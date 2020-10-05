@@ -1,14 +1,4 @@
-player = {
-    x = 0,
-    y = 0,
-    hp = 100,
-    atk = 12,
-    target = {
-        x = 0,
-        y = 0,
-        active = false
-    }
-}
+require "scripts.player.character"
 
 enemies = {}
 
@@ -52,7 +42,7 @@ function love.draw()
     end
     love.graphics.setColor(1,1,1,1)
 
-    love.graphics.draw(playerImg, player.x*32, player.y*32)
+    love.graphics.draw(playerImg, player.dx, player.dy)
 
     for i, v in ipairs(enemies) do
         love.graphics.draw(enemyImg, v.dx, v.dy)
@@ -83,6 +73,7 @@ function love.update(dt)
         end
     end
 
+    movePlayer(dt)
     updateBones(dt)
 end
 
@@ -159,6 +150,10 @@ function distanceToPoint(x,y,x2,y2)
     return math.sqrt(math.abs(x-x2)*math.abs(x-x2) + math.abs(y-y2)*math.abs(y-y2))
 end
 
+function difference(a,b)
+    return math.abs(a-b)
+end
+
 function boneSpurt(x,y,amount,velocity) 
     for i=1,amount do
         bones[#bones+1] = {
@@ -203,33 +198,6 @@ function updateBones(dt)
 end
 
 function love.keypressed(key)
-    if key == "w" then
-        player.y = player.y - 1
-        player.target.active = false
-    elseif key == "s" then
-        player.y = player.y + 1
-        player.target.active = false
-    elseif key == "d" then
-        player.x = player.x + 1
-        player.target.active = false
-    elseif key == "a" then
-        player.x = player. x - 1
-        player.target.active = false
-    elseif key == "left" then
-        player.target.active = true
-        player.target.x = player.x - 1
-        player.target.y = player.y
-    elseif key == "right" then
-        player.target.active = true
-        player.target.x = player.x + 1
-        player.target.y = player.y
-    elseif key == "up" then
-        player.target.active = true
-        player.target.y = player.y - 1
-        player.target.x = player.x
-    elseif key == "down" then
-        player.target.active = true
-        player.target.y = player.y + 1
-        player.target.x = player.x
-    end
+
+   checkTargeting()
 end
