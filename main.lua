@@ -25,12 +25,19 @@ function love.draw()
 
     love.graphics.setColor(1,1,1,1)
 
-    drawDummyEnemies()
-
     if player.target.active then
         love.graphics.draw(targetImg, player.target.x*32, player.target.y*32)
     end
+
+    drawDummyEnemies()
+
     love.graphics.draw(playerImg, player.dx, player.dy)
+    love.graphics.setColor(0,0,0)
+  
+    love.graphics.rectangle("line", player.dx, player.dy-8, 32,6)
+    love.graphics.setColor(0,1,0)
+    love.graphics.rectangle("fill", player.dx, player.dy-8, (player.dhp/player.mhp)*32,6)
+    love.graphics.setColor(1,1,1)
 
     love.graphics.print("BrawlQuest")
 end
@@ -44,7 +51,7 @@ function love.update(dt)
 
     updateDummyEnemies(dt)
 
-    movePlayer(dt)
+    updateCharacter(dt)
     updateBones(dt)
 end
 

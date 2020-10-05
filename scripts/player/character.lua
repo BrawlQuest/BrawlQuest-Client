@@ -8,8 +8,10 @@ player = {
     dx = 0,
     dy = 0,
     y = 0,
-    hp = 100,
-    atk = 12,
+    hp = 1000,
+    dhp = 1000,
+    mhp = 1000,
+    atk = 24,
     target = {
         x = 0,
         y = 0,
@@ -20,6 +22,9 @@ player = {
 function updateCharacter(dt)
    -- checkTargeting()
    movePlayer(dt)
+    if player.dhp > player.hp then
+        player.dhp = player.dhp - 32*dt
+    end
 end
 
 function movePlayer(dt)
