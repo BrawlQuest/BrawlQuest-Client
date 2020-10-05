@@ -12,9 +12,11 @@ function love.load()
     playerImg = love.graphics.newImage("assets/player/base.png")
     groundImg = love.graphics.newImage("assets/world/grounds/grass.png")
     treeImg = love.graphics.newImage("assets/world/objects/tree.png")
-   
     targetImg = love.graphics.newImage("assets/ui/target.png")
-
+    playerHitSfx = love.audio.newSource("assets/sfx/hit.wav", "static")
+    enemyHitSfx = love.audio.newSource("assets/sfx/impact_b.wav", "static")
+    critHitSfx = love.audio.newSource("assets/sfx/pit_trap_damage.wav", "static")
+    enemyDieSfx = love.audio.newSource("assets/sfx/skeleton.wav", "static")
     loadDummyEnemies()
 
     love.graphics.setBackgroundColor(0,0.3,0)
