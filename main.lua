@@ -50,6 +50,18 @@ end
 
 function tick()
    tickDummyEnemies()
+   if player.target.active then
+        if player.dx > player.target.x*32 then
+            player.dx = player.dx - 16
+        elseif player.dx < player.target.x*32 then
+            player.dx = player.dx + 16
+        end
+        if player.dy > player.target.y*32 then
+            player.dy = player.dy - 16
+        elseif player.dy < player.target.y*32 then
+            player.dy = player.dy + 16
+        end
+   end
 end
 
 function distanceToPoint(x,y,x2,y2)

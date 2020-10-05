@@ -24,7 +24,7 @@ function loadDummyEnemies()
         blockMap[enemies[#enemies].x..","..enemies[#enemies].y] = true
     end
 
-    for i = 1,12 do
+    for i = 1,4 do
         enemies[#enemies+1] = {
             x = love.math.random(1,30),
             dx = 0, -- drawX / drawY, for smoothing purposes
@@ -122,9 +122,9 @@ function tickDummyEnemies()
                 v.y = targetV.y
                 blockMap[v.x..","..v.y] = true
             end
-            if distanceToPoint(v.x,v.y,player.x,player.y) < v.range+1 then
-                boneSpurt(player.dx+16,player.dy+16,v.atk,48,1,0,0)
-            end
+           
+            
+            
         end
 
         if player.target.x == v.x and player.target.y == v.y then
