@@ -177,11 +177,13 @@ function tickDummyEnemies()
             v.red = 1
             local pushBack = 8
             if love.math.random(1,8) == 1 then -- CRIT
-                v.hp = v.hp - player.atk*2
-                v.red = 8
-                pushBack = 48
-                critHitSfx:setPitch(love.math.random(50,100)/100)
+                local modifier = love.math.random(2,12)
+                v.hp = v.hp - player.atk*modifier
+                v.red = modifier
+                pushBack = 12*modifier
+                critHitSfx:setPitch(1 * (modifier/14))
                 love.audio.play(critHitSfx)
+                boneSpurt(v.dx+16,v.dy+16,4*modifier,12*modifier,1,1,1)
             else
                 enemyHitSfx:setPitch(love.math.random(50,100)/100)
                 love.audio.play(enemyHitSfx)
