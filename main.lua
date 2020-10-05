@@ -13,6 +13,7 @@ function love.load()
     groundImg = love.graphics.newImage("assets/world/grounds/grass.png")
     treeImg = love.graphics.newImage("assets/world/objects/tree.png")
     enemyImg = love.graphics.newImage("assets/monsters/skeletons/sword.png")
+    rangedEnemyImg = love.graphics.newImage("assets/monsters/skeletons/mage.png")
     targetImg = love.graphics.newImage("assets/ui/target.png")
 
     for i = 1,12 do
@@ -24,10 +25,28 @@ function love.load()
             hp = 48,
             dhp = 48, -- drawn HP, for smoothing purposes
             atk = 1,
-            aggro = true
+            aggro = true,
+            range = 1
         }
         enemies[i].dx = enemies[i].x*32
         enemies[i].dy = enemies[i].y*32
+        blockMap[enemies[#enemies].x..","..enemies[#enemies].y] = true
+    end
+
+    for i = 1,12 do
+        enemies[#enemies+1] = {
+            x = love.math.random(1,30),
+            dx = 0, -- drawX / drawY, for smoothing purposes
+            dy = 0,
+            y = love.math.random(1,30),
+            hp = 48,
+            dhp = 48, -- drawn HP, for smoothing purposes
+            atk = 1,
+            aggro = true,
+            range = 2
+        }
+        enemies[#enemies].dx = enemies[#enemies].x*32
+        enemies[#enemies].dy = enemies[#enemies].y*32
         blockMap[enemies[#enemies].x..","..enemies[#enemies].y] = true
     end
 
@@ -37,15 +56,25 @@ end
 function love.draw()
 
     for i,v in ipairs(bones) do
-        love.graphics.setColor(1,1,1,v.alpha)
+        love.graphics.setColor(v.r,v.g,v.b,v.alpha)
         love.graphics.rectangle("fill",v.x,v.y,2,2)
     end
     love.graphics.setColor(1,1,1,1)
 
-    love.graphics.draw(playerImg, player.dx, player.dy)
+   
 
     for i, v in ipairs(enemies) do
-        love.graphics.draw(enemyImg, v.dx, v.dy)
+        if distanceToPoint(v.x,v.y,player.x,player.y) < v.range+1 then
+            love.graphics.setColor(0,0,0.4)
+            love.graphics.line(v.dx+16,v.dy+16,player.dx+16,player.dy+16)
+            love.graphics.setColor(1,1,1)
+        end
+
+        if v.range == 1 then
+            love.graphics.draw(enemyImg, v.dx, v.dy)
+        else
+            love.graphics.draw(rangedEnemyImg, v.dx, v.dy)
+        end
         love.graphics.setColor(1,0,0)
         love.graphics.rectangle("fill", v.dx, v.dy-6, (v.dhp/48)*32,6)
         love.graphics.setColor(1,1,1)
@@ -54,6 +83,7 @@ function love.draw()
     if player.target.active then
         love.graphics.draw(targetImg, player.target.x*32, player.target.y*32)
     end
+    love.graphics.draw(playerImg, player.dx, player.dy)
 
     love.graphics.print("BrawlTest Combat v1")
 
@@ -87,20 +117,23 @@ function tick()
         end
 
         if v.aggro then
-            targetV = moveToPlayer(v.x, v.y)
+            targetV = moveToPlayer(v.x, v.y, v)
             if blockMap[targetV.x..","..targetV.y] == nil then
                 blockMap[v.x..","..v.y] = nil
                 v.x = targetV.x
                 v.y = targetV.y
                 blockMap[v.x..","..v.y] = true
             end
+            if distanceToPoint(v.x,v.y,player.x,player.y) < v.range+1 then
+                boneSpurt(player.dx+16,player.dy+16,v.atk,48,1,0,0)
+            end
         end
 
         if player.target.x == v.x and player.target.y == v.y then
             v.hp = v.hp - player.atk
-            boneSpurt(v.dx+16,v.dy+16,4,48)
+            boneSpurt(v.dx+16,v.dy+16,4,48,1,1,1)
             if v.hp < 1 then
-                boneSpurt(v.dx+16,v.dy+16,48,74)
+                boneSpurt(v.dx+16,v.dy+16,48,74,1,1,1)
                 v.x = -9999
                 v.dx = -9999
                 v.dy = -9999
@@ -130,16 +163,16 @@ function smoothMovement(v,dt)
     end
 end
 
-function moveToPlayer(x,y) -- this needs work
-    if x > player.x + 1 then
+function moveToPlayer(x,y,v) -- this needs work
+    if x > player.x + v.range then
         x = x - 1
-    elseif x < player.x - 1 then
+    elseif x < player.x - v.range then
         x = x + 1
     end
 
-    if y > player.y + 1 then
+    if y > player.y + v.range then
         y = y - 1
-    elseif y < player.y - 1 then
+    elseif y < player.y - v.range then
         y = y + 1
     end
 
@@ -154,14 +187,17 @@ function difference(a,b)
     return math.abs(a-b)
 end
 
-function boneSpurt(x,y,amount,velocity) 
+function boneSpurt(x,y,amount,velocity,r,g,b) 
     for i=1,amount do
         bones[#bones+1] = {
             x = x,
             y = y,
             xv = love.math.random(-velocity,velocity),
             yv = love.math.random(-velocity,velocity),
-            alpha = 3
+            alpha = 3,
+            r = r,
+            g = g, 
+            b = b
         }
     end
 end
