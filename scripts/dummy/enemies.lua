@@ -1,6 +1,7 @@
 --[[
     Load dummy data on enemies
 ]]
+enemies = {}
 
 function loadDummyEnemies()
     enemyImg = love.graphics.newImage("assets/monsters/skeletons/sword.png")
@@ -102,4 +103,40 @@ function moveToPlayer(x,y,v) -- this needs work
     end
 
     return {x=x,y=y}
+end
+
+function tickDummyEnemies()
+    for i, v in ipairs(enemies) do
+        -- enemy logic
+        if distanceToPoint(v.x,v.y,player.x,player.y) < 10 then
+            v.aggro = true
+        else
+            v.aggro = false
+        end
+
+        if v.aggro then
+            targetV = moveToPlayer(v.x, v.y, v)
+            if blockMap[targetV.x..","..targetV.y] == nil then
+                blockMap[v.x..","..v.y] = nil
+                v.x = targetV.x
+                v.y = targetV.y
+                blockMap[v.x..","..v.y] = true
+            end
+            if distanceToPoint(v.x,v.y,player.x,player.y) < v.range+1 then
+                boneSpurt(player.dx+16,player.dy+16,v.atk,48,1,0,0)
+            end
+        end
+
+        if player.target.x == v.x and player.target.y == v.y then
+            v.hp = v.hp - player.atk
+            boneSpurt(v.dx+16,v.dy+16,4,48,1,1,1)
+            if v.hp < 1 then
+                boneSpurt(v.dx+16,v.dy+16,48,74,1,1,1)
+                v.x = -9999
+                v.dx = -9999
+                v.dy = -9999
+                v.y = -9999
+            end
+        end
+    end 
 end
