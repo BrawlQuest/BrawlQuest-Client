@@ -29,6 +29,7 @@ end
 
 function movePlayer(dt)
     if player.x*32 == player.dx and player.y*32 == player.dy then -- movement smoothing has finished
+        blockMap[player.x..","..player.y] = nil
         if love.keyboard.isDown("w") then
             player.y = player.y - 1
         elseif love.keyboard.isDown("s") then
@@ -39,6 +40,7 @@ function movePlayer(dt)
         elseif love.keyboard.isDown("d") then
             player.x = player.x + 1
         end
+        blockMap[player.x..","..player.y] = true
     else -- movement smoothing
         if difference(player.x*32, player.dx) > 1 then
             if player.dx > player.x*32 then

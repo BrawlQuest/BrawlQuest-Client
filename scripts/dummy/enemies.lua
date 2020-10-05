@@ -7,12 +7,12 @@ function loadDummyEnemies()
     enemyImg = love.graphics.newImage("assets/monsters/skeletons/sword.png")
     rangedEnemyImg = love.graphics.newImage("assets/monsters/skeletons/mage.png")
 
-    for i = 1,8 do
+    for i = 1,32 do
         enemies[#enemies+1] = {
-            x = love.math.random(10,20),
+            x = love.math.random(0,20),
             dx = 0, -- drawX / drawY, for smoothing purposes
             dy = 0,
-            y = love.math.random(10,20),
+            y = love.math.random(0,20),
             hp = 1000,
             mhp = 1000,
             dhp = 1000, -- drawn HP, for smoothing purposes
@@ -118,6 +118,18 @@ function moveToPlayer(x,y,v) -- this needs work
     elseif y < player.y - v.range then
         y = y + 1
     end
+
+    local iterationsLeft = 8
+    local px = x
+    local py = y
+    while distanceToPoint(player.x,player.y,v.x,v.y) > v.range+1 and blockMap[x..","..y] ~= nil and iterationsLeft > 0 do
+        x = px
+        y = py
+        x = x + love.math.random(-1,1)
+        y = y + love.math.random(-1,1)
+        iterationsLeft = iterationsLeft - 1
+    end
+
 
     return {x=x,y=y}
 end
