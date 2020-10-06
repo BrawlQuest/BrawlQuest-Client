@@ -42,6 +42,18 @@ function wasTileLit(x,y)
 end
 
 function calculateTileLit(tx,ty) 
+    -- doing this prevents trees themselves from being hidden
+    if tx > player.x then
+        tx = tx - 1
+    elseif tx < player.x then
+        tx = tx + 1
+    end
+    if ty > player. y then
+        ty = ty - 1
+    elseif ty < player.x then
+        ty = ty + 1
+    end
+
     local success, counter = Bresenham.line( player.x, player.y, tx, ty, function( x, y, counter )
      --   print( string.format( 'x: %d, y: %d, steps: %d, tile: %s', x, y, counter, grid[x][y] ))
         if treeMap[x..","..y] then
