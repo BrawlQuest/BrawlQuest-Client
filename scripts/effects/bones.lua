@@ -40,6 +40,12 @@ function updateBones(dt)
         else
             v.yv = 0
         end
+
+        if blockMap[math.abs(v.x/32)..","..math.abs(v.y/32)] then
+            v.yv = -v.yv
+            v.xv = -v.xv
+        end
+
         v.alpha = v.alpha - 1*dt
     end
 end

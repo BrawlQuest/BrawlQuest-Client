@@ -1,10 +1,12 @@
 require "scripts.player.character"
 require "scripts.dummy.enemies"
 require "scripts.effects.bones"
-
+require "scripts.effects.lighting"
 
 trees = {} -- temp
+lanterns = {} -- temp
 blockMap = {}
+treeMap = {}
 
 nextTick = 1
 
@@ -12,6 +14,7 @@ function love.load()
     playerImg = love.graphics.newImage("assets/player/base.png")
     groundImg = love.graphics.newImage("assets/world/grounds/grass.png")
     treeImg = love.graphics.newImage("assets/world/objects/tree.png")
+    lanternImg = love.graphics.newImage("assets/world/objects/lantern.png")
     targetImg = love.graphics.newImage("assets/ui/target.png")
     playerHitSfx = love.audio.newSource("assets/sfx/hit.wav", "static")
     enemyHitSfx = love.audio.newSource("assets/sfx/impact_b.wav", "static")
@@ -21,24 +24,52 @@ function love.load()
 
     love.graphics.setBackgroundColor(0,0.3,0)
 
-    for i = 1, 30 do
+    for i = 1, 70 do
         trees[i] = {
             x = love.math.random(0,love.graphics.getWidth()/32),
             y = love.math.random(0,love.graphics.getHeight()/32)
         }
         blockMap[trees[i].x..","..trees[i].y] = true
+        treeMap[trees[i].x..","..trees[i].y] = true
+    end
+
+    for i = 1, 4 do
+        lanterns[i] = {
+            x = love.math.random(0,love.graphics.getWidth()/32),
+            y = love.math.random(0,love.graphics.getHeight()/32)
+        }
     end
 end
 
 function love.draw()
     for x=0,love.graphics.getWidth()/32 do
         for y = 0,love.graphics.getHeight()/32 do
+            if isTileLit(x,y) then
+                if not wasTileLit(x,y) then
+                    love.graphics.setColor(1-oldLightAlpha,1-oldLightAlpha,1-oldLightAlpha) -- light up a tile
+                else
+                    love.graphics.setColor(1,1,1)
+                end
+            elseif wasTileLit(x,y) and oldLightAlpha > 0.2 then
+                love.graphics.setColor(oldLightAlpha, oldLightAlpha, oldLightAlpha)
+            else
+                love.graphics.setColor(0.2,0.2,0.2)
+            end
             love.graphics.draw(groundImg, x*32, y*32)
         end
     end
     
     for i,v in ipairs(trees) do
+        if isTileLit(v.x,v.y) then
+            love.graphics.setColor(1,1,1)
+        else
+            love.graphics.setColor(0.2,0.2,0.2)
+        end
         love.graphics.draw(treeImg, v.x*32, v.y*32)
+    end
+    
+    for i,v in ipairs(lanterns) do
+        love.graphics.draw(lanternImg,v.x*32,v.y*32)
     end
 
     drawBones()
@@ -69,14 +100,16 @@ function love.update(dt)
         nextTick = 1
     end
 
-    updateDummyEnemies(dt)
+    oldLightAlpha = oldLightAlpha - 3*dt -- update light, essentially
 
+    updateDummyEnemies(dt)
     updateCharacter(dt)
     updateBones(dt)
 end
 
 function tick()
    tickDummyEnemies()
+
    if player.target.active then
         if player.dx > player.target.x*32 then
             player.dx = player.dx - 16
@@ -102,3 +135,13 @@ end
 function love.keypressed(key)
    checkTargeting()
 end
+
+function copy(obj, seen)
+    if type(obj) ~= 'table' then return obj end
+    if seen and seen[obj] then return seen[obj] end
+    local s = seen or {}
+    local res = setmetatable({}, getmetatable(obj))
+    s[obj] = res
+    for k, v in pairs(obj) do res[copy(k, s)] = copy(v, s) end
+    return res
+  end
