@@ -20,7 +20,7 @@ player = {
 }
 
 function updateCharacter(dt)
-   -- checkTargeting()
+   checkTargeting()
    movePlayer(dt)
     if player.dhp > player.hp then
         player.dhp = player.dhp - 32*dt
@@ -28,6 +28,8 @@ function updateCharacter(dt)
 end
 
 function movePlayer(dt)
+    local lightRange = 4
+
     if player.x*32 == player.dx and player.y*32 == player.dy then -- movement smoothing has finished
         blockMap[player.x..","..player.y] = nil
         local original = {
@@ -36,18 +38,16 @@ function movePlayer(dt)
         }
         if love.keyboard.isDown("w") then
             player.y = player.y - 1
-            player.target.active = false
+            calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
         elseif love.keyboard.isDown("s") then
             player.y = player.y + 1
-            player.target.active = false
-        end
+            calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)  end
         if love.keyboard.isDown("a") then
             player.x = player.x - 1
-            player.target.active = false
+            calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
         elseif love.keyboard.isDown("d") then
             player.x = player.x + 1
-            player.target.active = false
-        end
+            calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)     end
         if  blockMap[player.x..","..player.y] ~= nil then
             player.x = original[1]
             player.y = original[2]
@@ -86,6 +86,7 @@ end
 function checkTargeting() -- Check which keys are down and place the player target accordingly
     player.target.x = player.x
     player.target.y = player.y
+    player.target.active = false
 
     if love.keyboard.isDown("up") then
         player.target.active = true

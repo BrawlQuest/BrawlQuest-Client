@@ -7,7 +7,7 @@ function loadDummyEnemies()
     enemyImg = love.graphics.newImage("assets/monsters/skeletons/sword.png")
     rangedEnemyImg = love.graphics.newImage("assets/monsters/skeletons/mage.png")
 
-    for i = 1,8 do
+    for i = 1,4 do
         enemies[#enemies+1] = {
             x = love.math.random(0,20),
             dx = 0, -- drawX / drawY, for smoothing purposes
@@ -27,7 +27,7 @@ function loadDummyEnemies()
         blockMap[enemies[#enemies].x..","..enemies[#enemies].y] = true
     end
 
-    for i = 1,2 do
+    for i = 1,1 do
         enemies[#enemies+1] = {
             x = love.math.random(10,20),
             dx = 0, -- drawX / drawY, for smoothing purposes
@@ -50,13 +50,17 @@ end
 
 function drawDummyEnemies()
     for i, v in ipairs(enemies) do
-       
-        
-        love.graphics.setColor(1,1-v.red,1-v.red)
-        if v.range == 1 then
-            love.graphics.draw(enemyImg, v.dx, v.dy)
-        else
-            love.graphics.draw(rangedEnemyImg, v.dx, v.dy)
+       if isTileLit(v.x,v.y) then
+            love.graphics.setColor(1,1-v.red,1-v.red)
+            if v.range == 1 then
+                love.graphics.draw(enemyImg, v.dx, v.dy)
+            else
+                love.graphics.draw(rangedEnemyImg, v.dx, v.dy)
+            end
+            
+            love.graphics.setColor(1,0,0)
+            love.graphics.rectangle("fill", v.dx, v.dy-6, (v.dhp/v.mhp)*32,6)
+            love.graphics.setColor(1,1,1)
         end
 
         if distanceToPoint(v.x,v.y,player.x,player.y) < v.range+1 then
@@ -64,10 +68,6 @@ function drawDummyEnemies()
             love.graphics.line(v.dx+16,v.dy+16,player.dx+16,player.dy+16)
             love.graphics.setColor(1,1,1,1)
         end
-
-        love.graphics.setColor(1,0,0)
-        love.graphics.rectangle("fill", v.dx, v.dy-6, (v.dhp/v.mhp)*32,6)
-        love.graphics.setColor(1,1,1)
     end
 end
 
@@ -120,8 +120,8 @@ function moveToPlayer(x,y,v) -- this needs work
     end
 
     local iterationsLeft = 8
-    local px = x
-    local py = y
+    local px = v.x
+    local py = v.y
     while distanceToPoint(player.x,player.y,v.x,v.y) > v.range+1 and blockMap[x..","..y] ~= nil and iterationsLeft > 0 do
         x = px
         y = py
@@ -179,7 +179,7 @@ function tickDummyEnemies()
             v.hp = v.hp - player.atk
             v.red = 1
             local pushBack = 8
-            if love.math.random(1,1) == 1 then -- CRIT
+            if love.math.random(1,4) == 1 then -- CRIT
                 local modifier = love.math.random(2,12)
                 v.hp = v.hp - player.atk*modifier
                 v.red = modifier
