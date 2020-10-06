@@ -7,15 +7,15 @@ function loadDummyEnemies()
     enemyImg = love.graphics.newImage("assets/monsters/skeletons/sword.png")
     rangedEnemyImg = love.graphics.newImage("assets/monsters/skeletons/mage.png")
 
-    for i = 1,32 do
+    for i = 1,8 do
         enemies[#enemies+1] = {
             x = love.math.random(0,20),
             dx = 0, -- drawX / drawY, for smoothing purposes
             dy = 0,
             y = love.math.random(0,20),
-            hp = 1000,
-            mhp = 1000,
-            dhp = 1000, -- drawn HP, for smoothing purposes
+            hp = 12,
+            mhp = 12,
+            dhp = 12, -- drawn HP, for smoothing purposes
             atk = 1,
             aggro = true,
             range = 1,
@@ -130,8 +130,16 @@ function moveToPlayer(x,y,v) -- this needs work
         iterationsLeft = iterationsLeft - 1
     end
 
+    moveEnemy(x,y,v)
+end
 
-    return {x=x,y=y}
+function moveEnemy(x,y,v) 
+    if blockMap[x..","..y] == nil then
+        blockMap[v.x..","..v.y] = nil
+        v.x = x
+        v.y = y
+        blockMap[v.x..","..v.y] = true
+    end
 end
 
 function tickDummyEnemies()
@@ -144,13 +152,8 @@ function tickDummyEnemies()
         end
       
         if v.aggro then
-            targetV = moveToPlayer(v.x, v.y, v)
-            if blockMap[targetV.x..","..targetV.y] == nil then
-                blockMap[v.x..","..v.y] = nil
-                v.x = targetV.x
-                v.y = targetV.y
-                blockMap[v.x..","..v.y] = true
-            end
+            moveToPlayer(v.x, v.y, v)
+            
             if distanceToPoint(v.x,v.y,player.x,player.y) < v.range+1 then
                 boneSpurt(player.dx+16,player.dy+16,v.atk,48,1,0,0)
                 playerHitSfx:setPitch(love.math.random(50,100)/100)
@@ -172,11 +175,11 @@ function tickDummyEnemies()
             end
         end
 
-        if player.target.x == v.x and player.target.y == v.y then
+        if player.target.x == v.x and player.target.y == v.y and player.target.active then
             v.hp = v.hp - player.atk
             v.red = 1
             local pushBack = 8
-            if love.math.random(1,8) == 1 then -- CRIT
+            if love.math.random(1,1) == 1 then -- CRIT
                 local modifier = love.math.random(2,12)
                 v.hp = v.hp - player.atk*modifier
                 v.red = modifier
@@ -184,23 +187,36 @@ function tickDummyEnemies()
                 critHitSfx:setPitch(1 * (modifier/14))
                 love.audio.play(critHitSfx)
                 boneSpurt(v.dx+16,v.dy+16,4*modifier,12*modifier,1,1,1)
+                if v.dx > player.x*32 then
+                    moveEnemy(v.x+1,v.y,v)
+                elseif v.dx < player.x*32 then
+                    moveEnemy(v.x-1,v.y,v)
+                end
+                if v.dy > player.y*32 then
+                    moveEnemy(v.x,v.y+1,v)
+                elseif v.dy < player.y*32 then
+                    moveEnemy(v.x,v.y-1,v)
+                end
             else
                 enemyHitSfx:setPitch(love.math.random(50,100)/100)
                 love.audio.play(enemyHitSfx)
+                if v.dx > player.x*32 then
+                    v.dx = v.dx + pushBack
+                elseif v.dx < player.x*32 then
+                    v.dx = v.dx - pushBack
+                end
+                if v.dy > player.y*32 then
+                    v.dy = v.dy + pushBack
+                elseif v.dy < player.y*32 then
+                    v.dy = v.dy - pushBack
+                end
             end
 
-            if v.dx > player.x*32 then
-                v.dx = v.dx + pushBack
-            elseif v.dx < player.x*32 then
-                v.dx = v.dx - pushBack
-            end
-            if v.dy > player.y*32 then
-                v.dy = v.dy + pushBack
-            elseif v.dy < player.y*32 then
-                v.dy = v.dy - pushBack
-            end
+           
             boneSpurt(v.dx+16,v.dy+16,4,48,1,1,1)
             if v.hp < 1 then
+                v.dx = v.x*32 -- there may be displacement from a crit, so we set the draw pos to the regular pos
+                v.dy = v.y*32
                 love.audio.play(enemyDieSfx)
                 blockMap[v.x..","..v.y] = nil
                 boneSpurt(v.dx+16,v.dy+16,48,72,0.8,0.8,1)

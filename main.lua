@@ -3,7 +3,7 @@ require "scripts.dummy.enemies"
 require "scripts.effects.bones"
 
 
-
+trees = {} -- temp
 blockMap = {}
 
 nextTick = 1
@@ -20,9 +20,27 @@ function love.load()
     loadDummyEnemies()
 
     love.graphics.setBackgroundColor(0,0.3,0)
+
+    for i = 1, 30 do
+        trees[i] = {
+            x = love.math.random(0,love.graphics.getWidth()/32),
+            y = love.math.random(0,love.graphics.getHeight()/32)
+        }
+        blockMap[trees[i].x..","..trees[i].y] = true
+    end
 end
 
 function love.draw()
+    for x=0,love.graphics.getWidth()/32 do
+        for y = 0,love.graphics.getHeight()/32 do
+            love.graphics.draw(groundImg, x*32, y*32)
+        end
+    end
+    
+    for i,v in ipairs(trees) do
+        love.graphics.draw(treeImg, v.x*32, v.y*32)
+    end
+
     drawBones()
 
     love.graphics.setColor(1,1,1,1)
