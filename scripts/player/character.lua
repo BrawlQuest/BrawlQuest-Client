@@ -9,7 +9,9 @@ player = {
     dy = 0,
     y = 0,
     hp = 100,
-    atk = 12,
+    dhp = 100,
+    mhp = 100,
+    atk = 1,
     target = {
         x = 0,
         y = 0,
@@ -20,19 +22,37 @@ player = {
 function updateCharacter(dt)
    -- checkTargeting()
    movePlayer(dt)
+    if player.dhp > player.hp then
+        player.dhp = player.dhp - 32*dt
+    end
 end
 
 function movePlayer(dt)
     if player.x*32 == player.dx and player.y*32 == player.dy then -- movement smoothing has finished
+        blockMap[player.x..","..player.y] = nil
+        local original = {
+            player.x,
+            player.y
+        }
         if love.keyboard.isDown("w") then
             player.y = player.y - 1
+            player.target.active = false
         elseif love.keyboard.isDown("s") then
             player.y = player.y + 1
+            player.target.active = false
         end
         if love.keyboard.isDown("a") then
             player.x = player.x - 1
+            player.target.active = false
         elseif love.keyboard.isDown("d") then
             player.x = player.x + 1
+            player.target.active = false
+        end
+        if  blockMap[player.x..","..player.y] ~= nil then
+            player.x = original[1]
+            player.y = original[2]
+        else
+            blockMap[player.x..","..player.y] = true
         end
     else -- movement smoothing
         if difference(player.x*32, player.dx) > 1 then
@@ -64,26 +84,22 @@ function movePlayer(dt)
 end
 
 function checkTargeting() -- Check which keys are down and place the player target accordingly
-    local isTargeting = false
-
     player.target.x = player.x
     player.target.y = player.y
 
     if love.keyboard.isDown("up") then
-        isTargeting = true
+        player.target.active = true
         player.target.y = player.y - 1
     elseif love.keyboard.isDown("down") then
-        isTargeting = true
+        player.target.active = true
         player.target.y = player.y + 1
     end
 
     if love.keyboard.isDown("left") then
-        isTargeting = true
+        player.target.active = true
         player.target.x = player.x - 1
     elseif love.keyboard.isDown("right") then
-        isTargeting = true
+        player.target.active = true
         player.target.x = player.x + 1
     end
-
-    player.target.active = isTargeting
 end
