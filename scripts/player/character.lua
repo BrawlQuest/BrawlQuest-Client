@@ -28,7 +28,7 @@ function updateCharacter(dt)
 end
 
 function movePlayer(dt)
-    local lightRange = 4
+    local lightRange = 24
 
     if player.x*32 == player.dx and player.y*32 == player.dy then -- movement smoothing has finished
         blockMap[player.x..","..player.y] = nil

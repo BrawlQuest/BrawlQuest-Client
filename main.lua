@@ -20,6 +20,23 @@ function love.load()
     enemyHitSfx = love.audio.newSource("assets/sfx/impact_b.wav", "static")
     critHitSfx = love.audio.newSource("assets/sfx/pit_trap_damage.wav", "static")
     enemyDieSfx = love.audio.newSource("assets/sfx/skeleton.wav", "static")
+    arrowImg = {}
+    arrowImg[-1]  = {
+            [0]=love.graphics.newImage("assets/ui/target/W_Arrow_1.png"),
+            [-1] = love.graphics.newImage("assets/ui/target/NW_Arrow_1.png"),
+            [1]=love.graphics.newImage("assets/ui/target/SW_Arrow_1.png")
+        }
+        arrowImg[0] = 
+        {
+            [-1] = love.graphics.newImage("assets/ui/target/N_Arrow_1.png"),
+            [1] = love.graphics.newImage("assets/ui/target/S_arrow_1.png")
+        }
+        arrowImg[1] = {
+            [0] = love.graphics.newImage("assets/ui/target/E_Arrow_1.png"),
+            [-1] = love.graphics.newImage("assets/ui/target/NE_Arrow_1.png"),
+            [1] = love.graphics.newImage("assets/ui/target/SE_Arrow_1.png")
+        }
+   
     loadDummyEnemies()
 
     love.graphics.setBackgroundColor(0,0.3,0)
@@ -76,10 +93,6 @@ function love.draw()
 
     love.graphics.setColor(1,1,1,1)
 
-    if player.target.active then
-        love.graphics.draw(targetImg, player.target.x*32, player.target.y*32)
-    end
-
     drawDummyEnemies()
 
     love.graphics.draw(playerImg, player.dx, player.dy)
@@ -89,6 +102,15 @@ function love.draw()
     love.graphics.setColor(0,1,0)
     love.graphics.rectangle("fill", player.dx, player.dy-8, (player.dhp/player.mhp)*32,6)
     love.graphics.setColor(1,1,1)
+
+    
+    if player.target.active then
+        diffX = player.target.x - player.x
+        diffY = player.target.y - player.y
+        if arrowImg[diffX][diffY] ~= nil then
+            love.graphics.draw(arrowImg[diffX][diffY], player.dx-32, player.dy-32)
+        end
+    end
 
     love.graphics.print("BrawlQuest")
 end

@@ -48,9 +48,9 @@ function calculateTileLit(tx,ty)
     elseif tx < player.x then
         tx = tx + 1
     end
-    if ty > player. y then
+    if ty > player.y then
         ty = ty - 1
-    elseif ty < player.x then
+    elseif ty < player.y then
         ty = ty + 1
     end
 
