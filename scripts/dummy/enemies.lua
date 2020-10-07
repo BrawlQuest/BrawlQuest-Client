@@ -6,8 +6,28 @@ enemies = {}
 function loadDummyEnemies()
     enemyImg = love.graphics.newImage("assets/monsters/skeletons/sword.png")
     rangedEnemyImg = love.graphics.newImage("assets/monsters/skeletons/mage.png")
+    alertImg = love.graphics.newImage("assets/ui/alert.png")
+    attackSounds = {
+        love.audio.newSource("assets/sfx/monsters/skeletons/attack/1.ogg", "static"),
+        love.audio.newSource("assets/sfx/monsters/skeletons/attack/2.ogg", "static"),
+        love.audio.newSource("assets/sfx/monsters/skeletons/attack/3.ogg", "static"),
+        love.audio.newSource("assets/sfx/monsters/skeletons/attack/4.ogg", "static")
+    }
 
-    for i = 1,4 do
+    aggroSounds = {
+        love.audio.newSource("assets/sfx/monsters/skeletons/aggro/1.ogg", "static"),
+        love.audio.newSource("assets/sfx/monsters/skeletons/aggro/2.ogg", "static"),
+        love.audio.newSource("assets/sfx/monsters/skeletons/aggro/3.ogg", "static")
+    }
+
+    deathSounds = {
+        love.audio.newSource("assets/sfx/monsters/skeletons/death/1.ogg", "static"),
+        love.audio.newSource("assets/sfx/monsters/skeletons/death/2.ogg", "static"),
+        love.audio.newSource("assets/sfx/monsters/skeletons/death/3.ogg", "static")
+    }
+
+
+    for i = 1,10 do
         enemies[#enemies+1] = {
             x = love.math.random(0,20),
             dx = 0, -- drawX / drawY, for smoothing purposes
@@ -20,14 +40,15 @@ function loadDummyEnemies()
             aggro = true,
             range = 1,
             red = 0,
-            atkAlpha = 0 -- the alpha for the line that is drawn when an attack hits
+            atkAlpha = 0, -- the alpha for the line that is drawn when an attack hits
+            aggroAlpha = 0
         }
         enemies[i].dx = enemies[i].x*32
         enemies[i].dy = enemies[i].y*32
         blockMap[enemies[#enemies].x..","..enemies[#enemies].y] = true
     end
 
-    for i = 1,1 do
+    for i = 1,4 do
         enemies[#enemies+1] = {
             x = love.math.random(10,20),
             dx = 0, -- drawX / drawY, for smoothing purposes
@@ -40,7 +61,8 @@ function loadDummyEnemies()
             aggro = true,
             range = 4,
             red = 0, -- when this is set the enemy lights up red to indicate being hit
-            atkAlpha = 0 -- the alpha for the line that is drawn when an attack hits
+            atkAlpha = 0, -- the alpha for the line that is drawn when an attack hits
+            aggroAlpha = 0
         }
         enemies[#enemies].dx = enemies[#enemies].x*32
         enemies[#enemies].dy = enemies[#enemies].y*32
@@ -60,7 +82,27 @@ function drawDummyEnemies()
             
             love.graphics.setColor(1,0,0)
             love.graphics.rectangle("fill", v.dx, v.dy-6, (v.dhp/v.mhp)*32,6)
+            love.graphics.setColor(1,1,1,v.aggroAlpha)
+            love.graphics.draw(alertImg,v.dx+8,v.dy-16)
             love.graphics.setColor(1,1,1)
+        else
+            if v.aggroAlpha > 0 then
+                love.graphics.setColor(1,1,1,v.aggroAlpha)
+                if v.range == 1 then
+                    love.graphics.draw(enemyImg, v.dx, v.dy)
+                else
+                    love.graphics.draw(rangedEnemyImg, v.dx, v.dy)
+                end
+                love.graphics.draw(alertImg,v.dx+8,v.dy-16)
+                love.graphics.setColor(1,1,1)
+            elseif v.atkAlpha > 0 then
+                love.graphics.setColor(1,1,1,v.atkAlpha)
+                if v.range == 1 then
+                    love.graphics.draw(enemyImg, v.dx, v.dy)
+                else
+                    love.graphics.draw(rangedEnemyImg, v.dx, v.dy)
+                end
+            end
         end
 
         if distanceToPoint(v.x,v.y,player.x,player.y) < v.range+1 then
@@ -84,6 +126,7 @@ function updateDummyEnemies(dt)
             end
         end
         v.atkAlpha = v.atkAlpha - 2*dt
+        v.aggroAlpha = v.aggroAlpha - 1*dt
     end
 end
 
@@ -147,6 +190,10 @@ function tickDummyEnemies()
         -- enemy logic
         if not v.aggro and distanceToPoint(v.x,v.y,player.x,player.y) < 4 + v.range*2 then
             v.aggro = true
+            local aggroSound = aggroSounds[love.math.random(1,#aggroSounds)]
+            aggroSound:setPitch(love.math.random(80,150)/100)
+            love.audio.play(aggroSound)
+            v.aggroAlpha = 2
         elseif distanceToPoint(v.x,v.y,player.x,player.y) > 4 + v.range*3 then
             v.aggro = false
         end
@@ -156,8 +203,9 @@ function tickDummyEnemies()
             
             if distanceToPoint(v.x,v.y,player.x,player.y) < v.range+1 then
                 boneSpurt(player.dx+16,player.dy+16,v.atk,48,1,0,0)
-                playerHitSfx:setPitch(love.math.random(50,100)/100)
-                love.audio.play(playerHitSfx)
+                local attackSound = attackSounds[love.math.random(1,#attackSounds)]
+                attackSound:setPitch(love.math.random(50,100)/100)
+                love.audio.play(attackSound)
                 player.hp = player.hp - v.atk
                 v.atkAlpha = 1
                 if (player.target.x ~= v.x or player.target.y ~= v.y) and v.range == 10000 then
@@ -217,7 +265,7 @@ function tickDummyEnemies()
             if v.hp < 1 then
                 v.dx = v.x*32 -- there may be displacement from a crit, so we set the draw pos to the regular pos
                 v.dy = v.y*32
-                love.audio.play(enemyDieSfx)
+                love.audio.play(deathSounds[love.math.random(1,#deathSounds)])
                 blockMap[v.x..","..v.y] = nil
                 boneSpurt(v.dx+16,v.dy+16,48,72,0.8,0.8,1)
                 v.x = -9999

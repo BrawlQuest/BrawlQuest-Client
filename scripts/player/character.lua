@@ -28,7 +28,7 @@ function updateCharacter(dt)
 end
 
 function movePlayer(dt)
-    local lightRange = 24
+    local lightRange = 6
 
     if player.x*32 == player.dx and player.y*32 == player.dy then -- movement smoothing has finished
         blockMap[player.x..","..player.y] = nil
@@ -39,15 +39,25 @@ function movePlayer(dt)
         if love.keyboard.isDown("w") then
             player.y = player.y - 1
             calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
+            stepSound:setPitch(love.math.random(90,200)/100)
+            love.audio.play(stepSound)
         elseif love.keyboard.isDown("s") then
             player.y = player.y + 1
-            calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)  end
+            calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
+            stepSound:setPitch(love.math.random(90,200)/100)
+            love.audio.play(stepSound)
+        end
         if love.keyboard.isDown("a") then
             player.x = player.x - 1
             calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
+            stepSound:setPitch(love.math.random(90,200)/100)
+            love.audio.play(stepSound)
         elseif love.keyboard.isDown("d") then
             player.x = player.x + 1
-            calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)     end
+            calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
+            stepSound:setPitch(love.math.random(90,200)/100)
+            love.audio.play(stepSound)
+        end
         if  blockMap[player.x..","..player.y] ~= nil then
             player.x = original[1]
             player.y = original[2]

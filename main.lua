@@ -11,6 +11,17 @@ treeMap = {}
 nextTick = 1
 
 function love.load()
+    music = love.audio.newSource("assets/music/album1/PuerLavari.mp3", "stream")
+    music:setLooping(true)
+    love.audio.play(music)
+
+    birds = love.audio.newSource("assets/sfx/ambient/forest/birds.mp3", "stream")
+    birds:setLooping(true)
+    birds:setVolume(0.1)
+    love.audio.play(birds)
+
+    stepSound = love.audio.newSource("assets/sfx/step/grass.mp3", "static")
+
     playerImg = love.graphics.newImage("assets/player/base.png")
     groundImg = love.graphics.newImage("assets/world/grounds/grass.png")
     treeImg = love.graphics.newImage("assets/world/objects/tree.png")
@@ -107,7 +118,7 @@ function love.draw()
     if player.target.active then
         diffX = player.target.x - player.x
         diffY = player.target.y - player.y
-        if arrowImg[diffX][diffY] ~= nil then
+        if arrowImg[diffX] ~= nil and arrowImg[diffX][diffY] ~= nil then
             love.graphics.draw(arrowImg[diffX][diffY], player.dx-32, player.dy-32)
         end
     end
