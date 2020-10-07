@@ -133,7 +133,7 @@ function love.update(dt)
         nextTick = 1
     end
 
-    oldLightAlpha = oldLightAlpha - 3*dt -- update light, essentially
+    oldLightAlpha = oldLightAlpha - 2*dt -- update light, essentially
 
     updateDummyEnemies(dt)
     updateCharacter(dt)

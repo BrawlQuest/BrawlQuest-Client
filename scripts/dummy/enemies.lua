@@ -29,10 +29,10 @@ function loadDummyEnemies()
 
     for i = 1,10 do
         enemies[#enemies+1] = {
-            x = love.math.random(0,20),
+            x = love.math.random(20,25),
             dx = 0, -- drawX / drawY, for smoothing purposes
             dy = 0,
-            y = love.math.random(0,20),
+            y = love.math.random(20,25),
             hp = 12,
             mhp = 12,
             dhp = 12, -- drawn HP, for smoothing purposes
@@ -50,10 +50,10 @@ function loadDummyEnemies()
 
     for i = 1,4 do
         enemies[#enemies+1] = {
-            x = love.math.random(10,20),
+            x = love.math.random(10,15),
             dx = 0, -- drawX / drawY, for smoothing purposes
             dy = 0,
-            y = love.math.random(10,20),
+            y = love.math.random(10,15),
             hp = 24,
             mhp = 24,
             dhp = 24, -- drawn HP, for smoothing purposes
