@@ -26,7 +26,7 @@ function love.load()
     birds = love.audio.newSource("assets/sfx/ambient/forest/birds.mp3", "stream")
     birds:setLooping(true)
     birds:setVolume(0.1)
-    love.audio.play(birds)
+  --  love.audio.play(birds)
 
     stepSound = love.audio.newSource("assets/sfx/step/grass.mp3", "static")
 
@@ -136,7 +136,7 @@ function love.draw()
     end
     
     for i in pairs(blockMap) do
-        love.graphics.rectangle("line", explode(i, ",")[1]*32, explode(i, ",")[2]*32, 32, 32)
+    --O    love.graphics.rectangle("line", explode(i, ",")[1]*32, explode(i, ",")[2]*32, 32, 32)
     end
 
     Luven.drawEnd()
@@ -165,7 +165,7 @@ function love.update(dt)
         Luven.camera:setPosition(player.dx, player.dy)
     end
 
-    timeOfDay = timeOfDay + 0.05*dt
+    timeOfDay = timeOfDay + 0.005*dt
     if timeOfDay < 0.8 then
         Luven.setAmbientLightColor({ 0.8-timeOfDay, 0.8-timeOfDay, 1-timeOfDay })
     else 

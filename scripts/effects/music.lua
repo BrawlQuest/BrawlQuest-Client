@@ -30,6 +30,7 @@ function updateMusic(dt)
     elseif not arrayContains(battleMusic, currentTrack) and enemiesInAggro > 0 then
         switchMusic(battleMusic[love.math.random(1,#battleMusic)])
     end
+    
     if isSwitching then
         if music[currentTrack]:getVolume() > 0.01 then
             music[currentTrack]:setVolume(music[currentTrack]:getVolume() - 0.3*dt)
@@ -40,10 +41,6 @@ function updateMusic(dt)
             music[currentTrack]:setVolume(0)
          --   music[currentTrack]:set
             currentPlaying = music[currentTrack]:play()
-        end
-    else
-        if music[currentTrack]:getVolume() < 1 then
-            music[currentTrack]:setVolume(music[currentTrack]:getVolume() + 0.3*dt)
         end
     end
 end
