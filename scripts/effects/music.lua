@@ -37,7 +37,8 @@ function updateMusic(dt)
             music[currentTrack]:stop()
             isSwitching = false
             currentTrack = nextTrack
-            music[currentTrack]:setVolume(1)
+            music[currentTrack]:setVolume(0)
+         --   music[currentTrack]:set
             currentPlaying = music[currentTrack]:play()
         end
     else

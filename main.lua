@@ -19,11 +19,7 @@ function love.load()
     Luven.init()
     Luven.setAmbientLightColor({ 0.1, 0.1, 0.1 })
     Luven.camera:init(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
-    Luven.camera:setScale(1.3)
-
-    lightId = Luven.addFlickeringLight(600, 400, { min = { 0.8, 0.0, 0.8, 0.8 }, max = { 1.0, 0.0, 1.0, 1.0 } }, { min = 0.25, max = 0.27 }, { min = 0.12, max = 0.2 })
-    lightId2 = Luven.addFlickeringLight(700, 400, { min = { 0.8, 0.0, 0.8, 0.8 }, max = { 1.0, 0.0, 1.0, 1.0 } }, { min = 0.25, max = 0.7 }, { min = 0.12, max = 0.2 }, Luven.lightShapes.cone)
-    Luven.addNormalLight(700, 500, { 0.9, 1, 0 }, 1, Luven.lightShapes.cone, 0)
+    Luven.camera:setScale(2)
 
     loadMusic()
 
@@ -69,8 +65,8 @@ function love.load()
             x = love.math.random(0,love.graphics.getWidth()/32),
             y = love.math.random(0,love.graphics.getHeight()/32)
         }
-        blockMap[trees[i].x..","..trees[i].y] = true
-        treeMap[trees[i].x..","..trees[i].y] = true
+        blockMap[trees[#trees].x..","..trees[#trees].y] = true
+        treeMap[trees[#trees].x..","..trees[#trees].y] = true
     end
 
     for i = 1, 4 do
@@ -78,14 +74,15 @@ function love.load()
             x = love.math.random(0,love.graphics.getWidth()/32),
             y = love.math.random(0,love.graphics.getHeight()/32)
         }
-        Luven.addNormalLight(lanterns[i].x*32,lanterns[i].y*32,{0.96,0.66,0.25}, 3)
+        Luven.addNormalLight(16+lanterns[i].x*32,16+lanterns[i].y*32,{1,0.5,0}, 1)
     end
 end
 
 function love.draw()
     Luven.drawBegin()
-    for x=0,30 do
-        for y = 0,30 do
+
+    for x=-30,love.graphics.getWidth()/32 do
+        for y = -30,love.graphics.getHeight()/32 do
             if isTileLit(x,y) then
                 if not wasTileLit(x,y) then
                     love.graphics.setColor(1-oldLightAlpha,1-oldLightAlpha,1-oldLightAlpha) -- light up a tile
@@ -137,6 +134,10 @@ function love.draw()
             love.graphics.draw(arrowImg[diffX][diffY], player.dx-32, player.dy-32)
         end
     end
+    
+    for i in pairs(blockMap) do
+        love.graphics.rectangle("line", explode(i, ",")[1]*32, explode(i, ",")[2]*32, 32, 32)
+    end
 
     Luven.drawEnd()
 
@@ -160,10 +161,12 @@ function love.update(dt)
     updateMusic(dt)
     Luven.update(dt)
 
-    Luven.camera:setPosition(player.dx, player.dy)
+    if not player.target.active then
+        Luven.camera:setPosition(player.dx, player.dy)
+    end
 
     timeOfDay = timeOfDay + 0.05*dt
-    if timeOfDay < 1 then
+    if timeOfDay < 0.8 then
         Luven.setAmbientLightColor({ 0.8-timeOfDay, 0.8-timeOfDay, 1-timeOfDay })
     else 
         Luven.setAmbientLightColor({ timeOfDay-0.8, timeOfDay-0.8, timeOfDay-1 })
@@ -220,4 +223,15 @@ function copy(obj, seen)
     end
 
     return false
+end
+
+function explode (inputstr, sep)
+    if sep == nil then
+            sep = "%s"
+    end
+    local t={}
+    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+            table.insert(t, str)
+    end
+    return t
 end

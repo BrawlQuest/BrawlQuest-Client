@@ -49,7 +49,7 @@ function loadDummyEnemies()
         blockMap[enemies[#enemies].x..","..enemies[#enemies].y] = true
     end
 
-    for i = 1,1 do
+    for i = 1,2 do
         enemies[#enemies+1] = {
             x = love.math.random(10,15),
             dx = 0, -- drawX / drawY, for smoothing purposes
@@ -195,6 +195,7 @@ function tickDummyEnemies()
             v.aggro = true
             local aggroSound = aggroSounds[love.math.random(1,#aggroSounds)]
             aggroSound:setPitch(love.math.random(80,150)/100)
+            aggroSound:setPosition(v.x-player.x,v.y-player.y)
             love.audio.play(aggroSound)
             v.aggroAlpha = 2
         elseif distanceToPoint(v.x,v.y,player.x,player.y) > 4 + v.range*2 then
@@ -251,6 +252,8 @@ function tickDummyEnemies()
                 end
             else
                 enemyHitSfx:setPitch(love.math.random(50,100)/100)
+                love.audio.setEffect('myEffect', {type = 'reverb'})
+                enemyHitSfx:setEffect('myEffect')
                 love.audio.play(enemyHitSfx)
                 if v.dx > player.x*32 then
                     v.dx = v.dx + pushBack
