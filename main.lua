@@ -3,6 +3,7 @@ require "scripts.dummy.enemies"
 require "scripts.effects.bones"
 require "scripts.effects.lighting"
 require "scripts.effects.music"
+Luven = require "scripts.libraries.luven.luven"
 
 trees = {} -- temp
 lanterns = {} -- temp
@@ -11,7 +12,19 @@ treeMap = {}
 
 nextTick = 1
 
+timeOfDay = 0
+
 function love.load()
+    love.graphics.setDefaultFilter("nearest", "nearest")
+    Luven.init()
+    Luven.setAmbientLightColor({ 0.1, 0.1, 0.1 })
+    Luven.camera:init(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
+    Luven.camera:setScale(1.3)
+
+    lightId = Luven.addFlickeringLight(600, 400, { min = { 0.8, 0.0, 0.8, 0.8 }, max = { 1.0, 0.0, 1.0, 1.0 } }, { min = 0.25, max = 0.27 }, { min = 0.12, max = 0.2 })
+    lightId2 = Luven.addFlickeringLight(700, 400, { min = { 0.8, 0.0, 0.8, 0.8 }, max = { 1.0, 0.0, 1.0, 1.0 } }, { min = 0.25, max = 0.7 }, { min = 0.12, max = 0.2 }, Luven.lightShapes.cone)
+    Luven.addNormalLight(700, 500, { 0.9, 1, 0 }, 1, Luven.lightShapes.cone, 0)
+
     loadMusic()
 
     birds = love.audio.newSource("assets/sfx/ambient/forest/birds.mp3", "stream")
@@ -65,12 +78,14 @@ function love.load()
             x = love.math.random(0,love.graphics.getWidth()/32),
             y = love.math.random(0,love.graphics.getHeight()/32)
         }
+        Luven.addNormalLight(lanterns[i].x*32,lanterns[i].y*32,{0.96,0.66,0.25}, 3)
     end
 end
 
 function love.draw()
-    for x=0,love.graphics.getWidth()/32 do
-        for y = 0,love.graphics.getHeight()/32 do
+    Luven.drawBegin()
+    for x=0,30 do
+        for y = 0,30 do
             if isTileLit(x,y) then
                 if not wasTileLit(x,y) then
                     love.graphics.setColor(1-oldLightAlpha,1-oldLightAlpha,1-oldLightAlpha) -- light up a tile
@@ -96,6 +111,7 @@ function love.draw()
     end
     
     for i,v in ipairs(lanterns) do
+        love.graphics.setColor(1,1,1)
         love.graphics.draw(lanternImg,v.x*32,v.y*32)
     end
 
@@ -122,7 +138,11 @@ function love.draw()
         end
     end
 
+    Luven.drawEnd()
+
     love.graphics.print("BrawlQuest\nEnemies in aggro: "..enemiesInAggro)
+
+    Luven.camera:draw()
 end
 
 function love.update(dt)
@@ -138,6 +158,19 @@ function love.update(dt)
     updateCharacter(dt)
     updateBones(dt)
     updateMusic(dt)
+    Luven.update(dt)
+
+    Luven.camera:setPosition(player.dx, player.dy)
+
+    timeOfDay = timeOfDay + 0.05*dt
+    if timeOfDay < 1 then
+        Luven.setAmbientLightColor({ 1-timeOfDay, 1-timeOfDay, 1-timeOfDay })
+    else 
+        Luven.setAmbientLightColor({ timeOfDay-1, timeOfDay-1, timeOfDay-1 })
+        if timeOfDay > 2 then
+            timeOfDay = 0 
+        end
+    end
 end
 
 function tick()
