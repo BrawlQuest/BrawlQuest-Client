@@ -166,7 +166,7 @@ function moveToPlayer(x,y,v) -- this needs work
     local iterationsLeft = 8
     local px = v.x
     local py = v.y
-    while distanceToPoint(player.x,player.y,v.x,v.y) > v.range+1 and blockMap[x..","..y] ~= nil and iterationsLeft > 0 do
+    while (difference(player.x,v.x) > v.range or difference(player.y,v.y) > v.range) and blockMap[x..","..y] ~= nil and iterationsLeft > 0 do
         x = px
         y = py
         x = x + love.math.random(-1,1)
