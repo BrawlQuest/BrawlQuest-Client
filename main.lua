@@ -164,9 +164,9 @@ function love.update(dt)
 
     timeOfDay = timeOfDay + 0.05*dt
     if timeOfDay < 1 then
-        Luven.setAmbientLightColor({ 1-timeOfDay, 1-timeOfDay, 1-timeOfDay })
+        Luven.setAmbientLightColor({ 0.8-timeOfDay, 0.8-timeOfDay, 1-timeOfDay })
     else 
-        Luven.setAmbientLightColor({ timeOfDay-1, timeOfDay-1, timeOfDay-1 })
+        Luven.setAmbientLightColor({ timeOfDay-0.8, timeOfDay-0.8, timeOfDay-1 })
         if timeOfDay > 2 then
             timeOfDay = 0 
         end
