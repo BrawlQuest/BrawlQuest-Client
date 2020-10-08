@@ -2,6 +2,7 @@
     Load dummy data on enemies
 ]]
 enemies = {}
+enemiesInAggro = 0 -- for music
 
 function loadDummyEnemies()
     enemyImg = love.graphics.newImage("assets/monsters/skeletons/sword.png")
@@ -29,10 +30,10 @@ function loadDummyEnemies()
 
     for i = 1,10 do
         enemies[#enemies+1] = {
-            x = love.math.random(20,25),
+            x = love.math.random(0,15),
             dx = 0, -- drawX / drawY, for smoothing purposes
             dy = 0,
-            y = love.math.random(20,25),
+            y = love.math.random(0,15),
             hp = 12,
             mhp = 12,
             dhp = 12, -- drawn HP, for smoothing purposes
@@ -48,7 +49,7 @@ function loadDummyEnemies()
         blockMap[enemies[#enemies].x..","..enemies[#enemies].y] = true
     end
 
-    for i = 1,4 do
+    for i = 1,1 do
         enemies[#enemies+1] = {
             x = love.math.random(10,15),
             dx = 0, -- drawX / drawY, for smoothing purposes
@@ -59,7 +60,7 @@ function loadDummyEnemies()
             dhp = 24, -- drawn HP, for smoothing purposes
             atk = 1,
             aggro = true,
-            range = 4,
+            range = 2,
             red = 0, -- when this is set the enemy lights up red to indicate being hit
             atkAlpha = 0, -- the alpha for the line that is drawn when an attack hits
             aggroAlpha = 0
@@ -186,16 +187,19 @@ function moveEnemy(x,y,v)
 end
 
 function tickDummyEnemies()
+    enemiesInAggro = #enemies
     for i, v in ipairs(enemies) do
         -- enemy logic
+       -- if v.hp > 0 then enemiesInAggro = enemiesInAggro + 1 end
         if not v.aggro and distanceToPoint(v.x,v.y,player.x,player.y) < 4 + v.range*2 then
             v.aggro = true
             local aggroSound = aggroSounds[love.math.random(1,#aggroSounds)]
             aggroSound:setPitch(love.math.random(80,150)/100)
             love.audio.play(aggroSound)
             v.aggroAlpha = 2
-        elseif distanceToPoint(v.x,v.y,player.x,player.y) > 4 + v.range*3 then
+        elseif distanceToPoint(v.x,v.y,player.x,player.y) > 4 + v.range*2 then
             v.aggro = false
+            enemiesInAggro = enemiesInAggro - 1
         end
       
         if v.aggro then

@@ -2,6 +2,7 @@ require "scripts.player.character"
 require "scripts.dummy.enemies"
 require "scripts.effects.bones"
 require "scripts.effects.lighting"
+require "scripts.effects.music"
 
 trees = {} -- temp
 lanterns = {} -- temp
@@ -11,9 +12,7 @@ treeMap = {}
 nextTick = 1
 
 function love.load()
-    music = love.audio.newSource("assets/music/album1/PuerLavari.mp3", "stream")
-    music:setLooping(true)
-    love.audio.play(music)
+    loadMusic()
 
     birds = love.audio.newSource("assets/sfx/ambient/forest/birds.mp3", "stream")
     birds:setLooping(true)
@@ -123,7 +122,7 @@ function love.draw()
         end
     end
 
-    love.graphics.print("BrawlQuest")
+    love.graphics.print("BrawlQuest\nEnemies in aggro: "..enemiesInAggro)
 end
 
 function love.update(dt)
@@ -138,6 +137,7 @@ function love.update(dt)
     updateDummyEnemies(dt)
     updateCharacter(dt)
     updateBones(dt)
+    updateMusic(dt)
 end
 
 function tick()
@@ -178,3 +178,13 @@ function copy(obj, seen)
     for k, v in pairs(obj) do res[copy(k, s)] = copy(v, s) end
     return res
   end
+
+  function arrayContains (tab, val)
+    for index, value in ipairs(tab) do
+        if value == val then
+            return true
+        end
+    end
+
+    return false
+end
