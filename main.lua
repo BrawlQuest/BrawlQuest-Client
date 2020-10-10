@@ -31,6 +31,7 @@ function love.load()
     stepSound = love.audio.newSource("assets/sfx/step/grass.mp3", "static")
 
     playerImg = love.graphics.newImage("assets/player/base.png")
+    swordImg = love.graphics.newImage("assets/player/gear/weapons/short sword.png")
     groundImg = love.graphics.newImage("assets/world/grounds/grass.png")
     treeImg = love.graphics.newImage("assets/world/objects/tree.png")
     lanternImg = love.graphics.newImage("assets/world/objects/lantern.png")
@@ -119,6 +120,7 @@ function love.draw()
     drawDummyEnemies()
 
     love.graphics.draw(playerImg, player.dx, player.dy)
+    love.graphics.draw(swordImg, player.dx-32, player.dy-32)
     love.graphics.setColor(0,0,0)
   
     love.graphics.rectangle("line", player.dx, player.dy-8, 32,6)
