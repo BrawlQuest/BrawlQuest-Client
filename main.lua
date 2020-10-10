@@ -37,7 +37,7 @@ function love.load()
         love.graphics.newImage("assets/player/gear/armour/casual/green shirt.png"),
         love.graphics.newImage("assets/player/gear/armour/casual/red robe.png")
     }
-    groundImg = love.graphics.newImage("assets/world/grounds/grass.png")
+    groundImg = love.graphics.newImage("assets/world/grounds/grass/grass05.png")
     treeImg = love.graphics.newImage("assets/world/objects/tree.png")
     lanternImg = love.graphics.newImage("assets/world/objects/lantern.png")
     targetImg = love.graphics.newImage("assets/ui/target.png")
