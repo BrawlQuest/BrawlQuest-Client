@@ -31,7 +31,12 @@ function love.load()
     stepSound = love.audio.newSource("assets/sfx/step/grass.mp3", "static")
 
     playerImg = love.graphics.newImage("assets/player/base.png")
-    swordImg = love.graphics.newImage("assets/player/gear/weapons/legendary blade.png")
+    swordImg = love.graphics.newImage("assets/player/gear/weapons/rose axe.png")
+    armour = {
+        love.graphics.newImage("assets/player/gear/armour/misc/tinfoil crown.png"),
+        love.graphics.newImage("assets/player/gear/armour/casual/green shirt.png"),
+        love.graphics.newImage("assets/player/gear/armour/casual/red robe.png")
+    }
     groundImg = love.graphics.newImage("assets/world/grounds/grass.png")
     treeImg = love.graphics.newImage("assets/world/objects/tree.png")
     lanternImg = love.graphics.newImage("assets/world/objects/lantern.png")
@@ -70,7 +75,7 @@ function love.load()
         treeMap[trees[#trees].x..","..trees[#trees].y] = true
     end
 
-    for i = 1, 4 do
+    for i = 1, 8 do
         lanterns[i] = {
             x = love.math.random(0,love.graphics.getWidth()/32),
             y = love.math.random(0,love.graphics.getHeight()/32)
@@ -119,8 +124,13 @@ function love.draw()
 
     drawDummyEnemies()
     
+    love.graphics.setColor(1,1,1,1)
+
     love.graphics.draw(swordImg, player.dx-32, player.dy-32)
     love.graphics.draw(playerImg, player.dx, player.dy)
+    for i, v in ipairs(armour) do
+        love.graphics.draw(v, player.dx, player.dy)
+    end
 
     love.graphics.setColor(0,0,0)
   
