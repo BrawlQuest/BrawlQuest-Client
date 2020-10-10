@@ -53,6 +53,6 @@ end
 function drawBones()
     for i,v in ipairs(bones) do
         love.graphics.setColor(v.r,v.g,v.b,v.alpha)
-        love.graphics.rectangle("fill",v.x,v.y,2,2)
+        love.graphics.rectangle("fill",v.x,v.y,1,1)
     end
 end

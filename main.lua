@@ -3,12 +3,15 @@ require "scripts.dummy.enemies"
 require "scripts.effects.bones"
 require "scripts.effects.lighting"
 require "scripts.effects.music"
+require "scripts.effects.loot"
 Luven = require "scripts.libraries.luven.luven"
 
 trees = {} -- temp
 lanterns = {} -- temp
 blockMap = {}
 treeMap = {}
+
+lootTest = {}
 
 nextTick = 1
 
@@ -29,7 +32,7 @@ function love.load()
   --  love.audio.play(birds)
 
     stepSound = love.audio.newSource("assets/sfx/step/grass.mp3", "static")
-
+    xpSound = love.audio.newSource("assets/sfx/xp.mp3", "static")
     playerImg = love.graphics.newImage("assets/player/base.png")
     swordImg = love.graphics.newImage("assets/player/gear/weapons/tridant01.png")
     armour = {
@@ -41,6 +44,8 @@ function love.load()
     treeImg = love.graphics.newImage("assets/world/objects/tree.png")
     lanternImg = love.graphics.newImage("assets/world/objects/lantern.png")
     targetImg = love.graphics.newImage("assets/ui/target.png")
+    xpImg = love.graphics.newImage("assets/ui/xp.png")
+
     playerHitSfx = love.audio.newSource("assets/sfx/hit.wav", "static")
     enemyHitSfx = love.audio.newSource("assets/sfx/impact_b.wav", "static")
     critHitSfx = love.audio.newSource("assets/sfx/pit_trap_damage.wav", "static")
@@ -132,6 +137,8 @@ function love.draw()
         love.graphics.draw(v, player.dx, player.dy)
     end
 
+    drawLoot()
+
     love.graphics.setColor(0,0,0)
   
     love.graphics.rectangle("line", player.dx, player.dy-8, 32,6)
@@ -172,6 +179,7 @@ function love.update(dt)
     updateCharacter(dt)
     updateBones(dt)
     updateMusic(dt)
+    updateLoot(dt)
     Luven.update(dt)
 
     if not player.target.active then

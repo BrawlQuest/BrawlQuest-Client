@@ -267,9 +267,9 @@ function tickDummyEnemies()
                 end
             end
 
-           
             boneSpurt(v.dx+16,v.dy+16,4,48,1,1,1)
             if v.hp < 1 then
+                burstLoot(v.dx+16,v.dy+16,v.mhp)
                 v.dx = v.x*32 -- there may be displacement from a crit, so we set the draw pos to the regular pos
                 v.dy = v.y*32
                 love.audio.play(deathSounds[love.math.random(1,#deathSounds)])
