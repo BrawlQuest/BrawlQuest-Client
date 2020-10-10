@@ -31,7 +31,7 @@ function love.load()
     stepSound = love.audio.newSource("assets/sfx/step/grass.mp3", "static")
 
     playerImg = love.graphics.newImage("assets/player/base.png")
-    swordImg = love.graphics.newImage("assets/player/gear/weapons/rose axe.png")
+    swordImg = love.graphics.newImage("assets/player/gear/weapons/tridant01.png")
     armour = {
         love.graphics.newImage("assets/player/gear/armour/misc/tinfoil crown.png"),
         love.graphics.newImage("assets/player/gear/armour/casual/green shirt.png"),
@@ -126,7 +126,7 @@ function love.draw()
     
     love.graphics.setColor(1,1,1,1)
 
-    love.graphics.draw(swordImg, player.dx-32, player.dy-32)
+    love.graphics.draw(swordImg, player.dx-(swordImg:getWidth()-32), player.dy-(swordImg:getHeight()-32))
     love.graphics.draw(playerImg, player.dx, player.dy)
     for i, v in ipairs(armour) do
         love.graphics.draw(v, player.dx, player.dy)
