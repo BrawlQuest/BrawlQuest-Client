@@ -187,6 +187,29 @@ function moveEnemy(x,y,v)
 end
 
 function tickDummyEnemies()
+    -- spawn enemies
+
+    if love.math.random(1,10) == 1 then
+        enemies[#enemies+1] = {
+            x = love.math.random(10,15),
+            dx = 0, -- drawX / drawY, for smoothing purposes
+            dy = 0,
+            y = love.math.random(10,15),
+            hp = 24,
+            mhp = 24,
+            dhp = 24, -- drawn HP, for smoothing purposes
+            atk = 1,
+            aggro = true,
+            range = 2,
+            red = 0, -- when this is set the enemy lights up red to indicate being hit
+            atkAlpha = 0, -- the alpha for the line that is drawn when an attack hits
+            aggroAlpha = 0
+        }
+        enemies[#enemies].dx = enemies[#enemies].x*32
+        enemies[#enemies].dy = enemies[#enemies].y*32
+        blockMap[enemies[#enemies].x..","..enemies[#enemies].y] = true
+    end
+
     enemiesInAggro = #enemies
     for i, v in ipairs(enemies) do
         -- enemy logic
@@ -269,7 +292,10 @@ function tickDummyEnemies()
 
             boneSpurt(v.dx+16,v.dy+16,4,48,1,1,1)
             if v.hp < 1 then
-                burstLoot(v.dx+16,v.dy+16,v.mhp)
+                burstLoot(v.dx+16,v.dy+16,math.abs(v.mhp/3),"xp")
+                if love.math.random(1,4) == 1 then
+                    burstLoot(v.dx+16,v.dy+16,1,"sword")
+                end
                 v.dx = v.x*32 -- there may be displacement from a crit, so we set the draw pos to the regular pos
                 v.dy = v.y*32
                 love.audio.play(deathSounds[love.math.random(1,#deathSounds)])

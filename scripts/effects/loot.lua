@@ -4,24 +4,26 @@
 
 loot = {}
 
-function burstLoot(x, y, amount)
+function burstLoot(x, y, amount, type)
     for i=1,amount do
     loot[#loot+1] = {
         x = x,
         y = y,
         xv = love.math.random(-128,128),
         yv = love.math.random(-128,128),
-        phase = "initial"
+        phase = "initial",
+        type = type
     }
 end
 end
 
 function drawLoot()
-    love.graphics.setColor(0.4,0.4,1)
     for i,v in ipairs(loot) do
-        love.graphics.setColor(0,0,1)
-        love.graphics.rectangle("line", v.x, v.y, 3, 3)
-       -- love.graphics.draw(xpImg, v.x, v.y)
+        if v.type == "xp" then
+            love.graphics.draw(xpImg, v.x, v.y)
+        else
+            love.graphics.draw(swordImg, v.x, v.y)
+        end
     end
 end
 
@@ -52,7 +54,7 @@ function updateLoot(dt)
                 v.yv = 0
             end
 
-            if v.xv == 0 and v.yv == 0 then
+            if v.xv == 0 or v.yv == 0 then
                 v.phase = "player"
                 
             end
@@ -75,8 +77,15 @@ function updateLoot(dt)
             end
 
             if distanceToPoint(player.dx+16, player.dy+16, v.x, v.y) < 32 then
-              --  xpSound:stop()
-               -- xpSound:play()
+                if v.type == "xp" then
+                    xpSound:stop()
+                    xpSound:setPitch(1 + (player.xp/100))
+                    xpSound:play()
+                else
+                    lootSound:stop()
+                    lootSound:play()
+                end
+                player.xp = player.xp + 1
                 table.remove(loot, i)
             end
         end

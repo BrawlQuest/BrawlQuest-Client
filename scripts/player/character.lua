@@ -16,7 +16,8 @@ player = {
         x = 0,
         y = 0,
         active = false
-    }
+    },
+    xp = 0
 }
 
 function updateCharacter(dt)

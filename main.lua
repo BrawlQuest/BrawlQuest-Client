@@ -26,13 +26,14 @@ function love.load()
 
     loadMusic()
 
-    birds = love.audio.newSource("assets/sfx/ambient/forest/birds.mp3", "stream")
+    birds = love.audio.newSource("assets/sfx/ambient/forest/jungle.ogg", "stream")
     birds:setLooping(true)
-    birds:setVolume(0.1)
-  --  love.audio.play(birds)
+    love.audio.play(birds)
 
     stepSound = love.audio.newSource("assets/sfx/step/grass.mp3", "static")
-    xpSound = love.audio.newSource("assets/sfx/xp.mp3", "static")
+    xpSound = love.audio.newSource("assets/sfx/xp.wav", "static")
+    xpSound:setVolume(0.4)
+    lootSound = love.audio.newSource("assets/sfx/loot.mp3", "static")
     playerImg = love.graphics.newImage("assets/player/base.png")
     swordImg = love.graphics.newImage("assets/player/gear/weapons/tridant01.png")
     armour = {
