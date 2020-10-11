@@ -22,7 +22,7 @@ function drawLoot()
         if v.type == "xp" then
             love.graphics.draw(xpImg, v.x, v.y)
         else
-            love.graphics.draw(swordImg, v.x, v.y)
+            love.graphics.draw(lootImg, v.x, v.y)
         end
     end
 end

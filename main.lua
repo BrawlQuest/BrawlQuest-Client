@@ -34,12 +34,13 @@ function love.load()
     xpSound = love.audio.newSource("assets/sfx/xp.wav", "static")
     xpSound:setVolume(0.4)
     lootSound = love.audio.newSource("assets/sfx/loot.mp3", "static")
+    lootImg = love.graphics.newImage("assets/player/gear/weapons/axe02.png")
     playerImg = love.graphics.newImage("assets/player/base.png")
-    swordImg = love.graphics.newImage("assets/player/gear/weapons/tridant01.png")
+    swordImg = love.graphics.newImage("assets/player/gear/weapons/sword02.png")
     armour = {
-        love.graphics.newImage("assets/player/gear/armour/misc/tinfoil crown.png"),
-        love.graphics.newImage("assets/player/gear/armour/casual/green shirt.png"),
-        love.graphics.newImage("assets/player/gear/armour/casual/red robe.png")
+        love.graphics.newImage("assets/player/gear/armour/legend/head.png"),
+        love.graphics.newImage("assets/player/gear/armour/guardian/chest.png"),
+        love.graphics.newImage("assets/player/gear/armour/iron/legs.png")
     }
     groundImg = love.graphics.newImage("assets/world/grounds/grass/grass05.png")
     treeImg = love.graphics.newImage("assets/world/objects/tree.png")
