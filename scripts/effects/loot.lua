@@ -9,8 +9,8 @@ function burstLoot(x, y, amount, type)
     loot[#loot+1] = {
         x = x,
         y = y,
-        xv = love.math.random(-128,128),
-        yv = love.math.random(-128,128),
+        xv = love.math.random(-64,64),
+        yv = love.math.random(-64,64),
         phase = "initial",
         type = type
     }
@@ -62,20 +62,21 @@ function updateLoot(dt)
           
             if math.abs(v.yv) < 64 and difference(player.dx+16, v.x) > 32 then
                 if player.dx+16 > v.x then
-                    v.xv = v.xv + 64*dt
+                    v.xv = v.xv + 128*dt
                 else
-                    v.xv = v.xv - 64*dt
+                    v.xv = v.xv - 128*dt
                 end
             end
 
             if math.abs(v.yv) < 64 and difference(player.dy+16, v.y) > 32 then
                 if player.dy+16 > v.y then
-                    v.yv = v.yv + 64*dt
+                    v.yv = v.yv + 128*dt
                 else
-                    v.yv = v.yv - 64*dt
+                    v.yv = v.yv - 128*dt
                 end
             end
 
+            --Accepts XP
             if distanceToPoint(player.dx+16, player.dy+16, v.x, v.y) < 32 then
                 if v.type == "xp" then
                     xpSound:stop()
