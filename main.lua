@@ -14,6 +14,7 @@ lanterns = {} -- temp
 blockMap = {}
 treeMap = {}
 players = {} -- other players
+playersDrawable = {}
 
 lootTest = {}
 
@@ -146,14 +147,14 @@ function love.draw()
         love.graphics.draw(v, player.dx, player.dy)
     end
 
-    for i,v in ipairs(players) do
-        if v.Name ~= username then
-            love.graphics.draw(playerImg, v.X*32, v.Y*32)
+    for i,v in ipairs(playersDrawable) do
+      --  if v.Name ~= username then
+            love.graphics.draw(playerImg, v.X, v.Y)
             love.graphics.setColor(0,0,0)
-            love.graphics.rectangle("fill", v.X*32, v.Y*32-12, 32, 12)
+            love.graphics.rectangle("fill", v.X, v.Y-12, 32, 12)
             love.graphics.setColor(1,1,1)
-            love.graphics.print(v.Name, v.X*32, v.Y*32-12)
-        end
+            love.graphics.print(v.Name, v.X, v.Y-12)
+      --  end
     end
 
     drawLoot()
@@ -214,6 +215,30 @@ function love.update(dt)
             timeOfDay = 0 
         end
     end
+
+    for i, v in pairs(players) do
+        if playersDrawable[i] == nil then
+            playersDrawable[i] = {
+                ['Name'] = v.Name,
+                ['X'] = v.X*32,
+                ['Y'] = v.X*32
+            }
+        end
+
+        if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X*32, v.Y*32) > 3 then
+            if playersDrawable[i].X > v.X*32 then
+                playersDrawable[i].X =  playersDrawable[i].X  - 64*dt
+            else
+                playersDrawable[i].X = playersDrawable[i].X + 64*dt
+            end
+
+            if playersDrawable[i].Y > v.Y*32 then
+                playersDrawable[i].Y = playersDrawable[i].Y - 64*dt
+            else
+                playersDrawable[i].Y = playersDrawable[i].Y + 64*dt
+            end
+        end
+    end
 end
 
 function tick()
@@ -251,8 +276,7 @@ end
 
 function sendPlayerToServer() 
     if not username then
-        
-        username = "Pebsie"
+        username = "Danjoe"
         api.post("/players", json:encode({
           ["Name"] = username,
           ["X"] = player.x,
