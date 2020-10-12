@@ -4,12 +4,16 @@ require "scripts.effects.bones"
 require "scripts.effects.lighting"
 require "scripts.effects.music"
 require "scripts.effects.loot"
+require "scripts.libraries.api"
 Luven = require "scripts.libraries.luven.luven"
+local json = require("scripts.libraries.json")
+local http = require("socket.http")
 
 trees = {} -- temp
 lanterns = {} -- temp
 blockMap = {}
 treeMap = {}
+players = {} -- other players
 
 lootTest = {}
 
@@ -89,6 +93,9 @@ function love.load()
         }
         Luven.addNormalLight(16+lanterns[i].x*32,16+lanterns[i].y*32,{1,0.5,0}, 1)
     end
+
+    font = love.graphics.newFont(10)
+    love.graphics.setFont(font)
 end
 
 function love.draw()
@@ -137,6 +144,16 @@ function love.draw()
     love.graphics.draw(playerImg, player.dx, player.dy)
     for i, v in ipairs(armour) do
         love.graphics.draw(v, player.dx, player.dy)
+    end
+
+    for i,v in ipairs(players) do
+        if v.Name ~= username then
+            love.graphics.draw(playerImg, v.X*32, v.Y*32)
+            love.graphics.setColor(0,0,0)
+            love.graphics.rectangle("fill", v.X*32, v.Y*32-12, 32, 12)
+            love.graphics.setColor(1,1,1)
+            love.graphics.print(v.Name, v.X*32, v.Y*32-12)
+        end
     end
 
     drawLoot()
@@ -214,6 +231,10 @@ function tick()
             player.dy = player.dy + 16
         end
    end
+
+   -- get data
+   players = api.get("/players")
+   sendPlayerToServer()
 end
 
 function distanceToPoint(x,y,x2,y2)
@@ -226,6 +247,24 @@ end
 
 function love.keypressed(key)
    checkTargeting()
+end
+
+function sendPlayerToServer() 
+    if not username then
+        
+        username = "Pebsie"
+        api.post("/players", json:encode({
+          ["Name"] = username,
+          ["X"] = player.x,
+          ["Y"] = player.y  
+        }))
+    else
+        api.post("/players/"..username, json:encode({
+            ["Name"] = username,
+            ["X"] = player.x,
+            ["Y"] = player.y  
+          }))
+    end
 end
 
 function copy(obj, seen)
