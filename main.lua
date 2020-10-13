@@ -8,21 +8,33 @@ require "scripts.effects.music"
 require "scripts.effects.loot"
 require "scripts.libraries.api"
 require "scripts.libraries.utils"
+local moonshine = require 'scripts.libraries.moonshine'
 Luven = require "scripts.libraries.luven.luven"
 local json = require("scripts.libraries.json")
 local http = require("socket.http")
+local wapi = require "scripts.libraries.wapi.webapi"
 
 trees = {} -- temp
 blockMap = {}
 treeMap = {}
 players = {} -- other players
 playersDrawable = {}
-
 lootTest = {}
-
 nextTick = 1
-
+timeOutTick = 3
 timeOfDay = 0
+username = "Pebsie"
+readyForUpdate = true
+
+updateRequest = wapi.request({
+    method = "GET",
+    url = api.url.."/players"
+  }, function (body, headers, code)
+    players = json:decode(body)
+    sendPlayerToServer()
+  end)
+
+sendUpdate = false
 
 function love.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
@@ -43,6 +55,7 @@ function love.load()
     initDummyData()
 
     love.graphics.setBackgroundColor(0,0.3,0)
+    
 end
 
 function love.draw()
@@ -61,8 +74,8 @@ function love.draw()
     Luven.drawEnd()
 
     love.graphics.print("BrawlQuest\nEnemies in aggro: "..enemiesInAggro)
-
     Luven.camera:draw()
+
 end
 
 function love.update(dt)
@@ -74,6 +87,7 @@ function love.update(dt)
 
     oldLightAlpha = oldLightAlpha - 2*dt -- update light, essentially
 
+    wapi.update()
     updateDummyEnemies(dt)
     updateCharacter(dt)
     updateBones(dt)
@@ -118,6 +132,12 @@ function love.update(dt)
             end
         end
     end
+
+    local info = love.thread.getChannel( 'players' ):pop()
+    if info then
+        print(info)
+        players = json:decode(info)
+    end
 end
 
 function tick()
@@ -135,10 +155,52 @@ function tick()
             player.dy = player.dy + 16
         end
    end
+   
+   getPlayerData('/players/'..username, json:encode({
+    ["Name"] = username,
+    ["X"] = player.x,
+    ["Y"] = player.y  
+  }))
 
    -- get data
-   players = api.get("/players")
-   sendPlayerToServer()
+--    print(api.url.."/players")
+  
+    -- request = wapi.request({
+    --     method = "GET",
+    --     url = api.url.."/players"
+    --   }, function (body, headers, code)
+    --     players = json:decode(body)
+    --     if readyForUpdate then sendPlayerToServer() end
+    --   end)
+    -- reqbody = json:encode({
+    --     ["Name"] = username,
+    --     ["X"] = player.x,
+    --     ["Y"] = player.y  
+    --   })
+    -- headers = json:encode({
+    --     ["Content-Type"] = "application/json",
+    --     ["Content-Length"] = string.len(reqbody)
+    -- })
+    -- -- print("Body: "..reqbody..", Headers: "..headers)
+    -- --   updateRequest = wapi.request({
+    -- --     payload = reqbody,
+    -- --     headers = headers,
+    -- --     method = "POST",
+    -- --     url = api.url.."/players/"..username,
+    -- --   }, function (body, headers, code)
+    -- --     players = json:decode(body)
+    -- --   end)
+
+--     players = api.post("/players/"..username, json:encode({
+--         ["Name"] = username,
+--         ["X"] = player.x,
+--         ["Y"] = player.y  
+--       }))
+--     timeOutTick = timeOutTick - 1
+--     if timeOutTick == 0 then
+--    --     readyForUpdate = true
+--         timeOutTick = 3
+--     end
 end
 
 
@@ -153,18 +215,23 @@ end
 
 
 function sendPlayerToServer() 
-    if not username then
-        username = "Pebsie"
-        api.post("/players", json:encode({
-          ["Name"] = username,
-          ["X"] = player.x,
-          ["Y"] = player.y  
-        }))
-    else
-        api.post("/players/"..username, json:encode({
-            ["Name"] = username,
-            ["X"] = player.x,
-            ["Y"] = player.y  
-          }))
-    end
+    readyForUpdate = false -- prevent another update from being sent until this one is finished
+    username = "Pebsie"
+    print("Sending player to server...")
+   
+
+  
+    -- if updateRequest == nil then
+    --       request = wapi.request({
+    --         payload = reqbody,
+    --           headers = headers,
+    --         method = "POST",
+    --         url = api.url.."/players"
+    --       }, function (body, headers, code)
+    --         readyForUpdate = true
+    --       end)
+    -- else
+        
+        
+   -- end
 end

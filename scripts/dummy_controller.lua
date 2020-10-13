@@ -88,6 +88,7 @@ function drawDummy()
     love.graphics.setColor(1,1,1,1)
 
     love.graphics.draw(swordImg, player.dx-(swordImg:getWidth()-32), player.dy-(swordImg:getHeight()-32))
+    
     love.graphics.draw(playerImg, player.dx, player.dy)
     for i, v in ipairs(armour) do
         love.graphics.draw(v, player.dx, player.dy)

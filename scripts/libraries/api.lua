@@ -13,53 +13,29 @@ api = {
 
        -- print("Calling "..api.url..action)
         b, c, h = http.request(api.url..action)
-        tb = b
-        b = json:decode(b)
-
-        if b then
-          return b
-        else
-          love.window.showMessageBox("Error", "An error occurred with this statement: " .. api.url .. action .. "\nThe server returned: " + tostring(tb))
-        end
+        return json:decode(b)
     end,
     post = function (action, body)
        -- print("Calling "..api.url..action)
         b, c, h = http.request(api.url..action, body)
+        return json:decode(b)
     end
   
 }
 
-script = {
-    code = [[]],
-    time = 1,
-    loaded = false,
-    paused = false
-}
+local thread
 
-function loadScript(url)
-  if url == "" then url = "example.lua" end
-  local s = love.filesystem.read( url )
-    if not s then
-      love.window.showMessageBox("Error", "Unable to find " .. url)
-    else
-      s = [[
-          local http = require("socket.http")
-          local json = require("libraries.json")
+function getPlayerData(request, body)
+  
+  thread = love.thread.newThread( [[
+    local http = require("socket.http")
+    local json = require("scripts.libraries.json")
+  
+    action, body = ...
+    print("Calling http://167.172.62.97:8080"..action.." with "..body)
+    b, c, h = http.request("http://167.172.62.97:8080"..action, body)
+    love.thread.getChannel( 'players' ):push( b )
+  ]] )
 
-          api = {
-              url = "http://freshplay.co.uk/b/api.php",
-              get = function (action)
-
-                  print("Calling "..api.url..action)
-                  b, c, h = http.request(api.url..action)
-                  return json:decode(b)
-
-              end
-          }
-      ]]..s
-      script.code = love.thread.newThread( s )
-      script.loaded = true
-      print("Loaded "..tostring(script.code))
-    end
+  thread:start(request,body)
 end
-
