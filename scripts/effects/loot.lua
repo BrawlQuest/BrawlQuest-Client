@@ -6,15 +6,21 @@ loot = {}
 
 function burstLoot(x, y, amount, type)
     for i=1,amount do
-    loot[#loot+1] = {
-        x = x,
-        y = y,
-        xv = love.math.random(-64,64),
-        yv = love.math.random(-64,64),
-        phase = "initial",
-        type = type
-    }
-end
+        loot[#loot+1] = {
+            x = x,
+            y = y,
+            phase = "initial",
+            type = type
+        }
+
+        if type == "sword" then
+            loot[#loot].xv = love.math.random(-128,128)
+            loot[#loot].yv = love.math.random(-128,128)
+        else
+            loot[#loot].xv = love.math.random(-64,64)
+            loot[#loot].yv = love.math.random(-64,64)
+        end
+    end
 end
 
 function drawLoot()
@@ -31,7 +37,12 @@ function updateLoot(dt)
     for i,v in ipairs(loot) do
         v.x = v.x + v.xv*dt
         v.y = v.y + v.yv*dt
-    
+           if v.x > player.dx+16 then
+                v.x = v.x - 8*dt
+            elseif v.x < player.dx+16 then
+                v.x = v.x + 8*dt
+            end
+
         if v.phase == "initial" then
           
             if math.abs(v.xv) > 16 then
@@ -58,9 +69,16 @@ function updateLoot(dt)
                 v.phase = "player"
                 
             end
-        else
-          
-            if math.abs(v.yv) < 64 and difference(player.dx+16, v.x) > 32 then
+        elseif v.type == "xp" then
+            
+         
+            if v.y > player.dy+16 then
+                v.y = v.y - 8*dt
+            elseif v.y < player.dy+16 then
+                v.y = v.y + 8*dt
+            end
+
+            if  difference(player.dx+16, v.x) > 32 then
                 if player.dx+16 > v.x then
                     v.xv = v.xv + 128*dt
                 else
@@ -68,7 +86,7 @@ function updateLoot(dt)
                 end
             end
 
-            if math.abs(v.yv) < 64 and difference(player.dy+16, v.y) > 32 then
+            if difference(player.dy+16, v.y) > 32 then
                 if player.dy+16 > v.y then
                     v.yv = v.yv + 128*dt
                 else
@@ -76,19 +94,21 @@ function updateLoot(dt)
                 end
             end
 
-            --Accepts XP
-            if distanceToPoint(player.dx+16, player.dy+16, v.x, v.y) < 32 then
-                if v.type == "xp" then
-                    xpSound:stop()
-                    xpSound:setPitch(1 + (player.xp/100))
-                    xpSound:play()
-                else
-                    lootSound:stop()
-                    lootSound:play()
-                end
-                player.xp = player.xp + 1
-                table.remove(loot, i)
+           
+        end
+
+         --Accepts XP
+         if distanceToPoint(player.dx+16, player.dy+16, v.x, v.y) < 32 then
+            if v.type == "xp" then
+                xpSound:stop()
+                xpSound:setPitch(1 + (player.xp/100))
+                xpSound:play()
+            else
+                lootSound:stop()
+                lootSound:play()
             end
+            player.xp = player.xp + 1
+            table.remove(loot, i)
         end
     end
 end

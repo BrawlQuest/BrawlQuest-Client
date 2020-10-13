@@ -72,7 +72,7 @@ function initLighting()
     Luven.init()
     Luven.setAmbientLightColor({ 0.1, 0.1, 0.1 })
     Luven.camera:init(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
-    Luven.camera:setScale(2)
+    Luven.camera:setScale(math.abs(love.graphics.getWidth()/32)/32)
 end
 
 function reinitLighting(w,h)

@@ -293,6 +293,8 @@ function tickDummyEnemies()
             boneSpurt(v.dx+16,v.dy+16,4,48,1,1,1)
             if v.hp < 1 then
                 burstLoot(v.dx+16,v.dy+16,math.abs(v.mhp/3),"xp")
+                burstLoot(v.dx+16,v.dy+16,1,"sword")
+             
                 if love.math.random(1,4) == 1 then
                     burstLoot(v.dx+16,v.dy+16,1,"sword")
                 end

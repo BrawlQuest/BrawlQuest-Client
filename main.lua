@@ -73,7 +73,7 @@ function love.update(dt)
     nextTick = nextTick - 1*dt
     if nextTick < 0 then
         tick()
-        nextTick = 0.5
+        nextTick = 1
     end
 
     oldLightAlpha = oldLightAlpha - 2*dt -- update light, essentially
