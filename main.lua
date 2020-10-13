@@ -73,7 +73,7 @@ function love.update(dt)
     nextTick = nextTick - 1*dt
     if nextTick < 0 then
         tick()
-        nextTick = 1
+        nextTick = 0.5
     end
 
     oldLightAlpha = oldLightAlpha - 2*dt -- update light, essentially
@@ -109,7 +109,7 @@ function love.update(dt)
             }
         end
 
-        if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X*32, v.Y*32) > 1 then
+        if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X*32, v.Y*32) > 3 then
             if playersDrawable[i].X-4 > v.X*32 then
                 playersDrawable[i].X =  playersDrawable[i].X  - 64*dt
             elseif playersDrawable[i].X+4 < v.X*32 then
