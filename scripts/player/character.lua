@@ -64,15 +64,15 @@ function updateCharacter(dt)
         end
 
         if player.mount.x > player.dx+8 then
-            player.mount.x = player.mount.x - 128*dt
+            player.mount.x = player.mount.x - 150*dt
         elseif player.mount.x < player.dx-8 then
-            player.mount.x = player.mount.x + 128*dt
+            player.mount.x = player.mount.x + 150*dt
         end
 
         if player.mount.y > player.dy+8 then
-            player.mount.y = player.mount.y - 128*dt
+            player.mount.y = player.mount.y - 150*dt
         elseif player.mount.y < player.dy-8 then
-            player.mount.y = player.mount.y + 128*dt
+            player.mount.y = player.mount.y + 150*dt
         end
 
         if distanceToPoint(player.mount.x, player.mount.y, player.dx, player.dy) < 16 then
