@@ -189,26 +189,26 @@ end
 function tickDummyEnemies()
     -- spawn enemies
 
-    if love.math.random(1,10) == 1 then
-        enemies[#enemies+1] = {
-            x = love.math.random(10,15),
-            dx = 0, -- drawX / drawY, for smoothing purposes
-            dy = 0,
-            y = love.math.random(10,15),
-            hp = 24,
-            mhp = 24,
-            dhp = 24, -- drawn HP, for smoothing purposes
-            atk = 1,
-            aggro = true,
-            range = 2,
-            red = 0, -- when this is set the enemy lights up red to indicate being hit
-            atkAlpha = 0, -- the alpha for the line that is drawn when an attack hits
-            aggroAlpha = 0
-        }
-        enemies[#enemies].dx = enemies[#enemies].x*32
-        enemies[#enemies].dy = enemies[#enemies].y*32
-        blockMap[enemies[#enemies].x..","..enemies[#enemies].y] = true
-    end
+    -- if love.math.random(1,10) == 1 then
+    --     enemies[#enemies+1] = {
+    --         x = love.math.random(10,15),
+    --         dx = 0, -- drawX / drawY, for smoothing purposes
+    --         dy = 0,
+    --         y = love.math.random(10,15),
+    --         hp = 24,
+    --         mhp = 24,
+    --         dhp = 24, -- drawn HP, for smoothing purposes
+    --         atk = 1,
+    --         aggro = true,
+    --         range = 2,
+    --         red = 0, -- when this is set the enemy lights up red to indicate being hit
+    --         atkAlpha = 0, -- the alpha for the line that is drawn when an attack hits
+    --         aggroAlpha = 0
+    --     }
+    --     enemies[#enemies].dx = enemies[#enemies].x*32
+    --     enemies[#enemies].dy = enemies[#enemies].y*32
+    --     blockMap[enemies[#enemies].x..","..enemies[#enemies].y] = true
+    -- end
 
     enemiesInAggro = #enemies
     for i, v in ipairs(enemies) do
@@ -235,6 +235,9 @@ function tickDummyEnemies()
                 attackSound:setPitch(love.math.random(50,100)/100)
                 love.audio.play(attackSound)
                 player.hp = player.hp - v.atk
+                if player.isMounted or player.isMounting then
+                    beginMounting()
+                end
                 v.atkAlpha = 1
                 if (player.target.x ~= v.x or player.target.y ~= v.y) and v.range == 10000 then
                     if v.x > player.x then

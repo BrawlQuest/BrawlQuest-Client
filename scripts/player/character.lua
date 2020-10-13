@@ -17,14 +17,69 @@ player = {
         y = 0,
         active = false
     },
-    xp = 0
+    xp = 0,
+    isMounted = false,
+    isMounting = false,
+    mount = {
+        x = -100,
+        y = -100,
+        stepSndPlay = 0.3,
+    }
 }
+
+
+function drawPlayer()
+    love.graphics.draw(swordImg, player.dx-(swordImg:getWidth()-32), player.dy-(swordImg:getHeight()-32))
+    
+    if player.isMounted then
+        love.graphics.draw(horseImg, player.dx+6, player.dy+9)
+    end
+    love.graphics.draw(playerImg, player.dx, player.dy)
+    for i, v in ipairs(armour) do
+        love.graphics.draw(v, player.dx, player.dy)
+    end
+    if player.isMounted then
+        love.graphics.draw(horseForeImg, player.dx+6, player.dy+9)
+    end
+    if player.isMounting then
+        love.graphics.draw(horseImg, player.mount.x, player.mount.y)
+    end
+end
 
 function updateCharacter(dt)
    checkTargeting()
    movePlayer(dt)
     if player.dhp > player.hp then
         player.dhp = player.dhp - 32*dt
+    end
+
+    if player.isMounting then
+        player.mount.stepSndPlay = player.mount.stepSndPlay - 1*dt
+        if player.mount.stepSndPlay < 0 then
+            stepSound:stop()
+            stepSound:setPitch(love.math.random(50,200)/100)
+            stepSound:setVolume(0.4)
+            stepSound:play()
+            player.mount.stepSndPlay = 0.2
+        end
+
+        if player.mount.x > player.dx+8 then
+            player.mount.x = player.mount.x - 128*dt
+        elseif player.mount.x < player.dx-8 then
+            player.mount.x = player.mount.x + 128*dt
+        end
+
+        if player.mount.y > player.dy+8 then
+            player.mount.y = player.mount.y - 128*dt
+        elseif player.mount.y < player.dy-8 then
+            player.mount.y = player.mount.y + 128*dt
+        end
+
+        if distanceToPoint(player.mount.x, player.mount.y, player.dx, player.dy) < 16 then
+            love.audio.play(horseMountSfx[love.math.random(1,#horseMountSfx)])
+            player.isMounted = true
+            player.isMounting = false
+        end
     end
 end
 
@@ -40,22 +95,26 @@ function movePlayer(dt)
         if love.keyboard.isDown("w") then
             player.y = player.y - 1
             calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
+            stepSound:stop()
             stepSound:setPitch(love.math.random(90,200)/100)
             love.audio.play(stepSound)
         elseif love.keyboard.isDown("s") then
             player.y = player.y + 1
             calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
+            stepSound:stop()
             stepSound:setPitch(love.math.random(90,200)/100)
             love.audio.play(stepSound)
         end
         if love.keyboard.isDown("a") then
             player.x = player.x - 1
             calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
+            stepSound:stop()
             stepSound:setPitch(love.math.random(90,200)/100)
             love.audio.play(stepSound)
         elseif love.keyboard.isDown("d") then
             player.x = player.x + 1
             calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
+            stepSound:stop()
             stepSound:setPitch(love.math.random(90,200)/100)
             love.audio.play(stepSound)
         end
@@ -66,11 +125,17 @@ function movePlayer(dt)
             blockMap[player.x..","..player.y] = true
         end
     else -- movement smoothing
+        local speed = 64
+             
+        if player.isMounted then
+            speed = 128
+        end
         if difference(player.x*32, player.dx) > 1 then
+      
             if player.dx > player.x*32 then
-                player.dx = player.dx - 64*dt
+                player.dx = player.dx - speed*dt
             else
-                player.dx = player.dx + 64*dt
+                player.dx = player.dx + speed*dt
             end
         else
             player.dx = player.x*32
@@ -78,9 +143,9 @@ function movePlayer(dt)
 
         if difference(player.y*32, player.dy) > 1 then
             if player.dy > player.y*32 then
-                player.dy = player.dy - 64*dt
+                player.dy = player.dy - speed*dt
             else
-                player.dy = player.dy + 64*dt
+                player.dy = player.dy + speed*dt
             end
         else
             player.dy = player.y*32
@@ -93,6 +158,7 @@ function movePlayer(dt)
         end
     end
 end
+
 
 function checkTargeting() -- Check which keys are down and place the player target accordingly
     player.target.x = player.x
@@ -113,5 +179,30 @@ function checkTargeting() -- Check which keys are down and place the player targ
     elseif love.keyboard.isDown("right") then
         player.target.active = true
         player.target.x = player.x + 1
+    end
+
+    if player.target.active and player.isMounted then
+        beginMounting()
+    end
+end
+
+function beginMounting()
+    if player.isMounted or player.isMounting then
+        love.audio.play(horseMountSfx[love.math.random(1,#horseMountSfx)])
+        player.isMounted = false
+        player.isMounting = false
+    else
+        love.audio.play(whistleSfx[love.math.random(1,#whistleSfx)])
+        player.isMounting = true
+        if love.math.random(1,2) == 1 then
+            player.mount.x = player.dx+love.graphics.getWidth()/2
+        else
+            player.mount.x = player.dx-love.graphics.getWidth()/2
+        end
+        if love.math.random(1,2) == 1 then
+            player.mount.y = player.dy+love.graphics.getHeight()/2
+        else
+            player.mount.y = player.dy-love.graphics.getHeight()/2
+        end
     end
 end

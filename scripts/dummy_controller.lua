@@ -4,6 +4,8 @@ function initDummyData()
     lootSound = love.audio.newSource("assets/sfx/loot.mp3", "static")
     lootImg = love.graphics.newImage("assets/player/gear/weapons/axe02.png")
     playerImg = love.graphics.newImage("assets/player/base.png")
+    horseImg = love.graphics.newImage("assets/player/mounts/horse/back.png")
+    horseForeImg = love.graphics.newImage("assets/player/mounts/horse/fore.png")
     swordImg = love.graphics.newImage("assets/player/gear/weapons/sword02.png")
     armour = {
         love.graphics.newImage("assets/player/gear/armour/legend/head.png"),
@@ -16,6 +18,17 @@ function initDummyData()
     xpImg = love.graphics.newImage("assets/ui/xp.png")
 
     enemyDieSfx = love.audio.newSource("assets/sfx/skeleton.wav", "static")
+    whistleSfx = {
+        love.audio.newSource("assets/sfx/player/actions/whistle/1.ogg", "static"),
+        love.audio.newSource("assets/sfx/player/actions/whistle/2.ogg", "static"),
+        love.audio.newSource("assets/sfx/player/actions/whistle/3.ogg", "static"),
+        love.audio.newSource("assets/sfx/player/actions/whistle/4.ogg", "static")
+    }
+    horseMountSfx = {
+        love.audio.newSource("assets/sfx/monsters/horse/mount/1.mp3", "static"),
+        love.audio.newSource("assets/sfx/monsters/horse/mount/2.mp3", "static")
+    }
+
     arrowImg = {}
     arrowImg[-1]  = {
             [0]=love.graphics.newImage("assets/ui/target/W_Arrow_1.png"),
@@ -87,12 +100,7 @@ function drawDummy()
     
     love.graphics.setColor(1,1,1,1)
 
-    love.graphics.draw(swordImg, player.dx-(swordImg:getWidth()-32), player.dy-(swordImg:getHeight()-32))
-    
-    love.graphics.draw(playerImg, player.dx, player.dy)
-    for i, v in ipairs(armour) do
-        love.graphics.draw(v, player.dx, player.dy)
-    end
+   
 
     for i,v in ipairs(playersDrawable) do
         if v.Name ~= username then

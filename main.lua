@@ -61,7 +61,9 @@ function love.draw()
             love.graphics.draw(arrowImg[diffX][diffY], player.dx-32, player.dy-32)
         end
     end
- 
+    
+    drawPlayer()
+
     Luven.drawEnd()
 
     love.graphics.print("BrawlQuest\nEnemies in aggro: "..enemiesInAggro)
@@ -197,6 +199,9 @@ end
 
 
 function love.keypressed(key)
+    if key == "m" then
+       beginMounting()
+    end
    checkTargeting()
 end
 
