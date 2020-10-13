@@ -8,11 +8,9 @@ require "scripts.effects.music"
 require "scripts.effects.loot"
 require "scripts.libraries.api"
 require "scripts.libraries.utils"
-local moonshine = require 'scripts.libraries.moonshine'
 Luven = require "scripts.libraries.luven.luven"
 local json = require("scripts.libraries.json")
 local http = require("socket.http")
-local wapi = require "scripts.libraries.wapi.webapi"
 
 trees = {} -- temp
 blockMap = {}
@@ -26,13 +24,6 @@ timeOfDay = 0
 username = "Pebsie"
 readyForUpdate = true
 
-updateRequest = wapi.request({
-    method = "GET",
-    url = api.url.."/players"
-  }, function (body, headers, code)
-    players = json:decode(body)
-    sendPlayerToServer()
-  end)
 
 sendUpdate = false
 
@@ -87,7 +78,7 @@ function love.update(dt)
 
     oldLightAlpha = oldLightAlpha - 2*dt -- update light, essentially
 
-    wapi.update()
+   
     updateDummyEnemies(dt)
     updateCharacter(dt)
     updateBones(dt)
@@ -118,16 +109,16 @@ function love.update(dt)
             }
         end
 
-        if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X*32, v.Y*32) > 3 then
-            if playersDrawable[i].X > v.X*32 then
+        if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X*32, v.Y*32) > 1 then
+            if playersDrawable[i].X-4 > v.X*32 then
                 playersDrawable[i].X =  playersDrawable[i].X  - 64*dt
-            else
+            elseif playersDrawable[i].X+4 < v.X*32 then
                 playersDrawable[i].X = playersDrawable[i].X + 64*dt
             end
 
-            if playersDrawable[i].Y > v.Y*32 then
+            if playersDrawable[i].Y-4 > v.Y*32 then
                 playersDrawable[i].Y = playersDrawable[i].Y - 64*dt
-            else
+            elseif playersDrawable[i].Y+4 < v.Y*32 then
                 playersDrawable[i].Y = playersDrawable[i].Y + 64*dt
             end
         end
