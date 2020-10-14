@@ -3,14 +3,15 @@ function initDummyData()
 
     lootSound = love.audio.newSource("assets/sfx/loot.mp3", "static")
     lootImg = love.graphics.newImage("assets/player/gearsets/a4/special.png")
-    playerImg = love.graphics.newImage("assets/player/base 3.png")
+    playerImg = love.graphics.newImage("assets/player/base/base 4.png")
     horseImg = love.graphics.newImage("assets/player/mounts/horse/back.png")
     horseForeImg = love.graphics.newImage("assets/player/mounts/horse/fore.png")
-    swordImg = love.graphics.newImage("assets/player/gearsets/a1/special.png")
+    swordImg = love.graphics.newImage("assets/player/gearsets/a4/dagger.png")
     armour = {
-        love.graphics.newImage("assets/player/gearsets/a1/head.png"),
-        love.graphics.newImage("assets/player/gearsets/a2/chest.png"),
-        love.graphics.newImage("assets/player/gearsets/a4/legs.png")
+        love.graphics.newImage("assets/player/gearsets/a4/head.png"),
+        love.graphics.newImage("assets/player/gearsets/a4/chest.png"),
+        love.graphics.newImage("assets/player/gearsets/a4/legs.png"),
+        love.graphics.newImage("assets/player/gearsets/custom/cloak 3.png")
     }
     groundImg = love.graphics.newImage("assets/world/grounds/grass/grass05.png")
     treeImg = love.graphics.newImage("assets/world/objects/tree.png")
