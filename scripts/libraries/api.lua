@@ -26,7 +26,6 @@ api = {
 local thread
 
 function getPlayerData(request, body)
-  
   thread = love.thread.newThread( [[
     local http = require("socket.http")
     local json = require("scripts.libraries.json")
