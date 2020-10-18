@@ -86,8 +86,8 @@ end
 function updateLoginBackground(dt) 
     for i,v in pairs(clouds) do
         v.x = v.x - v.speed*dt
-        if v.x > love.graphics.getWidth()+cloudImg:getWidth() then
-            v.x = -cloudImg:getWidth()
+        if v.x < -cloudImg:getWidth() then
+            v.x = love.graphics.getWidth()+cloudImg:getWidth()
         end
     end
     for i,v in pairs(loginTrees) do

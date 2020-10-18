@@ -144,7 +144,7 @@ function love.update(dt)
 
         local info = love.thread.getChannel( 'players' ):pop()
         if info then
-            print(info)
+            love.system.setClipboardText(info)
             players = json:decode(info)
         end
     end
@@ -164,12 +164,16 @@ function tick()
         elseif player.dy < player.target.y*32 then
             player.dy = player.dy + 16
         end
-   end
+    else
+        player.target.x = player.x
+        player.target.y = player.y
+    end
    
    getPlayerData('/players/'..username, json:encode({
-    ["Name"] = username,
     ["X"] = player.x,
-    ["Y"] = player.y  
+    ["Y"] = player.y ,
+    ["AX"] = player.target.x,
+    ["AY"] = player.target.y,
   }))
 
 end
