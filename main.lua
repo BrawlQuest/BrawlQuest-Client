@@ -9,6 +9,7 @@ require "scripts.effects.loot"
 require "scripts.libraries.api"
 require "scripts.libraries.utils"
 require "scripts.phases.login.login"
+require "scripts.player.other_players"
 Luven = require "scripts.libraries.luven.luven"
 local json = require("scripts.libraries.json")
 local http = require("socket.http")
@@ -116,33 +117,10 @@ function love.update(dt)
             end
         end
 
-        for i, v in pairs(players) do
-            if playersDrawable[i] == nil then
-                playersDrawable[i] = {
-                    ['Name'] = v.Name,
-                    ['X'] = v.X*32,
-                    ['Y'] = v.X*32
-                }
-            end
-
-            if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X*32, v.Y*32) > 3 then
-                if playersDrawable[i].X-4 > v.X*32 then
-                    playersDrawable[i].X =  playersDrawable[i].X  - 64*dt
-                elseif playersDrawable[i].X+4 < v.X*32 then
-                    playersDrawable[i].X = playersDrawable[i].X + 64*dt
-                end
-
-                if playersDrawable[i].Y-4 > v.Y*32 then
-                    playersDrawable[i].Y = playersDrawable[i].Y - 64*dt
-                elseif playersDrawable[i].Y+4 < v.Y*32 then
-                    playersDrawable[i].Y = playersDrawable[i].Y + 64*dt
-                end
-            end
-        end
+        updateOtherPlayers(dt)
 
         local info = love.thread.getChannel( 'players' ):pop()
         if info then
-            love.system.setClipboardText(info)
             players = json:decode(info)
         end
     end
@@ -150,7 +128,7 @@ end
 
 function tick()
    tickDummyEnemies()
-
+    tickOtherPlayers()
    if player.target.active then
         if player.dx > player.target.x*32 then
             player.dx = player.dx - 16

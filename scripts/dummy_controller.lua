@@ -104,13 +104,9 @@ function drawDummy()
    
 
     for i,v in ipairs(playersDrawable) do
-        if v.Name ~= username then
-            love.graphics.draw(playerImg, v.X, v.Y)
-            love.graphics.setColor(0,0,0)
-            love.graphics.rectangle("fill", v.X, v.Y-12, 32, 12)
-            love.graphics.setColor(1,1,1)
-            love.graphics.print(v.Name, v.X, v.Y-12)
-     end
+        --if v.Name ~= username then
+            drawOtherPlayer(v)
+      --  end
     end
 
     drawLoot()
