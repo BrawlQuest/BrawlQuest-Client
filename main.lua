@@ -53,8 +53,6 @@ function love.load()
     love.graphics.setFont(textFont)
 
     initDummyData()
-
-    
 end
 
 function love.draw()

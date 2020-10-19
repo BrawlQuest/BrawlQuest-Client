@@ -70,8 +70,6 @@ function updateLoot(dt)
                 
             end
         elseif v.type == "xp" then
-            
-         
             if v.y > player.dy+16 then
                 v.y = v.y - 8*dt
             elseif v.y < player.dy+16 then
