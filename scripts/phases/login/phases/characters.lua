@@ -43,7 +43,7 @@ function checkClickLoginPhaseCharacter(x,y)
             if characters[i] ~= nil then
                 username = characters[i]["Name"]
                 phase = "game"
-                love.audio.stop(currentPlaying)
+                love.audio.stop( titleMusic )
             end
         end
     end

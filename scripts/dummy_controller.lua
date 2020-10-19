@@ -3,12 +3,12 @@ function initDummyData()
 
     lootSound = love.audio.newSource("assets/sfx/loot.mp3", "static")
     lootImg = love.graphics.newImage("assets/player/gearsets/a4/special.png")
-    playerImg = love.graphics.newImage("assets/player/base/base 4.png")
+    playerImg = love.graphics.newImage("assets/player/base/base 1.png")
     horseImg = love.graphics.newImage("assets/player/mounts/horse/back.png")
     horseForeImg = love.graphics.newImage("assets/player/mounts/horse/fore.png")
     swordImg = love.graphics.newImage("assets/player/gearsets/a4/dagger.png")
     armour = {
-        love.graphics.newImage("assets/player/gearsets/a4/head.png"),
+        love.graphics.newImage("assets/player/gear/misc/pigeon.png"),
         love.graphics.newImage("assets/player/gearsets/a4/chest.png"),
         love.graphics.newImage("assets/player/gearsets/a4/legs.png"),
         love.graphics.newImage("assets/player/gearsets/custom/cloak 3.png")
@@ -104,23 +104,23 @@ function drawDummy()
    
 
     for i,v in ipairs(playersDrawable) do
-       -- if v.Name ~= username then
+        if v.Name ~= username then
             love.graphics.draw(playerImg, v.X, v.Y)
             love.graphics.setColor(0,0,0)
             love.graphics.rectangle("fill", v.X, v.Y-12, 32, 12)
             love.graphics.setColor(1,1,1)
             love.graphics.print(v.Name, v.X, v.Y-12)
-       -- end
+     end
     end
 
     drawLoot()
 
-    love.graphics.setColor(0,0,0)
+  --  love.graphics.setColor(0,0,0)
   
-    love.graphics.rectangle("line", player.dx, player.dy-8, 32,6)
-    love.graphics.setColor(0,1,0)
-    love.graphics.rectangle("fill", player.dx, player.dy-8, (player.dhp/player.mhp)*32,6)
-    love.graphics.setColor(1,1,1)
+    -- love.graphics.rectangle("line", player.dx, player.dy-8, 32,6)
+    -- love.graphics.setColor(0,1,0)
+    -- love.graphics.rectangle("fill", player.dx, player.dy-8, (player.dhp/player.mhp)*32,6)
+    -- love.graphics.setColor(1,1,1)
 
     
 end
