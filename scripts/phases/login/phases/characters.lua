@@ -40,7 +40,20 @@ function checkClickLoginPhaseCharacter(x,y)
     for i = 1,3 do
         local thisX,thisY = loginImageX+32,loginImageY+240+((i-1)*48)
         if isMouseOver(thisX,thisY, buttonImage:getWidth(), buttonImage:getHeight()) then
+            r, h = http.request {
+                url = api.url .. "/user/" .. textfields[1],
+                headers = {
+                    ['token'] = b['token']
+                },
+                sink = ltn12.sink.table(characters)
+            }
             if characters[i] ~= nil then
+                player.x = response['Me']['X']
+                player.y = response['Me']['Y']
+                player.dx = player.x*32
+                player.dy = player.y*32
+                totalCoverAlpha = 2
+                love.audio.play(awakeSound)
                 username = characters[i]["Name"]
                 phase = "game"
                 love.audio.stop( titleMusic )

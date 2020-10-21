@@ -25,6 +25,7 @@ playersDrawable = {}
 lootTest = {}
 nextTick = 1
 timeOutTick = 3
+totalCoverAlpha = 0 -- this covers the entire screen in white, for hiding purposes
 timeOfDay = 0
 username = "Pebsie"
 readyForUpdate = true
@@ -43,6 +44,8 @@ function love.load()
     stepSound = love.audio.newSource("assets/sfx/step/grass.mp3", "static")
     xpSound = love.audio.newSource("assets/sfx/xp.wav", "static")
     xpSound:setVolume(0.4)
+
+    awakeSound = love.audio.newSource("assets/sfx/player/awake.wav", "static")
    
     playerHitSfx = love.audio.newSource("assets/sfx/hit.wav", "static")
     enemyHitSfx = love.audio.newSource("assets/sfx/impact_b.wav", "static")
@@ -80,6 +83,9 @@ function love.draw()
         Luven.camera:draw()
     end
 
+    love.graphics.setColor(1,1,1,totalCoverAlpha)
+    love.graphics.rectangle("fill",0,0,love.graphics.getWidth(),love.graphics.getHeight())
+
     love.graphics.print(love.timer.getFPS().." FPS",0,love.graphics.getHeight()-12)
 end
 
@@ -94,7 +100,7 @@ function love.update(dt)
         end
 
         oldLightAlpha = oldLightAlpha - 2*dt -- update light, essentially
-
+        totalCoverAlpha = totalCoverAlpha - 1*dt
     
         updateDummyEnemies(dt)
         updateCharacter(dt)
@@ -121,7 +127,16 @@ function love.update(dt)
 
         local info = love.thread.getChannel( 'players' ):pop()
         if info then
-            players = json:decode(info)
+            local response = json:decode(info)
+            if distanceToPoint(player.x,player.y,response['Me']['X'],response['Me']['Y']) > 2 then
+                player.x = response['Me']['X']
+                player.y = response['Me']['Y']
+                player.dx = player.x*32
+                player.dy = player.y*32
+                totalCoverAlpha = 2
+                love.audio.play(awakeSound)
+            end
+            players = response['Players']
         end
     end
 end
