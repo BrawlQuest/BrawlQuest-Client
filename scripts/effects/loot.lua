@@ -108,12 +108,12 @@ function updateLoot(dt)
          --Accepts XP
          if distanceToPoint(player.dx+16, player.dy+16, v.x, v.y) < 32 and v.phase ~= "initial" then
             if v.type == "xp" then
-                xpSound:stop()
-                xpSound:setPitch(1 + (player.xp/100))
-                xpSound:play()
+                xpSfx:stop()
+                xpSfx:setPitch(1 + (player.xp/100))
+                xpSfx:play()
             else
-                lootSound:stop()
-                lootSound:play()
+                lootSfx:stop()
+                lootSfx:play()
             end
             player.xp = player.xp + 1
             table.remove(loot, i)

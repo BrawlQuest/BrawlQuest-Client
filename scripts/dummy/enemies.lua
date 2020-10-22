@@ -8,20 +8,20 @@ function loadDummyEnemies()
     enemyImg = love.graphics.newImage("assets/monsters/skeletons/sword.png")
     rangedEnemyImg = love.graphics.newImage("assets/monsters/skeletons/mage.png")
     alertImg = love.graphics.newImage("assets/ui/alert.png")
-    attackSounds = {
+    attackSfxs = {
         love.audio.newSource("assets/sfx/monsters/skeletons/attack/1.ogg", "static"),
         love.audio.newSource("assets/sfx/monsters/skeletons/attack/2.ogg", "static"),
         love.audio.newSource("assets/sfx/monsters/skeletons/attack/3.ogg", "static"),
         love.audio.newSource("assets/sfx/monsters/skeletons/attack/4.ogg", "static")
     }
 
-    aggroSounds = {
+    aggroSfxs = {
         love.audio.newSource("assets/sfx/monsters/skeletons/aggro/1.ogg", "static"),
         love.audio.newSource("assets/sfx/monsters/skeletons/aggro/2.ogg", "static"),
         love.audio.newSource("assets/sfx/monsters/skeletons/aggro/3.ogg", "static")
     }
 
-    deathSounds = {
+    deathSfxs = {
         love.audio.newSource("assets/sfx/monsters/skeletons/death/1.ogg", "static"),
         love.audio.newSource("assets/sfx/monsters/skeletons/death/2.ogg", "static"),
         love.audio.newSource("assets/sfx/monsters/skeletons/death/3.ogg", "static")
@@ -216,10 +216,10 @@ function tickDummyEnemies()
        -- if v.hp > 0 then enemiesInAggro = enemiesInAggro + 1 end
         if not v.aggro and distanceToPoint(v.x,v.y,player.x,player.y) < 4 + v.range*2 then
             v.aggro = true
-            local aggroSound = aggroSounds[love.math.random(1,#aggroSounds)]
-            aggroSound:setPitch(love.math.random(80,150)/100)
-            aggroSound:setPosition(v.x-player.x,v.y-player.y)
-            love.audio.play(aggroSound)
+            local aggroSfx = aggroSfxs[love.math.random(1,#aggroSfxs)]
+            aggroSfx:setPitch(love.math.random(80,150)/100)
+            aggroSfx:setPosition(v.x-player.x,v.y-player.y)
+            love.audio.play(aggroSfx)
             v.aggroAlpha = 2
         elseif distanceToPoint(v.x,v.y,player.x,player.y) > 4 + v.range*2 then
             v.aggro = false
@@ -231,9 +231,9 @@ function tickDummyEnemies()
             
             if distanceToPoint(v.x,v.y,player.x,player.y) < v.range+1 then
                 boneSpurt(player.dx+16,player.dy+16,v.atk,48,1,0,0)
-                local attackSound = attackSounds[love.math.random(1,#attackSounds)]
-                attackSound:setPitch(love.math.random(50,100)/100)
-                love.audio.play(attackSound)
+                local attackSfx = attackSfxs[love.math.random(1,#attackSfxs)]
+                attackSfx:setPitch(love.math.random(50,100)/100)
+                love.audio.play(attackSfx)
                 player.hp = player.hp - v.atk
                 if player.isMounted or player.isMounting then
                     beginMounting()
@@ -303,7 +303,7 @@ function tickDummyEnemies()
                 end
                 v.dx = v.x*32 -- there may be displacement from a crit, so we set the draw pos to the regular pos
                 v.dy = v.y*32
-                love.audio.play(deathSounds[love.math.random(1,#deathSounds)])
+                love.audio.play(deathSfxs[love.math.random(1,#deathSfxs)])
                 blockMap[v.x..","..v.y] = nil
                 boneSpurt(v.dx+16,v.dy+16,48,72,0.8,0.8,1)
                 v.x = -9999

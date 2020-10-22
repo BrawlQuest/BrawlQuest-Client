@@ -56,10 +56,10 @@ function updateCharacter(dt)
     if player.isMounting then
         player.mount.stepSndPlay = player.mount.stepSndPlay - 1*dt
         if player.mount.stepSndPlay < 0 then
-            stepSound:stop()
-            stepSound:setPitch(love.math.random(50,200)/100)
-            stepSound:setVolume(0.4)
-            stepSound:play()
+            stepSfx:stop()
+            stepSfx:setPitch(love.math.random(50,200)/100)
+            stepSfx:setVolume(0.4)
+            stepSfx:play()
             player.mount.stepSndPlay = 0.2
         end
 
@@ -95,28 +95,28 @@ function movePlayer(dt)
         if love.keyboard.isDown("w") then
             player.y = player.y - 1
             calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
-            stepSound:stop()
-            stepSound:setPitch(love.math.random(90,200)/100)
-            love.audio.play(stepSound)
+            stepSfx:stop()
+            stepSfx:setPitch(love.math.random(90,200)/100)
+            love.audio.play(stepSfx)
         elseif love.keyboard.isDown("s") then
             player.y = player.y + 1
             calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
-            stepSound:stop()
-            stepSound:setPitch(love.math.random(90,200)/100)
-            love.audio.play(stepSound)
+            stepSfx:stop()
+            stepSfx:setPitch(love.math.random(90,200)/100)
+            love.audio.play(stepSfx)
         end
         if love.keyboard.isDown("a") then
             player.x = player.x - 1
             calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
-            stepSound:stop()
-            stepSound:setPitch(love.math.random(90,200)/100)
-            love.audio.play(stepSound)
+            stepSfx:stop()
+            stepSfx:setPitch(love.math.random(90,200)/100)
+            love.audio.play(stepSfx)
         elseif love.keyboard.isDown("d") then
             player.x = player.x + 1
             calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
-            stepSound:stop()
-            stepSound:setPitch(love.math.random(90,200)/100)
-            love.audio.play(stepSound)
+            stepSfx:stop()
+            stepSfx:setPitch(love.math.random(90,200)/100)
+            love.audio.play(stepSfx)
         end
         if  blockMap[player.x..","..player.y] ~= nil then
             player.x = original[1]
