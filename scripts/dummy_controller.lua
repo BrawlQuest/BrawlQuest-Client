@@ -2,16 +2,17 @@ function initDummyData()
     print("YOU'RE INITIALISING DUMMY DATA.")
 
     lootSound = love.audio.newSource("assets/sfx/loot.mp3", "static")
-    lootImg = love.graphics.newImage("assets/player/gearsets/a4/special.png")
+    lootImg = love.graphics.newImage("assets/player/gear/a4/special.png")
     playerImg = love.graphics.newImage("assets/player/base/base 1.png")
     horseImg = love.graphics.newImage("assets/player/mounts/horse/back.png")
     horseForeImg = love.graphics.newImage("assets/player/mounts/horse/fore.png")
-    swordImg = love.graphics.newImage("assets/player/gearsets/a4/dagger.png")
+    swordImg = love.graphics.newImage("assets/player/gear/a2/sword.png")
     armour = {
-        love.graphics.newImage("assets/player/gear/misc/pigeon.png"),
-        love.graphics.newImage("assets/player/gearsets/a4/chest.png"),
-        love.graphics.newImage("assets/player/gearsets/a4/legs.png"),
-        love.graphics.newImage("assets/player/gearsets/custom/cloak 3.png")
+        love.graphics.newImage("assets/player/gear/custom/pigeon.png"),
+        love.graphics.newImage("assets/player/gear/a4/chest.png"),
+        love.graphics.newImage("assets/player/gear/a4/legs.png"),
+        love.graphics.newImage("assets/player/gear/custom/cloak 3.png"),
+        love.graphics.newImage("assets/player/gear/custom/red facemask.png")
     }
     groundImg = love.graphics.newImage("assets/world/grounds/grass/grass05.png")
     treeImg = love.graphics.newImage("assets/world/objects/tree.png")
