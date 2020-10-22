@@ -10,6 +10,7 @@ require "scripts.libraries.api"
 require "scripts.libraries.utils"
 require "scripts.phases.login.login"
 require "scripts.player.other_players"
+require "settings"
 Luven = require "scripts.libraries.luven.luven"
 local json = require("scripts.libraries.json")
 local http = require("socket.http")
@@ -74,9 +75,9 @@ function love.draw()
                 love.graphics.draw(arrowImg[diffX][diffY], player.dx-32, player.dy-32)
             end
         end
-        
+         
         drawPlayer()
-
+        drawLoot()
         Luven.drawEnd()
 
         love.graphics.print("BrawlQuest\nEnemies in aggro: "..enemiesInAggro)
@@ -110,7 +111,7 @@ function love.update(dt)
         Luven.update(dt)
 
         if not player.target.active then
-            Luven.camera:setPosition(player.dx, player.dy)
+            Luven.camera:setPosition(player.dx+16, player.dy+16)
         end
 
         timeOfDay = timeOfDay + 0.005*dt
@@ -128,14 +129,7 @@ function love.update(dt)
         local info = love.thread.getChannel( 'players' ):pop()
         if info then
             local response = json:decode(info)
-            if distanceToPoint(player.x,player.y,response['Me']['X'],response['Me']['Y']) > 2 then
-                player.x = response['Me']['X']
-                player.y = response['Me']['Y']
-                player.dx = player.x*32
-                player.dy = player.y*32
-                totalCoverAlpha = 2
-                love.audio.play(awakeSound)
-            end
+
             players = response['Players']
         end
     end

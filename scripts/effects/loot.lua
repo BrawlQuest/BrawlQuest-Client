@@ -10,16 +10,25 @@ function burstLoot(x, y, amount, type)
             x = x,
             y = y,
             phase = "initial",
-            type = type
+            type = type,
+            timeToFly = 1,
         }
 
         if type == "sword" then
-            loot[#loot].xv = love.math.random(-128,128)
-            loot[#loot].yv = love.math.random(-128,128)
+            loot[#loot].xv = love.math.random(48,90)
+            loot[#loot].yv = love.math.random(48,90)
         else
-            loot[#loot].xv = love.math.random(-64,64)
-            loot[#loot].yv = love.math.random(-64,64)
+            loot[#loot].xv = love.math.random(48,90)
+            loot[#loot].yv = love.math.random(48,90)
         end
+
+        if love.math.random(1,2) == 1 then
+            loot[#loot].xv = -loot[#loot].xv
+        end
+        if love.math.random(1,2) == 1 then
+            loot[#loot].yv = -loot[#loot].yv
+        end
+
     end
 end
 
@@ -35,6 +44,7 @@ end
 
 function updateLoot(dt)
     for i,v in ipairs(loot) do
+        v.timeToFly = v.timeToFly - 1*dt
         v.x = v.x + v.xv*dt
         v.y = v.y + v.yv*dt
            if v.x > player.dx+16 then
@@ -45,7 +55,7 @@ function updateLoot(dt)
 
         if v.phase == "initial" then
           
-            if math.abs(v.xv) > 16 then
+            if math.abs(v.xv) > 1 then
                 if v.xv > 0 then
                     v.xv = v.xv - 64*dt
                 else 
@@ -55,7 +65,7 @@ function updateLoot(dt)
                 v.xv = 0
             end
     
-            if math.abs(v.yv) > 16 then
+            if math.abs(v.yv) > 1 then
                 if v.yv > 0 then
                     v.yv = v.yv - 64*dt
                 else
@@ -65,11 +75,11 @@ function updateLoot(dt)
                 v.yv = 0
             end
 
-            if v.xv == 0 or v.yv == 0 then
+            if v.timeToFly < 0 and v.xv == 0 and v.yv == 0 then
                 v.phase = "player"
                 
             end
-        elseif v.type == "xp" then
+        else
             if v.y > player.dy+16 then
                 v.y = v.y - 8*dt
             elseif v.y < player.dy+16 then
@@ -96,7 +106,7 @@ function updateLoot(dt)
         end
 
          --Accepts XP
-         if distanceToPoint(player.dx+16, player.dy+16, v.x, v.y) < 32 then
+         if distanceToPoint(player.dx+16, player.dy+16, v.x, v.y) < 32 and v.phase ~= "initial" then
             if v.type == "xp" then
                 xpSound:stop()
                 xpSound:setPitch(1 + (player.xp/100))

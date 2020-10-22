@@ -23,7 +23,9 @@ function loadMusic()
         "Skirmish2"
     }
     
-    currentPlaying = titleMusic:play()
+    if playMusic then
+        currentPlaying = titleMusic:play()
+    end
 end
 
 function updateMusic(dt)

@@ -109,7 +109,7 @@ function drawDummy()
       --  end
     end
 
-    drawLoot()
+   
 
   --  love.graphics.setColor(0,0,0)
   

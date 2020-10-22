@@ -2,6 +2,7 @@
     The "characters" phase of login is for selecting a character
 ]]
 local json = require("scripts.libraries.json")
+local http = require("socket.http")
 
 function drawCharactersPhase()
     love.graphics.setFont(headerFont)
@@ -40,21 +41,18 @@ function checkClickLoginPhaseCharacter(x,y)
     for i = 1,3 do
         local thisX,thisY = loginImageX+32,loginImageY+240+((i-1)*48)
         if isMouseOver(thisX,thisY, buttonImage:getWidth(), buttonImage:getHeight()) then
-            r, h = http.request {
-                url = api.url .. "/user/" .. textfields[1],
-                headers = {
-                    ['token'] = b['token']
-                },
-                sink = ltn12.sink.table(characters)
-            }
             if characters[i] ~= nil then
+                username = characters[i]["Name"]
+                local b = {}
+                c, h = http.request{url = "http://167.172.62.97:8080/players/"..username, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
+                local response = json:decode(b[1])
                 player.x = response['Me']['X']
                 player.y = response['Me']['Y']
                 player.dx = player.x*32
                 player.dy = player.y*32
                 totalCoverAlpha = 2
                 love.audio.play(awakeSound)
-                username = characters[i]["Name"]
+                
                 phase = "game"
                 love.audio.stop( titleMusic )
             end
