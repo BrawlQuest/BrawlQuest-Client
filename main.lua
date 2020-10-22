@@ -10,10 +10,14 @@ require "scripts.libraries.api"
 require "scripts.libraries.utils"
 require "scripts.phases.login.login"
 require "scripts.player.other_players"
+require "data.data_controller"
 require "settings"
 Luven = require "scripts.libraries.luven.luven"
-local json = require("scripts.libraries.json")
-local http = require("socket.http")
+
+json = require("scripts.libraries.json")
+http = require("socket.http")
+ltn12 = require("ltn12")
+
 
 version = "Pre-Release"
 phase = "login"
@@ -35,6 +39,8 @@ scale, uiX, uiY = 1
 sendUpdate = false
 
 function love.load()
+    initHardData()
+
     love.graphics.setDefaultFilter("nearest", "nearest")
     loadMusic()
     initLogin()
@@ -55,6 +61,8 @@ function love.load()
     textFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf",24)
     smallTextFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf",12)
     headerFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 18) -- TODO: get a license for this font
+    headerBigFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 32) -- TODO: get a license for this font
+  
     love.graphics.setFont(textFont)
 
     initDummyData()

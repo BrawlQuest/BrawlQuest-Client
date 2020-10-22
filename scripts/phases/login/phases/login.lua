@@ -44,6 +44,8 @@ function checkClickLoginPhaseLogin(x,y)
         editingField = 1
     elseif isMouseOver(loginImageX + 50, loginImageY + 335, 288, 44) and editingField ~= 2 then
         editingField = 2
+    elseif isMouseOver(loginImageX + 36, loginImageY + 380, 288, 44) then
+        login()
     end
 end
 
@@ -66,5 +68,31 @@ function checkLoginTextinputPhaseLogin(key)
     textfields[editingField] = textfields[editingField] .. key
     if editingField == 2 then
         textfields[3] = textfields[3] .. "*"
+    end
+end
+
+
+function login()
+    b, c, h = http.request(api.url .. "/login", json:encode({
+        UID = textfields[1],
+        Password = textfields[2]
+    }))
+
+    if c == 200 then
+        b = json:decode(b)
+        UID = textfields[1]
+        token = b['token']
+        r, h = http.request {
+            url = api.url .. "/user/" .. textfields[1],
+            headers = {
+                ['token'] = b['token']
+            },
+            sink = ltn12.sink.table(characters)
+        }
+
+       if c == 200 then
+            characters = json:decode(characters[1])
+            loginPhase = "characters"
+       end
     end
 end

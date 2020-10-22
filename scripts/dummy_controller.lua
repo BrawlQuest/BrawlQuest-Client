@@ -2,7 +2,7 @@ function initDummyData()
     print("YOU'RE INITIALISING DUMMY DATA.")
 
     lootSfx = love.audio.newSource("assets/sfx/loot.mp3", "static")
-    lootImg = love.graphics.newImage("assets/player/gearsets/a4/special.png")
+    lootImg = love.graphics.newImage("assets/player/gear/a4/special.png")
     playerImg = love.graphics.newImage("assets/player/base/base 1.png")
     horseImg = love.graphics.newImage("assets/player/mounts/horse/back.png")
     horseForeImg = love.graphics.newImage("assets/player/mounts/horse/fore.png")

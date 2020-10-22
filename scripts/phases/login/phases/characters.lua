@@ -12,26 +12,26 @@ function drawCharactersPhase()
 
     for i = 1,3 do
         local thisX,thisY = loginImageX+32,loginImageY+240+((i-1)*48)
-        love.graphics.setColor(1,1,1)
+
+     
         if isMouseOver(thisX,thisY,buttonImage:getWidth(), buttonImage:getHeight()) then
             love.graphics.setColor(0.168,0.525,1)
         else
             love.graphics.setColor(1,1,1)
         end
         love.graphics.draw(buttonImage,thisX,thisY)
+
         love.graphics.setColor(1,1,1)
+        if isMouseOver(thisX,thisY,buttonImage:getWidth(), buttonImage:getHeight()) then
+            love.graphics.draw(playerImg,thisX+25,thisY+3)
+            love.graphics.setColor(1,1,1)
+        else
+            love.graphics.draw(playerImg,thisX+20,thisY+3)
+            love.graphics.setColor(0,0,0)
+        end
         if characters[i] ~= null then
-            if isMouseOver(thisX,thisY,buttonImage:getWidth(), buttonImage:getHeight()) then
-                love.graphics.draw(playerImg,thisX+25,thisY+3)
-                love.graphics.setColor(1,1,1)
-            else
-                love.graphics.draw(playerImg,thisX+20,thisY+3)
-                love.graphics.setColor(0,0,0)
-            end
-            
             love.graphics.printf(characters[i]["Name"],thisX+60,thisY+5,buttonImage:getWidth()-80,"center")
         else
-            love.graphics.setColor(0,0,0)
             love.graphics.printf("NEW CHARACTER",thisX+20,thisY+5,buttonImage:getWidth()-20,"center")
         end
     end
@@ -55,6 +55,10 @@ function checkClickLoginPhaseCharacter(x,y)
                 
                 phase = "game"
                 love.audio.stop( titleMusic )
+            else
+                newCharacterPosition = i
+
+                loginPhase = "creation"
             end
         end
     end
