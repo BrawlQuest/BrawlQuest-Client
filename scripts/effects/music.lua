@@ -15,13 +15,17 @@ function loadMusic()
         Skirmish2 = love.audio.newSource("assets/music/album1/Skirmish2.mp3", "stream")
     }
 
+    titleMusic = love.audio.newSource("assets/music/album1/Longing.mp3", "stream")
+
     battleMusic = {
         "Titans",
         "Skirmish",
         "Skirmish2"
     }
     
-    currentPlaying = music["PuerLavari"]:play()
+    if playMusic then
+        currentPlaying = titleMusic:play()
+    end
 end
 
 function updateMusic(dt)

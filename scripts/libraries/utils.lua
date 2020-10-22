@@ -37,3 +37,13 @@ end
 function difference(a,b)
     return math.abs(a-b)
 end
+
+function isMouseOver(x,y,width,height)
+    cx,cy = love.mouse.getPosition()
+
+    if cx > x and cx < x+width and cy > y and cy < y+height then
+        return true
+    end
+    
+    return false
+end
