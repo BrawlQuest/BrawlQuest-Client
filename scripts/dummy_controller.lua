@@ -1,8 +1,8 @@
 function initDummyData() 
     print("YOU'RE INITIALISING DUMMY DATA.")
 
-    lootSound = love.audio.newSource("assets/sfx/loot.mp3", "static")
-    lootImg = love.graphics.newImage("assets/player/gear/a4/special.png")
+    lootSfx = love.audio.newSource("assets/sfx/loot.mp3", "static")
+    lootImg = love.graphics.newImage("assets/player/gearsets/a4/special.png")
     playerImg = love.graphics.newImage("assets/player/base/base 1.png")
     horseImg = love.graphics.newImage("assets/player/mounts/horse/back.png")
     horseForeImg = love.graphics.newImage("assets/player/mounts/horse/fore.png")
@@ -50,19 +50,17 @@ function initDummyData()
         
     loadDummyEnemies()
 
-    for i = 1, 70 do
-        trees[i] = {
-            x = love.math.random(0,love.graphics.getWidth()/32),
-            y = love.math.random(0,love.graphics.getHeight()/32)
-        }
-        blockMap[trees[#trees].x..","..trees[#trees].y] = true
-        treeMap[trees[#trees].x..","..trees[#trees].y] = true
-    end
+    -- for i = 1, 70 do
+    --     trees[i] = {
+    --         x = love.math.random(0,love.graphics.getWidth()/32),
+    --         y = love.math.random(0,love.graphics.getHeight()/32)
+    --     }
+    --     blockMap[trees[#trees].x..","..trees[#trees].y] = true
+    --     treeMap[trees[#trees].x..","..trees[#trees].y] = true
+    -- end
 
     initLighting()
 
-    font = love.graphics.newFont(10)
-    love.graphics.setFont(font)
 end
 
 function drawDummy()

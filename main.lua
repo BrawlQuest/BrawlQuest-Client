@@ -42,11 +42,11 @@ function love.load()
     birds:setLooping(true)
     love.audio.play(birds)
 
-    stepSound = love.audio.newSource("assets/sfx/step/grass.mp3", "static")
-    xpSound = love.audio.newSource("assets/sfx/xp.wav", "static")
-    xpSound:setVolume(0.4)
+    stepSfx = love.audio.newSource("assets/sfx/step/grass.mp3", "static")
+    xpSfx = love.audio.newSource("assets/sfx/xp.wav", "static")
+    xpSfx:setVolume(0.4)
 
-    awakeSound = love.audio.newSource("assets/sfx/player/awake.wav", "static")
+    awakeSfx = love.audio.newSource("assets/sfx/player/awake.wav", "static")
    
     playerHitSfx = love.audio.newSource("assets/sfx/hit.wav", "static")
     enemyHitSfx = love.audio.newSource("assets/sfx/impact_b.wav", "static")
@@ -118,7 +118,7 @@ function love.update(dt)
             Luven.camera:setPosition(player.dx+16, player.dy+16)
         end
 
-        timeOfDay = timeOfDay + 0.005*dt
+        timeOfDay = timeOfDay + 0.00001*dt
         if timeOfDay < 0.8 then
             Luven.setAmbientLightColor({ 0.8-timeOfDay, 0.8-timeOfDay, 1-timeOfDay })
         else 

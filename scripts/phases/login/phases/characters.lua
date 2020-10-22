@@ -51,7 +51,7 @@ function checkClickLoginPhaseCharacter(x,y)
                 player.dx = player.x*32
                 player.dy = player.y*32
                 totalCoverAlpha = 2
-                love.audio.play(awakeSound)
+                love.audio.play(awakeSfx)
                 
                 phase = "game"
                 love.audio.stop( titleMusic )
