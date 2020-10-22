@@ -76,6 +76,10 @@ function love.draw()
             end
         end
          
+        for i,v in ipairs(playersDrawable) do
+            drawOtherPlayer(v,i)
+        end
+
         drawPlayer()
         drawLoot()
         Luven.drawEnd()

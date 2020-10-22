@@ -103,11 +103,6 @@ function drawDummy()
 
    
 
-    for i,v in ipairs(playersDrawable) do
-        --if v.Name ~= username then
-            drawOtherPlayer(v)
-      --  end
-    end
 
    
 
