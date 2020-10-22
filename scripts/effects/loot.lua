@@ -12,6 +12,7 @@ function burstLoot(x, y, amount, type)
             phase = "initial",
             type = type,
             timeToFly = 1,
+            speedToPlayer = 8
         }
 
         if type == "sword" then
@@ -80,10 +81,17 @@ function updateLoot(dt)
                 
             end
         else
+            v.speedToPlayer = v.speedToPlayer + 8*dt
             if v.y > player.dy+16 then
-                v.y = v.y - 8*dt
+                v.y = v.y - v.speedToPlayer*dt
             elseif v.y < player.dy+16 then
-                v.y = v.y + 8*dt
+                v.y = v.y + v.speedToPlayer*dt
+            end
+
+            if v.x > player.dx+16 then
+                v.x = v.x - v.speedToPlayer*dt
+            elseif v.x < player.dx+16 then
+                v.x = v.x + v.speedToPlayer*dt
             end
 
             if  difference(player.dx+16, v.x) > 32 then
