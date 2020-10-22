@@ -30,7 +30,7 @@ totalCoverAlpha = 0 -- this covers the entire screen in white, for hiding purpos
 timeOfDay = 0
 username = "Pebsie"
 readyForUpdate = true
-
+scale, uiX, uiY = 1
 
 sendUpdate = false
 
@@ -177,6 +177,15 @@ function love.keypressed(key)
         beginMounting()
         end
         checkTargeting()
+    end
+    if key == "." then
+        scale = scale * 1.25
+    end
+    if key == "," then
+        scale = scale / 1.25
+    end
+    if key == "escape" then
+        love.event.quit()
     end
 end
 
