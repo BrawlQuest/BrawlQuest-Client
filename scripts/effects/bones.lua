@@ -47,6 +47,9 @@ function updateBones(dt)
         end
 
         v.alpha = v.alpha - 1*dt
+        if v.alpha < 0 then
+            table.remove(bones, i)
+        end
     end
 end
 
