@@ -33,19 +33,19 @@ function initDummyData()
 
     arrowImg = {}
     arrowImg[-1]  = {
-            [0]=love.graphics.newImage("assets/ui/target/W_Arrow_1.png"),
-            [-1] = love.graphics.newImage("assets/ui/target/NW_Arrow_1.png"),
-            [1]=love.graphics.newImage("assets/ui/target/SW_Arrow_1.png")
+            [0]=love.graphics.newImage("assets/ui/target/w_arrow_1.png"),
+            [-1] = love.graphics.newImage("assets/ui/target/nw_arrow_1.png"),
+            [1]=love.graphics.newImage("assets/ui/target/sw_arrow_1.png")
         }
         arrowImg[0] = 
         {
-            [-1] = love.graphics.newImage("assets/ui/target/N_Arrow_1.png"),
-            [1] = love.graphics.newImage("assets/ui/target/S_arrow_1.png")
+            [-1] = love.graphics.newImage("assets/ui/target/n_arrow_1.png"),
+            [1] = love.graphics.newImage("assets/ui/target/s_arrow_1.png")
         }
         arrowImg[1] = {
-            [0] = love.graphics.newImage("assets/ui/target/E_Arrow_1.png"),
-            [-1] = love.graphics.newImage("assets/ui/target/NE_Arrow_1.png"),
-            [1] = love.graphics.newImage("assets/ui/target/SE_Arrow_1.png")
+            [0] = love.graphics.newImage("assets/ui/target/e_arrow_1.png"),
+            [-1] = love.graphics.newImage("assets/ui/target/ne_arrow_1.png"),
+            [1] = love.graphics.newImage("assets/ui/target/se_arrow_1.png")
         }
         
     loadDummyEnemies()
