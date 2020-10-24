@@ -1,6 +1,7 @@
 --[[
     This file is for the character creation window
 ]]
+require "scripts.phases.login.ui_elements"
 
 local selectedSkinTone = 1
 
@@ -38,20 +39,7 @@ function drawCreationPhase()
 
     -- button
     local thisX, thisY = loginImageX+38, loginImageY+390
-    if isMouseOver(thisX,thisY,buttonImage:getWidth(), buttonImage:getHeight()) then
-        love.graphics.setColor(0.168,0.525,1)
-    else
-        love.graphics.setColor(1,1,1)
-    end
-    love.graphics.draw(buttonImage,thisX,thisY)
-
-    if isMouseOver(thisX,thisY,buttonImage:getWidth(), buttonImage:getHeight()) then
-        love.graphics.setColor(1,1,1)
-    else
-        love.graphics.setColor(0,0,0)
-    end
-
-    love.graphics.printf("CREATE",thisX,thisY+5,buttonImage:getWidth(),"center")
+    drawButton("CREATE", thisX, thisY)
 end
 
 function checkClickLoginPhaseCreation(x,y)
@@ -89,24 +77,4 @@ end
 
 function checkLoginTextinputPhaseCreation(key)
     textfields[4] = textfields[4] .. key
-end
-
-function drawTextField(x, y, i) -- i is the editing field ID
-    love.graphics.draw(textFieldImage, x, y)
-    love.graphics.setColor(0, 0, 0)
-    love.graphics.setFont(textFont)
-    if isMouseOver(x,  y, 288, 44) then
-        love.graphics.setColor(0.6, 0.6, 0.6)
-    end
-
-    if editingField == i then
-        love.graphics.printf(textfields[i] .. "|", x+10,y+6, 262, "center")
-    else
-        love.graphics.printf(textfields[i], x+10, y+6, 262, "center")
-    end
-    love.graphics.setColor(0, 0, 0)
-
-    if isMouseOver(x, y, 288, 44) then
-        love.graphics.setColor(0.6, 0.6, 0.6)
-    end
 end
