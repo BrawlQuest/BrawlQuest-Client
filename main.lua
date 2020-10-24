@@ -1,11 +1,13 @@
 require "scripts.dummy_controller"
 require 'scripts.dummy.lanterns'
+require "scripts.libraries.api"
 require "scripts.player.character"
 require "scripts.dummy.enemies"
 require "scripts.effects.bones"
 require "scripts.effects.lighting"
 require "scripts.effects.music"
 require "scripts.effects.loot"
+require "scripts.ui.chat"
 require "scripts.libraries.api"
 require "scripts.libraries.utils"
 require "scripts.phases.login.login"
@@ -40,7 +42,7 @@ sendUpdate = false
 
 function love.load()
     initHardData()
-
+    initChat()
     love.graphics.setDefaultFilter("nearest", "nearest")
     loadMusic()
     initLogin()
@@ -59,10 +61,11 @@ function love.load()
     critHitSfx = love.audio.newSource("assets/sfx/pit_trap_damage.wav", "static")
 
     textFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf",24)
+  
     smallTextFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf",12)
     headerFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 18) -- TODO: get a license for this font
     headerBigFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 32) -- TODO: get a license for this font
-  
+    font = headerFont
     love.graphics.setFont(textFont)
 
     initDummyData()
@@ -92,13 +95,16 @@ function love.draw()
         drawLoot()
         Luven.drawEnd()
 
+
+        drawChatPanel(love.graphics.getWidth(),love.graphics.getHeight())
         love.graphics.print("BrawlQuest\nEnemies in aggro: "..enemiesInAggro)
         Luven.camera:draw()
     end
 
+
+
     love.graphics.setColor(1,1,1,totalCoverAlpha)
     love.graphics.rectangle("fill",0,0,love.graphics.getWidth(),love.graphics.getHeight())
-
     love.graphics.print(love.timer.getFPS().." FPS",0,love.graphics.getHeight()-12)
 end
 

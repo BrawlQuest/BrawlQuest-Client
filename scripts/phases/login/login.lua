@@ -5,6 +5,7 @@ require 'scripts.phases.login.background'
 require 'scripts.phases.login.phases.login'
 require 'scripts.phases.login.phases.characters'
 require 'scripts.phases.login.phases.creation'
+require 'scripts.phases.login.phases.server'
 
 textfields = {"", -- username
 "", -- password
@@ -38,6 +39,8 @@ function drawLogin()
         drawCharactersPhase()
     elseif loginPhase == "creation" then
         drawCreationPhase()
+    elseif loginPhase == "server" then
+        drawServerPhase()
     end
 
     love.graphics.setFont(smallTextFont)
@@ -56,6 +59,8 @@ function checkClickLogin(x, y)
         checkClickLoginPhaseCharacter(x,y)
     elseif loginPhase == "creation" then
         checkClickLoginPhaseCreation(x,y)
+    elseif loginPhase == "server" then
+        checkClickLoginPhaseServer(x,y)
     end
 end
 

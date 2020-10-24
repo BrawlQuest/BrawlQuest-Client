@@ -60,7 +60,7 @@ function checkClickLoginPhaseCharacter(x,y)
     if isMouseOver(loginImageX+32, loginImageY+390, buttonImage:getWidth(), buttonImage:getHeight()) then
         username = characters[characterSelected]["Name"]
         local b = {}
-        c, h = http.request{url = "http://167.172.62.97:8080/players/"..username, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
+        c, h = http.request{url = api.url.."/players/"..username, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
         local response = json:decode(b[1])
         player.x = response['Me']['X']
         player.y = response['Me']['Y']

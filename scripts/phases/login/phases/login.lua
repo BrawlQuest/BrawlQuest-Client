@@ -37,6 +37,14 @@ function drawLoginPhase()
     love.graphics.setColor(1, 1, 1)
     love.graphics.printf("Username", loginImageX + 50, loginImageY + 230, 262, "center")
     love.graphics.printf("Password", loginImageX + 50, loginImageY + 300, 262, "center")
+
+    love.graphics.setFont(smallTextFont)
+    if isMouseOver(loginImageX + 50, loginImageY + 460, 262, 30) then
+        love.graphics.setColor(0.8,0.8,0.8)
+    else
+        love.graphics.setColor(1,1,1)
+    end
+    love.graphics.printf("Server: "..servers[selectedServer].name.."\nClick to change", loginImageX + 50, loginImageY+460, 262, "center")
 end
 
 function checkClickLoginPhaseLogin(x,y)
@@ -46,6 +54,8 @@ function checkClickLoginPhaseLogin(x,y)
         editingField = 2
     elseif isMouseOver(loginImageX + 36, loginImageY + 380, 288, 44) then
         login()
+    elseif isMouseOver(loginImageX + 50, loginImageY + 460, 262, 30) then
+        loginPhase = "server"
     end
 end
 
