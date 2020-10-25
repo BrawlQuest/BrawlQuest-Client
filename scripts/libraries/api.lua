@@ -24,7 +24,7 @@ servers = {
 }
 
 api = {
-    url = servers[selectedServer],
+    url = servers[selectedServer].url,
     get = function (action)
 
        -- print("Calling "..api.url..action)
