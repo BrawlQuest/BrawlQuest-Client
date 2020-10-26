@@ -41,6 +41,7 @@ scale, uiX, uiY = 1
 sendUpdate = false
 
 function love.load()
+    print("start")
     initHardData()
     initChat()
     love.graphics.setDefaultFilter("nearest", "nearest")
@@ -69,6 +70,8 @@ function love.load()
     love.graphics.setFont(textFont)
 
     initDummyData()
+    scale, uiX, uiY = 1
+    print("loaded")
 end
 
 function love.draw()
@@ -95,8 +98,15 @@ function love.draw()
         drawLoot()
         Luven.drawEnd()
 
+        love.graphics.push() -- chat and quests scaling TODO: Quests
+            local i = 0.5
+            love.graphics.scale(scale*i)
+            drawChatPanel(uiX/i, uiY/i)
+            love.graphics.setDefaultFilter("nearest", "nearest")
+        love.graphics.pop()
+        
+        -- drawChatPanel(love.graphics.getWidth(),love.graphics.getHeight())
 
-        drawChatPanel(love.graphics.getWidth(),love.graphics.getHeight())
         love.graphics.print("BrawlQuest\nEnemies in aggro: "..enemiesInAggro)
         Luven.camera:draw()
     end
@@ -120,7 +130,10 @@ function love.update(dt)
 
         oldLightAlpha = oldLightAlpha - 2*dt -- update light, essentially
         totalCoverAlpha = totalCoverAlpha - 1*dt
-    
+        
+        uiX = love.graphics.getWidth()/scale -- scaling options
+        uiY = love.graphics.getHeight()/scale
+
         updateDummyEnemies(dt)
         updateCharacter(dt)
         updateBones(dt)
@@ -199,6 +212,7 @@ function love.keypressed(key)
         scale = scale / 1.25
     end
     if key == "escape" then
+        print("end")
         love.event.quit()
     end
 end
