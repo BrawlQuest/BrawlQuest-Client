@@ -74,6 +74,15 @@ function checkLoginKeyPressedPhaseLogin(key)
             login()
         end
     end
+
+    if key == "home" then 
+        textfields[1] = "Pebsie"
+        editingField = 2
+    elseif key == "end" then
+        textfields[1] = "Danjoe"
+        editingField = 2
+    end
+    
 end
 
 function checkLoginTextinputPhaseLogin(key)

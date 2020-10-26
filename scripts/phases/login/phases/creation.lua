@@ -6,6 +6,7 @@ require "scripts.phases.login.ui_elements"
 local selectedSkinTone = 1
 
 function drawCreationPhase() 
+    editingField = 4
     loginImageX, loginImageY = math.floor(love.graphics.getWidth() / 2 - (loginEntryImage:getWidth() / 2)),
     math.floor(love.graphics.getHeight() / 2 - (loginEntryImage:getHeight() / 2))
     love.graphics.draw(blankPanelImage, loginImageX, loginImageY)
@@ -25,16 +26,16 @@ function drawCreationPhase()
     love.graphics.draw(basePanelImage, loginImageX+35, loginImageY+320)
     
     for i,v in ipairs(baseCharacterImages) do
-        love.graphics.draw(v, loginImageX+35+(i-1)*50 + 24, loginImageY+332)
         if selectedSkinTone == i then
             love.graphics.setColor(0.168,0.525,1)
-            love.graphics.rectangle("line", loginImageX+35+(i-1)*50 + 25, loginImageY+330, 36, 36)
+            roundRectangle("fill", loginImageX+35+(i-1)*50 + 25, loginImageY+330, 36, 36, 5)
             love.graphics.setColor(1,1,1)
         elseif isMouseOver( loginImageX+35+(i-1)*50 + 25, loginImageY+330, 36, 36) then
             love.graphics.setColor(0.168,0.525,1,0.6)
-            love.graphics.rectangle("line", loginImageX+35+(i-1)*50 + 25, loginImageY+330, 36, 36)
+            roundRectangle("fill", loginImageX+35+(i-1)*50 + 25, loginImageY+330, 36, 36, 5)
             love.graphics.setColor(1,1,1)
         end
+        love.graphics.draw(v, loginImageX+35+(i-1)*50 + 24, loginImageY+332)
     end
 
     -- button
@@ -73,6 +74,27 @@ function checkLoginKeyPressedPhaseCreation(key)
     if key == "backspace" then
         textfields[4] = string.sub(textfields[4], 1, string.len(textfields[4]) - 1)
     end
+    if key == "return" then
+        r, h = http.request {
+            url = api.url.."/user/"..UID.."/"..textfields[4],
+            method = "POST",
+            headers = {
+                ['token'] = token
+            },
+        }
+
+        print(h)
+        if h == 200 then
+            login()
+        end
+    end
+    if selectedSkinTone < 5 and key == "right" then
+        selectedSkinTone = selectedSkinTone + 1
+    end
+    if selectedSkinTone > 1 and key == "left" then
+        selectedSkinTone = selectedSkinTone - 1
+    end
+
 end
 
 function checkLoginTextinputPhaseCreation(key)
