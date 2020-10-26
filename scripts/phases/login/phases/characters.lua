@@ -4,7 +4,7 @@
 local json = require("scripts.libraries.json")
 local http = require("socket.http")
 
-local characterSelected = -1
+characterSelected = 0
 
 function drawCharactersPhase()
     love.graphics.setFont(headerFont)
@@ -58,18 +58,57 @@ function checkClickLoginPhaseCharacter(x,y)
     end
 
     if isMouseOver(loginImageX+32, loginImageY+390, buttonImage:getWidth(), buttonImage:getHeight()) then
-        username = characters[characterSelected]["Name"]
-        local b = {}
-        c, h = http.request{url = api.url.."/players/"..username, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
-        local response = json:decode(b[1])
-        player.x = response['Me']['X']
-        player.y = response['Me']['Y']
-        player.dx = player.x*32
-        player.dy = player.y*32
-        totalCoverAlpha = 2
-        love.audio.play(awakeSfx)
-        
-        phase = "game"
-        love.audio.stop( titleMusic )
+        transitionToPhaseGame()
+    end
+end
+
+function transitionToPhaseGame()
+    username = characters[characterSelected]["Name"]
+    local b = {}
+    c, h = http.request{url = api.url.."/players/"..username, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
+    local response = json:decode(b[1])
+    player.x = response['Me']['X']
+    player.y = response['Me']['Y']
+    player.dx = player.x*32
+    player.dy = player.y*32
+    totalCoverAlpha = 2
+    love.audio.play(awakeSfx)
+    
+    phase = "game"
+    love.audio.stop( titleMusic )
+end
+
+function checkLoginKeyPressedPhaseCharchters(key)
+    -- if key == "down" then
+    --     characterSelected = characterSelected + 1
+    --     print(characterSelected)
+    -- end
+    -- if key == "up" then
+    --     characterSelected = characterSelected - 1
+    --     print(characterSelected)
+    -- end
+   
+    if characterSelected < 3 then
+        if key == "down" then
+            characterSelected = characterSelected + 1
+            print(characterSelected)
+        end
+    end
+    if characterSelected > 1 then
+        if key == "up" then
+            characterSelected = characterSelected - 1
+            print(characterSelected)
+        end
+    end
+    
+    if characterSelected > 0 then
+        if key == "return" then
+            if characters[characterSelected] ~= null then
+               transitionToPhaseGame() 
+            else
+                newCharacterPosition = characterSelected
+                loginPhase = "creation"
+            end
+        end
     end
 end

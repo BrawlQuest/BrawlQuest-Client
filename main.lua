@@ -104,8 +104,6 @@ function love.draw()
             drawChatPanel(uiX/i, uiY/i)
             love.graphics.setDefaultFilter("nearest", "nearest")
         love.graphics.pop()
-        
-        -- drawChatPanel(love.graphics.getWidth(),love.graphics.getHeight())
 
         love.graphics.print("BrawlQuest\nEnemies in aggro: "..enemiesInAggro)
         Luven.camera:draw()
@@ -197,8 +195,13 @@ end
 
 
 function love.keypressed(key)
+    -- checkLoginKeyPressedPhaseCharchters(key)
+
     if phase == "login" then
         checkLoginKeyPressed(key)
+        if loginPhase == "characters" then
+            checkLoginKeyPressedPhaseCharchters(key)
+        end
     else
         if key == "m" then
         beginMounting()
