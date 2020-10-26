@@ -68,6 +68,8 @@ function checkLoginKeyPressedPhaseLogin(key)
     elseif key == "tab" or key == "return" then
         if editingField == 1 then
             editingField = 2
+        elseif editingField == 2 and key == "tab" then 
+            editingField = 1
         elseif editingField == 2 and key == "return" then
             login()
         end

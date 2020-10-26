@@ -35,3 +35,20 @@ function drawButton(text,x,y)
 
     love.graphics.printf(text,x,y+5,buttonImage:getWidth(),"center")
 end
+
+function drawLargeButton(text,x,y)
+    if isMouseOver(x,y,charactersButtonImage:getWidth(), charactersButtonImage:getHeight()) then
+        love.graphics.setColor(0.168,0.525,1)
+    else
+        love.graphics.setColor(1,1,1)
+    end
+    love.graphics.draw(charactersButtonImage,x,y)
+
+    if isMouseOver(x,y,charactersButtonImage:getWidth(), charactersButtonImage:getHeight()) then
+        love.graphics.setColor(1,1,1)
+    else
+        love.graphics.setColor(0,0,0)
+    end
+
+    love.graphics.printf(text,x,y+15,charactersButtonImage:getWidth(),"center")
+end
