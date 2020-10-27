@@ -41,7 +41,6 @@ totalCoverAlpha = 0 -- this covers the entire screen in white, for hiding purpos
 timeOfDay = 0
 username = "Pebsie"
 readyForUpdate = true
-scale, uiX, uiY = 1
 
 sendUpdate = false
 
@@ -126,13 +125,9 @@ function love.update(dt)
             tick()
             nextTick = 1
         end
-
         oldLightAlpha = oldLightAlpha - 2*dt -- update light, essentially
         totalCoverAlpha = totalCoverAlpha - 1*dt
-        
-        uiX = love.graphics.getWidth()/scale -- scaling options
-        uiY = love.graphics.getHeight()/scale
-
+        updateHUD(dt)
         updateDummyEnemies(dt)
         updateCharacter(dt)
         updateBones(dt)
@@ -232,17 +227,10 @@ function love.mousepressed(x,y,button)
     end
 end
 
-function
-
 function love.resize(width, height)
     if phase == "login" then
         initLogin()
     else
         reinitLighting(width, height)
     end
-end
-
-function love.wheelmoved( dx, dy )
-    velx = velx + dx * 16
-    vely = vely + dy * 16
 end

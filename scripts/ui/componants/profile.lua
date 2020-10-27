@@ -1,6 +1,9 @@
 function drawProfile()
 	if isMouseOver(0,0,perks:getWidth()*scale,perks:getHeight()*scale) then
 		love.graphics.draw(perks)
+		printWidth = (profileBgnd:getWidth()+perks:getWidth())*scale+5
+	else
+		printWidth = profileBgnd:getWidth()*scale+5
     end
     
 	love.graphics.draw(profileBgnd)

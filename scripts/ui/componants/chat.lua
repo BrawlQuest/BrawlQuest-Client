@@ -95,6 +95,10 @@ function getFullChatHeight(username, text) -- gets the chat height for recalling
 	end
 end
 
+function getChatWidth()
+	return chatWidth+130
+end
+
 function tablelength(T)
 	return #T
 end

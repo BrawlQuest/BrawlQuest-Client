@@ -2,6 +2,10 @@ function initHUD()
     --scaling
     scale, uiX, uiY = 1
 
+    -- scrolling
+	posyInventory = 0
+    velyInventory = 0 -- The scroll velocity
+
     -- mouse
 	love.mouse.setVisible(false) -- make default mouse invisible
     mouseImg = love.graphics.newImage("assets/ui/mouse.png") -- load in a custom mouse image
@@ -54,3 +58,20 @@ function initHUD()
     battlebarItemBg = love.graphics.newImage("assets/ui/hud/battlebar/battlebarItem.png")
 end
 
+function updateHUD( dt )
+    uiX = love.graphics.getWidth()/scale -- scaling options
+    uiY = love.graphics.getHeight()/scale
+    posyInventory = posyInventory + velyInventory * dt
+    velyInventory = velyInventory - velyInventory * math.min( dt * 15, 1 )
+    if posyInventory < 1 then
+        posyInventory = 0
+    elseif posyInventory > 500 then
+        posyInventory = 500
+    end
+end
+
+function love.wheelmoved( dx, dy )
+    if isMouseOver(0, toolbary*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
+        velyInventory = velyInventory + dy * 16
+    end
+end

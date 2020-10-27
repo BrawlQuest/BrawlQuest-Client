@@ -21,5 +21,6 @@ function drawHUD()
     love.graphics.setFont(smallTextFont)
     love.graphics.print("BrawlQuest\nEnemies in aggro: "..enemiesInAggro.."\nWidth "
     ..love.graphics.getWidth().."\nHeight "..love.graphics.getHeight().."\nuiX "
-    ..uiX.."\nuiY "..uiY.." ",profileBgnd:getWidth()*scale+5, 5)
+    ..uiX.."\nuiY "..uiY.." ",printWidth, 5)
+    --love.graphics.rectangle("fill", (uiX-getChatWidth()), 0, getChatWidth()*(scale*0.5), uiY)
 end 
