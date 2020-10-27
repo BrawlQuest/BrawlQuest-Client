@@ -24,7 +24,8 @@ player = {
         x = -100,
         y = -100,
         stepSndPlay = 0.3,
-    }
+    },
+    displayName = "Lord Squabulus"
 }
 
 

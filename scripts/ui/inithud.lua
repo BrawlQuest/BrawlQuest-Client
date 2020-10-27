@@ -48,5 +48,8 @@ function initHUD()
 	profileImgBox = love.graphics.newImage("assets/ui/hud/profile/Profile.png")
 	profileBars = love.graphics.newImage("assets/ui/hud/profile/bars.png")
     profileBgnd = love.graphics.newImage("assets/ui/hud/profile/profile-backing.png")
+
+    -- Battlebar
+    battlebarBgnd = love.graphics.newImage("assets/ui/hud/battlebar/battlebarBg.png")
 end
 
