@@ -196,8 +196,6 @@ end
 
 
 function love.keypressed(key)
-    -- checkLoginKeyPressedPhaseCharchters(key)
-
     if phase == "login" then
         checkLoginKeyPressed(key)
         if loginPhase == "characters" then
@@ -234,10 +232,17 @@ function love.mousepressed(x,y,button)
     end
 end
 
+function
+
 function love.resize(width, height)
     if phase == "login" then
         initLogin()
     else
         reinitLighting(width, height)
     end
+end
+
+function love.wheelmoved( dx, dy )
+    velx = velx + dx * 16
+    vely = vely + dy * 16
 end

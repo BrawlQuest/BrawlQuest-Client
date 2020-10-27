@@ -10,15 +10,14 @@ function drawToolbar()
 	end
 
 	if isMouseOver(0, toolbary*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
-		love.graphics.draw(inventory, 0, toolbary)
+		drawInventory()
 		love.graphics.setColor(0,0,0,1)
 		love.graphics.setFont(smallTextFont, 16)
 		love.graphics.print("Serach", 105, toolbary+14)
 		smallTextFont:setFilter( "nearest", "nearest" )
 		love.graphics.setColor(1,1,1,1)
-		-- love.graphics.setFont(font)
 	end
-	
+
 	love.graphics.draw(toolbarBg, 0, toolbary)
 
 	local toolbarItems = {a0sword,a1sword,a2sword,a3sword,a4sword,a0axe,a1axe,a2axe,a3axe,a4axe}
@@ -40,4 +39,21 @@ function drawToolbar()
 	end
 	circleFont:setFilter( "nearest", "nearest" )
 	love.graphics.setFont(font)
+end
+
+function drawInventory()
+	love.graphics.draw(inventory, 0, toolbary)
+	love.graphics.rectangle("fill", 70, toolbary+40, 180, 483)
+	love.graphics.stencil(drawInventoryStencil, "replace", 1)
+	love.graphics.setStencilTest("greater", 0)
+	
+	love.graphics.setColor(0,0,0,0.2)
+	love.graphics.circle("fill", 0, 400, 150, 50)
+	love.graphics.setColor(1,1,1,1)
+
+	love.graphics.setStencilTest()
+end
+
+function drawInventoryStencil()
+	love.graphics.rectangle("fill", 70, toolbary+40, 180, 483)
 end

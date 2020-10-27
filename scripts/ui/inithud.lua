@@ -51,5 +51,6 @@ function initHUD()
 
     -- Battlebar
     battlebarBgnd = love.graphics.newImage("assets/ui/hud/battlebar/battlebarBg.png")
+    battlebarItemBg = love.graphics.newImage("assets/ui/hud/battlebar/battlebarItem.png")
 end
 
