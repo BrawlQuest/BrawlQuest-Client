@@ -12,7 +12,7 @@ function battlebarPlayer(thisX, iy)
     local thisY = iy-battlebarBgnd:getHeight()
     love.graphics.draw(battlebarBgnd, thisX, thisY)
     love.graphics.draw(profilePic, thisX+10, thisY+10)
-    battlebarNameAndBars(thisX, thisY, player.displayName, player.hp, player.mhp)
+    battlebarNameAndBars(thisX, thisY, player.name, player.hp, player.mhp)
     battlebarItem(thisX-44, thisY+18, a3sword, "+3")
 end
 
