@@ -76,7 +76,7 @@ function drawInventory()
 	love.graphics.setStencilTest("greater", 0) -- push
 		
         drawInventoryFeilds(70, toolbary+40+posyInventory)
-        love.graphics.rectangle("fill", 70, toolbary+40+posyInventory, 10, getFullUserInventoryFieldHeight())
+        -- love.graphics.rectangle("fill", 70, toolbary+40+posyInventory, 10, getFullUserInventoryFieldHeight())
 
 	love.graphics.setStencilTest() -- pop
 end

@@ -67,14 +67,11 @@ function updateHUD( dt )
     uiY = love.graphics.getHeight()/scale
     posyInventory = posyInventory + velyInventory * dt
     velyInventory = velyInventory - velyInventory * math.min( dt * 15, 1 )
-    -- if posyInventory < 1 then
-    --     posyInventory = 0
-    -- elseif posyInventory > 500 then
-    --     posyInventory = 500
-    -- end
 
-    if posyInventory > getFullUserInventoryFieldHeight() then
-        posyInventory = getFullUserInventoryFieldHeight()
+    if posyInventory < (getFullUserInventoryFieldHeight()*-1)+483 then
+        posyInventory = (getFullUserInventoryFieldHeight()*-1)+483
+    elseif posyInventory > 0 then
+        posyInventory = 0
     end
 end
 
@@ -82,5 +79,4 @@ function love.wheelmoved( dx, dy )
     if isMouseOver(0, toolbary*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
         velyInventory = velyInventory + dy * 16
     end
-    print(posyInventory)
 end
