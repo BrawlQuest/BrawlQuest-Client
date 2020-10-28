@@ -16,23 +16,18 @@ end
 
 function drawInventoryFeilds(thisX, y)
     love.graphics.setFont(inventorySubHeaderFont)
+    thisY = y
     for i = 0, tableLength(inventoryFields)-1 do -- Draws each inventory field
-        thisY = y + (i*200)
-        inventoryItemField(thisX+8, thisY+38, i+1)
+        inventoryItemField(thisX+8, thisY+0, i+1)
+        thisY = thisY + getUserInventoryFieldHeight(i+1)
     end
 end
 
 function inventoryItemField(thisX, y, field) 
-    love.graphics.printf(inventoryFields[field], thisX, y, 483)
+    --love.graphics.printf(inventoryFields[field], thisX, y, 483)
     
-    if i <= 3 then love.graphics.rectangle("fill", thisX, y, 10, 15+42)
-    elseif i >= 4 and i <= 7 then love.graphics.rectangle("fill", thisX, y, 10, 15+84)
-    elseif i >= 8 and i <= 11 then love.graphics.rectangle("fill", thisX, y, 10, 15+126)
-    elseif i >= 12 and i <= 15 then love.graphics.rectangle("fill", thisX, y, 10, 15+168)
-    elseif i >= 16 and i <= 19 then love.graphics.rectangle("fill", thisX, y, 10, 15+168)
-    end
-    
-    thisY = y + 15
+    love.graphics.printf(inventoryFields[field], thisX, thisY, 483)
+    thisY = thisY + 18
     for i = 0, tableLength(userInventory[field])-1 do 
         if i <= 3 then 
             drawInventoryItem(thisX+((i-0)*42), thisY+0, field, i+1)
@@ -49,6 +44,25 @@ function inventoryItemField(thisX, y, field)
     end
 end
 
+function getUserInventoryFieldHeight(field)
+    local i = tableLength(userInventory[field])-1
+    local j = 2
+    if i <= 3 then return j+42
+    elseif i >= 4 and i <= 7 then return j+84
+    elseif i >= 8 and i <= 11 then return j+126
+    elseif i >= 12 and i <= 15 then return j+168
+    elseif i >= 16 and i <= 19 then return j+168
+    end
+end
+
+function getFullUserInventoryFieldHeight()
+    local j = 0
+    for i = 1, tableLength(userInventory) do
+        j = j + getUserInventoryFieldHeight(i) + 18
+    end
+    return j
+end
+
 function drawInventoryItem(thisX, thisY, field, item)
     love.graphics.draw(inventoryItemBgnd, thisX, thisY) -- Background
     love.graphics.draw(userInventory[field][item], thisX+3, thisY+3) -- Item
@@ -62,6 +76,7 @@ function drawInventory()
 	love.graphics.setStencilTest("greater", 0) -- push
 		
         drawInventoryFeilds(70, toolbary+40+posyInventory)
+        love.graphics.rectangle("fill", 70, toolbary+40+posyInventory, 10, getFullUserInventoryFieldHeight())
 
 	love.graphics.setStencilTest() -- pop
 end
