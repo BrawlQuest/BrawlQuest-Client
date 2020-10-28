@@ -52,16 +52,16 @@ function drawPlayer()
         diffX = player.target.x - player.x
         diffY = player.target.y - player.y
         if arrowImg[diffX] ~= nil and arrowImg[diffX][diffY] ~= nil then
-            love.graphics.setColor(1,1,1,0.5)
+            love.graphics.setColor(1,1,1,1-nextTick)
             love.graphics.draw(arrowImg[diffX][diffY], player.dx-32, player.dy-32)
         end
     end
-    if me.AX ~= me.X or me.AY ~= me.Y then
+    if player.target.active and (me.AX ~= me.X or me.AY ~= me.Y) then
         diffX = me.AX - me.X
         diffY = me.AY - me.Y
         if arrowImg[diffX] ~= nil and arrowImg[diffX][diffY] ~= nil then
             love.graphics.setColor(1,1,1,1)
-            love.graphics.draw(arrowImg[diffX][diffY], (me.X*32)-32, (me.Y*32)-32)
+        --    love.graphics.draw(arrowImg[diffX][diffY], (me.X*32)-32, (me.Y*32)-32)
         end
     end
 end
@@ -183,6 +183,7 @@ end
 function checkTargeting() -- Check which keys are down and place the player target accordingly
     player.target.x = player.x
     player.target.y = player.y
+    local wasActive = player.target.active
     player.target.active = false
 
     if love.keyboard.isDown("up") then
@@ -199,6 +200,11 @@ function checkTargeting() -- Check which keys are down and place the player targ
     elseif love.keyboard.isDown("right") then
         player.target.active = true
         player.target.x = player.x + 1
+    end
+
+    if not wasActive and player.target.active then
+        -- newly active, trigger a send to make things feel a tad more responsive
+        nextUpdate = 0
     end
 
     if player.target.active and player.isMounted then

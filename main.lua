@@ -40,6 +40,8 @@ sblockMap = {}
 lootTest = {}
 nextUpdate = 1
 timeOutTick = 3
+previousTick = 0
+nextTick = 1
 totalCoverAlpha = 0 -- this covers the entire screen in white, for hiding purposes
 timeOfDay = 0
 username = "Pebsie"
@@ -122,6 +124,7 @@ function love.update(dt)
         updateLogin(dt)
     else
         nextUpdate = nextUpdate - 1*dt
+        nextTick = nextTick - 1*dt
         if nextUpdate < 0 then
              
             getPlayerData('/players/'..username, json:encode({
@@ -189,12 +192,7 @@ function tick()
   -- tickDummyEnemies()
     tickOtherPlayers()
     tickEnemies()
-    if player.target.active then
-    
-    else
-        player.target.x = player.x
-        player.target.y = player.y
-    end
+    nextTick = 1
 
 end
 
