@@ -193,7 +193,6 @@ function tick()
     tickOtherPlayers()
     tickEnemies()
     nextTick = 1
-
 end
 
 

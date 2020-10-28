@@ -56,7 +56,8 @@ function calculateTileLit(tx,ty)
 
     local success, counter = Bresenham.line( player.x, player.y, tx, ty, function( x, y, counter )
      --   print( string.format( 'x: %d, y: %d, steps: %d, tile: %s', x, y, counter, grid[x][y] ))
-        if treeMap[x..","..y] then
+        if treeMap[x..","..y] then -- Are you here to make enemies count as light blockers? Maybe don't...
+            -- We've tried it a few times and it just doesn't work!
             return false
         end
         return true
