@@ -5,7 +5,7 @@ function loadInventory()
     inventoryFields = {"weapons", "spells", "armour", "mounts", "other"}
     userInventory = {}
     userInventory[1] = {a0sword, a1sword, a2sword, a3sword, a4sword, a4sword, a4sword, a4sword, a4sword, a4sword}
-    userInventory[2] = {a0sword, a1sword, a2sword, a3sword, a4sword}
+    userInventory[2] = {a0sword, a1sword, a2sword, a3sword}
     userInventory[3] = {a0sword, a1sword, a2sword, a3sword, a4sword}
     userInventory[4] = {a0sword, a1sword, a2sword, a3sword, a4sword}
     userInventory[5] = {a0sword, a1sword, a2sword, a3sword, a4sword}
@@ -17,14 +17,21 @@ end
 function drawInventoryFeilds(thisX, y)
     love.graphics.setFont(inventorySubHeaderFont)
     for i = 0, tableLength(inventoryFields)-1 do -- Draws each inventory field
-        thisY = y + (i*100)
+        thisY = y + (i*200)
         inventoryItemField(thisX+8, thisY+38, i+1)
-        love.graphics.rectangle("fill", thisX, thisY, 10, 42+15)
     end
 end
 
 function inventoryItemField(thisX, y, field) 
     love.graphics.printf(inventoryFields[field], thisX, y, 483)
+    
+    if i <= 3 then love.graphics.rectangle("fill", thisX, y, 10, 15+42)
+    elseif i >= 4 and i <= 7 then love.graphics.rectangle("fill", thisX, y, 10, 15+84)
+    elseif i >= 8 and i <= 11 then love.graphics.rectangle("fill", thisX, y, 10, 15+126)
+    elseif i >= 12 and i <= 15 then love.graphics.rectangle("fill", thisX, y, 10, 15+168)
+    elseif i >= 16 and i <= 19 then love.graphics.rectangle("fill", thisX, y, 10, 15+168)
+    end
+    
     thisY = y + 15
     for i = 0, tableLength(userInventory[field])-1 do 
         if i <= 3 then 
