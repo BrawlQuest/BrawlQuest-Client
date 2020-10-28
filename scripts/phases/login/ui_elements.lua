@@ -35,3 +35,35 @@ function drawButton(text,x,y)
 
     love.graphics.printf(text,x,y+5,buttonImage:getWidth(),"center")
 end
+
+function drawLargeButton(text,x,y)
+    if isMouseOver(x,y,charactersButtonImage:getWidth(), charactersButtonImage:getHeight()) then
+        love.graphics.setColor(0.168,0.525,1)
+    else
+        love.graphics.setColor(1,1,1)
+    end
+    love.graphics.draw(charactersButtonImage,x,y)
+
+    if isMouseOver(x,y,charactersButtonImage:getWidth(), charactersButtonImage:getHeight()) then
+        love.graphics.setColor(1,1,1)
+    else
+        love.graphics.setColor(0,0,0)
+    end
+
+    love.graphics.printf(text,x,y+15,charactersButtonImage:getWidth(),"center")
+end
+
+function roundRectangle(type, x, y, width, height, radius)
+	--RECTANGLES
+	love.graphics.rectangle(type, x + radius, y + radius, width - (radius * 2), height - radius * 2)
+	love.graphics.rectangle(type, x + radius, y, width - (radius * 2), radius)
+	love.graphics.rectangle(type, x + radius, y + height - radius, width - (radius * 2), radius)
+	love.graphics.rectangle(type, x, y + radius, radius, height - (radius * 2))
+	love.graphics.rectangle(type, x + (width - radius), y + radius, radius, height - (radius * 2))
+	
+	--ARCS
+	love.graphics.arc(type, x + radius, y + radius, radius, math.rad(-180), math.rad(-90))
+	love.graphics.arc(type, x + width - radius , y + radius, radius, math.rad(-90), math.rad(0))
+	love.graphics.arc(type, x + radius, y + height - radius, radius, math.rad(-180), math.rad(-270))
+	love.graphics.arc(type, x + width - radius , y + height - radius, radius, math.rad(0), math.rad(90))
+end

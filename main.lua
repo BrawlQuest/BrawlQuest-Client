@@ -7,7 +7,13 @@ require "scripts.effects.bones"
 require "scripts.effects.lighting"
 require "scripts.effects.music"
 require "scripts.effects.loot"
-require "scripts.ui.chat"
+require "scripts.ui.inithud"
+require "scripts.ui.drawhud"
+require "scripts.ui.componants.chat"
+require "scripts.ui.componants.toolbar"
+require "scripts.ui.componants.battlebar"
+require "scripts.ui.componants.profile"
+require "scripts.ui.componants.inventory"
 require "scripts.libraries.api"
 require "scripts.libraries.utils"
 require "scripts.phases.login.login"
@@ -38,7 +44,6 @@ totalCoverAlpha = 0 -- this covers the entire screen in white, for hiding purpos
 timeOfDay = 0
 username = "Pebsie"
 readyForUpdate = true
-scale, uiX, uiY = 1
 
 oldInfo = {}
 
@@ -47,10 +52,10 @@ sendUpdate = false
 function love.load()
     print("start")
     initHardData()
-    initChat()
     love.graphics.setDefaultFilter("nearest", "nearest")
     loadMusic()
     initLogin()
+    initHUD()
     birds = love.audio.newSource("assets/sfx/ambient/forest/jungle.ogg", "stream")
     birds:setLooping(true)
     love.audio.play(birds)
@@ -74,7 +79,7 @@ function love.load()
     love.graphics.setFont(textFont)
 
     initDummyData()
-    scale, uiX, uiY = 1
+    
     print("loaded")
 end
 
@@ -97,18 +102,15 @@ function love.draw()
         drawLoot()
         Luven.drawEnd()
 
-        love.graphics.push() -- chat and quests scaling TODO: Quests
-            local i = 0.5
-            love.graphics.scale(scale*i)
-            drawChatPanel(uiX/i, uiY/i)
-            love.graphics.setDefaultFilter("nearest", "nearest")
-        love.graphics.pop()
+        drawHUD()
 
-        love.graphics.print("BrawlQuest\nEnemies in aggro: "..enemiesInAggro)
         Luven.camera:draw()
     end
 
-    
+    love.graphics.setColor(1,1,1,1)
+    local mx, my = love.mouse.getPosition()
+	love.graphics.draw(mouseImg, mx, my)
+
 
     love.graphics.setColor(1,1,1,totalCoverAlpha)
     love.graphics.rectangle("fill",0,0,love.graphics.getWidth(),love.graphics.getHeight())
@@ -131,14 +133,16 @@ function love.update(dt)
 
             nextUpdate = 0.5
         end
-
         oldLightAlpha = oldLightAlpha - 2*dt -- update light, essentially
         totalCoverAlpha = totalCoverAlpha - 1*dt
+        updateHUD(dt)
+ 
         
         uiX = love.graphics.getWidth()/scale -- scaling options
         uiY = love.graphics.getHeight()/scale
 
         updateEnemies(dt)
+
         updateCharacter(dt)
         updateBones(dt)
         updateMusic(dt)
@@ -194,26 +198,22 @@ end
 
 
 function love.keypressed(key)
-    -- checkLoginKeyPressedPhaseCharchters(key)
-
-    if (key == "l") then
-        print("Tom is a lower")
-    end
 
     if phase == "login" then
         checkLoginKeyPressed(key)
     else
         if key == "m" then
-        beginMounting()
+            beginMounting()
         end
         checkTargeting()
+        if key == "." then
+            scale = scale * 1.25
+        end
+        if key == "," then
+            scale = scale / 1.25
+        end
     end
-    if key == "." then
-        scale = scale * 1.25
-    end
-    if key == "," then
-        scale = scale / 1.25
-    end
+    
     if key == "escape" then
         print("end")
         love.event.quit()

@@ -21,11 +21,13 @@ editingField = 1
 
 function initLogin()
     loginEntryImage = love.graphics.newImage("assets/ui/login/login.png")
-    charactersEntryImage = love.graphics.newImage("assets/ui/login/character.png")
+    charactersEntryImage = love.graphics.newImage("assets/ui/login/characterbackground.png")
+    charactersButtonImage = love.graphics.newImage("assets/ui/login/characterwidget.png")
     blankPanelImage = love.graphics.newImage("assets/ui/login/emptylogin.png")
     buttonImage = love.graphics.newImage("assets/ui/login/button.png")
     textFieldImage = love.graphics.newImage("assets/ui/login/textbox.png")
     basePanelImage = love.graphics.newImage("assets/ui/login/character base panel.png")
+    
     initLoginBackground()
 end
 
@@ -45,7 +47,7 @@ function drawLogin()
 
     love.graphics.setFont(smallTextFont)
     love.graphics.print("BrawlQuest " .. version ..
-                            "\nFresh Play LTD 2016-2020\n\nGraphics by David E. Gervais\nMusic by Joseph Pearce\n\nMade with LÖVE")
+    "\nFresh Play LTD 2016-2020\n\nGraphics by David E. Gervais\nMusic by Joseph Pearce\n\nMade with LÖVE", 10, 10)
 end
 
 function updateLogin(dt)

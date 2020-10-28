@@ -8,45 +8,49 @@ characterSelected = 0
 
 function drawCharactersPhase()
     love.graphics.setFont(headerFont)
-    loginImageX, loginImageY = math.floor(love.graphics.getWidth() / 2 - (loginEntryImage:getWidth() / 2)),
-    math.floor(love.graphics.getHeight() / 2 - (loginEntryImage:getHeight() / 2))
+    loginImageX, loginImageY = math.floor(love.graphics.getWidth() / 2 - (charactersEntryImage:getWidth() / 2)),
+    math.floor(love.graphics.getHeight() / 2 - (charactersEntryImage:getHeight() / 2))
     love.graphics.draw(charactersEntryImage, loginImageX, loginImageY)
+    love.graphics.setFont(headerBigFont)
+    love.graphics.print("Choose Character", loginImageX+30, loginImageY+90)
+
+    love.graphics.setFont(headerFont)
+    love.graphics.print("Character Name", loginImageX+30, loginImageY+140)
 
     for i = 1,3 do
-        local thisX,thisY = loginImageX+32,loginImageY+240+((i-1)*48)
-
-     
-        if isMouseOver(thisX,thisY,buttonImage:getWidth(), buttonImage:getHeight()) or characterSelected == i then
+        local thisX,thisY = loginImageX+32,loginImageY+180+((i-1)*60)
+        
+        if isMouseOver(thisX,thisY,charactersButtonImage:getWidth(), charactersButtonImage:getHeight()) or characterSelected == i then
             love.graphics.setColor(0.168,0.525,1)
         else
             love.graphics.setColor(1,1,1)
         end
-        love.graphics.draw(buttonImage,thisX,thisY)
+        love.graphics.draw(charactersButtonImage,thisX,thisY)
 
         love.graphics.setColor(1,1,1)
-        if isMouseOver(thisX,thisY,buttonImage:getWidth(), buttonImage:getHeight()) or characterSelected == i then
-            love.graphics.draw(playerImg,thisX+25,thisY+3)
+        if isMouseOver(thisX,thisY,charactersButtonImage:getWidth(), charactersButtonImage:getHeight()) or characterSelected == i then
+            love.graphics.draw(playerImg,thisX+25,thisY+13)
             love.graphics.setColor(1,1,1)
         else
-            love.graphics.draw(playerImg,thisX+20,thisY+3)
+            love.graphics.draw(playerImg,thisX+20,thisY+13)
             love.graphics.setColor(0,0,0)
         end
         if characters[i] ~= null then
-            love.graphics.printf(characters[i]["Name"],thisX+60,thisY+5,buttonImage:getWidth()-80,"center")
+            love.graphics.printf(characters[i]["Name"],thisX+80,thisY+15,charactersButtonImage:getWidth()-80,"left")
         else
-            love.graphics.printf("NEW CHARACTER",thisX+20,thisY+5,buttonImage:getWidth()-20,"center")
+            love.graphics.printf("NEW CHARACTER",thisX+80,thisY+15,charactersButtonImage:getWidth()-80,"left")
         end
     end
 
     if characters[characterSelected] ~= null then
-        drawButton("ENTER WORLD", loginImageX+32, loginImageY+390)
+        drawLargeButton("ENTER WORLD", loginImageX+32, loginImageY+360)
     end
 end
 
 function checkClickLoginPhaseCharacter(x,y)
     for i = 1,3 do
-        local thisX,thisY = loginImageX+32,loginImageY+240+((i-1)*48)
-        if isMouseOver(thisX,thisY, buttonImage:getWidth(), buttonImage:getHeight()) then
+        local thisX,thisY = loginImageX+32,loginImageY+180+((i-1)*60)
+        if isMouseOver(thisX,thisY, charactersButtonImage:getWidth(), charactersButtonImage:getHeight()) then
             if characters[i] ~= null then
                 characterSelected = i
             else
@@ -57,7 +61,7 @@ function checkClickLoginPhaseCharacter(x,y)
         end
     end
 
-    if isMouseOver(loginImageX+32, loginImageY+390, buttonImage:getWidth(), buttonImage:getHeight()) then
+    if isMouseOver(loginImageX+32, loginImageY+390, charactersButtonImage:getWidth(), charactersButtonImage:getHeight()) then
         transitionToPhaseGame()
     end
 end

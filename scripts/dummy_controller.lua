@@ -1,5 +1,5 @@
 function initDummyData() 
-    print("YOU'RE INITIALISING DUMMY DATA.")
+    -- print("YOU'RE INITIALISING DUMMY DATA.")
 
     lootSfx = love.audio.newSource("assets/sfx/loot.mp3", "static")
     lootImg = love.graphics.newImage("assets/player/gear/a4/special.png")
