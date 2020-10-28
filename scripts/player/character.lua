@@ -19,6 +19,7 @@ player = {
     },
     xp = 0,
     isMounted = false,
+    name = "",
     isMounting = false,
     mount = {
         x = -100,

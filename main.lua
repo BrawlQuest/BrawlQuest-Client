@@ -174,6 +174,7 @@ function love.update(dt)
             me = response['Me']
             -- update player
             player.hp = me.HP
+            player.name = me.Name
             print(#sblockMap)
             newEnemyData(response['Enemies'])
             if response['Tick'] ~= previousTick then
