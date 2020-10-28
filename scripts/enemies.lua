@@ -173,8 +173,8 @@ function drawEnemies()
                 love.graphics.setColor(1,1,1,v.aggroAlpha)
                 love.graphics.draw(alertImg,v.dx+8,v.dy-16)
                 love.graphics.setColor(1,1,1)
-                love.graphics.setFont(smallTextFont)
-                love.graphics.printf(v.Target .. "\n" .. tostring(v.IsAggro), v.dx, v.dy-6, 32, "center")
+            --    love.graphics.setFont(smallTextFont)
+              --  love.graphics.printf(v.Target .. "\n" .. tostring(v.IsAggro), v.dx, v.dy-6, 32, "center")
             end
 
             if distanceToPoint(v.X,v.Y,player.x,player.y) < v.Enemy.Range+1 then
