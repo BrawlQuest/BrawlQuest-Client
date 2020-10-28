@@ -58,20 +58,25 @@ end
 
 function tickOtherPlayers()
     for i, v in pairs(players) do
-        if v.AX ~= 0 then
-            if v.AX < v.X then
-               playersDrawable[i].X = playersDrawable[i].X - 16
-                
-            elseif v.AX > v.X then
-                playersDrawable[i].X = playersDrawable[i].X + 16
+        if  playersDrawable[i] then
+            if v['Name'] ~= playersDrawable[i]['Name'] then
+                playersDrawable[i] = v
             end
-        end
+            if v.AX ~= 0 then
+                if v.AX < v.X then
+                playersDrawable[i].X = playersDrawable[i].X - 16
+                    
+                elseif v.AX > v.X then
+                    playersDrawable[i].X = playersDrawable[i].X + 16
+                end
+            end
 
-        if v.AY ~= 0 then
-            if v.AY < v.Y then
-                playersDrawable[i].Y = playersDrawable[i].Y - 16
-            elseif v.AY > v.Y then
-                playersDrawable[i].Y = playersDrawable[i].Y + 16
+            if v.AY ~= 0 then
+                if v.AY < v.Y then
+                    playersDrawable[i].Y = playersDrawable[i].Y - 16
+                elseif v.AY > v.Y then
+                    playersDrawable[i].Y = playersDrawable[i].Y + 16
+                end
             end
         end
     end

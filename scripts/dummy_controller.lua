@@ -96,7 +96,7 @@ function drawDummy()
 
     love.graphics.setColor(1,1,1,1)
 
-    drawDummyEnemies()
+    --drawDummyEnemies()
     
     love.graphics.setColor(1,1,1,1)
 

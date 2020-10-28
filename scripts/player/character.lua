@@ -28,6 +28,8 @@ player = {
     displayName = "Lord Squabulus"
 }
 
+me = {}
+
 
 function drawPlayer()
     love.graphics.draw(swordImg, player.dx-(swordImg:getWidth()-32), player.dy-(swordImg:getHeight()-32))
@@ -44,6 +46,22 @@ function drawPlayer()
     end
     if player.isMounting then
         love.graphics.draw(horseImg, player.mount.x, player.mount.y)
+    end
+    if player.target.active then
+        diffX = player.target.x - player.x
+        diffY = player.target.y - player.y
+        if arrowImg[diffX] ~= nil and arrowImg[diffX][diffY] ~= nil then
+            love.graphics.setColor(1,1,1,0.5)
+            love.graphics.draw(arrowImg[diffX][diffY], player.dx-32, player.dy-32)
+        end
+    end
+    if me.AX ~= me.X or me.AY ~= me.Y then
+        diffX = me.AX - me.X
+        diffY = me.AY - me.Y
+        if arrowImg[diffX] ~= nil and arrowImg[diffX][diffY] ~= nil then
+            love.graphics.setColor(1,1,1,1)
+            love.graphics.draw(arrowImg[diffX][diffY], (me.X*32)-32, (me.Y*32)-32)
+        end
     end
 end
 
@@ -119,7 +137,7 @@ function movePlayer(dt)
             stepSfx:setPitch(love.math.random(90,200)/100)
             love.audio.play(stepSfx)
         end
-        if  blockMap[player.x..","..player.y] ~= nil then
+        if  blockMap[player.x..","..player.y] == true then
             player.x = original[1]
             player.y = original[2]
         else

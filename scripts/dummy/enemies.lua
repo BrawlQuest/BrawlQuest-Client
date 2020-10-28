@@ -4,9 +4,10 @@
 enemies = {}
 enemiesInAggro = 0 -- for music
 
+enemyImg = {} -- enemy images will be loaded here
+
 function loadDummyEnemies()
-    enemyImg = love.graphics.newImage("assets/monsters/skeletons/sword.png")
-    rangedEnemyImg = love.graphics.newImage("assets/monsters/skeletons/mage.png")
+
     alertImg = love.graphics.newImage("assets/ui/alert.png")
     attackSfxs = {
         love.audio.newSource("assets/sfx/monsters/skeletons/attack/1.ogg", "static"),
@@ -28,47 +29,48 @@ function loadDummyEnemies()
     }
 
 
-    for i = 1,10 do
-        enemies[#enemies+1] = {
-            x = love.math.random(0,15),
-            dx = 0, -- drawX / drawY, for smoothing purposes
-            dy = 0,
-            y = love.math.random(0,15),
-            hp = 12,
-            mhp = 12,
-            dhp = 12, -- drawn HP, for smoothing purposes
-            atk = 1,
-            aggro = true,
-            range = 1,
-            red = 0,
-            atkAlpha = 0, -- the alpha for the line that is drawn when an attack hits
-            aggroAlpha = 0
-        }
-        enemies[i].dx = enemies[i].x*32
-        enemies[i].dy = enemies[i].y*32
-        blockMap[enemies[#enemies].x..","..enemies[#enemies].y] = true
-    end
+    -- for i = 1,10 do
+    --     enemies[#enemies+1] = {
+    --         x = love.math.random(0,15),
+    --         dx = 0, -- drawX / drawY, for smoothing purposes
+    --         dy = 0,
+    --         y = love.math.random(0,15),
+    --         hp = 12,
+    --         mhp = 12,
+    --         dhp = 12, -- drawn HP, for smoothing purposes
+    --         atk = 1,
+    --         aggro = true,
+    --         range = 1,
+    --         red = 0,
+    --         atkAlpha = 0, -- the alpha for the line that is drawn when an attack hits
+    --         aggroAlpha = 0
+    --     }
+    --     enemies[i].dx = enemies[i].x*32
+    --     enemies[i].dy = enemies[i].y*32
+    --     blockMap[enemies[#enemies].x..","..enemies[#enemies].y] = true
+    -- end
 
-    for i = 1,2 do
-        enemies[#enemies+1] = {
-            x = love.math.random(10,15),
-            dx = 0, -- drawX / drawY, for smoothing purposes
-            dy = 0,
-            y = love.math.random(10,15),
-            hp = 24,
-            mhp = 24,
-            dhp = 24, -- drawn HP, for smoothing purposes
-            atk = 1,
-            aggro = true,
-            range = 2,
-            red = 0, -- when this is set the enemy lights up red to indicate being hit
-            atkAlpha = 0, -- the alpha for the line that is drawn when an attack hits
-            aggroAlpha = 0
-        }
-        enemies[#enemies].dx = enemies[#enemies].x*32
-        enemies[#enemies].dy = enemies[#enemies].y*32
-        blockMap[enemies[#enemies].x..","..enemies[#enemies].y] = true
-    end
+    -- for i = 1,2 do
+    --     enemies[#enemies+1] = {
+    --         x = love.math.random(10,15),
+    --         dx = 0, -- drawX / drawY, for smoothing purposes
+    --         dy = 0,
+    --         y = love.math.random(10,15),
+    --         hp = 24,
+    --         mhp = 24,
+    --         dhp = 24, -- drawn HP, for smoothing purposes
+    --         atk = 1,
+    --         aggro = true,
+    --         range = 2,
+    --         red = 0, -- when this is set the enemy lights up red to indicate being hit
+    --         atkAlpha = 0, -- the alpha for the line that is drawn when an attack hits
+    --         aggroAlpha = 0
+    --     }
+    --     enemies[#enemies].dx = enemies[#enemies].x*32
+    --     enemies[#enemies].dy = enemies[#enemies].y*32
+    --     blockMap[enemies[#enemies].x..","..enemies[#enemies].y] = true
+    -- end
+    
 end
 
 function drawDummyEnemies()
@@ -167,7 +169,7 @@ function moveToPlayer(x,y,v) -- this needs work
     local px = v.x
     local py = v.y
     while (difference(player.x,v.x) > v.range or difference(player.y,v.y) > v.range) and blockMap[x..","..y] ~= nil and iterationsLeft > 0 do
-        x = px
+        x = px 
         y = py
         x = x + love.math.random(-1,1)
         y = y + love.math.random(-1,1)
@@ -242,6 +244,7 @@ function tickDummyEnemies()
                 if (player.target.x ~= v.x or player.target.y ~= v.y) and v.range == 10000 then
                     if v.x > player.x then
                         v.dx = v.dx - 6
+                        
                     elseif v.x < player.x then
                         v.dx = v.dx + 6
                     end
