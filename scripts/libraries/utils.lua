@@ -47,3 +47,7 @@ function isMouseOver(x,y,width,height)
     
     return false
 end
+
+function tableLength(T)
+	return #T
+end

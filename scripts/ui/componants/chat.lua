@@ -27,7 +27,7 @@ end
 
 function drawChatPanel(x, y) -- the function to recall it all
 	love.graphics.setFont(font)
-	for i = 1, tablelength(messages) do
+	for i = 1, tableLength(messages) do
 		y = y - getFullChatHeight(messages[i].username, messages[i].text)
 		drawChatbox(x-(chatWidth+130), y-30, messages[i].username, messages[i].text)
 	end
@@ -97,8 +97,4 @@ end
 
 function getChatWidth()
 	return chatWidth+130
-end
-
-function tablelength(T)
-	return #T
 end

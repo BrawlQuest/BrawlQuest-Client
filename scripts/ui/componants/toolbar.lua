@@ -40,21 +40,3 @@ function drawToolbar()
 	circleFont:setFilter( "nearest", "nearest" )
 	love.graphics.setFont(font)
 end
-
-function drawInventory()
-	love.graphics.draw(inventory, 0, toolbary)
-	-- love.graphics.rectangle("fill", 70, toolbary+40, 180, 483)
-	
-	love.graphics.stencil(drawInventoryStencil, "replace", 1) -- stencils inventory
-	love.graphics.setStencilTest("greater", 0) -- push
-		
-		love.graphics.setColor(1,0,0,1)
-		love.graphics.rectangle("fill", 0, toolbary+40+posyInventory, 150, 50)
-		love.graphics.setColor(1,1,1,1)
-
-	love.graphics.setStencilTest() -- pop
-end
-
-function drawInventoryStencil()
-	love.graphics.rectangle("fill", 70, toolbary+40, 180, 483)
-end

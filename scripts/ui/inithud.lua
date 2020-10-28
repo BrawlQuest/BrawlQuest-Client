@@ -56,6 +56,10 @@ function initHUD()
     -- Battlebar
     battlebarBgnd = love.graphics.newImage("assets/ui/hud/battlebar/battlebarBg.png")
     battlebarItemBg = love.graphics.newImage("assets/ui/hud/battlebar/battlebarItem.png")
+
+    -- Inventory
+    inventorySubHeaderFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 10)
+    loadInventory()
 end
 
 function updateHUD( dt )
@@ -63,11 +67,11 @@ function updateHUD( dt )
     uiY = love.graphics.getHeight()/scale
     posyInventory = posyInventory + velyInventory * dt
     velyInventory = velyInventory - velyInventory * math.min( dt * 15, 1 )
-    if posyInventory < 1 then
-        posyInventory = 0
-    elseif posyInventory > 500 then
-        posyInventory = 500
-    end
+    -- if posyInventory < 1 then
+    --     posyInventory = 0
+    -- elseif posyInventory > 500 then
+    --     posyInventory = 500
+    -- end
 end
 
 function love.wheelmoved( dx, dy )
