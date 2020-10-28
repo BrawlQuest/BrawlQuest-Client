@@ -202,7 +202,6 @@ function love.keypressed(key)
 
     if phase == "login" then
         checkLoginKeyPressed(key)
-   
     else
         if key == "m" then
         beginMounting()

@@ -88,7 +88,20 @@ function newEnemyData(data) -- called when nearby data is returned
         enemy.Y = v.Y
       
         enemy.IsAggro = v.IsAggro
-        if v.IsAggro then enemiesInAggro = enemiesInAggro + 1 end
+        if v.IsAggro then
+            enemiesInAggro = enemiesInAggro + 1
+
+            if v.TargetName == me.Name then
+                boneSpurt(player.dx+16,player.dy+16,v.Enemy.ATK,48,1,0,0)
+                local attackSfx = attackSfxs[love.math.random(1,#attackSfxs)]
+                attackSfx:setPitch(love.math.random(50,100)/100)
+                love.audio.play(attackSfx)
+                if player.isMounted or player.isMounting then
+                    beginMounting()
+                end
+                v.atkAlpha = 1
+            end
+        end
     end
 
 --     for i,v in ipairs(data) do
@@ -190,6 +203,12 @@ function drawEnemies()
             love.audio.play(deathSfxs[love.math.random(1,#deathSfxs)])
             boneSpurt(v.dx+16,v.dy+16,48,72,0.8,0.8,1)
             v.hasBurst = true
+        end
+
+        if distanceToPoint(v.X,v.Y,player.x,player.y) < v.Enemy.Range+1 then
+            love.graphics.setColor(1,0,0,v.atkAlpha)
+            love.graphics.line(v.dx+16,v.dy+16,player.dx+16,player.dy+16)
+            love.graphics.setColor(1,1,1,1)
         end
     end
 end
