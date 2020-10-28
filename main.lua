@@ -166,7 +166,7 @@ function love.update(dt)
             local response = json:decode(info)
 
             players = response['Players']
-            sblockMap = response['BlockMap']
+            blockMap = response['BlockMap']
             me = response['Me']
             print(#sblockMap)
             newEnemyData(response['Enemies'])
@@ -181,6 +181,7 @@ end
 function tick()
   -- tickDummyEnemies()
     tickOtherPlayers()
+    tickEnemies()
     if player.target.active then
     
     else

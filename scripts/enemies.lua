@@ -52,8 +52,7 @@ function newEnemyData(data) -- called when nearby data is returned
         end
         
         if enemy.HP ~= v.HP then
-
-            if me.AX ~= me.X or me.AY ~= me.Y and (me.AX == enemy.X and me.AY == enemy.Y) then
+            if (me.AX ~= me.X or me.AY ~= me.Y) and (me.AX == enemy.X and me.AY == enemy.Y) then
                 if player.dx > me.AX*32 then
                         player.dx = player.dx - 16
                     elseif player.dx < me.AX*32 then
@@ -66,6 +65,12 @@ function newEnemyData(data) -- called when nearby data is returned
                     end
                 
             end
+            enemy.HP = v.HP
+            enemy.red = 1
+
+            enemyHitSfx:setPitch(love.math.random(50,100)/100)
+            love.audio.play(enemyHitSfx)
+            boneSpurt(enemy.dx+16,enemy.dy+16,4,48,1,1,1)
         end
         
         if enemy.IsAggro == false and v.IsAggro then
@@ -76,24 +81,12 @@ function newEnemyData(data) -- called when nearby data is returned
         --   aggroSfx:setPosition(v.x-player.x,v.y-player.y)
             love.audio.play(aggroSfx)
         end
-        if enemy.HP > v.HP then
-            enemy.red = 1
-            enemy.HP = v.HP
-            if enemy.HP < 1 then
-            
-            else
 
-                enemyHitSfx:setPitch(love.math.random(50,100)/100)
-                love.audio.play(enemyHitSfx)
-                boneSpurt(enemy.dx+16,enemy.dy+16,4,48,1,1,1)
-
-            end
-        end
 
         enemy.Target = v.Target
         enemy.X = v.X
         enemy.Y = v.Y
-        enemy.speed = distanceToPoint(enemy.dx, enemy.dy, v.X*32, v.Y*32)
+      
         enemy.IsAggro = v.IsAggro
         if v.IsAggro then enemiesInAggro = enemiesInAggro + 1 end
     end
@@ -180,8 +173,8 @@ function drawEnemies()
                 love.graphics.setColor(1,1,1,v.aggroAlpha)
                 love.graphics.draw(alertImg,v.dx+8,v.dy-16)
                 love.graphics.setColor(1,1,1)
-              --  love.graphics.setFont(smallTextFont)
-            --    love.graphics.printf(v.HP .. "/" .. v.mhp, v.dx, v.dy-6, 32, "center")
+                love.graphics.setFont(smallTextFont)
+                love.graphics.printf(v.Target .. "\n" .. tostring(v.IsAggro), v.dx, v.dy-6, 32, "center")
             end
 
             if distanceToPoint(v.X,v.Y,player.x,player.y) < v.Enemy.Range+1 then
@@ -206,8 +199,15 @@ function updateEnemies(dt)
     for i, v in pairs(enemies) do
         smoothMovement(v,dt)
         if v.dhp > v.HP then
-            v.dhp = v.dhp - 32*dt
+            v.dhp = v.dhp - 1*dt
+        elseif v.dhp < v.HP then
+            v.dhp = v.HP
         end
+
+        if difference(v.dhp, v.HP) < 0.1 then
+            v.dhp = v.HP
+        end
+        
         if v.red > 0 then
             v.red = v.red - 2*dt
             if v.red < 0 then
@@ -221,19 +221,26 @@ end
 
 function smoothMovement(v,dt)
     if distanceToPoint(v.dx,v.dy,v.X*32,v.Y*32) > 3 then
-        if v.dx > v.X*32 then
+        if v.dx > v.X*32 + 3 then
             v.dx = v.dx - v.speed*dt
-        elseif v.dx < v.X*32 then
+        elseif v.dx < v.X*32 - 3 then
             v.dx = v.dx + v.speed*dt
         end
 
-        if v.dy > v.Y*32 then
+        if v.dy > v.Y*32 + 3 then
             v.dy = v.dy - v.speed*dt
-        elseif v.dy < v.Y*32 then
+        elseif v.dy < v.Y*32 - 3 then
             v.dy = v.dy + v.speed*dt
         end
     else
         v.dx = v.X*32 -- preventing blurring from fractional pixels
         v.dy = v.Y*32 
+    end
+end
+
+function tickEnemies()
+    for i,v in ipairs(enemies) do
+        local enemy = v
+        enemy.speed = distanceToPoint(enemy.dx, enemy.dy, v.X*32, v.Y*32)
     end
 end

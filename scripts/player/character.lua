@@ -136,7 +136,7 @@ function movePlayer(dt)
             stepSfx:setPitch(love.math.random(90,200)/100)
             love.audio.play(stepSfx)
         end
-        if  blockMap[player.x..","..player.y] ~= nil then
+        if  blockMap[player.x..","..player.y] == true then
             player.x = original[1]
             player.y = original[2]
         else
