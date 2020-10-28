@@ -69,6 +69,9 @@ function checkLoginKeyPressed(key)
         checkLoginKeyPressedPhaseLogin(key)
     elseif loginPhase == "creation" then
         checkLoginKeyPressedPhaseCreation(key)
+    elseif loginPhase == "characters" then
+        checkLoginKeyPressedPhaseCharacters(key)
+    
     end
 end
 

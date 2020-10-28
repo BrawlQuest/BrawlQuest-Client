@@ -78,26 +78,16 @@ function transitionToPhaseGame()
     love.audio.stop( titleMusic )
 end
 
-function checkLoginKeyPressedPhaseCharchters(key)
-    -- if key == "down" then
-    --     characterSelected = characterSelected + 1
-    --     print(characterSelected)
-    -- end
-    -- if key == "up" then
-    --     characterSelected = characterSelected - 1
-    --     print(characterSelected)
-    -- end
+function checkLoginKeyPressedPhaseCharacters(key)
    
     if characterSelected < 3 then
         if key == "down" then
             characterSelected = characterSelected + 1
-            print(characterSelected)
         end
     end
     if characterSelected > 1 then
         if key == "up" then
             characterSelected = characterSelected - 1
-            print(characterSelected)
         end
     end
     

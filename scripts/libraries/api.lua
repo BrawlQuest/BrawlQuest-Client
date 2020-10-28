@@ -10,7 +10,7 @@ local json = require("scripts.libraries.json")
 UID = ""
 token = ""
 
-selectedServer = 1
+selectedServer = 2
 
 servers = {
   {

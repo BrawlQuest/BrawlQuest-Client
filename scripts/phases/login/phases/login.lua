@@ -89,7 +89,7 @@ function login()
     }))
 
     if c == 200 then
-        b = json:decode(b)
+        b = json:decode(tostring(b))
         UID = textfields[1]
         token = b['token']
         r, h = http.request {

@@ -12,6 +12,7 @@ require "scripts.libraries.api"
 require "scripts.libraries.utils"
 require "scripts.phases.login.login"
 require "scripts.player.other_players"
+require "scripts.enemies"
 require "data.data_controller"
 require "settings"
 Luven = require "scripts.libraries.luven.luven"
@@ -29,14 +30,17 @@ blockMap = {}
 treeMap = {}
 players = {} -- other players
 playersDrawable = {}
+sblockMap = {}
 lootTest = {}
-nextTick = 1
+nextUpdate = 1
 timeOutTick = 3
 totalCoverAlpha = 0 -- this covers the entire screen in white, for hiding purposes
 timeOfDay = 0
 username = "Pebsie"
 readyForUpdate = true
 scale, uiX, uiY = 1
+
+oldInfo = {}
 
 sendUpdate = false
 
@@ -82,18 +86,13 @@ function love.draw()
 
         drawDummy()
 
-        if player.target.active then
-            diffX = player.target.x - player.x
-            diffY = player.target.y - player.y
-            if arrowImg[diffX] ~= nil and arrowImg[diffX][diffY] ~= nil then
-                love.graphics.draw(arrowImg[diffX][diffY], player.dx-32, player.dy-32)
-            end
-        end
-         
+        drawEnemies()
+
+        
         for i,v in ipairs(playersDrawable) do
             drawOtherPlayer(v,i)
         end
-
+        
         drawPlayer()
         drawLoot()
         Luven.drawEnd()
@@ -109,7 +108,7 @@ function love.draw()
         Luven.camera:draw()
     end
 
-
+    
 
     love.graphics.setColor(1,1,1,totalCoverAlpha)
     love.graphics.rectangle("fill",0,0,love.graphics.getWidth(),love.graphics.getHeight())
@@ -120,10 +119,17 @@ function love.update(dt)
     if phase == "login" then
         updateLogin(dt)
     else
-        nextTick = nextTick - 1*dt
-        if nextTick < 0 then
-            tick()
-            nextTick = 1
+        nextUpdate = nextUpdate - 1*dt
+        if nextUpdate < 0 then
+             
+            getPlayerData('/players/'..username, json:encode({
+                ["X"] = player.x,
+                ["Y"] = player.y ,
+                ["AX"] = player.target.x,
+                ["AY"] = player.target.y,
+            }))
+
+            nextUpdate = 0.5
         end
 
         oldLightAlpha = oldLightAlpha - 2*dt -- update light, essentially
@@ -132,7 +138,7 @@ function love.update(dt)
         uiX = love.graphics.getWidth()/scale -- scaling options
         uiY = love.graphics.getHeight()/scale
 
-        updateDummyEnemies(dt)
+        updateEnemies(dt)
         updateCharacter(dt)
         updateBones(dt)
         updateMusic(dt)
@@ -160,35 +166,27 @@ function love.update(dt)
             local response = json:decode(info)
 
             players = response['Players']
+            sblockMap = response['BlockMap']
+            me = response['Me']
+            print(#sblockMap)
+            newEnemyData(response['Enemies'])
+            if response['Tick'] ~= previousTick then
+                tick()
+                previousTick = response['Tick']
+            end
         end
     end
 end
 
 function tick()
-   tickDummyEnemies()
+  -- tickDummyEnemies()
     tickOtherPlayers()
-   if player.target.active then
-        if player.dx > player.target.x*32 then
-            player.dx = player.dx - 16
-        elseif player.dx < player.target.x*32 then
-            player.dx = player.dx + 16
-        end
-        if player.dy > player.target.y*32 then
-            player.dy = player.dy - 16
-        elseif player.dy < player.target.y*32 then
-            player.dy = player.dy + 16
-        end
+    if player.target.active then
+    
     else
         player.target.x = player.x
         player.target.y = player.y
     end
-   
-   getPlayerData('/players/'..username, json:encode({
-    ["X"] = player.x,
-    ["Y"] = player.y ,
-    ["AX"] = player.target.x,
-    ["AY"] = player.target.y,
-  }))
 
 end
 
@@ -197,11 +195,13 @@ end
 function love.keypressed(key)
     -- checkLoginKeyPressedPhaseCharchters(key)
 
+    if (key == "l") then
+        print("Tom is a lower")
+    end
+
     if phase == "login" then
         checkLoginKeyPressed(key)
-        if loginPhase == "characters" then
-            checkLoginKeyPressedPhaseCharchters(key)
-        end
+   
     else
         if key == "m" then
         beginMounting()
