@@ -94,16 +94,40 @@ function love.draw()
     else
         Luven.drawBegin()
 
+        for x=-30,love.graphics.getWidth()/32 do
+            for y = -30,love.graphics.getHeight()/32 do
+                if isTileLit(x,y) then
+                    if not wasTileLit(x,y) then
+                        love.graphics.setColor(1-oldLightAlpha,1-oldLightAlpha,1-oldLightAlpha) -- light up a tile
+                    else
+                        love.graphics.setColor(1,1,1)
+                    end
+                elseif wasTileLit(x,y) and oldLightAlpha > 0.2 then
+                    love.graphics.setColor(oldLightAlpha, oldLightAlpha, oldLightAlpha)
+                else
+                    love.graphics.setColor(0.2,0.2,0.2)
+                end
+                love.graphics.draw(groundImg, x*32, y*32)
+            end
+        end
      --   drawDummy()
      love.graphics.setColor(1,1,1)
         for i,v in ipairs(world) do
-            
+            if isTileLit(v.X,v.Y) then
+                love.graphics.setColor(1,1,1)
+            else
+                love.graphics.setColor(0.2,0.2,0.2)
+            end
             if not worldImg[v['GroundTile']] then
                 worldImg[v['GroundTile']] = love.graphics.newImage(v['GroundTile'])
             end
 
             if not worldImg[v['ForegroundTile']] then
                 worldImg[v['ForegroundTile']] = love.graphics.newImage(v['ForegroundTile'])
+            end
+
+            if v.Collision then
+                treeMap[v.X..","..v.Y] = true
             end
 
             love.graphics.draw(worldImg[v['GroundTile']], v.X*32, v.Y*32)

@@ -64,29 +64,10 @@ function initDummyData()
 end
 
 function drawDummy()
-    for x=-30,love.graphics.getWidth()/32 do
-        for y = -30,love.graphics.getHeight()/32 do
-            if isTileLit(x,y) then
-                if not wasTileLit(x,y) then
-                    love.graphics.setColor(1-oldLightAlpha,1-oldLightAlpha,1-oldLightAlpha) -- light up a tile
-                else
-                    love.graphics.setColor(1,1,1)
-                end
-            elseif wasTileLit(x,y) and oldLightAlpha > 0.2 then
-                love.graphics.setColor(oldLightAlpha, oldLightAlpha, oldLightAlpha)
-            else
-                love.graphics.setColor(0.2,0.2,0.2)
-            end
-            love.graphics.draw(groundImg, x*32, y*32)
-        end
-    end
+  
     
     for i,v in ipairs(trees) do
-        if isTileLit(v.x,v.y) then
-            love.graphics.setColor(1,1,1)
-        else
-            love.graphics.setColor(0.2,0.2,0.2)
-        end
+    
         love.graphics.draw(treeImg, v.x*32, v.y*32)
     end
     
