@@ -110,7 +110,7 @@ function love.draw()
     end
 
     love.graphics.setColor(1,1,1,1)
-    local mx, my = love.mouse.getPosition()
+    mx, my = love.mouse.getPosition()
 	love.graphics.draw(mouseImg, mx, my)
 
 
