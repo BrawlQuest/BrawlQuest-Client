@@ -1,5 +1,5 @@
 function initDummyData() 
-    -- print("YOU'RE INITIALISING DUMMY DATA.")
+    print("YOU'RE INITIALISING DUMMY DATA.")
 
     lootSfx = love.audio.newSource("assets/sfx/loot.mp3", "static")
     lootImg = love.graphics.newImage("assets/player/gear/a4/special.png")
@@ -14,7 +14,7 @@ function initDummyData()
         love.graphics.newImage("assets/player/gear/custom/cloak 3.png"),
         love.graphics.newImage("assets/player/gear/custom/red facemask.png")
     }
-    groundImg = love.graphics.newImage("assets/world/grounds/grass/grass05.png")
+    groundImg = love.graphics.newImage("assets/world/grounds/grass.png")
     treeImg = love.graphics.newImage("assets/world/objects/tree.png")
     targetImg = love.graphics.newImage("assets/ui/target.png")
     xpImg = love.graphics.newImage("assets/ui/xp.png")
