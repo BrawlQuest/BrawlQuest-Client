@@ -47,6 +47,9 @@ timeOfDay = 0
 username = "Pebsie"
 readyForUpdate = true
 
+world = {}
+worldImg = {}
+
 oldInfo = {}
 
 sendUpdate = false
@@ -91,8 +94,21 @@ function love.draw()
     else
         Luven.drawBegin()
 
-        drawDummy()
+     --   drawDummy()
+     love.graphics.setColor(1,1,1)
+        for i,v in ipairs(world) do
+            
+            if not worldImg[v['GroundTile']] then
+                worldImg[v['GroundTile']] = love.graphics.newImage(v['GroundTile'])
+            end
 
+            if not worldImg[v['ForegroundTile']] then
+                worldImg[v['ForegroundTile']] = love.graphics.newImage(v['ForegroundTile'])
+            end
+
+            love.graphics.draw(worldImg[v['GroundTile']], v.X*32, v.Y*32)
+            love.graphics.draw(worldImg[v['ForegroundTile']], v.X*32, v.Y*32)
+        end
         drawEnemies()
 
         
@@ -173,6 +189,7 @@ function love.update(dt)
             local response = json:decode(info)
 
             players = response['Players']
+            world = response['World']
             blockMap = response['BlockMap']
             me = response['Me']
             -- update player
