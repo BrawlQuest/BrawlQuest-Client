@@ -13,6 +13,7 @@ function drawQuestPopUpBackground(thisX, thisY)
 		love.graphics.draw(chatCorner, thisX+((i*questPopUpWidth)), thisY+(questPopUpHeight-(chatCorner:getHeight()*2))+(chatCorner:getHeight()*2), math.rad(-90-(i*90)))
 		love.graphics.rectangle("fill", thisX+chatCorner:getWidth(), thisY+(i*((questPopUpHeight-(chatCorner:getHeight()*2))+chatCorner:getHeight())), questPopUpWidth-(chatCorner:getHeight()*2), chatCorner:getHeight()) -- background rectangle
     end
+    love.graphics.setColor(1,1,1,1)
 end
 
 function drawQuestPopUpProfile(thisX, thisY)

@@ -180,7 +180,7 @@ function love.draw()
         love.graphics.setColor(1,1,1)
         love.graphics.print("BrawlQuest "..version.."\nCursor pos: "..tostring(math.floor((cx*scale)/(32))+player.x)..", "..tostring(math.floor(cy/32)+player.y/2).."\nPlayer pos: "..player.x..", "..player.y.."\n"..love.timer.getFPS().." FPS",200, 5)
 
-       -- drawHUD()
+        drawHUD()
         if isWorldEditWindowOpen then
             drawEditWorldWindow()
         end
