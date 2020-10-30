@@ -12,7 +12,7 @@ function drawHUD()
             love.graphics.scale(scale*i)
             drawBattlebar((uiX/2)/i, uiY/i)
             drawQuestPannel(uiX/i, 0)
-            drawQuestPopUp((uiX/2)/i, (uiY/2)/i)
+            --drawQuestPopUp((uiX/2)/i, (uiY/2)/i)
         love.graphics.pop()
 
         love.graphics.push()

@@ -103,8 +103,8 @@ end
 
 function love.wheelmoved( dx, dy )
     if isMouseOver(0, toolbary*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
-        velyInventory = velyInventory + dy * 16
+        velyInventory = velyInventory + dy * 160
     else 
-        velyChat = velyChat + dy * 30
+        velyChat = velyChat + dy * 300
     end
 end
