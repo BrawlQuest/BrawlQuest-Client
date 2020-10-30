@@ -6,6 +6,7 @@
 currentTrack = "PuerLavari"
 nextTrack = "Titans"
 isSwitching = false
+playMusic = true
 
 function loadMusic() 
     music = {
@@ -15,7 +16,7 @@ function loadMusic()
         Skirmish2 = love.audio.newSource("assets/music/album1/Skirmish2.mp3", "stream")
     }
 
-    titleMusic = love.audio.newSource("assets/music/album1/Longing.mp3", "stream")
+    titleMusic = love.audio.newSource("assets/music/unofficial/The-Island-of-Dr-Sinister.mp3", "stream")
 
     battleMusic = {
         "Titans",
@@ -23,9 +24,9 @@ function loadMusic()
         "Skirmish2"
     }
     
-    if playMusic then
+  --  if playMusic then
         currentPlaying = titleMusic:play()
-    end
+  --  end
 end
 
 function updateMusic(dt)

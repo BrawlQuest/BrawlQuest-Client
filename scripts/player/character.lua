@@ -68,7 +68,7 @@ end
 
 function updateCharacter(dt)
    checkTargeting()
-   movePlayer(dt)
+   if not isWorldEditWindowOpen then movePlayer(dt) end
     if player.dhp > player.hp then
         player.dhp = player.dhp - 32*dt
     end
