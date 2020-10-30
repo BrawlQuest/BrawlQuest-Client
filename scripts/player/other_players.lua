@@ -6,7 +6,28 @@
 function drawOtherPlayer(v,i)
     -- TODO: we need to extract player armour somewhere here, but as we aren't loading in assets yet this hasn't been done
     local thisPlayer = players[i] -- v is playerDrawable
+    if not itemImg[thisPlayer.Weapon.ImgPath] then
+        if love.filesystem.getInfo(thisPlayer.Weapon.ImgPath) then
+            itemImg[thisPlayer.Weapon.ImgPath] = love.graphics.newImage(thisPlayer.Weapon.ImgPath)
+        else
+            itemImg[thisPlayer.Weapon.ImgPath] = love.graphics.newImage("assets/error.png")
+        end
+    end
+    love.graphics.draw(itemImg[thisPlayer.Weapon.ImgPath] , v.X-(itemImg[thisPlayer.Weapon.ImgPath]:getWidth()-32), v.Y-(itemImg[thisPlayer.Weapon.ImgPath]:getHeight()-32))
+    
     love.graphics.draw(playerImg, v.X, v.Y)
+
+    if thisPlayer.HeadArmourID ~= 0 then
+        drawItemIfExists(thisPlayer.HeadArmour.ImgPath,v.X,v.Y)
+    end
+    if me.ChestArmourID ~= 0 then
+        drawItemIfExists(thisPlayer.ChestArmour.ImgPath,v.X,v.Y)
+    end
+    if me.LegArmourID ~= 0 then
+        drawItemIfExists(thisPlayer.LegArmour.ImgPath,v.X,v.Y)
+    end
+
+    
 
     love.graphics.setFont(smallTextFont)
     local nameWidth = smallTextFont:getWidth(v.Name)

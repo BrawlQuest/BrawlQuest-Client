@@ -17,6 +17,8 @@ function drawCharactersPhase()
     love.graphics.setFont(headerFont)
     love.graphics.print("Character Name", loginImageX+30, loginImageY+140)
 
+
+    
     for i = 1,3 do
         local thisX,thisY = loginImageX+32,loginImageY+180+((i-1)*60)
         
@@ -77,7 +79,7 @@ function transitionToPhaseGame()
     player.dy = player.y*32
     totalCoverAlpha = 2
     love.audio.play(awakeSfx)
-    
+    love.graphics.setBackgroundColor(0, 0, 0)
     phase = "game"
     love.audio.stop( titleMusic )
 end

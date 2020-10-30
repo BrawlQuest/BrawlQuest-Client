@@ -13,7 +13,18 @@ function loadMusic()
         PuerLavari = love.audio.newSource("assets/music/album1/PuerLavari.mp3", "stream"),
         Titans = love.audio.newSource("assets/music/album1/Titans.mp3", "stream"),
         Skirmish = love.audio.newSource("assets/music/album1/Skirmish.mp3", "stream"),
-        Skirmish2 = love.audio.newSource("assets/music/album1/Skirmish2.mp3", "stream")
+        Skirmish2 = love.audio.newSource("assets/music/album1/Skirmish2.mp3", "stream"),
+        H1 = love.audio.newSource("assets/music/unofficial/After-the-Invasion.mp3", "stream"),
+        H2 = love.audio.newSource("assets/music/unofficial/Bells-of-Weirdness.mp3", "stream"),
+        H3 = love.audio.newSource("assets/music/unofficial/Moment-of-Strange.mp3", "stream"),
+        H4 = love.audio.newSource("assets/music/unofficial/Welcome-to-the-Mansion.mp3", "stream")
+    }
+
+    worldMusic = {
+        "H1",
+        "H2",
+        "H3",
+        "H4"
     }
 
     titleMusic = love.audio.newSource("assets/music/unofficial/The-Island-of-Dr-Sinister.mp3", "stream")
@@ -30,8 +41,8 @@ function loadMusic()
 end
 
 function updateMusic(dt)
-    if enemiesInAggro == 0 and currentTrack ~= "PuerLavari" then
-        switchMusic("PuerLavari")
+    if enemiesInAggro == 0 and not arrayContains(worldMusic, currentTrack) then
+        switchMusic(worldMusic[love.math.random(1,#worldMusic)])
     elseif not arrayContains(battleMusic, currentTrack) and enemiesInAggro > 0 then
         switchMusic(battleMusic[love.math.random(1,#battleMusic)])
     end
