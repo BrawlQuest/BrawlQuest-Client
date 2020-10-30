@@ -12,6 +12,7 @@ function drawHUD()
             love.graphics.scale(scale*i)
             drawBattlebar((uiX/2)/i, uiY/i)
             drawQuestPannel(uiX/i, 0)
+            drawQuestPopUp((uiX/2)/i, (uiY/2)/i)
         love.graphics.pop()
 
         love.graphics.push()
@@ -19,6 +20,7 @@ function drawHUD()
             love.graphics.scale(scale)
             drawToolbar()
             drawProfile(uiX/i, uiY/i)
+            
         love.graphics.pop()
 
         love.graphics.setFont(smallTextFont)

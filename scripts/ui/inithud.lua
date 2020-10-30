@@ -75,6 +75,9 @@ function initHUD()
     "Make a lot of money",
     "Have a great time!"}
 
+    questPopUpWidth = 335
+    questPopUpHeight = 496--(chatCorner:getHeight()*2)
+    questPopUpPanelGap = 400
 end
 
 function updateHUD( dt )
