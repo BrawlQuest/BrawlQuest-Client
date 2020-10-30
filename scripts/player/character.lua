@@ -32,75 +32,104 @@ player = {
 me = {}
 
 
-function drawPlayer()
-    love.graphics.draw(swordImg, player.dx-(swordImg:getWidth()-32), player.dy-(swordImg:getHeight()-32))
-    
-    if player.isMounted then
-        love.graphics.draw(horseImg, player.dx+6, player.dy+9)
-    end
-    love.graphics.draw(playerImg, player.dx, player.dy)
-    for i, v in ipairs(armour) do
-        love.graphics.draw(v, player.dx, player.dy)
-    end
-    if player.isMounted then
-        love.graphics.draw(horseForeImg, player.dx+6, player.dy+9)
-    end
-    if player.isMounting then
-        love.graphics.draw(horseImg, player.mount.x, player.mount.y)
-    end
-    if player.target.active then
-        diffX = player.target.x - player.x
-        diffY = player.target.y - player.y
-        if arrowImg[diffX] ~= nil and arrowImg[diffX][diffY] ~= nil then
-            love.graphics.setColor(1,1,1,1-nextTick)
-            love.graphics.draw(arrowImg[diffX][diffY], player.dx-32, player.dy-32)
+function drawItemIfExists(path,x,y)
+    if not itemImg[path] then
+        if love.filesystem.getInfo(path) then
+            itemImg[path] = love.graphics.newImage(path)
+        else
+            itemImg[path] = love.graphics.newImage("assets/error.png")
         end
     end
-    if player.target.active and (me.AX ~= me.X or me.AY ~= me.Y) then
-        diffX = me.AX - me.X
-        diffY = me.AY - me.Y
-        if arrowImg[diffX] ~= nil and arrowImg[diffX][diffY] ~= nil then
-            love.graphics.setColor(1,1,1,1)
-        --    love.graphics.draw(arrowImg[diffX][diffY], (me.X*32)-32, (me.Y*32)-32)
+    love.graphics.draw(itemImg[path],x,y)
+end
+
+function drawPlayer()
+    if me and me.Weapon then
+        if not itemImg[me.Weapon.ImgPath] then
+            if love.filesystem.getInfo(me.Weapon.ImgPath) then
+                itemImg[me.Weapon.ImgPath] = love.graphics.newImage(me.Weapon.ImgPath)
+            else
+                itemImg[me.Weapon.ImgPath] = love.graphics.newImage("assets/error.png")
+            end
+        end
+        love.graphics.draw(itemImg[me.Weapon.ImgPath] , player.dx-(itemImg[me.Weapon.ImgPath]:getWidth()-32), player.dy-(itemImg[me.Weapon.ImgPath]:getHeight()-32))
+        
+        if player.isMounted then
+            love.graphics.draw(horseImg, player.dx+6, player.dy+9)
+        end
+        love.graphics.draw(playerImg, player.dx, player.dy)
+
+
+        if me.HeadArmourID ~= 0 then
+            drawItemIfExists(me.HeadArmour.ImgPath,player.dx,player.dy)
+        end
+        if me.ChestArmourID ~= 0 then
+            drawItemIfExists(me.ChestArmour.ImgPath,player.dx,player.dy)
+        end
+        if me.LegArmourID ~= 0 then
+            drawItemIfExists(me.LegArmour.ImgPath,player.dx,player.dy)
+        end
+
+        if player.isMounted then
+            love.graphics.draw(horseForeImg, player.dx+6, player.dy+9)
+        end
+        if player.isMounting then
+            love.graphics.draw(horseImg, player.mount.x, player.mount.y)
+        end
+        if player.target.active then
+            diffX = player.target.x - player.x
+            diffY = player.target.y - player.y
+            if arrowImg[diffX] ~= nil and arrowImg[diffX][diffY] ~= nil then
+                love.graphics.setColor(1,1,1,1-nextTick)
+                love.graphics.draw(arrowImg[diffX][diffY], player.dx-32, player.dy-32)
+            end
+        end
+        if player.target.active and (me.AX ~= me.X or me.AY ~= me.Y) then
+            diffX = me.AX - me.X
+            diffY = me.AY - me.Y
+            if arrowImg[diffX] ~= nil and arrowImg[diffX][diffY] ~= nil then
+                love.graphics.setColor(1,1,1,1)
+            --    love.graphics.draw(arrowImg[diffX][diffY], (me.X*32)-32, (me.Y*32)-32)
+            end
         end
     end
 end
 
-function updateCharacter(dt)
-   checkTargeting()
-   if not isWorldEditWindowOpen then movePlayer(dt) end
-    if player.dhp > player.hp then
-        player.dhp = player.dhp - 32*dt
-    end
-
-    if player.isMounting then
-        player.mount.stepSndPlay = player.mount.stepSndPlay - 1*dt
-        if player.mount.stepSndPlay < 0 then
-            stepSfx:stop()
-            stepSfx:setPitch(love.math.random(50,200)/100)
-            stepSfx:setVolume(0.4)
-            stepSfx:play()
-            player.mount.stepSndPlay = 0.2
+    function updateCharacter(dt)
+    checkTargeting()
+    if not isWorldEditWindowOpen then movePlayer(dt) end
+        if player.dhp > player.hp then
+            player.dhp = player.dhp - 32*dt
         end
 
-        if player.mount.x > player.dx+8 then
-            player.mount.x = player.mount.x - 150*dt
-        elseif player.mount.x < player.dx-8 then
-            player.mount.x = player.mount.x + 150*dt
-        end
+        if player.isMounting then
+            player.mount.stepSndPlay = player.mount.stepSndPlay - 1*dt
+            if player.mount.stepSndPlay < 0 then
+                stepSfx:stop()
+                stepSfx:setPitch(love.math.random(50,200)/100)
+                stepSfx:setVolume(0.4)
+                stepSfx:play()
+                player.mount.stepSndPlay = 0.2
+            end
 
-        if player.mount.y > player.dy+8 then
-            player.mount.y = player.mount.y - 150*dt
-        elseif player.mount.y < player.dy-8 then
-            player.mount.y = player.mount.y + 150*dt
-        end
+            if player.mount.x > player.dx+8 then
+                player.mount.x = player.mount.x - 150*dt
+            elseif player.mount.x < player.dx-8 then
+                player.mount.x = player.mount.x + 150*dt
+            end
 
-        if distanceToPoint(player.mount.x, player.mount.y, player.dx, player.dy) < 16 then
-            love.audio.play(horseMountSfx[love.math.random(1,#horseMountSfx)])
-            player.isMounted = true
-            player.isMounting = false
+            if player.mount.y > player.dy+8 then
+                player.mount.y = player.mount.y - 150*dt
+            elseif player.mount.y < player.dy-8 then
+                player.mount.y = player.mount.y + 150*dt
+            end
+
+            if distanceToPoint(player.mount.x, player.mount.y, player.dx, player.dy) < 16 then
+                love.audio.play(horseMountSfx[love.math.random(1,#horseMountSfx)])
+                player.isMounted = true
+                player.isMounting = false
+            end
         end
-    end
 end
 
 function movePlayer(dt)

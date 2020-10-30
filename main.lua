@@ -41,6 +41,8 @@ players = {} -- other players
 playersDrawable = {}
 sblockMap = {}
 lootTest = {}
+inventoryAlpha = {}
+itemImg = {}
 nextUpdate = 1
 timeOutTick = 3
 previousTick = 0
@@ -55,6 +57,9 @@ worldImg = {}
 lightGivers = {
     ["assets/world/objects/lantern.png"] = 1,
     ["assets/world/objects/Mushroom.png"] = 0.5,
+    ["assets/world/objects/Pumpkin0.png"] = 0.8,
+    ["assets/world/objects/Pumpkin1.png"] = 0.8,
+    ["assets/world/objects/Pumpkin2.png"] = 0.8,
 }
 lightSource = {}
 
@@ -111,7 +116,7 @@ function love.draw()
                 elseif wasTileLit(x,y) and oldLightAlpha > 0.2 then
                     love.graphics.setColor(oldLightAlpha, oldLightAlpha, oldLightAlpha)
                 else
-                    love.graphics.setColor(0.2,0.2,0.2)
+                    love.graphics.setColor(0,0,0,0)
                 end
                 love.graphics.draw(groundImg, x*32, y*32)
             end
@@ -122,7 +127,7 @@ function love.draw()
             if isTileLit(v.X,v.Y) then
                 love.graphics.setColor(1,1,1)
             else
-                love.graphics.setColor(0.2,0.2,0.2)
+                love.graphics.setColor(0,0,0,0)
             end
             if not worldImg[v['GroundTile']] then
                 if love.filesystem.getInfo(v['GroundTile']) then
@@ -178,6 +183,34 @@ function love.draw()
         love.graphics.setColor(1,0,0)
         love.graphics.rectangle("fill",0,love.graphics.getHeight()-16,(player.hp/100)*love.graphics.getWidth(),16)
         love.graphics.setColor(1,1,1)
+
+
+        for i,v in ipairs(inventoryAlpha) do
+            if isMouseOver((i-1)*32, love.graphics.getHeight()-48, 32, 32) then
+                love.graphics.setColor(1,1,1)
+                love.graphics.setFont(headerBigFont)
+                love.graphics.print(v.Item.Name,0,love.graphics.getHeight()-100)
+                love.graphics.setFont(headerFont)
+                love.graphics.print("+" .. v.Item.Val.." "..v.Item.Type,0,love.graphics.getHeight()-70)
+
+            love.graphics.setFont(textFont)
+            else
+              love.graphics.setColor(0.6,0.6,0.6)
+            end
+            love.graphics.rectangle("fill", (i-1)*32, love.graphics.getHeight()-48, 32, 32)
+            love.graphics.setColor(1,1,1)
+            love.graphics.rectangle("line",(i-1)*32,love.graphics.getHeight()-48,32,32)
+            if not itemImg[v.Item.ImgPath] then
+                if love.filesystem.getInfo(v.Item.ImgPath) then
+                    itemImg[v.Item.ImgPath] = love.graphics.newImage(v.Item.ImgPath)
+                else
+                    itemImg[v.Item.ImgPath] = love.graphics.newImage("assets/error.png")
+                end
+            end
+            love.graphics.draw(itemImg[v.Item.ImgPath], (i-1)*32,love.graphics.getHeight()-48)
+            love.graphics.printf(v.Inventory.Amount,(i-1)*32,love.graphics.getHeight()-48, 32, "right" )
+        end
+
         love.graphics.print("BrawlQuest "..version.."\nCursor pos: "..tostring(math.floor((cx*scale)/(32))+player.x)..", "..tostring(math.floor(cy/32)+player.y/2).."\nPlayer pos: "..player.x..", "..player.y.."\n"..love.timer.getFPS().." FPS",200, 5)
 
         drawHUD()
@@ -256,6 +289,11 @@ function love.update(dt)
             players = response['Players']
             world = response['World']
             blockMap = response['BlockMap']
+            if json:encode(inventoryAlpha) ~= json:encode(response['Inventory']) then
+                love.audio.play(lootSfx)
+            end
+
+            inventoryAlpha = response['Inventory']
             me = response['Me']
 
             if distanceToPoint(me.X, me.Y, player.x, player.y) > 6 then
@@ -341,7 +379,7 @@ end
 function love.textinput(key)
     if phase == "login" then
         checkLoginTextinput(key)
-    elseif isWorldEditWindowOpen then
+    elseif isWorldEditWindowOpen and key ~= "'" then
         checkEditWorldTextinput(key)
     end
 end
@@ -365,6 +403,14 @@ function love.mousepressed(x,y,button)
         print(json:encode(pendingWorldChanges))
         c, h = http.request{url = api.url.."/world", method="POST", body=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["token"]=token}}
         pendingWorldChanges = {}
+    elseif phase == "game" then
+        for i,v in ipairs(inventoryAlpha) do
+            if isMouseOver((i-1)*32, love.graphics.getHeight()-48, 32, 32) then
+                print( api.url.."/item/"..player.name.."/"..v.Item.ID)
+                c, h = http.request{url = api.url.."/item/"..player.name.."/"..v.Item.ID, headers={["token"]=token}}
+
+            end
+        end
     end 
 end
 

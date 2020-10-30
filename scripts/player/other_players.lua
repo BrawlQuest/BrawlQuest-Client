@@ -6,24 +6,47 @@
 function drawOtherPlayer(v,i)
     -- TODO: we need to extract player armour somewhere here, but as we aren't loading in assets yet this hasn't been done
     local thisPlayer = players[i] -- v is playerDrawable
-    love.graphics.draw(playerImg, v.X, v.Y)
-
-    love.graphics.setFont(smallTextFont)
-    local nameWidth = smallTextFont:getWidth(v.Name)
-
-    love.graphics.setColor(0,0,0,0.6)
-    love.graphics.rectangle("fill", (v.X+16)-(nameWidth/2), v.Y-12, nameWidth + 4, 12)
-    love.graphics.setColor(1,1,1)
-    love.graphics.print(v.Name, (v.X+16)-(nameWidth/2)+2, v.Y-10)
-
-    if thisPlayer ~= nil and thisPlayer.AX then
-        diffX = thisPlayer.AX - thisPlayer.X
-        diffY = thisPlayer.AY - thisPlayer.Y
-        if arrowImg[diffX] ~= nil and arrowImg[diffX][diffY] ~= nil then
-            love.graphics.draw(arrowImg[diffX][diffY], v.X-32, v.Y-32)
+    if thisPlayer then
+        if not itemImg[thisPlayer.Weapon.ImgPath] then
+            if love.filesystem.getInfo(thisPlayer.Weapon.ImgPath) then
+                itemImg[thisPlayer.Weapon.ImgPath] = love.graphics.newImage(thisPlayer.Weapon.ImgPath)
+            else
+                itemImg[thisPlayer.Weapon.ImgPath] = love.graphics.newImage("assets/error.png")
+            end
         end
+        love.graphics.draw(itemImg[thisPlayer.Weapon.ImgPath] , v.X-(itemImg[thisPlayer.Weapon.ImgPath]:getWidth()-32), v.Y-(itemImg[thisPlayer.Weapon.ImgPath]:getHeight()-32))
+        
+        love.graphics.draw(playerImg, v.X, v.Y)
+
+        if thisPlayer.HeadArmourID ~= 0 then
+            drawItemIfExists(thisPlayer.HeadArmour.ImgPath,v.X,v.Y)
+        end
+        if me.ChestArmourID ~= 0 then
+            drawItemIfExists(thisPlayer.ChestArmour.ImgPath,v.X,v.Y)
+        end
+        if me.LegArmourID ~= 0 then
+            drawItemIfExists(thisPlayer.LegArmour.ImgPath,v.X,v.Y)
+        end
+
+        
+
+        love.graphics.setFont(smallTextFont)
+        local nameWidth = smallTextFont:getWidth(v.Name)
+
+        love.graphics.setColor(0,0,0,0.6)
+        love.graphics.rectangle("fill", (v.X+16)-(nameWidth/2), v.Y-12, nameWidth + 4, 12)
+        love.graphics.setColor(1,1,1)
+        love.graphics.print(v.Name, (v.X+16)-(nameWidth/2)+2, v.Y-10)
+
+        if thisPlayer ~= nil and thisPlayer.AX then
+            diffX = thisPlayer.AX - thisPlayer.X
+            diffY = thisPlayer.AY - thisPlayer.Y
+            if arrowImg[diffX] ~= nil and arrowImg[diffX][diffY] ~= nil then
+                love.graphics.draw(arrowImg[diffX][diffY], v.X-32, v.Y-32)
+            end
+        end
+        love.graphics.setColor(1,1,1)
     end
-    love.graphics.setColor(1,1,1)
 end
 
 function updateOtherPlayers(dt)
