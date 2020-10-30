@@ -6,7 +6,7 @@
 function drawOtherPlayer(v,i)
     -- TODO: we need to extract player armour somewhere here, but as we aren't loading in assets yet this hasn't been done
     local thisPlayer = players[i] -- v is playerDrawable
-    if not thisPlayer then
+    if thisPlayer then
         if not itemImg[thisPlayer.Weapon.ImgPath] then
             if love.filesystem.getInfo(thisPlayer.Weapon.ImgPath) then
                 itemImg[thisPlayer.Weapon.ImgPath] = love.graphics.newImage(thisPlayer.Weapon.ImgPath)
