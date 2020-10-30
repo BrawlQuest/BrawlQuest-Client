@@ -3,8 +3,7 @@ function initHUD()
     scale, uiX, uiY = 1
 
     -- scrolling
-	posyInventory = 0
-    velyInventory = 0 -- The scroll velocity
+	posyInventory, velyInventory, posyChat, velyChat = 0, 0, 0, 0
 
     -- mouse
 	love.mouse.setVisible(false) -- make default mouse invisible
@@ -24,6 +23,8 @@ function initHUD()
 	messages[3] = {username = "Lord Squabulus", text = "I love a lot of thisd stuff"}
 	messages[4] = {username = "Boyo", text = "I just wanna have a good time"}
     messages[5] = {username = "Danjoe", text = "I love sd stuff that has real love to\n\n\n\n\nit"}
+
+    enteredChatText = "Hello there my dude! You've got the skills I'm looking for!"
 
     -- toolbar
     circleFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 16)
@@ -65,18 +66,29 @@ end
 function updateHUD( dt )
     uiX = love.graphics.getWidth()/scale -- scaling options
     uiY = love.graphics.getHeight()/scale
+    
     posyInventory = posyInventory + velyInventory * dt
     velyInventory = velyInventory - velyInventory * math.min( dt * 15, 1 )
+
+    posyChat = posyChat + velyChat * dt
+    velyChat = velyChat - velyChat * math.min( dt * 15, 1 )
 
     if posyInventory < (getFullUserInventoryFieldHeight()*-1)+483 then
         posyInventory = (getFullUserInventoryFieldHeight()*-1)+483
     elseif posyInventory > 0 then
         posyInventory = 0
     end
+
+    if posyChat < 0 then
+        posyChat = 0
+    end
 end
 
 function love.wheelmoved( dx, dy )
     if isMouseOver(0, toolbary*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
         velyInventory = velyInventory + dy * 16
+    else 
+        velyChat = velyChat + dy * 16
+        print(posyChat)
     end
 end

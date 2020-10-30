@@ -7,30 +7,18 @@
     It'll be replaced by Dan's chat later on
 ]]
 
-chat = {}
-
-function initChat()
-	profilePic = love.graphics.newImage("assets/ui/hud/chat/profile.png")
-	chatCorner = love.graphics.newImage("assets/ui/hud/chat/corner.png")
-	chatHeight = 0
-	playerName = "Danjoe"
-	chatWidth = 200
-	chatSpacing = 14
-
-	messages = {}
-	messages[1] = {username = "Danjoe", text = "Hello there you lovely people who keep me company at night just for the fun of it"}
-	messages[2] = {username = "Anyone", text = "Heyyyyyyyy, Red is sus Red is sus Red is sus Red is sus Red is sus Red is sus, he's being super weird right now, so... please be kind to him"}
-	messages[3] = {username = "Lord Squabulus", text = "I love a lot of thisd stuff"}
-	messages[4] = {username = "Boyo", text = "I just wanna have a good time"}
-	messages[5] = {username = "Danjoe", text = "I love sd stuff that has real love to\n\n\n\n\nit"}
-end
-
 function drawChatPanel(x, y) -- the function to recall it all
 	love.graphics.setFont(font)
+	local yChatEnter1 = y
+	local y = y - getEnterChatBoxHeight(enteredChatText)
+	local yChatEnter2 = y
+	local y = y + posyChat
 	for i = 1, tableLength(messages) do
 		y = y - getFullChatHeight(messages[i].username, messages[i].text)
-		drawChatbox(x-(chatWidth+130), y-30, messages[i].username, messages[i].text)
+		drawChatbox(x-(chatWidth+130), y, messages[i].username, messages[i].text)
 	end
+	drawChatSendButton(x, yChatEnter1)
+	drawEnterChatBox(x-(chatWidth+130), yChatEnter2, enteredChatText)
 end
 
 function drawChatboxBackground(x, y, text)
@@ -98,3 +86,23 @@ end
 function getChatWidth()
 	return chatWidth+130
 end
+
+function drawEnterChatBox(thisX, thisY, text)
+	drawChatboxBackground(thisX, thisY, text)
+	drawChatboxText(thisX, thisY, text)
+end
+
+function getEnterChatBoxHeight(text)
+	return (getChatHeight(text)+(chatCorner:getHeight()*2))+chatSpacing
+end
+
+function drawChatSendButton(x, y)
+	local i = 45
+	local j = 14
+	roundRectangle("fill", x-i-j-26, y-i-j, i, i, 10)
+end
+
+function drawChatStencil()
+	love.graphics.rectangle("fill", 70, toolbary+40, 180, 483)
+end
+
