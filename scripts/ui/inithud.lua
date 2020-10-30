@@ -23,6 +23,7 @@ function initHUD()
 	messages[3] = {username = "Lord Squabulus", text = "I love a lot of thisd stuff"}
 	messages[4] = {username = "Boyo", text = "I just wanna have a good time"}
     messages[5] = {username = "Danjoe", text = "I love sd stuff that has real love to\n\n\n\n\nit"}
+    messages[6] = {username = "Lord Squabulus", text = "I love sd stuff that has real love to it"}
 
     enteredChatText = "Hello there my dude! You've got the skills I'm looking for!"
 
@@ -61,6 +62,19 @@ function initHUD()
     -- Inventory
     inventorySubHeaderFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 10)
     loadInventory()
+
+    -- Quest Pannel
+    questWidth = 250
+    questHeight = 0
+    questSmallBoxTrue = love.graphics.newImage("assets/ui/hud/quests/xTrue.png")
+    questSmallBoxFalse = love.graphics.newImage("assets/ui/hud/quests/xFalse.png")
+
+    selectedQuest = {title = "The long and winding road", 
+    "Create a new passport", 
+    "Have lots of fun, it really is fun, like I have all the fun in the world",
+    "Make a lot of money",
+    "Have a great time!"}
+
 end
 
 function updateHUD( dt )
@@ -88,7 +102,6 @@ function love.wheelmoved( dx, dy )
     if isMouseOver(0, toolbary*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
         velyInventory = velyInventory + dy * 16
     else 
-        velyChat = velyChat + dy * 16
-        print(posyChat)
+        velyChat = velyChat + dy * 30
     end
 end

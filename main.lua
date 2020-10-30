@@ -14,6 +14,8 @@ require "scripts.ui.componants.toolbar"
 require "scripts.ui.componants.battlebar"
 require "scripts.ui.componants.profile"
 require "scripts.ui.componants.inventory"
+require "scripts.ui.componants.questpannel"
+require "scripts.ui.componants.questpopup"
 require "scripts.libraries.api"
 require "scripts.libraries.utils"
 require "scripts.phases.login.login"
@@ -189,7 +191,7 @@ function love.update(dt)
         end
         oldLightAlpha = oldLightAlpha - 2*dt -- update light, essentially
         totalCoverAlpha = totalCoverAlpha - 1*dt
-    --    updateHUD(dt)
+        updateHUD(dt)
  
         
         uiX = love.graphics.getWidth()/scale -- scaling options

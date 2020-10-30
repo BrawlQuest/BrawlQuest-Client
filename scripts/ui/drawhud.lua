@@ -4,13 +4,15 @@ function drawHUD()
             local i = 0.5
             love.graphics.scale(scale*i)
             drawChatPanel(uiX/i, uiY/i)
+            
         love.graphics.pop()
 
         love.graphics.push() -- chat and quests scaling TODO: Quests
             local i = 0.75
             love.graphics.scale(scale*i)
             drawBattlebar((uiX/2)/i, uiY/i)
-            love.graphics.pop()
+            drawQuestPannel(uiX/i, 0)
+        love.graphics.pop()
 
         love.graphics.push()
             local i = 1
@@ -23,6 +25,5 @@ function drawHUD()
         love.graphics.print("BrawlQuest\nEnemies in aggro: "..enemiesInAggro.."\nWidth "
         ..love.graphics.getWidth().."\nHeight "..love.graphics.getHeight().."\nuiX "
         ..uiX.."\nuiY "..uiY.." ",printWidth, 5)
-        --love.graphics.rectangle("fill", (uiX-getChatWidth()), 0, getChatWidth()*(scale*0.5), uiY)
     end
 end 
