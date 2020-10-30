@@ -47,12 +47,14 @@ timeOfDay = 0
 username = "Pebsie"
 readyForUpdate = true
 
+world = {}
+worldImg = {}
+
 oldInfo = {}
 
 sendUpdate = false
 
 function love.load()
-    print("start")
     initHardData()
     love.graphics.setDefaultFilter("nearest", "nearest")
     loadMusic()
@@ -81,8 +83,7 @@ function love.load()
     love.graphics.setFont(textFont)
 
     initDummyData()
-    
-    print("loaded")
+ 
 end
 
 function love.draw()
@@ -91,9 +92,56 @@ function love.draw()
     else
         Luven.drawBegin()
 
-        drawDummy()
+        for x=player.x-10,player.x+10 do
+            for y = player.y-10,player.y+10 do
+                if isTileLit(x,y) then
+                    if not wasTileLit(x,y) then
+                        love.graphics.setColor(1-oldLightAlpha,1-oldLightAlpha,1-oldLightAlpha) -- light up a tile
+                    else
+                        love.graphics.setColor(1,1,1)
+                    end
+                elseif wasTileLit(x,y) and oldLightAlpha > 0.2 then
+                    love.graphics.setColor(oldLightAlpha, oldLightAlpha, oldLightAlpha)
+                else
+                    love.graphics.setColor(0.2,0.2,0.2)
+                end
+                love.graphics.draw(groundImg, x*32, y*32)
+            end
+        end
+     --   drawDummy()
+        love.graphics.setColor(1,1,1)
+        for i,v in ipairs(world) do
+            if isTileLit(v.X,v.Y) then
+                love.graphics.setColor(1,1,1)
+            else
+                love.graphics.setColor(0.2,0.2,0.2)
+            end
+            if not worldImg[v['GroundTile']] then
+                if love.filesystem.getInfo(v['GroundTile']) then
+                     worldImg[v['GroundTile']] = love.graphics.newImage(v['GroundTile'])
+                else
+                    worldImg[v['GroundTile']] = love.graphics.newImage("assets/error.png")
+                end
+            end
 
-        drawEnemies()
+            if not worldImg[v['ForegroundTile']] then
+                if love.filesystem.getInfo(v['ForegroundTile']) then
+                    worldImg[v['ForegroundTile']] = love.graphics.newImage(v['ForegroundTile'])
+                else
+                    worldImg[v['GroundTile']] = love.graphics.newImage("assets/error.png")
+                end
+            end
+
+            if v.Collision then
+                treeMap[v.X..","..v.Y] = true
+            end
+
+            love.graphics.draw(worldImg[v['GroundTile']], v.X*32, v.Y*32)
+            love.graphics.draw(worldImg[v['ForegroundTile']], v.X*32, v.Y*32)
+            
+        end
+            love.graphics.setColor(1,1,1)
+            drawEnemies()
 
         
         for i,v in ipairs(playersDrawable) do
@@ -116,7 +164,10 @@ function love.draw()
 
     love.graphics.setColor(1,1,1,totalCoverAlpha)
     love.graphics.rectangle("fill",0,0,love.graphics.getWidth(),love.graphics.getHeight())
-    love.graphics.print(love.timer.getFPS().." FPS",0,love.graphics.getHeight()-12)
+ 
+    love.graphics.setFont(smallTextFont)
+    love.graphics.setColor(1,1,1,1)
+    love.graphics.print("BrawlQuest "..version.."\nPlayer pos: "..tostring(me.X)..", "..tostring(me.Y).."\n"..love.timer.getFPS().." FPS",200, 5)
 end
 
 function love.update(dt)
@@ -138,7 +189,7 @@ function love.update(dt)
         end
         oldLightAlpha = oldLightAlpha - 2*dt -- update light, essentially
         totalCoverAlpha = totalCoverAlpha - 1*dt
-        updateHUD(dt)
+    --    updateHUD(dt)
  
         
         uiX = love.graphics.getWidth()/scale -- scaling options
@@ -173,12 +224,12 @@ function love.update(dt)
             local response = json:decode(info)
 
             players = response['Players']
+            world = response['World']
             blockMap = response['BlockMap']
             me = response['Me']
             -- update player
             player.hp = me.HP
             player.name = me.Name
-            print(#sblockMap)
             newEnemyData(response['Enemies'])
             if response['Tick'] ~= previousTick then
                 tick()
@@ -215,7 +266,6 @@ function love.keypressed(key)
     end
     
     if key == "escape" then
-        print("end")
         love.event.quit()
     end
 end

@@ -1,5 +1,5 @@
 function initDummyData() 
-    -- print("YOU'RE INITIALISING DUMMY DATA.")
+    print("YOU'RE INITIALISING DUMMY DATA.")
 
     lootSfx = love.audio.newSource("assets/sfx/loot.mp3", "static")
     lootImg = love.graphics.newImage("assets/player/gear/a4/special.png")
@@ -14,7 +14,7 @@ function initDummyData()
         love.graphics.newImage("assets/player/gear/custom/cloak 3.png"),
         love.graphics.newImage("assets/player/gear/custom/red facemask.png")
     }
-    groundImg = love.graphics.newImage("assets/world/grounds/grass/grass05.png")
+    groundImg = love.graphics.newImage("assets/world/grounds/grass.png")
     treeImg = love.graphics.newImage("assets/world/objects/tree.png")
     targetImg = love.graphics.newImage("assets/ui/target.png")
     xpImg = love.graphics.newImage("assets/ui/xp.png")
@@ -64,29 +64,10 @@ function initDummyData()
 end
 
 function drawDummy()
-    for x=-30,love.graphics.getWidth()/32 do
-        for y = -30,love.graphics.getHeight()/32 do
-            if isTileLit(x,y) then
-                if not wasTileLit(x,y) then
-                    love.graphics.setColor(1-oldLightAlpha,1-oldLightAlpha,1-oldLightAlpha) -- light up a tile
-                else
-                    love.graphics.setColor(1,1,1)
-                end
-            elseif wasTileLit(x,y) and oldLightAlpha > 0.2 then
-                love.graphics.setColor(oldLightAlpha, oldLightAlpha, oldLightAlpha)
-            else
-                love.graphics.setColor(0.2,0.2,0.2)
-            end
-            love.graphics.draw(groundImg, x*32, y*32)
-        end
-    end
+  
     
     for i,v in ipairs(trees) do
-        if isTileLit(v.x,v.y) then
-            love.graphics.setColor(1,1,1)
-        else
-            love.graphics.setColor(0.2,0.2,0.2)
-        end
+    
         love.graphics.draw(treeImg, v.x*32, v.y*32)
     end
     
