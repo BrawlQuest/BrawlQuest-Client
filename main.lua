@@ -21,6 +21,7 @@ require "scripts.libraries.utils"
 require "scripts.phases.login.login"
 require "scripts.player.other_players"
 require "scripts.enemies"
+require "scripts.ui.temporary.worldedit"
 require "data.data_controller"
 require "settings"
 Luven = require "scripts.libraries.luven.luven"
@@ -51,6 +52,11 @@ readyForUpdate = true
 
 world = {}
 worldImg = {}
+lightGivers = {
+    ["assets/world/objects/lantern.png"] = 1,
+    ["assets/world/objects/Mushroom.png"] = 0.5,
+}
+lightSource = {}
 
 oldInfo = {}
 
@@ -130,8 +136,13 @@ function love.draw()
                 if love.filesystem.getInfo(v['ForegroundTile']) then
                     worldImg[v['ForegroundTile']] = love.graphics.newImage(v['ForegroundTile'])
                 else
-                    worldImg[v['GroundTile']] = love.graphics.newImage("assets/error.png")
+                    worldImg[v['ForegroundTile']] = love.graphics.newImage("assets/error.png")
                 end
+            end
+
+            if lightGivers[v['ForegroundTile']] and not lightSource[v.X..","..v.Y] then
+                lightSource[v.X..","..v.Y] = true
+                Luven.addNormalLight(16+v.X*32,16+v.Y*32,{1,0.5,0}, lightGivers[v['ForegroundTile']])
             end
 
             if v.Collision then
@@ -140,7 +151,12 @@ function love.draw()
 
             love.graphics.draw(worldImg[v['GroundTile']], v.X*32, v.Y*32)
             love.graphics.draw(worldImg[v['ForegroundTile']], v.X*32, v.Y*32)
+
+            -- local cx,cy = love.mouse.getPosition()
             
+            -- if  cx > v.X*32 and cx < v.X*32+32 and cy > v.Y*32+32 and cy < v.Y*32+32  then
+            --     love.graphics.rectangle("fill", v.X*32, v.Y*32, 32, 32)
+            -- end
         end
             love.graphics.setColor(1,1,1)
             drawEnemies()
@@ -154,8 +170,20 @@ function love.draw()
         drawLoot()
         Luven.drawEnd()
 
-        drawHUD()
+        love.graphics.setFont(smallTextFont)
+        love.graphics.setColor(1,1,1,1)
+        local cx,cy = love.mouse.getPosition()
+        
+        -- TEMP ALPHA STUFF
+        love.graphics.setColor(1,0,0)
+        love.graphics.rectangle("fill",0,love.graphics.getHeight()-16,(player.hp/100)*love.graphics.getWidth(),16)
+        love.graphics.setColor(1,1,1)
+        love.graphics.print("BrawlQuest "..version.."\nCursor pos: "..tostring(math.floor((cx*scale)/(32))+player.x)..", "..tostring(math.floor(cy/32)+player.y/2).."\nPlayer pos: "..player.x..", "..player.y.."\n"..love.timer.getFPS().." FPS",200, 5)
 
+       -- drawHUD()
+        if isWorldEditWindowOpen then
+            drawEditWorldWindow()
+        end
         Luven.camera:draw()
     end
 
@@ -166,20 +194,17 @@ function love.draw()
 
     love.graphics.setColor(1,1,1,totalCoverAlpha)
     love.graphics.rectangle("fill",0,0,love.graphics.getWidth(),love.graphics.getHeight())
- 
-    love.graphics.setFont(smallTextFont)
-    love.graphics.setColor(1,1,1,1)
-    love.graphics.print("BrawlQuest "..version.."\nPlayer pos: "..tostring(me.X)..", "..tostring(me.Y).."\n"..love.timer.getFPS().." FPS",200, 5)
-end
+ end
 
 function love.update(dt)
+    totalCoverAlpha = totalCoverAlpha - 1*dt
     if phase == "login" then
         updateLogin(dt)
     else
         nextUpdate = nextUpdate - 1*dt
         nextTick = nextTick - 1*dt
         if nextUpdate < 0 then
-             
+            
             getPlayerData('/players/'..username, json:encode({
                 ["X"] = player.x,
                 ["Y"] = player.y ,
@@ -209,7 +234,10 @@ function love.update(dt)
             Luven.camera:setPosition(player.dx+16, player.dy+16)
         end
 
-        timeOfDay = timeOfDay + 0.00001*dt
+        local date_table = os.date("*t")
+        local ms = string.match(tostring(os.clock()), "%d%.(%d+)")
+        local hour, minute, second = date_table.hour, date_table.min, date_table.sec
+        timeOfDay = date_table.min/1440
         if timeOfDay < 0.8 then
             Luven.setAmbientLightColor({ 0.8-timeOfDay, 0.8-timeOfDay, 1-timeOfDay })
         else 
@@ -229,6 +257,15 @@ function love.update(dt)
             world = response['World']
             blockMap = response['BlockMap']
             me = response['Me']
+
+            if distanceToPoint(me.X, me.Y, player.x, player.y) > 6 then
+                player.x = 0
+                player.dx = 0
+                player.dy = 0
+                player.y = 0
+                totalCoverAlpha = 2
+                love.audio.play(awakeSfx)            
+            end
             -- update player
             player.hp = me.HP
             player.name = me.Name
@@ -255,17 +292,46 @@ function love.keypressed(key)
     if phase == "login" then
         checkLoginKeyPressed(key)
     else
-        if key == "m" then
-            beginMounting()
+        if isWorldEditWindowOpen then
+            checkEditWorldKeyPressed(key)
+        else
+            if key == "m" then
+                beginMounting()
+            end
+            checkTargeting()
+            if key == "." then
+                scale = scale * 1.25
+            end
+            if key == "," then
+                scale = scale / 1.25
+            end
         end
-        checkTargeting()
-        if key == "." then
-            scale = scale * 1.25
-        end
-        if key == "," then
-            scale = scale / 1.25
+        if key == "'" then
+            if isWorldEditWindowOpen then
+                isWorldEditWindowOpen = false
+            else
+                isWorldEditWindowOpen = true
+            end
+        elseif key == "lctrl" then
+            print("Sending...")
+            pendingWorldChanges[#pendingWorldChanges+1] = {
+                GroundTile = textfields[5],
+                ForegroundTile = textfields[6],
+                Name =  textfields[7],
+                Music = "*",
+                Collision = thisTile.Collision,
+                Enemy = textfields[8],
+                X = player.x,
+                Y = player.y,
+            }
+            print(json:encode(pendingWorldChanges))
+            c, h = http.request{url = api.url.."/world", method="POST", source=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(pendingWorldChanges)),["token"]=token}}
+            pendingWorldChanges = {}
+        elseif key == "o" then
         end
     end
+    
+    
     
     if key == "escape" then
         love.event.quit()
@@ -275,19 +341,43 @@ end
 function love.textinput(key)
     if phase == "login" then
         checkLoginTextinput(key)
+    elseif isWorldEditWindowOpen then
+        checkEditWorldTextinput(key)
     end
 end
 
 function love.mousepressed(x,y,button)
     if phase == "login" then
         checkClickLogin(x,y)
+    elseif isWorldEditWindowOpen then
+        checkEditWorldClick(x,y)
+    elseif love.keyboard.isDown("lctrl") then
+        pendingWorldChanges[#pendingWorldChanges+1] = {
+            GroundTile = textfields[5],
+            ForegroundTile = textfields[6],
+            Name =  textfields[7],
+            Music = "*",
+            Collision = thisTile.Collision,
+            Enemy = textfields[8],
+            X = player.x,
+            Y = player.y,
+        }
+        print(json:encode(pendingWorldChanges))
+        c, h = http.request{url = api.url.."/world", method="POST", body=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["token"]=token}}
+        pendingWorldChanges = {}
+    end 
+end
+
+function love.mousereleased(x,y,button)
+    if #pendingWorldChanges ~= 0 then
+        c, h = http.request{url = api.url.."/world", method="POST", body=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["token"]=token}}
+        pendingWorldChanges = {}
     end
 end
 
 function love.resize(width, height)
     if phase == "login" then
         initLogin()
-    else
-        reinitLighting(width, height)
     end
+    reinitLighting(width, height)
 end

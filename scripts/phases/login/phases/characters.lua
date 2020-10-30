@@ -61,7 +61,7 @@ function checkClickLoginPhaseCharacter(x,y)
         end
     end
 
-    if isMouseOver(loginImageX+32, loginImageY+390, charactersButtonImage:getWidth(), charactersButtonImage:getHeight()) then
+    if isMouseOver(loginImageX+32, loginImageY+390, charactersButtonImage:getWidth(), charactersButtonImage:getHeight()) and characterSelected ~= 0 then
         transitionToPhaseGame()
     end
 end

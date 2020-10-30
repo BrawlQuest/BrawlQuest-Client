@@ -25,8 +25,8 @@ function initLoginBackground()
         love.graphics.newImage("assets/ui/login/monsters/7.png"),
         love.graphics.newImage("assets/ui/login/monsters/8.png")
     }
-    love.graphics.setBackgroundColor(0.137,0.537,1)
-
+  --  love.graphics.setBackgroundColor(0.137,0.537,1)
+    love.graphics.setBackgroundColor(0.239,0.1,0.239)
     for i=1,8 do
         clouds[#clouds+1] = {
             x=love.math.random(-love.graphics.getWidth(),love.graphics.getWidth()),
@@ -67,16 +67,19 @@ function drawLoginBackground()
     love.graphics.setColor(1,1,1,randoMonAlpha)
     love.graphics.draw(monsterImgs[randoMon1],love.graphics.getWidth()/2-512,love.graphics.getHeight()-360)
     love.graphics.draw(monsterImgs[randoMon2],love.graphics.getWidth()/2+256,love.graphics.getHeight()-360)
-    love.graphics.setColor(1,1,1,1)
+    love.graphics.setColor(1,1,1,0.2)
     for i,v in pairs(clouds) do
         love.graphics.draw(cloudImg, v.x, v.y)
     end
+
     for i,v in pairs(loginMountains) do
         love.graphics.draw(mountainImg, v.x, v.y)
     end
+    love.graphics.setColor(0.6,0.6,0.6)
     for i,v in pairs(loginGrass) do
         love.graphics.draw(groundImg,v.x,v.y)
     end
+    love.graphics.setColor(1,1,1)
     for i=0,10  do
         love.graphics.draw(loginTreeImg,loginTrees[i].x,love.graphics.getHeight()+loginTrees[i].y)
     end

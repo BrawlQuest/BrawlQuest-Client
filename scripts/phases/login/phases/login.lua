@@ -33,7 +33,7 @@ function drawLoginPhase()
     if isMouseOver(loginImageX + 36, loginImageY + 380, 288, 44) then
         love.graphics.setColor(0.8, 0.8, 0.8)
     end
-    love.graphics.printf("ENTER WORLD", loginImageX + 50, loginImageY + 390, 262, "center")
+    love.graphics.printf("LOGIN / REGISTER", loginImageX + 50, loginImageY + 390, 262, "center")
     love.graphics.setColor(1, 1, 1)
     love.graphics.printf("Username", loginImageX + 50, loginImageY + 230, 262, "center")
     love.graphics.printf("Password", loginImageX + 50, loginImageY + 300, 262, "center")
@@ -112,7 +112,12 @@ function login()
         }
 
        if c == 200 then
-            characters = json:decode(characters[1])
+            if type(characters[1]) == "string" then
+                characters = json:decode(characters[1])
+            else
+                print(json:encode(characters))
+                characters = characters[1]
+            end
             loginPhase = "characters"
        end
     end

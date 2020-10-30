@@ -10,7 +10,11 @@ require 'scripts.phases.login.phases.server'
 textfields = {"", -- username
 "", -- password
 "", -- clean password (hidden)
-"" -- character name (used on creation)
+"", -- character name (used on creation)
+"assets/world/grounds/grass.png", -- background tile (world edit)
+"assets/world/grounds/Mountain.png", -- foreground tile (world edit)
+"Spooky Forest", -- locale name (world edit)
+"" -- enemy name (world edit)
 }
 
 characters = {}
@@ -27,7 +31,8 @@ function initLogin()
     buttonImage = love.graphics.newImage("assets/ui/login/button.png")
     textFieldImage = love.graphics.newImage("assets/ui/login/textbox.png")
     basePanelImage = love.graphics.newImage("assets/ui/login/character base panel.png")
-    
+    lightningSfx = love.audio.newSource("assets/sfx/weather/lightning_b.wav", "static")
+    lightningSfx:setVolume(0.5)
     initLoginBackground()
 end
 
@@ -45,6 +50,7 @@ function drawLogin()
         drawServerPhase()
     end
 
+    love.graphics.setColor(1,1,1)
     love.graphics.setFont(smallTextFont)
     love.graphics.print("BrawlQuest " .. version ..
     "\nFresh Play LTD 2016-2020\n\nGraphics by David E. Gervais\nMusic by Joseph Pearce\n\nMade with LÖVE", 10, 10)
@@ -52,6 +58,12 @@ end
 
 function updateLogin(dt)
     updateLoginBackground(dt)
+    
+    if love.math.random(1,250) == 1 then
+        totalCoverAlpha = 0.6
+        lightningSfx:setPitch(love.math.random(30,60)/100)
+        love.audio.play(lightningSfx)       
+    end
 end
 
 function checkClickLogin(x, y)
@@ -73,7 +85,6 @@ function checkLoginKeyPressed(key)
         checkLoginKeyPressedPhaseCreation(key)
     elseif loginPhase == "characters" then
         checkLoginKeyPressedPhaseCharacters(key)
-    
     end
 end
 
