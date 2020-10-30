@@ -19,7 +19,7 @@ function drawProfile()
 
 	local j = 2.380952380952381
 
-	if me ~= null and me.HP ~= null or me.XP ~= null then
+	if me ~= null and me.HP ~= null or me.HP ~= null then
 		love.graphics.setColor(1,0,0,1)
 		love.graphics.rectangle("fill", 20, 80, me.HP / j, 10) -- Health
 

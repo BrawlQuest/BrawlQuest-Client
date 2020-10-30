@@ -12,7 +12,7 @@ function battlebarPlayer(thisX, iy)
     local thisY = iy-battlebarBgnd:getHeight()
     love.graphics.draw(battlebarBgnd, thisX, thisY)
     love.graphics.draw(profilePic, thisX+10, thisY+10)
-    battlebarNameAndBars(thisX, thisY, player.name, player.hp, player.mhp)
+    battlebarNameAndBars(thisX, thisY, me.Name, me.HP, me.Mana)
     battlebarItem(thisX-44, thisY+18, a3sword, "+3")
 end
 
@@ -32,9 +32,9 @@ end
 
 function battlebarNameAndBars(ix, iy, name, hp, mana)
     love.graphics.setColor(1,1,1,1)
-    if name == player.name then
+    if name == me.Name then
         thisX, thisY = ix+84, iy+36
-        love.graphics.printf(player.name, thisX, iy+6, 250)
+        love.graphics.printf(me.Name, thisX, iy+6, 250)
     else
         thisX, thisY = ix+10, iy+36
         love.graphics.printf(name, thisX, iy+6, 250, "right")
@@ -43,7 +43,7 @@ function battlebarNameAndBars(ix, iy, name, hp, mana)
     roundRectangle("fill", thisX, thisY, 250, 16, 2)
     roundRectangle("fill", thisX, thisY+22, 250, 16, 2)
     love.graphics.setColor(1,0,0,1)
-    if name == player.name then
+    if name == me.Name then
         if hp > 0 then 
             roundRectangle("fill", thisX, thisY, hp*2.5, 16, 2)
         end 
