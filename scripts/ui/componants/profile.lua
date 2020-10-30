@@ -1,7 +1,7 @@
 function drawProfile()
 	if isMouseOver(0,0,perks:getWidth()*scale,perks:getHeight()*scale) then
 		love.graphics.draw(perks)
-		printWidth = (profileBgnd:getWidth()+perks:getWidth())*scale+5
+		printWidth = (perks:getWidth())*scale+5
 	else
 		printWidth = profileBgnd:getWidth()*scale+5
     end
@@ -17,14 +17,18 @@ function drawProfile()
 		love.graphics.rectangle("fill", 20, 80+(14*(i-1)), 42, 10) -- Backing Rectangles
 	end
 
-	love.graphics.setColor(1,0,0,1)
-	love.graphics.rectangle("fill", 20, 80, 10, 10) -- Health
+	local j = 2.380952380952381
 
-	love.graphics.setColor(0,0.5,1,1)
-	love.graphics.rectangle("fill", 20, 94, 37, 10) -- Stamina
-	
-	love.graphics.setColor(1,0.5,0,1)
-	love.graphics.rectangle("fill", 20, 108, 23, 10) -- XP
+	if me ~= null and me.HP ~= null or me.XP ~= null then
+		love.graphics.setColor(1,0,0,1)
+		love.graphics.rectangle("fill", 20, 80, me.HP / j, 10) -- Health
+
+		love.graphics.setColor(0,0.5,1,1)
+		love.graphics.rectangle("fill", 20, 94, me.Mana / j, 10) -- Mana
+		
+		love.graphics.setColor(1,0.5,0,1)
+		love.graphics.rectangle("fill", 20, 108, me.XP / j, 10) -- XP
+	end
 	
 	love.graphics.setColor(1,1,1,1)
 end

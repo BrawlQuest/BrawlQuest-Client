@@ -11,6 +11,7 @@ player = {
     hp = 100,
     dhp = 100,
     mhp = 100,
+    mana = 100,
     atk = 1,
     target = {
         x = 0,
@@ -26,7 +27,6 @@ player = {
         y = -100,
         stepSndPlay = 0.3,
     },
-    displayName = "Lord Squabulus"
 }
 
 me = {}

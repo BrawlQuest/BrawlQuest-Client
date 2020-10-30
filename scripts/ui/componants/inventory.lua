@@ -66,6 +66,9 @@ end
 function drawInventoryItem(thisX, thisY, field, item)
     love.graphics.draw(inventoryItemBgnd, thisX, thisY) -- Background
     love.graphics.draw(userInventory[field][item], thisX+3, thisY+3) -- Item
+    -- if isMouseOver(thisX, thisY, inventoryItemBgnd:getWidth(), inventoryItemBgnd:getHeight()) and love.mouse.isDown(1) then 
+    --     mouseImg = love.graphics.draw(userInventory[field][item], my, mx)
+    -- end
 end
 
 function drawInventory()
@@ -82,5 +85,9 @@ function drawInventory()
 end
 
 function drawInventoryStencil()
+	love.graphics.rectangle("fill", 70, toolbary+40, 180, 483)
+end
+
+function drawChatStencil()
 	love.graphics.rectangle("fill", 70, toolbary+40, 180, 483)
 end
