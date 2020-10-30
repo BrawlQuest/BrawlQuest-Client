@@ -128,7 +128,7 @@ function love.draw()
                 if love.filesystem.getInfo(v['ForegroundTile']) then
                     worldImg[v['ForegroundTile']] = love.graphics.newImage(v['ForegroundTile'])
                 else
-                    worldImg[v['GroundTile']] = love.graphics.newImage("assets/error.png")
+                    worldImg[v['ForegroundTile']] = love.graphics.newImage("assets/error.png")
                 end
             end
 
@@ -152,6 +152,10 @@ function love.draw()
         drawLoot()
         Luven.drawEnd()
 
+    love.graphics.setFont(smallTextFont)
+    love.graphics.setColor(1,1,1,1)
+    love.graphics.print("BrawlQuest "..version.."\nPlayer pos: "..tostring(me.X)..", "..tostring(me.Y).."\n"..love.timer.getFPS().." FPS",200, 5)
+
         drawHUD()
 
         Luven.camera:draw()
@@ -164,11 +168,7 @@ function love.draw()
 
     love.graphics.setColor(1,1,1,totalCoverAlpha)
     love.graphics.rectangle("fill",0,0,love.graphics.getWidth(),love.graphics.getHeight())
- 
-    love.graphics.setFont(smallTextFont)
-    love.graphics.setColor(1,1,1,1)
-    love.graphics.print("BrawlQuest "..version.."\nPlayer pos: "..tostring(me.X)..", "..tostring(me.Y).."\n"..love.timer.getFPS().." FPS",200, 5)
-end
+ end
 
 function love.update(dt)
     if phase == "login" then

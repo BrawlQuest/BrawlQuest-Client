@@ -45,6 +45,7 @@ function drawLogin()
         drawServerPhase()
     end
 
+    love.graphics.setColor(1,1,1)
     love.graphics.setFont(smallTextFont)
     love.graphics.print("BrawlQuest " .. version ..
     "\nFresh Play LTD 2016-2020\n\nGraphics by David E. Gervais\nMusic by Joseph Pearce\n\nMade with LÖVE", 10, 10)
