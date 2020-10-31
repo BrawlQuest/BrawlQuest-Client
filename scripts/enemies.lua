@@ -132,7 +132,7 @@ function updateEnemies(dt)
     for i, v in pairs(enemies) do
         smoothMovement(v, dt)
         if v.dhp > v.HP then
-            v.dhp = v.dhp - 1 * dt
+            v.dhp = v.dhp - difference(v.dhp,v.HP) * dt
         elseif v.dhp < v.HP then
             v.dhp = v.HP
         end
