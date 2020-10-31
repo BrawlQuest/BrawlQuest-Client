@@ -180,7 +180,7 @@ function love.draw()
         
         -- TEMP ALPHA STUFF
         love.graphics.setColor(1,0,0)
-        love.graphics.rectangle("fill",0,love.graphics.getHeight()-16,(player.hp/100)*love.graphics.getWidth(),16)
+        love.graphics.rectangle("fill",0,love.graphics.getHeight()-16,(player.dhp/100)*love.graphics.getWidth(),16)
         love.graphics.setColor(1,1,1)
 
 
@@ -209,8 +209,8 @@ function love.draw()
             love.graphics.draw(itemImg[v.Item.ImgPath], (i-1)*32,love.graphics.getHeight()-48)
             love.graphics.printf(v.Inventory.Amount,(i-1)*32,love.graphics.getHeight()-48, 32, "right" )
         end
-
-        love.graphics.print("BrawlQuest "..version.."\nCursor pos: "..tostring(math.floor((cx*scale)/(32))+player.x)..", "..tostring(math.floor(cy/32)+player.y/2).."\nPlayer pos: "..player.x..", "..player.y.."\n"..love.timer.getFPS().." FPS",200, 5)
+       
+            -- love.graphics.print("BrawlQuest "..version.."\nCursor pos: "..tostring(math.floor((cx*scale)/(32))+player.x)..", "..tostring(math.floor(cy/32)+player.y/2).."\nPlayer pos: "..player.x..", "..player.y.."\n"..love.timer.getFPS().." FPS",200, 5)
 
        -- drawHUD()
         if isWorldEditWindowOpen then
@@ -220,6 +220,13 @@ function love.draw()
     end
 
     love.graphics.setColor(1,1,1,1)
+    if me.Weapon then
+        if me.LegArmour.Val == "Error" then me.LegArmour.Val = "0" end
+        if me.ChestArmour.Val == "Error" then me.ChestArmour.Val = "0" end
+        if me.HeadArmour.Val == "Error" then me.HeadArmour.Val = "0" end
+        love.graphics.setFont(headerBigFont)
+        love.graphics.print(me.Name .. "\n"..me.Weapon.Val.." ATK\n"..(tonumber(me.LegArmour.Val) + tonumber(me.ChestArmour.Val) + tonumber(me.HeadArmour.Val)).." DEF",0,0)
+    end
     mx, my = love.mouse.getPosition()
 	love.graphics.draw(mouseImg, mx, my)
 

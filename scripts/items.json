@@ -178,5 +178,104 @@
     "ImgPath": "assets/player/gear/custom/red facemask.png",
     "Desc": "",
     "Worth": 1
+  },
+  {
+    "ID": 21,
+    "Name": "Legendary Helmet",
+    "Type": "arm_head",
+    "Val": "10",
+    "ImgPath": "assets/player/gear/a4/head.png",
+    "Desc": "A wooden stick with the end slightly pointed.",
+    "Worth": 1
+  },
+  {
+    "ID": 22,
+    "Name": "Legendary Chestplate",
+    "Type": "arm_chest",
+    "Val": "20",
+    "ImgPath": "assets/player/gear/a4/chest.png",
+    "Desc": "A wooden stick with the end slightly pointed.",
+    "Worth": 1
+  },
+  {
+    "ID": 23,
+    "Name": "Legendary Leggings",
+    "Type": "arm_legs",
+    "Val": "15",
+    "ImgPath": "assets/player/gear/a4/legs.png",
+    "Desc": "A wooden stick with the end slightly pointed.",
+    "Worth": 1
+  },
+  {
+    "ID": 24,
+    "Name": "Legendary Dagger",
+    "Type": "wep",
+    "Val": "15",
+    "ImgPath": "assets/player/gear/a4/dagger.png",
+    "Desc": "A wooden stick with the end slightly pointed.",
+    "Worth": 1
+  },
+  {
+    "ID": 25,
+    "Name": "Legendary Axe",
+    "Type": "wep",
+    "Val": "15",
+    "ImgPath": "assets/player/gear/a4/axe.png",
+    "Desc": "A wooden stick with the end slightly pointed.",
+    "Worth": 1
+  },
+  {
+    "ID": 26,
+    "Name": "Legendary Blade",
+    "Type": "wep",
+    "Val": "20",
+    "ImgPath": "assets/player/gear/a4/axe.png",
+    "Desc": "A wooden stick with the end slightly pointed.",
+    "Worth": 1
+  },
+  {
+    "ID": 27,
+    "Name": "Legendary Sword",
+    "Type": "wep",
+    "Val": "20",
+    "ImgPath": "assets/player/gear/a4/sword.png",
+    "Desc": "A wooden stick with the end slightly pointed.",
+    "Worth": 1
+  },
+  {
+    "ID": 28,
+    "Name": "Rose Chestplate",
+    "Type": "arm_chest",
+    "Val": "12",
+    "ImgPath": "assets/player/gear/a5 rose/chest.png",
+    "Desc": "A wooden stick with the end slightly pointed.",
+    "Worth": 1
+  },
+  {
+    "ID": 29,
+    "Name": "Rose Helmet",
+    "Type": "arm_head",
+    "Val": "7",
+    "ImgPath": "assets/player/gear/a5 rose/head.png",
+    "Desc": "A wooden stick with the end slightly pointed.",
+    "Worth": 1
+  },
+  {
+    "ID": 30,
+    "Name": "Rose Leggings",
+    "Type": "arm_legs",
+    "Val": "7",
+    "ImgPath": "assets/player/gear/a5 rose/legs.png",
+    "Desc": "A wooden stick with the end slightly pointed.",
+    "Worth": 1
+  },
+  {
+    "ID": 31,
+    "Name": "Rose Axe",
+    "Type": "wep",
+    "Val": "11",
+    "ImgPath": "assets/player/gear/a5 rose/rose axe.png",
+    "Desc": "A wooden stick with the end slightly pointed.",
+    "Worth": 1
   }
 ]

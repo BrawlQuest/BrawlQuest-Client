@@ -100,6 +100,12 @@ end
     if not isWorldEditWindowOpen then movePlayer(dt) end
         if player.dhp > player.hp then
             player.dhp = player.dhp - 32*dt
+        elseif player.dhp < player.hp then
+            player.dhp = player.dhp + 32*dt
+        end
+
+        if difference(player.dhp, player.hp) < 0.2 then
+            player.dhp = player.hp
         end
 
         if player.isMounting then
