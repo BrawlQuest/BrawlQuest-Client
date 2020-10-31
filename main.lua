@@ -149,7 +149,8 @@ function love.draw()
             end
 
             if v.Collision then
-                treeMap[v.X..","..v.Y] = true
+                if v.ForegroundTile == "assets/world/objects/Mountain.png" then treeMap[v.X..","..v.Y] = true end
+                blockMap[v.X..","..v.Y] = true
             end
 
             love.graphics.draw(worldImg[v['GroundTile']], v.X*32, v.Y*32)
@@ -268,7 +269,7 @@ function love.update(dt)
         local date_table = os.date("*t")
         local ms = string.match(tostring(os.clock()), "%d%.(%d+)")
         local hour, minute, second = date_table.hour, date_table.min, date_table.sec
-        timeOfDay = date_table.min/1440
+        timeOfDay = 0.4--date_table.min/1440
         if timeOfDay < 0.8 then
             Luven.setAmbientLightColor({ 0.8-timeOfDay, 0.8-timeOfDay, 1-timeOfDay })
         else 
@@ -286,7 +287,6 @@ function love.update(dt)
 
             players = response['Players']
             world = response['World']
-            blockMap = response['BlockMap']
             if json:encode(inventoryAlpha) ~= json:encode(response['Inventory']) then
                 love.audio.play(lootSfx)
             end

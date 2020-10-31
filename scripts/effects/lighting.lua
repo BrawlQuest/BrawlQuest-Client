@@ -77,6 +77,7 @@ function initLighting()
 end
 
 function reinitLighting(w,h)
+    lightSource = {}
     Luven.dispose()
     initLighting()
 end

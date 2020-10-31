@@ -85,9 +85,9 @@ function newEnemyData(data) -- called when nearby data is returned
             if v.HP > 0 then enemiesInAggro = enemiesInAggro + 1 end
             --  if v.TargetName == player.name then -- TODO: fix v.TargetName on the API so this can work properly
             --  boneSpurt(player.dx+16,player.dy+16,v.Enemy.ATK,48,1,0,0)
-            local attackSfx = attackSfxs[love.math.random(1, #attackSfxs)]
-            attackSfx:setPitch(love.math.random(50, 100) / 100)
-            love.audio.play(attackSfx)
+         --   local attackSfx = attackSfxs[love.math.random(1, #attackSfxs)]
+          --  attackSfx:setPitch(love.math.random(50, 100) / 100)
+         --   love.audio.play(attackSfx)
             if player.isMounted or player.isMounting then
                 beginMounting()
             end

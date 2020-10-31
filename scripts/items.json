@@ -1,0 +1,182 @@
+[
+  {
+    "ID": 1,
+    "Name": "Long Stick",
+    "Type": "wep",
+    "Val": "1",
+    "ImgPath": "assets/player/gear/a1/dagger.png",
+    "Desc": "A wooden stick with the end slightly pointed.",
+    "Worth": 1
+  },
+  {
+    "ID": 2,
+    "Name": "chest",
+    "Type": "arm_chest",
+    "Val": "1",
+    "ImgPath": "assets/player/gear/a1/chest.png",
+    "Desc": "",
+    "Worth": 1
+  },
+  {
+    "ID": 3,
+    "Name": "chest",
+    "Type": "arm_head",
+    "Val": "1",
+    "ImgPath": "assets/player/gear/a1/head.png",
+    "Desc": "",
+    "Worth": 1
+  },
+  {
+    "ID": 4,
+    "Name": "Leather Leggings",
+    "Type": "arm_legs",
+    "Val": "1",
+    "ImgPath": "assets/player/gear/a1/legs.png",
+    "Desc": "",
+    "Worth": 1
+  },
+  {
+    "ID": 5,
+    "Name": "Leather Chestplate",
+    "Type": "arm_chest",
+    "Val": "1",
+    "ImgPath": "assets/player/gear/a1/chest.png",
+    "Desc": "",
+    "Worth": 1
+  },
+  {
+    "ID": 6,
+    "Name": "Leather Helmet",
+    "Type": "arm_head",
+    "Val": "1",
+    "ImgPath": "assets/player/gear/a1/head.png",
+    "Desc": "",
+    "Worth": 1
+  },
+  {
+    "ID": 7,
+    "Name": "Axe",
+    "Type": "wep",
+    "Val": "3",
+    "ImgPath": "assets/player/gear/a1/axe.png",
+    "Desc": "",
+    "Worth": 1
+  },
+  {
+    "ID": 8,
+    "Name": "Battle Axe",
+    "Type": "wep",
+    "Val": "5",
+    "ImgPath": "assets/player/gear/a2/axe.png",
+    "Desc": "",
+    "Worth": 1
+  },
+  {
+    "ID": 9,
+    "Name": "Tin Helmet",
+    "Type": "arm_head",
+    "Val": "3",
+    "ImgPath": "assets/player/gear/a2/head.png",
+    "Desc": "",
+    "Worth": 1
+  },
+  {
+    "ID": 10,
+    "Name": "Tin Chestplate",
+    "Type": "arm_chest",
+    "Val": "5",
+    "ImgPath": "assets/player/gear/a2/chest.png",
+    "Desc": "",
+    "Worth": 1
+  },
+  {
+    "ID": 11,
+    "Name": "Tin Leggings",
+    "Type": "arm_legs",
+    "Val": "3",
+    "ImgPath": "assets/player/gear/a2/legs.png",
+    "Desc": "",
+    "Worth": 1
+  },
+  {
+    "ID": 12,
+    "Name": "Dagger of Glory",
+    "Type": "wep",
+    "Val": "10",
+    "ImgPath": "assets/player/gear/a3/dagger.png",
+    "Desc": "",
+    "Worth": 1
+  },
+  {
+    "ID": 13,
+    "Name": "Guardian's Chestplate",
+    "Type": "arm_chest",
+    "Val": "10",
+    "ImgPath": "assets/player/gear/a3/chest.png",
+    "Desc": "",
+    "Worth": 1
+  },
+  {
+    "ID": 14,
+    "Name": "Guardian's Helmet",
+    "Type": "arm_head",
+    "Val": "6",
+    "ImgPath": "assets/player/gear/a3/head.png",
+    "Desc": "",
+    "Worth": 1
+  },
+  {
+    "ID": 15,
+    "Name": "Guardian's Leggings",
+    "Type": "arm_legs",
+    "Val": "7",
+    "ImgPath": "assets/player/gear/a3/legs.png",
+    "Desc": "",
+    "Worth": 1
+  },
+  {
+    "ID": 16,
+    "Name": "Balaclava",
+    "Type": "arm_head",
+    "Val": "1",
+    "ImgPath": "assets/player/gear/custom/balaclava.png",
+    "Desc": "",
+    "Worth": 1
+  },
+  {
+    "ID": 17,
+    "Name": "Camo Body",
+    "Type": "arm_chest",
+    "Val": "1",
+    "ImgPath": "assets/player/gear/custom/camo.png",
+    "Desc": "",
+    "Worth": 1
+  },
+  {
+    "ID": 18,
+    "Name": "Camo Legs",
+    "Type": "arm_legs",
+    "Val": "1",
+    "ImgPath": "assets/player/gear/custom/camo pants.png",
+    "Desc": "",
+    "Worth": 1
+  },
+  {
+    "ID": 19,
+    "Name": "Hair of the Bitch",
+    "Type": "arm_head",
+    "Val": "1",
+    "ImgPath": "assets/player/gear/custom/pigeon.png",
+    "Desc": "",
+    "Worth": 1
+  },
+  {
+    "ID": 20,
+    "Name": "Red Facemask",
+    "Type": "arm_head",
+    "Val": "1",
+    "ImgPath": "assets/player/gear/custom/red facemask.png",
+    "Desc": "",
+    "Worth": 1
+  }
+]
