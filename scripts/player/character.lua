@@ -142,7 +142,6 @@ function movePlayer(dt)
     local lightRange = 6
 
     if player.x*32 == player.dx and player.y*32 == player.dy then -- movement smoothing has finished
-        blockMap[player.x..","..player.y] = nil
         local original = {
             player.x,
             player.y
@@ -176,8 +175,6 @@ function movePlayer(dt)
         if  blockMap[player.x..","..player.y] == true then
             player.x = original[1]
             player.y = original[2]
-        else
-            blockMap[player.x..","..player.y] = true
         end
     else -- movement smoothing
         local speed = 64
