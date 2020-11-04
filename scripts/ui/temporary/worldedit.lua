@@ -12,9 +12,21 @@ thisTile = {
     Enemy = ""
 }
 
+worldFiles = {}
+
 pendingWorldChanges = {}
 
 isWorldEditWindowOpen = false
+
+function initEditWorld() 
+    local files = recursiveEnumerate("assets/world", {})
+    print(#files)
+    for k, file in ipairs(files) do
+        worldFiles[#worldFiles+1] = file
+         worldImg[file] = love.graphics.newImage(file)
+        print(k .. ". ".. file)
+    end
+end
 
 function drawEditWorldWindow()
     loginImageX, loginImageY = math.floor(love.graphics.getWidth() / 2 - (loginEntryImage:getWidth() / 2)),
@@ -27,7 +39,10 @@ function drawEditWorldWindow()
     love.graphics.setFont(headerFont)
     love.graphics.print("Images", loginImageX+30, loginImageY+200)
 
-    drawTextField(loginImageX+35,loginImageY+240,5)
+   -- drawTextField(loginImageX+35,loginImageY+240,5)
+    for i,v in ipairs(worldFiles) do
+        love.graphics.draw(worldImg[v], loginImageX+35 + (i*32), loginImageY+240)
+    end
     love.graphics.setColor(1,1,1)
     drawTextField(loginImageX+35,loginImageY+280,6)
     

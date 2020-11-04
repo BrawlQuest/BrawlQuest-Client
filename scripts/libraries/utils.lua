@@ -51,3 +51,20 @@ end
 function tableLength(T)
 	return #T
 end
+
+function recursiveEnumerate(folder, r)
+	local lfs = love.filesystem
+	local filesTable = lfs.getDirectoryItems(folder)
+	for i,v in ipairs(filesTable) do
+        local file = folder.."/"..v
+        local infoTable = {}
+        lfs.getInfo(file, infoTable)
+    
+		if (infoTable.type == 'file') then
+            r[#r+1] = file
+		elseif (infoTable.type == 'directory') then
+			r = recursiveEnumerate(file, r)
+		end
+	end
+	return r
+end
