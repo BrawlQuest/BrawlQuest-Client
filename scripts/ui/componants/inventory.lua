@@ -4,11 +4,33 @@ function loadInventory()
 
     inventoryFields = {"weapons", "spells", "armour", "mounts", "other"}
     userInventory = {}
-    userInventory[1] = {a0sword, a1sword, a2sword, a3sword, a4sword, a4sword, a4sword, a4sword, a4sword, a4sword}
-    userInventory[2] = {a0sword, a1sword, a2sword, a3sword}
-    userInventory[3] = {a0sword, a1sword, a2sword, a3sword, a4sword}
-    userInventory[4] = {a0sword, a1sword, a2sword, a3sword, a4sword}
-    userInventory[5] = {a0sword, a1sword, a2sword, a3sword, a4sword}
+    userInventory[1] = {}
+    userInventory[2] = {}
+    userInventory[3] = {}
+    userInventory[4] = {}
+    userInventory[5] = {}
+
+    for i, v in ipairs(inventoryAlpha) do
+        local t = 5
+
+        if v.Item.Type == "wep" then
+            t = 1
+        elseif v.Item.Type == "spell" then
+            t = 2 
+        elseif string.sub(v.Item.Type, 1, 4) == "arm_" then
+            t = 3
+        elseif v.item.Type == "mount" then
+            t = 4
+        end
+        if not itemImg[v.Item.ImgPath] then
+            if love.filesystem.getInfo(v.Item.ImgPath) then
+                itemImg[v.Item.ImgPath] = love.graphics.newImage(v.Item.ImgPath)
+            else
+                itemImg[v.Item.ImgPath] = love.graphics.newImage("assets/error.png")
+            end
+        end
+        userInventory[t][#userInventory[t] + 1] = itemImg[v.Item.ImgPath]
+    end
 
     userInventoryFieldHeight = {}
 
@@ -72,6 +94,7 @@ function drawInventoryItem(thisX, thisY, field, item)
 end
 
 function drawInventory()
+    loadInventory()
 	love.graphics.draw(inventory, 0, toolbary)
 	-- love.graphics.rectangle("fill", 70, toolbary+40, 180, 483)
 	
