@@ -33,6 +33,12 @@ me = {}
 
 
 function drawItemIfExists(path,x,y)
+    local rotation = 1
+    local offsetX = 0
+    if player.previousDirection == "left" then
+        rotation = -1
+        offsetX = 32
+    end
     if not itemImg[path] then
         if love.filesystem.getInfo(path) then
             itemImg[path] = love.graphics.newImage(path)
@@ -40,7 +46,7 @@ function drawItemIfExists(path,x,y)
             itemImg[path] = love.graphics.newImage("assets/error.png")
         end
     end
-    love.graphics.draw(itemImg[path],x,y)
+    love.graphics.draw(itemImg[path],x+offsetX,y, 0, rotation, 1, 0, 0)
 end
 
 function drawPlayer()
@@ -52,12 +58,20 @@ function drawPlayer()
                 itemImg[me.Weapon.ImgPath] = love.graphics.newImage("assets/error.png")
             end
         end
-        love.graphics.draw(itemImg[me.Weapon.ImgPath] , player.dx-(itemImg[me.Weapon.ImgPath]:getWidth()-32), player.dy-(itemImg[me.Weapon.ImgPath]:getHeight()-32))
-        
+        local rotation = 1
+        local offsetX = 0
+        if player.previousDirection == "left" then
+            rotation = -1
+            offsetX = 32
+            love.graphics.draw(itemImg[me.Weapon.ImgPath] , player.dx+(itemImg[me.Weapon.ImgPath]:getWidth()-32)+32, player.dy-(itemImg[me.Weapon.ImgPath]:getHeight()-32), 0, rotation, 1, 0, 0)
+        else
+            love.graphics.draw(itemImg[me.Weapon.ImgPath] , player.dx-(itemImg[me.Weapon.ImgPath]:getWidth()-32), player.dy-(itemImg[me.Weapon.ImgPath]:getHeight()-32), 0, rotation, 1, 0, 0)
+        end
+       
         if player.isMounted then
             love.graphics.draw(horseImg, player.dx+6, player.dy+9)
         end
-        love.graphics.draw(playerImg, player.dx, player.dy)
+        love.graphics.draw(playerImg, player.dx+offsetX, player.dy, 0, rotation, 1, 0, 0)
 
 
         if me.HeadArmourID ~= 0 then
@@ -100,6 +114,12 @@ end
     if not isWorldEditWindowOpen then movePlayer(dt) end
         if player.dhp > player.hp then
             player.dhp = player.dhp - 32*dt
+        elseif player.dhp < player.hp then
+            player.dhp = player.dhp + 32*dt
+        end
+
+        if difference(player.dhp, player.hp) < 0.2 then
+            player.dhp = player.hp
         end
 
         if player.isMounting then
@@ -136,43 +156,31 @@ function movePlayer(dt)
     local lightRange = 6
 
     if player.x*32 == player.dx and player.y*32 == player.dy then -- movement smoothing has finished
-        blockMap[player.x..","..player.y] = nil
         local original = {
             player.x,
             player.y
         }
         if love.keyboard.isDown("w") then
-            player.y = player.y - 1
-            calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
-            stepSfx:stop()
-            stepSfx:setPitch(love.math.random(90,200)/100)
-            love.audio.play(stepSfx)
+            original[2] = original[2] - 1
         elseif love.keyboard.isDown("s") then
-            player.y = player.y + 1
-            calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
-            stepSfx:stop()
-            stepSfx:setPitch(love.math.random(90,200)/100)
-            love.audio.play(stepSfx)
+            original[2] = original[2] + 1
         end
         if love.keyboard.isDown("a") then
-            player.x = player.x - 1
-            calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
-            stepSfx:stop()
-            stepSfx:setPitch(love.math.random(90,200)/100)
-            love.audio.play(stepSfx)
+            original[1] = original[1]- 1
+            player.previousDirection = "left"
         elseif love.keyboard.isDown("d") then
-            player.x = player.x + 1
-            calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
-            stepSfx:stop()
-            stepSfx:setPitch(love.math.random(90,200)/100)
-            love.audio.play(stepSfx)
+            original[1] = original[1] + 1
+            player.previousDirection = "right"
         end
-        if  blockMap[player.x..","..player.y] == true then
+        if (original[1] ~= player.x or original[2] ~= player.y) and not blockMap[original[1]..","..original[2]] then
             player.x = original[1]
             player.y = original[2]
-        else
-            blockMap[player.x..","..player.y] = true
+            calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
+            stepSfx:stop()
+            stepSfx:setPitch(love.math.random(90,200)/100)
+            love.audio.play(stepSfx)
         end
+        
     else -- movement smoothing
         local speed = 64
              

@@ -58,12 +58,6 @@ end
 
 function updateLogin(dt)
     updateLoginBackground(dt)
-    
-    if love.math.random(1,250) == 1 then
-        totalCoverAlpha = 0.6
-        lightningSfx:setPitch(love.math.random(30,60)/100)
-        love.audio.play(lightningSfx)       
-    end
 end
 
 function checkClickLogin(x, y)

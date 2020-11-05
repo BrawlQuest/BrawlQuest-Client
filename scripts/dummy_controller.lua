@@ -4,32 +4,12 @@ function initDummyData()
     lootSfx = love.audio.newSource("assets/sfx/loot.mp3", "static")
     lootImg = love.graphics.newImage("assets/player/gear/a4/special.png")
     playerImg = love.graphics.newImage("assets/player/base/base 1.png")
-    horseImg = love.graphics.newImage("assets/player/mounts/horse/back.png")
-    horseForeImg = love.graphics.newImage("assets/player/mounts/horse/fore.png")
-    swordImg = love.graphics.newImage("assets/player/gear/a2/sword.png")
-    armour = {
-        love.graphics.newImage("assets/player/gear/custom/pigeon.png"),
-        love.graphics.newImage("assets/player/gear/a4/chest.png"),
-        love.graphics.newImage("assets/player/gear/a4/legs.png"),
-        love.graphics.newImage("assets/player/gear/custom/cloak 3.png"),
-        love.graphics.newImage("assets/player/gear/custom/red facemask.png")
-    }
-    groundImg = love.graphics.newImage("assets/world/grounds/grass.png")
-    treeImg = love.graphics.newImage("assets/world/objects/tree.png")
+
+
     targetImg = love.graphics.newImage("assets/ui/target.png")
     xpImg = love.graphics.newImage("assets/ui/xp.png")
 
-    enemyDieSfx = love.audio.newSource("assets/sfx/skeleton.wav", "static")
-    whistleSfx = {
-        love.audio.newSource("assets/sfx/player/actions/whistle/1.ogg", "static"),
-        love.audio.newSource("assets/sfx/player/actions/whistle/2.ogg", "static"),
-        love.audio.newSource("assets/sfx/player/actions/whistle/3.ogg", "static"),
-        love.audio.newSource("assets/sfx/player/actions/whistle/4.ogg", "static")
-    }
-    horseMountSfx = {
-        love.audio.newSource("assets/sfx/monsters/horse/mount/1.mp3", "static"),
-        love.audio.newSource("assets/sfx/monsters/horse/mount/2.mp3", "static")
-    }
+  
 
     arrowImg = {}
     arrowImg[-1]  = {
@@ -47,17 +27,6 @@ function initDummyData()
             [-1] = love.graphics.newImage("assets/ui/target/ne_arrow_1.png"),
             [1] = love.graphics.newImage("assets/ui/target/se_arrow_1.png")
         }
-        
-    loadDummyEnemies()
-
-    -- for i = 1, 70 do
-    --     trees[i] = {
-    --         x = love.math.random(0,love.graphics.getWidth()/32),
-    --         y = love.math.random(0,love.graphics.getHeight()/32)
-    --     }
-    --     blockMap[trees[#trees].x..","..trees[#trees].y] = true
-    --     treeMap[trees[#trees].x..","..trees[#trees].y] = true
-    -- end
 
     initLighting()
 

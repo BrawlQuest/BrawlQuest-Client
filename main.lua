@@ -2,7 +2,6 @@ require "scripts.dummy_controller"
 require 'scripts.dummy.lanterns'
 require "scripts.libraries.api"
 require "scripts.player.character"
-require "scripts.dummy.enemies"
 require "scripts.effects.bones"
 require "scripts.effects.lighting"
 require "scripts.effects.music"
@@ -21,6 +20,7 @@ require "scripts.libraries.utils"
 require "scripts.phases.login.login"
 require "scripts.player.other_players"
 require "scripts.enemies"
+require "scripts.world"
 require "scripts.ui.temporary.worldedit"
 require "data.data_controller"
 require "settings"
@@ -34,7 +34,6 @@ ltn12 = require("ltn12")
 version = "Pre-Release"
 phase = "login"
 
-trees = {} -- temp
 blockMap = {}
 treeMap = {}
 players = {} -- other players
@@ -49,6 +48,7 @@ previousTick = 0
 nextTick = 1
 totalCoverAlpha = 0 -- this covers the entire screen in white, for hiding purposes
 timeOfDay = 0
+enemiesInAggro = 0
 username = "Pebsie"
 readyForUpdate = true
 
@@ -61,7 +61,7 @@ lightGivers = {
     ["assets/world/objects/Pumpkin1.png"] = 0.8,
     ["assets/world/objects/Pumpkin2.png"] = 0.8,
 }
-lightSource = {}
+
 
 oldInfo = {}
 
@@ -73,6 +73,7 @@ function love.load()
     loadMusic()
     initLogin()
     initHUD()
+    initEditWorld()
     birds = love.audio.newSource("assets/sfx/ambient/forest/jungle.ogg", "stream")
     birds:setLooping(true)
     love.audio.play(birds)
@@ -105,64 +106,8 @@ function love.draw()
     else
         Luven.drawBegin()
 
-        for x=player.x-10,player.x+10 do
-            for y = player.y-10,player.y+10 do
-                if isTileLit(x,y) then
-                    if not wasTileLit(x,y) then
-                        love.graphics.setColor(1-oldLightAlpha,1-oldLightAlpha,1-oldLightAlpha) -- light up a tile
-                    else
-                        love.graphics.setColor(1,1,1)
-                    end
-                elseif wasTileLit(x,y) and oldLightAlpha > 0.2 then
-                    love.graphics.setColor(oldLightAlpha, oldLightAlpha, oldLightAlpha)
-                else
-                    love.graphics.setColor(0,0,0,0)
-                end
-                love.graphics.draw(groundImg, x*32, y*32)
-            end
-        end
-     --   drawDummy()
-        love.graphics.setColor(1,1,1)
-        for i,v in ipairs(world) do
-            if isTileLit(v.X,v.Y) then
-                love.graphics.setColor(1,1,1)
-            else
-                love.graphics.setColor(0,0,0,0)
-            end
-            if not worldImg[v['GroundTile']] then
-                if love.filesystem.getInfo(v['GroundTile']) then
-                     worldImg[v['GroundTile']] = love.graphics.newImage(v['GroundTile'])
-                else
-                    worldImg[v['GroundTile']] = love.graphics.newImage("assets/error.png")
-                end
-            end
+        drawWorld()
 
-            if not worldImg[v['ForegroundTile']] then
-                if love.filesystem.getInfo(v['ForegroundTile']) then
-                    worldImg[v['ForegroundTile']] = love.graphics.newImage(v['ForegroundTile'])
-                else
-                    worldImg[v['ForegroundTile']] = love.graphics.newImage("assets/error.png")
-                end
-            end
-
-            if lightGivers[v['ForegroundTile']] and not lightSource[v.X..","..v.Y] then
-                lightSource[v.X..","..v.Y] = true
-                Luven.addNormalLight(16+v.X*32,16+v.Y*32,{1,0.5,0}, lightGivers[v['ForegroundTile']])
-            end
-
-            if v.Collision then
-                treeMap[v.X..","..v.Y] = true
-            end
-
-            love.graphics.draw(worldImg[v['GroundTile']], v.X*32, v.Y*32)
-            love.graphics.draw(worldImg[v['ForegroundTile']], v.X*32, v.Y*32)
-
-            -- local cx,cy = love.mouse.getPosition()
-            
-            -- if  cx > v.X*32 and cx < v.X*32+32 and cy > v.Y*32+32 and cy < v.Y*32+32  then
-            --     love.graphics.rectangle("fill", v.X*32, v.Y*32, 32, 32)
-            -- end
-        end
             love.graphics.setColor(1,1,1)
             drawEnemies()
 
@@ -181,7 +126,7 @@ function love.draw()
         
         -- TEMP ALPHA STUFF
         love.graphics.setColor(1,0,0)
-        love.graphics.rectangle("fill",0,love.graphics.getHeight()-16,(player.hp/100)*love.graphics.getWidth(),16)
+        love.graphics.rectangle("fill",0,love.graphics.getHeight()-16,(player.dhp/100)*love.graphics.getWidth(),16)
         love.graphics.setColor(1,1,1)
 
 
@@ -210,8 +155,8 @@ function love.draw()
             love.graphics.draw(itemImg[v.Item.ImgPath], (i-1)*32,love.graphics.getHeight()-48)
             love.graphics.printf(v.Inventory.Amount,(i-1)*32,love.graphics.getHeight()-48, 32, "right" )
         end
-
-        love.graphics.print("BrawlQuest "..version.."\nCursor pos: "..tostring(math.floor((cx*scale)/(32))+player.x)..", "..tostring(math.floor(cy/32)+player.y/2).."\nPlayer pos: "..player.x..", "..player.y.."\n"..love.timer.getFPS().." FPS",200, 5)
+       
+            -- love.graphics.print("BrawlQuest "..version.."\nCursor pos: "..tostring(math.floor((cx*scale)/(32))+player.x)..", "..tostring(math.floor(cy/32)+player.y/2).."\nPlayer pos: "..player.x..", "..player.y.."\n"..love.timer.getFPS().." FPS",200, 5)
 
         drawHUD()
         if isWorldEditWindowOpen then
@@ -221,12 +166,21 @@ function love.draw()
     end
 
     love.graphics.setColor(1,1,1,1)
+    if me.Weapon then
+        if me.LegArmour.Val == "Error" then me.LegArmour.Val = "0" end
+        if me.ChestArmour.Val == "Error" then me.ChestArmour.Val = "0" end
+        if me.HeadArmour.Val == "Error" then me.HeadArmour.Val = "0" end
+        love.graphics.setFont(headerBigFont)
+        love.graphics.print(me.Name .. "\n"..me.Weapon.Val.." ATK\n"..(tonumber(me.LegArmour.Val) + tonumber(me.ChestArmour.Val) + tonumber(me.HeadArmour.Val)).." DEF",0,0)
+    end
+
     mx, my = love.mouse.getPosition()
 	love.graphics.draw(mouseImg, mx, my)
 
 
     love.graphics.setColor(1,1,1,totalCoverAlpha)
     love.graphics.rectangle("fill",0,0,love.graphics.getWidth(),love.graphics.getHeight())
+    love.graphics.draw(worldCanvas)
  end
 
 function love.update(dt)
@@ -270,7 +224,7 @@ function love.update(dt)
         local date_table = os.date("*t")
         local ms = string.match(tostring(os.clock()), "%d%.(%d+)")
         local hour, minute, second = date_table.hour, date_table.min, date_table.sec
-        timeOfDay = date_table.min/1440
+        timeOfDay = 0.4--date_table.min/1440
         if timeOfDay < 0.8 then
             Luven.setAmbientLightColor({ 0.8-timeOfDay, 0.8-timeOfDay, 1-timeOfDay })
         else 
@@ -287,12 +241,11 @@ function love.update(dt)
             local response = json:decode(info)
 
             players = response['Players']
-            world = response['World']
-            blockMap = response['BlockMap']
+         
             if json:encode(inventoryAlpha) ~= json:encode(response['Inventory']) then
                 love.audio.play(lootSfx)
             end
-
+ 
             inventoryAlpha = response['Inventory']
             me = response['Me']
 
@@ -351,20 +304,21 @@ function love.keypressed(key)
                 isWorldEditWindowOpen = true
             end
         elseif key == "lctrl" then
-            print("Sending...")
-            pendingWorldChanges[#pendingWorldChanges+1] = {
-                GroundTile = textfields[5],
-                ForegroundTile = textfields[6],
-                Name =  textfields[7],
-                Music = "*",
-                Collision = thisTile.Collision,
-                Enemy = textfields[8],
-                X = player.x,
-                Y = player.y,
-            }
-            print(json:encode(pendingWorldChanges))
-            c, h = http.request{url = api.url.."/world", method="POST", source=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(pendingWorldChanges)),["token"]=token}}
-            pendingWorldChanges = {}
+            createWorld()
+            -- print("Sending...")
+            -- pendingWorldChanges[#pendingWorldChanges+1] = {
+            --     GroundTile = textfields[5],
+            --     ForegroundTile = textfields[6],
+            --     Name =  textfields[7],
+            --     Music = "*",
+            --     Collision = thisTile.Collision,
+            --     Enemy = textfields[8],
+            --     X = player.x,
+            --     Y = player.y,
+            -- }
+            -- print(json:encode(pendingWorldChanges))
+            -- c, h = http.request{url = api.url.."/world", method="POST", source=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(pendingWorldChanges)),["token"]=token}}
+            -- pendingWorldChanges = {}
         elseif key == "o" then
         end
     end
@@ -424,6 +378,9 @@ end
 function love.resize(width, height)
     if phase == "login" then
         initLogin()
+    else
+        createWorld()
     end
-    reinitLighting(width, height)
+
+
 end

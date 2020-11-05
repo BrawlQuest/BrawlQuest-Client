@@ -63,6 +63,10 @@ function updateOtherPlayers(dt)
         end
         
 
+        if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X*32, v.Y*32) > 64 then
+            playersDrawable[i].X = v.X*32
+            playersDrawable[i].Y = v.Y*32
+        end
         if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X*32, v.Y*32) > 1 then
             if playersDrawable[i].X-1 > v.X*32 then
                 playersDrawable[i].X =  playersDrawable[i].X  - 64*dt

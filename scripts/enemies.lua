@@ -14,6 +14,8 @@ deathSfxs = {love.audio.newSource("assets/sfx/monsters/skeletons/death/1.ogg", "
              love.audio.newSource("assets/sfx/monsters/skeletons/death/2.ogg", "static"),
              love.audio.newSource("assets/sfx/monsters/skeletons/death/3.ogg", "static")}
 
+alertImg = love.graphics.newImage("assets/ui/alert.png")
+
 function newEnemyData(data) -- called when nearby data is returned
     enemiesInAggro = 0
 
@@ -22,7 +24,6 @@ function newEnemyData(data) -- called when nearby data is returned
         local enemy = enemies[v.ID]
 
         if not enemy then
-            print("Created new enemy with ID " .. v.ID)
             enemies[v.ID] = v
             enemy = enemies[v.ID]
             enemy.dx = v.X * 32
@@ -85,9 +86,9 @@ function newEnemyData(data) -- called when nearby data is returned
             if v.HP > 0 then enemiesInAggro = enemiesInAggro + 1 end
             --  if v.TargetName == player.name then -- TODO: fix v.TargetName on the API so this can work properly
             --  boneSpurt(player.dx+16,player.dy+16,v.Enemy.ATK,48,1,0,0)
-            local attackSfx = attackSfxs[love.math.random(1, #attackSfxs)]
-            attackSfx:setPitch(love.math.random(50, 100) / 100)
-            love.audio.play(attackSfx)
+         --   local attackSfx = attackSfxs[love.math.random(1, #attackSfxs)]
+          --  attackSfx:setPitch(love.math.random(50, 100) / 100)
+         --   love.audio.play(attackSfx)
             if player.isMounted or player.isMounting then
                 beginMounting()
             end
@@ -132,7 +133,7 @@ function updateEnemies(dt)
     for i, v in pairs(enemies) do
         smoothMovement(v, dt)
         if v.dhp > v.HP then
-            v.dhp = v.dhp - 1 * dt
+            v.dhp = v.dhp - difference(v.dhp,v.HP) * dt
         elseif v.dhp < v.HP then
             v.dhp = v.HP
         end

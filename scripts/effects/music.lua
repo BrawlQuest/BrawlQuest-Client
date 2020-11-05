@@ -11,23 +11,20 @@ playMusic = true
 function loadMusic() 
     music = {
         PuerLavari = love.audio.newSource("assets/music/album1/PuerLavari.mp3", "stream"),
+        Mining = love.audio.newSource("assets/music/album1/Mining.mp3", "stream"),
+        Sax = love.audio.newSource("assets/music/album1/Sax.mp3", "stream"),
         Titans = love.audio.newSource("assets/music/album1/Titans.mp3", "stream"),
         Skirmish = love.audio.newSource("assets/music/album1/Skirmish.mp3", "stream"),
         Skirmish2 = love.audio.newSource("assets/music/album1/Skirmish2.mp3", "stream"),
-        H1 = love.audio.newSource("assets/music/unofficial/After-the-Invasion.mp3", "stream"),
-        H2 = love.audio.newSource("assets/music/unofficial/Bells-of-Weirdness.mp3", "stream"),
-        H3 = love.audio.newSource("assets/music/unofficial/Moment-of-Strange.mp3", "stream"),
-        H4 = love.audio.newSource("assets/music/unofficial/Welcome-to-the-Mansion.mp3", "stream")
     }
 
     worldMusic = {
-        "H1",
-        "H2",
-        "H3",
-        "H4"
+        "PuerLavari",
+        "Mining",
+        "Sax",
     }
 
-    titleMusic = love.audio.newSource("assets/music/unofficial/The-Island-of-Dr-Sinister.mp3", "stream")
+    titleMusic = love.audio.newSource("assets/music/album1/Longing.mp3", "stream")
 
     battleMusic = {
         "Titans",

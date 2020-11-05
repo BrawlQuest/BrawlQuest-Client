@@ -15,6 +15,7 @@ function initLoginBackground()
     cloudImg = love.graphics.newImage("assets/ui/login/cloud.png")
     mountainImg = love.graphics.newImage("assets/ui/login/mountain.png")
     loginTreeImg = love.graphics.newImage("assets/ui/login/tree.png")
+    groundImg = love.graphics.newImage("assets/world/grounds/grass.png")
     monsterImgs ={
         love.graphics.newImage("assets/ui/login/monsters/1.png"),
         love.graphics.newImage("assets/ui/login/monsters/2.png"),
@@ -25,8 +26,8 @@ function initLoginBackground()
         love.graphics.newImage("assets/ui/login/monsters/7.png"),
         love.graphics.newImage("assets/ui/login/monsters/8.png")
     }
-  --  love.graphics.setBackgroundColor(0.137,0.537,1)
-    love.graphics.setBackgroundColor(0.239,0.1,0.239)
+    love.graphics.setBackgroundColor(0.137,0.537,1)
+  
     for i=1,8 do
         clouds[#clouds+1] = {
             x=love.math.random(-love.graphics.getWidth(),love.graphics.getWidth()),
@@ -67,7 +68,7 @@ function drawLoginBackground()
     love.graphics.setColor(1,1,1,randoMonAlpha)
     love.graphics.draw(monsterImgs[randoMon1],love.graphics.getWidth()/2-512,love.graphics.getHeight()-360)
     love.graphics.draw(monsterImgs[randoMon2],love.graphics.getWidth()/2+256,love.graphics.getHeight()-360)
-    love.graphics.setColor(1,1,1,0.2)
+    love.graphics.setColor(1,1,1,1)
     for i,v in pairs(clouds) do
         love.graphics.draw(cloudImg, v.x, v.y)
     end
@@ -75,7 +76,7 @@ function drawLoginBackground()
     for i,v in pairs(loginMountains) do
         love.graphics.draw(mountainImg, v.x, v.y)
     end
-    love.graphics.setColor(0.6,0.6,0.6)
+
     for i,v in pairs(loginGrass) do
         love.graphics.draw(groundImg,v.x,v.y)
     end
@@ -94,19 +95,19 @@ function updateLoginBackground(dt)
         end
     end
     for i,v in pairs(loginTrees) do
-        v.x = v.x - 64*dt
+        v.x = v.x - 32*dt
         if v.x <= -64 then
             v.x = love.graphics.getWidth()+64
         end
     end
     for i,v in pairs(loginGrass) do
-        v.x = v.x - 64*dt
+        v.x = v.x - 32*dt
         if v.x <= -32 then
             v.x = love.graphics.getWidth()
         end
     end
     for i, v in pairs(loginMountains) do
-        v.x = v.x - 24*dt
+        v.x = v.x - 8*dt
         if v.x <= -128 then
             v.x = love.graphics.getWidth()+115
         end
