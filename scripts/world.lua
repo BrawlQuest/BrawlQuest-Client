@@ -1,27 +1,16 @@
 worldCanvas = love.graphics.newCanvas(32*101,32*101)
 isWorldCreated = false
 lightSource = {}
-
-function sortWorld(t)
-    -- convert hash to array
-    
-
-    -- sort
-    table.sort(t, function(a, b)
-        if a.X ~= b.X then
-            return a.x > b.x
-        end
-
-        return a.y > b.y
-    end)
-    return t
-end
+lowestX = 0
+lowestY = 0
 
 function createWorld()
     
     lightSource = {}
     local highestX = 0
     local highestY = 0
+    lowestX = 0
+    lowestY = 0
     for i,v in ipairs(world) do
         if v.X > highestX then
             highestX = v.X
@@ -29,9 +18,15 @@ function createWorld()
         if v.Y > highestY then
             highestY = v.Y
         end
+        if v.X < lowestX then
+            lowestX = v.X
+        end
+        if v.Y < lowestY then
+            lowestY = v.Y
+        end
     end
-    worldCanvas = love.graphics.newCanvas(32*(highestX+1), 32*(highestY+1))
-    reinitLighting(32*highestX, 32*highestY)
+    worldCanvas = love.graphics.newCanvas(32*(highestX+math.abs(lowestX)+2), 32*(highestY+math.abs(lowestY)+2))
+    reinitLighting(32*(highestX+math.abs(lowestX)+2), 32*(highestY+math.abs(lowestY)+2))
     love.graphics.setCanvas(worldCanvas)
         love.graphics.clear()
         love.graphics.setColor(1, 1, 1)
@@ -74,8 +69,8 @@ function createWorld()
                 blockMap[v.X .. "," .. v.Y] = true
             end
 
-            love.graphics.draw(worldImg[v['GroundTile']], v.X * 32, v.Y * 32)
-                love.graphics.draw(worldImg[foregroundAsset], v.X * 32, v.Y * 32)
+            love.graphics.draw(worldImg[v['GroundTile']], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32)
+            love.graphics.draw(worldImg[foregroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32)
         
         -- love.graphics.print(v.X .. "," ..v.Y.."\n"..of, v.X*32, v.Y*32)
             -- local cx,cy = love.mouse.getPosition()
@@ -108,7 +103,7 @@ function drawWorld()
     --   drawDummy()
     love.graphics.setColor(1,1,1,1)
     love.graphics.setBlendMode("alpha", "premultiplied")
-    love.graphics.draw(worldCanvas)
+    love.graphics.draw(worldCanvas, lowestX*32, lowestY*32)
     love.graphics.setBlendMode("alpha")
 end
 
