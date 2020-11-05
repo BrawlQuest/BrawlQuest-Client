@@ -22,9 +22,11 @@ function initEditWorld()
     local files = recursiveEnumerate("assets/world", {})
     print(#files)
     for k, file in ipairs(files) do
-        worldFiles[#worldFiles+1] = file
-         worldImg[file] = love.graphics.newImage(file)
-        print(k .. ". ".. file)
+        if string.find(file, "Store", 1) == nil then
+            worldFiles[#worldFiles+1] = file
+            print(k .. ". ".. file)
+            worldImg[file] = love.graphics.newImage(file)
+        end
     end
 end
 
