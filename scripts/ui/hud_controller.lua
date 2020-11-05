@@ -1,3 +1,5 @@
+require "scripts.ui.componants.tooltip"
+
 function initHUD()
     --scaling
     scale, uiX, uiY = 1
@@ -63,18 +65,43 @@ function initHUD()
     loadInventory()
 end
 
+
+function drawHUD()
+    
+    love.graphics.push() -- chat and quests scaling TODO: Quests
+        local i = 0.5
+        love.graphics.scale(scale*i)
+        drawChatPanel(uiX/i, uiY/i)
+    love.graphics.pop()
+
+    love.graphics.push() -- chat and quests scaling TODO: Quests
+        local i = 0.75
+        love.graphics.scale(scale*i)
+        drawBattlebar((uiX/2)/i, uiY/i)
+    love.graphics.pop()
+
+    love.graphics.push()
+        local i = 1
+        love.graphics.scale(scale)
+        drawToolbar()
+        drawProfile(uiX/i, uiY/i)
+    love.graphics.pop()
+
+    drawTooltip()
+    --love.graphics.rectangle("fill", (uiX-getChatWidth()), 0, getChatWidth()*(scale*0.5), uiY)
+end 
+
 function updateHUD( dt )
     uiX = love.graphics.getWidth()/scale -- scaling options
     uiY = love.graphics.getHeight()/scale
-    
     
     velyInventory = velyInventory - velyInventory * math.min( dt * 15, 1 )
 
     posyChat = posyChat + velyChat * dt
     velyChat = velyChat - velyChat * math.min( dt * 15, 1 )
 
-    if posyInventory < (getFullUserInventoryFieldHeight()*-1)+483 then
-        posyInventory = (getFullUserInventoryFieldHeight()*-1)+483
+    if posyInventory <= (getFullUserInventoryFieldHeight()*-1)+483 then
+      --  posyInventory = (getFullUserInventoryFieldHeight()*-1)+483
         velyInventory = 0
     elseif posyInventory > 0 then
         posyInventory = 0
@@ -86,6 +113,8 @@ function updateHUD( dt )
     if posyChat < 0 then
         posyChat = 0
     end
+
+    updateTooltip(dt)
 end
 
 function love.wheelmoved( dx, dy )
@@ -93,6 +122,5 @@ function love.wheelmoved( dx, dy )
        velyInventory = velyInventory + dy * 512
     else 
         velyChat = velyChat + dy * 512
-        print(posyChat)
     end
 end

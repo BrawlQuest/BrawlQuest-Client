@@ -14,7 +14,7 @@ function drawToolbar()
 		drawInventory()
 		love.graphics.setColor(0,0,0,1)
 		love.graphics.setFont(smallTextFont, 16)
-		love.graphics.print("Serach", 105, toolbary+14)
+		love.graphics.print("Search", 105, toolbary+14)
 		smallTextFont:setFilter( "nearest", "nearest" )
 		love.graphics.setColor(1,1,1,1)
 	end
