@@ -29,7 +29,7 @@ function isTileLit(x,y)
     if lightMap[x..","..y] == "lit" then
         return true
     else
-        return false
+        return true--false
     end
 end
 

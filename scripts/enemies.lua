@@ -14,6 +14,8 @@ deathSfxs = {love.audio.newSource("assets/sfx/monsters/skeletons/death/1.ogg", "
              love.audio.newSource("assets/sfx/monsters/skeletons/death/2.ogg", "static"),
              love.audio.newSource("assets/sfx/monsters/skeletons/death/3.ogg", "static")}
 
+alertImg = love.graphics.newImage("assets/ui/alert.png")
+
 function newEnemyData(data) -- called when nearby data is returned
     enemiesInAggro = 0
 
@@ -22,7 +24,6 @@ function newEnemyData(data) -- called when nearby data is returned
         local enemy = enemies[v.ID]
 
         if not enemy then
-            print("Created new enemy with ID " .. v.ID)
             enemies[v.ID] = v
             enemy = enemies[v.ID]
             enemy.dx = v.X * 32

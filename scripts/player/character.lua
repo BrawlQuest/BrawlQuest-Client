@@ -161,37 +161,26 @@ function movePlayer(dt)
             player.y
         }
         if love.keyboard.isDown("w") then
-            player.y = player.y - 1
-            calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
-            stepSfx:stop()
-            stepSfx:setPitch(love.math.random(90,200)/100)
-            love.audio.play(stepSfx)
+            original[2] = original[2] - 1
         elseif love.keyboard.isDown("s") then
-            player.y = player.y + 1
-            calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
-            stepSfx:stop()
-            stepSfx:setPitch(love.math.random(90,200)/100)
-            love.audio.play(stepSfx)
+            original[2] = original[2] + 1
         end
         if love.keyboard.isDown("a") then
-            player.x = player.x - 1
+            original[1] = original[1]- 1
             player.previousDirection = "left"
-            calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
-            stepSfx:stop()
-            stepSfx:setPitch(love.math.random(90,200)/100)
-            love.audio.play(stepSfx)
         elseif love.keyboard.isDown("d") then
-            player.x = player.x + 1
+            original[1] = original[1] + 1
             player.previousDirection = "right"
-            calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
-            stepSfx:stop()
-            stepSfx:setPitch(love.math.random(90,200)/100)
-            love.audio.play(stepSfx)
         end
-        if  blockMap[player.x..","..player.y] == true then
+        if (original[1] ~= player.x or original[2] ~= player.y) and not blockMap[original[1]..","..original[2]] then
             player.x = original[1]
             player.y = original[2]
+            calculateLighting(player.x-lightRange,player.y-lightRange,player.x+lightRange,player.y+lightRange)
+            stepSfx:stop()
+            stepSfx:setPitch(love.math.random(90,200)/100)
+            love.audio.play(stepSfx)
         end
+        
     else -- movement smoothing
         local speed = 64
              
