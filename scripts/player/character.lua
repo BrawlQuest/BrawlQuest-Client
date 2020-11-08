@@ -58,6 +58,9 @@ function drawPlayer()
                 itemImg[me.Weapon.ImgPath] = love.graphics.newImage("assets/error.png")
             end
         end
+      
+            drawItemIfExists("assets/player/gear/a4/shield.png", player.dx,player.dy)
+     
         local rotation = 1
         local offsetX = 0
         if player.previousDirection == "left" then
@@ -67,7 +70,7 @@ function drawPlayer()
         else
             love.graphics.draw(itemImg[me.Weapon.ImgPath] , player.dx-(itemImg[me.Weapon.ImgPath]:getWidth()-32), player.dy-(itemImg[me.Weapon.ImgPath]:getHeight()-32), 0, rotation, 1, 0, 0)
         end
-       
+
         if player.isMounted then
             love.graphics.draw(horseImg, player.dx+6, player.dy+9)
         end
@@ -83,6 +86,12 @@ function drawPlayer()
         if me.LegArmourID ~= 0 then
             drawItemIfExists(me.LegArmour.ImgPath,player.dx,player.dy)
         end
+
+        
+        if love.keyboard.isDown("lshift") then
+            drawItemIfExists("assets/player/gear/a4/shield.png", player.dx,player.dy)
+        end
+       
 
         if player.isMounted then
             love.graphics.draw(horseForeImg, player.dx+6, player.dy+9)
@@ -160,15 +169,15 @@ function movePlayer(dt)
             player.x,
             player.y
         }
-        if love.keyboard.isDown("w") then
+        if love.keyboard.isDown(keybinds.UP) then
             original[2] = original[2] - 1
-        elseif love.keyboard.isDown("s") then
+        elseif love.keyboard.isDown(keybinds.DOWN) then
             original[2] = original[2] + 1
         end
-        if love.keyboard.isDown("a") then
+        if love.keyboard.isDown(keybinds.LEFT) then
             original[1] = original[1]- 1
             player.previousDirection = "left"
-        elseif love.keyboard.isDown("d") then
+        elseif love.keyboard.isDown(keybinds.RIGHT) then
             original[1] = original[1] + 1
             player.previousDirection = "right"
         end
@@ -223,18 +232,18 @@ function checkTargeting() -- Check which keys are down and place the player targ
     local wasActive = player.target.active
     player.target.active = false
 
-    if love.keyboard.isDown("up") then
+    if love.keyboard.isDown(keybinds.ATTACK_UP) then
         player.target.active = true
         player.target.y = player.y - 1
-    elseif love.keyboard.isDown("down") then
+    elseif love.keyboard.isDown(keybinds.ATTACK_DOWN) then
         player.target.active = true
         player.target.y = player.y + 1
     end
 
-    if love.keyboard.isDown("left") then
+    if love.keyboard.isDown(keybinds.ATTACK_LEFT) then
         player.target.active = true
         player.target.x = player.x - 1
-    elseif love.keyboard.isDown("right") then
+    elseif love.keyboard.isDown(keybinds.ATTACK_RIGHT) then
         player.target.active = true
         player.target.x = player.x + 1
     end

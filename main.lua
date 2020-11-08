@@ -1,4 +1,4 @@
-require "scripts.dummy_controller"
+
 require 'scripts.dummy.lanterns'
 require "scripts.libraries.api"
 require "scripts.player.character"
@@ -20,7 +20,7 @@ require "scripts.enemies"
 require "scripts.world"
 require "scripts.ui.temporary.worldedit"
 require "data.data_controller"
-require "settings"
+require "scripts.player.settings"
 Luven = require "scripts.libraries.luven.luven"
 
 json = require("scripts.libraries.json")
@@ -64,6 +64,7 @@ sendUpdate = false
 
 function love.load()
     initHardData()
+    initSettings()
     love.graphics.setDefaultFilter("nearest", "nearest")
     loadMusic()
     initLogin()
@@ -90,8 +91,6 @@ function love.load()
     headerBigFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 32) -- TODO: get a license for this font
     font = headerFont
     love.graphics.setFont(textFont)
-
-    initDummyData()
 
 end
 
