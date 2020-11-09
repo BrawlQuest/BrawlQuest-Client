@@ -4,11 +4,33 @@ function loadInventory()
 
     inventoryFields = {"weapons", "spells", "armour", "mounts", "other"}
     userInventory = {}
-    userInventory[1] = {a0sword, a1sword, a2sword, a3sword, a4sword, a4sword, a4sword, a4sword, a4sword, a4sword}
-    userInventory[2] = {a0sword, a1sword, a2sword, a3sword}
-    userInventory[3] = {a0sword, a1sword, a2sword, a3sword, a4sword}
-    userInventory[4] = {a0sword, a1sword, a2sword, a3sword, a4sword}
-    userInventory[5] = {a0sword, a1sword, a2sword, a3sword, a4sword}
+    userInventory[1] = {}
+    userInventory[2] = {}
+    userInventory[3] = {}
+    userInventory[4] = {}
+    userInventory[5] = {}
+
+    for i, v in ipairs(inventoryAlpha) do
+        local t = 5
+
+        if v.Item.Type == "wep" then
+            t = 1
+        elseif v.Item.Type == "spell" then
+            t = 2 
+        elseif string.sub(v.Item.Type, 1, 4) == "arm_" then
+            t = 3
+        elseif v.item.Type == "mount" then
+            t = 4
+        end
+        if not itemImg[v.Item.ImgPath] then
+            if love.filesystem.getInfo(v.Item.ImgPath) then
+                itemImg[v.Item.ImgPath] = love.graphics.newImage(v.Item.ImgPath)
+            else
+                itemImg[v.Item.ImgPath] = love.graphics.newImage("assets/error.png")
+            end
+        end
+        userInventory[t][#userInventory[t] + 1] = v
+    end
 
     userInventoryFieldHeight = {}
 
@@ -54,6 +76,7 @@ function getUserInventoryFieldHeight(field)
     elseif i >= 12 and i <= 15 then return j+168
     elseif i >= 16 and i <= 19 then return j+168
     end
+
 end
 
 function getFullUserInventoryFieldHeight()
@@ -65,14 +88,21 @@ function getFullUserInventoryFieldHeight()
 end
 
 function drawInventoryItem(thisX, thisY, field, item)
+    if isMouseOver(thisX, thisY, 32, 32) then
+        love.graphics.setColor(0.6,0.6,0.6)
+        setTooltip(userInventory[field][item].Item.Name,"+"..userInventory[field][item].Item.Val .. " "..userInventory[field][item].Item.Type.."\n"..userInventory[field][item].Item.Desc)
+    end
     love.graphics.draw(inventoryItemBgnd, thisX, thisY) -- Background
-    love.graphics.draw(userInventory[field][item], thisX+3, thisY+3) -- Item
+    love.graphics.setColor(1,1,1)
+    
+    love.graphics.draw(itemImg[userInventory[field][item].Item.ImgPath], thisX+3, thisY+3) -- Item
     -- if isMouseOver(thisX, thisY, inventoryItemBgnd:getWidth(), inventoryItemBgnd:getHeight()) and love.mouse.isDown(1) then 
     --     mouseImg = love.graphics.draw(userInventory[field][item], my, mx)
     -- end
 end
 
 function drawInventory()
+    loadInventory()
 	love.graphics.draw(inventory, 0, toolbary)
 	-- love.graphics.rectangle("fill", 70, toolbary+40, 180, 483)
 	

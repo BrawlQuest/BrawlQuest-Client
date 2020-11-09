@@ -53,7 +53,7 @@ function createWorld()
                 if love.filesystem.getInfo(foregroundAsset) then
                     worldImg[foregroundAsset] = love.graphics.newImage(foregroundAsset)
                 else
-                    worldImg[foregroundAsset] = love.graphics.newImage("assets/error.png")
+                    worldImg[foregroundAsset] = love.graphics.newImage("assets/error.png") 
                 end
             end
 

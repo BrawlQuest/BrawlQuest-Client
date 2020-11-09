@@ -1,4 +1,4 @@
-require "scripts.dummy_controller"
+
 require 'scripts.dummy.lanterns'
 require "scripts.libraries.api"
 require "scripts.player.character"
@@ -6,8 +6,7 @@ require "scripts.effects.bones"
 require "scripts.effects.lighting"
 require "scripts.effects.music"
 require "scripts.effects.loot"
-require "scripts.ui.inithud"
-require "scripts.ui.drawhud"
+require "scripts.ui.hud_controller"
 require "scripts.ui.componants.chat"
 require "scripts.ui.componants.toolbar"
 require "scripts.ui.componants.battlebar"
@@ -23,13 +22,12 @@ require "scripts.enemies"
 require "scripts.world"
 require "scripts.ui.temporary.worldedit"
 require "data.data_controller"
-require "settings"
+require "scripts.player.settings"
 Luven = require "scripts.libraries.luven.luven"
 
 json = require("scripts.libraries.json")
 http = require("socket.http")
 ltn12 = require("ltn12")
-
 
 version = "Pre-Release"
 phase = "login"
@@ -59,17 +57,18 @@ lightGivers = {
     ["assets/world/objects/Mushroom.png"] = 0.5,
     ["assets/world/objects/Pumpkin0.png"] = 0.8,
     ["assets/world/objects/Pumpkin1.png"] = 0.8,
-    ["assets/world/objects/Pumpkin2.png"] = 0.8,
+    ["assets/world/objects/Pumpkin2.png"] = 0.8
 }
-
 
 oldInfo = {}
 
 sendUpdate = false
 
 function love.load()
-    initHardData()
     love.graphics.setDefaultFilter("nearest", "nearest")
+    initHardData()
+    initSettings()
+
     loadMusic()
     initLogin()
     initHUD()
@@ -83,21 +82,19 @@ function love.load()
     xpSfx:setVolume(0.4)
 
     awakeSfx = love.audio.newSource("assets/sfx/player/awake.wav", "static")
-   
+
     playerHitSfx = love.audio.newSource("assets/sfx/hit.wav", "static")
     enemyHitSfx = love.audio.newSource("assets/sfx/impact_b.wav", "static")
     critHitSfx = love.audio.newSource("assets/sfx/pit_trap_damage.wav", "static")
 
-    textFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf",24)
-  
-    smallTextFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf",12)
+    textFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 24)
+
+    smallTextFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 12)
     headerFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 18) -- TODO: get a license for this font
     headerBigFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 32) -- TODO: get a license for this font
     font = headerFont
     love.graphics.setFont(textFont)
 
-    initDummyData()
- 
 end
 
 function love.draw()
@@ -108,43 +105,42 @@ function love.draw()
 
         drawWorld()
 
-            love.graphics.setColor(1,1,1)
-            drawEnemies()
+        love.graphics.setColor(1, 1, 1)
+        drawEnemies()
 
-        
-        for i,v in ipairs(playersDrawable) do
-            drawOtherPlayer(v,i)
+        for i, v in ipairs(playersDrawable) do
+            drawOtherPlayer(v, i)
         end
-        
+
         drawPlayer()
         drawLoot()
         Luven.drawEnd()
 
         love.graphics.setFont(smallTextFont)
-        love.graphics.setColor(1,1,1,1)
-        local cx,cy = love.mouse.getPosition()
-        
+        love.graphics.setColor(1, 1, 1, 1)
+        local cx, cy = love.mouse.getPosition()
+
         -- TEMP ALPHA STUFF
-        love.graphics.setColor(1,0,0)
-        love.graphics.rectangle("fill",0,love.graphics.getHeight()-16,(player.dhp/100)*love.graphics.getWidth(),16)
-        love.graphics.setColor(1,1,1)
+        love.graphics.setColor(1, 0, 0)
+        love.graphics.rectangle("fill", 0, love.graphics.getHeight() - 16,
+            (player.dhp / 100) * love.graphics.getWidth(), 16)
+        love.graphics.setColor(1, 1, 1)
 
-
-        for i,v in ipairs(inventoryAlpha) do
-            if isMouseOver((i-1)*32, love.graphics.getHeight()-48, 32, 32) then
-                love.graphics.setColor(1,1,1)
+        for i, v in ipairs(inventoryAlpha) do
+            if isMouseOver((i - 1) * 32, love.graphics.getHeight() - 48, 32, 32) then
+                love.graphics.setColor(1, 1, 1)
                 love.graphics.setFont(headerBigFont)
-                love.graphics.print(v.Item.Name,0,love.graphics.getHeight()-100)
+                love.graphics.print(v.Item.Name, 0, love.graphics.getHeight() - 100)
                 love.graphics.setFont(headerFont)
-                love.graphics.print("+" .. v.Item.Val.." "..v.Item.Type,0,love.graphics.getHeight()-70)
+                love.graphics.print("+" .. v.Item.Val .. " " .. v.Item.Type, 0, love.graphics.getHeight() - 70)
 
-            love.graphics.setFont(textFont)
+                love.graphics.setFont(textFont)
             else
-              love.graphics.setColor(0.6,0.6,0.6)
+                love.graphics.setColor(0.6, 0.6, 0.6)
             end
-            love.graphics.rectangle("fill", (i-1)*32, love.graphics.getHeight()-48, 32, 32)
-            love.graphics.setColor(1,1,1)
-            love.graphics.rectangle("line",(i-1)*32,love.graphics.getHeight()-48,32,32)
+            love.graphics.rectangle("fill", (i - 1) * 32, love.graphics.getHeight() - 48, 32, 32)
+            love.graphics.setColor(1, 1, 1)
+            love.graphics.rectangle("line", (i - 1) * 32, love.graphics.getHeight() - 48, 32, 32)
             if not itemImg[v.Item.ImgPath] then
                 if love.filesystem.getInfo(v.Item.ImgPath) then
                     itemImg[v.Item.ImgPath] = love.graphics.newImage(v.Item.ImgPath)
@@ -152,11 +148,11 @@ function love.draw()
                     itemImg[v.Item.ImgPath] = love.graphics.newImage("assets/error.png")
                 end
             end
-            love.graphics.draw(itemImg[v.Item.ImgPath], (i-1)*32,love.graphics.getHeight()-48)
-            love.graphics.printf(v.Inventory.Amount,(i-1)*32,love.graphics.getHeight()-48, 32, "right" )
+            love.graphics.draw(itemImg[v.Item.ImgPath], (i - 1) * 32, love.graphics.getHeight() - 48)
+            love.graphics.printf(v.Inventory.Amount, (i - 1) * 32, love.graphics.getHeight() - 48, 32, "right")
         end
-       
-            -- love.graphics.print("BrawlQuest "..version.."\nCursor pos: "..tostring(math.floor((cx*scale)/(32))+player.x)..", "..tostring(math.floor(cy/32)+player.y/2).."\nPlayer pos: "..player.x..", "..player.y.."\n"..love.timer.getFPS().." FPS",200, 5)
+
+        -- love.graphics.print("BrawlQuest "..version.."\nCursor pos: "..tostring(math.floor((cx*scale)/(32))+player.x)..", "..tostring(math.floor(cy/32)+player.y/2).."\nPlayer pos: "..player.x..", "..player.y.."\n"..love.timer.getFPS().." FPS",200, 5)
 
         drawHUD()
         if isWorldEditWindowOpen then
@@ -165,49 +161,57 @@ function love.draw()
         Luven.camera:draw()
     end
 
-    love.graphics.setColor(1,1,1,1)
-    if me.Weapon then
-        if me.LegArmour.Val == "Error" then me.LegArmour.Val = "0" end
-        if me.ChestArmour.Val == "Error" then me.ChestArmour.Val = "0" end
-        if me.HeadArmour.Val == "Error" then me.HeadArmour.Val = "0" end
-        love.graphics.setFont(headerBigFont)
-        love.graphics.print(me.Name .. "\n"..me.Weapon.Val.." ATK\n"..(tonumber(me.LegArmour.Val) + tonumber(me.ChestArmour.Val) + tonumber(me.HeadArmour.Val)).." DEF",0,0)
-    end
+    -- love.graphics.setColor(1, 1, 1, 1)
+    -- if me.Weapon then
+    --     if me.LegArmour.Val == "Error" then
+    --         me.LegArmour.Val = "0"
+    --     end
+    --     if me.ChestArmour.Val == "Error" then
+    --         me.ChestArmour.Val = "0"
+    --     end
+    --     if me.HeadArmour.Val == "Error" then
+    --         me.HeadArmour.Val = "0"
+    --     end
+    --     love.graphics.setFont(headerBigFont)
+    --     love.graphics.print(me.Name .. "\n" .. me.Weapon.Val .. " ATK\n" ..
+    --                             (tonumber(me.LegArmour.Val) + tonumber(me.ChestArmour.Val) + tonumber(me.HeadArmour.Val)) ..
+    --                             " DEF", 0, 0)
+    -- end
 
     mx, my = love.mouse.getPosition()
-	love.graphics.draw(mouseImg, mx, my)
+    love.graphics.draw(mouseImg, mx, my)
 
-
-    love.graphics.setColor(1,1,1,totalCoverAlpha)
-    love.graphics.rectangle("fill",0,0,love.graphics.getWidth(),love.graphics.getHeight())
-    love.graphics.draw(worldCanvas)
- end
+    love.graphics.setColor(1, 1, 1, totalCoverAlpha)
+    love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+end
 
 function love.update(dt)
-    totalCoverAlpha = totalCoverAlpha - 1*dt
+    totalCoverAlpha = totalCoverAlpha - 1 * dt
     if phase == "login" then
         updateLogin(dt)
     else
-        nextUpdate = nextUpdate - 1*dt
-        nextTick = nextTick - 1*dt
+        nextUpdate = nextUpdate - 1 * dt
+        nextTick = nextTick - 1 * dt
         if nextUpdate < 0 then
-            
-            getPlayerData('/players/'..username, json:encode({
-                ["X"] = player.x,
-                ["Y"] = player.y ,
-                ["AX"] = player.target.x,
-                ["AY"] = player.target.y,
-            }))
+
+            getPlayerData('/players/' .. username, json:encode(
+                {
+                    ["X"] = player.x,
+                    ["Y"] = player.y,
+                    ["AX"] = player.target.x,
+                    ["AY"] = player.target.y,
+                    ["IsShield"] = love.keyboard.isDown("lshift")
+                }))
 
             nextUpdate = 0.5
         end
-        oldLightAlpha = oldLightAlpha - 2*dt -- update light, essentially
-        totalCoverAlpha = totalCoverAlpha - 1*dt
-        updateHUD(dt)
- 
+        oldLightAlpha = oldLightAlpha - 2 * dt -- update light, essentially
         
-        uiX = love.graphics.getWidth()/scale -- scaling options
-        uiY = love.graphics.getHeight()/scale
+        updateHUD(dt)
+
+        uiX = love.graphics.getWidth() / scale -- scaling options
+        
+        uiY = love.graphics.getHeight() / scale
 
         updateEnemies(dt)
 
@@ -218,34 +222,34 @@ function love.update(dt)
         Luven.update(dt)
 
         if not player.target.active then
-            Luven.camera:setPosition(player.dx+16, player.dy+16)
+            Luven.camera:setPosition(player.dx + 16, player.dy + 16)
         end
 
         local date_table = os.date("*t")
         local ms = string.match(tostring(os.clock()), "%d%.(%d+)")
         local hour, minute, second = date_table.hour, date_table.min, date_table.sec
-        timeOfDay = 0.4--date_table.min/1440
+        timeOfDay = 0 -- date_table.min/1440
         if timeOfDay < 0.8 then
-            Luven.setAmbientLightColor({ 0.8-timeOfDay, 0.8-timeOfDay, 1-timeOfDay })
-        else 
-            Luven.setAmbientLightColor({ timeOfDay-0.8, timeOfDay-0.8, timeOfDay-1 })
+            Luven.setAmbientLightColor({0.8 - timeOfDay, 0.8 - timeOfDay, 1 - timeOfDay})
+        else
+            Luven.setAmbientLightColor({timeOfDay - 0.8, timeOfDay - 0.8, timeOfDay - 1})
             if timeOfDay > 2 then
-                timeOfDay = 0 
+                timeOfDay = 0
             end
         end
 
         updateOtherPlayers(dt)
 
-        local info = love.thread.getChannel( 'players' ):pop()
+        local info = love.thread.getChannel('players'):pop()
         if info then
             local response = json:decode(info)
 
             players = response['Players']
-         
+
             if json:encode(inventoryAlpha) ~= json:encode(response['Inventory']) then
                 love.audio.play(lootSfx)
             end
- 
+
             inventoryAlpha = response['Inventory']
             me = response['Me']
 
@@ -255,7 +259,7 @@ function love.update(dt)
                 player.dy = 0
                 player.y = 0
                 totalCoverAlpha = 2
-                love.audio.play(awakeSfx)            
+                love.audio.play(awakeSfx)
             end
             -- update player
             player.hp = me.HP
@@ -270,13 +274,11 @@ function love.update(dt)
 end
 
 function tick()
-  -- tickDummyEnemies()
+    -- tickDummyEnemies()
     tickOtherPlayers()
     tickEnemies()
     nextTick = 1
 end
-
-
 
 function love.keypressed(key)
 
@@ -322,9 +324,7 @@ function love.keypressed(key)
         elseif key == "o" then
         end
     end
-    
-    
-    
+
     if key == "escape" then
         love.event.quit()
     end
@@ -338,39 +338,58 @@ function love.textinput(key)
     end
 end
 
-function love.mousepressed(x,y,button)
+function love.mousepressed(x, y, button)
     if phase == "login" then
-        checkClickLogin(x,y)
+        checkClickLogin(x, y)
     elseif isWorldEditWindowOpen then
-        checkEditWorldClick(x,y)
+        checkEditWorldClick(x, y)
     elseif love.keyboard.isDown("lctrl") then
-        pendingWorldChanges[#pendingWorldChanges+1] = {
+        pendingWorldChanges[#pendingWorldChanges + 1] = {
             GroundTile = textfields[5],
             ForegroundTile = textfields[6],
-            Name =  textfields[7],
+            Name = textfields[7],
             Music = "*",
             Collision = thisTile.Collision,
             Enemy = textfields[8],
             X = player.x,
-            Y = player.y,
+            Y = player.y
         }
         print(json:encode(pendingWorldChanges))
-        c, h = http.request{url = api.url.."/world", method="POST", body=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["token"]=token}}
+        c, h = http.request {
+            url = api.url .. "/world",
+            method = "POST",
+            body = ltn12.source.string(json:encode(pendingWorldChanges)),
+            headers = {
+                ["token"] = token
+            }
+        }
         pendingWorldChanges = {}
     elseif phase == "game" then
-        for i,v in ipairs(inventoryAlpha) do
-            if isMouseOver((i-1)*32, love.graphics.getHeight()-48, 32, 32) then
-                print( api.url.."/item/"..player.name.."/"..v.Item.ID)
-                c, h = http.request{url = api.url.."/item/"..player.name.."/"..v.Item.ID, headers={["token"]=token}}
+        for i, v in ipairs(inventoryAlpha) do
+            if isMouseOver((i - 1) * 32, love.graphics.getHeight() - 48, 32, 32) then
+                print(api.url .. "/item/" .. player.name .. "/" .. v.Item.ID)
+                c, h = http.request {
+                    url = api.url .. "/item/" .. player.name .. "/" .. v.Item.ID,
+                    headers = {
+                        ["token"] = token
+                    }
+                }
 
             end
         end
-    end 
+    end
 end
 
-function love.mousereleased(x,y,button)
+function love.mousereleased(x, y, button)
     if #pendingWorldChanges ~= 0 then
-        c, h = http.request{url = api.url.."/world", method="POST", body=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["token"]=token}}
+        c, h = http.request {
+            url = api.url .. "/world",
+            method = "POST",
+            body = ltn12.source.string(json:encode(pendingWorldChanges)),
+            headers = {
+                ["token"] = token
+            }
+        }
         pendingWorldChanges = {}
     end
 end
@@ -381,6 +400,5 @@ function love.resize(width, height)
     else
         createWorld()
     end
-
 
 end
