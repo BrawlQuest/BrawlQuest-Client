@@ -63,9 +63,10 @@ oldInfo = {}
 sendUpdate = false
 
 function love.load()
+    love.graphics.setDefaultFilter("nearest", "nearest")
     initHardData()
     initSettings()
-    love.graphics.setDefaultFilter("nearest", "nearest")
+
     loadMusic()
     initLogin()
     initHUD()
@@ -196,7 +197,8 @@ function love.update(dt)
                     ["X"] = player.x,
                     ["Y"] = player.y,
                     ["AX"] = player.target.x,
-                    ["AY"] = player.target.y
+                    ["AY"] = player.target.y,
+                    ["IsShield"] = love.keyboard.isDown("lshift")
                 }))
 
             nextUpdate = 0.5
@@ -224,7 +226,7 @@ function love.update(dt)
         local date_table = os.date("*t")
         local ms = string.match(tostring(os.clock()), "%d%.(%d+)")
         local hour, minute, second = date_table.hour, date_table.min, date_table.sec
-        timeOfDay = 0.4 -- date_table.min/1440
+        timeOfDay = 0 -- date_table.min/1440
         if timeOfDay < 0.8 then
             Luven.setAmbientLightColor({0.8 - timeOfDay, 0.8 - timeOfDay, 1 - timeOfDay})
         else

@@ -59,7 +59,7 @@ function drawPlayer()
             end
         end
       
-            drawItemIfExists("assets/player/gear/a4/shield.png", player.dx,player.dy)
+            drawItemIfExists(me.Shield.ImgPath, player.dx,player.dy)
      
         local rotation = 1
         local offsetX = 0
@@ -89,7 +89,7 @@ function drawPlayer()
 
         
         if love.keyboard.isDown("lshift") then
-            drawItemIfExists("assets/player/gear/a4/shield.png", player.dx,player.dy)
+            drawItemIfExists(me.Shield.ImgPath, player.dx,player.dy)
         end
        
 

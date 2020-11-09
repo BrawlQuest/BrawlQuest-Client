@@ -29,6 +29,7 @@ function checkClickLoginPhaseServer(x,y)
             selectedServer = i
             api.url = servers[selectedServer].url
             loginPhase = "login"
+            writeSettings()
         end
     end
 end

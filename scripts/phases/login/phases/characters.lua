@@ -86,6 +86,7 @@ function transitionToPhaseGame()
     love.graphics.setBackgroundColor(0, 0, 0)
     phase = "game"
     love.audio.stop( titleMusic )
+    createWorld()
 end
 
 function checkLoginKeyPressedPhaseCharacters(key)
