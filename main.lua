@@ -307,20 +307,20 @@ function love.keypressed(key)
             end
         elseif key == "lctrl" then
             createWorld()
-            -- print("Sending...")
-            -- pendingWorldChanges[#pendingWorldChanges+1] = {
-            --     GroundTile = textfields[5],
-            --     ForegroundTile = textfields[6],
-            --     Name =  textfields[7],
-            --     Music = "*",
-            --     Collision = thisTile.Collision,
-            --     Enemy = textfields[8],
-            --     X = player.x,
-            --     Y = player.y,
-            -- }
-            -- print(json:encode(pendingWorldChanges))
-            -- c, h = http.request{url = api.url.."/world", method="POST", source=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(pendingWorldChanges)),["token"]=token}}
-            -- pendingWorldChanges = {}
+            print("Sending...")
+            pendingWorldChanges[#pendingWorldChanges+1] = {
+                GroundTile = textfields[5],
+                ForegroundTile = textfields[6],
+                Name =  textfields[7],
+                Music = "*",
+                Collision = thisTile.Collision,
+                Enemy = textfields[8],
+                X = player.x,
+                Y = player.y,
+            }
+            print(json:encode(pendingWorldChanges))
+            c, h = http.request{url = api.url.."/world", method="POST", source=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(pendingWorldChanges)),["token"]=token}}
+            pendingWorldChanges = {}
         elseif key == "o" then
         end
     end

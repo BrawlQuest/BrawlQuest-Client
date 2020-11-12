@@ -19,7 +19,7 @@ function loadInventory()
             t = 2 
         elseif string.sub(v.Item.Type, 1, 4) == "arm_" then
             t = 3
-        elseif v.item.Type == "mount" then
+        elseif v.Item.Type == "mount" then
             t = 4
         end
         if not itemImg[v.Item.ImgPath] then
