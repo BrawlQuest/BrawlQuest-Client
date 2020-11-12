@@ -198,7 +198,7 @@ function love.update(dt)
                     ["Y"] = player.y,
                     ["AX"] = player.target.x,
                     ["AY"] = player.target.y,
-                    ["IsShield"] = love.keyboard.isDown("lshift")
+                    ["IsShield"] = love.keyboard.isDown(keybinds.SHIELD)
                 }))
 
             nextUpdate = 0.5
@@ -296,6 +296,9 @@ function love.keypressed(key)
             if key == "," then
                 scale = scale / 1.25
             end
+            if key == keybinds.SHIELD then
+                shieldUpSfx:play()
+            end
         end
         if key == "'" then
             if isWorldEditWindowOpen then
@@ -325,6 +328,12 @@ function love.keypressed(key)
 
     if key == "escape" then
         love.event.quit()
+    end
+end
+
+function love.keyreleased(key)
+    if key == keybinds.SHIELD then
+        shieldDownSfx:play()
     end
 end
 
