@@ -3,7 +3,7 @@ require "data.base_character"
 function initHardData()
     initBaseCharacterImages()
     lootSfx = love.audio.newSource("assets/sfx/loot.mp3", "static")
-    lootImg = love.graphics.newImage("assets/player/gear/a4/special.png")
+    lootImg = love.graphics.newImage("assets/ui/loot.png")
     playerImg = love.graphics.newImage("assets/player/base/base 1.png")
 
 
