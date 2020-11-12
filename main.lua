@@ -245,10 +245,9 @@ function love.update(dt)
             players = response['Players']
 
             if json:encode(inventoryAlpha) ~= json:encode(response['Inventory']) then
-                love.audio.play(lootSfx)
+                updateInventory(response)
+                inventoryAlpha = response['Inventory']
             end
-
-            inventoryAlpha = response['Inventory']
             me = response['Me']
 
             if distanceToPoint(me.X, me.Y, player.x, player.y) > 6 then

@@ -6,7 +6,9 @@ function initHardData()
     shieldUpSfx = love.audio.newSource("assets/sfx/player/actions/shield.wav", "static")
     shieldDownSfx =love.audio.newSource("assets/sfx/player/actions/shield.wav", "static")
     shieldDownSfx:setPitch(0.5)
-    lootImg = love.graphics.newImage("assets/player/gear/a4/special.png")
+
+    lootImg = love.graphics.newImage("assets/ui/loot.png")
+
     playerImg = love.graphics.newImage("assets/player/base/base 1.png")
 
 

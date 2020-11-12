@@ -68,3 +68,19 @@ function recursiveEnumerate(folder, r)
 	end
 	return r
 end
+
+function tableDifference(a, b)
+    if a and b then
+        local aa = {}
+        for k,v in pairs(a) do aa[v]=true end
+        for k,v in pairs(b) do aa[v]=nil end
+        local ret = {}
+        local n = 0
+        for k,v in pairs(a) do
+            if aa[v] then n=n+1 ret[n]=v end
+        end
+        return ret
+    else
+        return {}
+    end
+end
