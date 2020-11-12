@@ -15,7 +15,7 @@ function burstLoot(x, y, amount, type)
             speedToPlayer = 8
         }
 
-        if type == "sword" then
+        if type ~= "xp" then
             loot[#loot].xv = love.math.random(48,90)
             loot[#loot].yv = love.math.random(48,90)
         else
@@ -38,7 +38,9 @@ function drawLoot()
         if v.type == "xp" then
             love.graphics.draw(xpImg, v.x, v.y)
         else
-            love.graphics.draw(lootImg, v.x, v.y)
+            --love.graphics.draw(lootImg, v.x, v.y)
+            
+            drawItemIfExists(v.type, v.x, v.y)
         end
     end
 end

@@ -14,6 +14,9 @@ function drawOtherPlayer(v,i)
                 itemImg[thisPlayer.Weapon.ImgPath] = love.graphics.newImage("assets/error.png")
             end
         end
+  
+        drawItemIfExists(thisPlayer.Shield.ImgPath, v.X,v.Y)
+   
         love.graphics.draw(itemImg[thisPlayer.Weapon.ImgPath] , v.X-(itemImg[thisPlayer.Weapon.ImgPath]:getWidth()-32), v.Y-(itemImg[thisPlayer.Weapon.ImgPath]:getHeight()-32))
         
         love.graphics.draw(playerImg, v.X, v.Y)
@@ -21,13 +24,16 @@ function drawOtherPlayer(v,i)
         if thisPlayer.HeadArmourID ~= 0 then
             drawItemIfExists(thisPlayer.HeadArmour.ImgPath,v.X,v.Y)
         end
-        if me.ChestArmourID ~= 0 then
+        if thisPlayer.ChestArmourID ~= 0 then
             drawItemIfExists(thisPlayer.ChestArmour.ImgPath,v.X,v.Y)
         end
-        if me.LegArmourID ~= 0 then
+        if thisPlayer.LegArmourID ~= 0 then
             drawItemIfExists(thisPlayer.LegArmour.ImgPath,v.X,v.Y)
         end
 
+        if thisPlayer.IsShield then
+            drawItemIfExists(thisPlayer.Shield.ImgPath, v.X, v.Y)
+        end
         
 
         love.graphics.setFont(smallTextFont)

@@ -119,8 +119,13 @@ function drawEnemies()
          end
         elseif not v.hasBurst then
             burstLoot(v.dx + 16, v.dy + 16, math.abs(v.Enemy.HP / 3), "xp")
+            for i,k in ipairs(newInventoryItems) do
+                print(k.Item.Name)
+                burstLoot(v.dx + 16, v.dy + 16, k.Inventory.Amount, k.Item.ImgPath)
+                newInventoryItems = {}
+            end
             enemyHitSfx:setPitch(love.math.random(50, 100) / 100)
-            love.audio.play(enemyHitSfx)
+--            love.audio.play(enemyHitSfx)
 
             love.audio.play(deathSfxs[love.math.random(1, #deathSfxs)])
             boneSpurt(v.dx + 16, v.dy + 16, 48, 72, 0.8, 0.8, 1)

@@ -18,7 +18,7 @@ function initSettings()
     
     info = love.filesystem.getInfo("settings.txt")
 
-    if info or 1 == 2 then -- TODO: make this load in properly
+    if info and 1 == 2 then 
         contents, size = love.filesystem.read("string", "settings.txt")
         contents = json:decode(contents)
         keybinds = contents["keybinds"]

@@ -29,6 +29,7 @@ player = {
     },
 }
 
+newInventoryItems = {}
 me = {}
 
 
@@ -275,6 +276,27 @@ function beginMounting()
             player.mount.y = player.dy+love.graphics.getHeight()/2
         else
             player.mount.y = player.dy-love.graphics.getHeight()/2
+        end
+    end
+end
+
+function updateInventory(response)
+    newInventoryItems = {}
+    for i,v in ipairs(response['Inventory']) do
+        local newItem = true
+        v = copy(v)
+        for o,k in ipairs(inventoryAlpha) do
+            if k.Item.Name == v.Item.Name then--and v.Inventory.Amount == k.Inventory.Amount then
+                print("You have "..k.Inventory.Amount.." of this item, and the server says you now have "..v.Inventory.Amount)
+                    v.Inventory.Amount = v.Inventory.Amount - k.Inventory.Amount
+                    print("That's a change of "..v.Inventory.Amount.." of it.")
+                    if v.Inventory.Amount <= 0 then
+                        newItem = false
+                    end
+            end
+        end
+        if newItem then
+            table.insert(newInventoryItems, v)
         end
     end
 end
