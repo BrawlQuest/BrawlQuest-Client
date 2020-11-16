@@ -1,3 +1,5 @@
+selectedItem = {}
+
 function loadInventory()
     -- Inventory
     inventoryItemBgnd = love.graphics.newImage("assets/ui/hud/inventory/inventoryItem.png")
@@ -17,7 +19,7 @@ function loadInventory()
             t = 1
         elseif v.Item.Type == "spell" then
             t = 2 
-        elseif string.sub(v.Item.Type, 1, 4) == "arm_" then
+        elseif string.sub(v.Item.Type, 1, 4) == "arm_" or v.Item.Type == "shield" then
             t = 3
         elseif v.Item.Type == "mount" then
             t = 4
@@ -75,7 +77,6 @@ function getUserInventoryFieldHeight(field)
     elseif i >= 12 and i <= 15 then return j+168
     elseif i >= 16 and i <= 19 then return j+168
     end
-
 end
 
 function getFullUserInventoryFieldHeight()
@@ -90,14 +91,12 @@ function drawInventoryItem(thisX, thisY, field, item)
     if isMouseOver(thisX, thisY, 32, 32) then
         love.graphics.setColor(0.6,0.6,0.6)
         setTooltip(userInventory[field][item].Item.Name,"+"..userInventory[field][item].Item.Val .. " "..userInventory[field][item].Item.Type.."\n"..userInventory[field][item].Item.Desc)
+        selectedItem = userInventory[field][item].Item
     end
     love.graphics.draw(inventoryItemBgnd, thisX, thisY) -- Background
     love.graphics.setColor(1,1,1)
     
     love.graphics.draw(itemImg[userInventory[field][item].Item.ImgPath], thisX+3, thisY+3) -- Item
-    -- if isMouseOver(thisX, thisY, inventoryItemBgnd:getWidth(), inventoryItemBgnd:getHeight()) and love.mouse.isDown(1) then 
-    --     mouseImg = love.graphics.draw(userInventory[field][item], my, mx)
-    -- end
 end
 
 function drawInventory()
@@ -120,4 +119,13 @@ end
 
 function drawChatStencil()
 	love.graphics.rectangle("fill", 70, toolbary+40, 180, 483)
+end
+
+function checkInventoryMousePressed()
+    c, h = http.request {
+        url = api.url .. "/item/" .. player.name .. "/" .. selectedItem.ID,
+        headers = {
+            ["token"] = token
+        }
+    }
 end

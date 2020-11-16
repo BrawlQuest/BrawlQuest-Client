@@ -1,4 +1,11 @@
 require "scripts.ui.componants.tooltip"
+require "scripts.ui.componants.floats"
+
+isEnteringText = false
+UITextFields = {
+    "", -- search
+    "", -- chat
+}
 
 function initHUD()
     --scaling
@@ -88,6 +95,7 @@ function drawHUD()
     love.graphics.pop()
 
     drawTooltip()
+    
     --love.graphics.rectangle("fill", (uiX-getChatWidth()), 0, getChatWidth()*(scale*0.5), uiY)
 end 
 
@@ -115,6 +123,7 @@ function updateHUD( dt )
     end
 
     updateTooltip(dt)
+    updateFloats(dt)
 end
 
 function love.wheelmoved( dx, dy )

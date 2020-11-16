@@ -12,6 +12,12 @@ function battlebarPlayer(thisX, iy)
     local thisY = iy-battlebarBgnd:getHeight()
     love.graphics.draw(battlebarBgnd, thisX, thisY)
     love.graphics.draw(profilePic, thisX+10, thisY+10)
+    if me and me.Weapon then
+        love.graphics.push()
+        love.graphics.scale(2,2)
+        drawCharacter(me,thisX+10, thisY+10)
+        love.graphics.pop()
+    end
     battlebarNameAndBars(thisX, thisY, player.name, player.hp, player.mhp)
     battlebarItem(thisX-44, thisY+18, a3sword, "+3")
 end
@@ -25,7 +31,8 @@ end
 function battlebarEnemy(thisX, iy, name, hp, mana)
     local thisY = iy-battlebarBgnd:getHeight()
     love.graphics.draw(battlebarBgnd, thisX, thisY)
-    love.graphics.draw(profilePic, thisX+270, thisY+10)
+    --love.graphics.draw(profilePic, thisX+270, thisY+10)
+   -- drawCharacter(me,thisX+270, thisY+10)
     battlebarNameAndBars(thisX, thisY, name, hp, mana)
     battlebarItem(thisX+354, thisY+18, a3sword, "+3")
 end
