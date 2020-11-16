@@ -19,7 +19,9 @@ function battlebarPlayer(thisX, iy)
         love.graphics.pop()
     end
     battlebarNameAndBars(thisX, thisY, player.name, player.hp, player.mhp)
-    battlebarItem(thisX-44, thisY+18, a3sword, "+3")
+    if me and me.Weapon and itemImg[me.Weapon.ImgPath] then
+     battlebarItem(thisX-44, thisY+18, itemImg[me.Weapon.ImgPath], "+"..me.Weapon.Val)
+    end
 end
 
 function battlebarItem(thisX, thisY, item, stats)
