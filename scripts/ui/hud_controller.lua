@@ -1,5 +1,5 @@
-require "scripts.ui.componants.tooltip"
-require "scripts.ui.componants.floats"
+require "scripts.ui.components.tooltip"
+require "scripts.ui.components.floats"
 
 isEnteringText = false
 UITextFields = {
