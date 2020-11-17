@@ -13,7 +13,9 @@ function drawCharacter(v,x,y,ad)
             end
         end
 
-        drawItemIfExists(v.Shield.ImgPath, x,y,ad.previousDirection)
+        if v.SheildID ~= 0 then
+            drawItemIfExists(v.Shield.ImgPath, x,y,ad.previousDirection)
+        end
 
     
     local rotation = 1
@@ -45,7 +47,7 @@ function drawCharacter(v,x,y,ad)
             drawItemIfExists(v.LegArmour.ImgPath,x,y,ad.previousDirection)
         end
 
-        if v.IsShield then
+        if v.IsShield and v.SheildID ~= 0 then
             drawItemIfExists(v.Shield.ImgPath, x, y,ad.previousDirection)
         end
     end

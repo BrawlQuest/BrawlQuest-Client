@@ -122,10 +122,12 @@ function drawChatStencil()
 end
 
 function checkInventoryMousePressed()
+    if selectedItem ~= nil and isMouseOver(0, toolbary*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
     c, h = http.request {
         url = api.url .. "/item/" .. player.name .. "/" .. selectedItem.ID,
         headers = {
             ["token"] = token
         }
     }
+end
 end

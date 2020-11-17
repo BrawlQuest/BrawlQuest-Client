@@ -58,7 +58,9 @@ function drawPlayer()
             end
         end
 
-        drawItemIfExists(me.Shield.ImgPath, player.dx, player.dy, player.previousDirection)
+        if me.SheildID ~= 0 then
+            drawItemIfExists(me.Shield.ImgPath, player.dx, player.dy, player.previousDirection)
+        end
 
         local rotation = 1
         local offsetX = 0
@@ -88,7 +90,7 @@ function drawPlayer()
             drawItemIfExists(me.LegArmour.ImgPath, player.dx, player.dy, player.previousDirection)
         end
 
-        if love.keyboard.isDown("lshift") then
+        if love.keyboard.isDown(keybinds.SHIELD) and me.SheildID ~= 0  then
             drawItemIfExists(me.Shield.ImgPath, player.dx, player.dy, player.previousDirection)
         end
 

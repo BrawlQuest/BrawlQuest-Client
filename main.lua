@@ -154,10 +154,7 @@ function love.update(dt)
         
         updateHUD(dt)
 
-        uiX = love.graphics.getWidth() / scale -- scaling options
-        
-        uiY = love.graphics.getHeight() / scale
-
+     
         updateEnemies(dt)
 
         updateCharacter(dt)
