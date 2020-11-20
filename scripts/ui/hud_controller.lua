@@ -61,7 +61,9 @@ function initHUD()
 	level = love.graphics.newImage("assets/ui/hud/profile/Level.png")
 	profileBars = love.graphics.newImage("assets/ui/hud/profile/bars.png")
     profileBgnd = love.graphics.newImage("assets/ui/hud/profile/profile-backing.png")
-    profileImgStensil = love.graphics.newQuad(12, -2, 16, 16, playerImg:getDimensions())
+    sheildImg = love.graphics.newImage("assets/player/gen/sheild false.png")
+    profileImgStensil = love.graphics.newQuad(12, 0, 16, 16, playerImg:getDimensions())
+    sheildImgStensil = love.graphics.newQuad(12, 0, 16, 16, sheildImg:getDimensions())
 
     -- Battlebar
     battlebarBgnd = love.graphics.newImage("assets/ui/hud/battlebar/battlebarBg.png")

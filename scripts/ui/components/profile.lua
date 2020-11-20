@@ -44,6 +44,7 @@ function drawProfilePic(thisX, thisY, thisScale, thisRotation, player)
 	love.graphics.push()
 		local i = 4 * thisScale
 		love.graphics.scale(i)
+
 		if thisRotation == "left" then
 			thisX = thisX/i + (playerImg:getWidth()/2)
 			r = -1
@@ -52,11 +53,20 @@ function drawProfilePic(thisX, thisY, thisScale, thisRotation, player)
 			r = 1
 		end
 
-		love.graphics.draw(playerImg, profileImgStensil, thisX, thisY/i, 0, r, 1)
+		if me.Shield ~= null then
+			love.graphics.draw(itemImg[me.Shield.ImgPath], sheildImgStensil, thisX, thisY/i, 0, r, 1)
+		end
+		
+		if playerImg ~= null then
+			love.graphics.draw(playerImg, profileImgStensil, thisX, thisY/i, 0, r, 1)
+		end
 
 		if me.ChestArmour ~= null then
-			love.graphics.draw(itemImg[me.HeadArmour.ImgPath], profileImgStensil, thisX, thisY/i, 0, r, 1)
 			love.graphics.draw(itemImg[me.ChestArmour.ImgPath], profileImgStensil, thisX, thisY/i, 0, r, 1)
+		end
+
+		if me.HeadArmour ~= null then
+			love.graphics.draw(itemImg[me.HeadArmour.ImgPath], profileImgStensil, thisX, thisY/i, 0, r, 1)
 		end
 
 	love.graphics.pop()
