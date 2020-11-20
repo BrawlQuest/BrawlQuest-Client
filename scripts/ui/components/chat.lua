@@ -40,20 +40,16 @@ function drawChatboxUsernameText(x, y, username)
 	love.graphics.printf(username, x, y-6, chatWidth+(chatCorner:getWidth()*2), "center")
 end
 
-function drawChatboxProfile(x, y)
-	love.graphics.draw(profilePic, x, y)
-end
-
 function drawChatbox(x, y, username, text) -- TODO: If statement for different user modes
 	if username == playerName then
-		drawChatboxProfile(x+chatWidth+(chatCorner:getWidth()*2)+8, y)
+		drawProfilePic(x+chatWidth+(chatCorner:getWidth()*2)+8, y, 1, "left")
 		drawChatboxBackground(x, y, text)
 		drawChatboxText(x, y, text)
 	else
 		-- more stuff needed
 		local i = x+profilePic:getWidth()+8
 		local j = y+font:getHeight()
-		drawChatboxProfile(x, y)
+		drawProfilePic(x, y, 1, "right")
 		drawChatboxBackground(i, j, text)
 		drawChatboxText(i, j, text)
 		drawChatboxUsernameText(i, y, username)

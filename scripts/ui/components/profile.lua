@@ -7,10 +7,11 @@ function drawProfile()
     end
     
 	love.graphics.draw(profileBgnd)
-	love.graphics.draw(profileImgBox, 7, 5)
+	drawProfilePic(19, 5, 0.5, me.Name)
 	love.graphics.draw(level, 7, 5)
-    love.graphics.draw(profileBars, 7, 51)
-    
+	love.graphics.draw(profileBars, 7, 51)
+
+	
 	love.graphics.setColor(1,1,1,1)
 
 	for i = 1, 3 do
@@ -29,7 +30,24 @@ function drawProfile()
 		love.graphics.setColor(1,0.5,0,1)
 		love.graphics.rectangle("fill", 20, 108, me.XP / j, 10) -- XP
 	end
-	
+
 	love.graphics.setColor(1,1,1,1)
 end
 
+function drawProfilePic(thisX, thisY, thisScale, thisRotation, player)
+	love.graphics.push()
+		local i = 1 * thisScale
+        love.graphics.scale(i)
+		love.graphics.draw(profilePic, thisX/i, thisY/i)
+	love.graphics.pop()
+	
+	love.graphics.push()
+		local i = 4 * thisScale
+		love.graphics.scale(i)
+		if thisRotation == "left" then
+			love.graphics.draw(playerImg, profileImgStensil, (thisX/i)+(playerImg:getWidth()/2), thisY/i, 0, -1, 1)
+		else
+			love.graphics.draw(playerImg, profileImgStensil, thisX/i, thisY/i)
+		end
+	love.graphics.pop()
+end

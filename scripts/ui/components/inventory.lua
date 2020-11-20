@@ -71,7 +71,9 @@ end
 function getUserInventoryFieldHeight(field)
     local i = tableLength(userInventory[field]) - 1
     local j = 2
-    if i <= 3 then
+    if i <= 0 then
+        return j
+    elseif i >= 1 and i <= 3 then
         return j + 42
     elseif i >= 4 and i <= 7 then
         return j + 84

@@ -59,9 +59,9 @@ function initHUD()
     -- Profile and Perks
     perks = love.graphics.newImage("assets/ui/hud/perks/LeftUI.png")
 	level = love.graphics.newImage("assets/ui/hud/profile/Level.png")
-	profileImgBox = love.graphics.newImage("assets/ui/hud/profile/Profile.png")
 	profileBars = love.graphics.newImage("assets/ui/hud/profile/bars.png")
     profileBgnd = love.graphics.newImage("assets/ui/hud/profile/profile-backing.png")
+    profileImgStensil = love.graphics.newQuad(12, -2, 16, 16, playerImg:getDimensions())
 
     -- Battlebar
     battlebarBgnd = love.graphics.newImage("assets/ui/hud/battlebar/battlebarBg.png")
@@ -71,33 +71,6 @@ function initHUD()
     inventorySubHeaderFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 10)
     loadInventory()
 end
-
-
-function drawHUD()
-    
-    love.graphics.push() -- chat and quests scaling TODO: Quests
-        local i = 0.5
-        love.graphics.scale(scale*i)
-        drawChatPanel(uiX/i, uiY/i)
-    love.graphics.pop()
-
-    love.graphics.push() -- chat and quests scaling TODO: Quests
-        local i = 0.75
-        love.graphics.scale(scale*i)
-        drawBattlebar((uiX/2)/i, uiY/i)
-    love.graphics.pop()
-
-    love.graphics.push()
-        local i = 1
-        love.graphics.scale(scale)
-        drawToolbar()
-        drawProfile(uiX/i, uiY/i)
-    love.graphics.pop()
-
-    drawTooltip()
-    
-    --love.graphics.rectangle("fill", (uiX-getChatWidth()), 0, getChatWidth()*(scale*0.5), uiY)
-end 
 
 function updateHUD( dt )
     uiX = love.graphics.getWidth()/scale -- scaling options
@@ -125,6 +98,30 @@ function updateHUD( dt )
     updateTooltip(dt)
     updateFloats(dt)
 end
+
+function drawHUD()
+    
+    love.graphics.push() -- chat and quests scaling TODO: Quests
+        local i = 0.5
+        love.graphics.scale(scale*i)
+        drawChatPanel(uiX/i, uiY/i)
+    love.graphics.pop()
+
+    love.graphics.push() -- chat and quests scaling TODO: Quests
+        local i = 0.75
+        love.graphics.scale(scale*i)
+        drawBattlebar((uiX/2)/i, uiY/i)
+    love.graphics.pop()
+
+    love.graphics.push()
+        local i = 1
+        love.graphics.scale(scale)
+        drawToolbar()
+        drawProfile(uiX/i, uiY/i)
+    love.graphics.pop()
+
+    drawTooltip()
+end 
 
 function love.wheelmoved( dx, dy )
     if isMouseOver(0, toolbary*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
