@@ -124,13 +124,14 @@ function drawHUD()
         local i = 0.5
         love.graphics.scale(scale*i)
         drawChatPanel(uiX/i, uiY/i)
-        drawQuestPannel(uiX, 0)
+        
     love.graphics.pop()
 
     love.graphics.push() -- chat and quests scaling TODO: Quests
         local i = 0.75
         love.graphics.scale(scale*i)
         drawBattlebar((uiX/2)/i, uiY/i)
+        drawQuestPannel(uiX/i, 0)
     love.graphics.pop()
 
     love.graphics.push()
