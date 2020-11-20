@@ -86,13 +86,7 @@ function love.load()
     playerHitSfx = love.audio.newSource("assets/sfx/hit.wav", "static")
     enemyHitSfx = love.audio.newSource("assets/sfx/impact_b.wav", "static")
     critHitSfx = love.audio.newSource("assets/sfx/pit_trap_damage.wav", "static")
-
-    textFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 24)
-
-    smallTextFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 12)
-    headerFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 18) -- TODO: get a license for this font
-    headerBigFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 32) -- TODO: get a license for this font
-    font = headerFont
+    
     love.graphics.setFont(textFont)
 
 end

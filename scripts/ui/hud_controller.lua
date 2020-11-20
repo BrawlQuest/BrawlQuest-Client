@@ -11,6 +11,15 @@ function initHUD()
     --scaling
     scale, uiX, uiY = 1
 
+    -- fonts
+    textFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 24)
+
+    smallTextFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 12)
+    headerFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 18) -- TODO: get a license for this font
+    headerMediumFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 28)
+    headerBigFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 32) -- TODO: get a license for this font
+    font = headerFont
+
     -- scrolling
 	posyInventory, velyInventory, posyChat, velyChat = 0, 0, 0, 0
 
@@ -74,19 +83,21 @@ function initHUD()
     loadInventory()
 
     -- Quest Pannel
-    questWidth = 250
+    questWidth = 350
     questHeight = 0
     questSmallBoxTrue = love.graphics.newImage("assets/ui/hud/quests/xTrue.png")
     questSmallBoxFalse = love.graphics.newImage("assets/ui/hud/quests/xFalse.png")
+    buttonBacking = love.graphics.newImage("assets/ui/hud/quests/ButtonBacking.png")
+    buttonOutline = love.graphics.newImage("assets/ui/hud/quests/ButtonOutline.png")
 
-    selectedQuest = {title = "The long and winding road", 
+    selectedQuest = {npcName = "Mortus", npcDialogue = "I have a quest for you", title = "The long and winding road", 
     "Create a new passport", 
     "Have lots of fun, it really is fun, like I have all the fun in the world",
     "Make a lot of money",
     "Have a great time!"}
 
     questPopUpWidth = 335
-    questPopUpHeight = 496--(chatCorner:getHeight()*2)
+    questPopUpHeight = 496
     questPopUpPanelGap = 400
 
 end
@@ -124,14 +135,14 @@ function drawHUD()
         local i = 0.5
         love.graphics.scale(scale*i)
         drawChatPanel(uiX/i, uiY/i)
-        
+        drawQuestPannel(uiX/i, 0)
     love.graphics.pop()
 
     love.graphics.push() -- chat and quests scaling TODO: Quests
         local i = 0.75
         love.graphics.scale(scale*i)
         drawBattlebar((uiX/2)/i, uiY/i)
-        drawQuestPannel(uiX/i, 0)
+        drawQuestPopUp((uiX/2)/i, (uiY/2)/i)
     love.graphics.pop()
 
     love.graphics.push()
