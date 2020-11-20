@@ -7,11 +7,11 @@ require "scripts.effects.lighting"
 require "scripts.effects.music"
 require "scripts.effects.loot"
 require "scripts.ui.hud_controller"
-require "scripts.ui.componants.chat"
-require "scripts.ui.componants.toolbar"
-require "scripts.ui.componants.battlebar"
-require "scripts.ui.componants.profile"
-require "scripts.ui.componants.inventory"
+require "scripts.ui.components.chat"
+require "scripts.ui.components.toolbar"
+require "scripts.ui.components.battlebar"
+require "scripts.ui.components.profile"
+require "scripts.ui.components.inventory"
 require "scripts.libraries.api"
 require "scripts.libraries.utils"
 require "scripts.phases.login.login"
@@ -112,46 +112,9 @@ function love.draw()
 
         drawPlayer()
         drawLoot()
+        drawFloats()
         Luven.drawEnd()
-
-        love.graphics.setFont(smallTextFont)
-        love.graphics.setColor(1, 1, 1, 1)
-        local cx, cy = love.mouse.getPosition()
-
-        -- TEMP ALPHA STUFF
-        love.graphics.setColor(1, 0, 0)
-        love.graphics.rectangle("fill", 0, love.graphics.getHeight() - 16,
-            (player.dhp / 100) * love.graphics.getWidth(), 16)
-        love.graphics.setColor(1, 1, 1)
-
-        for i, v in ipairs(inventoryAlpha) do
-            if isMouseOver((i - 1) * 32, love.graphics.getHeight() - 48, 32, 32) then
-                love.graphics.setColor(1, 1, 1)
-                love.graphics.setFont(headerBigFont)
-                love.graphics.print(v.Item.Name, 0, love.graphics.getHeight() - 100)
-                love.graphics.setFont(headerFont)
-                love.graphics.print("+" .. v.Item.Val .. " " .. v.Item.Type, 0, love.graphics.getHeight() - 70)
-
-                love.graphics.setFont(textFont)
-            else
-                love.graphics.setColor(0.6, 0.6, 0.6)
-            end
-            love.graphics.rectangle("fill", (i - 1) * 32, love.graphics.getHeight() - 48, 32, 32)
-            love.graphics.setColor(1, 1, 1)
-            love.graphics.rectangle("line", (i - 1) * 32, love.graphics.getHeight() - 48, 32, 32)
-            if not itemImg[v.Item.ImgPath] then
-                if love.filesystem.getInfo(v.Item.ImgPath) then
-                    itemImg[v.Item.ImgPath] = love.graphics.newImage(v.Item.ImgPath)
-                else
-                    itemImg[v.Item.ImgPath] = love.graphics.newImage("assets/error.png")
-                end
-            end
-            love.graphics.draw(itemImg[v.Item.ImgPath], (i - 1) * 32, love.graphics.getHeight() - 48)
-            love.graphics.printf(v.Inventory.Amount, (i - 1) * 32, love.graphics.getHeight() - 48, 32, "right")
-        end
-
-        -- love.graphics.print("BrawlQuest "..version.."\nCursor pos: "..tostring(math.floor((cx*scale)/(32))+player.x)..", "..tostring(math.floor(cy/32)+player.y/2).."\nPlayer pos: "..player.x..", "..player.y.."\n"..love.timer.getFPS().." FPS",200, 5)
-
+    
         drawHUD()
         if isWorldEditWindowOpen then
             drawEditWorldWindow()
@@ -159,22 +122,6 @@ function love.draw()
         Luven.camera:draw()
     end
 
-    -- love.graphics.setColor(1, 1, 1, 1)
-    -- if me.Weapon then
-    --     if me.LegArmour.Val == "Error" then
-    --         me.LegArmour.Val = "0"
-    --     end
-    --     if me.ChestArmour.Val == "Error" then
-    --         me.ChestArmour.Val = "0"
-    --     end
-    --     if me.HeadArmour.Val == "Error" then
-    --         me.HeadArmour.Val = "0"
-    --     end
-    --     love.graphics.setFont(headerBigFont)
-    --     love.graphics.print(me.Name .. "\n" .. me.Weapon.Val .. " ATK\n" ..
-    --                             (tonumber(me.LegArmour.Val) + tonumber(me.ChestArmour.Val) + tonumber(me.HeadArmour.Val)) ..
-    --                             " DEF", 0, 0)
-    -- end
 
     mx, my = love.mouse.getPosition()
     love.graphics.draw(mouseImg, mx, my)
@@ -207,10 +154,7 @@ function love.update(dt)
         
         updateHUD(dt)
 
-        uiX = love.graphics.getWidth() / scale -- scaling options
-        
-        uiY = love.graphics.getHeight() / scale
-
+     
         updateEnemies(dt)
 
         updateCharacter(dt)
@@ -306,7 +250,7 @@ function love.keypressed(key)
                 isWorldEditWindowOpen = true
             end
         elseif key == "lctrl" then
-            createWorld()
+            -- createWorld()
             -- print("Sending...")
             -- pendingWorldChanges[#pendingWorldChanges+1] = {
             --     GroundTile = textfields[5],
@@ -371,18 +315,7 @@ function love.mousepressed(x, y, button)
         }
         pendingWorldChanges = {}
     elseif phase == "game" then
-        for i, v in ipairs(inventoryAlpha) do
-            if isMouseOver((i - 1) * 32, love.graphics.getHeight() - 48, 32, 32) then
-                print(api.url .. "/item/" .. player.name .. "/" .. v.Item.ID)
-                c, h = http.request {
-                    url = api.url .. "/item/" .. player.name .. "/" .. v.Item.ID,
-                    headers = {
-                        ["token"] = token
-                    }
-                }
-
-            end
-        end
+       checkInventoryMousePressed()
     end
 end
 

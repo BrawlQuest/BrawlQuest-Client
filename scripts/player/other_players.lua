@@ -3,38 +3,62 @@
     It could probably be named better. Any ideas, Matt?
 ]]
 
+function drawCharacter(v,x,y,ad)
+    if ad then
+        if not itemImg[v.Weapon.ImgPath] then
+            if love.filesystem.getInfo(v.Weapon.ImgPath) then
+                itemImg[v.Weapon.ImgPath] = love.graphics.newImage(v.Weapon.ImgPath)
+            else
+                itemImg[v.Weapon.ImgPath] = love.graphics.newImage("assets/error.png")
+            end
+        end
+
+        if v.SheildID ~= 0 then
+            drawItemIfExists(v.Shield.ImgPath, x,y,ad.previousDirection)
+        end
+
+    
+    local rotation = 1
+    local offsetX = 0
+    if ad and ad.previousDirection and ad.previousDirection == "left" then
+        rotation = -1
+        offsetX = 32
+        love.graphics.draw(itemImg[v.Weapon.ImgPath],
+            x + (itemImg[v.Weapon.ImgPath]:getWidth() - 32) + 32,
+           y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, rotation, 1, 0, 0)
+    elseif ad and ad.previousDirection and ad.previousDirection == "right" then
+        love.graphics.draw(itemImg[v.Weapon.ImgPath], x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32),
+           y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, rotation, 1, 0, 0)
+    end
+
+    -- if v.isMounted then
+    --     love.graphics.draw(horseImg, player.dx + 6, player.dy + 9)
+    -- end
+    love.graphics.draw(playerImg, x+offsetX, y, 0, rotation, 1, 0, 0)
+
+   
+        if v.HeadArmourID ~= 0 then
+            drawItemIfExists(v.HeadArmour.ImgPath,x,y,ad.previousDirection)
+        end
+        if v.ChestArmourID ~= 0 then
+            drawItemIfExists(v.ChestArmour.ImgPath,x,y,ad.previousDirection)
+        end
+        if v.LegArmourID ~= 0 then
+            drawItemIfExists(v.LegArmour.ImgPath,x,y,ad.previousDirection)
+        end
+
+        if v.IsShield and v.SheildID ~= 0 then
+            drawItemIfExists(v.Shield.ImgPath, x, y,ad.previousDirection)
+        end
+    end
+end
+
 function drawOtherPlayer(v,i)
     -- TODO: we need to extract player armour somewhere here, but as we aren't loading in assets yet this hasn't been done
     local thisPlayer = players[i] -- v is playerDrawable
-    if thisPlayer then
-        if not itemImg[thisPlayer.Weapon.ImgPath] then
-            if love.filesystem.getInfo(thisPlayer.Weapon.ImgPath) then
-                itemImg[thisPlayer.Weapon.ImgPath] = love.graphics.newImage(thisPlayer.Weapon.ImgPath)
-            else
-                itemImg[thisPlayer.Weapon.ImgPath] = love.graphics.newImage("assets/error.png")
-            end
-        end
-  
-        drawItemIfExists(thisPlayer.Shield.ImgPath, v.X,v.Y)
-   
-        love.graphics.draw(itemImg[thisPlayer.Weapon.ImgPath] , v.X-(itemImg[thisPlayer.Weapon.ImgPath]:getWidth()-32), v.Y-(itemImg[thisPlayer.Weapon.ImgPath]:getHeight()-32))
-        
-        love.graphics.draw(playerImg, v.X, v.Y)
-
-        if thisPlayer.HeadArmourID ~= 0 then
-            drawItemIfExists(thisPlayer.HeadArmour.ImgPath,v.X,v.Y)
-        end
-        if thisPlayer.ChestArmourID ~= 0 then
-            drawItemIfExists(thisPlayer.ChestArmour.ImgPath,v.X,v.Y)
-        end
-        if thisPlayer.LegArmourID ~= 0 then
-            drawItemIfExists(thisPlayer.LegArmour.ImgPath,v.X,v.Y)
-        end
-
-        if thisPlayer.IsShield then
-            drawItemIfExists(thisPlayer.Shield.ImgPath, v.X, v.Y)
-        end
-        
+    if thisPlayer and v and thisPlayer.Weapon then
+        if not v.previousDirection then v.previousDirection = "right" end
+        drawCharacter(thisPlayer,v.X,v.Y,v)
 
         love.graphics.setFont(smallTextFont)
         local nameWidth = smallTextFont:getWidth(v.Name)
@@ -76,8 +100,10 @@ function updateOtherPlayers(dt)
         if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X*32, v.Y*32) > 1 then
             if playersDrawable[i].X-1 > v.X*32 then
                 playersDrawable[i].X =  playersDrawable[i].X  - 64*dt
+                playersDrawable[i].previousDirection = "left"
             elseif playersDrawable[i].X+1 < v.X*32 then
                 playersDrawable[i].X = playersDrawable[i].X + 64*dt
+                playersDrawable[i].previousDirection = "right"
             end
 
             if playersDrawable[i].Y-1 > v.Y*32 then
