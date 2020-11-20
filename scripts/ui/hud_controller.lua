@@ -72,6 +72,23 @@ function initHUD()
     -- Inventory
     inventorySubHeaderFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 10)
     loadInventory()
+
+    -- Quest Pannel
+    questWidth = 250
+    questHeight = 0
+    questSmallBoxTrue = love.graphics.newImage("assets/ui/hud/quests/xTrue.png")
+    questSmallBoxFalse = love.graphics.newImage("assets/ui/hud/quests/xFalse.png")
+
+    selectedQuest = {title = "The long and winding road", 
+    "Create a new passport", 
+    "Have lots of fun, it really is fun, like I have all the fun in the world",
+    "Make a lot of money",
+    "Have a great time!"}
+
+    questPopUpWidth = 335
+    questPopUpHeight = 496--(chatCorner:getHeight()*2)
+    questPopUpPanelGap = 400
+
 end
 
 function updateHUD( dt )
@@ -107,6 +124,7 @@ function drawHUD()
         local i = 0.5
         love.graphics.scale(scale*i)
         drawChatPanel(uiX/i, uiY/i)
+        drawQuestPannel(uiX, 0)
     love.graphics.pop()
 
     love.graphics.push() -- chat and quests scaling TODO: Quests
