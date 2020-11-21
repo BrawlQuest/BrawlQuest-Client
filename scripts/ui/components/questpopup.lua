@@ -1,7 +1,12 @@
 function drawQuestPopUp(thisX, thisY)
-    drawQuestPopUpProfile(thisX, thisY)
-    drawQuestPopUpQuest(thisX, thisY)
-    --love.graphics.rectangle("fill", thisX-(questPopUpWidth/2), thisY-(questPopUpHeight/2), 335, 496)
+    if player.x ~= null then
+        if player.x == 4 and player.y == 1 then 
+            drawQuestPopUpProfile(thisX, thisY)
+            drawQuestPopUpQuest(thisX, thisY)
+        else 
+            --print("X: "..player.x.." Y: "..player.y.." ")
+        end
+    end
 end
 
 function drawQuestPopUpBackground(thisX, thisY)
