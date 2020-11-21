@@ -65,14 +65,20 @@ function initHUD()
     top_left = love.graphics.newQuad(0, 0, 34, 34, a0sword:getDimensions())
     inventory = love.graphics.newImage("assets/ui/hud/inventory/inventoryBg.png")
 
-    -- Profile and Perks
-    perks = love.graphics.newImage("assets/ui/hud/perks/LeftUI.png")
+    -- Profile
+
 	level = love.graphics.newImage("assets/ui/hud/profile/Level.png")
 	profileBars = love.graphics.newImage("assets/ui/hud/profile/bars.png")
     profileBgnd = love.graphics.newImage("assets/ui/hud/profile/profile-backing.png")
     sheildImg = love.graphics.newImage("assets/player/gen/sheild false.png")
     profileImgStensil = love.graphics.newQuad(12, 0, 16, 16, playerImg:getDimensions())
     sheildImgStensil = love.graphics.newQuad(12, 0, 16, 16, sheildImg:getDimensions())
+
+    -- Perks
+    perks = love.graphics.newImage("assets/ui/hud/perks/LeftUI.png")
+    perksBg = love.graphics.newImage("assets/ui/hud/perks/perksBg.png")
+    mouseDown = love.graphics.newImage("assets/ui/hud/perks/BQ Mice - 1.png")
+    mouseUp = love.graphics.newImage("assets/ui/hud/perks/BQ Mice + 1.png")
 
     -- Battlebar
     battlebarBgnd = love.graphics.newImage("assets/ui/hud/battlebar/battlebarBg.png")

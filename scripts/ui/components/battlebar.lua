@@ -11,7 +11,7 @@ end
 function battlebarPlayer(thisX, iy)
     local thisY = iy-battlebarBgnd:getHeight()
     love.graphics.draw(battlebarBgnd, thisX, thisY)
-    drawProfilePic(thisX+10, thisY+10, 1, me.Name)
+    drawProfilePic(thisX+10, thisY+10, 1, "right", me.Name)
     --love.graphics.draw(profilePic, thisX+10, thisY+10)
     if me and me.Weapon then
         love.graphics.push()
@@ -21,7 +21,7 @@ function battlebarPlayer(thisX, iy)
     end
     battlebarNameAndBars(thisX, thisY, player.name, player.hp, player.mhp)
     if me and me.Weapon and itemImg[me.Weapon.ImgPath] then
-     battlebarItem(thisX-44, thisY+18, itemImg[me.Weapon.ImgPath], "+"..me.Weapon.Val)
+        battlebarItem(thisX-44, thisY+18, itemImg[me.Weapon.ImgPath], "+"..me.Weapon.Val)
     end
 end
 
@@ -35,7 +35,7 @@ function battlebarEnemy(thisX, iy, name, hp, mana)
     local thisY = iy-battlebarBgnd:getHeight()
     love.graphics.draw(battlebarBgnd, thisX, thisY)
     -- love.graphics.draw(profilePic, thisX+270, thisY+10)
-    drawProfilePic(thisX+270, thisY+10, 1, "left", me.Name)
+    drawProfilePic(thisX+270, thisY+10, 1, "left")
    -- drawCharacter(me,thisX+270, thisY+10)
     battlebarNameAndBars(thisX, thisY, name, hp, mana)
     battlebarItem(thisX+354, thisY+18, a3sword, "+3")
@@ -54,6 +54,7 @@ function battlebarNameAndBars(ix, iy, name, hp, mana)
     roundRectangle("fill", thisX, thisY, 250, 16, 2)
     roundRectangle("fill", thisX, thisY+22, 250, 16, 2)
     love.graphics.setColor(1,0,0,1)
+    
     if name == player.name then
         if hp > 0 then 
             roundRectangle("fill", thisX, thisY, hp*2.5, 16, 2)

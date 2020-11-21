@@ -42,7 +42,7 @@ end
 
 function drawChatbox(x, y, username, text) -- TODO: If statement for different user modes
 	if username == playerName then
-		drawProfilePic(x+chatWidth+(chatCorner:getWidth()*2)+8, y, 1, "left")
+		drawProfilePic(x+chatWidth+(chatCorner:getWidth()*2)+8, y, 1, "left", me.Name)
 		drawChatboxBackground(x, y, text)
 		drawChatboxText(x, y, text)
 	else
