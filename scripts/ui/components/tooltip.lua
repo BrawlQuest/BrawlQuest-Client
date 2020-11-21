@@ -10,14 +10,14 @@ tooltip = {
 
 function setTooltip(title, desc)
     tooltip.x, tooltip.y = love.mouse.getPosition()
-    tooltip.x = tooltip.x + 16 -- avoid getting cut off by the mouse
-    tooltip.y = tooltip.y + 16
+    tooltip.x = (tooltip.x + 16)/scale -- avoid getting cut off by the mouse
+    tooltip.y = (tooltip.y + 16)/scale
     tooltip.alpha = 1
     tooltip.title = title
     tooltip.desc = desc
 end
 
-function drawTooltip()
+function drawTooltip(thisX, thisY)
     love.graphics.setColor(0,0,0,tooltip.alpha)
     love.graphics.rectangle("fill", tooltip.x - tooltip.padding,tooltip.y - tooltip.padding, 150 + (tooltip.padding*2), getToolTipTitleHeight(tooltip.title) + getToolTipDescHeight(tooltip.desc) + (tooltip.padding*2) + tooltip.spacing)
     love.graphics.setColor(1,1,1,tooltip.alpha)
@@ -40,6 +40,6 @@ function getToolTipDescHeight(title)
 end
 
 function updateTooltip(dt)
-    tooltip.alpha = tooltip.alpha - 1*dt
+    tooltip.alpha = tooltip.alpha - 8*dt
 end
 

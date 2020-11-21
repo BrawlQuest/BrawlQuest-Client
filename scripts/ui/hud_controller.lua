@@ -15,6 +15,7 @@ function initHUD()
     textFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 24)
 
     smallTextFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 12)
+    headerSmallFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 16)
     headerFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 18) -- TODO: get a license for this font
     headerMediumFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 28)
     headerBigFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 32) -- TODO: get a license for this font
@@ -156,9 +157,10 @@ function drawHUD()
         love.graphics.scale(scale)
         drawToolbar()
         drawProfile(uiX/i, uiY/i)
+        drawTooltip()
     love.graphics.pop()
 
-    drawTooltip()
+    
 end 
 
 function love.wheelmoved( dx, dy )

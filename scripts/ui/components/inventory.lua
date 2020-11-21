@@ -95,7 +95,7 @@ function getFullUserInventoryFieldHeight()
 end
 
 function drawInventoryItem(thisX, thisY, field, item)
-    if isMouseOver(thisX, thisY, 32, 32) then
+    if isMouseOver(thisX*scale, thisY*scale, 32*scale, 32*scale) then
         love.graphics.setColor(0.6, 0.6, 0.6)
         setTooltip(userInventory[field][item].Item.Name,
             "+" .. userInventory[field][item].Item.Val .. " " .. userInventory[field][item].Item.Type .. "\n" ..
@@ -111,14 +111,12 @@ end
 function drawInventory()
     loadInventory()
     love.graphics.draw(inventory, 0, toolbary)
-    -- love.graphics.rectangle("fill", 70, toolbary+40, 180, 483)
 
     love.graphics.stencil(drawInventoryStencil, "replace", 1) -- stencils inventory
     love.graphics.setStencilTest("greater", 0) -- push
 
     drawInventoryFeilds(70, toolbary + 40 + posyInventory)
-    -- love.graphics.rectangle("fill", 70, toolbary+40+posyInventory, 10, getFullUserInventoryFieldHeight())
-
+   
     love.graphics.setStencilTest() -- pop
 end
 

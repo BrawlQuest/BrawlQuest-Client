@@ -15,8 +15,8 @@ function battlebarPlayer(thisX, iy)
     --love.graphics.draw(profilePic, thisX+10, thisY+10)
     if me and me.Weapon then
         love.graphics.push()
-        love.graphics.scale(2,2)
-        drawCharacter(me,thisX+10, thisY+10)
+            love.graphics.scale(2,2)
+            drawCharacter(me,thisX+10, thisY+10)
         love.graphics.pop()
     end
     battlebarNameAndBars(thisX, thisY, player.name, player.hp, player.mhp)
@@ -28,7 +28,9 @@ end
 function battlebarItem(thisX, thisY, item, stats)
     love.graphics.draw(battlebarItemBg, thisX, thisY)
     love.graphics.draw(item, thisX+1, thisY+1)
-    love.graphics.printf(stats, thisX, thisY+32, battlebarItemBg:getWidth(), "center")
+    love.graphics.setFont(headerSmallFont)
+    love.graphics.printf(stats, thisX-10, thisY+32, battlebarItemBg:getWidth()+20, "center")
+    love.graphics.setFont(headerFont)
 end
 
 function battlebarEnemy(thisX, iy, name, hp, mana)

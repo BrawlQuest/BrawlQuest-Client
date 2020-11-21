@@ -55,27 +55,21 @@ function drawProfilePic(thisX, thisY, thisScale, thisRotation, player)
 			r = 1
 		end
 
-		if player == me.Name then
-			if me.Shield ~= null then
-				love.graphics.draw(itemImg[me.Shield.ImgPath], sheildImgStensil, thisX, thisY/i, 0, r, 1)
-			end
-			
-			if playerImg ~= null then
-				love.graphics.draw(playerImg, profileImgStensil, thisX, thisY/i, 0, r, 1)
-			end
-
-			if me.ChestArmour ~= null then
-				love.graphics.draw(itemImg[me.ChestArmour.ImgPath], profileImgStensil, thisX, thisY/i, 0, r, 1)
-			end
-
-			if me.HeadArmour ~= null then
-				love.graphics.draw(itemImg[me.HeadArmour.ImgPath], profileImgStensil, thisX, thisY/i, 0, r, 1)
-			end
-		else
-			if v ~= null then
-			love.graphics.draw(enemyImg[v.Enemy.ghost], sheildImgStensil, thisX, thisY/i, 0, r, 1)
-			end
+		if me.Shield ~= null then
+			love.graphics.draw(itemImg[me.Shield.ImgPath], sheildImgStensil, thisX, thisY/i, 0, r, 1)
+		end
+		
+		if playerImg ~= null then
+			love.graphics.draw(playerImg, profileImgStensil, thisX, thisY/i, 0, r, 1)
 		end
 
+		if me.ChestArmour ~= null then
+			love.graphics.draw(itemImg[me.ChestArmour.ImgPath], profileImgStensil, thisX, thisY/i, 0, r, 1)
+		end
+
+		if me.HeadArmour ~= null then
+			love.graphics.draw(itemImg[me.HeadArmour.ImgPath], profileImgStensil, thisX, thisY/i, 0, r, 1)
+		end
+	
 	love.graphics.pop()
 end
