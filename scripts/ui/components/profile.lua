@@ -9,6 +9,9 @@ function drawProfile()
 	love.graphics.draw(profileBgnd)
 	drawProfilePic(19, 5, 0.5, me.Name)
 	love.graphics.draw(level, 7, 5)
+	
+	
+
 	love.graphics.draw(profileBars, 7, 51)
 
 	
@@ -21,6 +24,12 @@ function drawProfile()
 	local j = 2.380952380952381
 
 	if me ~= null and me.HP ~= null or me.XP ~= null then
+		love.graphics.setColor(0,0,0,1)
+		love.graphics.setFont(circleFont)
+		love.graphics.printf(me.LVL, 33, 33, 30, "center")
+		love.graphics.setFont(font)
+		love.graphics.setColor(1,1,1,1)
+		
 		love.graphics.setColor(1,0,0,1)
 		love.graphics.rectangle("fill", 20, 80, me.HP / j, 10) -- Health
 

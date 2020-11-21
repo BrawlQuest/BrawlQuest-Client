@@ -42,9 +42,17 @@ function drawEditWorldWindow()
     love.graphics.print("Images", loginImageX+30, loginImageY+200)
 
    -- drawTextField(loginImageX+35,loginImageY+240,5)
+    
+    love.graphics.setColor(0,0,0,1)
+    love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), 36)
+    love.graphics.setColor(1,1,1,1)
+
+    love.graphics.scale(1)
     for i,v in ipairs(worldFiles) do
-        love.graphics.draw(worldImg[v], loginImageX+35 + (i*32), loginImageY+240)
-    end
+        love.graphics.draw(worldImg[v], 3 + (i*32), 3)
+    end 
+
+
     love.graphics.setColor(1,1,1)
     drawTextField(loginImageX+35,loginImageY+280,6)
     
