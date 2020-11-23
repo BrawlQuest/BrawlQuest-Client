@@ -24,7 +24,7 @@ function initEditWorld()
     for k, file in ipairs(files) do
         if string.find(file, "Store", 1) == nil then
             worldFiles[#worldFiles+1] = file
-            print(k .. ". ".. file)
+            -- print(k .. ". ".. file)
             worldImg[file] = love.graphics.newImage(file)
         end
     end

@@ -11,8 +11,8 @@ keybinds = {
 }
 
 
-musicVolume = 1
-sfxVolume = 1
+musicVolume = 0
+sfxVolume = 0
 
 function initSettings()
     

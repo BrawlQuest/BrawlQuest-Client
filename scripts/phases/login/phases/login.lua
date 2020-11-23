@@ -61,9 +61,9 @@ end
 
 function checkLoginKeyPressedPhaseLogin(key)
     if key == "backspace" then
-        textfields[editingField] = string.sub(textfields[editingField], 1, string.len(textfields[editingField]) - 1)
+        textfields[editingField] = ""
         if editingField == 2 then
-            textfields[3] = string.sub(textfields[3], 1, string.len(textfields[3]) - 1)
+            textfields[3] = ""
         end
     elseif key == "tab" or key == "return" then
         if editingField == 1 then
@@ -77,10 +77,30 @@ function checkLoginKeyPressedPhaseLogin(key)
 
     if key == "home" then 
         textfields[1] = "Pebsie"
+        textfields[2] = "password"
+        textfields[3] = "********"
         editingField = 2
+        login()
+        characterSelected = 1
+        if characters[characterSelected] ~= null then
+            transitionToPhaseGame() 
+        else
+            newCharacterPosition = characterSelected
+            loginPhase = "creation"
+        end
     elseif key == "end" then
         textfields[1] = "Danjoe"
+        textfields[2] = "password"
+        textfields[3] = "********"
         editingField = 2
+        login()
+        characterSelected = 1
+        if characters[characterSelected] ~= null then
+            transitionToPhaseGame() 
+        else
+            newCharacterPosition = characterSelected
+            loginPhase = "creation"
+        end
     end
     
 end
@@ -98,7 +118,7 @@ function login()
         UID = textfields[1],
         Password = textfields[2]
     }))
-
+    
     if c == 200 then
         b = json:decode(tostring(b))
         UID = textfields[1]
@@ -119,6 +139,9 @@ function login()
                 characters = characters[1]
             end
             loginPhase = "characters"
-       end
+        end
+    elseif c == 401 then
+        textfields[2] = ""
+        textfields[3] = ""
     end
 end

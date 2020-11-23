@@ -1,6 +1,6 @@
 function drawProfile()
 	
-	if isMouseOver(0,0,perks:getWidth()*scale,perks:getHeight()*scale) then
+	if isMouseOver(0,0,perksBg:getWidth()*scale,perksBg:getHeight()*scale) then
 		drawPerks()
     end
     
@@ -39,8 +39,10 @@ end
 function drawProfilePic(thisX, thisY, thisScale, thisRotation, player)
 	love.graphics.push()
 		local i = 1 * thisScale
-        love.graphics.scale(i)
+		love.graphics.scale(i)
+		love.graphics.setColor(0,0,0,0.6)
 		love.graphics.draw(profilePic, thisX/i, thisY/i) 
+		love.graphics.setColor(1,1,1,1)
 	love.graphics.pop()
 	
 	love.graphics.push()

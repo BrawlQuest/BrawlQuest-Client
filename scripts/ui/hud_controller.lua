@@ -16,6 +16,7 @@ function initHUD()
 
     smallTextFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 12)
     headerSmallFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 16)
+    headerTinyFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 6)
     headerFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 18) -- TODO: get a license for this font
     headerMediumFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 28)
     headerBigFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 32) -- TODO: get a license for this font
@@ -76,10 +77,29 @@ function initHUD()
     sheildImgStensil = love.graphics.newQuad(12, 0, 16, 16, sheildImg:getDimensions())
 
     -- Perks
-    perks = love.graphics.newImage("assets/ui/hud/perks/LeftUI.png")
     perksBg = love.graphics.newImage("assets/ui/hud/perks/perksBg.png")
     mouseDown = love.graphics.newImage("assets/ui/hud/perks/BQ Mice - 1.png")
     mouseUp = love.graphics.newImage("assets/ui/hud/perks/BQ Mice + 1.png")
+    perksReserve = love.graphics.newImage("assets/ui/hud/perks/cp-backing.png")
+
+    selectedPerk = 0
+
+    perkImages = {
+        love.graphics.newImage("assets/ui/hud/perks/perkType3.png"),
+        love.graphics.newImage("assets/ui/hud/perks/perkType2.png"),
+        love.graphics.newImage("assets/ui/hud/perks/perkType1.png")
+    }
+
+    perks = {
+        total = 10,
+        reserve = 10,
+        0,
+        0,
+        0
+    }
+    perkTitles = {
+        "strength", "intelligence", "defense"
+    }
 
     -- Battlebar
     battlebarBgnd = love.graphics.newImage("assets/ui/hud/battlebar/battlebarBg.png")

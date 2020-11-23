@@ -301,7 +301,7 @@ function love.mousepressed(x, y, button)
             X = player.x,
             Y = player.y
         }
-        print(json:encode(pendingWorldChanges))
+        -- print(json:encode(pendingWorldChanges))
         c, h = http.request {
             url = api.url .. "/world",
             method = "POST",
@@ -313,6 +313,7 @@ function love.mousepressed(x, y, button)
         pendingWorldChanges = {}
     elseif phase == "game" then
        checkInventoryMousePressed()
+       checkPerksMousePressed(button)
     end
 end
 
