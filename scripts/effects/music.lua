@@ -6,7 +6,7 @@
 currentTrack = "PuerLavari"
 nextTrack = "Titans"
 isSwitching = false
-playMusic = true
+playMusic = false
 
 function loadMusic() 
     music = {
@@ -32,28 +32,34 @@ function loadMusic()
         "Skirmish2"
     }
     
-  --  if playMusic then
-        currentPlaying = titleMusic:play()
-  --  end
+    if playMusic then   
+    currentPlaying = titleMusic:play()
+    end
+
+    if musicVolume == 0 then
+        playMusic = false
+    end
 end
 
 function updateMusic(dt)
-    if enemiesInAggro == 0 and not arrayContains(worldMusic, currentTrack) then
-        switchMusic(worldMusic[love.math.random(1,#worldMusic)])
-    elseif not arrayContains(battleMusic, currentTrack) and enemiesInAggro > 0 then
-        switchMusic(battleMusic[love.math.random(1,#battleMusic)])
-    end
-    
-    if isSwitching then
-        if music[currentTrack]:getVolume() > 0.01 then
-            music[currentTrack]:setVolume(music[currentTrack]:getVolume() - 0.3*dt)
-        else
-            music[currentTrack]:stop()
-            isSwitching = false
-            currentTrack = nextTrack
-            music[currentTrack]:setVolume(1)
-         --   music[currentTrack]:set
-            currentPlaying = music[currentTrack]:play()
+    if playMusic then
+        if enemiesInAggro == 0 and not arrayContains(worldMusic, currentTrack) then
+            switchMusic(worldMusic[love.math.random(1,#worldMusic)])
+        elseif not arrayContains(battleMusic, currentTrack) and enemiesInAggro > 0 then
+            switchMusic(battleMusic[love.math.random(1,#battleMusic)])
+        end
+
+        if isSwitching then
+            if music[currentTrack]:getVolume() > 0.01 then
+                music[currentTrack]:setVolume(music[currentTrack]:getVolume() - 0.3*dt)
+            else
+                music[currentTrack]:stop()
+                isSwitching = false
+                currentTrack = nextTrack
+                music[currentTrack]:setVolume(1)
+                --   music[currentTrack]:set
+                currentPlaying = music[currentTrack]:play()
+            end
         end
     end
 end

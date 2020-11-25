@@ -83,6 +83,7 @@ function love.load()
     xpSfx:setVolume(0.4)
 
     awakeSfx = love.audio.newSource("assets/sfx/player/awake.wav", "static")
+    awakeSfx:setVolume(0.4)
 
     playerHitSfx = love.audio.newSource("assets/sfx/hit.wav", "static")
     enemyHitSfx = love.audio.newSource("assets/sfx/impact_b.wav", "static")
@@ -164,18 +165,19 @@ function love.update(dt)
             Luven.camera:setPosition(player.dx + 16, player.dy + 16)
         end
 
-        local date_table = os.date("*t")
-        local ms = string.match(tostring(os.clock()), "%d%.(%d+)")
-        local hour, minute, second = date_table.hour, date_table.min, date_table.sec
-        timeOfDay = 0 -- date_table.min/1440
-        if timeOfDay < 0.8 then
-            Luven.setAmbientLightColor({0.8 - timeOfDay, 0.8 - timeOfDay, 1 - timeOfDay})
-        else
-            Luven.setAmbientLightColor({timeOfDay - 0.8, timeOfDay - 0.8, timeOfDay - 1})
-            if timeOfDay > 2 then
-                timeOfDay = 0
-            end
-        end
+        -- local date_table = os.date("*t")
+        -- local ms = string.match(tostring(os.clock()), "%d%.(%d+)")
+        -- local hour, minute, second = date_table.hour, date_table.min, date_table.sec
+        -- -- date_table.min/1440
+        -- Luven.setAmbientLightColor({0.5 - timeOfDay, 0.5 - timeOfDay, 0.5 - timeOfDay})
+        -- -- if timeOfDay < 0.8 then
+        -- --     Luven.setAmbientLightColor({1 - timeOfDay, 1 - timeOfDay, 1 - timeOfDay})
+        -- -- else
+        -- --     Luven.setAmbientLightColor({timeOfDay - 1, timeOfDay - 1, timeOfDay - 1})
+        -- --     if timeOfDay > 2 then
+        -- --         timeOfDay = 0
+        -- --     end
+        -- -- end
 
         updateOtherPlayers(dt)
 

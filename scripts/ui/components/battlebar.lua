@@ -29,7 +29,7 @@ function battlebarItem(thisX, thisY, item, stats)
     love.graphics.draw(battlebarItemBg, thisX, thisY)
     love.graphics.draw(item, thisX+1, thisY+1)
     love.graphics.setFont(headerSmallFont)
-    love.graphics.printf(stats, thisX-10, thisY+32, battlebarItemBg:getWidth()+20, "center")
+    love.graphics.print(stats, thisX+(battlebarItemBg:getWidth()/2)-(font:getWidth(stats)/2), thisY+32)
     love.graphics.setFont(headerFont)
 end
 
