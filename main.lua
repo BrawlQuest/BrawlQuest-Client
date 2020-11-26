@@ -113,7 +113,9 @@ function love.draw()
         drawFloats()
         Luven.drawEnd()
     
-        drawHUD()
+        if not isWorldEditWindowOpen then
+            drawHUD()
+        end
         if isWorldEditWindowOpen then
             drawEditWorldWindow()
         end
@@ -122,6 +124,7 @@ function love.draw()
 
 
     mx, my = love.mouse.getPosition()
+    love.graphics.setColor(1,1,1)
     love.graphics.draw(mouseImg, mx, my)
 
     love.graphics.setColor(1, 1, 1, totalCoverAlpha)
@@ -165,19 +168,19 @@ function love.update(dt)
             Luven.camera:setPosition(player.dx + 16, player.dy + 16)
         end
 
-        -- local date_table = os.date("*t")
-        -- local ms = string.match(tostring(os.clock()), "%d%.(%d+)")
-        -- local hour, minute, second = date_table.hour, date_table.min, date_table.sec
-        -- -- date_table.min/1440
-        -- Luven.setAmbientLightColor({0.5 - timeOfDay, 0.5 - timeOfDay, 0.5 - timeOfDay})
-        -- -- if timeOfDay < 0.8 then
-        -- --     Luven.setAmbientLightColor({1 - timeOfDay, 1 - timeOfDay, 1 - timeOfDay})
-        -- -- else
-        -- --     Luven.setAmbientLightColor({timeOfDay - 1, timeOfDay - 1, timeOfDay - 1})
-        -- --     if timeOfDay > 2 then
-        -- --         timeOfDay = 0
-        -- --     end
-        -- -- end
+        local date_table = os.date("*t")
+        local ms = string.match(tostring(os.clock()), "%d%.(%d+)")
+        local hour, minute, second = date_table.hour, date_table.min, date_table.sec
+        -- date_table.min/1440
+        Luven.setAmbientLightColor({0.5 - timeOfDay, 0.5 - timeOfDay, 0.5 - timeOfDay})
+        -- if timeOfDay < 0.8 then
+        --     Luven.setAmbientLightColor({1 - timeOfDay, 1 - timeOfDay, 1 - timeOfDay})
+        -- else
+        --     Luven.setAmbientLightColor({timeOfDay - 1, timeOfDay - 1, timeOfDay - 1})
+        --     if timeOfDay > 2 then
+        --         timeOfDay = 0
+        --     end
+        -- end
 
         updateOtherPlayers(dt)
 
@@ -250,20 +253,24 @@ function love.keypressed(key)
             end
         elseif key == "lctrl" then
             -- createWorld()
-            -- print("Sending...")
-            -- pendingWorldChanges[#pendingWorldChanges+1] = {
-            --     GroundTile = textfields[5],
-            --     ForegroundTile = textfields[6],
-            --     Name =  textfields[7],
-            --     Music = "*",
-            --     Collision = thisTile.Collision,
-            --     Enemy = textfields[8],
-            --     X = player.x,
-            --     Y = player.y,
-            -- }
-            -- print(json:encode(pendingWorldChanges))
-            -- c, h = http.request{url = api.url.."/world", method="POST", source=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(pendingWorldChanges)),["token"]=token}}
-            -- pendingWorldChanges = {}
+            print("Sending...")
+            pendingWorldChanges[#pendingWorldChanges+1] = {
+                GroundTile = textfields[5],
+                ForegroundTile = textfields[6],
+                Name =  textfields[7],
+                Music = "*",
+                Collision = thisTile.Collision,
+                Enemy = textfields[8],
+                X = player.x,
+                Y = player.y,
+            }
+            print(json:encode(pendingWorldChanges))
+            c, h = http.request{url = api.url.."/world", method="POST", source=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(pendingWorldChanges)),["token"]=token}}
+            pendingWorldChanges = {}
+            local b = {}
+            c, h = http.request{url = api.url.."/world", method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
+            world = json:decode(b[1])
+            createWorld()
         elseif key == "o" then
         end
     end

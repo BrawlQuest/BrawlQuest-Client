@@ -37,10 +37,6 @@ function drawEditWorldWindow()
 
     love.graphics.setFont(headerBigFont)
     love.graphics.print("Edit\nWorld", loginImageX+30, loginImageY+90)
-
-    love.graphics.setFont(headerFont)
-    love.graphics.print("Images", loginImageX+30, loginImageY+200)
-
    -- drawTextField(loginImageX+35,loginImageY+240,5)
     
     love.graphics.setColor(0,0,0,1)
@@ -48,24 +44,40 @@ function drawEditWorldWindow()
     love.graphics.setColor(1,1,1,1)
 
     love.graphics.scale(1)
+    local x = 0
+    local y = 0
     for i,v in ipairs(worldFiles) do
-        love.graphics.draw(worldImg[v], 3 + (i*32), 3)
+        if textfields[6] == v then
+            love.graphics.rectangle("fill",x,y,32,32)
+        end
+
+        if textfields[5] == v then
+            love.graphics.setColor(1,0,0)
+            love.graphics.rectangle("line",x,y,32,32)
+            love.graphics.setColor(1,1,1)
+        end
+        love.graphics.draw(worldImg[v], x, y)
+        x = x + 32
+        if x > love.graphics.getHeight() then
+            y = y + 32
+            x = 0
+        end
     end 
 
 
+    -- love.graphics.setColor(1,1,1)
+    -- drawTextField(loginImageX+35,loginImageY+280,6)
+    love.graphics.setFont(headerFont)
     love.graphics.setColor(1,1,1)
-    drawTextField(loginImageX+35,loginImageY+280,6)
-    
+    love.graphics.print("Name", loginImageX+30, loginImageY+180)
+    drawTextField(loginImageX+35,loginImageY+210,7)
     love.graphics.setColor(1,1,1)
-    love.graphics.print("Name", loginImageX+30, loginImageY+310)
-    drawTextField(loginImageX+35,loginImageY+330,7)
-    love.graphics.setColor(1,1,1)
-    love.graphics.print("Enemy", loginImageX+30, loginImageY+360)
-    drawTextField(loginImageX+35,loginImageY+380,8)
+    love.graphics.print("Enemy", loginImageX+30, loginImageY+250)
+    drawTextField(loginImageX+35,loginImageY+280,8)
     if thisTile.Collision == true then
-        drawButton("TURN COLLISION OFF", loginImageX+35,loginImageY+430)
+        drawButton("TURN COLLISION OFF", loginImageX+35,loginImageY+320)
     else
-        drawButton("TURN COLLISION ON", loginImageX+35,loginImageY+430)
+        drawButton("TURN COLLISION ON", loginImageX+35,loginImageY+320)
     end
 end
 
@@ -82,15 +94,27 @@ function checkEditWorldKeyPressed(key)
 end
 
 function checkEditWorldClick(x,y)
+    local tx = 0
+    local ty = 0
+    for i,v in ipairs(worldFiles) do
+        if isMouseOver(tx,ty,32,32) then
+            if love.mouse.isDown(1) then
+                textfields[6] = v
+            elseif love.mouse.isDown(2) then
+                textfields[5] = v
+            end
+        end
+        tx = tx + 32
+        if tx > love.graphics.getHeight() then
+            ty = ty + 32
+            tx = 0
+        end
+    end 
     if isMouseOver(loginImageX+35,loginImageY+240,288,44) then
-        editingField = 5
-    elseif isMouseOver(loginImageX+35,loginImageY+280,288,44) then
-        editingField = 6
-    elseif isMouseOver(loginImageX+35,loginImageY+330, 288, 44) then
         editingField = 7
-    elseif isMouseOver(loginImageX+35,loginImageY+380, 288, 44) then
+    elseif isMouseOver(loginImageX+35,loginImageY+280, 288, 44) then
         editingField = 8
-    elseif isMouseOver(loginImageX+35,loginImageY+430,288,44) then
+    elseif isMouseOver(loginImageX+35,loginImageY+320,288,44) then
         if thisTile.Collision then
             thisTile.Collision = false
         else

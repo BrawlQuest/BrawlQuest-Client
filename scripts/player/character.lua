@@ -48,77 +48,6 @@ function drawItemIfExists(path, x, y, previousDirection)
     love.graphics.draw(itemImg[path], x + offsetX, y, 0, rotation, 1, 0, 0)
 end
 
--- function drawPlayer()
---     if me and me.Weapon then
---         if not itemImg[me.Weapon.ImgPath] then
---             if love.filesystem.getInfo(me.Weapon.ImgPath) then
---                 itemImg[me.Weapon.ImgPath] = love.graphics.newImage(me.Weapon.ImgPath)
---             else
---                 itemImg[me.Weapon.ImgPath] = love.graphics.newImage("assets/error.png")
---             end
---         end
-
---         if me.SheildID ~= 0 then
---             drawItemIfExists(me.Shield.ImgPath, player.dx, player.dy, player.previousDirection)
---         end
-
---         local rotation = 1
---         local offsetX = 0
---         if player.previousDirection == "left" then
---             rotation = -1
---             offsetX = 32
---             love.graphics.draw(itemImg[me.Weapon.ImgPath],
---                 player.dx + (itemImg[me.Weapon.ImgPath]:getWidth() - 32) + 32,
---                 player.dy - (itemImg[me.Weapon.ImgPath]:getHeight() - 32), 0, rotation, 1, 0, 0)
---         else
---             love.graphics.draw(itemImg[me.Weapon.ImgPath], player.dx - (itemImg[me.Weapon.ImgPath]:getWidth() - 32),
---                 player.dy - (itemImg[me.Weapon.ImgPath]:getHeight() - 32), 0, rotation, 1, 0, 0)
---         end
-
---         if player.isMounted then
---             love.graphics.draw(horseImg, player.dx + 6, player.dy + 9)
---         end
---         love.graphics.draw(playerImg, player.dx + offsetX, player.dy, 0, rotation, 1, 0, 0)
-
---         if me.HeadArmourID ~= 0 then
---             drawItemIfExists(me.HeadArmour.ImgPath, player.dx, player.dy, player.previousDirection)
---         end
---         if me.ChestArmourID ~= 0 then
---             drawItemIfExists(me.ChestArmour.ImgPath, player.dx, player.dy, player.previousDirection)
---         end
---         if me.LegArmourID ~= 0 then
---             drawItemIfExists(me.LegArmour.ImgPath, player.dx, player.dy, player.previousDirection)
---         end
-
---         if love.keyboard.isDown(keybinds.SHIELD) and me.SheildID ~= 0  then
---             drawItemIfExists(me.Shield.ImgPath, player.dx, player.dy, player.previousDirection)
---         end
-
---         if player.isMounted then
---             love.graphics.draw(horseForeImg, player.dx + 6, player.dy + 9)
---         end
---         if player.isMounting then
---             love.graphics.draw(horseImg, player.mount.x, player.mount.y)
---         end
---         if player.target.active then
---             diffX = player.target.x - player.x
---             diffY = player.target.y - player.y
---             if arrowImg[diffX] ~= nil and arrowImg[diffX][diffY] ~= nil then
---                 love.graphics.setColor(1, 1, 1, 1 - nextTick)
---                 love.graphics.draw(arrowImg[diffX][diffY], player.dx - 32, player.dy - 32)
---             end
---         end
---         if player.target.active and (me.AX ~= me.X or me.AY ~= me.Y) then
---             diffX = me.AX - me.X
---             diffY = me.AY - me.Y
---             if arrowImg[diffX] ~= nil and arrowImg[diffX][diffY] ~= nil then
---                 love.graphics.setColor(1, 1, 1, 1)
---                 --    love.graphics.draw(arrowImg[diffX][diffY], (me.X*32)-32, (me.Y*32)-32)
---             end
---         end
---     end
--- end
-
 function updateCharacter(dt)
     checkTargeting()
     if not isWorldEditWindowOpen then
@@ -258,11 +187,11 @@ end
 
 function beginMounting()
     if player.isMounted or player.isMounting then
-        love.audio.play(horseMountSfx[love.math.random(1, #horseMountSfx)])
+     --   love.audio.play(horseMountSfx[love.math.random(1, #horseMountSfx)])
         player.isMounted = false
         player.isMounting = false
     else
-        love.audio.play(whistleSfx[love.math.random(1, #whistleSfx)])
+       -- love.audio.play(whistleSfx[love.math.random(1, #whistleSfx)])
         player.isMounting = true
         if love.math.random(1, 2) == 1 then
             player.mount.x = player.dx + love.graphics.getWidth() / 2
