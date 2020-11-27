@@ -47,20 +47,24 @@ function drawEditWorldWindow()
     local x = 0
     local y = 0
     for i,v in ipairs(worldFiles) do
-        if textfields[6] == v then
-            love.graphics.rectangle("fill",x,y,32,32)
-        end
+        if string.sub(v,1,25) ~= "assets/world/objects/Wall" then
 
-        if textfields[5] == v then
-            love.graphics.setColor(1,0,0)
-            love.graphics.rectangle("line",x,y,32,32)
-            love.graphics.setColor(1,1,1)
-        end
-        love.graphics.draw(worldImg[v], x, y)
-        x = x + 32
-        if x > love.graphics.getHeight() then
-            y = y + 32
-            x = 0
+            
+            if textfields[6] == v then
+                love.graphics.rectangle("fill",x,y,32,32)
+            end
+
+            if textfields[5] == v then
+                love.graphics.setColor(1,0,0)
+                love.graphics.rectangle("line",x,y,32,32)
+                love.graphics.setColor(1,1,1)
+            end
+            love.graphics.draw(worldImg[v], x, y)
+            x = x + 32
+            if x > love.graphics.getHeight() then
+                y = y + 32
+                x = 0
+            end
         end
     end 
 
