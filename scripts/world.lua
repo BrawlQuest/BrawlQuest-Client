@@ -134,7 +134,7 @@ function getDrawableWall(tileName, x, y) -- this is used to smooth the corners o
     }
 
     for i, v in ipairs(world) do
-        if isTileWall(v.ForegroundTile) then
+        if isTileWall(v.ForegroundTile) or isTileWall(v.GroundTile) then
             if v.X == x - 1 and v.Y == y then
                 nearby.left = true
             elseif v.X == x + 1 and v.Y == y then
