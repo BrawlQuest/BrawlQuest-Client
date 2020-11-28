@@ -58,7 +58,8 @@ lightGivers = {
     ["assets/world/objects/Mushroom.png"] = 0.5,
     ["assets/world/objects/Pumpkin0.png"] = 0.8,
     ["assets/world/objects/Pumpkin1.png"] = 0.8,
-    ["assets/world/objects/Pumpkin2.png"] = 0.8
+    ["assets/world/objects/Pumpkin2.png"] = 0.8,
+    ["assets/world/objects/Lamp.png"] = 1
 }
 
 oldInfo = {}

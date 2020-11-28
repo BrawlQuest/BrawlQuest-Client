@@ -45,8 +45,12 @@ function createWorld()
                 end
             end
             local foregroundAsset = v['ForegroundTile']
+            local backgroundAsset = v['GroundTile']
             if isTileWall(v.ForegroundTile) then
                 foregroundAsset = getDrawableWall(v['ForegroundTile'], v.X, v.Y)
+            end
+            if isTileWall(v.GroundTile) then
+                backgroundAsset = getDrawableWall(v['GroundTile'], v.X, v.Y)
             end
 
             if not worldImg[foregroundAsset] then
@@ -69,7 +73,7 @@ function createWorld()
                 blockMap[v.X .. "," .. v.Y] = true
             end
 
-            love.graphics.draw(worldImg[v['GroundTile']], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32)
+            love.graphics.draw(worldImg[backgroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32)
             love.graphics.draw(worldImg[foregroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32)
         
         -- love.graphics.print(v.X .. "," ..v.Y.."\n"..of, v.X*32, v.Y*32)
