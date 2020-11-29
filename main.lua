@@ -173,7 +173,7 @@ function love.update(dt)
         local ms = string.match(tostring(os.clock()), "%d%.(%d+)")
         local hour, minute, second = date_table.hour, date_table.min, date_table.sec
         -- date_table.min/1440
-        Luven.setAmbientLightColor({0.5 - timeOfDay, 0.5 - timeOfDay, 0.5 - timeOfDay})
+        Luven.setAmbientLightColor({1 - timeOfDay, 1 - timeOfDay, 1 - timeOfDay})
         -- if timeOfDay < 0.8 then
         --     Luven.setAmbientLightColor({1 - timeOfDay, 1 - timeOfDay, 1 - timeOfDay})
         -- else
