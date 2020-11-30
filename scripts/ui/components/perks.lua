@@ -36,29 +36,25 @@ function drawPerks()
 end
 
 function checkPerksMousePressed(button)
-    
-    if isMouseOver(0,0,perksBg:getWidth()*scale,perksBg:getHeight()*scale) then
-        if perks.reserve > 0 and button == 1 then
-            if selectedPerk == 1 then
-                perks[1] = perks[1] + 1
-            elseif selectedPerk == 2 then
-                perks[2] = perks[2] + 1
-            elseif selectedPerk == 3 then
-                perks[3] = perks[3] + 1
-            end
-            perks.reserve = perks.reserve - 1
-        end
-
-        if perks.reserve < perks.total then
-            if button == 2 then
-                if selectedPerk == 1 and perks[1] > 0 then
-                    perks[1] = perks[1] - 1
-                elseif selectedPerk == 2 and perks[2] > 0 then
-                    perks[2] = perks[2] - 1
-                elseif selectedPerk == 3 and perks[3] > 0 then
-                    perks[3] = perks[3] - 1
+    local perkTitleWidth = 60
+    local padding = 10
+    local thisX, thisY = 70+padding, 50+padding
+    for i = 1, 3 do
+        local thisX = thisX + (perkTitleWidth*(i-1))
+        if isMouseOver(thisX*scale, (thisY+14)*scale, 38*scale, 38*scale) then
+            if perks.reserve > 0 and button == 1 then
+                if selectedPerk == i then
+                    perks[i] = perks[i] + 1
                 end
-                perks.reserve = perks.reserve + 1
+                perks.reserve = perks.reserve - 1
+            end
+            if button == 2 then 
+                if perks[i] > 0 then
+                    if selectedPerk == i then
+                        perks[i] = perks[i] - 1
+                    end
+                    perks.reserve = perks.reserve + 1
+                end
             end
         end
     end

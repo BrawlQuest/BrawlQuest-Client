@@ -1,16 +1,6 @@
 selectedItem = {}
 
 function loadInventory()
-    -- Inventory
-    inventoryItemBgnd = love.graphics.newImage("assets/ui/hud/inventory/inventoryItem.png")
-
-    inventoryFields = {"weapons", "spells", "armour", "mounts", "other"}
-    userInventory = {}
-    userInventory[1] = {}
-    userInventory[2] = {}
-    userInventory[3] = {}
-    userInventory[4] = {}
-    userInventory[5] = {}
 
     for i, v in ipairs(inventoryAlpha) do
         local t = 5
@@ -24,6 +14,7 @@ function loadInventory()
         elseif v.Item.Type == "mount" then
             t = 4
         end
+        inventoryFieldLength[t] = inventoryFieldLength[t] + 1
         if not itemImg[v.Item.ImgPath] then
             if love.filesystem.getInfo(v.Item.ImgPath) then
                 itemImg[v.Item.ImgPath] = love.graphics.newImage(v.Item.ImgPath)
@@ -42,14 +33,14 @@ function drawInventoryFeilds(thisX, y)
     love.graphics.setFont(inventorySubHeaderFont)
     thisY = y
     for i = 0, tableLength(inventoryFields) - 1 do -- Draws each inventory field
-        inventoryItemField(thisX + 8, thisY + 0, i + 1)
-        thisY = thisY + getUserInventoryFieldHeight(i + 1)
+        if inventoryFieldLength[i+1] ~= 0 then
+            inventoryItemField(thisX + 8, thisY + 0, i + 1)
+            thisY = thisY + getUserInventoryFieldHeight(i + 1)
+        end
     end
 end
 
 function inventoryItemField(thisX, y, field)
-    -- love.graphics.printf(inventoryFields[field], thisX, y, 483)
-
     love.graphics.printf(inventoryFields[field], thisX, thisY, 483)
     thisY = thisY + 18
     for i = 0, tableLength(userInventory[field]) - 1 do

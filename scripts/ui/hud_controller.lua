@@ -15,6 +15,7 @@ function initHUD()
     textFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 24)
 
     smallTextFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 12)
+    playerNameFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 8)
     headerSmallFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 16)
     headerTinyFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 6)
     headerFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 18) -- TODO: get a license for this font
@@ -107,7 +108,18 @@ function initHUD()
 
     -- Inventory
     inventorySubHeaderFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 10)
+    inventoryItemBgnd = love.graphics.newImage("assets/ui/hud/inventory/inventoryItem.png")
+
+    inventoryFields = {"weapons", "spells", "armour", "mounts", "other"}
+    inventoryFieldLength = {0, 0, 0, 0, 0}
+    userInventory = {}
+    userInventory[1] = {}
+    userInventory[2] = {}
+    userInventory[3] = {}
+    userInventory[4] = {}
+    userInventory[5] = {}
     loadInventory()
+
 
     -- Quest Pannel
     questWidth = 350

@@ -81,14 +81,22 @@ function drawPlayer(v, i)
         end
         drawCharacter(thisPlayer, v.X, v.Y, v)
 
-        love.graphics.setFont(smallTextFont)
-        local nameWidth = smallTextFont:getWidth(v.Name)
+        love.graphics.setFont(playerNameFont)
+        local nameWidth = playerNameFont:getWidth(v.Name)
+        local nameHeight = playerNameFont:getHeight(v.Name)
+        local padding = 1
+
+        if v.previousDirection == "left" then
+            boi = 10
+        else
+            boi = 16
+        end
 
         love.graphics.setColor(0, 0, 0, 0.6)
-        love.graphics.rectangle("fill", (v.X + 16) - (nameWidth / 2), v.Y - 12, nameWidth + 4, 12)
+        love.graphics.rectangle("fill", (v.X + boi) - (nameWidth / 2), v.Y - nameHeight - 3, nameWidth + ((padding+2)*2), nameHeight + (padding*2))
         love.graphics.setColor(1, 1, 1)
-        love.graphics.print(v.Name, (v.X + 16) - (nameWidth / 2) + 2, v.Y - 10)
-
+        love.graphics.print(v.Name, (v.X + boi) - (nameWidth / 2) + (padding+2), v.Y - nameHeight - 3 + padding)
+        
         if thisPlayer ~= nil and thisPlayer.AX then
             local diffX
             local diffY
