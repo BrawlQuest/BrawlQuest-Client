@@ -24,9 +24,6 @@ function loadInventory()
         end
         userInventory[t][#userInventory[t] + 1] = v
     end
-
-    userInventoryFieldHeight = {}
-
 end
 
 function drawInventoryFeilds(thisX, y)

@@ -40,7 +40,7 @@ function battlebarEnemy(thisX, iy, name, hp, mana)
     drawProfilePic(thisX+270, thisY+10, 1, "left")
    -- drawCharacter(me,thisX+270, thisY+10)
     battlebarNameAndBars(thisX, thisY, name, hp, mana)
-    battlebarItem(thisX+354, thisY+18, a3sword, "+3")
+    battlebarItem(thisX+354, thisY+18, a0sword, "+3")
 end
 
 function battlebarNameAndBars(ix, iy, name, hp, mana)

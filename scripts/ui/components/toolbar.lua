@@ -20,7 +20,8 @@ function drawToolbar()
 
 	love.graphics.draw(toolbarBg, 0, toolbary)
 
-	local toolbarItems = {a0sword,a1sword,a2sword,a3sword,a4sword,a0axe,a1axe,a2axe,a3axe,a4axe}
+	
+	toolbarItems = {a0sword, a0sword}
 
 	local c = {1,2,3,4,5,6,7,8,9,0}
 	
@@ -29,13 +30,16 @@ function drawToolbar()
 		love.graphics.setColor(1,1,1,0.5)
 		love.graphics.rectangle("fill", 11+7, ((toolbary+22)+((b-1)*49))+2, 34, 34)
 		love.graphics.setColor(1,1,1,1)
-		love.graphics.draw(toolbarItems[b], top_left, 11+8, ((toolbary+22)+((b-1)*49))+3)--text
-		
-		love.graphics.draw(toolbarItem, 11, (toolbary+22)+((b-1)*49))--background
+
+		if toolbarItems[b] ~= null then
+			love.graphics.draw(toolbarItems[b], top_left, 11+8, ((toolbary+22)+((b-1)*49))+3)
+		end
+
+		love.graphics.draw(toolbarItem, 11, (toolbary+22)+((b-1)*49))--Forground
 
 		love.graphics.setColor(0,0,0,1)
 
-		love.graphics.printf(c[b], 11, (toolbary+22)+((b-1)*49)+27, 16, "center")
+		love.graphics.printf(c[b], 11, (toolbary+22)+((b-1)*49)+27, 16, "center")--text
 		love.graphics.setColor(1,1,1,1)
 	end
 	circleFont:setFilter( "nearest", "nearest" )

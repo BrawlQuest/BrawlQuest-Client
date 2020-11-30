@@ -73,9 +73,19 @@ function createWorld()
                 blockMap[v.X .. "," .. v.Y] = true
             end
 
-            love.graphics.draw(worldImg[backgroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32)
+            love.graphics.draw(worldImg[backgroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32)  
+            
+            love.graphics.setColor(0,0,0,0.5)
+           -- if isTileWall(v.ForegroundTile) then -- draw shadow
+                --love.graphics.rectangle("fill", (v.X+math.abs(lowestX)) * 32 , (v.Y+math.abs(lowestY)) * 32 + 32, 32, 16)
+                
+            --end
+            if v.Collision then
+                love.graphics.draw(worldImg[foregroundAsset],(v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32 + 60, 0, 1, -1)
+            end
+            
+            love.graphics.setColor(1, 1, 1, 1)
             love.graphics.draw(worldImg[foregroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32)
-        
         -- love.graphics.print(v.X .. "," ..v.Y.."\n"..of, v.X*32, v.Y*32)
             -- local cx,cy = love.mouse.getPosition()
 

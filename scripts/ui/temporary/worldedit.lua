@@ -8,7 +8,7 @@ thisTile = {
     ForegroundTile = "assets/world/objects/Mushroom.png",
     Name = "Spooky Forest",
     Music = "*",
-    Collision = true,
+    Collision = false,
     Enemy = ""
 }
 
@@ -39,13 +39,13 @@ function drawEditWorldWindow()
     love.graphics.print("Edit\nWorld", loginImageX+30, loginImageY+90)
    -- drawTextField(loginImageX+35,loginImageY+240,5)
     
-    love.graphics.setColor(0,0,0,1)
-    love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), 36)
+    love.graphics.setColor(0,0,0,0.5)
+    love.graphics.rectangle("fill", 0, 0, 20 * (32+4) + 40, 4 * (32+4) + 40)
     love.graphics.setColor(1,1,1,1)
 
     love.graphics.scale(1)
-    local x = 0
-    local y = 0
+    local x = 10
+    local y = 10
     for i,v in ipairs(worldFiles) do
         if string.sub(v,1,25) ~= "assets/world/objects/Wall" then
 
@@ -60,10 +60,10 @@ function drawEditWorldWindow()
                 love.graphics.setColor(1,1,1)
             end
             love.graphics.draw(worldImg[v], x, y)
-            x = x + 32
+            x = x + 32 + 5
             if x > love.graphics.getHeight() then
-                y = y + 32
-                x = 0
+                y = y + 32 + 5
+                x = 10
             end
         end
     end 
@@ -79,10 +79,15 @@ function drawEditWorldWindow()
     love.graphics.print("Enemy", loginImageX+30, loginImageY+250)
     drawTextField(loginImageX+35,loginImageY+280,8)
     if thisTile.Collision == true then
-        drawButton("TURN COLLISION OFF", loginImageX+35,loginImageY+320)
+        love.graphics.setColor(1,0,0,1)
+        love.graphics.rectangle("fill", loginImageX+100, loginImageY+375, 100, 100)
+        drawButton("ON COLLISIONS ARE ON", loginImageX+35,loginImageY+320)
     else
-        drawButton("TURN COLLISION ON", loginImageX+35,loginImageY+320)
+        love.graphics.setColor(0,1,0,1)
+        love.graphics.rectangle("fill", loginImageX+100, loginImageY+375, 100, 100)
+        drawButton("OFF COLLISIONS ARE OFF", loginImageX+35,loginImageY+320)
     end
+    love.graphics.setColor(1,1,1,1)
 end
 
 function checkEditWorldTextinput(key)

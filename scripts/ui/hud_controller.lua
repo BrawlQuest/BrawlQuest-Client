@@ -51,22 +51,32 @@ function initHUD()
     circleFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 16)
     smallTextFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf",12)
 
-    a0sword = love.graphics.newImage("assets/player/gear/a0/sword.png")
-    a1sword = love.graphics.newImage("assets/player/gear/a1/sword.png")
-    a2sword = love.graphics.newImage("assets/player/gear/a2/sword.png")
-    a3sword = love.graphics.newImage("assets/player/gear/a3/sword.png")
-    a4sword = love.graphics.newImage("assets/player/gear/a4/sword.png")
+    toolbarItems = {}
 
-    a0axe = love.graphics.newImage("assets/player/gear/a0/axe.png")
-    a1axe = love.graphics.newImage("assets/player/gear/a1/axe.png")
-    a2axe = love.graphics.newImage("assets/player/gear/a2/axe.png")
-    a3axe = love.graphics.newImage("assets/player/gear/a3/axe.png")
-    a4axe = love.graphics.newImage("assets/player/gear/a4/axe.png")
+    a0sword = love.graphics.newImage("assets/player/gear/a0/sword.png")
 
     toolbarBg = love.graphics.newImage("assets/ui/hud/toolbar/toolbar-backing.png")
     toolbarItem = love.graphics.newImage("assets/ui/hud/toolbar/toolbarItem.png")
     top_left = love.graphics.newQuad(0, 0, 34, 34, a0sword:getDimensions())
     inventory = love.graphics.newImage("assets/ui/hud/inventory/inventoryBg.png")
+
+    
+
+    -- Inventory
+    inventorySubHeaderFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 10)
+    inventoryItemBgnd = love.graphics.newImage("assets/ui/hud/inventory/inventoryItem.png")
+
+    inventoryFields = {"weapons", "spells", "armour", "mounts", "other"}
+    inventoryFieldLength = {0, 0, 0, 0, 0}
+    userInventory = {}
+    userInventory[1] = {}
+    userInventory[2] = {}
+    userInventory[3] = {}
+    userInventory[4] = {}
+    userInventory[5] = {}
+    loadInventory()
+
+    userInventoryFieldHeight = {}
 
     -- Profile
 
@@ -105,21 +115,6 @@ function initHUD()
     -- Battlebar
     battlebarBgnd = love.graphics.newImage("assets/ui/hud/battlebar/battlebarBg.png")
     battlebarItemBg = love.graphics.newImage("assets/ui/hud/battlebar/battlebarItem.png")
-
-    -- Inventory
-    inventorySubHeaderFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 10)
-    inventoryItemBgnd = love.graphics.newImage("assets/ui/hud/inventory/inventoryItem.png")
-
-    inventoryFields = {"weapons", "spells", "armour", "mounts", "other"}
-    inventoryFieldLength = {0, 0, 0, 0, 0}
-    userInventory = {}
-    userInventory[1] = {}
-    userInventory[2] = {}
-    userInventory[3] = {}
-    userInventory[4] = {}
-    userInventory[5] = {}
-    loadInventory()
-
 
     -- Quest Pannel
     questWidth = 350
@@ -169,7 +164,6 @@ function updateHUD( dt )
 end
 
 function drawHUD()
-    
     love.graphics.push() -- chat and quests scaling TODO: Quests
         local i = 0.5
         love.graphics.scale(scale*i)
@@ -191,8 +185,6 @@ function drawHUD()
         drawProfile(uiX/i, uiY/i)
         drawTooltip()
     love.graphics.pop()
-
-    
 end 
 
 function love.wheelmoved( dx, dy )
