@@ -110,7 +110,7 @@ function drawWorld()
             -- else
             --     love.graphics.setColor(0, 0, 0, 0)
             -- end
-            love.graphics.setColor(1,1,1)
+            love.graphics.setColor(1,1,1,1)
             love.graphics.draw(groundImg, x * 32, y * 32)
         end
     end

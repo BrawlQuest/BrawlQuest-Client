@@ -103,8 +103,8 @@ function checkEditWorldKeyPressed(key)
 end
 
 function checkEditWorldClick(x,y)
-    local tx = 0
-    local ty = 0
+    local tx = 10
+    local ty = 10
     for i,v in ipairs(worldFiles) do
         if isMouseOver(tx,ty,32,32) then
             if love.mouse.isDown(1) then
@@ -113,10 +113,10 @@ function checkEditWorldClick(x,y)
                 textfields[5] = v
             end
         end
-        tx = tx + 32
+        tx = tx + 32 + 5
         if tx > love.graphics.getHeight() then
-            ty = ty + 32
-            tx = 0
+            ty = ty + 32 + 5
+            tx = 10
         end
     end 
     if isMouseOver(loginImageX+35,loginImageY+240,288,44) then
