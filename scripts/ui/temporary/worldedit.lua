@@ -39,15 +39,15 @@ function drawEditWorldWindow()
     love.graphics.print("Edit\nWorld", loginImageX+30, loginImageY+90)
    -- drawTextField(loginImageX+35,loginImageY+240,5)
     
-    love.graphics.setColor(0,0,0,0.5)
-    love.graphics.rectangle("fill", 0, 0, 20 * (32+4) + 40, 4 * (32+4) + 40)
+    love.graphics.setColor(0,0,0,0.7)
+    love.graphics.rectangle("fill", 0, 0, (love.graphics.getWidth()*0.75)+20, (4 * 40)  + 40)
     love.graphics.setColor(1,1,1,1)
 
     love.graphics.scale(1)
     local x = 10
     local y = 10
     for i,v in ipairs(worldFiles) do
-        if string.sub(v,1,25) ~= "assets/world/objects/Wall" then
+        if string.sub(v,1,25) ~= "assets/world/objects/Wall" and string.sub(v,1,18) ~= "assets/world/water" then
 
             
             if textfields[6] == v then
@@ -61,7 +61,7 @@ function drawEditWorldWindow()
             end
             love.graphics.draw(worldImg[v], x, y)
             x = x + 32 + 5
-            if x > love.graphics.getHeight() then
+            if x > love.graphics.getWidth()*0.75 then
                 y = y + 32 + 5
                 x = 10
             end
@@ -105,20 +105,23 @@ end
 function checkEditWorldClick(x,y)
     local tx = 10
     local ty = 10
-    for i,v in ipairs(worldFiles) do
-        if isMouseOver(tx,ty,32,32) then
-            if love.mouse.isDown(1) then
-                textfields[6] = v
-            elseif love.mouse.isDown(2) then
-                textfields[5] = v
-            end
-        end
-        tx = tx + 32 + 5
-        if tx > love.graphics.getHeight() then
-            ty = ty + 32 + 5
-            tx = 10
-        end
-    end 
+    
+        for i,v in ipairs(worldFiles) do
+            if string.sub(v,1,25) ~= "assets/world/objects/Wall" and string.sub(v,1,18) ~= "assets/world/water" then
+                if isMouseOver(tx,ty,32,32) then
+                    if love.mouse.isDown(1) then
+                        textfields[6] = v
+                    elseif love.mouse.isDown(2) then
+                        textfields[5] = v
+                    end
+                end
+                tx = tx + 32 + 5
+                if tx > love.graphics.getWidth()*0.75 then
+                    ty = ty + 32 + 5
+                    tx = 10
+                end
+        end 
+    end
     if isMouseOver(loginImageX+35,loginImageY+240,288,44) then
         editingField = 7
     elseif isMouseOver(loginImageX+35,loginImageY+280, 288, 44) then
