@@ -24,7 +24,9 @@ function initHUD()
     font = headerFont
 
     -- scrolling
-	posyInventory, velyInventory, posyChat, velyChat = 0, 0, 0, 0
+    posyInventory, velyInventory, posyChat, velyChat = 0, 0, 0, 0
+    uiX = love.graphics.getWidth()/scale -- scaling options
+    uiY = love.graphics.getHeight()/scale
 
     -- mouse
 	love.mouse.setVisible(false) -- make default mouse invisible
@@ -137,8 +139,6 @@ function initHUD()
 end
 
 function updateHUD( dt )
-    uiX = love.graphics.getWidth()/scale -- scaling options
-    uiY = love.graphics.getHeight()/scale
     
     velyInventory = velyInventory - velyInventory * math.min( dt * 15, 1 )
 
@@ -164,19 +164,19 @@ function updateHUD( dt )
 end
 
 function drawHUD()
-    love.graphics.push() -- chat and quests scaling TODO: Quests
-        local i = 0.5
-        love.graphics.scale(scale*i)
-        drawChatPanel(uiX/i, uiY/i)
-        drawQuestPannel(uiX/i, 0)
-    love.graphics.pop()
+    -- love.graphics.push() -- chat and quests scaling TODO: Quests
+    --     local i = 0.5
+    --     love.graphics.scale(scale*i)
+    --     drawChatPanel(uiX/i, uiY/i)
+    --     drawQuestPannel(uiX/i, 0)
+    -- love.graphics.pop()
 
-    love.graphics.push() -- chat and quests scaling TODO: Quests
-        local i = 0.75
-        love.graphics.scale(scale*i)
-        drawBattlebar((uiX/2)/i, uiY/i)
-        drawQuestPopUp((uiX/2)/i, (uiY/2)/i)
-    love.graphics.pop()
+    -- love.graphics.push() -- chat and quests scaling TODO: Quests
+    --     local i = 0.75
+    --     love.graphics.scale(scale*i)
+    --     drawBattlebar((uiX/2)/i, uiY/i)
+    --     drawQuestPopUp((uiX/2)/i, (uiY/2)/i)
+    -- love.graphics.pop()
 
     love.graphics.push()
         local i = 1

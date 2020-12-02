@@ -241,9 +241,13 @@ function love.keypressed(key)
             checkTargeting()
             if key == "." then
                 scale = scale * 1.25
+                uiX = love.graphics.getWidth()/scale -- scaling options
+                uiY = love.graphics.getHeight()/scale
             end
             if key == "," then
                 scale = scale / 1.25
+                uiX = love.graphics.getWidth()/scale -- scaling options
+                uiY = love.graphics.getHeight()/scale
             end
             if key == keybinds.SHIELD then
                 shieldUpSfx:play()
