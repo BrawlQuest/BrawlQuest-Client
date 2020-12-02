@@ -59,7 +59,9 @@ lightGivers = {
     ["assets/world/objects/Pumpkin0.png"] = 0.8,
     ["assets/world/objects/Pumpkin1.png"] = 0.8,
     ["assets/world/objects/Pumpkin2.png"] = 0.8,
-    ["assets/world/objects/Lamp.png"] = 1
+    ["assets/world/objects/Lamp.png"] = 1,
+    ["assets/world/objects/Furnace.png"] = 1,
+    ["assets/world/objects/Campfire.png"] = 1,
 }
 
 oldInfo = {}
@@ -173,7 +175,8 @@ function love.update(dt)
         local ms = string.match(tostring(os.clock()), "%d%.(%d+)")
         local hour, minute, second = date_table.hour, date_table.min, date_table.sec
         -- date_table.min/1440
-        Luven.setAmbientLightColor({1 - timeOfDay, 1 - timeOfDay, 1 - timeOfDay})
+        timeOfDay = math.abs(hour-24)/12
+        Luven.setAmbientLightColor({1 - timeOfDay, 1 - timeOfDay, 1 - (timeOfDay*0.75)})
         -- if timeOfDay < 0.8 then
         --     Luven.setAmbientLightColor({1 - timeOfDay, 1 - timeOfDay, 1 - timeOfDay})
         -- else
