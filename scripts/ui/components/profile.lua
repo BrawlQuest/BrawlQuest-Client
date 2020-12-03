@@ -36,7 +36,8 @@ function drawProfile()
 	love.graphics.setColor(1,1,1,1)
 end
 
-function drawProfilePic(thisX, thisY, thisScale, thisRotation, player)
+function drawProfilePic(thisX, thisY, thisScale, thisRotation, tplayer)
+	if not tplayer then tplayer = me end
 	love.graphics.push()
 		local i = 1 * thisScale
 		love.graphics.scale(i)
@@ -57,20 +58,20 @@ function drawProfilePic(thisX, thisY, thisScale, thisRotation, player)
 			r = 1
 		end
 
-		if me.Shield ~= null then
-			love.graphics.draw(itemImg[me.Shield.ImgPath], sheildImgStensil, thisX, thisY/i, 0, r, 1)
+		if tplayer.Shield ~= null then
+			love.graphics.draw(itemImg[tplayer.Shield.ImgPath], sheildImgStensil, thisX, thisY/i, 0, r, 1)
 		end
 		
 		if playerImg ~= null then
 			love.graphics.draw(playerImg, profileImgStensil, thisX, thisY/i, 0, r, 1)
 		end
 
-		if me.ChestArmour ~= null then
-			love.graphics.draw(itemImg[me.ChestArmour.ImgPath], profileImgStensil, thisX, thisY/i, 0, r, 1)
+		if tplayer.ChestArmour ~= null then
+			love.graphics.draw(itemImg[tplayer.ChestArmour.ImgPath], profileImgStensil, thisX, thisY/i, 0, r, 1)
 		end
 
-		if me.HeadArmour ~= null then
-			love.graphics.draw(itemImg[me.HeadArmour.ImgPath], profileImgStensil, thisX, thisY/i, 0, r, 1)
+		if tplayer.HeadArmour ~= null then
+			love.graphics.draw(itemImg[tplayer.HeadArmour.ImgPath], profileImgStensil, thisX, thisY/i, 0, r, 1)
 		end
 	
 	love.graphics.pop()

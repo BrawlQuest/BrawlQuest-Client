@@ -129,8 +129,10 @@ function love.draw()
     love.graphics.setColor(1,1,1)
     love.graphics.draw(mouseImg, mx, my)
 
+
     love.graphics.setColor(1, 1, 1, totalCoverAlpha)
     love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+    
 end
 
 function love.update(dt)
@@ -189,6 +191,18 @@ function love.update(dt)
                 inventoryAlpha = response['Inventory']
             end
             me = response['Me']
+            messages = {}
+            for i=1, #response['Chat']['Global'] do
+                local v = response['Chat']['Global'][#response['Chat']['Global'] + 1 - i]
+             
+                messages[#messages+1] = {
+                    username = v["Sender"]["Name"],
+                    text = v["Message"],
+                    player = v["Sender"]
+                }
+             end
+             
+       
 
             if distanceToPoint(me.X, me.Y, player.x, player.y) > 6 then
                 player.x = 0
@@ -222,55 +236,59 @@ function love.keypressed(key)
     if phase == "login" then
         checkLoginKeyPressed(key)
     else
-        if isWorldEditWindowOpen then
-            checkEditWorldKeyPressed(key)
-        else
-            if key == "m" then
-                beginMounting()
-            end
-            checkTargeting()
-            if key == "." then
-                scale = scale * 1.25
-                uiX = love.graphics.getWidth()/scale -- scaling options
-                uiY = love.graphics.getHeight()/scale
-            end
-            if key == "," then
-                scale = scale / 1.25
-                uiX = love.graphics.getWidth()/scale -- scaling options
-                uiY = love.graphics.getHeight()/scale
-            end
-            if key == keybinds.SHIELD then
-                shieldUpSfx:play()
-            end
-        end
-        if key == "'" then
+        if not isTypingInChat then
             if isWorldEditWindowOpen then
-                isWorldEditWindowOpen = false
+                checkEditWorldKeyPressed(key)
             else
-                isWorldEditWindowOpen = true
+                if key == "m" then
+                    beginMounting()
+                end
+                checkTargeting()
+                if key == "." then
+                    scale = scale * 1.25
+                    uiX = love.graphics.getWidth()/scale -- scaling options
+                    uiY = love.graphics.getHeight()/scale
+                end
+                if key == "," then
+                    scale = scale / 1.25
+                    uiX = love.graphics.getWidth()/scale -- scaling options
+                    uiY = love.graphics.getHeight()/scale
+                end
+                if key == keybinds.SHIELD then
+                    shieldUpSfx:play()
+                end
             end
-        elseif key == "lctrl" then
-            -- createWorld()
-            print("Sending...")
-            pendingWorldChanges[#pendingWorldChanges+1] = {
-                GroundTile = textfields[5],
-                ForegroundTile = textfields[6],
-                Name =  textfields[7],
-                Music = "*",
-                Collision = thisTile.Collision,
-                Enemy = textfields[8],
-                X = player.x,
-                Y = player.y,
-            }
-            print(json:encode(pendingWorldChanges))
-            c, h = http.request{url = api.url.."/world", method="POST", source=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(pendingWorldChanges)),["token"]=token}}
-            pendingWorldChanges = {}
-            local b = {}
-            c, h = http.request{url = api.url.."/world", method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
-            world = json:decode(b[1])
-            createWorld()
-        elseif key == "o" then
+            if key == "'" then
+                if isWorldEditWindowOpen then
+                    isWorldEditWindowOpen = false
+                else
+                    isWorldEditWindowOpen = true
+                end
+            elseif key == "lctrl" then
+                -- createWorld()
+                print("Sending...")
+                pendingWorldChanges[#pendingWorldChanges+1] = {
+                    GroundTile = textfields[5],
+                    ForegroundTile = textfields[6],
+                    Name =  textfields[7],
+                    Music = "*",
+                    Collision = thisTile.Collision,
+                    Enemy = textfields[8],
+                    X = player.x,
+                    Y = player.y,
+                }
+                print(json:encode(pendingWorldChanges))
+                c, h = http.request{url = api.url.."/world", method="POST", source=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(pendingWorldChanges)),["token"]=token}}
+                pendingWorldChanges = {}
+                local b = {}
+                c, h = http.request{url = api.url.."/world", method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
+                world = json:decode(b[1])
+                createWorld()
+            elseif key == "o" then
+            end
+           
         end
+        checkKeyPressedChat(key)
     end
 
     if key == "escape" then
@@ -290,6 +308,8 @@ function love.textinput(key)
         checkLoginTextinput(key)
     elseif isWorldEditWindowOpen and key ~= "'" then
         checkEditWorldTextinput(key)
+    elseif isTypingInChat then
+        checkChatTextinput(key)
     end
 end
 
@@ -321,6 +341,7 @@ function love.mousepressed(x, y, button)
         pendingWorldChanges = {}
     elseif phase == "game" then
        checkInventoryMousePressed()
+       checkChatMousePressed()
        checkPerksMousePressed(button)
     end
 end

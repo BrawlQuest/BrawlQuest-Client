@@ -34,21 +34,7 @@ function initHUD()
     mouseImg = love.graphics.newImage("assets/ui/mouse.png") -- load in a custom mouse image
     
     -- chatbox
-    profilePic = love.graphics.newImage("assets/ui/hud/chat/profile.png")
-	chatCorner = love.graphics.newImage("assets/ui/hud/chat/corner.png")
-	chatHeight = 0
-	playerName = "Danjoe"
-    chatWidth = 400
-	chatSpacing = 14
-
-	messages = {}
-	messages[1] = {username = "Danjoe", text = "Hello there you lovely people who keep me company at night just for the fun of it"}
-	messages[2] = {username = "Anyone", text = "Heyyyyyyyy, Red is sus Red is sus Red is sus Red is sus Red is sus Red is sus, he's being super weird right now, so... please be kind to him"}
-	messages[3] = {username = "Lord Squabulus", text = "I love a lot of thisd stuff"}
-	messages[4] = {username = "Boyo", text = "I just wanna have a good time"}
-    messages[5] = {username = "Danjoe", text = "I love sd stuff that has real love to\n\n\n\n\nit"}
-
-    enteredChatText = "Hello there my dude! You've got the skills I'm looking for!"
+    initChat()
 
     -- toolbar
     circleFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 16)

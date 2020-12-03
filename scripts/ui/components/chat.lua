@@ -2,10 +2,65 @@
     This file contains chat functions.
     It'll be replaced by Dan's chat later on
 ]]
---[[
-    This file contains chat functions.
-    It'll be replaced by Dan's chat later on
-]]
+
+isTypingInChat = false -- this global will be used on other screens to ensure that movement isn't happening whilst chatting
+
+function initChat()
+    profilePic = love.graphics.newImage("assets/ui/hud/chat/profile.png")
+	chatCorner = love.graphics.newImage("assets/ui/hud/chat/corner.png")
+	chatHeight = 0
+	playerName = "Danjoe"
+    chatWidth = 400
+	chatSpacing = 14
+
+	messages = {}
+
+
+    enteredChatText = ""
+end
+
+function checkChatMousePressed() 
+	-- if isMouseOver((uiX-48)*(scale),(uiY-32)*(scale), 45*(scale),45*(scale)) then
+	-- 	chatData = {
+	-- 		["PlayerName"] = "Pebsie",
+	-- 		["Channel"] = "Global",
+	-- 		["Message"] = enteredChatText,
+	-- 		["Created"] = os.time(os.date("!*t"))
+	-- 	}
+
+	-- 	c, h = http.request{url = api.url.."/chat", method="POST", source=ltn12.source.string(json:encode(chatData)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(chatData)),["token"]=token}}
+	 
+	-- 	enteredChatText = ""
+	-- end
+end
+
+function checkKeyPressedChat(key) 
+	if key == "return" then
+		if not isTypingInChat then
+			isTypingInChat = true
+		elseif enteredChatText ~= "" then
+			chatData = {
+				["PlayerName"] = me.Name,
+				["Channel"] = "Global",
+				["Message"] = enteredChatText,
+				["Created"] = os.time(os.date("!*t"))
+			}
+	
+			c, h = http.request{url = api.url.."/chat", method="POST", source=ltn12.source.string(json:encode(chatData)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(chatData)),["token"]=token}}
+		 
+			enteredChatText = ""
+			isTypingInChat = false
+		end
+	elseif key == "backspace" and isTypingInChat then
+        enteredChatText = string.sub( enteredChatText, 1, string.len( enteredChatText) - 1)
+	end
+end
+
+function checkChatTextinput(key)
+	if isTypingInChat then
+		enteredChatText = enteredChatText .. key
+	end
+end
 
 function drawChatPanel(x, y) -- the function to recall it all
 	love.graphics.setFont(font)
@@ -15,7 +70,7 @@ function drawChatPanel(x, y) -- the function to recall it all
 	local y = y + posyChat
 	for i = 1, tableLength(messages) do
 		y = y - getFullChatHeight(messages[i].username, messages[i].text)
-		drawChatbox(x-(chatWidth+130), y, messages[i].username, messages[i].text)
+		drawChatbox(x-(chatWidth+130), y, messages[i].username, messages[i].text,  messages[i].player)
 	end
 	drawChatSendButton(x, yChatEnter1)
 	drawEnterChatBox(x-(chatWidth+130), yChatEnter2, enteredChatText)
@@ -40,9 +95,9 @@ function drawChatboxUsernameText(x, y, username)
 	love.graphics.printf(username, x, y-6, chatWidth+(chatCorner:getWidth()*2), "center")
 end
 
-function drawChatbox(x, y, username, text) -- TODO: If statement for different user modes
+function drawChatbox(x, y, username, text, player) -- TODO: If statement for different user modes
 	if username == playerName then
-		drawProfilePic(x+chatWidth+(chatCorner:getWidth()*2)+8, y, 1, "left", me.Name)
+		drawProfilePic(x+chatWidth+(chatCorner:getWidth()*2)+8, y, 1, "left", username, player)
 		drawChatboxBackground(x, y, text)
 		drawChatboxText(x, y, text)
 	else
@@ -84,6 +139,9 @@ function getChatWidth()
 end
 
 function drawEnterChatBox(thisX, thisY, text)
+	if isTypingInChat then
+	 	text = text .. "|"
+	end
 	drawChatboxBackground(thisX, thisY, text)
 	drawChatboxText(thisX, thisY, text)
 end
@@ -93,9 +151,9 @@ function getEnterChatBoxHeight(text)
 end
 
 function drawChatSendButton(x, y)
-	local i = 45
-	local j = 14
-	roundRectangle("fill", x-i-j-26, y-i-j, i, i, 10)
+	i = 45
+	j = 14
+	roundRectangle("fill", x-i-j-26, y-i-j, 45, 45,  10)
 end
 
 function drawChatStencil()
