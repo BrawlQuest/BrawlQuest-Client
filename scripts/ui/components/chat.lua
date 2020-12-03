@@ -19,40 +19,27 @@ function initChat()
 	previousUsername = ""
 end
 
-function checkChatMousePressed() 
-	-- if isMouseOver((uiX-48)*(scale),(uiY-32)*(scale), 45*(scale),45*(scale)) then
-	-- 	chatData = {
-	-- 		["PlayerName"] = "Pebsie",
-	-- 		["Channel"] = "Global",
-	-- 		["Message"] = enteredChatText,
-	-- 		["Created"] = os.time(os.date("!*t"))
-	-- 	}
-
-	-- 	c, h = http.request{url = api.url.."/chat", method="POST", source=ltn12.source.string(json:encode(chatData)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(chatData)),["token"]=token}}
-	 
-	-- 	enteredChatText = ""
-	-- end
-end
-
 function checkKeyPressedChat(key) 
-	if key == "return" then
-		if not isTypingInChat then
-			isTypingInChat = true
-		elseif enteredChatText ~= "" then
+	if isTypingInChat then
+		if key == "backspace" then
+			enteredChatText = string.sub( enteredChatText, 1, string.len( enteredChatText) - 1)
+		elseif key == "return" and enteredChatText ~= "" then
 			chatData = {
 				["PlayerName"] = me.Name,
 				["Channel"] = "Global",
 				["Message"] = enteredChatText,
 				["Created"] = os.time(os.date("!*t"))
 			}
-	
 			c, h = http.request{url = api.url.."/chat", method="POST", source=ltn12.source.string(json:encode(chatData)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(chatData)),["token"]=token}}
-		 
 			enteredChatText = ""
+		elseif key == "escape" then 
 			isTypingInChat = false
+			enteredChatText = ""
 		end
-	elseif key == "backspace" and isTypingInChat then
-        enteredChatText = string.sub( enteredChatText, 1, string.len( enteredChatText) - 1)
+	else
+		if key == "return" then
+			isTypingInChat = true
+		end
 	end
 end
 
@@ -62,74 +49,72 @@ function checkChatTextinput(key)
 	end
 end
 
-function drawChatPanel(x, y) -- the function to recall it all
+function drawChatPanel(thisX, thisY) -- the function to recall it all
 	love.graphics.setFont(chatFont)
-	local yChatEnter1 = y
-	local y = y - getEnterChatBoxHeight(enteredChatText)
-	local yChatEnter2 = y
-	local y = y + posyChat
+	local thisY = thisY - getEnterChatBoxHeight(enteredChatText)
+	local chatEnterY = thisY
+	local thisY = thisY + posyChat
 	
-	for i = 1, tableLength(messages) do
-		y = y - getFullChatHeight(messages[i].username, messages[i].text, i)
-		drawChatbox(x-(chatWidth+130), y, messages[i].username, messages[i].text,  messages[i].player, i)
+	for i = 1, tableLength(messages) do -- the most important thing here
+		thisY = thisY - getFullChatHeight(messages[i].username, messages[i].text, i)
+		drawChatbox(thisX - (chatWidth+130), thisY, messages[i].username, messages[i].text,  messages[i].player, i)
 		previousUsername = messages[i].username
 	end
-	-- drawChatSendButton(x, yChatEnter1)
-	drawEnterChatBox(x-(chatWidth+130), yChatEnter2, enteredChatText)
+
+	drawEnterChatBox(thisX - (chatWidth+130), chatEnterY, enteredChatText)
 end
 
-function drawChatboxBackground(x, y, text)
+function drawChatboxBackground(thisX, thisY, text)
 	love.graphics.setColor(0,0,0,0.7)
 	for i = 0, 1 do 
-		love.graphics.draw(chatCorner, x+(i*chatWidth)+(i*(chatCorner:getWidth()*2)), y, math.rad(0+(i*90)))
-		love.graphics.draw(chatCorner, x+(i*chatWidth)+(i*(chatCorner:getWidth()*2)), y+getChatHeight(text)+(chatCorner:getHeight()*2), math.rad(-90-(i*90)))
-		love.graphics.rectangle("fill", x+chatCorner:getWidth(), y+(i*(getChatHeight(text)+chatCorner:getHeight())), chatWidth, chatCorner:getHeight()) -- background rectangle
+		love.graphics.draw(chatCorner, thisX + (i*chatWidth)+(i*(chatCorner:getWidth()*2)), thisY, math.rad(0+(i*90)))
+		love.graphics.draw(chatCorner, thisX + (i*chatWidth)+(i*(chatCorner:getWidth()*2)), thisY + getChatHeight(text)+(chatCorner:getHeight()*2), math.rad(-90-(i*90)))
+		love.graphics.rectangle("fill", thisX + chatCorner:getWidth(), thisY + (i*(getChatHeight(text)+chatCorner:getHeight())), chatWidth, chatCorner:getHeight()) -- background rectangle
 	end
-	love.graphics.rectangle("fill", x, y+chatCorner:getHeight(), chatWidth+(chatCorner:getWidth()*2), getChatHeight(text)) -- background rectangle
+	love.graphics.rectangle("fill", thisX, thisY + chatCorner:getHeight(), chatWidth+(chatCorner:getWidth()*2), getChatHeight(text)) -- background rectangle
 	love.graphics.setColor(1,1,1,1)
 end
 
-function drawChatboxText(x, y, text)
-	love.graphics.printf(text, x+chatCorner:getHeight(), y+chatCorner:getHeight(), chatWidth)
+function drawChatboxText(thisX, thisY, text)
+	love.graphics.printf(text, thisX + chatCorner:getHeight(), thisY + chatCorner:getHeight(), chatWidth)
 end
 
-function drawChatboxUsernameText(x, y, username)
-	love.graphics.printf(username, x, y-6, chatWidth+(chatCorner:getWidth()*2), "center")
+function drawChatboxUsernameText(thisX, thisY, username)
+	love.graphics.printf(username, thisX, thisY - 6, chatWidth+(chatCorner:getWidth()*2), "center")
 end
 
-function drawChatbox(x, y, username, text, player, i) 
+function drawChatbox(thisX, y, username, text, player, i) 
 	if i == 1 then
 		if username == me.Name then
-			drawProfilePic(x+chatWidth+(chatCorner:getWidth()*2)+8, y, 1, "left", username, player)
-			drawChatboxBackground(x, y, text)
-			drawChatboxText(x, y, text)
+			drawProfilePic(thisX+chatWidth+(chatCorner:getWidth()*2)+8, y, 1, "left", username, player)
+			drawChatboxBackground(thisX, y, text)
+			drawChatboxText(thisX, y, text)
 		else
-			local i = x+profilePic:getWidth()+8
+			local i = thisX + profilePic:getWidth()+8
 			local j = y+chatFont:getHeight()
-			drawProfilePic(x, y, 1, "right")
+			drawProfilePic(thisX, y, 1, "right")
 			drawChatboxBackground(i, j, text)
 			drawChatboxText(i, j, text)
 			drawChatboxUsernameText(i, y, username)
 		end
 
-	elseif	username == previousUsername then
+	elseif username == previousUsername then
 		if username == me.Name then
-			-- drawProfilePic(x+chatWidth+(chatCorner:getWidth()*2)+8, y, 1, "left", username, player)
-			drawChatboxBackground(x, y, text)
-			drawChatboxText(x, y, text)
+			drawChatboxBackground(thisX, y, text)
+			drawChatboxText(thisX, y, text)
 		else
-			local i = x+profilePic:getWidth()+8
+			local i = thisX + profilePic:getWidth()+8
 			drawChatboxBackground(i, y, text)
 			drawChatboxText(i, y, text)
 		end
 	elseif username == me.Name then
-		drawProfilePic(x+chatWidth+(chatCorner:getWidth()*2)+8, y, 1, "left", username, player)
-		drawChatboxBackground(x, y, text)
-		drawChatboxText(x, y, text)
+		drawProfilePic(thisX + chatWidth+(chatCorner:getWidth()*2)+8, y, 1, "left", username, player)
+		drawChatboxBackground(thisX, y, text)
+		drawChatboxText(thisX, y, text)
 	else
-		local i = x+profilePic:getWidth()+8
+		local i = thisX+profilePic:getWidth()+8
 		local j = y+chatFont:getHeight()
-		drawProfilePic(x, y, 1, "right")
+		drawProfilePic(thisX, y, 1, "right")
 		drawChatboxBackground(i, j, text)
 		drawChatboxText(i, j, text)
 		drawChatboxUsernameText(i, y, username)
@@ -188,7 +173,7 @@ function drawEnterChatBox(thisX, thisY, text)
 	local enterChatWidth = chatWidth + 90
 	
 	if isTypingInChat then
-		if chatCursor.on then text = text .. "|" end
+		if chatCursor.on then text = text .. "£" end
 		love.graphics.setColor(1,1,1,1)
 	else
 		love.graphics.setColor(1,1,1,1)
@@ -210,7 +195,7 @@ function drawEnterChatBox(thisX, thisY, text)
 	love.graphics.printf(text, thisX+chatCorner:getHeight(), thisY+chatCorner:getHeight(), enterChatWidth)
 	love.graphics.setColor(1,1,1,1)
 	if not isTypingInChat then
-		love.graphics.printf("press enter to chat", thisX+chatCorner:getHeight(), thisY+chatCorner:getHeight(), enterChatWidth)
+		love.graphics.printf("Press Enter to Chat", thisX+chatCorner:getHeight(), thisY+chatCorner:getHeight(), enterChatWidth)
 	end
 end
 

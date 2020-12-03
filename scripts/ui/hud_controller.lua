@@ -24,7 +24,7 @@ function initHUD()
     headerBigFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 32) -- TODO: get a license for this font
     font = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 18)
    
-    chatFont = love.graphics.newFont("assets/ui/fonts/square-deal-old.ttf", 30)
+    chatFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 24)
 
     -- scrolling
     posyInventory, velyInventory, posyChat, velyChat = 0, 0, 0, 0

@@ -175,8 +175,8 @@ function love.update(dt)
         date_table = os.date("*t")
         ms = string.match(tostring(os.clock()), "%d%.(%d+)")
         hour, minute, second = date_table.hour, date_table.min, date_table.sec
-        timeOfDay = cerp(0, 1, ((math.abs(hour) * 60) + math.abs(minute)) / 720)
-        Luven.setAmbientLightColor({timeOfDay, timeOfDay, timeOfDay})
+        timeOfDay = cerp(0.1, 1, ((math.abs(hour) * 60) + math.abs(minute)) / 720)
+        Luven.setAmbientLightColor({timeOfDay, timeOfDay, timeOfDay+0.1})
 
         updateOtherPlayers(dt)
 
