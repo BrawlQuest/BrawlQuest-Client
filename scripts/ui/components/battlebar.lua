@@ -1,10 +1,12 @@
 function drawBattlebar(thisX, thisY)
     -- local thisX, thisY =  uiX/2, uiY
-    if enemiesInAggro == 0 then
-        battlebarPlayer(thisX-(battlebarBgnd:getWidth()/2), thisY)
-    elseif enemiesInAggro > 0 then
-        battlebarPlayer(thisX-(battlebarBgnd:getWidth()+5), thisY)
-        battlebarEnemy(thisX+5, thisY, "Skellington", 39, 19)
+    if enemiesInAggro ~= 0 then
+        if enemiesInAggro == 0 then
+            battlebarPlayer(thisX-(battlebarBgnd:getWidth()/2), thisY)
+        elseif enemiesInAggro > 0 then
+            battlebarPlayer(thisX-(battlebarBgnd:getWidth()+5), thisY)
+            battlebarEnemy(thisX+5, thisY, "Skellington", 39, 19)
+        end
     end
 end
 

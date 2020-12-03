@@ -210,7 +210,7 @@ end
 
 function updateInventory(response)
     newInventoryItems = {}
-    print(json:encode(inventoryAlpha))
+    -- print(json:encode(inventoryAlpha))
     if json:encode(inventoryAlpha) ~= "[]" then
         for i, v in ipairs(response['Inventory']) do
             local newItem = true

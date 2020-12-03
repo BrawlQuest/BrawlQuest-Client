@@ -63,7 +63,7 @@ function checkClickLoginPhaseCreation(x,y)
             },
         }
 
-        print(h)
+        print("Login Status = " .. h)
         if h == 200 then
             login()
         end
@@ -83,7 +83,7 @@ function checkLoginKeyPressedPhaseCreation(key)
             },
         }
 
-        print(h)
+        print("Login Status = " .. h)
         if h == 200 then
             login()
         end

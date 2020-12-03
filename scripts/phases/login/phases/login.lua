@@ -135,7 +135,7 @@ function login()
             if type(characters[1]) == "string" then
                 characters = json:decode(characters[1])
             else
-                print(json:encode(characters))
+                print("Characters" .. json:encode(characters))
                 characters = characters[1]
             end
             loginPhase = "characters"

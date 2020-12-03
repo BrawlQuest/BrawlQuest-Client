@@ -9,7 +9,8 @@ UITextFields = {
 
 function initHUD()
     --scaling
-    scale, uiX, uiY = 1
+    uiX, uiY = 1
+    scale = 1
 
     -- fonts
     textFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 24)
@@ -21,7 +22,7 @@ function initHUD()
     headerFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 18) -- TODO: get a license for this font
     headerMediumFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 28)
     headerBigFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 32) -- TODO: get a license for this font
-    font = headerFont
+    font = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 20)
 
     -- scrolling
     posyInventory, velyInventory, posyChat, velyChat = 0, 0, 0, 0
@@ -37,7 +38,7 @@ function initHUD()
 	chatCorner = love.graphics.newImage("assets/ui/hud/chat/corner.png")
 	chatHeight = 0
 	playerName = "Danjoe"
-	chatWidth = 200
+    chatWidth = 400
 	chatSpacing = 14
 
 	messages = {}
@@ -119,7 +120,7 @@ function initHUD()
     battlebarItemBg = love.graphics.newImage("assets/ui/hud/battlebar/battlebarItem.png")
 
     -- Quest Pannel
-    questWidth = 350
+    questWidth = 600
     questHeight = 0
     questSmallBoxTrue = love.graphics.newImage("assets/ui/hud/quests/xTrue.png")
     questSmallBoxFalse = love.graphics.newImage("assets/ui/hud/quests/xFalse.png")
@@ -164,19 +165,19 @@ function updateHUD( dt )
 end
 
 function drawHUD()
-    -- love.graphics.push() -- chat and quests scaling TODO: Quests
-    --     local i = 0.5
-    --     love.graphics.scale(scale*i)
-    --     drawChatPanel(uiX/i, uiY/i)
-    --     drawQuestPannel(uiX/i, 0)
-    -- love.graphics.pop()
+    love.graphics.push() -- chat and quests scaling TODO: Quests
+        local i = 0.5
+        love.graphics.scale(scale*i)
+        drawChatPanel(uiX/i, uiY/i)
+        drawQuestPannel(uiX/i, 0)
+    love.graphics.pop()
 
-    -- love.graphics.push() -- chat and quests scaling TODO: Quests
-    --     local i = 0.75
-    --     love.graphics.scale(scale*i)
-    --     drawBattlebar((uiX/2)/i, uiY/i)
-    --     drawQuestPopUp((uiX/2)/i, (uiY/2)/i)
-    -- love.graphics.pop()
+    love.graphics.push() -- chat and quests scaling TODO: Quests
+        local i = 0.75
+        love.graphics.scale(scale*i)
+        drawBattlebar((uiX/2)/i, uiY/i)
+        drawQuestPopUp((uiX/2)/i, (uiY/2)/i)
+    love.graphics.pop()
 
     love.graphics.push()
         local i = 1

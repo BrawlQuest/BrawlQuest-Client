@@ -22,7 +22,7 @@ function drawChatPanel(x, y) -- the function to recall it all
 end
 
 function drawChatboxBackground(x, y, text)
-	love.graphics.setColor(0,0,0,0.5)
+	love.graphics.setColor(0,0,0,0.7)
 	for i = 0, 1 do 
 		love.graphics.draw(chatCorner, x+(i*chatWidth)+(i*(chatCorner:getWidth()*2)), y, math.rad(0+(i*90)))
 		love.graphics.draw(chatCorner, x+(i*chatWidth)+(i*(chatCorner:getWidth()*2)), y+getChatHeight(text)+(chatCorner:getHeight()*2), math.rad(-90-(i*90)))
