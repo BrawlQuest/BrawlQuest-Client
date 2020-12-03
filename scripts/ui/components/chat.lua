@@ -63,7 +63,7 @@ function checkChatTextinput(key)
 end
 
 function drawChatPanel(x, y) -- the function to recall it all
-	love.graphics.setFont(font)
+	love.graphics.setFont(chatFont)
 	local yChatEnter1 = y
 	local y = y - getEnterChatBoxHeight(enteredChatText)
 	local yChatEnter2 = y
@@ -105,7 +105,7 @@ function drawChatbox(x, y, username, text, player, i)
 			drawChatboxText(x, y, text)
 		else
 			local i = x+profilePic:getWidth()+8
-			local j = y+font:getHeight()
+			local j = y+chatFont:getHeight()
 			drawProfilePic(x, y, 1, "right")
 			drawChatboxBackground(i, j, text)
 			drawChatboxText(i, j, text)
@@ -128,7 +128,7 @@ function drawChatbox(x, y, username, text, player, i)
 		drawChatboxText(x, y, text)
 	else
 		local i = x+profilePic:getWidth()+8
-		local j = y+font:getHeight()
+		local j = y+chatFont:getHeight()
 		drawProfilePic(x, y, 1, "right")
 		drawChatboxBackground(i, j, text)
 		drawChatboxText(i, j, text)
@@ -137,11 +137,11 @@ function drawChatbox(x, y, username, text, player, i)
 end
 
 function getChatHeight(text) -- gets the chat height for recalling stuff
-	local width, lines = font:getWrap( text, chatWidth )
+	local width, lines = chatFont:getWrap( text, chatWidth )
 	if #lines >= 1 then
-	 	return ((#lines)*(font:getHeight()))+2
+	 	return ((#lines)*(chatFont:getHeight()))+2
 	else
-		return font:getHeight()+2
+		return chatFont:getHeight()+2
 	end
 end
 
@@ -154,11 +154,11 @@ function getFullChatHeight(username, text, i) -- gets the chat height for recall
 	
 			return (getChatHeight(text)+(chatCorner:getHeight()*2))+chatSpacing
 		else
-			if getChatHeight(text)+(chatCorner:getHeight()*2)+font:getHeight() < profilePic:getHeight() then
+			if getChatHeight(text)+(chatCorner:getHeight()*2)+chatFont:getHeight() < profilePic:getHeight() then
 				return (profilePic:getHeight())+chatSpacing
 			end
 			
-			return (getChatHeight(text)+(chatCorner:getHeight()*2)+font:getHeight())+chatSpacing	
+			return (getChatHeight(text)+(chatCorner:getHeight()*2)+chatFont:getHeight())+chatSpacing	
 		end
 	elseif	username == previousUsername then
 		return (getChatHeight(text)+(chatCorner:getHeight()*2))--+chatSpacing
@@ -170,11 +170,11 @@ function getFullChatHeight(username, text, i) -- gets the chat height for recall
 		return (getChatHeight(text)+(chatCorner:getHeight()*2))+chatSpacing
 		
 	else
-		if getChatHeight(text)+(chatCorner:getHeight()*2)+font:getHeight() < profilePic:getHeight() then
+		if getChatHeight(text)+(chatCorner:getHeight()*2)+chatFont:getHeight() < profilePic:getHeight() then
 			return (profilePic:getHeight())+chatSpacing
         end
         
-        return (getChatHeight(text)+(chatCorner:getHeight()*2)+font:getHeight())+chatSpacing
+        return (getChatHeight(text)+(chatCorner:getHeight()*2)+chatFont:getHeight())+chatSpacing
 		
 	end
 	previousUsername = username
