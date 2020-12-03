@@ -9,14 +9,14 @@ function initChat()
     profilePic = love.graphics.newImage("assets/ui/hud/chat/profile.png")
 	chatCorner = love.graphics.newImage("assets/ui/hud/chat/corner.png")
 	chatHeight = 0
-	playerName = "Danjoe"
     chatWidth = 400
 	chatSpacing = 14
 
 	messages = {}
 
 
-    enteredChatText = ""
+	enteredChatText = ""
+	previousUsername = ""
 end
 
 function checkChatMousePressed() 
@@ -68,11 +68,13 @@ function drawChatPanel(x, y) -- the function to recall it all
 	local y = y - getEnterChatBoxHeight(enteredChatText)
 	local yChatEnter2 = y
 	local y = y + posyChat
+	
 	for i = 1, tableLength(messages) do
-		y = y - getFullChatHeight(messages[i].username, messages[i].text)
-		drawChatbox(x-(chatWidth+130), y, messages[i].username, messages[i].text,  messages[i].player)
+		y = y - getFullChatHeight(messages[i].username, messages[i].text, i)
+		drawChatbox(x-(chatWidth+130), y, messages[i].username, messages[i].text,  messages[i].player, i)
+		previousUsername = messages[i].username
 	end
-	drawChatSendButton(x, yChatEnter1)
+	-- drawChatSendButton(x, yChatEnter1)
 	drawEnterChatBox(x-(chatWidth+130), yChatEnter2, enteredChatText)
 end
 
@@ -95,13 +97,36 @@ function drawChatboxUsernameText(x, y, username)
 	love.graphics.printf(username, x, y-6, chatWidth+(chatCorner:getWidth()*2), "center")
 end
 
-function drawChatbox(x, y, username, text, player) -- TODO: If statement for different user modes
-	if username == playerName then
+function drawChatbox(x, y, username, text, player, i) 
+	if i == 1 then
+		if username == me.Name then
+			drawProfilePic(x+chatWidth+(chatCorner:getWidth()*2)+8, y, 1, "left", username, player)
+			drawChatboxBackground(x, y, text)
+			drawChatboxText(x, y, text)
+		else
+			local i = x+profilePic:getWidth()+8
+			local j = y+font:getHeight()
+			drawProfilePic(x, y, 1, "right")
+			drawChatboxBackground(i, j, text)
+			drawChatboxText(i, j, text)
+			drawChatboxUsernameText(i, y, username)
+		end
+
+	elseif	username == previousUsername then
+		if username == me.Name then
+			-- drawProfilePic(x+chatWidth+(chatCorner:getWidth()*2)+8, y, 1, "left", username, player)
+			drawChatboxBackground(x, y, text)
+			drawChatboxText(x, y, text)
+		else
+			local i = x+profilePic:getWidth()+8
+			drawChatboxBackground(i, y, text)
+			drawChatboxText(i, y, text)
+		end
+	elseif username == me.Name then
 		drawProfilePic(x+chatWidth+(chatCorner:getWidth()*2)+8, y, 1, "left", username, player)
 		drawChatboxBackground(x, y, text)
 		drawChatboxText(x, y, text)
 	else
-		-- more stuff needed
 		local i = x+profilePic:getWidth()+8
 		local j = y+font:getHeight()
 		drawProfilePic(x, y, 1, "right")
@@ -113,11 +138,31 @@ end
 
 function getChatHeight(text) -- gets the chat height for recalling stuff
 	local width, lines = font:getWrap( text, chatWidth )
- 	return ((#lines)*(font:getHeight()))+2
+	if #lines >= 1 then
+	 	return ((#lines)*(font:getHeight()))+2
+	else
+		return font:getHeight()+2
+	end
 end
 
-function getFullChatHeight(username, text) -- gets the chat height for recalling stuff
-	if username == playerName then
+function getFullChatHeight(username, text, i) -- gets the chat height for recalling stuff
+	if i == 1 then
+		if username == me.Name then 
+			if getChatHeight(text)+(chatCorner:getHeight()*2) < profilePic:getHeight() then
+				return (profilePic:getHeight())+chatSpacing
+			end
+	
+			return (getChatHeight(text)+(chatCorner:getHeight()*2))+chatSpacing
+		else
+			if getChatHeight(text)+(chatCorner:getHeight()*2)+font:getHeight() < profilePic:getHeight() then
+				return (profilePic:getHeight())+chatSpacing
+			end
+			
+			return (getChatHeight(text)+(chatCorner:getHeight()*2)+font:getHeight())+chatSpacing	
+		end
+	elseif	username == previousUsername then
+		return (getChatHeight(text)+(chatCorner:getHeight()*2))--+chatSpacing
+	elseif username == me.Name then
 		if getChatHeight(text)+(chatCorner:getHeight()*2) < profilePic:getHeight() then
 		    return (profilePic:getHeight())+chatSpacing
         end
@@ -130,8 +175,9 @@ function getFullChatHeight(username, text) -- gets the chat height for recalling
         end
         
         return (getChatHeight(text)+(chatCorner:getHeight()*2)+font:getHeight())+chatSpacing
-    
+		
 	end
+	previousUsername = username
 end
 
 function getChatWidth()
@@ -140,21 +186,36 @@ end
 
 function drawEnterChatBox(thisX, thisY, text)
 	if isTypingInChat then
-	 	text = text .. "|"
+		text = text .. "|"
+		love.graphics.setColor(1,1,1,1)
+	else
+		love.graphics.setColor(0,0,0,0.7)
 	end
-	drawChatboxBackground(thisX, thisY, text)
-	drawChatboxText(thisX, thisY, text)
+	
+	local enterChatWidth = chatWidth + 90
+
+	-- love.graphics.setColor(0,0,0,0.7)
+	for i = 0, 1 do 
+		love.graphics.draw(chatCorner, thisX+(i*enterChatWidth)+(i*(chatCorner:getWidth()*2)), thisY, math.rad(0+(i*90)))
+		love.graphics.draw(chatCorner, thisX+(i*enterChatWidth)+(i*(chatCorner:getWidth()*2)), thisY+getChatHeight(text)+(chatCorner:getHeight()*2), math.rad(-90-(i*90)))
+		love.graphics.rectangle("fill", thisX+chatCorner:getWidth(), thisY+(i*(getChatHeight(text)+chatCorner:getHeight())), enterChatWidth, chatCorner:getHeight()) -- background rectangle
+	end
+	love.graphics.rectangle("fill", thisX, thisY+chatCorner:getHeight(), enterChatWidth+(chatCorner:getWidth()*2), getChatHeight(text)) -- background rectangle
+	
+	love.graphics.setColor(0,0,0,1)
+	love.graphics.printf(text, thisX+chatCorner:getHeight(), thisY+chatCorner:getHeight(), enterChatWidth)
+	love.graphics.setColor(1,1,1,1)
 end
 
 function getEnterChatBoxHeight(text)
 	return (getChatHeight(text)+(chatCorner:getHeight()*2))+chatSpacing
 end
 
-function drawChatSendButton(x, y)
-	i = 45
-	j = 14
-	roundRectangle("fill", x-i-j-26, y-i-j, 45, 45,  10)
-end
+-- function drawChatSendButton(x, y)
+-- 	i = 45
+-- 	j = 14
+-- 	roundRectangle("fill", x-i-j-26, y-i-j, 45, 45,  10)
+-- end
 
 function drawChatStencil()
 	love.graphics.rectangle("fill", 70, toolbary+40, 180, 483)

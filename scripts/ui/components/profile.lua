@@ -73,6 +73,5 @@ function drawProfilePic(thisX, thisY, thisScale, thisRotation, tplayer)
 		if tplayer.HeadArmour ~= null then
 			love.graphics.draw(itemImg[tplayer.HeadArmour.ImgPath], profileImgStensil, thisX, thisY/i, 0, r, 1)
 		end
-	
 	love.graphics.pop()
 end
