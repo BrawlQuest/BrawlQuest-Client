@@ -93,7 +93,6 @@ function love.load()
     critHitSfx = love.audio.newSource("assets/sfx/pit_trap_damage.wav", "static")
     
     love.graphics.setFont(textFont)
-
 end
 
 function love.draw()
@@ -171,20 +170,11 @@ function love.update(dt)
             Luven.camera:setPosition(player.dx + 16, player.dy + 16)
         end
 
-        local date_table = os.date("*t")
-        local ms = string.match(tostring(os.clock()), "%d%.(%d+)")
-        local hour, minute, second = date_table.hour, date_table.min, date_table.sec
-        -- date_table.min/1440
-        timeOfDay = math.abs(hour-24)/12
-        Luven.setAmbientLightColor({1 - timeOfDay, 1 - timeOfDay, 1 - (timeOfDay*0.75)})
-        -- if timeOfDay < 0.8 then
-        --     Luven.setAmbientLightColor({1 - timeOfDay, 1 - timeOfDay, 1 - timeOfDay})
-        -- else
-        --     Luven.setAmbientLightColor({timeOfDay - 1, timeOfDay - 1, timeOfDay - 1})
-        --     if timeOfDay > 2 then
-        --         timeOfDay = 0
-        --     end
-        -- end
+        date_table = os.date("*t")
+        ms = string.match(tostring(os.clock()), "%d%.(%d+)")
+        hour, minute, second = date_table.hour, date_table.min, date_table.sec
+        timeOfDay = cerp(0, 1, ((math.abs(hour) * 60) + math.abs(minute)) / 720)
+        Luven.setAmbientLightColor({timeOfDay, timeOfDay, timeOfDay})
 
         updateOtherPlayers(dt)
 
@@ -284,6 +274,7 @@ function love.keypressed(key)
     end
 
     if key == "escape" then
+        print("Time of Day = " .. cerp(0, 1, ((math.abs(hour) * 60) + math.abs(minute)) / 720))
         love.event.quit()
     end
 end
