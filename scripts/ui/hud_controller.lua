@@ -35,6 +35,12 @@ function initHUD()
     
     -- chatbox
     initChat()
+    chatCursor = {
+        on = true,
+        speed = 40,
+        i = 0,
+    }
+
 
     -- toolbar
     circleFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 16)
@@ -148,6 +154,18 @@ function updateHUD( dt )
 
     updateTooltip(dt)
     updateFloats(dt)
+
+    if chatCursor.i < chatCursor.speed then
+        chatCursor.i = chatCursor.i + 1
+    else
+        if chatCursor.on then
+            chatCursor.on = false
+        else
+            chatCursor.on = true
+        end
+        chatCursor.i = 0
+    end
+
 end
 
 function drawHUD()

@@ -185,14 +185,18 @@ function getChatWidth()
 end
 
 function drawEnterChatBox(thisX, thisY, text)
+	local enterChatWidth = chatWidth + 90
+	
 	if isTypingInChat then
-		text = text .. "|"
+		if chatCursor.on then text = text .. "|" end
 		love.graphics.setColor(1,1,1,1)
 	else
+		love.graphics.setColor(1,1,1,1)
+		
 		love.graphics.setColor(0,0,0,0.7)
 	end
 	
-	local enterChatWidth = chatWidth + 90
+	
 
 	-- love.graphics.setColor(0,0,0,0.7)
 	for i = 0, 1 do 
@@ -205,6 +209,9 @@ function drawEnterChatBox(thisX, thisY, text)
 	love.graphics.setColor(0,0,0,1)
 	love.graphics.printf(text, thisX+chatCorner:getHeight(), thisY+chatCorner:getHeight(), enterChatWidth)
 	love.graphics.setColor(1,1,1,1)
+	if not isTypingInChat then
+		love.graphics.printf("press enter to chat", thisX+chatCorner:getHeight(), thisY+chatCorner:getHeight(), enterChatWidth)
+	end
 end
 
 function getEnterChatBoxHeight(text)

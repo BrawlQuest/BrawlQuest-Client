@@ -99,6 +99,7 @@ function checkEditWorldKeyPressed(key)
         textfields[editingField] = string.sub(textfields[editingField], 1, string.len(textfields[editingField]) - 1)
     elseif key == "tab" or key == "return" then
         editingField = editingField + 1
+    elseif key == "escape" then isWorldEditWindowOpen = false
     end
 end
 

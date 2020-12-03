@@ -257,13 +257,13 @@ function love.keypressed(key)
                 if key == keybinds.SHIELD then
                     shieldUpSfx:play()
                 end
+                if key == "escape" then
+                    print("Time of Day = " .. timeOfDay)
+                    love.event.quit()
+                end
             end
             if key == "'" then
-                if isWorldEditWindowOpen then
-                    isWorldEditWindowOpen = false
-                else
-                    isWorldEditWindowOpen = true
-                end
+                if isWorldEditWindowOpen then isWorldEditWindowOpen = false else isWorldEditWindowOpen = true end
             elseif key == "lctrl" then
                 -- createWorld()
                 print("Sending...")
@@ -289,11 +289,6 @@ function love.keypressed(key)
            
         end
         checkKeyPressedChat(key)
-    end
-
-    if key == "escape" then
-        print("Time of Day = " .. timeOfDay)
-        love.event.quit()
     end
 end
 

@@ -76,33 +76,29 @@ function checkLoginKeyPressedPhaseLogin(key)
     end
 
     if key == "home" then 
-        textfields[1] = "Pebsie"
-        textfields[2] = "password"
-        textfields[3] = "********"
-        editingField = 2
-        login()
-        characterSelected = 1
-        if characters[characterSelected] ~= null then
-            transitionToPhaseGame() 
-        else
-            newCharacterPosition = characterSelected
-            loginPhase = "creation"
-        end
+        quickLogin("Pebsie", 1)
     elseif key == "end" then
-        textfields[1] = "Danjoe"
-        textfields[2] = "password"
-        textfields[3] = "********"
-        editingField = 2
-        login()
-        characterSelected = 1
-        if characters[characterSelected] ~= null then
-            transitionToPhaseGame() 
-        else
-            newCharacterPosition = characterSelected
-            loginPhase = "creation"
-        end
+        quickLogin("Danjoe", 1)
+    elseif key == "pageup" then
+        quickLogin("Danjoe", 2)
+    elseif key == "pagedown" then
+        quickLogin("Danjoe", 3)
     end
+end
     
+function quickLogin(name, character)
+    textfields[1] = name
+    textfields[2] = "password"
+    textfields[3] = "********"
+    editingField = 2
+    login()
+    characterSelected = character
+    if characters[characterSelected] ~= null then
+        transitionToPhaseGame() 
+    else
+        newCharacterPosition = characterSelected
+        loginPhase = "creation"
+    end
 end
 
 function checkLoginTextinputPhaseLogin(key)
