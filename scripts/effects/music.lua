@@ -31,7 +31,7 @@ function loadMusic()
 
     if musicVolume ~= 0 then   
         currentPlaying = titleMusic:play()
-        titleMusic:setVolume(musicVolume)
+        titleMusic:setVolume(0.5 * musicVolume)
     end
 
     
