@@ -31,7 +31,7 @@ function initEditWorld()
 end
 
 function drawEditWorldWindow()
-    loginImageX, loginImageY = math.floor(love.graphics.getWidth() / 2 - (loginEntryImage:getWidth() / 2)),
+    local loginImageX, loginImageY = math.floor(love.graphics.getWidth() / 2 - (loginEntryImage:getWidth() / 2)),
     math.floor(love.graphics.getHeight() / 2 - (loginEntryImage:getHeight() / 2))
     love.graphics.draw(blankPanelImage, loginImageX, loginImageY)
 

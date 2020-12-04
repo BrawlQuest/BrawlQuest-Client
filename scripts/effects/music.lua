@@ -6,9 +6,13 @@
 currentTrack = "PuerLavari"
 nextTrack = "Titans"
 isSwitching = false
-playMusic = false
+playMusic = true
+
 
 function loadMusic() 
+
+    previousMusicVolume = musicVolume
+    
     music = {
         PuerLavari = love.audio.newSource("assets/music/album1/PuerLavari.mp3", "stream"),
         Mining = love.audio.newSource("assets/music/album1/Mining.mp3", "stream"),
@@ -18,30 +22,40 @@ function loadMusic()
         Skirmish2 = love.audio.newSource("assets/music/album1/Skirmish2.mp3", "stream"),
     }
 
-    worldMusic = {
-        "PuerLavari",
-        "Mining",
-        "Sax",
-    }
+    worldMusic = {"PuerLavari", "Mining", "Sax",}
 
     titleMusic = love.audio.newSource("assets/music/album1/Longing.mp3", "stream")
 
-    battleMusic = {
-        "Titans",
-        "Skirmish",
-        "Skirmish2"
-    }
+    battleMusic = {"Titans", "Skirmish", "Skirmish2"}
     
+
     if playMusic then   
-    currentPlaying = titleMusic:play()
+        currentPlaying = titleMusic:play()
+        -- titleMusic:setVolume(musicVolume)
     end
 
-    if musicVolume == 0 then
-        playMusic = false
-    end
+    
+
+    
 end
 
 function updateMusic(dt)
+
+    -- print(musicVolume)
+
+    if volumeSlider:getValue() ~= previousMusicVolume then
+        musicVolume = volumeSlider:getValue()
+        music[currentTrack]:setVolume(musicVolume)
+        previousMusicVolume = musicVolume
+        print("Music Volume: " .. musicVolume)
+        writeSettings()
+        if musicVolume == 0 then
+            playMusic = false
+        else
+            playMusic = true
+        end
+    end
+
     if playMusic then
         if enemiesInAggro == 0 and not arrayContains(worldMusic, currentTrack) then
             switchMusic(worldMusic[love.math.random(1,#worldMusic)])
@@ -56,7 +70,7 @@ function updateMusic(dt)
                 music[currentTrack]:stop()
                 isSwitching = false
                 currentTrack = nextTrack
-                music[currentTrack]:setVolume(1)
+                music[currentTrack]:setVolume(musicVolume)
                 --   music[currentTrack]:set
                 currentPlaying = music[currentTrack]:play()
             end

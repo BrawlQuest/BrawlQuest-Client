@@ -156,6 +156,8 @@ function updateHUD( dt )
 
     updateTooltip(dt)
     updateFloats(dt)
+    updateSliders()
+    updateSFX()
 
     if chatCursor.i < chatCursor.speed then
         chatCursor.i = chatCursor.i + 1
@@ -167,7 +169,6 @@ function updateHUD( dt )
         end
         chatCursor.i = 0
     end
-
 end
 
 function drawHUD()
@@ -183,6 +184,7 @@ function drawHUD()
         love.graphics.scale(scale*i)
         drawBattlebar((uiX/2)/i, uiY/i)
         drawQuestPopUp((uiX/2)/i, (uiY/2)/i)
+        
     love.graphics.pop()
 
     love.graphics.push()
@@ -192,6 +194,8 @@ function drawHUD()
         drawProfile(uiX/i, uiY/i)
         drawTooltip()
     love.graphics.pop()
+
+    drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
 end 
 
 function love.wheelmoved( dx, dy )

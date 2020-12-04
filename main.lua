@@ -5,6 +5,7 @@ require "scripts.player.character"
 require "scripts.effects.bones"
 require "scripts.effects.lighting"
 require "scripts.effects.music"
+require "scripts.effects.sfx"
 require "scripts.effects.loot"
 require "scripts.ui.hud_controller"
 require "scripts.ui.components.chat"
@@ -17,6 +18,7 @@ require "scripts.ui.components.questpopup"
 require "scripts.ui.components.perks"
 require "scripts.libraries.api"
 require "scripts.libraries.utils"
+require 'scripts.libraries.simple-slider'
 require "scripts.phases.login.login"
 require "scripts.player.other_players"
 require "scripts.enemies"
@@ -71,27 +73,13 @@ sendUpdate = false
 function love.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
     initHardData()
-    initSettings()
-
-    loadMusic()
     initLogin()
     initHUD()
-    initEditWorld()
-    birds = love.audio.newSource("assets/sfx/ambient/forest/jungle.ogg", "stream")
-    birds:setLooping(true)
-    love.audio.play(birds)
-
-    stepSfx = love.audio.newSource("assets/sfx/step/grass.mp3", "static")
-    xpSfx = love.audio.newSource("assets/sfx/xp.wav", "static")
-    xpSfx:setVolume(0.4)
-
-    awakeSfx = love.audio.newSource("assets/sfx/player/awake.wav", "static")
-    awakeSfx:setVolume(0.4)
-
-    playerHitSfx = love.audio.newSource("assets/sfx/hit.wav", "static")
-    enemyHitSfx = love.audio.newSource("assets/sfx/impact_b.wav", "static")
-    critHitSfx = love.audio.newSource("assets/sfx/pit_trap_damage.wav", "static")
     
+    initSettings()
+    loadMusic()
+    initEditWorld()
+    initSFX()
     love.graphics.setFont(textFont)
 end
 
@@ -122,6 +110,7 @@ function love.draw()
             drawEditWorldWindow()
         end
         Luven.camera:draw()
+        -- print(brightnessSlider:getValue())
     end
 
 
@@ -159,7 +148,6 @@ function love.update(dt)
         
         updateHUD(dt)
 
-     
         updateEnemies(dt)
 
         updateCharacter(dt)
@@ -239,6 +227,10 @@ function love.keypressed(key)
         if not isTypingInChat then
             if isWorldEditWindowOpen then
                 checkEditWorldKeyPressed(key)
+            elseif isSettingsWindowOpen then
+                if key == "escape" then
+                    isSettingsWindowOpen = false
+                end
             else
                 if key == "m" then
                     beginMounting()
@@ -257,9 +249,8 @@ function love.keypressed(key)
                 if key == keybinds.SHIELD then
                     shieldUpSfx:play()
                 end
-                if key == "escape" then
-                    print("Time of Day = " .. timeOfDay)
-                    love.event.quit()
+                if key == "escape" then                 
+                    isSettingsWindowOpen = true
                 end
             end
             if key == "'" then
@@ -286,14 +277,17 @@ function love.keypressed(key)
                 createWorld()
             elseif key == "o" then
             end
-           
+        end
+        if key == "q" then
+            print("Time of Day = " .. timeOfDay)
+            love.event.quit()
         end
         checkKeyPressedChat(key)
     end
 end
 
 function love.keyreleased(key)
-    if key == keybinds.SHIELD then
+    if key == keybinds.SHIELD and not isTypingInChat then
         shieldDownSfx:play()
     end
 end
@@ -336,8 +330,9 @@ function love.mousepressed(x, y, button)
         pendingWorldChanges = {}
     elseif phase == "game" then
        checkInventoryMousePressed()
-       checkChatMousePressed()
+    --    checkChatMousePressed()
        checkPerksMousePressed(button)
+       checkSettingsMousePressed(button)
     end
 end
 
@@ -360,6 +355,8 @@ function love.resize(width, height)
         initLogin()
     else
         createWorld()
+        loadSliders()
     end
-
+    uiX = love.graphics.getWidth()/scale -- scaling options
+    uiY = love.graphics.getHeight()/scale
 end
