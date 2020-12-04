@@ -14,6 +14,12 @@ function initSFX()
     playerHitSfx = love.audio.newSource("assets/sfx/hit.wav", "static")
     enemyHitSfx = love.audio.newSource("assets/sfx/impact_b.wav", "static")
     critHitSfx = love.audio.newSource("assets/sfx/pit_trap_damage.wav", "static")
+
+    lootSfx = love.audio.newSource("assets/sfx/loot.mp3", "static")
+    shieldUpSfx = love.audio.newSource("assets/sfx/player/actions/shield.wav", "static")
+    shieldDownSfx = love.audio.newSource("assets/sfx/player/actions/shield.wav", "static")
+    shieldDownSfx:setPitch(0.5)
+
     setSFXVolumes()
 end
 
@@ -28,14 +34,17 @@ function updateSFX()
 end
 
 function setSFXVolumes()
-    xpSfx:setVolume(0.4*sfxVolume)
-    awakeSfx:setVolume(0.4*sfxVolume)
-    critHitSfx:setVolume(1*sfxVolume)
-    enemyHitSfx:setVolume(1*sfxVolume)
-    playerHitSfx:setVolume(1*sfxVolume)
-    birds:setVolume(1*sfxVolume)
+    lootSfx:setVolume(1 * sfxVolume)
+    shieldUpSfx:setVolume(0.4 * sfxVolume)
+    shieldDownSfx:setVolume(0.4 * sfxVolume)
+    xpSfx:setVolume(1 * sfxVolume)
+    awakeSfx:setVolume(0.4 * sfxVolume)
+    critHitSfx:setVolume(1 * sfxVolume)
+    enemyHitSfx:setVolume(1 * sfxVolume)
+    playerHitSfx:setVolume(1 * sfxVolume)
+    birds:setVolume(1 * sfxVolume)
     -- horseMountSfx:setVolume(1*sfxVolume)
-    stepSfx:setVolume(1*sfxVolume)
+    stepSfx:setVolume(1 * sfxVolume)
     for i = 1, #attackSfxs do
         attackSfxs[i]:setVolume(1*sfxVolume)
     end

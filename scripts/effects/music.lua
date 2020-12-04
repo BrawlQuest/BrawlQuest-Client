@@ -29,9 +29,9 @@ function loadMusic()
     battleMusic = {"Titans", "Skirmish", "Skirmish2"}
     
 
-    if playMusic then   
+    if musicVolume ~= 0 then   
         currentPlaying = titleMusic:play()
-        -- titleMusic:setVolume(musicVolume)
+        titleMusic:setVolume(musicVolume)
     end
 
     

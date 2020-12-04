@@ -51,8 +51,10 @@ function loadSliders()
 end
 
 function updateSliders()
-    volumeSlider:update()
-    sfxSlider:update()
+    if isSettingsWindowOpen then
+        volumeSlider:update()
+        sfxSlider:update()
+    end
 end
 
 function writeSettings()
@@ -86,26 +88,36 @@ function drawSettingsPanel(thisX, thisY)
             thisX, thisY = thisX, thisY + spacing
         end
 
-        -- if dpiScaling then
+        if dpiScaling then
             love.graphics.setColor(1,0,0,1)
-            roundRectangle("fill", thisX, thisY + 40, questPopUpWidth - (padding*2), 40, 10)
-            love.graphics.setColor(1,1,1,1)
-            love.graphics.printf("High", thisX, thisY + 46, questPopUpWidth - (padding*2), "center")
-        -- end
-
-        love.graphics.setColor(1,1,1,1)
+            drawSettingsButton(thisX, thisY, "High", padding)
+        else
+            love.graphics.setColor(0.1,0.1,1,1)
+            drawSettingsButton(thisX, thisY, "Low", padding)
+        end
     end
 end
 
-function sliderValueA(v)
-
+function drawSettingsButton(thisX, thisY, text, padding)
+    roundRectangle("fill", thisX, thisY + 40, questPopUpWidth - (padding*2), 40, 10)
+    love.graphics.setColor(1,1,1,1)
+    love.graphics.printf(text, thisX, thisY + 46, questPopUpWidth - (padding*2), "center")
 end
 
+function sliderValueA(v) end
+
 function checkSettingsMousePressed(button)
-    local thisX, thisY = (love.graphics.getWidth()/2) - (questPopUpWidth/2)+20, (love.graphics.getHeight()/2)-(questPopUpHeight/2)
-    -- if isMouseOver(thisX*scale, (thisY+14)*scale, 38*scale, 38*scale) then
-    --     if button == 1 then
-            
-    --     end
-    -- end
+    local padding = 20
+    local thisX, thisY = (love.graphics.getWidth()/2) - (questPopUpWidth/2)+20, (love.graphics.getHeight()/2)-(questPopUpHeight/2)+20+(75*3)+40
+    if isMouseOver(thisX, thisY, questPopUpWidth - (padding*2), 40) and button == 1 then
+        if dpiScaling then
+            dpiScaling = false
+            love.window.setMode(love.graphics.getWidth(), love.graphics.getHeight(), {highdpi=false})
+        else
+            dpiScaling = true
+            love.window.setMode(love.graphics.getWidth(), love.graphics.getHeight(), {highdpi=true})
+        end
+        createWorld()
+        writeSettings()
+    end
 end
