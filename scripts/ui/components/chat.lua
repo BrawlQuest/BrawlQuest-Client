@@ -34,7 +34,7 @@ function checkKeyPressedChat(key)
 			enteredChatText = ""
 		end
 	else
-		if key == "return" then
+		if key == "return" and not isSettingsWindowOpen then
 			isTypingInChat = true
 		end
 	end
@@ -99,30 +99,34 @@ end
 
 function drawChatboxProfilePic(thisX, thisY, username, text, player, i)
 	if username == me.Name then
-		drawProfilePic(thisX+chatWidth+(chatCorner:getWidth() * 2) + 8, getProfilePicY(thisY, text), 1, "left", username, player)
+		drawProfilePic(thisX+chatWidth+(chatCorner:getWidth() * 2) + 8, getProfilePicY(thisY, text, username), 1, "left", username, player)
 		drawChatboxBackground(thisX, thisY, text)
 		drawChatboxText(thisX, thisY, text)
 	else
 		local i = thisX + profilePic:getWidth()+8
 		local j = thisY + chatFont:getHeight()
-		drawProfilePic(thisX, getProfilePicY(thisY, text)+chatFont:getHeight(), 1, "right")
-		drawChatboxBackground(i, j, text)
-		drawChatboxText(i, j, text)
-		drawChatboxUsernameText(i, thisY, username)
+		drawProfilePic(thisX, getProfilePicY(thisY, text, username)+chatFont:getHeight(), 1, "right")
+		drawChatboxBackground(i, thisY, text)
+		drawChatboxText(i, thisY, text)
+		love.graphics.setColor(1,1,1,1)
+		love.graphics.printf(username, i+4, thisY + getChatTextHeight(text)+(chatCorner:getHeight()*2)+10, chatWidth+(chatCorner:getWidth()*2), "left")
+		-- drawChatboxUsernameText(i, thisY + getProfilePicY(thisY, text), username)
 	end
 end
 
-function getProfilePicY(thisY, text)
-	return thisY-profilePic:getHeight()+getChatTextHeight(text)+(chatCorner:getHeight()*2)
+function getProfilePicY(thisY, text, username)
+	if username == me.Name then
+		return thisY-profilePic:getHeight()+getChatTextHeight(text)+(chatCorner:getHeight()*2)
+	else
+		return thisY-profilePic:getHeight()+getChatTextHeight(text)+(chatCorner:getHeight()*2)+10
+	end
 end
 
 function getChatboxProfilePicHeight(username, text, i)
 	if username == me.Name then 
 		return (getChatTextHeight(text)+(chatCorner:getHeight()*2))+chatSpacing
 	else
-		if getChatTextHeight(text)+(chatCorner:getHeight()*2)+chatFont:getHeight() < profilePic:getHeight() then
-			return (profilePic:getHeight())+chatSpacing end
-		return (getChatTextHeight(text)+(chatCorner:getHeight()*2)+chatFont:getHeight())+chatSpacing	
+		return (getChatTextHeight(text)+(chatCorner:getHeight()*2)+chatFont:getHeight())+chatSpacing+10
 	end
 end
 

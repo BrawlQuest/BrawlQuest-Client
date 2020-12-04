@@ -231,6 +231,9 @@ function love.keypressed(key)
                 if key == "escape" then
                     isSettingsWindowOpen = false
                 end
+                if key == "return" then
+                    love.event.quit()
+                end
             else
                 if key == "m" then
                     beginMounting()
@@ -251,6 +254,7 @@ function love.keypressed(key)
                 end
                 if key == "escape" then                 
                     isSettingsWindowOpen = true
+                    loadSliders()
                 end
             end
             if key == "'" then

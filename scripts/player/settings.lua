@@ -90,11 +90,13 @@ function drawSettingsPanel(thisX, thisY)
 
         if dpiScaling then
             love.graphics.setColor(1,0,0,1)
-            drawSettingsButton(thisX, thisY, "High", padding)
+            drawSettingsButton(thisX, thisY, "Highest", padding)
         else
             love.graphics.setColor(0.1,0.1,1,1)
-            drawSettingsButton(thisX, thisY, "Low", padding)
+            drawSettingsButton(thisX, thisY, "Lowest", padding)
         end
+        love.graphics.setColor(1,0,0,1)
+        drawSettingsButton(thisX, thisY+ (spacing*2), "Quit Game (return)", padding)
     end
 end
 
@@ -119,5 +121,8 @@ function checkSettingsMousePressed(button)
         end
         createWorld()
         writeSettings()
+    end
+    if isMouseOver(thisX, thisY + (75*2), questPopUpWidth - (padding*2), 40) and button == 1 then
+        love.event.quit()
     end
 end
