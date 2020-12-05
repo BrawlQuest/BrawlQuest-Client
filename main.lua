@@ -311,46 +311,11 @@ function love.mousepressed(x, y, button)
         checkClickLogin(x, y)
     elseif isWorldEditWindowOpen then
         checkEditWorldClick(x, y)
-    elseif love.keyboard.isDown("lctrl") then
-        pendingWorldChanges[#pendingWorldChanges + 1] = {
-            GroundTile = textfields[5],
-            ForegroundTile = textfields[6],
-            Name = textfields[7],
-            Music = "*",
-            Collision = thisTile.Collision,
-            Enemy = textfields[8],
-            X = player.x,
-            Y = player.y
-        }
-        -- print(json:encode(pendingWorldChanges))
-        c, h = http.request {
-            url = api.url .. "/world",
-            method = "POST",
-            body = ltn12.source.string(json:encode(pendingWorldChanges)),
-            headers = {
-                ["token"] = token
-            }
-        }
-        pendingWorldChanges = {}
     elseif phase == "game" then
        checkInventoryMousePressed()
     --    checkChatMousePressed()
        checkPerksMousePressed(button)
        checkSettingsMousePressed(button)
-    end
-end
-
-function love.mousereleased(x, y, button)
-    if #pendingWorldChanges ~= 0 then
-        c, h = http.request {
-            url = api.url .. "/world",
-            method = "POST",
-            body = ltn12.source.string(json:encode(pendingWorldChanges)),
-            headers = {
-                ["token"] = token
-            }
-        }
-        pendingWorldChanges = {}
     end
 end
 
