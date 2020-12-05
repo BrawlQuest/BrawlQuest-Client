@@ -30,78 +30,44 @@ function createWorld()
     love.graphics.setCanvas(worldCanvas)
         love.graphics.clear()
         love.graphics.setColor(1, 1, 1)
-        -- print(#world)
         for i, v in ipairs(world) do
-            if isTileLit(v.X, v.Y) then
-                love.graphics.setColor(1, 1, 1)
-            else
-                love.graphics.setColor(0, 0, 0, 0)
-            end
-            if not worldImg[v['GroundTile']] then
-                if love.filesystem.getInfo(v['GroundTile']) then
-                    worldImg[v['GroundTile']] = love.graphics.newImage(v['GroundTile'])
-                else
-                    worldImg[v['GroundTile']] = love.graphics.newImage("assets/error.png")
-                end
-            end
-            local foregroundAsset = v['ForegroundTile']
-            local backgroundAsset = v['GroundTile']
-            if isTileWall(v.ForegroundTile) then
-                foregroundAsset = getDrawableWall(v['ForegroundTile'], v.X, v.Y)
-            end
-            if isTileWall(v.GroundTile) then
-                backgroundAsset = getDrawableWall(v['GroundTile'], v.X, v.Y)
-            end
-
-            if isTileWater(v.ForegroundTile) then
-                foregroundAsset = getDrawableWater(v['ForegroundTile'], v.X, v.Y)
-            end
-            
-            if isTileWater(v.GroundTile) then
-                backgroundAsset = getDrawableWater(v['GroundTile'], v.X, v.Y)
-            end
-
-            if not worldImg[foregroundAsset] then
-                if love.filesystem.getInfo(foregroundAsset) then
-                    worldImg[foregroundAsset] = love.graphics.newImage(foregroundAsset)
-                else
-                    worldImg[foregroundAsset] = love.graphics.newImage("assets/error.png") 
-                end
-            end
-
-            if lightGivers[foregroundAsset] and not lightSource[v.X .. "," .. v.Y] then
-                lightSource[v.X .. "," .. v.Y] = true
-                Luven.addNormalLight(16 + v.X * 32, 16 + v.Y * 32, {1, 0.5, 0}, lightGivers[foregroundAsset])
-            end
-
-            if v.Collision then
-                if foregroundAsset == "assets/world/objects/Mountain.png" then
-                    treeMap[v.X .. "," .. v.Y] = true
-                end
-                blockMap[v.X .. "," .. v.Y] = true
-            end
-
-            love.graphics.draw(worldImg[backgroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32)  
-            
-            love.graphics.setColor(0,0,0,0.5)
-            if isTileWall(v.ForegroundTile) then -- draw shadow
-                love.graphics.rectangle("fill", (v.X+math.abs(lowestX)) * 32 , (v.Y+math.abs(lowestY)) * 32 + 32, 32, 16)
-                
-            end
-            -- if v.Collision then
-            --     love.graphics.draw(worldImg[foregroundAsset],(v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32 + 60, 0, 1, -1)
-            -- end
-            
-            love.graphics.setColor(1, 1, 1, 1)
-            love.graphics.draw(worldImg[foregroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32)
-        -- love.graphics.print(v.X .. "," ..v.Y.."\n"..of, v.X*32, v.Y*32)
-            -- local cx,cy = love.mouse.getPosition()
-
-            -- if  cx > v.X*32 and cx < v.X*32+32 and cy > v.Y*32+32 and cy < v.Y*32+32  then
-            --     love.graphics.rectangle("fill", v.X*32, v.Y*32, 32, 32)
-            -- end
+            drawTile(v)
         end
     love.graphics.setCanvas()
+end
+
+function drawTile(v, offset)
+    
+    if isTileLit(v.X, v.Y) then
+        love.graphics.setColor(1, 1, 1)
+    else
+        love.graphics.setColor(0, 0, 0, 0)
+    end
+    local backgroundAsset = getWorldAsset(v.GroundTile, v.X, v.Y)
+    local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y)
+
+
+    if lightGivers[foregroundAsset] and not lightSource[v.X .. "," .. v.Y] then
+        lightSource[v.X .. "," .. v.Y] = true
+        Luven.addNormalLight(16 + v.X * 32, 16 + v.Y * 32, {1, 0.5, 0}, lightGivers[foregroundAsset])
+    end
+
+    if v.Collision then
+        if foregroundAsset == "assets/world/objects/Mountain.png" then
+            treeMap[v.X .. "," .. v.Y] = true
+        end
+        blockMap[v.X .. "," .. v.Y] = true
+    end
+
+    love.graphics.draw(worldImg[backgroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32)  
+    
+    love.graphics.setColor(0,0,0,0.5)
+    if isTileWall(v.ForegroundTile) then -- draw shadow
+        love.graphics.rectangle("fill", (v.X+math.abs(lowestX)) * 32 , (v.Y+math.abs(lowestY)) * 32 + 32, 32, 16) 
+    end
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.draw(worldImg[foregroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32)
+
 end
 
 function drawWorld()
@@ -122,11 +88,39 @@ function drawWorld()
             love.graphics.draw(groundImg, x * 32, y * 32)
         end
     end
-    --   drawDummy()
     love.graphics.setColor(1,1,1,1)
     love.graphics.setBlendMode("alpha", "premultiplied")
     love.graphics.draw(worldCanvas, lowestX*32, lowestY*32)
     love.graphics.setBlendMode("alpha")
+    love.graphics.setColor(1,1,1,0.5)
+    for i,v in ipairs(pendingWorldChanges) do
+        local groundAsset = getWorldAsset(v.GroundTile, v.X, v.Y)
+        local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y)
+        love.graphics.draw(worldImg[groundAsset], v.X*32, v.Y*32)
+        love.graphics.draw(worldImg[foregroundAsset], v.X*32, v.Y*32)
+    end
+    love.graphics.setColor(1,1,1)
+end
+
+function getWorldAsset(v,x,y) 
+    if not worldImg[v] then
+        if love.filesystem.getInfo(v) then
+            worldImg[v] = love.graphics.newImage(v)
+        else
+            worldImg[v] = love.graphics.newImage("assets/error.png")
+        end
+    end
+    local foregroundAsset = v['ForegroundTile']
+    local backgroundAsset = v['GroundTile']
+    if isTileWall(v) then
+        v = getDrawableWall(v, x,y)
+    end
+
+    if isTileWater(v) then
+        v = getDrawableWater(v, x, y)
+    end
+
+    return v
 end
 
 function isTileWall(tileName)
@@ -162,7 +156,6 @@ function getDrawableWall(tileName, x, y) -- this is used to smooth the corners o
                 nearby.top = true
             end
         end
-
     end
 
     local assetName = "1.png"

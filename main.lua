@@ -259,9 +259,15 @@ function love.keypressed(key)
             end
             if key == "'" then
                 if isWorldEditWindowOpen then isWorldEditWindowOpen = false else isWorldEditWindowOpen = true end
+            elseif key == "space" and love.keyboard.isDown("lshift") then
+                c, h = http.request{url = api.url.."/world", method="POST", source=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(pendingWorldChanges)),["token"]=token}}
+                pendingWorldChanges = {}
+                local b = {}
+                c, h = http.request{url = api.url.."/world", method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
+                world = json:decode(b[1])
+                createWorld()
             elseif key == "lctrl" then
-                -- createWorld()
-                print("Sending...")
+                --
                 pendingWorldChanges[#pendingWorldChanges+1] = {
                     GroundTile = textfields[5],
                     ForegroundTile = textfields[6],
@@ -269,16 +275,10 @@ function love.keypressed(key)
                     Music = "*",
                     Collision = thisTile.Collision,
                     Enemy = textfields[8],
-                    X = player.x,
-                    Y = player.y,
+                    X = player.x + 0,
+                    Y = player.y + 0,
                 }
-                print(json:encode(pendingWorldChanges))
-                c, h = http.request{url = api.url.."/world", method="POST", source=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(pendingWorldChanges)),["token"]=token}}
-                pendingWorldChanges = {}
-                local b = {}
-                c, h = http.request{url = api.url.."/world", method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
-                world = json:decode(b[1])
-                createWorld()
+                
             elseif key == "o" then
             end
         end
