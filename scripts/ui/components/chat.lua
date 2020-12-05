@@ -29,9 +29,9 @@ function checkKeyPressedChat(key)
 			}
 			c, h = http.request{url = api.url.."/chat", method="POST", source=ltn12.source.string(json:encode(chatData)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(chatData)),["token"]=token}}
 			enteredChatText = ""
+			isTypingInChat = false
 		elseif key == "escape" then 
 			isTypingInChat = false
-			enteredChatText = ""
 		end
 	else
 		if key == "return" and not isSettingsWindowOpen then

@@ -15,7 +15,7 @@ function drawProfile()
 	end
 
 	local j = 2.380952380952381
-
+	
 	if me ~= null and me.HP ~= null or me.XP ~= null then
 		love.graphics.setColor(0,0,0,1)
 		love.graphics.setFont(circleFont)
