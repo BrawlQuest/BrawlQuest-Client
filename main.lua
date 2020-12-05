@@ -144,7 +144,6 @@ function love.update(dt)
 
             nextUpdate = 0.5
         end
-        oldLightAlpha = oldLightAlpha - 2 * dt -- update light, essentially
         
         updateHUD(dt)
 
@@ -283,7 +282,6 @@ function love.keypressed(key)
             end
         end
         if key == "q" then
-            print("Time of Day = " .. timeOfDay)
             love.event.quit()
         end
         checkKeyPressedChat(key)
