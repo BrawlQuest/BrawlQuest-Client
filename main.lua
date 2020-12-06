@@ -110,12 +110,12 @@ function love.draw()
         if isWorldEditWindowOpen then
             drawEditWorldWindow()
         end
-        if player.x == 3 and player.y == -6 then
+        if (player.x == 3 and player.y == -6) or (player.x == 3 and player.y == 1) then
             love.graphics.setFont(smallTextFont)
             love.graphics.setColor(0,0,0)
-            love.graphics.rectangle("fill",love.graphics.getWidth()/2-smallTextFont:getWidth("Press E to talk to Bartender")/2,love.graphics.getHeight()/2+38,smallTextFont:getWidth("Press E to talk to Bartender"),smallTextFont:getHeight())
+            love.graphics.rectangle("fill",love.graphics.getWidth()/2-smallTextFont:getWidth("Press E to talk")/2,love.graphics.getHeight()/2+38,smallTextFont:getWidth("Press E to talk"),smallTextFont:getHeight())
             love.graphics.setColor(1,1,1)
-            love.graphics.print("Press E to talk to Bartender",love.graphics.getWidth()/2-smallTextFont:getWidth("Press E to talk to Bartender")/2,love.graphics.getHeight()/2+38)
+            love.graphics.print("Press E to talk",love.graphics.getWidth()/2-smallTextFont:getWidth("Press E to talk")/2,love.graphics.getHeight()/2+38)
         end
         if showNPCChatBackground then drawNPCChatBackground(love.graphics.getWidth()/2-128,love.graphics.getHeight()/2-128) end        Luven.camera:draw()
         -- print(brightnessSlider:getValue())
@@ -125,7 +125,7 @@ function love.draw()
     mx, my = love.mouse.getPosition()
     love.graphics.setColor(1,1,1)
     love.graphics.draw(mouseImg, mx, my)
-
+    love.graphics.print(player.x..", "..player.y,200,200)
 
     love.graphics.setColor(1, 1, 1, totalCoverAlpha)
     love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
@@ -287,6 +287,12 @@ function love.keypressed(key)
                 }
                 
             elseif key == keybinds.INTERACT then
+                if (player.x == 3 and player.y == -6) then
+                    npcChat = bartenderNPCChat
+                elseif (player.x == 3 and player.y == 1) then
+                    npcChat = mortusNPCChat
+                end
+                currentConversationStage = 1
                 createNPCChatBackground(player.x,player.y)
                 showNPCChatBackground = not showNPCChatBackground
             end
