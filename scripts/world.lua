@@ -32,8 +32,17 @@ function createWorld()
         love.graphics.setColor(1, 1, 1)
         for i, v in ipairs(world) do
             drawTile(v)
+            -- if v.Collision then
+            --     love.graphics.setColor(1,0,0)
+            --     love.graphics.rectangle("line",(v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32,32,32)
+            -- end
         end
     love.graphics.setCanvas()
+    if player.x and player.y then
+        createNPCChatBackground(player.x,player.y)
+    else
+        createNPCChatBackground(0,0)
+    end
 end
 
 function drawTile(v, offset)

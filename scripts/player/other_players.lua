@@ -12,7 +12,7 @@ function drawCharacter(v, x, y, ad)
             end
         end
 
-        if v.SheildID ~= 0 then
+        if v.ShieldID ~= 0 then
             drawItemIfExists(v.Shield.ImgPath, x, y, ad.previousDirection)
         end
 
@@ -54,7 +54,7 @@ function drawCharacter(v, x, y, ad)
         --     love.graphics.draw(horseImg, player.mount.x, player.mount.y)
         -- end
 
-        if v.IsShield and v.SheildID ~= 0 then
+        if v.IsShield and v.ShieldID ~= 0 then
             drawItemIfExists(v.Shield.ImgPath, x, y, ad.previousDirection)
         end
 

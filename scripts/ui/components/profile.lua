@@ -4,7 +4,7 @@ function drawProfile()
 		drawPerks()
     end
     
-	love.graphics.draw(profileBgnd)
+	love.graphics.draw(profileBackground)
 	drawProfilePic(19, 5, 0.5, "right", me.Name)
 	love.graphics.draw(level, 7, 5)
 	love.graphics.draw(profileBars, 7, 51)
@@ -59,19 +59,19 @@ function drawProfilePic(thisX, thisY, thisScale, thisRotation, tplayer)
 		end
 
 		if tplayer.Shield ~= null then
-			love.graphics.draw(itemImg[tplayer.Shield.ImgPath], sheildImgStensil, thisX, thisY/i, 0, r, 1)
+	--		love.graphics.draw(itemImg[tplayer.Shield.ImgPath], ShieldImgStencil, thisX, thisY/i, 0, r, 1)
 		end
 		
 		if playerImg ~= null then
-			love.graphics.draw(playerImg, profileImgStensil, thisX, thisY/i, 0, r, 1)
+	--		love.graphics.draw(playerImg, profileImgStencil, thisX, thisY/i, 0, r, 1)
 		end
 
 		if tplayer.ChestArmour ~= null then
-			love.graphics.draw(itemImg[tplayer.ChestArmour.ImgPath], profileImgStensil, thisX, thisY/i, 0, r, 1)
+	--		love.graphics.draw(itemImg[tplayer.ChestArmour.ImgPath], profileImgStencil, thisX, thisY/i, 0, r, 1)
 		end
 
 		if tplayer.HeadArmour ~= null then
-			love.graphics.draw(itemImg[tplayer.HeadArmour.ImgPath], profileImgStensil, thisX, thisY/i, 0, r, 1)
+	--		love.graphics.draw(itemImg[tplayer.HeadArmour.ImgPath], profileImgStencil, thisX, thisY/i, 0, r, 1)
 		end
 	love.graphics.pop()
 end

@@ -6,7 +6,7 @@ function initHardData()
     lootImg = love.graphics.newImage("assets/ui/loot.png")
 
     playerImg = love.graphics.newImage("assets/player/base/base 1.png")
-
+    bartenderImg = love.graphics.newImage("assets/npc/Bartender.png")
 
     targetImg = love.graphics.newImage("assets/ui/target.png")
     xpImg = love.graphics.newImage("assets/ui/xp.png")

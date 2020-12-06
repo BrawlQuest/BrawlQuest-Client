@@ -13,7 +13,7 @@ require "scripts.ui.components.toolbar"
 require "scripts.ui.components.battlebar"
 require "scripts.ui.components.profile"
 require "scripts.ui.components.inventory"
-require "scripts.ui.components.questpannel"
+require "scripts.ui.components.questPanel"
 require "scripts.ui.components.questpopup"
 require "scripts.ui.components.perks"
 require "scripts.libraries.api"
@@ -26,6 +26,7 @@ require "scripts.world"
 require "scripts.ui.temporary.worldedit"
 require "data.data_controller"
 require "scripts.player.settings"
+require "scripts.ui.components.npc-chat"
 Luven = require "scripts.libraries.luven.luven"
 
 json = require("scripts.libraries.json")
@@ -109,7 +110,14 @@ function love.draw()
         if isWorldEditWindowOpen then
             drawEditWorldWindow()
         end
-        Luven.camera:draw()
+        if player.x == 3 and player.y == -6 then
+            love.graphics.setFont(smallTextFont)
+            love.graphics.setColor(0,0,0)
+            love.graphics.rectangle("fill",love.graphics.getWidth()/2-smallTextFont:getWidth("Press E to talk to Bartender")/2,love.graphics.getHeight()/2+38,smallTextFont:getWidth("Press E to talk to Bartender"),smallTextFont:getHeight())
+            love.graphics.setColor(1,1,1)
+            love.graphics.print("Press E to talk to Bartender",love.graphics.getWidth()/2-smallTextFont:getWidth("Press E to talk to Bartender")/2,love.graphics.getHeight()/2+38)
+        end
+        if showNPCChatBackground then drawNPCChatBackground(love.graphics.getWidth()/2-128,love.graphics.getHeight()/2-128) end        Luven.camera:draw()
         -- print(brightnessSlider:getValue())
     end
 
@@ -278,7 +286,9 @@ function love.keypressed(key)
                     Y = player.y + 0,
                 }
                 
-            elseif key == "o" then
+            elseif key == keybinds.INTERACT then
+                createNPCChatBackground(player.x,player.y)
+                showNPCChatBackground = not showNPCChatBackground
             end
         end
         if key == "q" then
@@ -314,6 +324,7 @@ function love.mousepressed(x, y, button)
     --    checkChatMousePressed()
        checkPerksMousePressed(button)
        checkSettingsMousePressed(button)
+       checkNPCChatMousePressed()
     end
 end
 

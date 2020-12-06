@@ -26,7 +26,7 @@ function loadInventory()
     end
 end
 
-function drawInventoryFeilds(thisX, y)
+function drawInventoryFields(thisX, y)
     love.graphics.setFont(inventorySubHeaderFont)
     thisY = y
     for i = 0, tableLength(inventoryFields) - 1 do -- Draws each inventory field
@@ -90,7 +90,7 @@ function drawInventoryItem(thisX, thisY, field, item)
                 userInventory[field][item].Item.Desc)
         selectedItem = userInventory[field][item].Item
     end
-    love.graphics.draw(inventoryItemBgnd, thisX, thisY) -- Background
+    love.graphics.draw(inventoryItemBackground, thisX, thisY) -- Background
     love.graphics.setColor(1, 1, 1)
 
     love.graphics.draw(itemImg[userInventory[field][item].Item.ImgPath], thisX + 3, thisY + 3) -- Item
@@ -98,27 +98,27 @@ end
 
 function drawInventory()
     loadInventory()
-    love.graphics.draw(inventory, 0, toolbary)
+    love.graphics.draw(inventory, 0, toolbarY)
 
     love.graphics.stencil(drawInventoryStencil, "replace", 1) -- stencils inventory
     love.graphics.setStencilTest("greater", 0) -- push
 
-    drawInventoryFeilds(70, toolbary + 40 + posyInventory)
+    drawInventoryFields(70, toolbarY + 40 + posYInventory)
    
     love.graphics.setStencilTest() -- pop
 end
 
 function drawInventoryStencil()
-    love.graphics.rectangle("fill", 70, toolbary + 40, 180, 483)
+    love.graphics.rectangle("fill", 70, toolbarY + 40, 180, 483)
 end
 
 function drawChatStencil()
-    love.graphics.rectangle("fill", 70, toolbary + 40, 180, 483)
+    love.graphics.rectangle("fill", 70, toolbarY + 40, 180, 483)
 end
 
 function checkInventoryMousePressed()
     if selectedItem ~= nil and selectedItem.ID ~= nil and
-        isMouseOver(0, toolbary * scale, inventory:getWidth() * scale, inventory:getHeight() * scale) then
+        isMouseOver(0, toolbarY * scale, inventory:getWidth() * scale, inventory:getHeight() * scale) then
         c, h = http.request {
             url = api.url .. "/item/" .. player.name .. "/" .. selectedItem.ID,
             headers = {

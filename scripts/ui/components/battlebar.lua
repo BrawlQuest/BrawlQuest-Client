@@ -2,17 +2,17 @@ function drawBattlebar(thisX, thisY)
     -- local thisX, thisY =  uiX/2, uiY
     if enemiesInAggro ~= 0 then
         if enemiesInAggro == 0 then
-            battlebarPlayer(thisX-(battlebarBgnd:getWidth()/2), thisY)
+            battlebarPlayer(thisX-(battlebarBackground:getWidth()/2), thisY)
         elseif enemiesInAggro > 0 then
-            battlebarPlayer(thisX-(battlebarBgnd:getWidth()+5), thisY)
+            battlebarPlayer(thisX-(battlebarBackground:getWidth()+5), thisY)
             battlebarEnemy(thisX+5, thisY, "Skellington", 39, 19)
         end
     end
 end
 
 function battlebarPlayer(thisX, iy)
-    local thisY = iy-battlebarBgnd:getHeight()
-    love.graphics.draw(battlebarBgnd, thisX, thisY)
+    local thisY = iy-battlebarBackground:getHeight()
+    love.graphics.draw(battlebarBackground, thisX, thisY)
     drawProfilePic(thisX+10, thisY+10, 1, "right", me.Name)
     --love.graphics.draw(profilePic, thisX+10, thisY+10)
     if me and me.Weapon then
@@ -36,8 +36,8 @@ function battlebarItem(thisX, thisY, item, stats)
 end
 
 function battlebarEnemy(thisX, iy, name, hp, mana)
-    local thisY = iy-battlebarBgnd:getHeight()
-    love.graphics.draw(battlebarBgnd, thisX, thisY)
+    local thisY = iy-battlebarBackground:getHeight()
+    love.graphics.draw(battlebarBackground, thisX, thisY)
     -- love.graphics.draw(profilePic, thisX+270, thisY+10)
     drawProfilePic(thisX+270, thisY+10, 1, "left")
    -- drawCharacter(me,thisX+270, thisY+10)

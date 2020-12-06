@@ -7,7 +7,8 @@ keybinds = {
     ATTACK_DOWN = "down",
     ATTACK_LEFT = "left",
     ATTACK_RIGHT = "right",
-    SHIELD = "lshift"
+    SHIELD = "lshift",
+    INTERACT = "e"
 }
 
 
@@ -20,7 +21,7 @@ function initSettings()
     info = love.filesystem.getInfo("settings.txt")
     isSettingsWindowOpen = false
 
-    if info then 
+    if info and 1 == 2 then 
         contents, size = love.filesystem.read("string", "settings.txt")
         contents = json:decode(contents)
         keybinds = contents["keybinds"]
@@ -109,20 +110,22 @@ end
 function sliderValueA(v) end
 
 function checkSettingsMousePressed(button)
-    local padding = 20
-    local thisX, thisY = (love.graphics.getWidth()/2) - (questPopUpWidth/2)+20, (love.graphics.getHeight()/2)-(questPopUpHeight/2)+20+(75*3)+40
-    if isMouseOver(thisX, thisY, questPopUpWidth - (padding*2), 40) and button == 1 then
-        if dpiScaling then
-            dpiScaling = false
-            love.window.setMode(love.graphics.getWidth(), love.graphics.getHeight(), {highdpi=false})
-        else
-            dpiScaling = true
-            love.window.setMode(love.graphics.getWidth(), love.graphics.getHeight(), {highdpi=true})
+    if isSettingsWindowOpen then
+        local padding = 20
+        local thisX, thisY = (love.graphics.getWidth()/2) - (questPopUpWidth/2)+20, (love.graphics.getHeight()/2)-(questPopUpHeight/2)+20+(75*3)+40
+        if isMouseOver(thisX, thisY, questPopUpWidth - (padding*2), 40) and button == 1 then
+            if dpiScaling then
+                dpiScaling = false
+                love.window.setMode(love.graphics.getWidth(), love.graphics.getHeight(), {highdpi=false})
+            else
+                dpiScaling = true
+                love.window.setMode(love.graphics.getWidth(), love.graphics.getHeight(), {highdpi=true})
+            end
+            createWorld()
+            writeSettings()
         end
-        createWorld()
-        writeSettings()
-    end
-    if isMouseOver(thisX, thisY + (75*2), questPopUpWidth - (padding*2), 40) and button == 1 then
-        love.event.quit()
+        if isMouseOver(thisX, thisY + (75*2), questPopUpWidth - (padding*2), 40) and button == 1 then
+            love.event.quit()
+        end
     end
 end

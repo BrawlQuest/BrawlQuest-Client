@@ -50,7 +50,7 @@ function drawChatPanel(thisX, thisY) -- the function to recall it all
 	love.graphics.setFont(chatFont)
 	local thisY = thisY - getEnterChatBoxHeight(enteredChatText)
 	local chatEnterY = thisY
-	local thisY = thisY + posyChat
+	local thisY = thisY + posYChat
 	
 	for i = 1, tableLength(messages) do -- the most important thing here
 		thisY = thisY - getFullChatHeight(messages[i].username, messages[i].text, i)
@@ -190,6 +190,6 @@ function getEnterChatBoxHeight(text)
 end
 
 function drawChatStencil()
-	love.graphics.rectangle("fill", 70, toolbary+40, 180, 483)
+	love.graphics.rectangle("fill", 70, toolbarY+40, 180, 483)
 end
 

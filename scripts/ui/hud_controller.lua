@@ -27,7 +27,7 @@ function initHUD()
     chatFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 24)
 
     -- scrolling
-    posyInventory, velyInventory, posyChat, velyChat = 0, 0, 0, 0
+    posYInventory, velyInventory, posYChat, velyChat = 0, 0, 0, 0
     uiX = love.graphics.getWidth()/scale -- scaling options
     uiY = love.graphics.getHeight()/scale
 
@@ -61,7 +61,7 @@ function initHUD()
 
     -- Inventory
     inventorySubHeaderFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 10)
-    inventoryItemBgnd = love.graphics.newImage("assets/ui/hud/inventory/inventoryItem.png")
+    inventoryItemBackground = love.graphics.newImage("assets/ui/hud/inventory/inventoryItem.png")
 
     inventoryFields = {"weapons", "spells", "armour", "mounts", "other"}
     inventoryFieldLength = {0, 0, 0, 0, 0}
@@ -79,10 +79,10 @@ function initHUD()
 
 	level = love.graphics.newImage("assets/ui/hud/profile/Level.png")
 	profileBars = love.graphics.newImage("assets/ui/hud/profile/bars.png")
-    profileBgnd = love.graphics.newImage("assets/ui/hud/profile/profile-backing.png")
-    sheildImg = love.graphics.newImage("assets/player/gen/sheild false.png")
-    profileImgStensil = love.graphics.newQuad(12, 0, 16, 16, playerImg:getDimensions())
-    sheildImgStensil = love.graphics.newQuad(12, 0, 16, 16, sheildImg:getDimensions())
+    profileBackground = love.graphics.newImage("assets/ui/hud/profile/profile-backing.png")
+    ShieldImg = love.graphics.newImage("assets/player/gen/Shield false.png")
+    profileImgStencil = love.graphics.newQuad(12, 0, 16, 16, playerImg:getDimensions())
+    ShieldImgStencil = love.graphics.newQuad(12, 0, 16, 16, ShieldImg:getDimensions())
 
     -- Perks
     perksBg = love.graphics.newImage("assets/ui/hud/perks/perksBg.png")
@@ -110,10 +110,10 @@ function initHUD()
     }
 
     -- Battlebar
-    battlebarBgnd = love.graphics.newImage("assets/ui/hud/battlebar/battlebarBg.png")
+    battlebarBackground = love.graphics.newImage("assets/ui/hud/battlebar/battlebarBg.png")
     battlebarItemBg = love.graphics.newImage("assets/ui/hud/battlebar/battlebarItem.png")
 
-    -- Quest Pannel
+    -- Quest Panel
     questWidth = 600
     questHeight = 0
     questSmallBoxTrue = love.graphics.newImage("assets/ui/hud/quests/xTrue.png")
@@ -137,21 +137,21 @@ function updateHUD( dt )
     
     velyInventory = velyInventory - velyInventory * math.min( dt * 15, 1 )
 
-    posyChat = posyChat + velyChat * dt
+    posYChat = posYChat + velyChat * dt
     velyChat = velyChat - velyChat * math.min( dt * 15, 1 )
 
-    if posyInventory <= (getFullUserInventoryFieldHeight()*-1)+483 then
-      --  posyInventory = (getFullUserInventoryFieldHeight()*-1)+483
+    if posYInventory <= (getFullUserInventoryFieldHeight()*-1)+483 then
+      --  posYInventory = (getFullUserInventoryFieldHeight()*-1)+483
         velyInventory = 0
-    elseif posyInventory > 0 then
-        posyInventory = 0
+    elseif posYInventory > 0 then
+        posYInventory = 0
         velyInventory = 0
     else
-        posyInventory = posyInventory + velyInventory * dt
+        posYInventory = posYInventory + velyInventory * dt
     end
 
-    if posyChat < 0 then
-        posyChat = 0
+    if posYChat < 0 then
+        posYChat = 0
     end
 
     updateTooltip(dt)
@@ -176,7 +176,7 @@ function drawHUD()
         local i = 0.5
         love.graphics.scale(scale*i)
         drawChatPanel(uiX/i, uiY/i)
-        -- drawQuestPannel(uiX/i, 0)
+        -- drawQuestPanel(uiX/i, 0)
     love.graphics.pop()
 
     love.graphics.push() -- chat and quests scaling TODO: Quests
@@ -199,7 +199,7 @@ function drawHUD()
 end 
 
 function love.wheelmoved( dx, dy )
-    if isMouseOver(0, toolbary*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
+    if isMouseOver(0, toolbarY*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
        velyInventory = velyInventory + dy * 512
     else 
         velyChat = velyChat + dy * 512
