@@ -29,7 +29,7 @@ end
 function drawInventoryFields(thisX, y)
     love.graphics.setFont(inventorySubHeaderFont)
     thisY = y
-    for i = 0, tableLength(inventoryFields) - 1 do -- Draws each inventory field
+    for i = 0, #inventoryFields - 1 do -- Draws each inventory field
         if inventoryFieldLength[i+1] ~= 0 then
             inventoryItemField(thisX + 8, thisY + 0, i + 1)
             thisY = thisY + getUserInventoryFieldHeight(i + 1)
@@ -40,7 +40,7 @@ end
 function inventoryItemField(thisX, y, field)
     love.graphics.printf(inventoryFields[field], thisX, thisY, 483)
     thisY = thisY + 18
-    for i = 0, tableLength(userInventory[field]) - 1 do
+    for i = 0, #userInventory[field] - 1 do
         if i <= 3 then
             drawInventoryItem(thisX + ((i - 0) * 42), thisY + 0, field, i + 1)
             userInventoryFieldHeight[field] = 42 + 15
@@ -57,7 +57,7 @@ function inventoryItemField(thisX, y, field)
 end
 
 function getUserInventoryFieldHeight(field)
-    local i = tableLength(userInventory[field]) - 1
+    local i = #userInventory[field] - 1
     local j = 2
     if i <= 0 then
         return j
@@ -76,7 +76,7 @@ end
 
 function getFullUserInventoryFieldHeight()
     local j = 0
-    for i = 1, tableLength(userInventory) do
+    for i = 1, #userInventory do
         j = j + getUserInventoryFieldHeight(i) + 18
     end
     return j

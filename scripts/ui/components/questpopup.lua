@@ -45,7 +45,7 @@ function drawQuestPopUpQuest(thisX, thisY)
     love.graphics.printf(selectedQuest.title, thisX+paddingX, thisY+paddingY, questPopUpWidth-(paddingX*2))
     thisY = thisY+getMediumTitleHeight(selectedQuest.title, questPopUpWidth-(paddingX*2))+spacing
     love.graphics.setFont(font)
-    for i = 1, tableLength(selectedQuest) do 
+    for i = 1, #selectedQuest do 
         love.graphics.printf(i .. ". " .. selectedQuest[i], thisX+paddingX, thisY+paddingY, questPopUpWidth-(paddingX*2), "left")
         thisY = thisY + getTextHeight(i .. ". " .. selectedQuest[i], questPopUpWidth-(paddingX*2))+spacing
     end

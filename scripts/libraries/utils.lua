@@ -48,10 +48,6 @@ function isMouseOver(x,y,width,height)
     return false
 end
 
-function tableLength(T)
-	return #T
-end
-
 function recursiveEnumerate(folder, r)
 	local lfs = love.filesystem
 	local filesTable = lfs.getDirectoryItems(folder)

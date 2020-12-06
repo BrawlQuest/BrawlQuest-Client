@@ -52,7 +52,7 @@ function drawChatPanel(thisX, thisY) -- the function to recall it all
 	local chatEnterY = thisY
 	local thisY = thisY + posYChat
 	
-	for i = 1, tableLength(messages) do -- the most important thing here
+	for i = 1, #messages do -- the most important thing here
 		thisY = thisY - getFullChatHeight(messages[i].username, messages[i].text, i)
 		drawChatbox(thisX - (chatWidth+130), thisY, messages[i].username, messages[i].text,  messages[i].player, i)
 		previousUsername = messages[i].username

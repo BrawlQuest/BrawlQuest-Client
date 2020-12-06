@@ -110,7 +110,8 @@ function love.draw()
         if isWorldEditWindowOpen then
             drawEditWorldWindow()
         end
-        if (player.x == 3 and player.y == -6) or (player.x == 3 and player.y == 1) then
+
+        if distanceToPoint(player.x,player.y,3,-6) <= 1 or distanceToPoint(player.x,player.y,4,1) <= 1 or distanceToPoint(player.x,player.y,10,-16) <= 1  then
             love.graphics.setFont(smallTextFont)
             love.graphics.setColor(0,0,0)
             love.graphics.rectangle("fill",love.graphics.getWidth()/2-smallTextFont:getWidth("Press E to talk")/2,love.graphics.getHeight()/2+38,smallTextFont:getWidth("Press E to talk"),smallTextFont:getHeight())
@@ -287,10 +288,12 @@ function love.keypressed(key)
                 }
                 
             elseif key == keybinds.INTERACT then
-                if (player.x == 3 and player.y == -6) then
+                if distanceToPoint(player.x,player.y,3,-6) <= 1 then
                     npcChat = bartenderNPCChat
-                elseif (player.x == 3 and player.y == 1) then
+                elseif distanceToPoint(player.x,player.y,4,1) <= 1 then
                     npcChat = mortusNPCChat
+                elseif distanceToPoint(player.x,player.y,10,-16) <= 1 then
+                    npcChat = blacksmithChat
                 end
                 currentConversationStage = 1
                 createNPCChatBackground(player.x,player.y)

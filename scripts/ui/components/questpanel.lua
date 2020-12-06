@@ -26,7 +26,7 @@ function drawQuestPanelDropDown(thisX, thisY, title)
     love.graphics.rectangle("fill", thisX+chatCorner:getHeight(), thisY+(getQuestPanelDropDownHeight()-chatCorner:getHeight()), questWidth-chatCorner:getHeight(), chatCorner:getHeight())
     drawQuestTitle(thisX, thisY, title)
     thisY = thisY + getQuestPanelTextHeight(title)+(5*2) + 42
-    for i = 1, tableLength(selectedQuest) do 
+    for i = 1, #selectedQuest do 
         
         love.graphics.printf(selectedQuest[i], thisX+20+20, thisY+20, questWidth-20-10-20, "left")
         

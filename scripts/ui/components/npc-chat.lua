@@ -90,6 +90,88 @@ mortusNPCChat = {
 }}
 }
 
+blacksmithChat = {
+    img = "assets/npc/Blacksmith.png",
+    reputation = 1.0,
+    conversation = {
+        {
+            title = "King's Guard making you craft your own tools now, are they? Or are you here to pay my last invoice?",
+            options = {
+                {
+                    "I'm not King's Guard.",
+                    2,
+                },
+                {
+                    "King's Guard owe you money?",
+                    3,
+                },
+            },
+        },
+        {
+            title = "Ah, well that's a shame. How can I help you, then?",
+                options = {
+                    {
+                        "I'm interested in learning about blacksmithing.",
+                        4,
+                    },
+                    {
+                        "Bartender Fred is worried about some nasty smells.",
+                        5,
+                    }
+                }
+        },
+        {
+            title = "When do they not? I bless them for their protection against the horrors outside of our wall but they sure aren't great at paying for the things they order.",
+                options = {
+                    {"How much are you down?",
+                    6,},
+                    {
+                        "Well, sorry to say that I'm no Kings Guard.",
+                        2,
+                    }
+                }
+        },
+        {
+            title = "Well then! That's great to hear. Well, given my fiscal situation with the King's Guard you're going to need to gather your own supplies. Bring me some stone and wood and I'll teach you to craft.",
+            options = {
+              {  "Stone and wood? Got it.",1}
+            }
+        },
+        {
+            title = "Smells? Hah! He isn't complaining about my ovens, that's for sure. Fred loves them. I should know: I was his best man. Sorry pal, but you're in the wrong place if you're investigating the stench of his beer garden.",
+            options = {
+               { "Ah. Sorry.",1}
+            }
+        },
+        {
+            title = "Years of work, now. Years.",
+            options = {
+                {"Sorry to hear it. Is there any way I can help?",7},
+                {"Sad to hear it, pal.",7}
+            }
+        },
+        {
+            title = "It wouldn't be quite so hard if I had more apprentices to teach up. It'd lessen the burden significantly, that's for sure.",
+            options = {
+                {
+                    "Apprentices? I'd be open to learning about blacksmithing!",4
+                },
+                {
+                    "That makes sense. Sad to say I don't know anyone interested in weapon forging.",8,
+                }
+            }
+        },
+        {
+            title = "Aye, no worries pal. If you ever do... you know who to come to.",
+                options = {
+                    {
+                        "Got it.",1
+                    }
+                }
+        }
+    }
+}
+
 currentConversationStage = 1
 currentConversationTitle = {}
 currentConversationOptions = {}
