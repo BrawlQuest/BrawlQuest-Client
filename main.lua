@@ -22,6 +22,7 @@ require 'scripts.libraries.simple-slider'
 require "scripts.phases.login.login"
 require "scripts.player.other_players"
 require "scripts.enemies"
+require "scripts.npcs"
 require "scripts.world"
 require "scripts.ui.temporary.worldedit"
 require "data.data_controller"
@@ -93,6 +94,7 @@ function love.draw()
         drawWorld()
 
         love.graphics.setColor(1, 1, 1)
+        drawNPCs()
         drawEnemies()
 
         for i, v in ipairs(playersDrawable) do
@@ -118,7 +120,7 @@ function love.draw()
             love.graphics.setColor(1,1,1)
             love.graphics.print("Press E to talk",love.graphics.getWidth()/2-smallTextFont:getWidth("Press E to talk")/2,love.graphics.getHeight()/2+38)
         end
-        if showNPCChatBackground then drawNPCChatBackground(love.graphics.getWidth()/2-128,love.graphics.getHeight()/2-128) end        Luven.camera:draw()
+             Luven.camera:draw()
         -- print(brightnessSlider:getValue())
     end
 
@@ -157,7 +159,7 @@ function love.update(dt)
         updateHUD(dt)
 
         updateEnemies(dt)
-
+        updateNPCs(dt)
         updateCharacter(dt)
         updateBones(dt)
         updateMusic(dt)
@@ -167,13 +169,7 @@ function love.update(dt)
         if not player.target.active then
             Luven.camera:setPosition(player.dx + 16, player.dy + 16)
         end
-
-        date_table = os.date("*t")
-        ms = string.match(tostring(os.clock()), "%d%.(%d+)")
-        hour, minute, second = date_table.hour, date_table.min, date_table.sec
-        timeOfDay = cerp(0.1, 1, ((math.abs(hour) * 60) + math.abs(minute)) / 720)
-        Luven.setAmbientLightColor({timeOfDay, timeOfDay, timeOfDay+0.1})
-
+        
         updateOtherPlayers(dt)
 
         local info = love.thread.getChannel('players'):pop()
@@ -181,6 +177,7 @@ function love.update(dt)
             local response = json:decode(info)
 
             players = response['Players']
+            npcs = response['NPC']
 
             if json:encode(inventoryAlpha) ~= json:encode(response['Inventory']) then
                 updateInventory(response)
@@ -198,7 +195,8 @@ function love.update(dt)
                 }
              end
              
-       
+           timeOfDay = cerp(0.1, 1, ((math.abs(response['CurrentHour']) * 60) + 0) / 720)
+           Luven.setAmbientLightColor({timeOfDay, timeOfDay, timeOfDay+0.1})
 
             if distanceToPoint(me.X, me.Y, player.x, player.y) > 6 then
                 player.x = 0

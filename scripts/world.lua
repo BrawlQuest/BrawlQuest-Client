@@ -103,15 +103,16 @@ function drawWorld()
     love.graphics.setBlendMode("alpha")
     love.graphics.setColor(1,1,1,0.5)
     for i,v in ipairs(pendingWorldChanges) do -- draw world edit pending changes
-        local groundAsset = getWorldAsset(v.GroundTile, v.X, v.Y)
-        local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y)
+        local groundAsset = getWorldAsset(v.GroundTile, v.X, v.Y, true)
+        local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y, true)
         love.graphics.draw(worldImg[groundAsset], v.X*32, v.Y*32)
         love.graphics.draw(worldImg[foregroundAsset], v.X*32, v.Y*32)
     end
     love.graphics.setColor(1,1,1)
 end
 
-function getWorldAsset(v,x,y) 
+function getWorldAsset(v,x,y,notFindWall)
+
     if not worldImg[v] then
         if love.filesystem.getInfo(v) then
             worldImg[v] = love.graphics.newImage(v)
@@ -121,12 +122,15 @@ function getWorldAsset(v,x,y)
     end
     local foregroundAsset = v['ForegroundTile']
     local backgroundAsset = v['GroundTile']
-    if isTileWall(v) then
-        v = getDrawableWall(v, x,y)
-    end
 
-    if isTileWater(v) then
-        v = getDrawableWater(v, x, y)
+    if not notFindWall then
+        if isTileWall(v) then
+            v = getDrawableWall(v, x,y)
+        end
+
+        if isTileWater(v) then
+            v = getDrawableWater(v, x, y)
+        end
     end
 
     return v

@@ -116,6 +116,18 @@ function drawPlayer(v, i)
     end
 end
 
+function drawNamePlate(x,y,name)
+    love.graphics.setFont(playerNameFont)
+    local nameWidth = playerNameFont:getWidth(name)
+    local nameHeight = playerNameFont:getHeight(name)
+    padding = 1
+    love.graphics.setColor(0, 0, 0, 0.6)
+    love.graphics.rectangle("fill", (x) - (nameWidth / 2),y- nameHeight - 3, nameWidth + ((padding+2)*2), nameHeight + (padding*2))
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.print(name, (x) - (nameWidth / 2) + (padding+2), y - nameHeight - 3 + padding)
+    
+end
+
 function updateOtherPlayers(dt)
     for i, v in pairs(players) do
         if playersDrawable[i] == nil then
