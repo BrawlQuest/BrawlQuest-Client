@@ -28,16 +28,16 @@ end
 
 function drawInventoryFields(thisX, y)
     love.graphics.setFont(inventorySubHeaderFont)
-    thisY = y
+    local thisY = y
     for i = 0, #inventoryFields - 1 do -- Draws each inventory field
         if inventoryFieldLength[i+1] ~= 0 then
             inventoryItemField(thisX + 8, thisY + 0, i + 1)
-            thisY = thisY + getUserInventoryFieldHeight(i + 1)
+            thisY = thisY + getUserInventoryFieldHeight(i)
         end
     end
 end
 
-function inventoryItemField(thisX, y, field)
+function inventoryItemField(thisX, thisY, field)
     love.graphics.printf(inventoryFields[field], thisX, thisY, 483)
     thisY = thisY + 18
     for i = 0, #userInventory[field] - 1 do
@@ -74,13 +74,15 @@ function getUserInventoryFieldHeight(field)
     end
 end
 
-function getFullUserInventoryFieldHeight()
-    local j = 0
-    for i = 1, #userInventory do
-        j = j + getUserInventoryFieldHeight(i) + 18
-    end
-    return j
-end
+-- function getFullUserInventoryFieldHeight()
+--     local j = 0
+--     for i = 0, #inventoryFields - 1 do
+--         if inventoryFieldLength[i+1] ~= 0 then
+--             j = j + getUserInventoryFieldHeight(i + 1) + 18
+--         end
+--     end
+--     return j
+-- end
 
 function drawInventoryItem(thisX, thisY, field, item)
     if isMouseOver(thisX*scale, thisY*scale, 32*scale, 32*scale) then

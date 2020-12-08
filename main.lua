@@ -273,7 +273,6 @@ function love.keypressed(key)
                 world = json:decode(b[1])
                 createWorld()
             elseif key == "lctrl" then
-                --
                 pendingWorldChanges[#pendingWorldChanges+1] = {
                     GroundTile = textfields[5],
                     ForegroundTile = textfields[6],
@@ -284,7 +283,6 @@ function love.keypressed(key)
                     X = player.x + 0,
                     Y = player.y + 0,
                 }
-                
             elseif key == keybinds.INTERACT then
                 if distanceToPoint(player.x,player.y,3,-6) <= 1 then
                     npcChat = bartenderNPCChat
@@ -297,9 +295,9 @@ function love.keypressed(key)
                 createNPCChatBackground(player.x,player.y)
                 showNPCChatBackground = not showNPCChatBackground
             end
-        end
-        if key == "q" then
-            love.event.quit()
+            if key == "q" then
+                love.event.quit()
+            end
         end
         checkKeyPressedChat(key)
     end
