@@ -54,9 +54,10 @@ function startConversation()
             c, h = http.request{url = api.url.."/conversation/"..v.Conversation.."/"..username, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
             npcChat = json:decode(b[1])
           -- print(string.gsub(string.gsub(string.gsub(npcChat.Options, "',", '",'),"['",'["'),"']",'"]'))
-            local optionString = string.gsub(npcChat.Options, "',", '"')
-            optionString = string.gsub(optionString, "['", '["')
-            optionString = string.gsub(optionString, "']", '"]')
+            local optionString = npcChat.Options
+            optionString = string.gsub(optionString, "'s", 's')
+            optionString = string.gsub(optionString, "'t", 't')
+            optionString =  string.gsub(optionString, "'", '"')
           npcChat.Options = json:decode(optionString)
             createNPCChatBackground(player.x,player.y)
             showNPCChatBackground = not showNPCChatBackground
