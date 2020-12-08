@@ -29,11 +29,12 @@ end
 function drawInventoryFields(thisX, y)
     love.graphics.setFont(inventorySubHeaderFont)
     local thisY = y
+    print(#inventoryFields - 1)
     for i = 0, #inventoryFields - 1 do -- Draws each inventory field
-        if inventoryFieldLength[i+1] ~= 0 then
+        
             inventoryItemField(thisX + 8, thisY + 0, i + 1)
-            thisY = thisY + getUserInventoryFieldHeight(i)
-        end
+            thisY = thisY + getUserInventoryFieldHeight(i+1)
+  
     end
 end
 
@@ -57,25 +58,29 @@ function inventoryItemField(thisX, thisY, field)
 end
 
 function getUserInventoryFieldHeight(field)
-    if userInventory[field] then
-        local i = #userInventory[field] - 1
-        local j = 2
-        if i <= 0 then
-            return j
-        elseif i >= 1 and i <= 3 then
-            return j + 42
-        elseif i >= 4 and i <= 7 then
-            return j + 84
-        elseif i >= 8 and i <= 11 then
-            return j + 126
-        elseif i >= 12 and i <= 15 then
-            return j + 168
-        elseif i >= 16 and i <= 19 then
-            return j + 168
-        end
-    else
-        return 42
-    end 
+    local i = inventoryFieldLength[field]
+    print(i)
+    return 42
+    -- if userInventory[field] then
+    --     local i = #userInventory[field] - 1
+    --     local j = 2
+    --     -- print(i)
+    --     if i <= 0 then
+    --         return j
+    --     elseif i >= 1 and i <= 3 then
+    --         return j + 42
+    --     elseif i >= 4 and i <= 7 then
+    --         return j + 84
+    --     elseif i >= 8 and i <= 11 then
+    --         return j + 126
+    --     elseif i >= 12 and i <= 15 then
+    --         return j + 168
+    --     elseif i >= 16 and i <= 19 then
+    --         return j + 168
+    --     end
+    -- else
+    --     return 42
+    -- end 
 end
 
 -- function getFullUserInventoryFieldHeight()
