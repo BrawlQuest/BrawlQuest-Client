@@ -199,11 +199,11 @@ function drawHUD()
         love.graphics.push()
         love.graphics.scale(scale)
             w,h = love.graphics.getDimensions()
-            w = (w/scale)/2
-            h = (h/scale)/2
-            drawNPCChatBackground(w - (128/scale/2),h - (128/scale/2))
+          
+            drawNPCChatBackground(w/2 - 128, h/2 - 128)
         love.graphics.pop()
     end  
+
 
     drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
 end 
