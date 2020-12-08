@@ -2,7 +2,7 @@ npcChatBackground = {"Grass", "Tree"}
 
 showNPCChatBackground = false
 
-npcChat = {}
+
 
 bartenderNPCChat = {
     name = "Bartender Fred",
@@ -90,6 +90,7 @@ mortusNPCChat = {
 }}
 }
 
+
 blacksmithChat = {
     img = "assets/npc/Blacksmith.png",
     reputation = 1.0,
@@ -171,7 +172,7 @@ blacksmithChat = {
         }
     }
 }
-
+npcChat = blacksmithChat
 currentConversationStage = 1
 currentConversationTitle = {}
 currentConversationOptions = {}
