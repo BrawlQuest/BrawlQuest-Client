@@ -113,13 +113,16 @@ function love.draw()
             drawEditWorldWindow()
         end
 
-        if distanceToPoint(player.x,player.y,3,-6) <= 1 or distanceToPoint(player.x,player.y,4,1) <= 1 or distanceToPoint(player.x,player.y,10,-16) <= 1  then
-            love.graphics.setFont(smallTextFont)
-            love.graphics.setColor(0,0,0)
-            love.graphics.rectangle("fill",love.graphics.getWidth()/2-smallTextFont:getWidth("Press E to talk")/2,love.graphics.getHeight()/2+38,smallTextFont:getWidth("Press E to talk"),smallTextFont:getHeight())
-            love.graphics.setColor(1,1,1)
-            love.graphics.print("Press E to talk",love.graphics.getWidth()/2-smallTextFont:getWidth("Press E to talk")/2,love.graphics.getHeight()/2+38)
+        for i,v in ipairs(npcs) do
+            if distanceToPoint(player.x,player.y,v.X,v.Y) <= 1 and not showNPCChatBackground  and v.Conversation ~= "" then
+                love.graphics.setFont(smallTextFont)
+                love.graphics.setColor(0,0,0)
+                love.graphics.rectangle("fill",love.graphics.getWidth()/2-smallTextFont:getWidth("Press E to talk")/2,love.graphics.getHeight()/2+38,smallTextFont:getWidth("Press E to talk"),smallTextFont:getHeight())
+                love.graphics.setColor(1,1,1)
+                love.graphics.print("Press E to talk",love.graphics.getWidth()/2-smallTextFont:getWidth("Press E to talk")/2,love.graphics.getHeight()/2+38)
+            end
         end
+       
              Luven.camera:draw()
         -- print(brightnessSlider:getValue())
     end
@@ -273,7 +276,6 @@ function love.keypressed(key)
                 world = json:decode(b[1])
                 createWorld()
             elseif key == "lctrl" then
-                --
                 pendingWorldChanges[#pendingWorldChanges+1] = {
                     GroundTile = textfields[5],
                     ForegroundTile = textfields[6],
@@ -286,16 +288,8 @@ function love.keypressed(key)
                 }
                 
             elseif key == keybinds.INTERACT then
-                if distanceToPoint(player.x,player.y,3,-6) <= 1 then
-                    npcChat = bartenderNPCChat
-                elseif distanceToPoint(player.x,player.y,4,1) <= 1 then
-                    npcChat = mortusNPCChat
-                elseif distanceToPoint(player.x,player.y,10,-16) <= 1 then
-                    npcChat = blacksmithChat
-                end
-                currentConversationStage = 1
-                createNPCChatBackground(player.x,player.y)
-                showNPCChatBackground = not showNPCChatBackground
+                startConversation()
+             
             end
         end
         if key == "q" then
@@ -331,7 +325,9 @@ function love.mousepressed(x, y, button)
     --    checkChatMousePressed()
        checkPerksMousePressed(button)
        checkSettingsMousePressed(button)
-       checkNPCChatMousePressed()
+       if showNPCChatBackground then
+        checkNPCChatMousePressed()
+       end
     end
 end
 
