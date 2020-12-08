@@ -288,7 +288,7 @@ function checkNPCChatMousePressed()
                     showNPCChatBackground = false
                 else
                     local b = {}
-                    c, h = http.request{url = api.url.."/conversation/"..v[2], method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
+                    c, h = http.request{url = api.url.."/conversation/"..v[2].."/"..username, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
                     npcChat = json:decode(b[1])
                     npcChat.Options = json:decode(string.gsub(npcChat.Options, "'", '"'))
                 end

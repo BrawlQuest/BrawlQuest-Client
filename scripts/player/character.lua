@@ -234,7 +234,8 @@ function updateInventory(response)
 
     for i,k in ipairs(newInventoryItems) do
         print(k.Item.Name)
-        burstLoot(player.x + 16, player.y + 16, k.Inventory.Amount, k.Item.ImgPath)
+        burstLoot((player.x*32)-16, (player.y*32)-16, k.Inventory.Amount, k.Item.ImgPath)
         newInventoryItems = {}
     end
+    loadInventory()
 end

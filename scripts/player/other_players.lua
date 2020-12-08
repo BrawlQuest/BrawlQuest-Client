@@ -79,8 +79,12 @@ function drawPlayer(v, i)
         if not v.previousDirection then
             v.previousDirection = "right"
         end
+        if v.RedAlpha ~= null then
+            love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha)
+        end
         drawCharacter(thisPlayer, v.X, v.Y, v)
 
+        love.graphics.setColor(1,1,1)
         love.graphics.setFont(playerNameFont)
         local nameWidth = playerNameFont:getWidth(v.Name)
         local nameHeight = playerNameFont:getHeight(v.Name)
@@ -137,9 +141,23 @@ function updateOtherPlayers(dt)
                 ['X'] = v.X * 32,
                 ['Y'] = v.X * 32,
                 ['AX'] = 0,
-                ['AY'] = 0
+                ['AY'] = 0,
+                ['HP'] = v.HP,
+                ['RedAlpha'] = 0
             }
         end
+
+        if playersDrawable[i].HP > v.HP then
+            playersDrawable[i].HP = v.HP
+            playersDrawable[i].RedAlpha = 1
+            love.audio.play(playerHitSfx)
+        end
+
+        playersDrawable[i].RedAlpha = playersDrawable[i].RedAlpha - 1*dt
+        if playersDrawable[i].RedAlpha < 0 then
+            playersDrawable[i].RedAlpha = 0
+        end
+        
 
         if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X * 32, v.Y * 32) > 64 then
             playersDrawable[i].X = v.X * 32

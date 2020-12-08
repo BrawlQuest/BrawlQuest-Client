@@ -57,21 +57,25 @@ function inventoryItemField(thisX, thisY, field)
 end
 
 function getUserInventoryFieldHeight(field)
-    local i = #userInventory[field] - 1
-    local j = 2
-    if i <= 0 then
-        return j
-    elseif i >= 1 and i <= 3 then
-        return j + 42
-    elseif i >= 4 and i <= 7 then
-        return j + 84
-    elseif i >= 8 and i <= 11 then
-        return j + 126
-    elseif i >= 12 and i <= 15 then
-        return j + 168
-    elseif i >= 16 and i <= 19 then
-        return j + 168
-    end
+    if userInventory[field] then
+        local i = #userInventory[field] - 1
+        local j = 2
+        if i <= 0 then
+            return j
+        elseif i >= 1 and i <= 3 then
+            return j + 42
+        elseif i >= 4 and i <= 7 then
+            return j + 84
+        elseif i >= 8 and i <= 11 then
+            return j + 126
+        elseif i >= 12 and i <= 15 then
+            return j + 168
+        elseif i >= 16 and i <= 19 then
+            return j + 168
+        end
+    else
+        return 42
+    end 
 end
 
 -- function getFullUserInventoryFieldHeight()

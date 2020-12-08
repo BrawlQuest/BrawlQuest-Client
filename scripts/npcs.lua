@@ -33,15 +33,15 @@ function updateNPCs(dt)
             n.Y = v.Y*32
         end
         if distanceToPoint(n.X, n.Y, v.X * 32, v.Y * 32) > 1 then 
-            if n.X-3 > v.X*32 then
-                n.X = n.X - 32*dt
-            elseif n.X+3 < v.X*32 then
-                n.X = n.X + 32*dt
+            if n.X-1 > v.X*32 then
+                n.X = n.X - 30*dt
+            elseif n.X+1 < v.X*32 then
+                n.X = n.X + 30*dt
             end
-            if n.Y-3 > v.Y*32 then
-                n.Y = n.Y - 32*dt
-            elseif n.Y+3 < v.Y*32 then
-                n.Y = n.Y + 32 *dt
+            if n.Y-1 > v.Y*32 then
+                n.Y = n.Y - 30*dt
+            elseif n.Y+1 < v.Y*32 then
+                n.Y = n.Y + 30 *dt
             end
         end
     end
@@ -51,9 +51,13 @@ function startConversation()
     for i,v in ipairs(npcs) do
         if distanceToPoint(player.x,player.y,v.X,v.Y) <= 1 and not showNPCChatBackground  and v.Conversation ~= "" then
             local b = {}
-            c, h = http.request{url = api.url.."/conversation/"..v.Conversation, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
+            c, h = http.request{url = api.url.."/conversation/"..v.Conversation.."/"..username, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
             npcChat = json:decode(b[1])
-            npcChat.Options = json:decode(string.gsub(npcChat.Options, "'", '"'))
+          -- print(string.gsub(string.gsub(string.gsub(npcChat.Options, "',", '",'),"['",'["'),"']",'"]'))
+            local optionString = string.gsub(npcChat.Options, "',", '"')
+            optionString = string.gsub(optionString, "['", '["')
+            optionString = string.gsub(optionString, "']", '"]')
+          npcChat.Options = json:decode(optionString)
             createNPCChatBackground(player.x,player.y)
             showNPCChatBackground = not showNPCChatBackground
         end
