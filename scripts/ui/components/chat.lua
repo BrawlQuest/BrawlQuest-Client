@@ -29,7 +29,7 @@ function checkKeyPressedChat(key)
 			}
 			c, h = http.request{url = api.url.."/chat", method="POST", source=ltn12.source.string(json:encode(chatData)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(chatData)),["token"]=token}}
 			enteredChatText = ""
-			isTypingInChat = false
+			if not chatRepeat then isTypingInChat = false end
 		elseif key == "escape" then 
 			isTypingInChat = false
 		end
@@ -167,9 +167,6 @@ function drawEnterChatBox(thisX, thisY, text)
 		love.graphics.setColor(0,0,0,0.7)
 	end
 	
-	
-
-	-- love.graphics.setColor(0,0,0,0.7)
 	for i = 0, 1 do 
 		love.graphics.draw(chatCorner, thisX+(i*enterChatWidth)+(i*(chatCorner:getWidth()*2)), thisY, math.rad(0+(i*90)))
 		love.graphics.draw(chatCorner, thisX+(i*enterChatWidth)+(i*(chatCorner:getWidth()*2)), thisY+getChatTextHeight(text)+(chatCorner:getHeight()*2), math.rad(-90-(i*90)))
@@ -177,10 +174,11 @@ function drawEnterChatBox(thisX, thisY, text)
 	end
 	love.graphics.rectangle("fill", thisX, thisY+chatCorner:getHeight(), enterChatWidth+(chatCorner:getWidth()*2), getChatTextHeight(text)) -- background rectangle
 	
-	love.graphics.setColor(0,0,0,1)
+	if isTypingInChat then love.graphics.setColor(0,0,0,1) else love.graphics.setColor(1,1,1,1) end
+	
 	love.graphics.printf(text, thisX+chatCorner:getHeight(), thisY+chatCorner:getHeight(), enterChatWidth)
 	love.graphics.setColor(1,1,1,1)
-	if not isTypingInChat then
+	if not isTypingInChat and text == "" then
 		love.graphics.printf("Press Enter to Chat", thisX+chatCorner:getHeight(), thisY+chatCorner:getHeight(), enterChatWidth)
 	end
 end
