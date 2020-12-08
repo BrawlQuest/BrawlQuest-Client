@@ -298,3 +298,13 @@ function checkNPCChatMousePressed()
     end
 
 end
+
+function drawNPCChatIndicator()
+    if distanceToPoint(player.x,player.y,3,-6) <= 1 or distanceToPoint(player.x,player.y,4,1) <= 1 or distanceToPoint(player.x,player.y,10,-16) <= 1  then
+        love.graphics.setFont(smallTextFont)
+        love.graphics.setColor(0,0,0)
+        love.graphics.rectangle("fill",love.graphics.getWidth()/2-smallTextFont:getWidth("Press E to talk")/2,love.graphics.getHeight()/2+38,smallTextFont:getWidth("Press E to talk"),smallTextFont:getHeight())
+        love.graphics.setColor(1,1,1)
+        love.graphics.print("Press E to talk",love.graphics.getWidth()/2-smallTextFont:getWidth("Press E to talk")/2,love.graphics.getHeight()/2+38)
+    end
+end

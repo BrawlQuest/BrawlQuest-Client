@@ -140,15 +140,15 @@ function updateHUD( dt )
     posYChat = posYChat + velyChat * dt
     velyChat = velyChat - velyChat * math.min( dt * 15, 1 )
 
-    if posYInventory <= (getFullUserInventoryFieldHeight()*-1)+483 then
-      --  posYInventory = (getFullUserInventoryFieldHeight()*-1)+483
-        velyInventory = 0
-    elseif posYInventory > 0 then
-        posYInventory = 0
-        velyInventory = 0
-    else
+    -- if posYInventory <= (getFullUserInventoryFieldHeight()*-1)+483 then
+    --   --  posYInventory = (getFullUserInventoryFieldHeight()*-1)+483
+    --     velyInventory = 0
+    -- elseif posYInventory > 0 then
+    --     posYInventory = 0
+    --     velyInventory = 0
+    -- else
         posYInventory = posYInventory + velyInventory * dt
-    end
+    -- end
 
     if posYChat < 0 then
         posYChat = 0
@@ -182,7 +182,7 @@ function drawHUD()
     love.graphics.push() -- chat and quests scaling TODO: Quests
         local i = 0.75
         love.graphics.scale(scale*i)
-        drawBattlebar((uiX/2)/i, uiY/i)
+        -- drawBattlebar((uiX/2)/i, uiY/i)
         drawQuestPopUp((uiX/2)/i, (uiY/2)/i)
         
     love.graphics.pop()

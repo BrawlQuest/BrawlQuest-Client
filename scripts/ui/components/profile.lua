@@ -58,20 +58,20 @@ function drawProfilePic(thisX, thisY, thisScale, thisRotation, tplayer)
 			r = 1
 		end
 
-		if tplayer.Shield ~= null then
-	--		love.graphics.draw(itemImg[tplayer.Shield.ImgPath], ShieldImgStencil, thisX, thisY/i, 0, r, 1)
+		if itemImg[tplayer.Shield] ~= nil then
+			love.graphics.draw(itemImg[tplayer.Shield.ImgPath], ShieldImgStencil, thisX, thisY/i, 0, r, 1)
 		end
 		
 		if playerImg ~= null then
-	--		love.graphics.draw(playerImg, profileImgStencil, thisX, thisY/i, 0, r, 1)
+			love.graphics.draw(playerImg, profileImgStencil, thisX, thisY/i, 0, r, 1)
 		end
 
-		if tplayer.ChestArmour ~= null then
-	--		love.graphics.draw(itemImg[tplayer.ChestArmour.ImgPath], profileImgStencil, thisX, thisY/i, 0, r, 1)
+		if itemImg[tplayer.ChestArmour] ~= nil then
+			love.graphics.draw(itemImg[tplayer.ChestArmour.ImgPath], profileImgStencil, thisX, thisY/i, 0, r, 1)
 		end
 
-		if tplayer.HeadArmour ~= null then
-	--		love.graphics.draw(itemImg[tplayer.HeadArmour.ImgPath], profileImgStencil, thisX, thisY/i, 0, r, 1)
+		if itemImg[tplayer.HeadArmour] ~= nil then
+			love.graphics.draw(itemImg[tplayer.HeadArmour.ImgPath], profileImgStencil, thisX, thisY/i, 0, r, 1)
 		end
 	love.graphics.pop()
 end

@@ -105,13 +105,14 @@ function love.draw()
         drawLoot()
         drawFloats()
         Luven.drawEnd()
-    
+        drawNPCChatIndicator()
         if not isWorldEditWindowOpen then
             drawHUD()
         end
         if isWorldEditWindowOpen then
             drawEditWorldWindow()
         end
+
 
         for i,v in ipairs(npcs) do
             if distanceToPoint(player.x,player.y,v.X,v.Y) <= 1 and not showNPCChatBackground  and v.Conversation ~= "" then
@@ -124,6 +125,7 @@ function love.draw()
         end
        
              Luven.camera:draw()
+
         -- print(brightnessSlider:getValue())
     end
 
@@ -286,14 +288,13 @@ function love.keypressed(key)
                     X = player.x + 0,
                     Y = player.y + 0,
                 }
-                
             elseif key == keybinds.INTERACT then
                 startConversation()
              
             end
-        end
-        if key == "q" then
-            love.event.quit()
+            if key == "q" then
+                love.event.quit()
+            end
         end
         checkKeyPressedChat(key)
     end
