@@ -30,7 +30,7 @@ function drawProfile()
 		love.graphics.rectangle("fill", 20, 94, me.Mana / j, 10) -- Mana
 		
 		love.graphics.setColor(1,0.5,0,1)
-		love.graphics.rectangle("fill", 20, 108, me.XP / 100, 10) -- XP
+		love.graphics.rectangle("fill", 20, 108, me.XP / j, 10) -- XP
 	end
 
 	love.graphics.setColor(1,1,1,1)

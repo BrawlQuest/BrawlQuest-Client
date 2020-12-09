@@ -27,6 +27,7 @@ player = {
         stepSndPlay = 0.3
     },
     walk = 0,
+    cp = 0
 }
 
 newInventoryItems = {}

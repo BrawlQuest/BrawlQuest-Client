@@ -47,6 +47,10 @@ end
 
 function updateLoot(dt)
     for i,v in ipairs(loot) do
+        local targetX = player.dx+16
+        local targetY = player.dy+16
+
+        
         v.timeToFly = v.timeToFly - 1*dt
         v.x = v.x + v.xv*dt
         v.y = v.y + v.yv*dt

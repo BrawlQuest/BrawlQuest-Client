@@ -125,7 +125,7 @@ function love.draw()
         end
        
              Luven.camera:draw()
-
+          
         -- print(brightnessSlider:getValue())
     end
 
@@ -189,6 +189,7 @@ function love.update(dt)
                 inventoryAlpha = response['Inventory']
             end
             me = response['Me']
+            player.cp = response['CharPoints']
             messages = {}
             for i=1, #response['Chat']['Global'] do
                 local v = response['Chat']['Global'][#response['Chat']['Global'] + 1 - i]
@@ -213,6 +214,11 @@ function love.update(dt)
             end
             -- update player
             player.hp = me.HP
+            player.xp = me.XP
+            if player.lvl ~= me.LVL then
+                love.audio.play(lvlSfx)
+                player.lvl = me.LVL
+            end
             player.name = me.Name
             newEnemyData(response['Enemies'])
             if response['Tick'] ~= previousTick then

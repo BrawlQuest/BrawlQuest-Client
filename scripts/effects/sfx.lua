@@ -10,6 +10,8 @@ function initSFX()
     xpSfx = love.audio.newSource("assets/sfx/xp.wav", "static")
     xpSfx:setVolume(0.4*sfxVolume)
 
+    lvlSfx = love.audio.newSource("assets/sfx/player/level.mp3", "static")
+
     awakeSfx = love.audio.newSource("assets/sfx/player/awake.wav", "static")
     playerHitSfx = love.audio.newSource("assets/sfx/hit.wav", "static")
     enemyHitSfx = love.audio.newSource("assets/sfx/impact_b.wav", "static")
