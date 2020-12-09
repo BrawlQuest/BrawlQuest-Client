@@ -1,16 +1,3 @@
-keybinds = {
-    UP = "w",
-    DOWN = "s",
-    LEFT = "a",
-    RIGHT = "d",
-    ATTACK_UP = "up",
-    ATTACK_DOWN = "down",
-    ATTACK_LEFT = "left",
-    ATTACK_RIGHT = "right",
-    SHIELD = "lshift",
-    INTERACT = "e"
-}
-
 
 musicVolume = 0
 sfxVolume = 1
@@ -33,6 +20,7 @@ function initSettings()
         dpiScaling = contents["dpiScaling"]
         fullscreen = contents["fullscreen"]
         chatRepeat = contents["chatRepeat"]
+        scale = contents["scale"]
         api.url = servers[selectedServer].url
         print("File Initiated")
     else
@@ -44,6 +32,7 @@ function initSettings()
             dpiScaling = dpiScaling,
             fullscreen = fullscreen,
             chatRepeat = chatRepeat,
+            scale = scale,
         }))
     end  
 
@@ -78,6 +67,7 @@ function writeSettings()
         dpiScaling = dpiScaling,
         fullscreen = fullscreen,
         chatRepeat = chatRepeat,
+        scale = scale,
     }))
 end
 

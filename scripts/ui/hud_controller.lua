@@ -9,7 +9,6 @@ UITextFields = {
 
 function initHUD()
     --scaling
-    uiX, uiY = 1
     scale = 1
 
     -- fonts
@@ -26,10 +25,11 @@ function initHUD()
    
     chatFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 24)
 
+    npcChatFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 12)
+
     -- scrolling
     posYInventory, velyInventory, posYChat, velyChat = 0, 0, 0, 0
-    uiX = love.graphics.getWidth()/scale -- scaling options
-    uiY = love.graphics.getHeight()/scale
+    uiX, uiY = love.graphics.getWidth()/scale, love.graphics.getHeight()/scale -- scaling options
 
     -- mouse
 	love.mouse.setVisible(false) -- make default mouse invisible
@@ -64,16 +64,18 @@ function initHUD()
     inventoryItemBackground = love.graphics.newImage("assets/ui/hud/inventory/inventoryItem.png")
 
     inventoryFields = {"weapons", "spells", "armour", "mounts", "other"}
-    inventoryFieldLength = {0, 0, 0, 0, 0}
-    userInventory = {}
-    userInventory[1] = {}
-    userInventory[2] = {}
-    userInventory[3] = {}
-    userInventory[4] = {}
-    userInventory[5] = {}
+    
+    -- userInventory = {}
+    -- userInventory[1] = {}
+    -- userInventory[2] = {}
+    -- userInventory[3] = {}
+    -- userInventory[4] = {}
+    -- userInventory[5] = {}
     loadInventory()
 
     userInventoryFieldHeight = {}
+
+    scrollInventory = {up = true, down = true,}
 
     -- Profile
 
@@ -139,16 +141,20 @@ function updateHUD( dt )
 
     posYChat = posYChat + velyChat * dt
     velyChat = velyChat - velyChat * math.min( dt * 15, 1 )
+    
 
-    -- if posYInventory <= (getFullUserInventoryFieldHeight()*-1)+483 then
-    --   --  posYInventory = (getFullUserInventoryFieldHeight()*-1)+483
-    --     velyInventory = 0
-    -- elseif posYInventory > 0 then
-    --     posYInventory = 0
-    --     velyInventory = 0
-    -- else
+    if posYInventory < (getFullUserInventoryFieldHeight()*-1) and scrollInventory.up then
+        posYInventory = (getFullUserInventoryFieldHeight()*-1)
+        velyInventory = 0
+        scrollInventory.up = false
+    elseif posYInventory > 0 and scrollInventory.down then
+        posYInventory = 0
+        velyInventory = 0
+        scrollInventory.down = false
+    elseif scrollInventory.up or scrollInventory.down then
         posYInventory = posYInventory + velyInventory * dt
-    -- end
+        scrollInventory.up, scrollInventory.down = true, true
+    end
 
     if posYChat < 0 then
         posYChat = 0
@@ -193,25 +199,9 @@ function drawHUD()
         drawToolbar()
         drawProfile(uiX/i, uiY/i)
         drawTooltip()
+        if showNPCChatBackground then drawNPCChatBackground((uiX/2)/i - 128, (uiY/2)/i - 128) end
     love.graphics.pop()
-
-    if showNPCChatBackground then
-        love.graphics.push()
-        love.graphics.scale(scale)
-            w,h = love.graphics.getDimensions()
-          
-            drawNPCChatBackground(w/2 - 128, h/2 - 128)
-        love.graphics.pop()
-    end  
-
 
     drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
 end 
 
-function love.wheelmoved( dx, dy )
-    if isMouseOver(0, toolbarY*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
-       velyInventory = velyInventory + dy * 512
-    else 
-        velyChat = velyChat + dy * 512
-    end
-end
