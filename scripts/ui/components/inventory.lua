@@ -23,13 +23,14 @@ function loadInventory()
             end
         end
         userInventory[t][#userInventory[t] + 1] = v
+        print(#userInventory[t])
     end
 end
 
 function drawInventoryFields(thisX, y)
     love.graphics.setFont(inventorySubHeaderFont)
     local thisY = y
-    print(#inventoryFields - 1)
+    -- print(#inventoryFields - 1)
     for i = 0, #inventoryFields - 1 do -- Draws each inventory field
         
             inventoryItemField(thisX + 8, thisY + 0, i + 1)
@@ -59,7 +60,7 @@ end
 
 function getUserInventoryFieldHeight(field)
     local i = inventoryFieldLength[field]
-    print(i)
+    -- print(i)
     return 42
     -- if userInventory[field] then
     --     local i = #userInventory[field] - 1
