@@ -1,16 +1,3 @@
-keybinds = {
-    UP = "w",
-    DOWN = "s",
-    LEFT = "a",
-    RIGHT = "d",
-    ATTACK_UP = "up",
-    ATTACK_DOWN = "down",
-    ATTACK_LEFT = "left",
-    ATTACK_RIGHT = "right",
-    SHIELD = "lshift",
-    INTERACT = "e"
-}
-
 
 musicVolume = 0
 sfxVolume = 1

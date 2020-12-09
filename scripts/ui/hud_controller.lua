@@ -26,6 +26,8 @@ function initHUD()
    
     chatFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 24)
 
+    npcChatFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 12)
+
     -- scrolling
     posYInventory, velyInventory, posYChat, velyChat = 0, 0, 0, 0
     uiX = love.graphics.getWidth()/scale -- scaling options
@@ -199,25 +201,9 @@ function drawHUD()
         drawToolbar()
         drawProfile(uiX/i, uiY/i)
         drawTooltip()
+        if showNPCChatBackground then drawNPCChatBackground((uiX/2)/i - 128, (uiY/2)/i - 128) end
     love.graphics.pop()
-
-    if showNPCChatBackground then
-        love.graphics.push()
-        love.graphics.scale(scale)
-            w,h = love.graphics.getDimensions()
-          
-            drawNPCChatBackground(w/2 - 128, h/2 - 128)
-        love.graphics.pop()
-    end  
-
 
     drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
 end 
 
-function love.wheelmoved( dx, dy )
-    if isMouseOver(0, toolbarY*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
-        velyInventory = velyInventory + dy * 512
-    else 
-        velyChat = velyChat + dy * 512
-    end
-end

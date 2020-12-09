@@ -128,10 +128,6 @@ function drawInventoryStencil()
     love.graphics.rectangle("fill", 70, toolbarY + 40, 180, 483)
 end
 
-function drawChatStencil()
-    love.graphics.rectangle("fill", 70, toolbarY + 40, 180, 483)
-end
-
 function checkInventoryMousePressed()
     if selectedItem ~= nil and selectedItem.ID ~= nil and
         isMouseOver(0, toolbarY * scale, inventory:getWidth() * scale, inventory:getHeight() * scale) then
