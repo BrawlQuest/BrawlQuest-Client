@@ -64,7 +64,6 @@ function checkLoginKeyPressedPhaseLogin(key)
         textfields[editingField] =  string.sub( textfields[editingField], 1, string.len(textfields[editingField]) - 1)
         if editingField == 2 then
             textfields[3] =  string.sub( textfields[3], 1, string.len(textfields[3]) - 1)
-     
         end
     elseif key == "tab" or key == "return" then
         if editingField == 1 then
