@@ -64,16 +64,18 @@ function initHUD()
     inventoryItemBackground = love.graphics.newImage("assets/ui/hud/inventory/inventoryItem.png")
 
     inventoryFields = {"weapons", "spells", "armour", "mounts", "other"}
-    inventoryFieldLength = {0, 0, 0, 0, 0}
-    userInventory = {}
-    userInventory[1] = {}
-    userInventory[2] = {}
-    userInventory[3] = {}
-    userInventory[4] = {}
-    userInventory[5] = {}
+    
+    -- userInventory = {}
+    -- userInventory[1] = {}
+    -- userInventory[2] = {}
+    -- userInventory[3] = {}
+    -- userInventory[4] = {}
+    -- userInventory[5] = {}
     loadInventory()
 
     userInventoryFieldHeight = {}
+
+    scrollInventory = {up = true, down = true,}
 
     -- Profile
 
@@ -139,16 +141,20 @@ function updateHUD( dt )
 
     posYChat = posYChat + velyChat * dt
     velyChat = velyChat - velyChat * math.min( dt * 15, 1 )
+    
 
-    -- if posYInventory <= (getFullUserInventoryFieldHeight()*-1)+483 then
-    --   --  posYInventory = (getFullUserInventoryFieldHeight()*-1)+483
-    --     velyInventory = 0
-    -- elseif posYInventory > 0 then
-    --     posYInventory = 0
-    --     velyInventory = 0
-    -- else
+    if posYInventory < (getFullUserInventoryFieldHeight()*-1) and scrollInventory.up then
+        posYInventory = (getFullUserInventoryFieldHeight()*-1)
+        velyInventory = 0
+        scrollInventory.up = false
+    elseif posYInventory > 0 and scrollInventory.down then
+        posYInventory = 0
+        velyInventory = 0
+        scrollInventory.down = false
+    elseif scrollInventory.up or scrollInventory.down then
         posYInventory = posYInventory + velyInventory * dt
-    -- end
+        scrollInventory.up, scrollInventory.down = true, true
+    end
 
     if posYChat < 0 then
         posYChat = 0
@@ -210,7 +216,7 @@ end
 
 function love.wheelmoved( dx, dy )
     if isMouseOver(0, toolbarY*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
-       velyInventory = velyInventory + dy * 512
+        velyInventory = velyInventory + dy * 512
     else 
         velyChat = velyChat + dy * 512
     end
