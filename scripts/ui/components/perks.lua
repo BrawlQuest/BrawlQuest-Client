@@ -28,9 +28,9 @@ function drawPerks()
         love.graphics.draw(perkImages[i], thisX, thisY+14)
         love.graphics.setColor(0,0,0,1)
         love.graphics.setFont(circleFont)
-        love.graphics.print(me[perkTitles[i]], thisX-(circleFont:getWidth(perks[i])/2)+34, thisY+14+27)
+        love.graphics.print(perkTitles[i], thisX-(circleFont:getWidth(perks[i])/2)+34, thisY+14+27)
         love.graphics.setColor(1,1,1,1)
-    end
+    end  
 
     love.graphics.setFont(font)
 end

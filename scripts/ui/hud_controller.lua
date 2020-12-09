@@ -108,7 +108,7 @@ function initHUD()
         0
     }
     perkTitles = {
-        "STR", "INT", "STA"
+        "strength", "intelligence", "defense"
     }
 
     -- Battlebar

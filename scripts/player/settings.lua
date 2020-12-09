@@ -36,6 +36,8 @@ function initSettings()
         }))
     end  
 
+    uiX, uiY = love.graphics.getWidth()/scale, love.graphics.getHeight()/scale
+
     if not dpiScaling then dpiScaler(false) end
 
     if fullscreen then love.window.setFullscreen(true) end
