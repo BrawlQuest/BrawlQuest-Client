@@ -171,6 +171,7 @@ function love.update(dt)
         updateBones(dt)
         updateMusic(dt)
         updateLoot(dt)
+        updateNPCChat(dt)
         Luven.update(dt)
 
         if not player.target.active then
@@ -245,6 +246,8 @@ function love.resize(width, height)
         createWorld()
         loadSliders()
     end
-    uiX = love.graphics.getWidth()/scale -- scaling options
-    uiY = love.graphics.getHeight()/scale
+    if scale then
+        uiX = love.graphics.getWidth()/scale -- scaling options
+        uiY = love.graphics.getHeight()/scale
+    end
 end

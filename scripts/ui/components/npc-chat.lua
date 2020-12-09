@@ -175,6 +175,10 @@ npcChat = blacksmithChat
 currentConversationStage = 1
 currentConversationTitle = {}
 currentConversationOptions = {}
+chatXpos = -64
+chatOpacity = 0
+nextChar = 0.1
+chatWritten = ""
 
 function createNPCChatBackground(x, y)
     npcChatBackground = {}
@@ -217,16 +221,18 @@ function createNPCChatBackground(x, y)
 end
 
 function drawNPCChatBackground(x, y)
+    
     love.graphics.setColor(0.3, 0.3, 1)
     love.graphics.rectangle("fill", x, y, 256, 256)
     love.graphics.setColor(1, 1, 1)
-
-    for i = 0, 1 do
-        love.graphics.draw(worldImg[npcChatBackground[2]], x + (i * 128), y + 78, 0, 4, 4)
+    love.graphics.stencil(drawNPCChatStencil, "replace", 1) -- stencils inventory
+    love.graphics.setStencilTest("greater", 0) -- push
+    for i = -2, 2 do
+        love.graphics.draw(worldImg[npcChatBackground[2]], x + (i * 128) - chatXpos, y + 78, 0, 4, 4)
     end
 
-    for i = 0, 3 do
-        love.graphics.draw(worldImg[npcChatBackground[1]], x + (i * 64), y + 192, 0, 2, 2)
+    for i = -5, 5 do
+        love.graphics.draw(worldImg[npcChatBackground[1]], x + (i * 64) - chatXpos, y + 192, 0, 2, 2)
     end
 
     if not worldImg[npcChat.ImgPath] then
@@ -236,11 +242,10 @@ function drawNPCChatBackground(x, y)
             worldImg[npcChat.ImgPath] = love.graphics.newImage("assets/error.png")
         end
     end
-    love.graphics.draw(worldImg[npcChat.ImgPath], x + 128, y + 126, 0, 4, 4)
+    love.graphics.draw(worldImg[npcChat.ImgPath], x + 128 - (chatXpos*2), y + 126, 0, 4, 4)
 
     -- Clouds
-    love.graphics.stencil(drawNPCChatStencil, "replace", 1) -- stencils inventory
-    love.graphics.setStencilTest("greater", 0) -- push
+    
         -- Draw Clouds Here
         -- Draw Clouds Here
         -- Draw Clouds Here
@@ -251,16 +256,17 @@ function drawNPCChatBackground(x, y)
         -- love.graphics.setColor(1,0,0,1)
         -- love.graphics.rectangle("fill", 0,0,uiX,uiY)
         
-    love.graphics.setStencilTest() -- pop
-
-    love.graphics.setColor(1,1,1,1)
+    love.graphics.setColor(1,1,1,chatOpacity)
     love.graphics.setFont(npcChatFont)
-    love.graphics.printf(npcChat.Title, x + 10, y + 10, 200, "left")
+    love.graphics.printf(chatWritten, x + 10, y + 10, 200, "left")
     local ty = y + 125
     for i, v in pairs(npcChat.Options) do
-        drawDialogueOption(x + 20, ty, v[1])
+        drawDialogueOption(x + 20 , ty, v[1])
         ty = ty + getDialogueBoxHeight(v[1]) + 10
     end
+
+    love.graphics.setStencilTest() -- pop
+
 
     -- love.graphics.setColor(0, 0.4 + ((npcChat.reputation / 1) * 0.4), 0)
     -- love.graphics.rectangle("fill", x + 128, y + 100, 120, smallTextFont:getHeight() + 4)
@@ -271,15 +277,42 @@ function drawNPCChatBackground(x, y)
     love.graphics.rectangle("line", x, y, 256, 256)
 end
 
+function updateNPCChat(dt)
+    chatXpos = chatXpos + 64*dt
+    if chatXpos > 0 then
+        chatOpacity = chatOpacity + 2*dt
+        if chatOpacity > 1 then chatOpacity = 1 end
+        nextChar = nextChar - 1 *dt
+        if nextChar < 0 then
+           
+            if npcChat and #chatWritten ~= #npcChat.Title then
+                chatWritten = chatWritten..string.sub(npcChat.Title,#chatWritten+1,#chatWritten+1)
+                if string.sub(npcChat.Title,#chatWritten,#chatWritten) == "." or string.sub(npcChat.Title,#chatWritten,#chatWritten) == "?" then
+                    nextChar = 0.3
+                elseif string.sub(npcChat.Title,#chatWritten,#chatWritten) == "," then
+                    nextChar = 0.1
+                else
+                    nextChar = 0.03
+                end
+            else
+                nextChar = 0.03
+            end
+        end
+        chatXpos = 0
+    end
+
+   
+end
+
 function drawDialogueOption(x, y, text)
     local rHeight = getDialogueBoxHeight(text)
     if isMouseOver(x*scale, y*scale, 133*scale, rHeight*scale) then
-        love.graphics.setColor(0.2, 0.2, 0.2, 1)
+        love.graphics.setColor(0.2, 0.2, 0.2, chatOpacity)
     else
-        love.graphics.setColor(0, 0, 0, 1)
+        love.graphics.setColor(0, 0, 0, chatOpacity)
     end
     love.graphics.rectangle("fill", x, y, 133, rHeight + 5)
-    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.setColor(1, 1, 1, chatOpacity)
     love.graphics.printf(text, x + 5, y + 5, 128, "left")
 end
 
@@ -300,6 +333,7 @@ function checkNPCChatMousePressed()
             local rHeight = getDialogueBoxHeight(v[1]) * scale
             if isMouseOver(tx, ty, 133 * scale, (rHeight + 5) * scale) then
                 currentConversationStage = v[2]
+                chatWritten = ""
                 if v[2] == "1" then
                     showNPCChatBackground = false
                 else

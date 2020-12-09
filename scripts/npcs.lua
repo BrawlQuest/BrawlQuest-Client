@@ -53,6 +53,10 @@ function startConversation()
             local b = {}
             c, h = http.request{url = api.url.."/conversation/"..v.Conversation.."/"..username, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
             npcChat = json:decode(b[1])
+            chatXpos = -64
+            chatOpacity = 0
+            chatWritten = ""
+            
           -- print(string.gsub(string.gsub(string.gsub(npcChat.Options, "',", '",'),"['",'["'),"']",'"]'))
             local optionString = npcChat.Options
             optionString = string.gsub(optionString, "'s", 's')
