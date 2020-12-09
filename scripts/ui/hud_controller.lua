@@ -9,7 +9,6 @@ UITextFields = {
 
 function initHUD()
     --scaling
-    uiX, uiY = 1
     scale = 1
 
     -- fonts
@@ -30,8 +29,7 @@ function initHUD()
 
     -- scrolling
     posYInventory, velyInventory, posYChat, velyChat = 0, 0, 0, 0
-    uiX = love.graphics.getWidth()/scale -- scaling options
-    uiY = love.graphics.getHeight()/scale
+    uiX, uiY = love.graphics.getWidth()/scale, love.graphics.getHeight()/scale -- scaling options
 
     -- mouse
 	love.mouse.setVisible(false) -- make default mouse invisible

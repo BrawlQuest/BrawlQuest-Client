@@ -20,6 +20,7 @@ function initSettings()
         dpiScaling = contents["dpiScaling"]
         fullscreen = contents["fullscreen"]
         chatRepeat = contents["chatRepeat"]
+        scale = contents["scale"]
         api.url = servers[selectedServer].url
         print("File Initiated")
     else
@@ -31,6 +32,7 @@ function initSettings()
             dpiScaling = dpiScaling,
             fullscreen = fullscreen,
             chatRepeat = chatRepeat,
+            scale = scale,
         }))
     end  
 
@@ -65,6 +67,7 @@ function writeSettings()
         dpiScaling = dpiScaling,
         fullscreen = fullscreen,
         chatRepeat = chatRepeat,
+        scale = scale,
     }))
 end
 
