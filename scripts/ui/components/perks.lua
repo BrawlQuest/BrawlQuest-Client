@@ -16,20 +16,22 @@ function drawPerks()
     love.graphics.print("available\npoints", thisX+((mouseUp:getWidth()+spacing)*2)+perksReserve:getWidth()+spacing, thisY+4)
     local thisY = thisY + 30
     for i = 1, 3 do
-        love.graphics.setFont(headerTinyFont)
-        local thisX = thisX + (perkTitleWidth*(i-1))
-        love.graphics.print(perkTitles[i], thisX-(headerTinyFont:getWidth(perkTitles[i])/2)+19, thisY)
-        
-        if isMouseOver(thisX*scale, (thisY+14)*scale, 38*scale, 38*scale) then
-            love.graphics.setColor(0.6, 0.6, 0.6)
-            selectedPerk = i
-        end
+        if me[perkTitles[i]] then
+            love.graphics.setFont(headerTinyFont)
+            local thisX = thisX + (perkTitleWidth*(i-1))
+            love.graphics.print(perkTitles[i], thisX-(headerTinyFont:getWidth(perkTitles[i])/2)+19, thisY)
+            
+            if isMouseOver(thisX*scale, (thisY+14)*scale, 38*scale, 38*scale) then
+                love.graphics.setColor(0.6, 0.6, 0.6)
+                selectedPerk = i
+            end
 
-        love.graphics.draw(perkImages[i], thisX, thisY+14)
-        love.graphics.setColor(0,0,0,1)
-        love.graphics.setFont(circleFont)
-        love.graphics.print(perkTitles[i], thisX-(circleFont:getWidth(perks[i])/2)+34, thisY+14+27)
-        love.graphics.setColor(1,1,1,1)
+            love.graphics.draw(perkImages[i], thisX, thisY+14)
+            love.graphics.setColor(0,0,0,1)
+            love.graphics.setFont(circleFont)
+            love.graphics.print(me[perkTitles[i]], thisX-(circleFont:getWidth(perks[i])/2)+34, thisY+14+27)
+            love.graphics.setColor(1,1,1,1)
+        end
     end  
 
     love.graphics.setFont(font)

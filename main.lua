@@ -192,7 +192,7 @@ function love.update(dt)
                 updateInventory(response)
                 inventoryAlpha = response['Inventory']
             end
-            me = response['Me']
+         
             player.cp = response['CharPoints']
             messages = {}
             for i=1, #response['Chat']['Global'] do
@@ -208,11 +208,16 @@ function love.update(dt)
            timeOfDay = cerp(0.1, 1, ((math.abs(response['CurrentHour']) * 60) + 0) / 720)
            Luven.setAmbientLightColor({timeOfDay, timeOfDay, timeOfDay+0.1})
 
-            if distanceToPoint(me.X, me.Y, player.x, player.y) > 6 then
-                player.x = 0
-                player.dx = 0
-                player.dy = 0
-                player.y = 0
+           me = response['Me']
+           player.x = me.X
+           player.dx = me.X*32
+           player.dy = me.Y*32
+           player.y = me.Y
+            if distanceToPoint(me.X, me.Y, player.x, player.y) > 4 then
+                player.x = me.X
+                player.dx = me.X*32
+                player.dy = me.Y*32
+                player.y = me.Y
                 totalCoverAlpha = 2
                 love.audio.play(awakeSfx)
             end
