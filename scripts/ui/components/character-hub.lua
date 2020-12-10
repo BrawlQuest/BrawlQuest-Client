@@ -1,4 +1,6 @@
 function loadCharacterHub()
+    
+
     hubImages = {
         placeholder = love.graphics.newImage("assets/ui/hud/charater-hub/placeholder.png"),
         profileBG = love.graphics.newImage("assets/ui/hud/charater-hub/profile.png"),
@@ -30,12 +32,14 @@ function loadCharacterHub()
             {1,0,0,1},
             {0,0.5,1,1},
             {1,0.5,0,1},
-        }
+        },
+        font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 9),
     }
 end
 
 function drawCharacterHub(thisX, thisY)
     if me ~= null and me.HP ~= null or me.XP ~= null then
+        love.graphics.setFont(characterHub.font)
         thisX, thisY = thisX, thisY - hubImages.profileBG:getHeight()
         drawCharacterHubProfile(thisX, thisY)
         thisX = thisX + hubImages.profileBG:getWidth()
@@ -58,12 +62,15 @@ function drawCharacterHubProfile(thisX, thisY)
     drawProfilePic(thisX + 9, thisY + 8, 1, "right", me.Name)
     
     love.graphics.draw(hubImages.profileFG, thisX, thisY)
+    love.graphics.setColor(0,0,0,1)
+    love.graphics.print(me.LVL, thisX + 56 - (characterHub.font:getWidth(me.LVL)/2), thisY + 85 - (characterHub.font:getHeight(me.LVL)/2))
 end
 
 function drawCharacterHubStats(thisX, thisY)
     love.graphics.setColor(unpack(characterHub.backgroundColor))
     love.graphics.draw(hubImages.statsBG, thisX, thisY)
-    
+    love.graphics.setFont(characterHub.font)
+    -- local statNumbers = {me.STA, me.INT, me.DEF}
     for i = 0, 2 do
         if isMouseOver((thisX + (49 * i) + 3) * scale, (thisY + 43) * scale, hubImages.statCardBg:getWidth() * scale, hubImages.statCardBg:getHeight() * scale) then
             love.graphics.setColor(1,0,0,1)
@@ -71,10 +78,17 @@ function drawCharacterHubStats(thisX, thisY)
             love.graphics.setColor(1,1,1,0.70)
         end
         love.graphics.draw(hubImages.statCardBg, thisX + (49 * i) + 3, thisY + 43)
+        
     end
 
     love.graphics.setColor(1,1,1,1)
     love.graphics.draw(hubImages.statsFG, thisX, thisY)
+    
+    love.graphics.setColor(0,0,0,1)
+    love.graphics.print(perks.reserve, thisX + 77 - (characterHub.font:getWidth(perks.reserve)/2), thisY + 28 - (characterHub.font:getHeight(perks.reserve)/2))
+    for i = 0, 2 do
+        love.graphics.print(perks[i+1], thisX + (49 * i) + 3 + 32 - (characterHub.font:getWidth(perks[i+1])/2), thisY + 43 + 42 - (characterHub.font:getHeight(perks[i+1])/2))
+    end
 end
 
 function drawCharacterHubMeters(thisX, thisY)
@@ -84,7 +98,7 @@ function drawCharacterHubMeters(thisX, thisY)
     love.graphics.setColor(1,1,1,1)
     if me.Name ~= null then love.graphics.print(me.Name, thisX + 4, thisY) end
     thisY = thisY + 25
-    love.graphics.setFont(headerTinyFont)
+    love.graphics.setFont(characterHub.font)
     local j = (100/151)
     local meterLevels = {me.HP, me.Mana, me.XP}
     for i = 0, 2 do
@@ -98,7 +112,7 @@ function drawCharacterHubMeters(thisX, thisY)
         love.graphics.setColor(1,1,1,1)
         love.graphics.draw(hubImages.meterIcons[i+1], thisX, thisY + spacing)
         love.graphics.draw(hubImages.meterNames[i+1], thisX, thisY + spacing)
-        love.graphics.print(meterLevels[i+1], thisX + 187, thisY + spacing + 4)
+        love.graphics.print(meterLevels[i+1], thisX + 198 - (characterHub.font:getWidth(meterLevels[i+1])/2), thisY + spacing + 6)
     end
 end
 
