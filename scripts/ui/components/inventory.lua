@@ -100,15 +100,19 @@ end
 
 function drawInventoryItem(thisX, thisY, field, item)
     if isMouseOver(thisX*scale, thisY*scale, 32*scale, 32*scale) then
-        love.graphics.setColor(0.6, 0.6, 0.6)
+        love.graphics.setColor(0.6, 0.6, 0.6,inventoryOpacity)
         setTooltip(userInventory[field][item].Item.Name,
             "+" .. userInventory[field][item].Item.Val .. " " .. userInventory[field][item].Item.Type .. "\n" ..
                 userInventory[field][item].Item.Desc)
         selectedItem = userInventory[field][item].Item
     end
     love.graphics.draw(inventoryItemBackground, thisX, thisY) -- Background
-    love.graphics.setColor(1, 1, 1)
 
+    if string.sub(userInventory[field][item].Item.Type, 1, 4) == "arm_" then
+        love.graphics.setColor(1,1,1,inventoryOpacity*0.3)
+        love.graphics.draw(playerImg, thisX + 3, thisY + 3)
+    end
+    love.graphics.setColor(1, 1, 1,inventoryOpacity)
     love.graphics.draw(itemImg[userInventory[field][item].Item.ImgPath], thisX + 3, thisY + 3) -- Item
 end
 

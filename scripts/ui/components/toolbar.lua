@@ -2,21 +2,24 @@
     This file contains toolbar and inventory functions. They're pretty good.
 ]]
 
+inventoryOpacity = 0
+
 function drawToolbar()
 	if uiY > (769*scale) then
 		toolbarY = (uiY/2) - 261
 	else
 		toolbarY = 124
 	end
+
 	
-	if isMouseOver(0, toolbarY*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
+		love.graphics.setColor(1,1,1,inventoryOpacity)
 		drawInventory()
-		love.graphics.setColor(0,0,0,1)
+		love.graphics.setColor(0,0,0,inventoryOpacity)
 		love.graphics.setFont(smallTextFont, 16)
 		love.graphics.print("Search", 105, toolbarY+14)
 		smallTextFont:setFilter( "nearest", "nearest" )
 		love.graphics.setColor(1,1,1,1)
-	end
+	
 
 	love.graphics.draw(toolbarBg, 0, toolbarY)
 
