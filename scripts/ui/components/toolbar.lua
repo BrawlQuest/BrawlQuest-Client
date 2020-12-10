@@ -3,12 +3,9 @@
 ]]
 
 function drawToolbar()
-	if uiY > (769*scale) then
-		toolbarY = (uiY/2) - 261
-	else
-		toolbarY = 124
-	end
 	
+	toolbarY = (uiY/2) - 261
+
 	if isMouseOver(0, toolbarY*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
 		drawInventory()
 		love.graphics.setColor(0,0,0,1)

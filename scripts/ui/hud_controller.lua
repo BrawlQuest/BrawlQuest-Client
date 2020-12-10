@@ -133,6 +133,8 @@ function initHUD()
     questPopUpHeight = 496
     questPopUpPanelGap = 400
 
+    loadCharacterHub() 
+
 end
 
 function updateHUD( dt )
@@ -197,9 +199,10 @@ function drawHUD()
         local i = 1
         love.graphics.scale(scale)
         drawToolbar()
-        drawProfile(uiX/i, uiY/i)
+        -- drawProfile(uiX/i, uiY/i)
         drawTooltip()
         if showNPCChatBackground then drawNPCChatBackground((uiX/2)/i - 128, (uiY/2)/i - 128) end
+        drawCharacterHub(0, uiY/i)
     love.graphics.pop()
 
     drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
