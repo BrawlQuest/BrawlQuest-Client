@@ -1,5 +1,6 @@
 worldCanvas = love.graphics.newCanvas(32*101,32*101)
 isWorldCreated = false
+worldLookup = {}
 lightSource = {}
 lowestX = 0
 lowestY = 0
@@ -12,6 +13,11 @@ function createWorld()
     lowestX = 0
     lowestY = 0
     for i,v in ipairs(world) do
+        if not worldLookup[v.X] then
+            worldLookup[v.X] = {}
+        end
+        worldLookup[v.X][v.Y] = copy(v)
+
         if v.X > highestX then
             highestX = v.X
         end
@@ -32,10 +38,6 @@ function createWorld()
         love.graphics.setColor(1, 1, 1)
         for i, v in ipairs(world) do
             drawTile(v)
-            -- if v.Collision then
-            --     love.graphics.setColor(1,0,0)
-            --     love.graphics.rectangle("line",(v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32,32,32)
-            -- end
         end
     love.graphics.setCanvas()
     if player.x and player.y then
@@ -127,11 +129,11 @@ function getWorldAsset(v,x,y,notFindWall)
         if isTileWall(v) then
             v = getDrawableWall(v, x,y)
         end
+    end
 
         if isTileWater(v) then
             v = getDrawableWater(v, x, y)
         end
-    end
 
     return v
 end
@@ -157,8 +159,17 @@ function getDrawableWall(tileName, x, y) -- this is used to smooth the corners o
         bottom = false,
     }
 
-    for i, v in ipairs(world) do
-        if isTileWall(v.ForegroundTile) or isTileWall(v.GroundTile) then
+    local worldToCheck = {
+        worldLookup[x-1][y],
+        worldLookup[x+1][y],
+        worldLookup[x][y-1],
+        worldLookup[x][y+1]
+    }
+ 
+
+    for i =1 ,4 do
+        v = worldToCheck[i]
+        if v and (isTileWall(v.ForegroundTile) or isTileWall(v.GroundTile)) then
             if v.X == x - 1 and v.Y == y then
                 nearby.left = true
             elseif v.X == x + 1 and v.Y == y then
@@ -231,8 +242,22 @@ function getDrawableWater(tileName, x, y)
         bottomRight = false
     }
 
-    for i, v in ipairs(world) do
-        if isTileWater(v.ForegroundTile) or isTileWater(v.GroundTile) then
+    local worldToCheck = {
+        worldLookup[x-1][y],
+        worldLookup[x+1][y],
+        worldLookup[x][y+1],
+        worldLookup[x][y-1],
+        worldLookup[x-1][y-1],
+        worldLookup[x+1][y-1],
+        worldLookup[x-1][y+1],
+        worldLookup[x+1][y+1]
+
+    }
+ 
+
+    for i = 1, 8 do
+        v = worldToCheck[i]
+        if v and (isTileWater(v.ForegroundTile) or isTileWater(v.GroundTile)) then
             if v.X == x - 1 and v.Y == y then
                 nearby.left = true
             elseif v.X == x + 1 and v.Y == y then
