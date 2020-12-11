@@ -203,8 +203,9 @@ function love.update(dt)
                     player = v["Sender"]
                 }
              end
-             
+            
            timeOfDay = cerp(0.1, 1, ((math.abs(response['CurrentHour']) * 60) + 0) / 720)
+        
            Luven.setAmbientLightColor({timeOfDay, timeOfDay, timeOfDay+0.1})
 
            me = response['Me']

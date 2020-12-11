@@ -48,7 +48,6 @@ function createWorld()
 end
 
 function drawTile(v, offset)
-    
     if isTileLit(v.X, v.Y) then
         love.graphics.setColor(1, 1, 1)
     else
@@ -72,12 +71,18 @@ function drawTile(v, offset)
 
     love.graphics.draw(worldImg[backgroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32)  
     
-    -- love.graphics.setColor(0,0,0,0.5)
-    -- if isTileWall(v.ForegroundTile) then -- draw shadow
-    --     love.graphics.rectangle("fill", (v.X+math.abs(lowestX)) * 32 , (v.Y+math.abs(lowestY)) * 32 + 32, 32, 16) 
-    -- end
-    -- love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.draw(worldImg[foregroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32)
+    if worldLookup[v.X][v.Y-1] and (isTileWall(worldLookup[v.X][v.Y-1].ForegroundTile) or isTileWall(worldLookup[v.X][v.Y-1].GroundTile)) and not isTileWall(v.ForegroundTile) then
+        love.graphics.setColor(0,0,0,0.5)
+        print(timeOfDay)
+        love.graphics.rectangle("fill", (v.X+math.abs(lowestX)) * 32 , (v.Y+math.abs(lowestY)) * 32, 32,16)
+        love.graphics.setColor(1,1,1,1)
+    elseif (isTileWall(v.GroundTile) or isTileWall(v.ForegroundTile)) and not worldLookup[v.X][v.Y+1] then -- no tile below us but we stil need to cast a shadow
+        love.graphics.setColor(0,0,0,0.5)
+        love.graphics.rectangle("fill", (v.X+math.abs(lowestX)) * 32 , (v.Y+1+math.abs(lowestY)) * 32, 32, 16)
+        love.graphics.setColor(1,1,1,1)
+    end 
+
+    if foregroundAsset ~= backgroundAsset then love.graphics.draw(worldImg[foregroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32) end
 
 end
 
@@ -251,7 +256,6 @@ function getDrawableWater(tileName, x, y)
         worldLookup[x+1][y-1],
         worldLookup[x-1][y+1],
         worldLookup[x+1][y+1]
-
     }
  
 

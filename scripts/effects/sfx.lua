@@ -22,6 +22,8 @@ function initSFX()
     shieldDownSfx = love.audio.newSource("assets/sfx/player/actions/shield.wav", "static")
     shieldDownSfx:setPitch(0.5)
 
+    speakSound = love.audio.newSource("assets/sfx/speak.wav", "static")
+
     stepSounds = {
         ["assets/world/grounds/grass.png"] = love.audio.newSource("assets/sfx/step/grass.mp3", "static"),
         ["assets/world/grounds/Stone Floor.png"] = love.audio.newSource("assets/sfx/player/step/stone.mp3", "static"),
@@ -35,6 +37,16 @@ function initSFX()
         ["assets/world/doors/Library.png"] = love.audio.newSource("assets/sfx/player/step/door.mp3", "static"),
         ["assets/world/doors/Potion.png"] = love.audio.newSource("assets/sfx/player/step/door.mp3", "static"),
         ["assets/world/doors/Residential.png"] = love.audio.newSource("assets/sfx/player/step/door.mp3", "static")
+    }
+
+    npcSounds = {
+        ["assets/npc/Farmer.png"] = love.audio.newSource("assets/sfx/npc/farmer.mp3", "static"),
+        ["assets/npc/Bartender.png"] = love.audio.newSource("assets/sfx/npc/bartender.mp3", "static"),
+        ["assets/npc/Guard.png"] = love.audio.newSource("assets/sfx/npc/soldier.mp3", "static"),
+        ["assets/npc/Peasant.png"] = love.audio.newSource("assets/sfx/npc/person.mp3", "static"),
+        ["assets/npc/Person.png"] = love.audio.newSource("assets/sfx/npc/person.mp3", "static"),
+        ["assets/npc/Drunk Man.png"] = love.audio.newSource("assets/sfx/npc/drunk man.mp3", "static"),
+        ["assets/npc/Priest.png"] = love.audio.newSource("assets/sfx/npc/soldier.mp3", "static"),
     }
 
     setSFXVolumes()
