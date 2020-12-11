@@ -68,10 +68,8 @@ function updateCharacter(dt)
     if player.isMounting then
         player.mount.stepSndPlay = player.mount.stepSndPlay - 1 * dt
         if player.mount.stepSndPlay < 0 then
-            stepSfx:stop()
-            stepSfx:setPitch(love.math.random(50, 200) / 100)
-            stepSfx:setVolume(0.4)
-            stepSfx:play()
+       
+        
             player.mount.stepSndPlay = 0.2
         end
 
@@ -116,9 +114,7 @@ function movePlayer(dt)
             player.x = original[1]
             player.y = original[2]
             calculateLighting(player.x - lightRange, player.y - lightRange, player.x + lightRange, player.y + lightRange)
-            stepSfx:stop()
-            stepSfx:setPitch(love.math.random(90, 200) / 100)
-            love.audio.play(stepSfx)
+            playFootstepSound(worldLookup[player.x][player.y])
         end
 
     else -- movement smoothing

@@ -22,6 +22,21 @@ function initSFX()
     shieldDownSfx = love.audio.newSource("assets/sfx/player/actions/shield.wav", "static")
     shieldDownSfx:setPitch(0.5)
 
+    stepSounds = {
+        ["assets/world/grounds/grass.png"] = love.audio.newSource("assets/sfx/step/grass.mp3", "static"),
+        ["assets/world/grounds/Stone Floor.png"] = love.audio.newSource("assets/sfx/player/step/stone.mp3", "static"),
+        ["assets/world/grounds/Red Walkway.png"] = love.audio.newSource("assets/sfx/player/step/carpet.mp3", "static"),
+        ["assets/world/grounds/Red Walkway Down.png"] = love.audio.newSource("assets/sfx/player/step/carpet.mp3", "static"),
+        ["assets/world/grounds/Sand.png"] = love.audio.newSource("assets/sfx/player/step/snow.ogg", "static"),
+        ["assets/world/doors/Armoury.png"] = love.audio.newSource("assets/sfx/player/step/door.mp3", "static"),
+        ["assets/world/doors/Bar.png"] = love.audio.newSource("assets/sfx/player/step/door.mp3", "static"),
+        ["assets/world/doors/Barracks.png"] = love.audio.newSource("assets/sfx/player/step/door.mp3", "static"),
+        ["assets/world/doors/Church.png"] = love.audio.newSource("assets/sfx/player/step/door.mp3", "static"),
+        ["assets/world/doors/Library.png"] = love.audio.newSource("assets/sfx/player/step/door.mp3", "static"),
+        ["assets/world/doors/Potion.png"] = love.audio.newSource("assets/sfx/player/step/door.mp3", "static"),
+        ["assets/world/doors/Residential.png"] = love.audio.newSource("assets/sfx/player/step/door.mp3", "static")
+    }
+
     setSFXVolumes()
 end
 
@@ -58,3 +73,16 @@ function setSFXVolumes()
     end
 end
 
+function playFootstepSound(v)
+    stepSfx:stop()
+    if v and stepSounds[v.GroundTile] then
+        stepSfx = stepSounds[v.GroundTile]
+    elseif v and stepSounds[v.ForegroundTile] then
+        stepSfx = stepSounds[v.ForegroundTile]
+    else
+        stepSfx = stepSounds["assets/world/grounds/grass.png"]
+    end
+    stepSfx:setPitch(love.math.random(85,200)/100)
+    stepSfx:setVolume(0.5 * sfxVolume)
+    stepSfx:play()
+end
