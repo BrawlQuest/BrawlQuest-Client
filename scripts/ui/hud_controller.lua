@@ -177,6 +177,19 @@ function updateHUD( dt )
         end
         chatCursor.i = 0
     end
+	if uiY > (769*scale) then
+		toolbarY = (uiY/2) - 261
+	else
+		toolbarY = 124
+	end
+
+	if isMouseOver(0, toolbarY*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
+        inventoryOpacity = inventoryOpacity + 3*dt
+        if inventoryOpacity > 1 then inventoryOpacity = 1 end
+    else
+        inventoryOpacity = inventoryOpacity - 3*dt
+        if inventoryOpacity < 0 then inventoryOpacity = 0 end
+    end
 end
 
 function drawHUD()

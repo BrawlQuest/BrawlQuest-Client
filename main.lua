@@ -209,10 +209,7 @@ function love.update(dt)
            Luven.setAmbientLightColor({timeOfDay, timeOfDay, timeOfDay+0.1})
 
            me = response['Me']
-           player.x = me.X
-           player.dx = me.X*32
-           player.dy = me.Y*32
-           player.y = me.Y
+
             if distanceToPoint(me.X, me.Y, player.x, player.y) > 4 then
                 player.x = me.X
                 player.dx = me.X*32
