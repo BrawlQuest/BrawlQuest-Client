@@ -180,6 +180,8 @@ chatOpacity = 0
 nextChar = 0.1
 chatWritten = ""
 
+npcChatSFX = {}
+
 function createNPCChatBackground(x, y)
     npcChatBackground = {}
     local foundX = false
@@ -284,16 +286,36 @@ function updateNPCChat(dt)
         if chatOpacity > 1 then chatOpacity = 1 end
         nextChar = nextChar - 1 *dt
         if nextChar < 0 then
-           
+            
             if npcChat and #chatWritten ~= #npcChat.Title then
+                -- if not npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)] then
+                --     if love.filesystem.getInfo("assets/sfx/npc/speak/"..string.lower(string.sub(npcChat.Title,#chatWritten,#chatWritten))..".ogg") then
+                --         npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)] = love.audio.newSource("assets/sfx/npc/speak/"..string.lower(string.sub(npcChat.Title,#chatWritten,#chatWritten))..".ogg", "static")
+                --     end
+                -- end
+                -- if npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)] then
+                --    -- speakSound:stop()
+                --     speakSound = npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)]
+                --     speakSound:setPitch(love.math.random(20,200)/100)
+                --     speakSound:setVolume(0.3*sfxVolume)
+                --     npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)]:setPitch(love.math.random(20,200)/100)
+                --     npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)]:play()
+                --     -- speakSound:play()
+                -- end
+              --  speakSound:stop()
+                speakSound:setPitch(love.math.random(60,100)/100)
+                speakSound:setVolume(0.1*sfxVolume)
+                speakSound:play()
                 chatWritten = chatWritten..string.sub(npcChat.Title,#chatWritten+1,#chatWritten+1)
                 if string.sub(npcChat.Title,#chatWritten,#chatWritten) == "." or string.sub(npcChat.Title,#chatWritten,#chatWritten) == "?" then
                     nextChar = 0.3
                 elseif string.sub(npcChat.Title,#chatWritten,#chatWritten) == "," then
                     nextChar = 0.1
+                elseif string.sub(npcChat.Title,#chatWritten,#chatWritten) == "!" then
+                    nextChar = 0.5
                 else
                     nextChar = 0.03
-                end
+            end
             else
                 nextChar = 0.03
             end

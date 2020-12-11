@@ -57,6 +57,14 @@ function startConversation()
             chatOpacity = 0
             chatWritten = ""
             
+            if npcSounds[npcChat.ImgPath] then
+                npcSounds[npcChat.ImgPath]:setVolume(sfxVolume)
+                npcSounds[npcChat.ImgPath]:play()
+            else
+                npcSounds["assets/npc/Person.png"]:setVolume(sfxVolume)
+                npcSounds["assets/npc/Person.png"]:play()
+            end
+
           -- print(string.gsub(string.gsub(string.gsub(npcChat.Options, "',", '",'),"['",'["'),"']",'"]'))
             local optionString = npcChat.Options
             optionString = string.gsub(optionString, "'s", 's')
