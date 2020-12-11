@@ -47,12 +47,12 @@ function initHUD()
     -- toolbar
     circleFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 16)
     smallTextFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf",12)
-    
+    a0sword = love.graphics.newImage("assets/player/gear/a0/sword.png")
     toolbarY = 0
     toolbarItems = {a0sword, a0sword}
     toolbarTitles = {1,2,3,4,5,6,7,8,9,0}
 
-    a0sword = love.graphics.newImage("assets/player/gear/a0/sword.png")
+    
 
     toolbarBg = love.graphics.newImage("assets/ui/hud/toolbar/toolbar-backing.png")
     toolbarItem = love.graphics.newImage("assets/ui/hud/toolbar/toolbarItem.png")
@@ -65,15 +65,7 @@ function initHUD()
     inventorySubHeaderFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 10)
     inventoryItemBackground = love.graphics.newImage("assets/ui/hud/inventory/inventoryItem.png")
 
-    inventoryFields = {"weapons", "spells", "armour", "mounts", "other"}
     
-    -- userInventory = {}
-    -- userInventory[1] = {}
-    -- userInventory[2] = {}
-    -- userInventory[3] = {}
-    -- userInventory[4] = {}
-    -- userInventory[5] = {}
-    loadInventory()
 
     userInventoryFieldHeight = {}
 
@@ -148,18 +140,18 @@ function updateHUD( dt )
     velyChat = velyChat - velyChat * math.min( dt * 15, 1 )
     
 
-    if posYInventory < (getFullUserInventoryFieldHeight()*-1) and scrollInventory.up then
-        posYInventory = (getFullUserInventoryFieldHeight()*-1)
-        velyInventory = 0
-        scrollInventory.up = false
-    elseif posYInventory > 0 and scrollInventory.down then
-        posYInventory = 0
-        velyInventory = 0
-        scrollInventory.down = false
-    elseif scrollInventory.up or scrollInventory.down then
-        posYInventory = posYInventory + velyInventory * dt
-        scrollInventory.up, scrollInventory.down = true, true
-    end
+    -- if posYInventory < (getFullUserInventoryFieldHeight()*-1) and scrollInventory.up then
+    --     posYInventory = (getFullUserInventoryFieldHeight()*-1)
+    --     velyInventory = 0
+    --     scrollInventory.up = false
+    -- elseif posYInventory > 0 and scrollInventory.down then
+    --     posYInventory = 0
+    --     velyInventory = 0
+    --     scrollInventory.down = false
+    -- elseif scrollInventory.up or scrollInventory.down then
+    --     posYInventory = posYInventory + velyInventory * dt
+    --     scrollInventory.up, scrollInventory.down = true, true
+    -- end
 
     if posYChat < 0 then
         posYChat = 0
