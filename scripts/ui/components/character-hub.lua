@@ -28,12 +28,9 @@ function loadCharacterHub()
     showStatsPanel = false
     characterHub = {
         backgroundColor = {0,0,0,0.5},
-        barColors = {
-            {1,0,0,1},
-            {0,0.5,1,1},
-            {1,0.5,0,1},
-        },
+        barColors = {{1,0,0,1}, {0,0.5,1,1}, {1,0.5,0,1}, },
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 9),
+        nameFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 14)
     }
 end
 
@@ -43,10 +40,10 @@ function drawCharacterHub(thisX, thisY)
         thisX, thisY = thisX, thisY - hubImages.profileBG:getHeight()
         drawCharacterHubProfile(thisX, thisY)
         thisX = thisX + hubImages.profileBG:getWidth()
-        -- if isMouseOver(thisX * scale, thisY * scale, 100, 100) then
+        if isMouseOver(thisX * scale, thisY * scale, 468 * scale, 97 * scale) then
             drawCharacterHubStats(thisX, thisY)
             thisX = thisX + hubImages.statsBG:getWidth()
-        -- end
+        end
         drawCharacterHubMeters(thisX, thisY)
     end
 end
@@ -94,10 +91,10 @@ end
 function drawCharacterHubMeters(thisX, thisY)
     love.graphics.setColor(unpack(characterHub.backgroundColor))
     love.graphics.draw(hubImages.metersBG, thisX, thisY)
-    love.graphics.setFont(headerSmallFont)
+    love.graphics.setFont(characterHub.nameFont)
     love.graphics.setColor(1,1,1,1)
-    if me.Name ~= null then love.graphics.print(me.Name, thisX + 4, thisY) end
-    thisY = thisY + 25
+    love.graphics.print(me.Name, thisX + 6, thisY+2)
+    thisX, thisY = thisX + 5, thisY + 25
     love.graphics.setFont(characterHub.font)
     local j = (100/151)
     local meterLevels = {me.HP, me.Mana, me.XP}
