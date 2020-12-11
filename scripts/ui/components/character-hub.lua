@@ -1,6 +1,5 @@
-function loadCharacterHub()
+function initCharacterHub()
     
-
     hubImages = {
         placeholder = love.graphics.newImage("assets/ui/hud/charater-hub/placeholder.png"),
         profileBG = love.graphics.newImage("assets/ui/hud/charater-hub/profile.png"),
@@ -30,7 +29,7 @@ function loadCharacterHub()
         backgroundColor = {0,0,0,0.5},
         barColors = {{1,0,0,1}, {0,0.5,1,1}, {1,0.5,0,1}, },
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 9),
-        nameFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 14)
+        nameFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 14),
     }
 end
 
@@ -54,7 +53,8 @@ end
 
 function drawCharacterHubProfile(thisX, thisY)
     love.graphics.setColor(unpack(characterHub.backgroundColor))
-    love.graphics.draw(hubImages.profileBG, thisX, thisY)
+    -- love.graphics.draw(hubImages.profileBG, thisX, thisY)
+    love.graphics.rectangle("fill", thisX, thisY, 82, 97)
     love.graphics.setColor(1,1,1,1)
     drawProfilePic(thisX + 9, thisY + 8, 1, "right", me.Name)
     
@@ -65,7 +65,8 @@ end
 
 function drawCharacterHubStats(thisX, thisY)
     love.graphics.setColor(unpack(characterHub.backgroundColor))
-    love.graphics.draw(hubImages.statsBG, thisX, thisY)
+    -- love.graphics.draw(hubImages.statsBG, thisX, thisY)
+    love.graphics.rectangle("fill", thisX, thisY, 155, 97)
     love.graphics.setFont(characterHub.font)
     -- local statNumbers = {me.STA, me.INT, me.DEF}
     for i = 0, 2 do
@@ -90,7 +91,8 @@ end
 
 function drawCharacterHubMeters(thisX, thisY)
     love.graphics.setColor(unpack(characterHub.backgroundColor))
-    love.graphics.draw(hubImages.metersBG, thisX, thisY)
+    -- love.graphics.draw(hubImages.metersBG, thisX, thisY)
+    love.graphics.rectangle("fill", thisX, thisY, 231, 97)
     love.graphics.setFont(characterHub.nameFont)
     love.graphics.setColor(1,1,1,1)
     love.graphics.print(me.Name, thisX + 6, thisY+2)

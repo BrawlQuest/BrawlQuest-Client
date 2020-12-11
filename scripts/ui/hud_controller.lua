@@ -57,7 +57,7 @@ function initHUD()
     toolbarBg = love.graphics.newImage("assets/ui/hud/toolbar/toolbar-backing.png")
     toolbarItem = love.graphics.newImage("assets/ui/hud/toolbar/toolbarItem.png")
     top_left = love.graphics.newQuad(0, 0, 34, 34, a0sword:getDimensions())
-    inventory = love.graphics.newImage("assets/ui/hud/inventory/inventoryBg.png")
+    -- inventory = love.graphics.newImage("assets/ui/hud/inventory/inventoryBg.png")
 
     
 
@@ -135,7 +135,8 @@ function initHUD()
     questPopUpHeight = 496
     questPopUpPanelGap = 400
 
-    loadCharacterHub() 
+    initCharacterHub() 
+    initToolBarInventory()
 
 end
 
@@ -168,6 +169,7 @@ function updateHUD( dt )
     updateFloats(dt)
     updateSliders()
     updateSFX()
+    updateToolBarInventory(dt)
 
     if chatCursor.i < chatCursor.speed then
         chatCursor.i = chatCursor.i + 1
@@ -180,13 +182,13 @@ function updateHUD( dt )
         chatCursor.i = 0
     end
 
-	if isMouseOver(0, toolbarY*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
-        inventoryOpacity = inventoryOpacity + 3*dt
-        if inventoryOpacity > 1 then inventoryOpacity = 1 end
-    else
-        inventoryOpacity = inventoryOpacity - 3*dt
-        if inventoryOpacity < 0 then inventoryOpacity = 0 end
-    end
+	-- if isMouseOver(0, toolbarY*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
+    --     inventoryOpacity = inventoryOpacity + 3*dt
+    --     if inventoryOpacity > 1 then inventoryOpacity = 1 end
+    -- else
+    --     inventoryOpacity = inventoryOpacity - 3*dt
+    --     if inventoryOpacity < 0 then inventoryOpacity = 0 end
+    -- end
 end
 
 function drawHUD()
@@ -208,11 +210,12 @@ function drawHUD()
     love.graphics.push()
         local i = 1
         love.graphics.scale(scale)
-        drawToolbar(0, uiY - hubImages.profileBG:getHeight() - 523)
+        --drawToolbar(0, uiY - hubImages.profileBG:getHeight() - 523)
         -- drawProfile(uiX/i, uiY/i)
         drawTooltip()
         if showNPCChatBackground then drawNPCChatBackground((uiX/2)/i - 128, (uiY/2)/i - 128) end
         drawCharacterHub(0, uiY/i)
+        drawToolBarInventory(0, uiY/i)
     love.graphics.pop()
 
     drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
