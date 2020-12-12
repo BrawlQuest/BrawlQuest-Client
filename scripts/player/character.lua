@@ -234,5 +234,5 @@ function updateInventory(response)
         burstLoot((player.x*32)-16, (player.y*32)-16, k.Inventory.Amount, k.Item.ImgPath)
         newInventoryItems = {}
     end
-    loadInventory()
+    getInventory()
 end

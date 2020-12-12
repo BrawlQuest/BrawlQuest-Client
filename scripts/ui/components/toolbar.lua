@@ -4,28 +4,21 @@
 
 inventoryOpacity = 0
 
-function drawToolbar()
-	if uiY > (769*scale) then
-		toolbarY = (uiY/2) - 261
-	else
-		toolbarY = 124
-	end
-
+function drawToolbar(thisX, thisY)
+		toolbarY = thisY
 	
 		love.graphics.setColor(1,1,1,inventoryOpacity)
 		drawInventory()
 		love.graphics.setColor(0,0,0,inventoryOpacity)
 		love.graphics.setFont(smallTextFont, 16)
 		love.graphics.print("Search", 105, toolbarY+14)
-		smallTextFont:setFilter( "nearest", "nearest" )
+		-- smallTextFont:setFilter( "nearest", "nearest" )
 		love.graphics.setColor(1,1,1,1)
-	
 
 	love.graphics.draw(toolbarBg, 0, toolbarY)
 
 	
-	toolbarItems = {a0sword, a0sword}
-
+	
 	local c = {1,2,3,4,5,6,7,8,9,0}
 	
 	love.graphics.setFont(circleFont)
@@ -42,9 +35,10 @@ function drawToolbar()
 
 		love.graphics.setColor(0,0,0,1)
 
-		love.graphics.printf(c[b], 11, (toolbarY+22)+((b-1)*49)+27, 16, "center")--text
+		love.graphics.printf(toolbarTitles[b], 11, (toolbarY+22)+((b-1)*49)+27, 16, "center")--text
 		love.graphics.setColor(1,1,1,1)
 	end
-	circleFont:setFilter( "nearest", "nearest" )
+
+	-- circleFont:setFilter( "nearest", "nearest" )
 	love.graphics.setFont(font)
 end

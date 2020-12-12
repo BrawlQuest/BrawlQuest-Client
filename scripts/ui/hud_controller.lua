@@ -47,15 +47,17 @@ function initHUD()
     -- toolbar
     circleFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 16)
     smallTextFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf",12)
-
-    toolbarItems = {}
-
     a0sword = love.graphics.newImage("assets/player/gear/a0/sword.png")
+    toolbarY = 0
+    toolbarItems = {a0sword, a0sword}
+    toolbarTitles = {1,2,3,4,5,6,7,8,9,0}
+
+    
 
     toolbarBg = love.graphics.newImage("assets/ui/hud/toolbar/toolbar-backing.png")
     toolbarItem = love.graphics.newImage("assets/ui/hud/toolbar/toolbarItem.png")
     top_left = love.graphics.newQuad(0, 0, 34, 34, a0sword:getDimensions())
-    inventory = love.graphics.newImage("assets/ui/hud/inventory/inventoryBg.png")
+    -- inventory = love.graphics.newImage("assets/ui/hud/inventory/inventoryBg.png")
 
     
 
@@ -63,15 +65,7 @@ function initHUD()
     inventorySubHeaderFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 10)
     inventoryItemBackground = love.graphics.newImage("assets/ui/hud/inventory/inventoryItem.png")
 
-    inventoryFields = {"weapons", "spells", "armour", "mounts", "other"}
     
-    -- userInventory = {}
-    -- userInventory[1] = {}
-    -- userInventory[2] = {}
-    -- userInventory[3] = {}
-    -- userInventory[4] = {}
-    -- userInventory[5] = {}
-    loadInventory()
 
     userInventoryFieldHeight = {}
 
@@ -105,10 +99,10 @@ function initHUD()
         reserve = 10,
         0,
         0,
-        0
+        0,
     }
     perkTitles = {
-        "STR", "INT", "STA"
+        "STR", "INT", "STA",
     }
 
     -- Battlebar
@@ -133,6 +127,9 @@ function initHUD()
     questPopUpHeight = 496
     questPopUpPanelGap = 400
 
+    initCharacterHub() 
+    initToolBarInventory()
+
 end
 
 function updateHUD( dt )
@@ -143,18 +140,18 @@ function updateHUD( dt )
     velyChat = velyChat - velyChat * math.min( dt * 15, 1 )
     
 
-    if posYInventory < (getFullUserInventoryFieldHeight()*-1) and scrollInventory.up then
-        posYInventory = (getFullUserInventoryFieldHeight()*-1)
-        velyInventory = 0
-        scrollInventory.up = false
-    elseif posYInventory > 0 and scrollInventory.down then
-        posYInventory = 0
-        velyInventory = 0
-        scrollInventory.down = false
-    elseif scrollInventory.up or scrollInventory.down then
-        posYInventory = posYInventory + velyInventory * dt
-        scrollInventory.up, scrollInventory.down = true, true
-    end
+    -- if posYInventory < (getFullUserInventoryFieldHeight()*-1) and scrollInventory.up then
+    --     posYInventory = (getFullUserInventoryFieldHeight()*-1)
+    --     velyInventory = 0
+    --     scrollInventory.up = false
+    -- elseif posYInventory > 0 and scrollInventory.down then
+    --     posYInventory = 0
+    --     velyInventory = 0
+    --     scrollInventory.down = false
+    -- elseif scrollInventory.up or scrollInventory.down then
+    --     posYInventory = posYInventory + velyInventory * dt
+    --     scrollInventory.up, scrollInventory.down = true, true
+    -- end
 
     if posYChat < 0 then
         posYChat = 0
@@ -164,6 +161,7 @@ function updateHUD( dt )
     updateFloats(dt)
     updateSliders()
     updateSFX()
+    updateToolBarInventory(dt)
 
     if chatCursor.i < chatCursor.speed then
         chatCursor.i = chatCursor.i + 1
@@ -175,19 +173,14 @@ function updateHUD( dt )
         end
         chatCursor.i = 0
     end
-	if uiY > (769*scale) then
-		toolbarY = (uiY/2) - 261
-	else
-		toolbarY = 124
-	end
 
-	if isMouseOver(0, toolbarY*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
-        inventoryOpacity = inventoryOpacity + 3*dt
-        if inventoryOpacity > 1 then inventoryOpacity = 1 end
-    else
-        inventoryOpacity = inventoryOpacity - 3*dt
-        if inventoryOpacity < 0 then inventoryOpacity = 0 end
-    end
+	-- if isMouseOver(0, toolbarY*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
+    --     inventoryOpacity = inventoryOpacity + 3*dt
+    --     if inventoryOpacity > 1 then inventoryOpacity = 1 end
+    -- else
+    --     inventoryOpacity = inventoryOpacity - 3*dt
+    --     if inventoryOpacity < 0 then inventoryOpacity = 0 end
+    -- end
 end
 
 function drawHUD()
@@ -209,10 +202,12 @@ function drawHUD()
     love.graphics.push()
         local i = 1
         love.graphics.scale(scale)
-        drawToolbar()
-        drawProfile(uiX/i, uiY/i)
+        --drawToolbar(0, uiY - hubImages.profileBG:getHeight() - 523)
+        -- drawProfile(uiX/i, uiY/i)
         drawTooltip()
         if showNPCChatBackground then drawNPCChatBackground((uiX/2)/i - 128, (uiY/2)/i - 128) end
+        drawCharacterHub(0, uiY/i)
+        drawToolBarInventory(0, uiY/i)
     love.graphics.pop()
 
     drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
