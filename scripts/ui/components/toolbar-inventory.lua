@@ -5,6 +5,7 @@ function initToolBarInventory()
         items = {},
         fields = {"weapons", "spells", "armour", "mounts", "other"},
         fieldLength = {0, 0, 0, 0, 0},
+        font = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 12),
         images = {
             itemBG = love.graphics.newImage("assets/ui/hud/character-inventory/item-bg.png"),
             numbers = {
@@ -74,6 +75,7 @@ end
 
 function drawToolBarInventory(thisX, thisY)
     love.graphics.setColor(unpack(characterHub.backgroundColor))
+    love.graphics.setFont(inventory.font)
     love.graphics.rectangle("fill", thisX + 313, thisY - 97, -313, 0 - cerp(23, 23 + (uiY - 97 - 23), inventory.amount))
     thisX, thisY = thisX, thisY - 97
     love.graphics.setColor(1,1,1,1)
@@ -119,8 +121,8 @@ function drawInventoryItem(thisX, thisY, field, item, number)
 end
 
 function drawInventoryItemField(thisX, thisY, field)
-    love.graphics.printf(inventory.fields[field], thisX, thisY, 483)
-    thisY = thisY + 18
+    love.graphics.printf(inventory.fields[field], thisX + 9, thisY, 483)
+    thisY = thisY + 20
     for i = 0, #userInventory[field] - 1 do
         if i <= 3 then
             drawInventoryItem(thisX + 9 + (43 * i), thisY + 0, field, i + 1)

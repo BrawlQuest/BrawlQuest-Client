@@ -162,6 +162,7 @@ function updateHUD( dt )
     updateSliders()
     updateSFX()
     updateToolBarInventory(dt)
+    updateCharacterHub(dt)
 
     if chatCursor.i < chatCursor.speed then
         chatCursor.i = chatCursor.i + 1
