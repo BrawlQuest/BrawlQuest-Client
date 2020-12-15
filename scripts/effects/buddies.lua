@@ -1,33 +1,45 @@
 buddies = {}
 
-function updatePlayerBuddy(dt, player)
-    if buddies[player.Name] == null then
-        buddies[player.Name] = {
-            X = player.X,
-            Y = player.Y,
-            img = player.Buddy
+function updateBuddy(dt, pl)
+    if buddies[pl.Name] == null then
+        buddies[pl.Name] = {
+            X = pl.X,
+            Y = pl.Y,
+            img = pl.Buddy,
+            previousDirection = "left"
         }
     end
 
-    local v = buddies[player.Name]
-    local speed = distanceToPoint(v.X,player.X)*dt
-    if v.X > player.X then
+    local v = buddies[pl.Name]
+    local speed = distanceToPoint(v.X,v.Y,pl.X+16,pl.Y+16)*dt
+    if v.X+3 > pl.X+16 then
         v.X = v.X - speed
-    elseif v.X < player.X then
+        v.previousDirection = "left"
+    elseif v.X-3 < pl.X+16 then
         v.X = v.X + speed
+        v.previousDirection = "right"
     end
-    if v.Y > player.Y then
+    if v.Y > pl.Y+16 then
         v.Y = v.Y - speed
-    elseif v.Y < player.Y then
+    elseif v.Y < pl.Y+16 then
         v.Y = v.Y + speed
     end    
-    buddies[player.Name] = v
+    buddies[pl.Name] = v
 end
 
-function drawBuddy(player)
-    if player and player.Buddy and player.Buddy ~= null then
-        local v = buddies[player.Name]
-        local img = getImgIfNotexist(v.img)
-        love.graphics.draw(img, v.X, v.Y)
+function drawBuddy(pl)
+    if pl then
+        local rotation = 1
+        local offsetX = 0
+      
+        if buddies[pl] ~= null then
+            local v = buddies[pl]
+            if v.previousDirection and v.previousDirection == "left" then
+                rotation = -1
+                offsetX = 8
+            end
+            local img = getImgIfNotExist(v.img)
+            love.graphics.draw(img, v.X+offsetX, v.Y, 0, rotation, 1, 0, 0)
+        end
     end
 end

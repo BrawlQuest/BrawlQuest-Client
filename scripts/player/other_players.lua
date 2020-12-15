@@ -70,10 +70,13 @@ function drawPlayer(v, i)
         thisPlayer = me
         v.X = player.dx
         v.Y = player.dy
+        v.Name = player.name
         v.previousDirection = player.previousDirection
         thisPlayer.AX = player.target.x
         thisPlayer.AY = player.target.y
         thisPlayer.IsShield = love.keyboard.isDown(keybinds.SHIELD)
+        thisPlayer.Name = player.name
+        thisPlayer.Buddy = player.buddy
     else
         thisPlayer = players[i]
     end

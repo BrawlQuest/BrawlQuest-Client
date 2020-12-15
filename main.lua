@@ -218,10 +218,14 @@ function love.update(dt)
                 player.dx = me.X*32
                 player.dy = me.Y*32
                 player.y = me.Y
+          
                 totalCoverAlpha = 2
                 love.audio.play(awakeSfx)
             end
             -- update player
+            player.name = me.Name
+  
+            player.buddy = me.Buddy
             player.hp = me.HP
             player.xp = me.XP
             if player.lvl ~= me.LVL then
