@@ -52,6 +52,15 @@ end
 
 function updateCharacter(dt)
     checkTargeting()
+    if me and player.dx and player.dy and player.buddy then
+        local pl = {
+            X = player.dx,
+            Y = player.dy,
+            Buddy = player.buddy,
+            Name = player.name
+        }
+        updateBuddy(dt, pl)
+    end
     if not isWorldEditWindowOpen then
         movePlayer(dt)
     end

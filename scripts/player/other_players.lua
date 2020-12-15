@@ -1,3 +1,4 @@
+
 --[[
     This script is for managing other player's actions.
     It could probably be named better. Any ideas, Matt?
@@ -35,6 +36,7 @@ function drawCharacter(v, x, y, ad)
             love.graphics.draw(horseImg, x + 6, y + 9)
         end
 
+        drawBuddy(v.Name)
         love.graphics.draw(playerImg, x + offsetX, y, 0, rotation, 1, 0, 0)
 
         if v.HeadArmourID ~= 0 then
@@ -68,10 +70,13 @@ function drawPlayer(v, i)
         thisPlayer = me
         v.X = player.dx
         v.Y = player.dy
+        v.Name = player.name
         v.previousDirection = player.previousDirection
         thisPlayer.AX = player.target.x
         thisPlayer.AY = player.target.y
         thisPlayer.IsShield = love.keyboard.isDown(keybinds.SHIELD)
+        thisPlayer.Name = player.name
+        thisPlayer.Buddy = player.buddy
     else
         thisPlayer = players[i]
     end
@@ -178,6 +183,8 @@ function updateOtherPlayers(dt)
                 playersDrawable[i].Y = playersDrawable[i].Y + 64 * dt
             end
         end
+
+        updateBuddy(dt, playersDrawable[i])
     end
 end
 

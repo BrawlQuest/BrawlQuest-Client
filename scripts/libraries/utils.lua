@@ -1,4 +1,16 @@
 
+function getImgIfNotExist(v)
+    if not worldImg[v] then
+        if love.filesystem.getInfo(v) then
+            worldImg[v] = love.graphics.newImage(v)
+        else
+            worldImg[v] = love.graphics.newImage("assets/error.png")
+        end
+    end
+
+    return worldImg[v]
+end
+
 function copy(obj, seen)
     if type(obj) ~= 'table' then return obj end
     if seen and seen[obj] then return seen[obj] end
