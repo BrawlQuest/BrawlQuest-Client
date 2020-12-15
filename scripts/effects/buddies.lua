@@ -15,10 +15,10 @@ function updateBuddy(dt, pl)
     speed.X = difference(v.X, pl.X+16) * dt
     speed.Y = difference(v.Y, pl.Y+16) * dt
     -- local speed = distanceToPoint(v.X,v.Y,pl.X+16,pl.Y+16)*dt
-    if v.X+3 > pl.X+16 then
+    if v.X > pl.X+16 then
         v.X = v.X - speed.X
         v.previousDirection = "left"
-    elseif v.X-3 < pl.X+16 then
+    elseif v.X < pl.X+16 then
         v.X = v.X + speed.X
         v.previousDirection = "right"
     end
