@@ -16,30 +16,6 @@ function initChat()
 	previousUsername = ""
 end
 
--- function checkKeyPressedChat(key) 
--- 	if isTypingInChat then
--- 		if key == "backspace" then
--- 			enteredChatText = string.sub( enteredChatText, 1, string.len( enteredChatText) - 1)
--- 		elseif key == "return" and enteredChatText ~= "" then
--- 			chatData = {
--- 				["PlayerName"] = me.Name,
--- 				["Channel"] = "Global",
--- 				["Message"] = enteredChatText,
--- 				["Created"] = os.time(os.date("!*t"))
--- 			}
--- 			c, h = http.request{url = api.url.."/chat", method="POST", source=ltn12.source.string(json:encode(chatData)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(chatData)),["token"]=token}}
--- 			enteredChatText = ""
--- 			if not chatRepeat then isTypingInChat = false end
--- 		elseif key == "escape" or (key == "return" and enteredChatText == "") then 
--- 			isTypingInChat = false
--- 		end
--- 	else
--- 		if key == "return" and not isSettingsWindowOpen then
--- 			isTypingInChat = true
--- 		end
--- 	end
--- end
-
 function checkChatTextinput(key)
 	if isTypingInChat then
 		enteredChatText = enteredChatText .. key

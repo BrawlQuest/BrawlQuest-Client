@@ -1,4 +1,4 @@
-function drawQuestPanel(thisX, thisY)
+function drawQuestPanelOriginal(thisX, thisY)
     love.graphics.setFont(headerFont)
     thisX = thisX - questWidth
     -- if isMouseOver((thisX*scale)*0.5, (thisY*scale)*0.5, questWidth, (getQuestPanelDropDownHeight()*scale)*0.5) then

@@ -109,7 +109,7 @@ function love.keypressed(key)
 end
 
 function love.keyreleased(key)
-    if key == keybinds.SHIELD and not isTypingInChat then
+    if key == keybinds.SHIELD and not isTypingInChat and phase == "game" then
         shieldDownSfx:play()
     end
 end
