@@ -71,6 +71,8 @@ function initHUD()
     userInventory[3] = {}
     userInventory[4] = {}
     userInventory[5] = {}
+    userInventory[6] = {}
+    userInventory[7] = {}
     inventoryFieldLength = {0, 0, 0, 0, 0, 0, 0,}
 
     userInventoryFieldHeight = {}
