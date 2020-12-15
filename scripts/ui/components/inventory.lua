@@ -34,7 +34,7 @@ function inventoryItemField(thisX, thisY, field)
     end
 end
 
-function getUserInventoryFieldHeight(field)
+function getUserInventoryFieldHeightOriginal(field)
     local i = #userInventory[field]
     local j = 2
     if i <= 0 then
@@ -84,11 +84,11 @@ function drawInventory()
     love.graphics.setStencilTest() -- pop
 end
 
-function drawInventoryStencil()
+function drawInventoryStencilOriginal()
     love.graphics.rectangle("fill", 70, toolbarY + 40, 180, 483)
 end
 
-function checkInventoryMousePressed()
+function checkInventoryMousePressedOriginal()
     if selectedItem ~= nil and selectedItem.ID ~= nil and
         isMouseOver(0, toolbarY * scale, inventory:getWidth() * scale, inventory:getHeight() * scale) then
         c, h = http.request {

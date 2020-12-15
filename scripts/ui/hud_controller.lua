@@ -65,7 +65,13 @@ function initHUD()
     inventorySubHeaderFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 10)
     inventoryItemBackground = love.graphics.newImage("assets/ui/hud/inventory/inventoryItem.png")
 
-    
+    userInventory = {}
+    userInventory[1] = {}
+    userInventory[2] = {}
+    userInventory[3] = {}
+    userInventory[4] = {}
+    userInventory[5] = {}
+    inventoryFieldLength = {0, 0, 0, 0, 0}
 
     userInventoryFieldHeight = {}
 
@@ -149,9 +155,12 @@ function updateHUD( dt )
     --     velyInventory = 0
     --     scrollInventory.down = false
     -- elseif scrollInventory.up or scrollInventory.down then
-    --     posYInventory = posYInventory + velyInventory * dt
+        
     --     scrollInventory.up, scrollInventory.down = true, true
     -- end
+
+    posYInventory = posYInventory + velyInventory * dt
+    print(posYInventory)
 
     if posYChat < 0 then
         posYChat = 0
@@ -205,11 +214,17 @@ function drawHUD()
         love.graphics.scale(scale)
         --drawToolbar(0, uiY - hubImages.profileBG:getHeight() - 523)
         -- drawProfile(uiX/i, uiY/i)
-        drawTooltip()
+        
         if showNPCChatBackground then drawNPCChatBackground((uiX/2)/i - 128, (uiY/2)/i - 128) end
         drawCharacterHub(0, uiY/i)
         drawToolBarInventory(0, uiY/i)
+        drawTooltip()
     love.graphics.pop()
+
+    love.graphics.setColor(1,1,1,0.5*inventory.opacity)
+    -- love.graphics.rectangle("fill", (0) * scale, (0 + 50) * scale, 313 * scale, (uiY - 97 - 50 - 50) * scale)
+    -- love.graphics.rectangle("fill", (0) * scale, (0 + 50) * scale, 313 * scale, (0 + getFullUserInventoryFieldHeight()) * scale)
+    love.graphics.setColor(1,1,1,1)
 
     drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
 end 
