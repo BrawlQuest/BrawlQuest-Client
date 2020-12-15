@@ -21,7 +21,6 @@ function initCharacterHub()
             love.graphics.newImage("assets/ui/hud/charater-hub/MANA.png"),
             love.graphics.newImage("assets/ui/hud/charater-hub/XP.png"),
         },
-
     }
 
     showStatsPanel = false
@@ -30,7 +29,22 @@ function initCharacterHub()
         barColors = {{1,0,0,1}, {0,0.5,1,1}, {1,0.5,0,1}, },
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 9),
         nameFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 14),
+        open = false,
+        amount = 0,
     }
+end
+
+function updateCharacterHub(dt)
+    if isMouseOver(0 * scale, (uiY - 97) * scale, 468 * scale, 97 * scale) then
+        characterHub.open = true
+        characterHub.amount = characterHub.amount + 4 * dt
+        if characterHub.amount > 1 then characterHub.amount = 1 end
+    else
+        characterHub.open = false
+        characterHub.amount = characterHub.amount - 4 * dt
+        if characterHub.amount < 0 then characterHub.amount = 0 end
+    end
+    -- print(characterHub.amount)
 end
 
 function drawCharacterHub(thisX, thisY)
@@ -39,10 +53,10 @@ function drawCharacterHub(thisX, thisY)
         thisX, thisY = thisX, thisY - hubImages.profileBG:getHeight()
         drawCharacterHubProfile(thisX, thisY)
         thisX = thisX + hubImages.profileBG:getWidth()
-        if isMouseOver(thisX * scale, thisY * scale, 468 * scale, 97 * scale) then
+        if characterHub.amount ~= 0 then
             drawCharacterHubStats(thisX, thisY)
-            thisX = thisX + hubImages.statsBG:getWidth()
-        end
+        end  
+        thisX = thisX + cerp(0, hubImages.statsBG:getWidth(), characterHub.amount)
         drawCharacterHubMeters(thisX, thisY)
     end
 end
@@ -66,23 +80,22 @@ end
 function drawCharacterHubStats(thisX, thisY)
     love.graphics.setColor(unpack(characterHub.backgroundColor))
     -- love.graphics.draw(hubImages.statsBG, thisX, thisY)
-    love.graphics.rectangle("fill", thisX, thisY, 155, 97)
+    love.graphics.rectangle("fill", thisX, thisY, cerp(0, 155, characterHub.amount), 97)
     love.graphics.setFont(characterHub.font)
     -- local statNumbers = {me.STA, me.INT, me.DEF}
     for i = 0, 2 do
         if isMouseOver((thisX + (49 * i) + 3) * scale, (thisY + 43) * scale, hubImages.statCardBg:getWidth() * scale, hubImages.statCardBg:getHeight() * scale) then
-            love.graphics.setColor(1,0,0,1)
+            love.graphics.setColor(1,0,0, cerp(0, 1, characterHub.amount))
         else
-            love.graphics.setColor(1,1,1,0.70)
+            love.graphics.setColor(1,1,1,cerp(0, 0.7, characterHub.amount))
         end
         love.graphics.draw(hubImages.statCardBg, thisX + (49 * i) + 3, thisY + 43)
-        
     end
 
-    love.graphics.setColor(1,1,1,1)
+    love.graphics.setColor(1,1,1,cerp(0, 1, characterHub.amount))
     love.graphics.draw(hubImages.statsFG, thisX, thisY)
     
-    love.graphics.setColor(0,0,0,1)
+    love.graphics.setColor(0,0,0, cerp(0, 1, characterHub.amount))
     love.graphics.print(perks.reserve, thisX + 77 - (characterHub.font:getWidth(perks.reserve)/2), thisY + 28 - (characterHub.font:getHeight(perks.reserve)/2))
     for i = 0, 2 do
         love.graphics.print(perks[i+1], thisX + (49 * i) + 3 + 32 - (characterHub.font:getWidth(perks[i+1])/2), thisY + 43 + 42 - (characterHub.font:getHeight(perks[i+1])/2))
@@ -116,8 +129,18 @@ function drawCharacterHubMeters(thisX, thisY)
 end
 
 
-function checkStatsMousePressed()
-
+function checkStatsMousePressed(button)
+    for i = 0, 2 do
+        if isMouseOver((0 + hubImages.profileBG:getWidth() + (49 * i) + 3) * scale, (uiY - hubImages.profileBG:getHeight() + 43) * scale, hubImages.statCardBg:getWidth() * scale, hubImages.statCardBg:getHeight() * scale) then
+            if perks.reserve > 0 and button == 1 then
+                perks[i+1] = perks[i+1] + 1
+                perks.reserve = perks.reserve - 1
+            elseif perks[i+1] > 0 and button == 2 then
+                perks[i+1] = perks[i+1] - 1
+                perks.reserve = perks.reserve + 1
+            end
+        end
+    end
 end
 
 function getSTA(i)

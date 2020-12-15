@@ -29,7 +29,7 @@ function love.keypressed(key)
                 editingField = editingField + 1
             elseif key == "escape" or key == "'" then isWorldEditWindowOpen = false end
         elseif isSettingsWindowOpen then
-            if key == "escape" then
+            if key == "escape" or key == "w" or key == "a" or key == "s" or key == "d" then
                 isSettingsWindowOpen = false
             end
             if key == "return" then

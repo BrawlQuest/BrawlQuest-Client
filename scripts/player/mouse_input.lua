@@ -8,6 +8,7 @@ function love.mousepressed(x, y, button)
     --    checkChatMousePressed()
        checkPerksMousePressed(button)
        checkSettingsMousePressed(button)
+       checkStatsMousePressed(button)
        if showNPCChatBackground then
         checkNPCChatMousePressed()
        end
@@ -15,7 +16,7 @@ function love.mousepressed(x, y, button)
 end
 
 function love.wheelmoved( dx, dy )
-    if isMouseOver(0, toolbarY*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
+    if isMouseOver(0, 0, 313 * scale, (uiY - 97) * scale) then
         velyInventory = velyInventory + dy * 512
     else 
         velyChat = velyChat + dy * 512

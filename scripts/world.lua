@@ -73,7 +73,7 @@ function drawTile(v, offset)
     
     if worldLookup[v.X][v.Y-1] and (isTileWall(worldLookup[v.X][v.Y-1].ForegroundTile) or isTileWall(worldLookup[v.X][v.Y-1].GroundTile)) and not isTileWall(v.ForegroundTile) then
         love.graphics.setColor(0,0,0,0.5)
-        print(timeOfDay)
+        -- print(timeOfDay)
         love.graphics.rectangle("fill", (v.X+math.abs(lowestX)) * 32 , (v.Y+math.abs(lowestY)) * 32, 32,16)
         love.graphics.setColor(1,1,1,1)
     elseif (isTileWall(v.GroundTile) or isTileWall(v.ForegroundTile)) and not worldLookup[v.X][v.Y+1] then -- no tile below us but we stil need to cast a shadow

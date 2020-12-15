@@ -65,7 +65,13 @@ function initHUD()
     inventorySubHeaderFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 10)
     inventoryItemBackground = love.graphics.newImage("assets/ui/hud/inventory/inventoryItem.png")
 
-    
+    userInventory = {}
+    userInventory[1] = {}
+    userInventory[2] = {}
+    userInventory[3] = {}
+    userInventory[4] = {}
+    userInventory[5] = {}
+    inventoryFieldLength = {0, 0, 0, 0, 0, 0, 0,}
 
     userInventoryFieldHeight = {}
 
@@ -138,20 +144,6 @@ function updateHUD( dt )
 
     posYChat = posYChat + velyChat * dt
     velyChat = velyChat - velyChat * math.min( dt * 15, 1 )
-    
-
-    -- if posYInventory < (getFullUserInventoryFieldHeight()*-1) and scrollInventory.up then
-    --     posYInventory = (getFullUserInventoryFieldHeight()*-1)
-    --     velyInventory = 0
-    --     scrollInventory.up = false
-    -- elseif posYInventory > 0 and scrollInventory.down then
-    --     posYInventory = 0
-    --     velyInventory = 0
-    --     scrollInventory.down = false
-    -- elseif scrollInventory.up or scrollInventory.down then
-    --     posYInventory = posYInventory + velyInventory * dt
-    --     scrollInventory.up, scrollInventory.down = true, true
-    -- end
 
     if posYChat < 0 then
         posYChat = 0
@@ -162,6 +154,7 @@ function updateHUD( dt )
     updateSliders()
     updateSFX()
     updateToolBarInventory(dt)
+    updateCharacterHub(dt)
 
     if chatCursor.i < chatCursor.speed then
         chatCursor.i = chatCursor.i + 1
@@ -204,11 +197,17 @@ function drawHUD()
         love.graphics.scale(scale)
         --drawToolbar(0, uiY - hubImages.profileBG:getHeight() - 523)
         -- drawProfile(uiX/i, uiY/i)
-        drawTooltip()
+        
         if showNPCChatBackground then drawNPCChatBackground((uiX/2)/i - 128, (uiY/2)/i - 128) end
         drawCharacterHub(0, uiY/i)
         drawToolBarInventory(0, uiY/i)
+        drawTooltip()
     love.graphics.pop()
+
+    -- love.graphics.setColor(1,1,1,0.5*inventory.opacity)
+    -- love.graphics.rectangle("fill", (0) * scale, (0 + 50) * scale, 313 * scale, (uiY - 97 - 50 - 50) * scale)
+    -- love.graphics.rectangle("fill", (0) * scale, (0 + 50) * scale, 313 * scale, (0 + getFullUserInventoryFieldHeight()) * scale)
+    -- love.graphics.setColor(1,1,1,1)
 
     drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
 end 
