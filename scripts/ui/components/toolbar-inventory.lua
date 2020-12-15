@@ -149,7 +149,13 @@ function drawInventoryItem(thisX, thisY, field, item, number)
             love.graphics.setColor(1,1,1,inventory.opacity)
         end
         love.graphics.setColor(1,1,1,inventory.opacity)
-        love.graphics.draw(itemImg[userInventory[field][item].Item.ImgPath], thisX + 2, thisY + 2) -- Item
+        if itemImg[userInventory[field][item].Item.ImgPath]:getWidth() <= 32 and itemImg[userInventory[field][item].Item.ImgPath]:getHeight() <= 32 then
+            love.graphics.draw(itemImg[userInventory[field][item].Item.ImgPath], thisX + 18 - (itemImg[userInventory[field][item].Item.ImgPath]:getWidth() / 2),
+            thisY + 18 - (itemImg[userInventory[field][item].Item.ImgPath]:getHeight() / 2))
+        else
+            love.graphics.draw(itemImg[userInventory[field][item].Item.ImgPath], thisX + 2, thisY + 2) -- Item
+        end
+        
     end
 end
 
