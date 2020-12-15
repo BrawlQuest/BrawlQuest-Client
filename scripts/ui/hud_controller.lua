@@ -144,23 +144,22 @@ function updateHUD( dt )
 
     posYChat = posYChat + velyChat * dt
     velyChat = velyChat - velyChat * math.min( dt * 15, 1 )
-    
 
-    -- if posYInventory < (getFullUserInventoryFieldHeight()*-1) and scrollInventory.up then
-    --     posYInventory = (getFullUserInventoryFieldHeight()*-1)
-    --     velyInventory = 0
-    --     scrollInventory.up = false
-    -- elseif posYInventory > 0 and scrollInventory.down then
-    --     posYInventory = 0
-    --     velyInventory = 0
-    --     scrollInventory.down = false
-    -- elseif scrollInventory.up or scrollInventory.down then
-        
-    --     scrollInventory.up, scrollInventory.down = true, true
-    -- end
+    if getFullUserInventoryFieldHeight() * scale > (uiY - 97 - 50 - 50) * scale then
+        posYInventory = posYInventory + velyInventory * dt
+        if posYInventory > 0 then
+            posYInventory = 0
+        elseif posYInventory < 0 - getFullUserInventoryFieldHeight() + (uiY - 97 - 50 - 50) then
+            posYInventory = 0 - getFullUserInventoryFieldHeight() + (uiY - 97 - 50 - 50)
+            print("YES")
+        end
+    else
+        posYInventory = 0
+    end
 
-    posYInventory = posYInventory + velyInventory * dt
-    print(posYInventory)
+    -- print(posYInventory)
+    print((getFullUserInventoryFieldHeight()).." "..getFullUserInventoryFieldHeight() * scale - (uiY - 97 - 50 - 50) * scale)
+
 
     if posYChat < 0 then
         posYChat = 0
@@ -221,10 +220,10 @@ function drawHUD()
         drawTooltip()
     love.graphics.pop()
 
-    love.graphics.setColor(1,1,1,0.5*inventory.opacity)
+    -- love.graphics.setColor(1,1,1,0.5*inventory.opacity)
     -- love.graphics.rectangle("fill", (0) * scale, (0 + 50) * scale, 313 * scale, (uiY - 97 - 50 - 50) * scale)
     -- love.graphics.rectangle("fill", (0) * scale, (0 + 50) * scale, 313 * scale, (0 + getFullUserInventoryFieldHeight()) * scale)
-    love.graphics.setColor(1,1,1,1)
+    -- love.graphics.setColor(1,1,1,1)
 
     drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
 end 

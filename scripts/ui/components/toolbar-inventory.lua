@@ -3,10 +3,12 @@ function initToolBarInventory()
         open = false,
         amount = 0,
         opacity = 0,
+        titleSpacing = 25,
+        itemSpacing = 42,
         items = {},
         fields = {"weapons", "spells", "armour", "mounts", "other"},
         fieldLength = {0, 0, 0, 0, 0},
-        font = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 10),
+        font = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 12),
         headerFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 26),
         images = {
             itemBG = love.graphics.newImage("assets/ui/hud/character-inventory/item-bg.png"),
@@ -95,13 +97,13 @@ function drawToolBarInventory(thisX, thisY)
 
         love.graphics.stencil(drawInventoryStencil, "replace", 1) -- stencils inventory
         love.graphics.setStencilTest("greater", 0) -- push
-            thisY = thisY + 60 + posYInventory
+            thisY = thisY + 50 + posYInventory
             for i = 1, #inventory.fields do -- Draws each inventory field
                 if inventoryFieldLength[i] ~= 0 then
                     drawInventoryItemField(thisX + 8, thisY, i)
-                    love.graphics.setColor(1,1,1, 0.25 * inventory.opacity)
-                    love.graphics.rectangle("fill", thisX, thisY, 313, getUserInventoryFieldHeight(i))
-                    love.graphics.setColor(1,1,1, 1 * inventory.opacity)
+                    -- love.graphics.setColor(1,1,1, 0.25 * inventory.opacity)
+                    -- love.graphics.rectangle("fill", thisX, thisY, 313, getUserInventoryFieldHeight(i))
+                    -- love.graphics.setColor(1,1,1, 1 * inventory.opacity)
                     thisY = thisY + getUserInventoryFieldHeight(i)
                 end
             end
@@ -139,40 +141,37 @@ function drawInventoryItem(thisX, thisY, field, item, number)
 end
 
 function drawInventoryItemField(thisX, thisY, field)
-    love.graphics.printf(inventory.fields[field], thisX + 2, thisY + 2, 483)
-    thisY = thisY + 20
+    love.graphics.printf(inventory.fields[field], thisX + 2, thisY + 4, 483)
+    thisY = thisY + inventory.titleSpacing
     for i = 0, #userInventory[field] - 1 do
         if i <= 3 then
-            drawInventoryItem(thisX + (43 * i), thisY + 0, field, i + 1)
-            --drawInventoryItem(thisX + 9 + (43 * i), thisY + 0, field,  + 1)
+            drawInventoryItem(thisX + (43 * i), thisY + (inventory.itemSpacing * 0), field, i + 1)
         elseif i >= 4 and i <= 7 then
-            drawInventoryItem(thisX + (43 * i), thisY + 42, field, i + 1)
+            drawInventoryItem(thisX + (43 * i), thisY + (inventory.itemSpacing * 1), field, i + 1)
         elseif i >= 8 and i <= 11 then
-            drawInventoryItem(thisX + (43 * i), thisY + 84, field, i + 1)
+            drawInventoryItem(thisX + (43 * i), thisY + (inventory.itemSpacing * 2), field, i + 1)
         elseif i >= 12 and i <= 15 then
-            drawInventoryItem(thisX + (43 * i), thisY + 126, field, i + 1)
+            drawInventoryItem(thisX + (43 * i), thisY + (inventory.itemSpacing * 3), field, i + 1)
         elseif i >= 16 and i <= 19 then
-            drawInventoryItem(thisX + (43 * i), thisY + 168, field, i + 1)
+            drawInventoryItem(thisX + (43 * i), thisY + (inventory.itemSpacing * 4), field, i + 1)
         end
     end
 end
 
 function getUserInventoryFieldHeight(field)
     local i = #userInventory[field]
-    local j = inventory.images.itemBG:getHeight()
-    local titlespacing = 20
     if i <= 0 then
-        return (j * 0) + titlespacing
+        return (inventory.itemSpacing * 0) + inventory.titleSpacing
     elseif i >= 1 and i <= 3 then
-        return (j * 1) + titlespacing
+        return (inventory.itemSpacing * 1) + inventory.titleSpacing
     elseif i >= 4 and i <= 7 then
-        return (j * 2) + titlespacing
+        return (inventory.itemSpacing * 2) + inventory.titleSpacing
     elseif i >= 8 and i <= 11 then
-        return (j * 3) + titlespacing
+        return (inventory.itemSpacing * 3) + inventory.titleSpacing
     elseif i >= 12 and i <= 15 then
-        return (j * 4) + titlespacing
+        return (inventory.itemSpacing * 4) + inventory.titleSpacing
     elseif i >= 16 and i <= 19 then
-        return (j * 5) + titlespacing
+        return (inventory.itemSpacing * 5) + inventory.titleSpacing
     end
 end
 
