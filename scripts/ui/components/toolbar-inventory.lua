@@ -6,7 +6,7 @@ function initToolBarInventory()
         titleSpacing = 25,
         itemSpacing = 42,
         items = {},
-        fields = {"weapons", "spells", "armour", "mounts", "other"},
+        fields = {"weapons", "spells", "armour", "reagent", "mounts", "buddies", "other",},
         fieldLength = {0, 0, 0, 0, 0},
         font = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 12),
         headerFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 26),
@@ -36,10 +36,12 @@ function getInventory()
     userInventory[3] = {}
     userInventory[4] = {}
     userInventory[5] = {}
-    inventoryFieldLength = {0, 0, 0, 0, 0}
+    userInventory[6] = {}
+    userInventory[7] = {}
+    inventoryFieldLength = {0, 0, 0, 0, 0, 0, 0,}
 
     for i, v in ipairs(inventoryAlpha) do
-        local t = 5
+        local t = 7
 
         if v.Item.Type == "wep" then
             t = 1
@@ -47,9 +49,14 @@ function getInventory()
             t = 2
         elseif string.sub(v.Item.Type, 1, 4) == "arm_" or v.Item.Type == "shield" then
             t = 3
-        elseif v.Item.Type == "mount" then
+        elseif v.Item.Type == "reagent" then
             t = 4
+        elseif v.Item.Type == "mount" then
+            t = 5
+        elseif v.Item.Type == "buddy" then
+            t = 6
         end
+
         inventoryFieldLength[t] = inventoryFieldLength[t] + 1
         if not itemImg[v.Item.ImgPath] then
             if love.filesystem.getInfo(v.Item.ImgPath) then
@@ -68,6 +75,16 @@ function updateToolBarInventory(dt)
         inventory.open = true
         inventory.amount = inventory.amount + 4 * dt
         if inventory.amount > 1 then inventory.amount = 1 end
+
+        if getFullUserInventoryFieldHeight() * scale > (uiY - 97 - 50 - 50) * scale then
+            posYInventory = posYInventory + velyInventory * dt
+            if posYInventory > 0 then
+                posYInventory = 0
+            elseif posYInventory < 0 - getFullUserInventoryFieldHeight() + (uiY - 97 - 50 - 50) then
+                posYInventory = 0 - getFullUserInventoryFieldHeight() + (uiY - 97 - 50 - 50)
+            end
+        else posYInventory = 0
+        end
     else
         inventory.open = false
         inventory.amount = inventory.amount - 4 * dt
@@ -92,7 +109,7 @@ function drawToolBarInventory(thisX, thisY)
         thisY = thisY - cerp(0, (uiY - 97), inventory.amount)
 
         love.graphics.setFont(inventory.headerFont)
-        love.graphics.print("Inventory", thisX + 8, thisY + 7)
+        love.graphics.print("Inventory", thisX + 8, thisY + 14)
         love.graphics.setFont(inventory.font)
 
         love.graphics.stencil(drawInventoryStencil, "replace", 1) -- stencils inventory
@@ -113,19 +130,11 @@ function drawToolBarInventory(thisX, thisY)
 end
 
 function drawInventoryItem(thisX, thisY, field, item, number)
-    
     if number ~= null then  
         love.graphics.draw(inventory.images.itemBG, thisX, thisY)
         if item ~= null then love.graphics.draw(item, top_left, thisX + 2, thisY + 2) end
         love.graphics.draw(inventory.images.numbers[number], thisX - 3, thisY + 26)
     else
-        
-        if string.sub(userInventory[field][item].Item.Type, 1, 4) == "arm_" then
-            love.graphics.setColor(1,1,1,inventory.opacity*0.5)
-            love.graphics.draw(playerImg, thisX + 2, thisY + 2)
-            love.graphics.setColor(1,1,1,inventory.opacity)
-        end
-
         if isMouseOver(thisX*scale, thisY*scale, 34*scale, 34*scale) and isMouseOver((0) * scale, (0 + 50) * scale, 313 * scale, (uiY - 97 - 50 - 50) * scale) then
             love.graphics.setColor(0.6, 0.6, 0.6,inventory.opacity)
             setTooltip(userInventory[field][item].Item.Name,
@@ -133,27 +142,34 @@ function drawInventoryItem(thisX, thisY, field, item, number)
                     userInventory[field][item].Item.Desc)
             selectedItem = userInventory[field][item].Item
         end
-
         love.graphics.draw(inventory.images.itemBG, thisX, thisY)
+        if string.sub(userInventory[field][item].Item.Type, 1, 4) == "arm_" then
+            love.graphics.setColor(1,1,1,inventory.opacity*0.5)
+            love.graphics.draw(playerImg, thisX + 2, thisY + 2)
+            love.graphics.setColor(1,1,1,inventory.opacity)
+        end
         love.graphics.setColor(1,1,1,inventory.opacity)
         love.graphics.draw(itemImg[userInventory[field][item].Item.ImgPath], thisX + 2, thisY + 2) -- Item
     end
 end
 
 function drawInventoryItemField(thisX, thisY, field)
-    love.graphics.printf(inventory.fields[field], thisX + 2, thisY + 4, 483)
+    love.graphics.printf(inventory.fields[field], thisX + 2, thisY + 2, 483)
     thisY = thisY + inventory.titleSpacing
-    for i = 0, #userInventory[field] - 1 do
-        if i <= 3 then
-            drawInventoryItem(thisX + (43 * i), thisY + (inventory.itemSpacing * 0), field, i + 1)
-        elseif i >= 4 and i <= 7 then
-            drawInventoryItem(thisX + (43 * i), thisY + (inventory.itemSpacing * 1), field, i + 1)
-        elseif i >= 8 and i <= 11 then
-            drawInventoryItem(thisX + (43 * i), thisY + (inventory.itemSpacing * 2), field, i + 1)
-        elseif i >= 12 and i <= 15 then
-            drawInventoryItem(thisX + (43 * i), thisY + (inventory.itemSpacing * 3), field, i + 1)
-        elseif i >= 16 and i <= 19 then
-            drawInventoryItem(thisX + (43 * i), thisY + (inventory.itemSpacing * 4), field, i + 1)
+    local itemWidth = 7
+    for i = 1, #userInventory[field] do
+        if i <= 7 then
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 0), field, i)
+        elseif i > 7 and i <= 14 then
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 1), field, i)
+        elseif i > 14 and i <= 21 then
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 2), field, i)
+        elseif i > 21 and i <= 28 then
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 3), field, i)
+        elseif i > 28 and i <= 35 then
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 4), field, i)
+        else
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 5), field, i)
         end
     end
 end
@@ -162,15 +178,15 @@ function getUserInventoryFieldHeight(field)
     local i = #userInventory[field]
     if i <= 0 then
         return (inventory.itemSpacing * 0) + inventory.titleSpacing
-    elseif i >= 1 and i <= 3 then
+    elseif i > 0 and i <= 7 then
         return (inventory.itemSpacing * 1) + inventory.titleSpacing
-    elseif i >= 4 and i <= 7 then
+    elseif i > 7 and i <= 14 then
         return (inventory.itemSpacing * 2) + inventory.titleSpacing
-    elseif i >= 8 and i <= 11 then
+    elseif i > 14 and i <= 21 then
         return (inventory.itemSpacing * 3) + inventory.titleSpacing
-    elseif i >= 12 and i <= 15 then
+    elseif i > 21 and i <= 28 then
         return (inventory.itemSpacing * 4) + inventory.titleSpacing
-    elseif i >= 16 and i <= 19 then
+    elseif i > 28 and i <= 35 then
         return (inventory.itemSpacing * 5) + inventory.titleSpacing
     end
 end

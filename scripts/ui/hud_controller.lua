@@ -71,7 +71,7 @@ function initHUD()
     userInventory[3] = {}
     userInventory[4] = {}
     userInventory[5] = {}
-    inventoryFieldLength = {0, 0, 0, 0, 0}
+    inventoryFieldLength = {0, 0, 0, 0, 0, 0, 0,}
 
     userInventoryFieldHeight = {}
 
@@ -144,22 +144,6 @@ function updateHUD( dt )
 
     posYChat = posYChat + velyChat * dt
     velyChat = velyChat - velyChat * math.min( dt * 15, 1 )
-
-    if getFullUserInventoryFieldHeight() * scale > (uiY - 97 - 50 - 50) * scale then
-        posYInventory = posYInventory + velyInventory * dt
-        if posYInventory > 0 then
-            posYInventory = 0
-        elseif posYInventory < 0 - getFullUserInventoryFieldHeight() + (uiY - 97 - 50 - 50) then
-            posYInventory = 0 - getFullUserInventoryFieldHeight() + (uiY - 97 - 50 - 50)
-            print("YES")
-        end
-    else
-        posYInventory = 0
-    end
-
-    -- print(posYInventory)
-    print((getFullUserInventoryFieldHeight()).." "..getFullUserInventoryFieldHeight() * scale - (uiY - 97 - 50 - 50) * scale)
-
 
     if posYChat < 0 then
         posYChat = 0
