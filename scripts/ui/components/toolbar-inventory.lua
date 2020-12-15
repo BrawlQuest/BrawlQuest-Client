@@ -96,7 +96,7 @@ end
 function drawToolBarInventory(thisX, thisY)
     love.graphics.setColor(unpack(characterHub.backgroundColor))
   
-    love.graphics.rectangle("fill", thisX + 313, thisY - 97, -313, 0 - cerp(23, 23 + (uiY - 97 - 23), inventory.amount))
+    love.graphics.rectangle("fill", thisX, thisY - 97, 313, 0 - cerp(23, 23 + (uiY - 97 - 23), inventory.amount))
     thisX, thisY = thisX, thisY - 97
     love.graphics.setColor(1,1,1,1)
     for i = 0, 6 do 

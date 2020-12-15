@@ -133,13 +133,16 @@ function love.draw()
              Luven.camera:draw()
           
         -- print(brightnessSlider:getValue())
+        
+        love.graphics.setFont(font)
+        love.graphics.print(player.x..", "..player.y,10,6)
     end
 
 
     mx, my = love.mouse.getPosition()
     love.graphics.setColor(1,1,1)
     love.graphics.draw(mouseImg, mx, my)
-    love.graphics.print(player.x..", "..player.y,200,200)
+    
 
     love.graphics.setColor(1, 1, 1, totalCoverAlpha)
     love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
