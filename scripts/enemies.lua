@@ -102,8 +102,16 @@ function drawEnemies()
     for i, v in pairs(enemies) do
         if v.HP > 0 then
             if isTileLit(v.X, v.Y) then
+
+        local rotation = 1
+        local offsetX = 0
+        if v and v.previousDirection and v.previousDirection == "left" then
+            rotation = -1
+            offsetX = 32
+        end
+
                 love.graphics.setColor(1, 1 - v.red, 1 - v.red)
-                love.graphics.draw(enemyImg[v.Enemy.Name], v.dx, v.dy)
+                love.graphics.draw(enemyImg[v.Enemy.Name], v.dx + offsetX, v.dy, 0, rotation, 1, 0, 0)
                 love.graphics.setColor(1, 0, 0)
                 love.graphics.rectangle("fill", v.dx, v.dy - 6, (v.dhp / v.mhp) * 32, 6)
                 love.graphics.setColor(1, 1, 1, v.aggroAlpha)
@@ -158,8 +166,10 @@ end
 function smoothMovement(v, dt)
     if distanceToPoint(v.dx, v.dy, v.X * 32, v.Y * 32) > 3 then
         if v.dx > v.X * 32 + 3 then
+            v.previousDirection = "left"
             v.dx = v.dx - v.speed * dt
         elseif v.dx < v.X * 32 - 3 then
+            v.previousDirection = "right"
             v.dx = v.dx + v.speed * dt
         end
 
