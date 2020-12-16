@@ -240,6 +240,7 @@ function updateInventory(response)
 
     for i,k in ipairs(newInventoryItems) do
         print(k.Item.Name)
+        love.audio.play(enemyHitSfx)
         burstLoot((player.x*32)-16, (player.y*32)-16, k.Inventory.Amount, k.Item.ImgPath)
         newInventoryItems = {}
     end

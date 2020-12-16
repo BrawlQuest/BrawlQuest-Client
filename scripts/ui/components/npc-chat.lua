@@ -358,6 +358,7 @@ function checkNPCChatMousePressed()
                 chatWritten = ""
                 if v[2] == "1" then
                     showNPCChatBackground = false
+                    npcChat.Title = ""
                 else
                     local b = {}
                     c, h = http.request{url = api.url.."/conversation/"..v[2].."/"..username, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
@@ -368,7 +369,7 @@ function checkNPCChatMousePressed()
                 optionString = string.gsub(optionString, "'ll", 'll')
                 optionString = string.gsub(optionString, "'ve", 've')
                 optionString =  string.gsub(optionString, "'", '"')
-            npcChat.Options = json:decode(optionString)
+                npcChat.Options = json:decode(optionString)
                     --npcChat.Options = json:decode(string.gsub(npcChat.Options, "'", '"'))
                 end
             end
