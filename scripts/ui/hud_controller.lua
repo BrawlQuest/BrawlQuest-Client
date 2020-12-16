@@ -23,7 +23,7 @@ function initHUD()
     headerBigFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 32) -- TODO: get a license for this font
     font = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 18)
    
-    chatFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 24)
+    chatFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16)
 
     npcChatFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 12)
 
@@ -197,7 +197,7 @@ function drawHUD()
     love.graphics.push() -- chat and quests scaling TODO: Quests
         local i = 0.5
         love.graphics.scale(scale*i)
-        drawChatPanel(uiX/i, uiY/i-(100/i))
+        drawChatPanel(uiX/i, (uiY - cerp(100, ((uiY/1.25)-20), quests.amount)) / i)
         -- drawQuestPanel(uiX/i, 0)
     love.graphics.pop()
 

@@ -28,7 +28,7 @@ function initCharacterHub()
         backgroundColor = {0,0,0,0.5},
         barColors = {{1,0,0,1}, {0,0.5,1,1}, {1,0.5,0,1}, },
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 9),
-        nameFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 14),
+        nameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
         open = false,
         amount = 0,
     }
@@ -108,7 +108,7 @@ function drawCharacterHubMeters(thisX, thisY)
     love.graphics.rectangle("fill", thisX, thisY, 231, 97)
     love.graphics.setFont(characterHub.nameFont)
     love.graphics.setColor(1,1,1,1)
-    love.graphics.print(me.Name, thisX + 6, thisY+2)
+    love.graphics.print(me.Name, thisX + 6, thisY+4)
     thisX, thisY = thisX + 5, thisY + 25
     love.graphics.setFont(characterHub.font)
     local j = (100/151)

@@ -31,18 +31,18 @@ function updateBuddy(dt, pl)
 end
 
 function drawBuddy(pl)
-    -- if pl then
-    --     local rotation = 1
-    --     local offsetX = 0
+    if pl then
+        local rotation = 1
+        local offsetX = 0
       
-    --     if buddies[pl] ~= null then
-    --         local v = buddies[pl]
-    --         if v.previousDirection and v.previousDirection == "left" then
-    --             rotation = -1
-    --             offsetX = 8
-    --         end
-    --         local img = getImgIfNotExist(v.img)
-    --         love.graphics.draw(img, v.X+offsetX, v.Y, 0, rotation, 1, 0, 0)
-    --     end
-    -- end
+        if buddies[pl] ~= null then
+            local v = buddies[pl]
+            if v.previousDirection and v.previousDirection == "left" then
+                rotation = -1
+                offsetX = 8
+            end
+            local img = getImgIfNotExist(v.img)
+            love.graphics.draw(img, v.X+offsetX, v.Y, 0, rotation, 1, 0, 0)
+        end
+    end
 end

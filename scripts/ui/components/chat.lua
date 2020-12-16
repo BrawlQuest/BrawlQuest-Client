@@ -9,7 +9,7 @@ function initChat()
     profilePic = love.graphics.newImage("assets/ui/hud/chat/profile.png")
 	chatCorner = love.graphics.newImage("assets/ui/hud/chat/corner.png")
 	chatHeight = 0
-    chatWidth = 400
+    chatWidth = 484
 	chatSpacing = 14
 	messages = {}
 	enteredChatText = ""
