@@ -41,8 +41,11 @@ function drawBuddy(pl)
                 rotation = -1
                 offsetX = 8
             end
-            local img = getImgIfNotExist(v.img)
-            love.graphics.draw(img, v.X+offsetX, v.Y, 0, rotation, 1, 0, 0)
+            if v.img then
+             local img = getImgIfNotExist(v.img)
+          
+                love.graphics.draw(img, v.X+offsetX, v.Y, 0, rotation, 1, 0, 0)
+            end
         end
     end
 end
