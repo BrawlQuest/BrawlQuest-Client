@@ -168,48 +168,25 @@ function updateHUD( dt )
         end
         chatCursor.i = 0
     end
-
-	-- if isMouseOver(0, toolbarY*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
-    --     inventoryOpacity = inventoryOpacity + 3*dt
-    --     if inventoryOpacity > 1 then inventoryOpacity = 1 end
-    -- else
-    --     inventoryOpacity = inventoryOpacity - 3*dt
-    --     if inventoryOpacity < 0 then inventoryOpacity = 0 end
-    -- end
 end
 
 function drawHUD()
-    love.graphics.push() -- chat and quests scaling TODO: Quests
+    love.graphics.push() -- chat and quests scaling 
         local i = 0.5
         love.graphics.scale(scale*i)
         drawChatPanel(uiX/i, uiY/i)
-        -- drawQuestPanel(uiX/i, 0)
-    love.graphics.pop()
-
-    love.graphics.push() -- chat and quests scaling TODO: Quests
-        local i = 0.75
-        love.graphics.scale(scale*i)
-        -- drawBattlebar((uiX/2)/i, uiY/i)
-        drawQuestPopUp((uiX/2)/i, (uiY/2)/i)
-        
     love.graphics.pop()
 
     love.graphics.push()
         local i = 1
         love.graphics.scale(scale)
-        --drawToolbar(0, uiY - hubImages.profileBG:getHeight() - 523)
-        -- drawProfile(uiX/i, uiY/i)
+
         
         if showNPCChatBackground then drawNPCChatBackground((uiX/2)/i - 128, (uiY/2)/i - 128) end
         drawCharacterHub(0, uiY/i)
         drawToolBarInventory(0, uiY/i)
         drawTooltip()
     love.graphics.pop()
-
-    -- love.graphics.setColor(1,1,1,0.5*inventory.opacity)
-    -- love.graphics.rectangle("fill", (0) * scale, (0 + 50) * scale, 313 * scale, (uiY - 97 - 50 - 50) * scale)
-    -- love.graphics.rectangle("fill", (0) * scale, (0 + 50) * scale, 313 * scale, (0 + getFullUserInventoryFieldHeight()) * scale)
-    -- love.graphics.setColor(1,1,1,1)
 
     drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
 end 
