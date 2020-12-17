@@ -1,5 +1,4 @@
 function initQuestsPanel()
-   
     questsPanel = {
         open = false,
         amount = 0,
@@ -27,19 +26,25 @@ function drawQuestsPanel(thisX, thisY)
     love.graphics.setColor(1,1,1,questsPanel.opacity)
     love.graphics.setFont(inventory.headerFont)
     love.graphics.print("Quests", thisX + 8, thisY)
-    love.graphics.setFont(inventory.font)
-    thisX, thisY = thisX, thisY + 40
-    for i = 1, #questsPanel.titles do
-        if #quests[i] ~= null then
-            love.graphics.rectangle("fill", thisX + 19, thisY, questsPanel.boxBgWidth, 2)
-            thisY = thisY + 6
-            love.graphics.setFont(inventory.font)
-            love.graphics.print(questsPanel.titles[i], thisX + 38, thisY)
-            drawQuestsPanelField(thisX, thisY + questsPanel.titleSpacing, i)
-            -- love.graphics.rectangle("fill", thisX + 200, thisY, 40, getQuestsPanelFieldHeight(i))
-            thisY = thisY + getQuestsPanelFieldHeight(i) + questsPanel.fieldSpacing
+    
+    love.graphics.stencil(drawQuestsPanelStencil, "replace", 1) -- stencils inventory
+    love.graphics.setStencilTest("greater", 0) -- push
+
+        love.graphics.setFont(inventory.font)
+        thisX, thisY = thisX, thisY + 40
+        for i = 1, #questsPanel.titles do
+            if #quests[i] ~= null then
+                love.graphics.rectangle("fill", thisX + 19, thisY, questsPanel.boxBgWidth, 2)
+                thisY = thisY + 6
+                love.graphics.setFont(inventory.font)
+                love.graphics.print(questsPanel.titles[i], thisX + 38, thisY)
+                drawQuestsPanelField(thisX, thisY + questsPanel.titleSpacing, i)
+                -- love.graphics.rectangle("fill", thisX + 200, thisY, 40, getQuestsPanelFieldHeight(i))
+                thisY = thisY + getQuestsPanelFieldHeight(i) + questsPanel.fieldSpacing
+            end
         end
-    end
+
+    love.graphics.setStencilTest() -- pop
 end
 
 function drawQuestsPanelField(thisX, thisY, i)
@@ -91,3 +96,20 @@ function drawQuestsPanelQuestBoxBg(thisX, thisY, width, height)
 		love.graphics.rectangle("fill", thisX+chatCorner:getWidth(), thisY+(i*((height-(chatCorner:getHeight()*2))+chatCorner:getHeight())), width-(chatCorner:getHeight()*2), chatCorner:getHeight()) -- background rectangle
     end
 end
+
+function drawQuestsPanelStencil()
+    -- love.graphics.rectangle(
+    --     "fill",
+    --     ((uiX/1) - 313) * scale, 
+    --     ((uiY/1) + cerp(-14 - 106, 0- ((uiY/1.25) - 15), questsPanel.amount)) * scale,
+    --     (313) * scale,
+    --     (cerp(14, ((uiY/1.25) - 106 - 14), questsPanel.amount)) * scale
+    -- )
+    love.graphics.rectangle(
+        "fill",
+        ((uiX/1) - 313), 
+        ((uiY/1) + 0 - (uiY/1.25)),
+        (313),
+        ((uiY/1.25) - 106 - 14)
+    )
+end 

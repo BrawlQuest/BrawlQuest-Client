@@ -169,14 +169,6 @@ function updateHUD( dt )
         end
         chatCursor.i = 0
     end
-
-	-- if isMouseOver(0, toolbarY*scale, inventory:getWidth()*scale, inventory:getHeight()*scale) then
-    --     inventoryOpacity = inventoryOpacity + 3*dt
-    --     if inventoryOpacity > 1 then inventoryOpacity = 1 end
-    -- else
-    --     inventoryOpacity = inventoryOpacity - 3*dt
-    --     if inventoryOpacity < 0 then inventoryOpacity = 0 end
-    -- end
 end
 
 function drawHUD()
@@ -191,20 +183,62 @@ function drawHUD()
         drawCharacterHub(0, uiY/i)
         drawToolBarInventory(0, uiY/i)
         drawQuestHub(uiX/i, uiY/i)
+        if questsPanel.open then drawQuestsPanel((uiX/i) - 313, (uiY/i) + cerp(-14, 0 - ((uiY/1.25) - 15), questsPanel.amount)) end
+        -- love.graphics.rectangle(
+        --     "fill",
+        --     (uiX/i) - 313, 
+        --     (uiY/i) + cerp(-14, 0- ((uiY/1.25) - 15), questsPanel.amount),
+        --     313,
+        --     cerp(14, ((uiY/1.25) - 106 - 14), questsPanel.amount)
+        -- )
         drawTooltip()
     love.graphics.pop()
 
-    love.graphics.push() -- chat and quests scaling TODO: Quests
-        local i = 0.5
-        love.graphics.scale(scale*i)
-        drawChatPanel(uiX/i, (uiY - cerp(100, ((uiY/1.25)-15), questsPanel.amount)) / i)
-        -- drawQuestPanel(uiX/i, 0)
-    love.graphics.pop()
+    -- love.graphics.stencil(drawChatStencil, "replace", 1) -- stencils inventory
+    -- love.graphics.setStencilTest("greater", 0) -- push
+        love.graphics.push() -- chat and quests scaling TODO: Quests
+            local i = 0.5
+            love.graphics.scale(scale*i)
+            drawChatPanel(uiX/i, (uiY - cerp(100, ((uiY/1.25)-15), questsPanel.amount)) / i)
+            -- drawQuestPanel(uiX/i, 0)
+        love.graphics.pop()
+    -- love.graphics.setStencilTest() -- pop
 
     -- love.graphics.setColor(1,1,1,0.5*inventory.opacity)
     -- love.graphics.rectangle("fill", (0) * scale, (0 + 50) * scale, 313 * scale, (uiY - 97 - 50 - 50) * scale)
     -- love.graphics.rectangle("fill", (0) * scale, (0 + 50) * scale, 313 * scale, (0 + getFullUserInventoryFieldHeight()) * scale)
     -- love.graphics.setColor(1,1,1,1)
+
+    love.graphics.setColor(1,1,1,1)
+    -- drawQuestsPanelStencil()
+    -- drawChatStencil()
+    -- love.graphics.rectangle("fill", uiX/i, (uiY/i) - 106, -313, cerp(-14, 0 - ((uiY/1.25) - 102), questsPanel.amount))
+    -- love.graphics.rectangle("fill", (0) * scale, (0 + 50) * scale, 313 * scale, (0 + getFullUserInventoryFieldHeight()) * scale)
+    -- love.graphics.setColor(1,1,1,1)
+
+    -- love.graphics.rectangle(
+    --     "fill",
+    --     ((uiX) - 313) * scale, 
+    --     ((uiY) + cerp(-14 - 106, 0- ((uiY/1.25) - 15), questsPanel.amount)) * scale,
+    --     (313) * scale,
+    --     (cerp(14, ((uiY/1.25) - 106 - 14), questsPanel.amount)) * scale
+    -- )
+
+    -- love.graphics.rectangle(
+    --     "fill",
+    --     (uiX - 313) * scale, 
+    --     (0) * scale,
+    --     (313) * scale,
+    --     (cerp(uiY - 134, uiY - ((uiY/1.25) + 20), questsPanel.amount)) * scale
+    -- )
+
+    -- chat Stncil
+    -- love.graphics.rectangle("fill",
+    --     ((uiX - 313)) * scale, 
+    --     ((0)) * scale,
+    --     ((313)) * scale,
+    --     ((cerp(uiY - 134 + 14, uiY - ((uiY/1.25)+5), questsPanel.amount))) * scale
+    -- )
 
     drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
 end 

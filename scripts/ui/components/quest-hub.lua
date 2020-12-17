@@ -80,7 +80,12 @@ function updateQuestHub(dt)
     if questHub.amount > 0 then questHub.open = true else questHub.open = false end
     questHub.opacity = cerp(0, 1, questHub.amount)
 
-    if isMouseOver((uiX - 313) * scale, (0) * scale, 313 * scale, (uiY - 97) * scale) then
+    if isMouseOver(
+        ((uiX) - 313) * scale, 
+        ((uiY) - ((uiY/1.25) - 15)) * scale,
+        (313) * scale,
+        ((uiY/1.25) - 106 - 14) * scale
+    ) then
         questsPanel.amount = questsPanel.amount + 4 * dt
         if questsPanel.amount > 1 then questsPanel.amount = 1 end
     else
@@ -94,8 +99,8 @@ end
 
 function drawQuestHub(thisX, thisY) 
     love.graphics.setColor(0,0,0,0.5)
-    love.graphics.rectangle("fill", thisX, thisY - 106, -313, cerp(-14, 0 - ((uiY/1.25) - 102), questsPanel.amount))
-    love.graphics.rectangle("fill", thisX, thisY, cerp(-313, -462, questHub.amount), -106)
+    love.graphics.rectangle("fill", thisX, thisY - 106, -313, cerp(-14, 0 - ((uiY/1.25) - 102), questsPanel.amount)) -- Quests Panel Background
+    love.graphics.rectangle("fill", thisX, thisY, cerp(-313, -462, questHub.amount), -106) -- Quests Hub Background
     love.graphics.setColor(1,1,1,1)
 
 
@@ -106,10 +111,6 @@ function drawQuestHub(thisX, thisY)
         drawQuestHubNPCTalk(thisX - 150, thisY)
     end
     drawQuestHubMeters(thisX - cerp(222 + 10, 371 + 10, questHub.amount), thisY + 2)
-
-    if questsPanel.open then
-        drawQuestsPanel(thisX - 313 + 73, thisY + cerp(-14, 0 - ((uiY/1.25) - 102 - 15), questsPanel.amount))
-    end
 end
 
 function drawQuestHubProifle(thisX, thisY)

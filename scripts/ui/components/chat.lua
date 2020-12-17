@@ -28,11 +28,16 @@ function drawChatPanel(thisX, thisY) -- the function to recall it all
 	local chatEnterY = thisY
 	local thisY = thisY + posYChat
 	
-	for i = 1, #messages do -- the most important thing here
-		thisY = thisY - getFullChatHeight(messages[i].username, messages[i].text, i)
-		drawChatbox(thisX - (chatWidth+130), thisY, messages[i].username, messages[i].text,  messages[i].player, i)
-		previousUsername = messages[i].username
-	end
+	love.graphics.stencil(drawChatStencil, "replace", 1) -- stencils inventory
+    love.graphics.setStencilTest("greater", 0) -- push
+
+		for i = 1, #messages do -- the most important thing here
+			thisY = thisY - getFullChatHeight(messages[i].username, messages[i].text, i)
+			drawChatbox(thisX - (chatWidth+130), thisY, messages[i].username, messages[i].text,  messages[i].player, i)
+			previousUsername = messages[i].username
+		end
+
+	love.graphics.setStencilTest() -- pop
 
 	drawEnterChatBox(thisX - (chatWidth+130), chatEnterY, enteredChatText)
 end
@@ -164,6 +169,11 @@ function getEnterChatBoxHeight(text)
 end
 
 function drawChatStencil()
-	love.graphics.rectangle("fill", 70, toolbarY+40, 180, 483)
+	love.graphics.rectangle("fill",
+		((uiX - 313)/0.5),
+		((0)/0.5),
+		((313)/0.5),
+		((cerp(uiY - 134 + 14, uiY - ((uiY/1.25)+5), questsPanel.amount))/0.5)
+	)
 end
 
