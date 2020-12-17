@@ -77,7 +77,7 @@ function getMediumTitleHeight(text, width)
  	return ((#lines)*(headerBigFont:getHeight()))+2
 end
 
-function getTextHeight(text, width)
-	local width, lines = font:getWrap(text, width)
- 	return ((#lines)*(font:getHeight()))+2
-end
+-- function getTextHeight(text, width)
+-- 	local width, lines = font:getWrap(text, width)
+--  	return ((#lines)*(font:getHeight()))+2
+-- end

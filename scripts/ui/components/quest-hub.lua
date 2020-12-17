@@ -7,6 +7,7 @@ function initQuestHub()
         selectedQuest = 1,
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
         titleFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 14),
+        nameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
         images = {
             npcTalkBG = love.graphics.newImage("assets/ui/hud/quest-hub/npcTalkBG.png"),
             barCapLeft = love.graphics.newImage("assets/ui/hud/quest-hub/barCapLeft.png"),
@@ -18,30 +19,53 @@ function initQuestHub()
 
     
     quests = {
+        -- {Tracking = {}, Backlog = {}, Completed = {},}
         {
-            title = "The Fall of Man",
-            comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
-            giver = "Mortus",
-            task = "Get 12 Apples",
-            requiredAmount = 12,
-            currentAmount = 6,
-            complete = false,
-            -- selected = 1,
+            {
+                title = "The Fall of Man and his friends, he had it bad man",
+                comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
+                giver = "Mortus",
+                task = "Get 12 Apples",
+                requiredAmount = 12,
+                currentAmount = 6,
+                complete = false,
+                -- selected = 1,
+            },
+            {
+                title = "The Brotherhood",
+                comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
+                giver = "Brother Dan",
+                task = "Kill 4 Mobs",
+                requiredAmount = 4,
+                currentAmount = 4,
+                complete = true,
+                -- selected = 2,
+            },
         },
         {
-            title = "The Brotherhood",
-            comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
-            giver = "Brother Dan",
-            task = "Kill 4 Mobs",
-            requiredAmount = 4,
-            currentAmount = 4,
-            complete = true,
-            -- selected = 2,
+            {
+                title = "The Fall of Man",
+                comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
+                giver = "Mortus",
+                task = "Get 12 Apples",
+                requiredAmount = 12,
+                currentAmount = 6,
+                complete = false,
+                -- selected = 1,
+            },
+            {
+                title = "The Brotherhood",
+                comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
+                giver = "Brother Dan",
+                task = "Kill 4 Mobs",
+                requiredAmount = 4,
+                currentAmount = 4,
+                complete = true,
+                -- selected = 2,
+            },
         },
+        {},
     }
-
-    
-
 end
 
 function updateQuestHub(dt)
@@ -90,7 +114,7 @@ end
 
 function drawQuestHubProifle(thisX, thisY)
     if me.Name ~= null then drawProfilePic(thisX, thisY, 1, "left", me.Name) end
-    love.graphics.setFont(questsPanel.nameFont)
+    love.graphics.setFont(questHub.nameFont)
     love.graphics.printf(questsPanel.questGiver, thisX, thisY + 64 + 6, 64, "center") 
 end
 
@@ -100,9 +124,9 @@ function drawQuestHubNPCTalk(thisX, thisY)
         love.graphics.draw(questHub.images.npcTalkBG, thisX, thisY)
         love.graphics.setColor(1,1,1,questHub.opacity)
         love.graphics.setFont(questHub.titleFont)
-        love.graphics.printf(quests[questHub.selectedQuest].title , thisX + 7, thisY + 7, 127)
+        love.graphics.printf(quests[1][questHub.selectedQuest].title , thisX + 7, thisY + 7, 127)
         love.graphics.setFont(questHub.font)
-        love.graphics.printf(quests[questHub.selectedQuest].comment, thisX + 7, thisY + 7 + getQuestHubTextHeight(quests[questHub.selectedQuest].title, 127), 127)
+        love.graphics.printf(quests[1][questHub.selectedQuest].comment, thisX + 7, thisY + 7 + getQuestHubTextHeight(quests[1][questHub.selectedQuest].title, 127), 127)
     end
 end
 
@@ -115,8 +139,8 @@ end
 function drawQuestHubMetersBar(thisX, thisY, i)
     love.graphics.setColor(0,0,0,0.5)
     love.graphics.rectangle("fill", thisX + 28, thisY, 157, 19)
-    if quests[i] ~= null then
-        if not quests[i].complete then
+    if quests[1][i] ~= null then
+        if not quests[1][i].complete then
             love.graphics.setColor(1,0,0,1)
         else
             love.graphics.setColor(0,0.7,0,1)
@@ -126,18 +150,18 @@ function drawQuestHubMetersBar(thisX, thisY, i)
     love.graphics.draw(questHub.images.barCapLeft, thisX, thisY)
     love.graphics.draw(questHub.images.barCapRight, thisX + 188, thisY)
 
-    if quests[i] ~= null then
-        love.graphics.rectangle("fill", thisX + 28, thisY, (157 / quests[i].requiredAmount) * quests[i].currentAmount, 19)
+    if quests[1][i] ~= null then
+        love.graphics.rectangle("fill", thisX + 28, thisY, (157 / quests[1][i].requiredAmount) * quests[1][i].currentAmount, 19)
         love.graphics.setColor(1,1,1,1)
 
-        if quests[i].complete then 
+        if quests[1][i].complete then 
             love.graphics.draw(questHub.images.barComplete, thisX + 9, thisY + 4)
         else 
             love.graphics.draw(questHub.images.barUnComplete, thisX + 9, thisY + 4) 
         end
 
-        love.graphics.printf(quests[i].task, thisX + 34, thisY + 7, 144, "left")
-        love.graphics.printf(quests[i].currentAmount .. "/" .. quests[i].requiredAmount, thisX + 188, thisY + 7, 34, "center")
+        love.graphics.printf(quests[1][i].task, thisX + 34, thisY + 7, 144, "left")
+        love.graphics.printf(quests[1][i].currentAmount .. "/" .. quests[1][i].requiredAmount, thisX + 188, thisY + 7, 34, "center")
     end
 end
 
