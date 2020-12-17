@@ -4,8 +4,8 @@ function initQuestsPanel()
         amount = 0,
         opacity = 0,
         questGiver = "Mortus the Wise",
-        titleFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 12),
-        commentFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 10),
+        titleFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 10),
+        commentFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
         titles = {"Tracking", "Backlog", "Completed",},
         spacing = 40,
         titleSpacing = 12,
@@ -25,7 +25,7 @@ end
 function drawQuestsPanel(thisX, thisY)
     love.graphics.setColor(1,1,1,questsPanel.opacity)
     love.graphics.setFont(inventory.headerFont)
-    love.graphics.print("Quests", thisX + 8, thisY)
+    love.graphics.print("Quests", thisX + 20, thisY)
     
     love.graphics.stencil(drawQuestsPanelStencil, "replace", 1) -- stencils inventory
     love.graphics.setStencilTest("greater", 0) -- push
@@ -81,7 +81,7 @@ function drawQuestsPanelQuestBox(thisX, thisY, i, j)
 
     thisX, thisY = thisX + 20 + ((234 / 2)-(questsPanel.boxTextWidth / 2)), thisY + 10 + 12 
     love.graphics.setFont(questsPanel.titleFont)
-    love.graphics.printf(quests[i][j].title, thisX, thisY, questsPanel.boxTextWidth, "center")
+    love.graphics.printf(quests[i][j].title, thisX, thisY, questsPanel.boxTextWidth, "left")
     thisY = thisY + getTextHeight(quests[i][j].title, questsPanel.boxTextWidth, questsPanel.titleFont) + 8
     love.graphics.setFont(questsPanel.commentFont)
     love.graphics.printf("- " .. quests[i][j].task, thisX, thisY, questsPanel.boxTextWidth, "left")
