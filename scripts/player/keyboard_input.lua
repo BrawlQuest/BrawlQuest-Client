@@ -57,6 +57,10 @@ function love.keypressed(key)
             -- if key == "m" then beginMounting() end
             checkTargeting()
 
+            if key == "/" then
+                table.remove(quests[1], 1)
+            end
+
             if key == "return" and not isSettingsWindowOpen then
                 isTypingInChat = true
             end

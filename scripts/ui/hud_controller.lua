@@ -28,7 +28,7 @@ function initHUD()
     npcChatFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 12)
 
     -- scrolling
-    posYInventory, velyInventory, posYChat, velyChat = 0, 0, 0, 0
+    posYInventory, velyInventory, posYChat, velyChat, posYQuest, velYQuest = 0, 0, 0, 0, 0, 0
     uiX, uiY = love.graphics.getWidth()/scale, love.graphics.getHeight()/scale -- scaling options
 
     -- mouse
@@ -42,42 +42,6 @@ function initHUD()
         speed = 40,
         i = 0,
     }
-
-
-    -- toolbar
-    circleFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 16)
-    smallTextFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf",12)
-    a0sword = love.graphics.newImage("assets/player/gear/a0/sword.png")
-    toolbarY = 0
-    toolbarItems = {a0sword, a0sword}
-    toolbarTitles = {1,2,3,4,5,6,7,8,9,0}
-
-    
-
-    toolbarBg = love.graphics.newImage("assets/ui/hud/toolbar/toolbar-backing.png")
-    toolbarItem = love.graphics.newImage("assets/ui/hud/toolbar/toolbarItem.png")
-    top_left = love.graphics.newQuad(0, 0, 34, 34, a0sword:getDimensions())
-    -- inventory = love.graphics.newImage("assets/ui/hud/inventory/inventoryBg.png")
-
-    
-
-    -- Inventory
-    inventorySubHeaderFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 10)
-    inventoryItemBackground = love.graphics.newImage("assets/ui/hud/inventory/inventoryItem.png")
-
-    userInventory = {}
-    userInventory[1] = {}
-    userInventory[2] = {}
-    userInventory[3] = {}
-    userInventory[4] = {}
-    userInventory[5] = {}
-    userInventory[6] = {}
-    userInventory[7] = {}
-    inventoryFieldLength = {0, 0, 0, 0, 0, 0, 0,}
-
-    userInventoryFieldHeight = {}
-
-    scrollInventory = {up = true, down = true,}
 
     -- Profile
 

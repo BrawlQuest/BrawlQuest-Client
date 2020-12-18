@@ -1,4 +1,39 @@
 function initToolBarInventory()
+    -- toolbar
+    circleFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 16)
+    smallTextFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf",12)
+    a0sword = love.graphics.newImage("assets/player/gear/a0/sword.png")
+    toolbarY = 0
+    toolbarItems = {}
+    toolbarTitles = {1,2,3,4,5,6,7,8,9,0}
+
+    
+
+    toolbarBg = love.graphics.newImage("assets/ui/hud/toolbar/toolbar-backing.png")
+    toolbarItem = love.graphics.newImage("assets/ui/hud/toolbar/toolbarItem.png")
+    top_left = love.graphics.newQuad(0, 0, 34, 34, a0sword:getDimensions())
+    -- inventory = love.graphics.newImage("assets/ui/hud/inventory/inventoryBg.png")
+
+    -- Inventory
+    inventorySubHeaderFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 10)
+    inventoryItemBackground = love.graphics.newImage("assets/ui/hud/inventory/inventoryItem.png")
+
+    userInventory = {}
+    userInventory[1] = {}
+    userInventory[2] = {}
+    userInventory[3] = {}
+    userInventory[4] = {}
+    userInventory[5] = {}
+    userInventory[6] = {}
+    userInventory[7] = {}
+    userInventory[8] = {}
+    inventoryFieldLength = {0, 0, 0, 0, 0, 0, 0, 0,}
+
+
+    userInventoryFieldHeight = {}
+
+    scrollInventory = {up = true, down = true,}
+
     inventory = {
         open = false,
         amount = 0,
@@ -7,8 +42,8 @@ function initToolBarInventory()
         itemSpacing = 42,
         imageNumber = 0,
         items = {},
-        fields = {"weapons", "spells", "armour", "reagent", "mounts", "buddies", "other",},
-        fieldLength = {0, 0, 0, 0, 0},
+        fields = {"weapons", "spells", "armour", "reagent", "consumables", "mounts", "buddies", "other",},
+        fieldLength = {0, 0, 0, 0, 0, 0, 0,},
         font = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 12),
         headerFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 26),
         itemFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
@@ -46,10 +81,11 @@ function getInventory()
     userInventory[5] = {}
     userInventory[6] = {}
     userInventory[7] = {}
-    inventoryFieldLength = {0, 0, 0, 0, 0, 0, 0,}
+    userInventory[8] = {}
+    inventoryFieldLength = {0, 0, 0, 0, 0, 0, 0, 0,}
 
     for i, v in ipairs(inventoryAlpha) do
-        local t = 7
+        local t = 8
 
         if v.Item.Type == "wep" then
             t = 1
@@ -59,10 +95,12 @@ function getInventory()
             t = 3
         elseif v.Item.Type == "reagent" then
             t = 4
-        elseif v.Item.Type == "mount" then
+        elseif v.Item.Type == "consumable" then 
             t = 5
-        elseif v.Item.Type == "buddy" then
+        elseif v.Item.Type == "mount" then
             t = 6
+        elseif v.Item.Type == "buddy" then
+            t = 7
         end
 
         inventoryFieldLength[t] = inventoryFieldLength[t] + 1
@@ -75,7 +113,12 @@ function getInventory()
         end
         userInventory[t][#userInventory[t] + 1] = v 
     end
-   
+    
+    -- if userInventory[1][1] ~= null then 
+    --     toolbarItems = {userInventory[1][1].Item.ImgPath, userInventory[1][1].Item.ImgPath,} 
+    -- end
+
+    -- print(userInventory[1][1].Item.ImgPath)
 end
 
 function updateToolBarInventory(dt)
@@ -140,7 +183,9 @@ function drawInventoryItem(thisX, thisY, field, item, number)
     if number ~= null then  
         love.graphics.draw(inventory.images.itemBG, thisX, thisY)
         if item ~= null then love.graphics.draw(item, top_left, thisX + 2, thisY + 2) end
+        -- love.graphics.setColor(1,1,1,0.5)
         love.graphics.draw(inventory.images.numbers[number], thisX - 3, thisY + 26)
+        -- love.graphics.setColor(1,1,1,1)
     else
         if isMouseOver(thisX*scale, thisY*scale, 34*scale, 34*scale) and isMouseOver((0) * scale, (0 + 50) * scale, 313 * scale, (uiY - 97 - 50 - 50) * scale) then
             love.graphics.setColor(0.6, 0.6, 0.6,inventory.opacity)

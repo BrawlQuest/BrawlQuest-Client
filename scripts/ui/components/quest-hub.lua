@@ -28,8 +28,7 @@ function initQuestHub()
                 task = "Get 12 Apples",
                 requiredAmount = 12,
                 currentAmount = 6,
-                complete = false,
-                -- selected = 1,
+                replayable = true,
             },
             {
                 title = "The Brotherhood",
@@ -38,8 +37,7 @@ function initQuestHub()
                 task = "Kill 4 Mobs",
                 requiredAmount = 4,
                 currentAmount = 4,
-                complete = true,
-                -- selected = 2,
+                replayable = false,
             },
         },
         {
@@ -50,8 +48,7 @@ function initQuestHub()
                 task = "Get 12 Apples",
                 requiredAmount = 12,
                 currentAmount = 6,
-                complete = false,
-                -- selected = 1,
+                replayable = true,
             },
             {
                 title = "The Brotherhood",
@@ -60,11 +57,29 @@ function initQuestHub()
                 task = "Kill 4 Mobs",
                 requiredAmount = 4,
                 currentAmount = 4,
-                complete = true,
-                -- selected = 2,
+                replayable = false,
             },
         },
-        {},
+        {
+            {
+                title = "The Fall of Man",
+                comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
+                giver = "Mortus",
+                task = "Get 12 Apples",
+                requiredAmount = 12,
+                currentAmount = 6,
+                replayable = false,
+            },
+            {
+                title = "The Brotherhood",
+                comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
+                giver = "Brother Dan",
+                task = "Kill 4 Mobs",
+                requiredAmount = 4,
+                currentAmount = 4,
+                replayable = true,
+            },
+        },
     }
 end
 
@@ -88,6 +103,18 @@ function updateQuestHub(dt)
     ) then
         questsPanel.amount = questsPanel.amount + 4 * dt
         if questsPanel.amount > 1 then questsPanel.amount = 1 end
+
+        velYQuest = velYQuest - velYQuest * math.min( dt * 15, 1 )
+        if getFullQuestsPanelFieldHeight() * scale > ((uiY/1.25) - 106 - 14) * scale then
+            posYQuest = posYQuest + velYQuest * dt
+            if posYQuest > 0 then
+                posYQuest = 0
+            elseif posYQuest < 0 - getFullQuestsPanelFieldHeight() + ((uiY/1.25) - 106 - 14 - 55) then
+                posYQuest = 0 - getFullQuestsPanelFieldHeight() + ((uiY/1.25) - 106 - 14 - 55)
+            end
+        else posYQuest = 0
+        end
+        -- print(posYQuest)    
     else
         questsPanel.amount = questsPanel.amount - 4 * dt
         if questsPanel.amount < 0 then questsPanel.amount = 0 end

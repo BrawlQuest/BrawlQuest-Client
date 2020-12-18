@@ -10,19 +10,24 @@ function initQuestsPanel()
         spacing = 40,
         titleSpacing = 12,
         fieldSpacing = 10,
-        boxSpacing = 8,
+        boxSpacing = 0,
         images = {
             love.graphics.newImage("assets/ui/hud/quest-hub/action-circles/1.png"),
             love.graphics.newImage("assets/ui/hud/quest-hub/action-circles/2.png"),
             love.graphics.newImage("assets/ui/hud/quest-hub/action-circles/3.png"),
+            love.graphics.newImage("assets/ui/hud/quest-hub/action-bg.png"),
         },
         boxBgWidth = 274,
-        boxTextWidth = 230,
+        boxTextWidth = 200,
+        selectedQuest = {},
+        hover = false,
     }
 end
 
 
 function drawQuestsPanel(thisX, thisY)
+    -- questsPanel.selectedQuest = {}
+    questsPanel.hover = false
     love.graphics.setColor(1,1,1,questsPanel.opacity)
     love.graphics.setFont(inventory.headerFont)
     love.graphics.print("Quests", thisX + 20, thisY)
@@ -31,9 +36,10 @@ function drawQuestsPanel(thisX, thisY)
     love.graphics.setStencilTest("greater", 0) -- push
 
         love.graphics.setFont(inventory.font)
-        thisX, thisY = thisX, thisY + 40
+        thisX, thisY = thisX, thisY + 40 + posYQuest
+        -- love.graphics.rectangle("fill", thisX + 40, thisY, 40, getFullQuestsPanelFieldHeight())
         for i = 1, #questsPanel.titles do
-            if #quests[i] ~= null then
+            -- if #quests[i] ~= 0 then
                 love.graphics.rectangle("fill", thisX + 19, thisY, questsPanel.boxBgWidth, 2)
                 thisY = thisY + 6
                 love.graphics.setFont(inventory.font)
@@ -41,7 +47,7 @@ function drawQuestsPanel(thisX, thisY)
                 drawQuestsPanelField(thisX, thisY + questsPanel.titleSpacing, i)
                 -- love.graphics.rectangle("fill", thisX + 200, thisY, 40, getQuestsPanelFieldHeight(i))
                 thisY = thisY + getQuestsPanelFieldHeight(i) + questsPanel.fieldSpacing
-            end
+            -- end
         end
 
     love.graphics.setStencilTest() -- pop
@@ -64,22 +70,70 @@ function getQuestsPanelFieldHeight(i)
     -- return ((getQuestsPanelBoxHeight(i) + questsPanel.boxSpacing) * #quests[i]) + questsPanel.titleSpacing
 end
 
+function getFullQuestsPanelFieldHeight()
+    local questsFullHeight = 0
+    for i = 1, #questsPanel.titles do
+        -- if #quests[i] ~= 0 then
+            questsFullHeight = questsFullHeight + 6 + getQuestsPanelFieldHeight(i) + questsPanel.fieldSpacing
+        -- end
+    end
+    return questsFullHeight
+end
+
 function getQuestsPanelBoxHeight(i, j)
-    return getTextHeight(
+    local height = getTextHeight(
         quests[i][j].title, questsPanel.boxTextWidth, questsPanel.titleFont
     ) + 8 + getTextHeight(
         quests[i][j].task, questsPanel.boxTextWidth, questsPanel.commentFont
-    ) + 10 + (12 * 2)
+    ) + 10 + (10 * 2)
+
+    local profileHeight = (profilePic:getHeight() * 0.5) + 20 + 10
+
+    if height < profileHeight then return profileHeight else return height end
 end
 
 function drawQuestsPanelQuestBox(thisX, thisY, i, j)
     love.graphics.setColor(0,0,0,0.75 * questsPanel.opacity)
     drawQuestsPanelQuestBoxBg(thisX, thisY + 10, questsPanel.boxBgWidth, getQuestsPanelBoxHeight(i, j) - 10)
+    drawProfilePic(thisX + 10, thisY + 10 + 10, 0.5, "right", me.Name)
+    
+    local isIt = isMouseOver((thisX  - 6) * scale, (thisY + 4) * scale, questsPanel.images[4]:getWidth() * scale, questsPanel.images[4]:getHeight() * scale)
+    
+    if i == 1 then
+        if isIt then
+            love.graphics.setColor(1,1,1,questsPanel.opacity)
+            love.graphics.draw(questsPanel.images[4], thisX - 6, thisY + 4)
+            love.graphics.setColor(0,0,0,questsPanel.opacity)
+            love.graphics.draw(questsPanel.images[1], thisX - 6, thisY + 4)
+        else
+            love.graphics.setColor(0.75,0,0,questsPanel.opacity)
+            love.graphics.draw(questsPanel.images[4], thisX - 6, thisY + 4)
+            love.graphics.setColor(1,1,1,questsPanel.opacity)
+            love.graphics.draw(questsPanel.images[1], thisX - 6, thisY + 4)
+        end
+    elseif i == 2 or (i == 3 and quests[i][j].replayable) then
+        if isIt then
+            love.graphics.setColor(1,1,1,questsPanel.opacity)
+            love.graphics.draw(questsPanel.images[4], thisX - 6, thisY + 4)
+            love.graphics.setColor(0,0,0,questsPanel.opacity)
+            love.graphics.draw(questsPanel.images[2], thisX - 6, thisY + 4)
+        else
+            love.graphics.setColor(0,0.75,0,questsPanel.opacity)
+            love.graphics.draw(questsPanel.images[4], thisX - 6, thisY + 4)
+            love.graphics.setColor(1,1,1,questsPanel.opacity)
+            love.graphics.draw(questsPanel.images[2], thisX - 6, thisY + 4)
+        end
+    end
+
+    if isIt then
+        questsPanel.selectedQuest = {i, j, quests[i][j]}
+        questsPanel.hover = true
+    end
+    
     love.graphics.setColor(1,1,1,questsPanel.opacity)
-    love.graphics.draw(questsPanel.images[1], thisX - 10, thisY)
     -- love.graphics.draw(questsPanel.images[3], thisX + questsPanel.boxBgWidth - 15, thisY)
 
-    thisX, thisY = thisX + 20 + ((234 / 2)-(questsPanel.boxTextWidth / 2)), thisY + 10 + 12 
+    thisX, thisY = thisX + (profilePic:getWidth() * 0.5) + (10 * 2), thisY + 10 + 10 
     love.graphics.setFont(questsPanel.titleFont)
     love.graphics.printf(quests[i][j].title, thisX, thisY, questsPanel.boxTextWidth, "left")
     thisY = thisY + getTextHeight(quests[i][j].title, questsPanel.boxTextWidth, questsPanel.titleFont) + 8
@@ -98,18 +152,23 @@ function drawQuestsPanelQuestBoxBg(thisX, thisY, width, height)
 end
 
 function drawQuestsPanelStencil()
-    -- love.graphics.rectangle(
-    --     "fill",
-    --     ((uiX/1) - 313) * scale, 
-    --     ((uiY/1) + cerp(-14 - 106, 0- ((uiY/1.25) - 15), questsPanel.amount)) * scale,
-    --     (313) * scale,
-    --     (cerp(14, ((uiY/1.25) - 106 - 14), questsPanel.amount)) * scale
-    -- )
     love.graphics.rectangle(
         "fill",
         ((uiX/1) - 313), 
-        ((uiY/1) + 0 - (uiY/1.25)),
+        ((uiY/1) + 55 - (uiY/1.25)),
         (313),
-        ((uiY/1.25) - 106 - 14)
+        ((uiY/1.25) - 106 - 14 - 55)
     )
 end 
+
+function checkQuestPanelMousePressed(button)
+    if button == 1 and questsPanel.hover then
+        if questsPanel.selectedQuest[1] == 1 then 
+            table.insert(quests[2], questsPanel.selectedQuest[3])
+            table.remove(quests[questsPanel.selectedQuest[1]], questsPanel.selectedQuest[2])
+        elseif questsPanel.selectedQuest[1] == 2 then 
+            table.insert(quests[1], questsPanel.selectedQuest[3])
+            table.remove(quests[questsPanel.selectedQuest[1]], questsPanel.selectedQuest[2])
+        end
+    end
+end
