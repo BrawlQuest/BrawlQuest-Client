@@ -137,7 +137,7 @@ function initHUD()
 
     initCharacterHub() 
     initToolBarInventory()
-
+    initQuestHub()
 end
 
 function updateHUD( dt )
@@ -157,6 +157,7 @@ function updateHUD( dt )
     updateSFX()
     updateToolBarInventory(dt)
     updateCharacterHub(dt)
+    updateQuestHub(dt)
 
     if chatCursor.i < chatCursor.speed then
         chatCursor.i = chatCursor.i + 1
@@ -171,11 +172,6 @@ function updateHUD( dt )
 end
 
 function drawHUD()
-    love.graphics.push() -- chat and quests scaling 
-        local i = 0.5
-        love.graphics.scale(scale*i)
-        drawChatPanel(uiX/i, uiY/i)
-    love.graphics.pop()
 
     love.graphics.push()
         local i = 1
@@ -185,9 +181,22 @@ function drawHUD()
         if showNPCChatBackground then drawNPCChatBackground((uiX/2)/i - 128, (uiY/2)/i - 128) end
         drawCharacterHub(0, uiY/i)
         drawToolBarInventory(0, uiY/i)
+        drawQuestHub(uiX/i, uiY/i)
+        if questsPanel.open then drawQuestsPanel((uiX/i) - 313, (uiY/i) + cerp(-14, 0 - ((uiY/1.25) - 15), questsPanel.amount)) end
         drawTooltip()
+        
     love.graphics.pop()
 
+    love.graphics.push() -- chat and quests scaling TODO: Quests
+        local i = 0.5
+        love.graphics.scale(scale*i)
+
+        drawChatPanel(uiX/i, (uiY - cerp(100, ((uiY/1.25)-15), questsPanel.amount)) / i)
+
+    love.graphics.pop()
+
+    love.graphics.setColor(1,1,1,1)
+    
     drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
 end 
 

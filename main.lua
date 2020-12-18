@@ -13,6 +13,8 @@ require "scripts.effects.buddies"
 require "scripts.ui.hud_controller"
 require "scripts.ui.components.character-hub"
 require "scripts.ui.components.toolbar-inventory"
+require "scripts.ui.components.quest-hub"
+require "scripts.ui.components.quests-panel"
 require "scripts.ui.components.chat"
 require "scripts.ui.components.toolbar"
 require "scripts.ui.components.battlebar"
@@ -132,13 +134,16 @@ function love.draw()
              Luven.camera:draw()
           
         -- print(brightnessSlider:getValue())
+        
+        love.graphics.setFont(font)
+        love.graphics.print(player.x..", "..player.y,10,6)
     end
 
 
     mx, my = love.mouse.getPosition()
     love.graphics.setColor(1,1,1)
     love.graphics.draw(mouseImg, mx, my)
-    love.graphics.print(player.x..", "..player.y,200,200)
+    
 
     love.graphics.setColor(1, 1, 1, totalCoverAlpha)
     love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())

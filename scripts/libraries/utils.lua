@@ -11,6 +11,11 @@ function getImgIfNotExist(v)
     return worldImg[v]
 end
 
+function getTextHeight(text, width, thisFont)
+	local width, lines = thisFont:getWrap(text, width)
+ 	return ((#lines)*(thisFont:getHeight()))
+end
+
 function copy(obj, seen)
     if type(obj) ~= 'table' then return obj end
     if seen and seen[obj] then return seen[obj] end

@@ -9,36 +9,12 @@ function initChat()
     profilePic = love.graphics.newImage("assets/ui/hud/chat/profile.png")
 	chatCorner = love.graphics.newImage("assets/ui/hud/chat/corner.png")
 	chatHeight = 0
-    chatWidth = 400
+    chatWidth = 484
 	chatSpacing = 14
 	messages = {}
 	enteredChatText = ""
 	previousUsername = ""
 end
-
--- function checkKeyPressedChat(key) 
--- 	if isTypingInChat then
--- 		if key == "backspace" then
--- 			enteredChatText = string.sub( enteredChatText, 1, string.len( enteredChatText) - 1)
--- 		elseif key == "return" and enteredChatText ~= "" then
--- 			chatData = {
--- 				["PlayerName"] = me.Name,
--- 				["Channel"] = "Global",
--- 				["Message"] = enteredChatText,
--- 				["Created"] = os.time(os.date("!*t"))
--- 			}
--- 			c, h = http.request{url = api.url.."/chat", method="POST", source=ltn12.source.string(json:encode(chatData)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(chatData)),["token"]=token}}
--- 			enteredChatText = ""
--- 			if not chatRepeat then isTypingInChat = false end
--- 		elseif key == "escape" or (key == "return" and enteredChatText == "") then 
--- 			isTypingInChat = false
--- 		end
--- 	else
--- 		if key == "return" and not isSettingsWindowOpen then
--- 			isTypingInChat = true
--- 		end
--- 	end
--- end
 
 function checkChatTextinput(key)
 	if isTypingInChat then
@@ -52,11 +28,16 @@ function drawChatPanel(thisX, thisY) -- the function to recall it all
 	local chatEnterY = thisY
 	local thisY = thisY + posYChat
 	
-	for i = 1, #messages do -- the most important thing here
-		thisY = thisY - getFullChatHeight(messages[i].username, messages[i].text, i)
-		drawChatbox(thisX - (chatWidth+130), thisY, messages[i].username, messages[i].text,  messages[i].player, i)
-		previousUsername = messages[i].username
-	end
+	love.graphics.stencil(drawChatStencil, "replace", 1) -- stencils inventory
+    love.graphics.setStencilTest("greater", 0) -- push
+
+		for i = 1, #messages do -- the most important thing here
+			thisY = thisY - getFullChatHeight(messages[i].username, messages[i].text, i)
+			drawChatbox(thisX - (chatWidth+130), thisY, messages[i].username, messages[i].text,  messages[i].player, i)
+			previousUsername = messages[i].username
+		end
+
+	love.graphics.setStencilTest() -- pop
 
 	drawEnterChatBox(thisX - (chatWidth+130), chatEnterY, enteredChatText)
 end
@@ -188,6 +169,11 @@ function getEnterChatBoxHeight(text)
 end
 
 function drawChatStencil()
-	love.graphics.rectangle("fill", 70, toolbarY+40, 180, 483)
+	love.graphics.rectangle("fill",
+		((uiX - 313)/0.5),
+		((0)/0.5),
+		((313)/0.5),
+		((cerp(uiY - 134 + 14, uiY - ((uiY/1.25)+5), questsPanel.amount))/0.5)
+	)
 end
 
