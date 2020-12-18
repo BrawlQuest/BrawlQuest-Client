@@ -56,3 +56,15 @@ function getPlayerData(request, body)
 
   thread:start(request,body)
 end
+
+function apiGET(request)
+  thread = love.thread.newThread( [[
+    local http = require("socket.http")
+    local json = require("scripts.libraries.json")
+    local ltn12 = require("ltn12")
+
+    action = ...
+    c, h = http.request{url = "]]..api.url..[["..action, headers={["token"]="]]..token..[["}}
+  ]] )
+  thread:start(request)
+end

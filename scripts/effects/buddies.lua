@@ -1,7 +1,7 @@
 buddies = {}
 
 function updateBuddy(dt, pl)
-    if buddies[pl.Name] == null then
+    if buddies[pl.Name] == null or buddies[pl.Name].img ~= pl.Buddy then
         buddies[pl.Name] = {
             X = pl.X,
             Y = pl.Y,
