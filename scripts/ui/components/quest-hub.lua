@@ -1,9 +1,12 @@
 function initQuestHub()
     initQuestsPanel()
     questHub = {
-        open = false,
+        open = true,
+        commentOpen = false,
         amount = 0,
+        commentAmount = 0,
         opacity = 0,
+        commentOpacity = 0,
         selectedQuest = 1,
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
         titleFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 14),
@@ -84,7 +87,18 @@ function initQuestHub()
 end
 
 function updateQuestHub(dt)
-    if isMouseOver((uiX - 468) * scale, (uiY - 102) * scale, 468 * scale, 102 * scale) then
+    if isMouseOver((uiX - 468) * scale, (uiY - 102) * scale, 468 * scale, 102 * scale) and #quests[1] > 0 then
+        questHub.commentAmount = questHub.commentAmount + 4 * dt
+        if questHub.commentAmount > 1 then questHub.commentAmount = 1 end
+    else
+        questHub.commentAmount = questHub.commentAmount - 4 * dt
+        if questHub.commentAmount < 0 then questHub.commentAmount = 0 end
+    end
+
+    if questHub.commentAmount > 0 then questHub.commentOpen = true else questHub.commentOpen = false end
+    questHub.commentOpacity = cerp(0, 1, questHub.commentAmount)
+
+    if #quests[1] > 0 then
         questHub.amount = questHub.amount + 4 * dt
         if questHub.amount > 1 then questHub.amount = 1 end
     else
@@ -94,27 +108,24 @@ function updateQuestHub(dt)
 
     if questHub.amount > 0 then questHub.open = true else questHub.open = false end
     questHub.opacity = cerp(0, 1, questHub.amount)
-
-    if isMouseOver(
-        ((uiX) - 313) * scale, 
-        ((uiY) - ((uiY/1.25) - 15)) * scale,
-        (313) * scale,
-        ((uiY/1.25) - 106 - 14) * scale
-    ) then
+    
+    if isMouseOver(((uiX/1) - 313) * scale, 
+    ((uiY/1) + 55 - (uiY/1.25)) * scale,
+    (313) * scale,
+    (cerp((uiY/1.25) ,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale) then
         questsPanel.amount = questsPanel.amount + 4 * dt
         if questsPanel.amount > 1 then questsPanel.amount = 1 end
 
         velYQuest = velYQuest - velYQuest * math.min( dt * 15, 1 )
-        if getFullQuestsPanelFieldHeight() * scale > ((uiY/1.25) - 106 - 14) * scale then
+        if getFullQuestsPanelFieldHeight() * scale > (cerp((uiY/1.25) ,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale then
             posYQuest = posYQuest + velYQuest * dt
             if posYQuest > 0 then
                 posYQuest = 0
-            elseif posYQuest < 0 - getFullQuestsPanelFieldHeight() + ((uiY/1.25) - 106 - 14 - 55) then
-                posYQuest = 0 - getFullQuestsPanelFieldHeight() + ((uiY/1.25) - 106 - 14 - 55)
+            elseif posYQuest < 0 - getFullQuestsPanelFieldHeight() + (cerp((uiY/1.25), ((uiY/1.25) - 106 - 14 - 55), questHub.amount)) then
+                posYQuest = 0 - getFullQuestsPanelFieldHeight() + (cerp((uiY/1.25), ((uiY/1.25) - 106 - 14 - 55), questHub.amount))
             end
         else posYQuest = 0
         end
-        -- print(posYQuest)    
     else
         questsPanel.amount = questsPanel.amount - 4 * dt
         if questsPanel.amount < 0 then questsPanel.amount = 0 end
@@ -125,19 +136,25 @@ function updateQuestHub(dt)
 end
 
 function drawQuestHub(thisX, thisY) 
-    love.graphics.setColor(0,0,0,0.5)
-    love.graphics.rectangle("fill", thisX, thisY - 106, -313, cerp(-14, 0 - ((uiY/1.25) - 102), questsPanel.amount)) -- Quests Panel Background
-    love.graphics.rectangle("fill", thisX, thisY, cerp(-313, -462, questHub.amount), -106) -- Quests Hub Background
-    love.graphics.setColor(1,1,1,1)
-
-
-    thisX, thisY = thisX - 73, thisY - 100
-    drawQuestHubProifle(thisX, thisY)
-    if questHub.open then
-        -- thisX, thisY = thisX - 150, thisY
-        drawQuestHubNPCTalk(thisX - 150, thisY)
+    if #quests[1] > 0 then
+        love.graphics.setColor(0,0,0,0.5)
+    else
+        love.graphics.setColor(0,0,0,0.5 * questsPanel.opacity)
     end
-    drawQuestHubMeters(thisX - cerp(222 + 10, 371 + 10, questHub.amount), thisY + 2)
+    love.graphics.rectangle("fill", thisX, thisY - 106, -313, cerp(-14, 0 - ((uiY/1.25) - 102), questsPanel.amount)) -- Quests Panel Background
+    love.graphics.rectangle("fill", thisX, thisY, cerp(-313, -462, questHub.commentAmount), -106) -- Quests Hub Background
+    love.graphics.setColor(1,1,1,1 * questHub.opacity)
+
+
+    thisX, thisY = thisX - 73, thisY - cerp(0, 100, questHub.amount)
+    if #quests[1] > 0 then 
+        drawQuestHubProifle(thisX, thisY)
+        if questHub.commentOpen then
+            -- thisX, thisY = thisX - 150, thisY
+            drawQuestHubNPCTalk(thisX - 150, thisY)
+        end
+    end
+    drawQuestHubMeters(thisX - cerp(222 + 10, 371 + 10, questHub.commentAmount), thisY + 2)
 end
 
 function drawQuestHubProifle(thisX, thisY)
@@ -147,10 +164,10 @@ function drawQuestHubProifle(thisX, thisY)
 end
 
 function drawQuestHubNPCTalk(thisX, thisY)
-    if questHub.open then
-        love.graphics.setColor(0,0,0, questHub.opacity * 0.6 )
+    if questHub.commentOpen and #quests[1] > 0 then
+        love.graphics.setColor(0,0,0, questHub.commentOpacity * 0.6 )
         love.graphics.draw(questHub.images.npcTalkBG, thisX, thisY)
-        love.graphics.setColor(1,1,1,questHub.opacity)
+        love.graphics.setColor(1,1,1,questHub.commentOpacity)
         love.graphics.setFont(questHub.titleFont)
         love.graphics.printf(quests[1][questHub.selectedQuest].title , thisX + 7, thisY + 7, 127)
         love.graphics.setFont(questHub.font)
@@ -165,22 +182,22 @@ function drawQuestHubMeters(thisX, thisY)
 end
 
 function drawQuestHubMetersBar(thisX, thisY, i)
-    love.graphics.setColor(0,0,0,0.5)
+    love.graphics.setColor(0,0,0,0.5 * questHub.opacity)
     love.graphics.rectangle("fill", thisX + 28, thisY, 157, 19)
-    if quests[1][i] ~= null then
+    if quests[1][i] ~= null and #quests[1] > 0 then 
         if not quests[1][i].complete then
-            love.graphics.setColor(1,0,0,1)
+            love.graphics.setColor(1,0,0,1 *  questHub.opacity)
         else
-            love.graphics.setColor(0,0.7,0,1)
+            love.graphics.setColor(0,0.7,0,1 *  questHub.opacity)
         end
     end
 
     love.graphics.draw(questHub.images.barCapLeft, thisX, thisY)
     love.graphics.draw(questHub.images.barCapRight, thisX + 188, thisY)
 
-    if quests[1][i] ~= null then
+    if quests[1][i] ~= null and #quests[1] > 0 then 
         love.graphics.rectangle("fill", thisX + 28, thisY, (157 / quests[1][i].requiredAmount) * quests[1][i].currentAmount, 19)
-        love.graphics.setColor(1,1,1,1)
+        love.graphics.setColor(1,1,1,1 *  questHub.opacity)
 
         if quests[1][i].complete then 
             love.graphics.draw(questHub.images.barComplete, thisX + 9, thisY + 4)

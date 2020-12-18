@@ -157,8 +157,9 @@ function drawQuestsPanelStencil()
         ((uiX/1) - 313), 
         ((uiY/1) + 55 - (uiY/1.25)),
         (313),
-        ((uiY/1.25) - 106 - 14 - 55)
+        (cerp((uiY/1.25) ,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) --((uiY/1.25) - 106 - 14 - 55)
     )
+    
 end 
 
 function checkQuestPanelMousePressed(button)

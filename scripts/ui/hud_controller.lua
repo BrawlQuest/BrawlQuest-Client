@@ -155,8 +155,8 @@ function drawHUD()
         local i = 0.5
         love.graphics.scale(scale*i)
 
-        drawChatPanel(uiX/i, (uiY - cerp(100, ((uiY/1.25)-15), questsPanel.amount)) / i)
-
+        drawChatPanel(uiX/i, (uiY - cerp(cerp(0, 100, questHub.amount), ((uiY/1.25)-15), questsPanel.amount)) / i)
+        -- drawChatStencil()
     love.graphics.pop()
 
     love.graphics.setColor(1,1,1,1)

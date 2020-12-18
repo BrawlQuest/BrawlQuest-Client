@@ -173,7 +173,7 @@ function drawChatStencil()
 		((uiX - 313)/0.5),
 		((0)/0.5),
 		((313)/0.5),
-		((cerp(uiY - 134 + 14, uiY - ((uiY/1.25)+5), questsPanel.amount))/0.5)
+		((cerp(cerp(uiY ,uiY - 134 + 14, questHub.amount), uiY - ((uiY/1.25)+5), questsPanel.amount))/0.5)
 	)
 end
 
