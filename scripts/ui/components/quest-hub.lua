@@ -87,7 +87,7 @@ function initQuestHub()
 end
 
 function updateQuestHub(dt)
-    if isMouseOver((uiX - 468) * scale, (uiY - 102) * scale, 468 * scale, 102 * scale) and #quests[1] > 0 then
+    if isMouseOver((uiX - 468) * scale, (uiY - 102) * scale, 468 * scale, 102 * scale) and #quests[1] > 0 then -- Opens Comment
         questHub.commentAmount = questHub.commentAmount + 4 * dt
         if questHub.commentAmount > 1 then questHub.commentAmount = 1 end
     else
@@ -110,19 +110,19 @@ function updateQuestHub(dt)
     questHub.opacity = cerp(0, 1, questHub.amount)
     
     if isMouseOver(((uiX/1) - 313) * scale, 
-    ((uiY/1) + 55 - (uiY/1.25)) * scale,
+    ((uiY) + 55 - (uiY/1.25)) * scale,
     (313) * scale,
-    (cerp((uiY/1.25) ,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale) then
+    (cerp((uiY/1.25) - 55 ,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale) then -- Opens Quests Panel
         questsPanel.amount = questsPanel.amount + 4 * dt
         if questsPanel.amount > 1 then questsPanel.amount = 1 end
 
         velYQuest = velYQuest - velYQuest * math.min( dt * 15, 1 )
-        if getFullQuestsPanelFieldHeight() * scale > (cerp((uiY/1.25) ,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale then
+        if getFullQuestsPanelFieldHeight() * scale > (cerp((uiY/1.25) - 55,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale then
             posYQuest = posYQuest + velYQuest * dt
             if posYQuest > 0 then
                 posYQuest = 0
-            elseif posYQuest < 0 - getFullQuestsPanelFieldHeight() + (cerp((uiY/1.25), ((uiY/1.25) - 106 - 14 - 55), questHub.amount)) then
-                posYQuest = 0 - getFullQuestsPanelFieldHeight() + (cerp((uiY/1.25), ((uiY/1.25) - 106 - 14 - 55), questHub.amount))
+            elseif posYQuest < 0 - getFullQuestsPanelFieldHeight() + (cerp((uiY/1.25) - 55, ((uiY/1.25) - 106 - 14 - 55), questHub.amount)) then
+                posYQuest = 0 - getFullQuestsPanelFieldHeight() + (cerp((uiY/1.25) - 55, ((uiY/1.25) - 106 - 14 - 55), questHub.amount))
             end
         else posYQuest = 0
         end
