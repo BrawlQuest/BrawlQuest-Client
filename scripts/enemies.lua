@@ -112,8 +112,15 @@ function drawEnemies()
 
                 love.graphics.setColor(1, 1 - v.red, 1 - v.red)
                 love.graphics.draw(enemyImg[v.Enemy.Name], v.dx + offsetX, v.dy, 0, rotation, 1, 0, 0)
-                love.graphics.setColor(1, 0, 0)
-                love.graphics.rectangle("fill", v.dx, v.dy - 6, (v.dhp / v.mhp) * 32, 6)
+                if distanceToPoint(v.dx, v.dy, player.dx, player.dy) < 256 then
+                    if v.Enemy.CanMove then
+                        love.graphics.setColor(1, 0, 0, 1 - (distanceToPoint(v.dx, v.dy, player.dx, player.dy)/256))
+                        love.graphics.rectangle("fill", v.dx, v.dy - 6, (v.dhp / v.mhp) * 32, 6)
+                    else
+                        love.graphics.setColor(1,0,0)
+                        love.graphics.rectangle("fill", v.dx, v.dy - 2, (v.dhp / v.mhp) * 32, 2)
+                    end
+                end
                 love.graphics.setColor(1, 1, 1, v.aggroAlpha)
                 love.graphics.draw(alertImg, v.dx + 8, v.dy - 16)
                 love.graphics.setColor(1, 1, 1)
@@ -121,7 +128,7 @@ function drawEnemies()
           --      love.graphics.printf(tostring(v.IsAggro), v.dx, v.dy-6, 32, "center")
             end
 
-         if distanceToPoint(v.dx,v.dy,player.dx,player.dy) < (v.Enemy.Range+1)*32 then
+         if distanceToPoint(v.dx,v.dy,player.dx,player.dy) < (v.Enemy.Range+1)*32 and v.Target == me.id then
             love.graphics.setColor(1, 0, 0)
             love.graphics.line(v.dx + 16, v.dy + 16, player.dx + 16, player.dy + 16)
             love.graphics.setColor(1, 1, 1, 1)

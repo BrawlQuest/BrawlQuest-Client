@@ -63,6 +63,7 @@ function updateMusic(dt)
                 isSwitching = false
                 currentTrack = nextTrack
                 music[currentTrack]:setVolume(musicVolume)
+                music[currentTrack]:setLooping(true)
                 currentPlaying = music[currentTrack]:play()
             end
         end

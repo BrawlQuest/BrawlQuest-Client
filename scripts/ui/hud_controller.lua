@@ -172,11 +172,12 @@ function updateHUD( dt )
 end
 
 function drawHUD()
-    
+
     love.graphics.push()
         local i = 1
         love.graphics.scale(scale)
 
+        
         if showNPCChatBackground then drawNPCChatBackground((uiX/2)/i - 128, (uiY/2)/i - 128) end
         drawCharacterHub(0, uiY/i)
         drawToolBarInventory(0, uiY/i)

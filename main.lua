@@ -112,7 +112,7 @@ function love.draw()
         drawLoot()
         drawFloats()
         Luven.drawEnd()
-        drawNPCChatIndicator()
+  
         if not isWorldEditWindowOpen then
             drawHUD()
         end

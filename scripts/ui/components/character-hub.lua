@@ -96,9 +96,9 @@ function drawCharacterHubStats(thisX, thisY)
     love.graphics.draw(hubImages.statsFG, thisX, thisY)
     
     love.graphics.setColor(0,0,0, cerp(0, 1, characterHub.amount))
-    love.graphics.print(perks.reserve, thisX + 77 - (characterHub.font:getWidth(perks.reserve)/2), thisY + 28 - (characterHub.font:getHeight(perks.reserve)/2))
+    love.graphics.print(player.cp, thisX + 77 - (characterHub.font:getWidth(player.cp)/2), thisY + 28 - (characterHub.font:getHeight(player.cp)/2))
     for i = 0, 2 do
-        love.graphics.print(perks[i+1], thisX + (49 * i) + 3 + 32 - (characterHub.font:getWidth(perks[i+1])/2), thisY + 43 + 42 - (characterHub.font:getHeight(perks[i+1])/2))
+        love.graphics.print(me[perkTitles[i+1]], thisX + (49 * i) + 3 + 32 - (characterHub.font:getWidth(me[perkTitles[i+1]])/2), thisY + 43 + 42 - (characterHub.font:getHeight(me[perkTitles[i+1]])/2))
     end
 end
 
@@ -132,12 +132,15 @@ end
 function checkStatsMousePressed(button)
     for i = 0, 2 do
         if isMouseOver((0 + hubImages.profileBG:getWidth() + (49 * i) + 3) * scale, (uiY - hubImages.profileBG:getHeight() + 43) * scale, hubImages.statCardBg:getWidth() * scale, hubImages.statCardBg:getHeight() * scale) then
-            if perks.reserve > 0 and button == 1 then
-                perks[i+1] = perks[i+1] + 1
-                perks.reserve = perks.reserve - 1
-            elseif perks[i+1] > 0 and button == 2 then
-                perks[i+1] = perks[i+1] - 1
-                perks.reserve = perks.reserve + 1
+            if player.cp > 0 and button == 1 then
+                -- if selectedPerk == i then
+                --     perks[i] = perks[i] + 1
+                -- end
+                -- perks.reserve = perks.reserve - 1
+                c, h = http.request{url = api.url.."/stat/"..player.name.."/"..perkTitles[i+1], method="GET", headers={["token"]=token}}
+		
+            elseif button == 2 then 
+                c, h = http.request{url = api.url.."/stat/"..player.name.."/"..perkTitles[i+1], method="DELETE", headers={["token"]=token}}
             end
         end
     end
