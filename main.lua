@@ -232,6 +232,7 @@ function love.update(dt)
   
             player.buddy = me.Buddy
             player.hp = me.HP
+       
             player.xp = me.XP
             if player.lvl ~= me.LVL then
                 love.audio.play(lvlSfx)

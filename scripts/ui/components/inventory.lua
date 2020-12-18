@@ -91,11 +91,7 @@ end
 function checkInventoryMousePressedOriginal()
     if selectedItem ~= nil and selectedItem.ID ~= nil and
         isMouseOver(0, toolbarY * scale, inventory:getWidth() * scale, inventory:getHeight() * scale) then
-        c, h = http.request {
-            url = api.url .. "/item/" .. player.name .. "/" .. selectedItem.ID,
-            headers = {
-                ["token"] = token
-            }
-        }
+
+        apiGET(api.url .. "/item/" .. player.name .. "/" .. selectedItem.ID)
     end
 end

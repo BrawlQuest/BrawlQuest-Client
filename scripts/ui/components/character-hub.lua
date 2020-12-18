@@ -112,7 +112,7 @@ function drawCharacterHubMeters(thisX, thisY)
     thisX, thisY = thisX + 5, thisY + 25
     love.graphics.setFont(characterHub.font)
     local j = (100/151)
-    local meterLevels = {me.HP, me.Mana, me.XP}
+    local meterLevels = {player.dhp, me.Mana, me.XP}
     for i = 0, 2 do
         local spacing = 23 * i
         love.graphics.setColor(unpack(characterHub.backgroundColor))
@@ -124,7 +124,7 @@ function drawCharacterHubMeters(thisX, thisY)
         love.graphics.setColor(1,1,1,1)
         love.graphics.draw(hubImages.meterIcons[i+1], thisX, thisY + spacing)
         love.graphics.draw(hubImages.meterNames[i+1], thisX, thisY + spacing)
-        love.graphics.print(meterLevels[i+1], thisX + 198 - (characterHub.font:getWidth(meterLevels[i+1])/2), thisY + spacing + 6)
+        love.graphics.print(math.floor(meterLevels[i+1]), thisX + 198 - (characterHub.font:getWidth(math.floor(meterLevels[i+1]))/2), thisY + spacing + 6)
     end
 end
 
@@ -133,14 +133,13 @@ function checkStatsMousePressed(button)
     for i = 0, 2 do
         if isMouseOver((0 + hubImages.profileBG:getWidth() + (49 * i) + 3) * scale, (uiY - hubImages.profileBG:getHeight() + 43) * scale, hubImages.statCardBg:getWidth() * scale, hubImages.statCardBg:getHeight() * scale) then
             if player.cp > 0 and button == 1 then
-                -- if selectedPerk == i then
-                --     perks[i] = perks[i] + 1
-                -- end
-                -- perks.reserve = perks.reserve - 1
-                c, h = http.request{url = api.url.."/stat/"..player.name.."/"..perkTitles[i+1], method="GET", headers={["token"]=token}}
-		
+                apiGET("/stat/"..player.name.."/"..perkTitles[i+1])
+                player.cp = player.cp - 1
+                me[perkTitles[i+1]] = me[perkTitles[i+1]] + 1
             elseif button == 2 then 
                 c, h = http.request{url = api.url.."/stat/"..player.name.."/"..perkTitles[i+1], method="DELETE", headers={["token"]=token}}
+                player.cp = player.cp + 1
+                me[perkTitles[i+1]] = me[perkTitles[i+1]] - 1
             end
         end
     end

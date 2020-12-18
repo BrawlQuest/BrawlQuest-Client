@@ -65,9 +65,9 @@ function updateCharacter(dt)
         movePlayer(dt)
     end
     if player.dhp > player.hp then
-        player.dhp = player.dhp - 32 * dt
+        player.dhp = player.dhp - ((player.dhp/player.hp)*100) * dt
     elseif player.dhp < player.hp then
-        player.dhp = player.dhp + 32 * dt
+        player.dhp = player.dhp + ((player.dhp/player.hp)*100) * dt
     end
 
     if difference(player.dhp, player.hp) < 0.2 then
