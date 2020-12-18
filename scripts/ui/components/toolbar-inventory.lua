@@ -5,11 +5,13 @@ function initToolBarInventory()
         opacity = 0,
         titleSpacing = 25,
         itemSpacing = 42,
+        imageNumber = 0,
         items = {},
         fields = {"weapons", "spells", "armour", "reagent", "mounts", "buddies", "other",},
         fieldLength = {0, 0, 0, 0, 0},
         font = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 12),
         headerFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 26),
+        itemFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
         images = {
             itemBG = love.graphics.newImage("assets/ui/hud/character-inventory/item-bg.png"),
             numbers = {
@@ -23,6 +25,12 @@ function initToolBarInventory()
                 love.graphics.newImage("assets/ui/hud/character-inventory/08.png"),
                 love.graphics.newImage("assets/ui/hud/character-inventory/09.png"),
                 love.graphics.newImage("assets/ui/hud/character-inventory/10.png"),
+            },
+            numberBg = {
+                love.graphics.newImage("assets/ui/hud/character-inventory/number-backgrounds/01.png"),
+                love.graphics.newImage("assets/ui/hud/character-inventory/number-backgrounds/02.png"),
+                love.graphics.newImage("assets/ui/hud/character-inventory/number-backgrounds/03.png"),
+                love.graphics.newImage("assets/ui/hud/character-inventory/number-backgrounds/04.png"),
             },
         },
     }
@@ -110,7 +118,6 @@ function drawToolBarInventory(thisX, thisY)
 
         love.graphics.setFont(inventory.headerFont)
         love.graphics.print("Inventory", thisX + 8, thisY + 14)
-        love.graphics.setFont(inventory.font)
 
         love.graphics.stencil(drawInventoryStencil, "replace", 1) -- stencils inventory
         love.graphics.setStencilTest("greater", 0) -- push
@@ -155,12 +162,32 @@ function drawInventoryItem(thisX, thisY, field, item, number)
         else
             love.graphics.draw(itemImg[userInventory[field][item].Item.ImgPath], thisX + 2, thisY + 2) -- Item
         end
+
+        local amount = userInventory[field][item].Inventory.Amount
         
+        if amount > 1 then
+            if amount <= 9 then
+                inventory.imageNumber = 1
+            elseif amount > 9 and amount <= 99 then
+                inventory.imageNumber = 2
+            elseif amount > 99 and amount <= 999 then
+                inventory.imageNumber = 3
+            else
+                inventory.imageNumber = 4
+            end
+            thisX, thisY = thisX + 39 - inventory.images.numberBg[inventory.imageNumber]:getWidth(), thisY + 39 - inventory.images.numberBg[inventory.imageNumber]:getHeight()
+            love.graphics.draw(inventory.images.numberBg[inventory.imageNumber], thisX, thisY)
+            love.graphics.setColor(0,0,0,inventory.opacity)
+            love.graphics.print(amount, thisX + 5, thisY + 4)
+            love.graphics.setColor(1,1,1,inventory.opacity)
+        end
     end
 end
 
 function drawInventoryItemField(thisX, thisY, field)
+    love.graphics.setFont(inventory.font)
     love.graphics.printf(inventory.fields[field], thisX + 2, thisY + 2, 483)
+    love.graphics.setFont(inventory.itemFont)
     thisY = thisY + inventory.titleSpacing
     local itemWidth = 7
     for i = 1, #userInventory[field] do
