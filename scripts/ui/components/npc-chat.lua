@@ -244,7 +244,7 @@ function drawNPCChatBackground(x, y)
             worldImg[npcChat.ImgPath] = love.graphics.newImage("assets/error.png")
         end
     end
-    love.graphics.draw(worldImg[npcChat.ImgPath], x + 128 - (chatXpos*2), y + 126, 0, 4, 4)
+    love.graphics.draw(worldImg[npcChat.ImgPath], x + 128 - (chatXpos*2), y + (254 - worldImg[npcChat.ImgPath]:getWidth()*4), 0, 4, 4)
 
     -- Clouds
     
