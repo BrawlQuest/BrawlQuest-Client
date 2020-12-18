@@ -32,7 +32,7 @@ function drawChatPanel(thisX, thisY) -- the function to recall it all
     love.graphics.setStencilTest("greater", 0) -- push
 
 		for i = 1, #messages do -- the most important thing here
-			thisY = thisY - getFullChatHeight(messages[i].username, messages[i].text, i)
+			thisY = thisY - getChatHeight(messages[i].username, messages[i].text, i)
 			drawChatbox(thisX - (chatWidth+130), thisY, messages[i].username, messages[i].text,  messages[i].player, i)
 			previousUsername = messages[i].username
 		end
@@ -40,6 +40,15 @@ function drawChatPanel(thisX, thisY) -- the function to recall it all
 	love.graphics.setStencilTest() -- pop
 
 	drawEnterChatBox(thisX - (chatWidth+130), chatEnterY, enteredChatText)
+end
+
+function getFullChatHeight()
+	local height = 0
+	for i = 1, #messages do
+		height = height - getChatHeight(messages[i].username, messages[i].text, i)
+		previousUsername = messages[i].username
+	end
+	return height * -0.5
 end
 
 function drawChatboxBackground(thisX, thisY, text)
@@ -120,7 +129,7 @@ function getChatTextHeight(text) -- gets the chat height for recalling stuff
 	end
 end
 
-function getFullChatHeight(username, text, i) -- gets the chat height for recalling stuff
+function getChatHeight(username, text, i) -- gets the chat height for recalling stuff
 	if i == 1 then
 		return getChatboxProfilePicHeight(username, text, i)
 	elseif	username == previousUsername then

@@ -108,12 +108,21 @@ function updateHUD( dt )
     
     velyInventory = velyInventory - velyInventory * math.min( dt * 15, 1 )
 
-    posYChat = posYChat + velyChat * dt
+    
     velyChat = velyChat - velyChat * math.min( dt * 15, 1 )
 
-    if posYChat < 0 then
-        posYChat = 0
+
+    if (getFullChatHeight() + cerp(10, 115, questHub.amount)) * scale > uiY then -- take into account spacing from the bottom
+        posYChat = posYChat + velyChat * dt
+        if posYChat < 0 then
+            posYChat = 0
+        -- elseif posYChat > uiY - getFullChatHeight() then
+        --     posYChat = uiY - getFullChatHeight()
+        end
+    else posYChat = 0
     end
+
+    -- print((getFullChatHeight()) * scale .. " " .. uiY)
 
     updateTooltip(dt)
     updateFloats(dt)
