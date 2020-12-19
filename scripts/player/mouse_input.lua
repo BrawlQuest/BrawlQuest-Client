@@ -5,8 +5,6 @@ function love.mousepressed(x, y, button)
         checkEditWorldClick(x, y)
     elseif phase == "game" then
        checkInventoryMousePressed()
-    --    checkChatMousePressed()
-       checkPerksMousePressed(button)
        checkSettingsMousePressed(button)
        checkStatsMousePressed(button)
        if showNPCChatBackground then
