@@ -22,6 +22,23 @@ function love.keypressed(key)
         end
     else
         if key == "q" then love.event.quit() end
+        if key == "b" and buddies[player.name] ~= null then
+            print(buddies[player.name].img)
+            chatXpos = -64
+            chatOpacity = 0
+            chatWritten = ""
+            npcChat = {
+                Title = ":)",
+                ImgPath = buddies[player.name].img,
+                Options = {
+                    {
+                        "Woohoo!",
+                        "1"
+                    },
+                }
+            }
+            showNPCChatBackground = true
+        end
         if isWorldEditWindowOpen then
             if key == "backspace" then
                 textfields[editingField] = string.sub(textfields[editingField], 1, string.len(textfields[editingField]) - 1)

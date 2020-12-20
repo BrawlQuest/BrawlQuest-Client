@@ -38,41 +38,40 @@ function initToolBarInventory()
         open = false,
         amount = 0,
         opacity = 0,
+        usedItemThisTick = false,
         titleSpacing = 25,
         itemSpacing = 42,
         imageNumber = 0,
         items = {},
+
         fields = {"weapons", "spells", "armour", "reagent", "consumables", "mounts", "buddies", "other",},
         fieldLength = {0, 0, 0, 0, 0, 0, 0,},
+
         font = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 12),
         headerFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 26),
         itemFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
         images = {
             itemBG = love.graphics.newImage("assets/ui/hud/character-inventory/item-bg.png"),
-            numbers = {
-                love.graphics.newImage("assets/ui/hud/character-inventory/01.png"),
-                love.graphics.newImage("assets/ui/hud/character-inventory/02.png"),
-                love.graphics.newImage("assets/ui/hud/character-inventory/03.png"),
-                love.graphics.newImage("assets/ui/hud/character-inventory/04.png"),
-                love.graphics.newImage("assets/ui/hud/character-inventory/05.png"),
-                love.graphics.newImage("assets/ui/hud/character-inventory/06.png"),
-                love.graphics.newImage("assets/ui/hud/character-inventory/07.png"),
-                love.graphics.newImage("assets/ui/hud/character-inventory/08.png"),
-                love.graphics.newImage("assets/ui/hud/character-inventory/09.png"),
-                love.graphics.newImage("assets/ui/hud/character-inventory/10.png"),
-            },
-            numberBg = {
-                love.graphics.newImage("assets/ui/hud/character-inventory/number-backgrounds/01.png"),
-                love.graphics.newImage("assets/ui/hud/character-inventory/number-backgrounds/02.png"),
-                love.graphics.newImage("assets/ui/hud/character-inventory/number-backgrounds/03.png"),
-                love.graphics.newImage("assets/ui/hud/character-inventory/number-backgrounds/04.png"),
-            },
-        },
+            numbers = {love.graphics.newImage("assets/ui/hud/character-inventory/01.png"),
+                       love.graphics.newImage("assets/ui/hud/character-inventory/02.png"),
+                       love.graphics.newImage("assets/ui/hud/character-inventory/03.png"),
+                       love.graphics.newImage("assets/ui/hud/character-inventory/04.png"),
+                       love.graphics.newImage("assets/ui/hud/character-inventory/05.png"),
+                       love.graphics.newImage("assets/ui/hud/character-inventory/06.png"),
+                       love.graphics.newImage("assets/ui/hud/character-inventory/07.png"),
+                       love.graphics.newImage("assets/ui/hud/character-inventory/08.png"),
+                       love.graphics.newImage("assets/ui/hud/character-inventory/09.png"),
+                       love.graphics.newImage("assets/ui/hud/character-inventory/10.png")},
+            numberBg = {love.graphics.newImage("assets/ui/hud/character-inventory/number-backgrounds/01.png"),
+                        love.graphics.newImage("assets/ui/hud/character-inventory/number-backgrounds/02.png"),
+                        love.graphics.newImage("assets/ui/hud/character-inventory/number-backgrounds/03.png"),
+                        love.graphics.newImage("assets/ui/hud/character-inventory/number-backgrounds/04.png")}
+        }
     }
 end
 
 function getInventory()
-    
+
     userInventory = {}
     userInventory[1] = {}
     userInventory[2] = {}
@@ -83,6 +82,7 @@ function getInventory()
     userInventory[7] = {}
     userInventory[8] = {}
     inventoryFieldLength = {0, 0, 0, 0, 0, 0, 0, 0,}
+
 
     for i, v in ipairs(inventoryAlpha) do
         local t = 8
@@ -111,21 +111,17 @@ function getInventory()
                 itemImg[v.Item.ImgPath] = love.graphics.newImage("assets/error.png")
             end
         end
-        userInventory[t][#userInventory[t] + 1] = v 
+        userInventory[t][#userInventory[t] + 1] = v
     end
-    
-    -- if userInventory[1][1] ~= null then 
-    --     toolbarItems = {userInventory[1][1].Item.ImgPath, userInventory[1][1].Item.ImgPath,} 
-    -- end
-
-    -- print(userInventory[1][1].Item.ImgPath)
 end
 
 function updateToolBarInventory(dt)
     if isMouseOver(0, 0, 313 * scale, (uiY - 97) * scale) then
         inventory.open = true
         inventory.amount = inventory.amount + 4 * dt
-        if inventory.amount > 1 then inventory.amount = 1 end
+        if inventory.amount > 1 then
+            inventory.amount = 1
+        end
 
         if getFullUserInventoryFieldHeight() * scale > (uiY - 97 - 50 - 50) * scale then
             posYInventory = posYInventory + velyInventory * dt
@@ -134,29 +130,32 @@ function updateToolBarInventory(dt)
             elseif posYInventory < 0 - getFullUserInventoryFieldHeight() + (uiY - 97 - 50 - 50) then
                 posYInventory = 0 - getFullUserInventoryFieldHeight() + (uiY - 97 - 50 - 50)
             end
-        else posYInventory = 0
+        else
+            posYInventory = 0
         end
     else
         inventory.open = false
         inventory.amount = inventory.amount - 4 * dt
-        if inventory.amount < 0 then inventory.amount = 0 end
+        if inventory.amount < 0 then
+            inventory.amount = 0
+        end
     end
     inventory.opacity = cerp(0, 1, inventory.amount)
 end
 
 function drawToolBarInventory(thisX, thisY)
     love.graphics.setColor(unpack(characterHub.backgroundColor))
-  
+
     love.graphics.rectangle("fill", thisX, thisY - 97, 313, 0 - cerp(23, 23 + (uiY - 97 - 23), inventory.amount))
     thisX, thisY = thisX, thisY - 97
-    love.graphics.setColor(1,1,1,1)
-    for i = 0, 6 do 
-        drawInventoryItem(thisX + 9 + (43 * i), thisY - 42, 0, toolbarItems[i+1], i + 1)
+    love.graphics.setColor(1, 1, 1, 1)
+    for i = 0, 6 do
+        drawInventoryItem(thisX + 9 + (43 * i), thisY - 42, 0, toolbarItems[i + 1], i + 1)
     end
 
-    if inventory.open then 
+    if inventory.open then
         getInventory()
-        love.graphics.setColor(1,1,1,inventory.opacity)
+        love.graphics.setColor(1, 1, 1, inventory.opacity)
         thisY = thisY - cerp(0, (uiY - 97), inventory.amount)
 
         love.graphics.setFont(inventory.headerFont)
@@ -164,52 +163,78 @@ function drawToolBarInventory(thisX, thisY)
 
         love.graphics.stencil(drawInventoryStencil, "replace", 1) -- stencils inventory
         love.graphics.setStencilTest("greater", 0) -- push
-            thisY = thisY + 50 + posYInventory
-            for i = 1, #inventory.fields do -- Draws each inventory field
-                if inventoryFieldLength[i] ~= 0 then
-                    drawInventoryItemField(thisX + 8, thisY, i)
-                    -- love.graphics.setColor(1,1,1, 0.25 * inventory.opacity)
-                    -- love.graphics.rectangle("fill", thisX, thisY, 313, getUserInventoryFieldHeight(i))
-                    -- love.graphics.setColor(1,1,1, 1 * inventory.opacity)
-                    thisY = thisY + getUserInventoryFieldHeight(i)
-                end
+        thisY = thisY + 50 + posYInventory
+        for i = 1, #inventory.fields do -- Draws each inventory field
+            if inventoryFieldLength[i] ~= 0 then
+                drawInventoryItemField(thisX + 8, thisY, i)
+                -- love.graphics.setColor(1,1,1, 0.25 * inventory.opacity)
+                -- love.graphics.rectangle("fill", thisX, thisY, 313, getUserInventoryFieldHeight(i))
+                -- love.graphics.setColor(1,1,1, 1 * inventory.opacity)
+                thisY = thisY + getUserInventoryFieldHeight(i)
             end
+        end
         love.graphics.setStencilTest() -- pop
     end
-    
+
 end
 
 function drawInventoryItem(thisX, thisY, field, item, number)
-    if number ~= null then  
+    if number ~= null then
         love.graphics.draw(inventory.images.itemBG, thisX, thisY)
         if item ~= null then love.graphics.draw(item, top_left, thisX + 2, thisY + 2) end
-        -- love.graphics.setColor(1,1,1,0.5)
+
         love.graphics.draw(inventory.images.numbers[number], thisX - 3, thisY + 26)
         -- love.graphics.setColor(1,1,1,1)
     else
-        if isMouseOver(thisX*scale, thisY*scale, 34*scale, 34*scale) and isMouseOver((0) * scale, (0 + 50) * scale, 313 * scale, (uiY - 97 - 50 - 50) * scale) then
-            love.graphics.setColor(0.6, 0.6, 0.6,inventory.opacity)
-            setTooltip(userInventory[field][item].Item.Name,
-                "+" .. userInventory[field][item].Item.Val .. " " .. userInventory[field][item].Item.Type .. "\n" ..
-                    userInventory[field][item].Item.Desc)
+        if isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale) and
+            isMouseOver((0) * scale, (0 + 50) * scale, 313 * scale, (uiY - 97 - 50 - 50) * scale) then
+            love.graphics.setColor(0.6, 0.6, 0.6, inventory.opacity)
+            local valString = "Item"
+            if userInventory[field][item].Item.Type == "wep" then
+                valString = "+" .. userInventory[field][item].Item.Val .. " Weapon"
+            elseif userInventory[field][item].Item.Type == "arm_head" then
+                valString = "+" .. userInventory[field][item].Item.Val .. " Head Armour"
+            elseif userInventory[field][item].Item.Type == "arm_chest" then
+                valString = "+" .. userInventory[field][item].Item.Val .. " Chest Armour"
+            elseif userInventory[field][item].Item.Type == "arm_leg" then
+                valString = "+" .. userInventory[field][item].Item.Val .. " Leg Armour"
+            elseif userInventory[field][item].Item.Type == "spell" then
+                valString = "Spell (" .. userInventory[field][item].Item.Val .. " Mana)"
+            elseif userInventory[field][item].Item.Type == "hp_potion" then
+                valString = "Restores " .. userInventory[field][item].Item.Val .. " HP"
+            elseif userInventory[field][item].Item.Type == "mana_potion" then
+                valString = "Restores " .. userInventory[field][item].Item.Val .. " Mana"
+            elseif userInventory[field][item].Item.Type == "reagent" then
+                valString = "Reagent"
+            elseif userInventory[field][item].Item.Type == "buddy" then
+                valString = "Buddy"
+            end
+
+            setTooltip(userInventory[field][item].Item.Name, valString .. "\n" .. userInventory[field][item].Item.Desc)
             selectedItem = userInventory[field][item].Item
         end
+      
         love.graphics.draw(inventory.images.itemBG, thisX, thisY)
         if string.sub(userInventory[field][item].Item.Type, 1, 4) == "arm_" then
-            love.graphics.setColor(1,1,1,inventory.opacity*0.5)
+            love.graphics.setColor(1, 1, 1, inventory.opacity * 0.5)
             love.graphics.draw(playerImg, thisX + 2, thisY + 2)
-            love.graphics.setColor(1,1,1,inventory.opacity)
+            love.graphics.setColor(1, 1, 1, inventory.opacity)
         end
-        love.graphics.setColor(1,1,1,inventory.opacity)
-        if itemImg[userInventory[field][item].Item.ImgPath]:getWidth() <= 32 and itemImg[userInventory[field][item].Item.ImgPath]:getHeight() <= 32 then
-            love.graphics.draw(itemImg[userInventory[field][item].Item.ImgPath], thisX + 18 - (itemImg[userInventory[field][item].Item.ImgPath]:getWidth() / 2),
-            thisY + 18 - (itemImg[userInventory[field][item].Item.ImgPath]:getHeight() / 2))
+        love.graphics.setColor(1, 1, 1, inventory.opacity)
+        if inventory.usedItemThisTick then
+            love.graphics.setColor(1,1,1,0.4)
+        end
+        if itemImg[userInventory[field][item].Item.ImgPath]:getWidth() <= 32 and
+            itemImg[userInventory[field][item].Item.ImgPath]:getHeight() <= 32 then
+            love.graphics.draw(itemImg[userInventory[field][item].Item.ImgPath],
+                thisX + 18 - (itemImg[userInventory[field][item].Item.ImgPath]:getWidth() / 2),
+                thisY + 18 - (itemImg[userInventory[field][item].Item.ImgPath]:getHeight() / 2))
         else
             love.graphics.draw(itemImg[userInventory[field][item].Item.ImgPath], thisX + 2, thisY + 2) -- Item
         end
 
         local amount = userInventory[field][item].Inventory.Amount
-        
+
         if amount > 1 then
             if amount <= 9 then
                 inventory.imageNumber = 1
@@ -220,11 +245,12 @@ function drawInventoryItem(thisX, thisY, field, item, number)
             else
                 inventory.imageNumber = 4
             end
-            thisX, thisY = thisX + 39 - inventory.images.numberBg[inventory.imageNumber]:getWidth(), thisY + 39 - inventory.images.numberBg[inventory.imageNumber]:getHeight()
+            thisX, thisY = thisX + 39 - inventory.images.numberBg[inventory.imageNumber]:getWidth(),
+                thisY + 39 - inventory.images.numberBg[inventory.imageNumber]:getHeight()
             love.graphics.draw(inventory.images.numberBg[inventory.imageNumber], thisX, thisY)
-            love.graphics.setColor(0,0,0,inventory.opacity)
+            love.graphics.setColor(0, 0, 0, inventory.opacity)
             love.graphics.print(amount, thisX + 5, thisY + 4)
-            love.graphics.setColor(1,1,1,inventory.opacity)
+            love.graphics.setColor(1, 1, 1, inventory.opacity)
         end
     end
 end
@@ -282,15 +308,11 @@ end
 function checkInventoryMousePressed()
     if selectedItem ~= nil and selectedItem.ID ~= nil and
         isMouseOver((0) * scale, (0 + 50) * scale, 313 * scale, (uiY - 97 - 50 - 50) * scale) then
-        c, h = http.request {
-            url = api.url .. "/item/" .. player.name .. "/" .. selectedItem.ID,
-            headers = {
-                ["token"] = token
-            }
-        }
+        apiGET("/item/" .. player.name .. "/" .. selectedItem.ID)
+        usedItemThisTick = true
     end
 end
 
 function drawInventoryStencil()
     love.graphics.rectangle("fill", (0), (0 + 50), 313, (uiY - 97 - 50 - 50))
-end 
+end

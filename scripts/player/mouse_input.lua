@@ -4,14 +4,14 @@ function love.mousepressed(x, y, button)
     elseif isWorldEditWindowOpen then
         checkEditWorldClick(x, y)
     elseif phase == "game" then
-        checkQuestPanelMousePressed(button)
-        checkInventoryMousePressed()
-        checkPerksMousePressed(button)
-        checkSettingsMousePressed(button)
-        checkStatsMousePressed(button)
-        if showNPCChatBackground then
-            checkNPCChatMousePressed()
-        end
+
+       checkInventoryMousePressed()
+       checkSettingsMousePressed(button)
+       checkStatsMousePressed(button)
+       if showNPCChatBackground then
+        checkNPCChatMousePressed()
+       end
+
     end
 end
 
