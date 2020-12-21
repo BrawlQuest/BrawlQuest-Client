@@ -234,16 +234,16 @@ function drawNPCChatBackground(x, y)
     npcChatArg.selectedOption = 0
     npcChatArg.hover = false
     love.graphics.setColor(0.3, 0.3, 1)
-    love.graphics.rectangle("fill", x, y, 256, 256 + 128)
+    love.graphics.rectangle("fill", x, y, 256, 256)
     love.graphics.setColor(1, 1, 1)
     love.graphics.stencil(drawNPCChatStencil, "replace", 1) -- stencils inventory
     love.graphics.setStencilTest("greater", 0) -- push
         for i = -2, 2 do
-            love.graphics.draw(worldImg[npcChatBackground[2]], x + (i * 128) - chatXpos, y + 78 + 128, 0, 4, 4)
+            love.graphics.draw(worldImg[npcChatBackground[2]], x + (i * 128) - chatXpos, y + 78, 0, 4, 4)
         end
 
         for i = -5, 5 do
-            love.graphics.draw(worldImg[npcChatBackground[1]], x + (i * 64) - chatXpos, y + 192  + 128, 0, 2, 2)
+            love.graphics.draw(worldImg[npcChatBackground[1]], x + (i * 64) - chatXpos, y + 192, 0, 2, 2)
         end
 
         if not worldImg[npcChat.ImgPath] then
@@ -253,7 +253,7 @@ function drawNPCChatBackground(x, y)
                 worldImg[npcChat.ImgPath] = love.graphics.newImage("assets/error.png")
             end
         end
-        love.graphics.draw(worldImg[npcChat.ImgPath], x + 128 - (chatXpos*2), y + (254 - worldImg[npcChat.ImgPath]:getWidth()*4) + 128, 0, 4, 4)
+        love.graphics.draw(worldImg[npcChat.ImgPath], x + 128 - (chatXpos*2), y + (254 - worldImg[npcChat.ImgPath]:getWidth()*4) + 0, 0, 4, 4)
 
         -- Clouds
         
@@ -272,7 +272,7 @@ function drawNPCChatBackground(x, y)
         love.graphics.printf(chatWritten, x + 10, y + 10, 200, "left")
         local ty = y + 125
         for i, v in pairs(npcChat.Options) do
-            drawDialogueOption(x + 20 , ty + 100, v[1], i)
+            drawDialogueOption(x + 20 , ty + 0, v[1], i)
             ty = ty + getDialogueBoxHeight(v[1]) + 10
         end
 
@@ -284,7 +284,8 @@ function drawNPCChatBackground(x, y)
     -- love.graphics.printf("Reputation: " .. npcChat.reputation, x + 128, y + 102, 120, "center")
 
     love.graphics.setColor(1, 1, 1)
-    love.graphics.rectangle("line", x, y, 256, 256 + 128)
+    love.graphics.rectangle("line", x, y, 256, 256)
+    -- drawNPCChatStencil()
 end
 
 function updateNPCChat(dt)
@@ -395,5 +396,5 @@ function drawNPCChatIndicator()
 end
 
 function drawNPCChatStencil()
-    love.graphics.rectangle("fill", (uiX/2) - 128, (uiY/2) - 128 - 64, 256, 256 + 128)
+    love.graphics.rectangle("fill", (uiX/2) - 128, (uiY/2) - 128, 256, 256)
 end
