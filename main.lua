@@ -112,7 +112,7 @@ function love.draw()
         drawLoot()
         drawFloats()
         Luven.drawEnd()
-  
+        
         if not isWorldEditWindowOpen then
             drawHUD()
         end
@@ -151,6 +151,8 @@ function love.draw()
 end
 
 function love.update(dt)
+
+    Luven.camera:setScale(worldScale)
     totalCoverAlpha = totalCoverAlpha - 1 * dt
     if phase == "login" then
         updateLogin(dt)

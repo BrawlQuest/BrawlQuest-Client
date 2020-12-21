@@ -182,6 +182,14 @@ chatWritten = ""
 
 npcChatSFX = {}
 
+function initNPCChat()
+    npcChatArg = {
+        font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
+        selectedOption = 0,
+        hover = false,
+    }
+end
+
 function createNPCChatBackground(x, y)
     npcChatBackground = {}
     local foundX = false
@@ -223,52 +231,52 @@ function createNPCChatBackground(x, y)
 end
 
 function drawNPCChatBackground(x, y)
-    
+    npcChatArg.selectedOption = 0
+    npcChatArg.hover = false
     love.graphics.setColor(0.3, 0.3, 1)
-    love.graphics.rectangle("fill", x, y, 256, 256)
+    love.graphics.rectangle("fill", x, y, 256, 256 + 128)
     love.graphics.setColor(1, 1, 1)
     love.graphics.stencil(drawNPCChatStencil, "replace", 1) -- stencils inventory
     love.graphics.setStencilTest("greater", 0) -- push
-    for i = -2, 2 do
-        love.graphics.draw(worldImg[npcChatBackground[2]], x + (i * 128) - chatXpos, y + 78, 0, 4, 4)
-    end
-
-    for i = -5, 5 do
-        love.graphics.draw(worldImg[npcChatBackground[1]], x + (i * 64) - chatXpos, y + 192, 0, 2, 2)
-    end
-
-    if not worldImg[npcChat.ImgPath] then
-        if love.filesystem.getInfo(npcChat.ImgPath) then
-            worldImg[npcChat.ImgPath] = love.graphics.newImage(npcChat.ImgPath)
-        else
-            worldImg[npcChat.ImgPath] = love.graphics.newImage("assets/error.png")
+        for i = -2, 2 do
+            love.graphics.draw(worldImg[npcChatBackground[2]], x + (i * 128) - chatXpos, y + 78 + 128, 0, 4, 4)
         end
-    end
-    love.graphics.draw(worldImg[npcChat.ImgPath], x + 128 - (chatXpos*2), y + (254 - worldImg[npcChat.ImgPath]:getWidth()*4), 0, 4, 4)
 
-    -- Clouds
-    
-        -- Draw Clouds Here
-        -- Draw Clouds Here
-        -- Draw Clouds Here
-        -- Draw Clouds Here
-        -- Draw Clouds Here
+        for i = -5, 5 do
+            love.graphics.draw(worldImg[npcChatBackground[1]], x + (i * 64) - chatXpos, y + 192  + 128, 0, 2, 2)
+        end
 
-        -- Testing Stuff
-        -- love.graphics.setColor(1,0,0,1)
-        -- love.graphics.rectangle("fill", 0,0,uiX,uiY)
+        if not worldImg[npcChat.ImgPath] then
+            if love.filesystem.getInfo(npcChat.ImgPath) then
+                worldImg[npcChat.ImgPath] = love.graphics.newImage(npcChat.ImgPath)
+            else
+                worldImg[npcChat.ImgPath] = love.graphics.newImage("assets/error.png")
+            end
+        end
+        love.graphics.draw(worldImg[npcChat.ImgPath], x + 128 - (chatXpos*2), y + (254 - worldImg[npcChat.ImgPath]:getWidth()*4) + 128, 0, 4, 4)
+
+        -- Clouds
         
-    love.graphics.setColor(1,1,1,chatOpacity)
-    love.graphics.setFont(npcChatFont)
-    love.graphics.printf(chatWritten, x + 10, y + 10, 200, "left")
-    local ty = y + 125
-    for i, v in pairs(npcChat.Options) do
-        drawDialogueOption(x + 20 , ty, v[1])
-        ty = ty + getDialogueBoxHeight(v[1]) + 10
-    end
+            -- Draw Clouds Here
+            -- Draw Clouds Here
+            -- Draw Clouds Here
+            -- Draw Clouds Here
+            -- Draw Clouds Here
+
+            -- Testing Stuff
+            -- love.graphics.setColor(1,0,0,1)
+            -- love.graphics.rectangle("fill", 0,0,uiX,uiY)
+            
+        love.graphics.setColor(1,1,1,chatOpacity)
+        love.graphics.setFont(npcChatArg.font)
+        love.graphics.printf(chatWritten, x + 10, y + 10, 200, "left")
+        local ty = y + 125
+        for i, v in pairs(npcChat.Options) do
+            drawDialogueOption(x + 20 , ty + 100, v[1], i)
+            ty = ty + getDialogueBoxHeight(v[1]) + 10
+        end
 
     love.graphics.setStencilTest() -- pop
-
 
     -- love.graphics.setColor(0, 0.4 + ((npcChat.reputation / 1) * 0.4), 0)
     -- love.graphics.rectangle("fill", x + 128, y + 100, 120, smallTextFont:getHeight() + 4)
@@ -276,7 +284,7 @@ function drawNPCChatBackground(x, y)
     -- love.graphics.printf("Reputation: " .. npcChat.reputation, x + 128, y + 102, 120, "center")
 
     love.graphics.setColor(1, 1, 1)
-    love.graphics.rectangle("line", x, y, 256, 256)
+    love.graphics.rectangle("line", x, y, 256, 256 + 128)
 end
 
 function updateNPCChat(dt)
@@ -326,10 +334,12 @@ function updateNPCChat(dt)
    
 end
 
-function drawDialogueOption(x, y, text)
+function drawDialogueOption(x, y, text, i)
     local rHeight = getDialogueBoxHeight(text)
     if isMouseOver(x*scale, y*scale, 133*scale, rHeight*scale) then
         love.graphics.setColor(0.2, 0.2, 0.2, chatOpacity)
+        npcChatArg.selectedOption = i
+        npcChatArg.hover = true
     else
         love.graphics.setColor(0, 0, 0, chatOpacity)
     end
@@ -339,21 +349,18 @@ function drawDialogueOption(x, y, text)
 end
 
 function getDialogueBoxHeight(text)
-    local width, lines = npcChatFont:getWrap(text, 128)
+    local width, lines = npcChatArg.font:getWrap(text, 128)
     if #lines >= 1 then
-        return ((#lines) * (npcChatFont:getHeight())) + 4
+        return ((#lines) * (npcChatArg.font:getHeight())) + 4
     else
-        return npcChatFont:getHeight() + 4
+        return npcChatArg.font:getHeight() + 4
     end
 end
 
-function checkNPCChatMousePressed()
-    tx, ty = ((uiX/2) - 128 + 20) * scale, ((uiY/2) - 128 + 125) * scale
-    local hasMovedOn = false
-    for i, v in pairs(npcChat.Options) do
-        if not hasMovedOn then
-            local rHeight = getDialogueBoxHeight(v[1]) * scale
-            if isMouseOver(tx, ty, 133 * scale, (rHeight + 5) * scale) then
+function checkNPCChatMousePressed(button)
+    if button == 1 and npcChatArg.hover then
+        for i, v in pairs(npcChat.Options) do
+            if npcChatArg.selectedOption == i then
                 currentConversationStage = v[2]
                 chatWritten = ""
                 if v[2] == "1" then
@@ -374,21 +381,19 @@ function checkNPCChatMousePressed()
                 end
             end
         end
-        ty = ty + getDialogueBoxHeight(v[1]) + 10
     end
-
 end
 
 function drawNPCChatIndicator()
     if distanceToPoint(player.x,player.y,3,-6) <= 1 or distanceToPoint(player.x,player.y,4,1) <= 1 or distanceToPoint(player.x,player.y,10,-16) <= 1  then
-        love.graphics.setFont(npcChatFont)
+        love.graphics.setFont(npcChatArg.font)
         love.graphics.setColor(0,0,0)
-        love.graphics.rectangle("fill",love.graphics.getWidth()/2-npcChatFont:getWidth("Press E to talk")/2,love.graphics.getHeight()/2+38,smallTextFont:getWidth("Press E to talk"),smallTextFont:getHeight())
+        love.graphics.rectangle("fill",love.graphics.getWidth()/2-npcChatArg.font:getWidth("Press E to talk")/2,love.graphics.getHeight()/2+38,smallTextFont:getWidth("Press E to talk"),smallTextFont:getHeight())
         love.graphics.setColor(1,1,1)
-        love.graphics.print("Press E to talk",love.graphics.getWidth()/2-npcChatFont:getWidth("Press E to talk")/2,love.graphics.getHeight()/2+38)
+        love.graphics.print("Press E to talk",love.graphics.getWidth()/2-npcChatArg.font:getWidth("Press E to talk")/2,love.graphics.getHeight()/2+38)
     end
 end
 
 function drawNPCChatStencil()
-    love.graphics.rectangle("fill", (uiX/2) - 128, (uiY/2) - 128, 256, 256)
+    love.graphics.rectangle("fill", (uiX/2) - 128, (uiY/2) - 128 - 64, 256, 256 + 128)
 end

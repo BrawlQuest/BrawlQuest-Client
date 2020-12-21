@@ -15,7 +15,7 @@ function initHUD()
     textFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 24)
 
     smallTextFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 12)
-    playerNameFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 8)
+    playerNameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8)
     headerSmallFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 16)
     headerTinyFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 6)
     headerFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 18) -- TODO: get a license for this font
@@ -25,7 +25,7 @@ function initHUD()
    
     chatFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 24)
 
-    npcChatFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 12)
+    npcChatFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16)
 
     -- scrolling
     posYInventory, velyInventory, posYChat, velyChat, posYQuest, velYQuest = 0, 0, 0, 0, 0, 0
@@ -102,15 +102,12 @@ function initHUD()
     initCharacterHub() 
     initToolBarInventory()
     initQuestHub()
+    initNPCChat()
 end
 
 function updateHUD( dt )
-    
     velyInventory = velyInventory - velyInventory * math.min( dt * 15, 1 )
-
-    
     velyChat = velyChat - velyChat * math.min( dt * 15, 1 )
-
 
     if (getFullChatHeight() + cerp(10, 115, questHub.amount)) * scale > uiY then -- take into account spacing from the bottom
         posYChat = posYChat + velyChat * dt
@@ -121,8 +118,6 @@ function updateHUD( dt )
         end
     else posYChat = 0
     end
-
-    -- print((getFullChatHeight()) * scale .. " " .. uiY)
 
     updateTooltip(dt)
     updateFloats(dt)
@@ -149,9 +144,7 @@ function drawHUD()
     love.graphics.push()
         local i = 1
         love.graphics.scale(scale)
-
-        
-        if showNPCChatBackground then drawNPCChatBackground((uiX/2)/i - 128, (uiY/2)/i - 128) end
+        if showNPCChatBackground then drawNPCChatBackground((uiX/2)/i - 128, (uiY/2)/i - 128 - 64) end
         drawCharacterHub(0, uiY/i)
         drawToolBarInventory(0, uiY/i)
         drawQuestHub(uiX/i, uiY/i)
@@ -163,9 +156,7 @@ function drawHUD()
     love.graphics.push() -- chat and quests scaling TODO: Quests
         local i = 0.5
         love.graphics.scale(scale*i)
-
         drawChatPanel(uiX/i, (uiY - cerp(cerp(0, 100, questHub.amount), ((uiY/1.25)-15), questsPanel.amount)) / i)
-        -- drawChatStencil()
     love.graphics.pop()
 
     love.graphics.setColor(1,1,1,1)

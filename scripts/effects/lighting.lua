@@ -64,16 +64,16 @@ function calculateTileLit(tx,ty)
     end)
 
     return success
-   
 end
 
 -- Luven related functions
 
 function initLighting() 
+    worldScale = 2
     Luven.init()
     Luven.setAmbientLightColor({ 0.1, 0.1, 0.1 })
     Luven.camera:init(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
-    Luven.camera:setScale(2)
+    Luven.camera:setScale(worldScale)
 end
 
 function reinitLighting(w,h)

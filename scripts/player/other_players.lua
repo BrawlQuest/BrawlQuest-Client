@@ -91,9 +91,9 @@ function drawPlayer(v, i)
 
         love.graphics.setColor(1,1,1)
         love.graphics.setFont(playerNameFont)
-        local nameWidth = playerNameFont:getWidth(v.Name)
-        local nameHeight = playerNameFont:getHeight(v.Name)
-        local padding = 1
+        local nameWidth = playerNameFont:getWidth(v.Name) * 0.5
+        local nameHeight = playerNameFont:getHeight(v.Name) * 0.5
+        local padding = 2
 
         if v.previousDirection == "left" then
             boi = 10
@@ -102,9 +102,12 @@ function drawPlayer(v, i)
         end
 
         love.graphics.setColor(0, 0, 0, 0.6)
-        love.graphics.rectangle("fill", (v.X + boi) - (nameWidth / 2), v.Y - nameHeight - 3, nameWidth + ((padding+2)*2), nameHeight + (padding*2))
+        love.graphics.rectangle("fill", (v.X + boi) - (nameWidth / 2), v.Y - nameHeight - 3, nameWidth + ((padding+2)*2), nameHeight + (padding*2) + 1)
         love.graphics.setColor(1, 1, 1)
-        love.graphics.print(v.Name, (v.X + boi) - (nameWidth / 2) + (padding+2), v.Y - nameHeight - 3 + padding)
+        love.graphics.push()
+        love.graphics.scale(0.5)
+        love.graphics.print(v.Name, ((v.X + boi) - (nameWidth / 2) + (padding+2)) * 2, (v.Y - nameHeight - 2 + padding) * 2)
+        love.graphics.pop()
         
         if thisPlayer ~= nil and thisPlayer.AX then
             local diffX
@@ -134,7 +137,6 @@ function drawNamePlate(x,y,name)
     love.graphics.rectangle("fill", (x) - (nameWidth / 2),y- nameHeight - 3, nameWidth + ((padding+2)*2), nameHeight + (padding*2))
     love.graphics.setColor(1, 1, 1)
     love.graphics.print(name, (x) - (nameWidth / 2) + (padding+2), y - nameHeight - 3 + padding)
-    
 end
 
 function updateOtherPlayers(dt)
