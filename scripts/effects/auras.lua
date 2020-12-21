@@ -8,6 +8,8 @@ function drawAuras()
             love.graphics.setColor(1,0,0,0.2*v.alpha)
         elseif v.Stat == "INT" then
             love.graphics.setColor(0,0,1,0.2*v.alpha)
+        elseif v.Stat == "LUCK" then
+            love.graphics.setColor(1,1,0,0.2*v.alpha)
         end
         local x,y = v.X*32, v.Y*32
         x = x +16
@@ -35,7 +37,7 @@ function drawAuraHeadings()
         love.graphics.setColor(1,1,1)
         love.graphics.draw(img,x,4)
         if isMouseOver(x*scale,4*scale,32*scale,32*scale) then
-            setTooltip(v.Stat, "Your "..v.Stat.." is being increased by "..v.Value)
+            setTooltip(v.Stat, "Your "..v.Stat.." is being increased by "..v.Value.." for the next "..v.TimeLeft.." seconds")
 
         end
         x = x - 36
@@ -46,17 +48,18 @@ function tickAuras()
    -- auraAuras = {}
     for i,v in ipairs(auras) do
         local img = getImgIfNotExist("assets/auras/"..v.Stat..".png")
-        local x = v.X - 4
-        local y = v.Y - 4
+        local x = v.X - v.Radius
+        local y = v.Y - v.Radius
         auraAuras[#auraAuras+1] = {
             X = v.X,
             Y = v.Y,
             width = 0,
             Stat = v.Stat,
-            alpha = 1
+            alpha = 1,
+            Radius = v.Radius
         }
-        while x < v.X + 4 do
-            while y < v.Y + 4 do
+        while x < v.X + v.Radius do
+            while y < v.Y + v.Radius do
                 if love.math.random(1,10) == 1 then
                     auraParticles[#auraParticles+1] = {
                         x = x*32 + 16,
@@ -65,14 +68,15 @@ function tickAuras()
                         ox = x*32 + 16,
                         stat = v.Stat,
                         alpha = 2,
-                        img =  getImgIfNotExist("assets/auras/"..v.Stat..".png")
+                        img =  getImgIfNotExist("assets/auras/"..v.Stat..".png"),
+                        Radius = v.Radius
                     }
                 
                 end
                 y = y + 1
             end
             x = x + 1
-            y = v.Y - 4
+            y = v.Y - v.Radius
         end
     end 
 end
@@ -96,11 +100,11 @@ function updateAuras(dt)
     for i,v in ipairs(auraAuras) do
      
      
-        if v.width > (32*8) then
+        if v.width > (32*(v.Radius*2)) then
             v.alpha = v.alpha - 0.7*dt
             v.width = v.width + 16*dt
         else
-            v.width = v.width + (32*8)*dt
+            v.width = v.width + (32*(v.Radius*2))*dt
             v.alpha = v.alpha - 0.4*dt
         end
         if v.alpha < 0 then
