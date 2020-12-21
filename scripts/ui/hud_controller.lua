@@ -15,7 +15,7 @@ function initHUD()
     textFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 24)
 
     smallTextFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 12)
-    playerNameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16)
+    playerNameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8)
     npcNameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8)
     headerSmallFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 16)
     headerTinyFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 6)

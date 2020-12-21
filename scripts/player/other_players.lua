@@ -96,10 +96,11 @@ function drawPlayer(v, i)
         -- local padding = 2
 
         if v.previousDirection == "left" then
-            boi = 11
+            boi = 11 + 3
         else
-            boi = 16
+            boi = 16 + 3
         end
+        -- boi = 0
 
         drawNamePlate(v.X + boi, v.Y, v.Name)
 
@@ -131,15 +132,15 @@ function drawPlayer(v, i)
 end
 
 function drawNamePlate(x,y,name)
-    love.graphics.setFont(npcNameFont)
+    love.graphics.setFont(playerNameFont)
     local thisX, thisY = x , y - 2
-    local nameWidth = npcNameFont:getWidth(name)
-    local nameHeight = npcNameFont:getHeight(name)
+    local nameWidth = playerNameFont:getWidth(name)
+    local nameHeight = playerNameFont:getHeight(name)
     local padding = 2
-    love.graphics.setColor(0, 0, 0, 0.5)
-    roundRectangle("fill", (thisX) - (nameWidth / 2) + (padding * 0.5), thisY - nameHeight - 3, nameWidth + ((padding)*2), nameHeight + (padding*2), 3)
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.print(name, (thisX) - (nameWidth * 0.5) + (padding), thisY - nameHeight - 2 + padding)
+    love.graphics.setColor(0, 0, 0, 0.6)
+    roundRectangle("fill", (thisX) - (nameWidth / 2) - (padding) - 2, thisY - nameHeight - 3, nameWidth + (padding * 2) + 3, nameHeight + (padding * 2), 3)
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.print(name, (thisX) - (nameWidth * 0.5), thisY - nameHeight - 2 + padding)
 end
 
 function updateOtherPlayers(dt)
