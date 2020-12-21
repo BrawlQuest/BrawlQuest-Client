@@ -10,6 +10,7 @@ require "scripts.effects.music"
 require "scripts.effects.sfx"
 require "scripts.effects.loot"
 require "scripts.effects.buddies"
+require "scripts.effects.auras"
 require "scripts.ui.hud_controller"
 require "scripts.ui.components.character-hub"
 require "scripts.ui.components.toolbar-inventory"
@@ -99,7 +100,7 @@ function love.draw()
         Luven.drawBegin()
 
         drawWorld()
-
+        drawAuras()
         love.graphics.setColor(1, 1, 1)
         drawNPCs()
         drawEnemies()
@@ -179,6 +180,7 @@ function love.update(dt)
         updateNPCs(dt)
         updateCharacter(dt)
         updateBones(dt)
+        updateAuras(dt)
         updateMusic(dt)
         updateLoot(dt)
         updateNPCChat(dt)
@@ -196,7 +198,7 @@ function love.update(dt)
 
             players = response['Players']
             npcs = response['NPC']
-
+            auras = response['Auras']
             if json:encode(inventoryAlpha) ~= json:encode(response['Inventory']) then
                 updateInventory(response)
                 inventoryAlpha = response['Inventory']
@@ -254,6 +256,7 @@ function tick()
     -- tickDummyEnemies()
     tickOtherPlayers()
     tickEnemies()
+    tickAuras()
     nextTick = 1
 end
 
