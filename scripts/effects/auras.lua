@@ -1,6 +1,12 @@
 auras = {}
 auraParticles = {}
 auraAuras = {} -- don't ask
+auraColors = {
+    HP = {1,0,0},
+    INT = {0,0,1},
+    LUCK = {1,1,0}
+}
+
 
 function drawAuras()
     for i,v in ipairs(auraAuras) do
@@ -38,7 +44,6 @@ function drawAuraHeadings()
         love.graphics.draw(img,x,4)
         if isMouseOver(x*scale,4*scale,32*scale,32*scale) then
             setTooltip(v.Stat, "Your "..v.Stat.." is being increased by "..v.Value.." for the next "..v.TimeLeft.." seconds")
-
         end
         x = x - 36
     end
@@ -56,7 +61,8 @@ function tickAuras()
             width = 0,
             Stat = v.Stat,
             alpha = 1,
-            Radius = v.Radius
+            Radius = v.Radius,
+            lightID =    Luven.addFlashingLight(16 + v.X * 32, 16 + v.Y * 32, auraColors[v.Stat], 2, 3)
         }
         while x < v.X + v.Radius do
             while y < v.Y + v.Radius do
@@ -108,6 +114,7 @@ function updateAuras(dt)
             v.alpha = v.alpha - 0.4*dt
         end
         if v.alpha < 0 then
+       --     Luven.removeLight(v.lightID)
             table.remove(auraAuras, i)
         else
             auraAuras[i] = v
