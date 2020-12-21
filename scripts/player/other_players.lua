@@ -91,9 +91,9 @@ function drawPlayer(v, i)
 
         love.graphics.setColor(1,1,1)
         love.graphics.setFont(playerNameFont)
-        local nameWidth = playerNameFont:getWidth(v.Name) * 0.5
-        local nameHeight = playerNameFont:getHeight(v.Name) * 0.5
-        local padding = 2
+        -- local nameWidth = playerNameFont:getWidth(v.Name) * 0.5
+        -- local nameHeight = playerNameFont:getHeight(v.Name) * 0.5
+        -- local padding = 2
 
         if v.previousDirection == "left" then
             boi = 11
@@ -101,13 +101,15 @@ function drawPlayer(v, i)
             boi = 16
         end
 
-        love.graphics.setColor(0, 0, 0, 0.6)
-        love.graphics.rectangle("fill", (v.X + boi) - (nameWidth / 2), v.Y - nameHeight - 5, nameWidth + ((padding+2)*2), nameHeight + (padding*2))
-        love.graphics.setColor(1, 1, 1)
-        love.graphics.push()
-        love.graphics.scale(0.5)
-        love.graphics.print(v.Name, ((v.X + boi) - (nameWidth / 2) + (padding+2)) * 2, (v.Y - nameHeight - 4 + padding) * 2)
-        love.graphics.pop()
+        drawNamePlate(v.X + boi, v.Y, v.Name)
+
+        -- love.graphics.setColor(0, 0, 0, 0.6)
+        -- love.graphics.rectangle("fill", (v.X + boi) - (nameWidth / 2), v.Y - nameHeight - 5, nameWidth + ((padding+2)*2), nameHeight + (padding*2))
+        -- love.graphics.setColor(1, 1, 1)
+        -- love.graphics.push()
+        -- love.graphics.scale(0.5)
+        -- love.graphics.print(v.Name, ((v.X + boi) - (nameWidth / 2) + (padding+2)) * 2, (v.Y - nameHeight - 4 + padding) * 2)
+        -- love.graphics.pop()
         
         if thisPlayer ~= nil and thisPlayer.AX then
             local diffX
@@ -134,10 +136,10 @@ function drawNamePlate(x,y,name)
     local nameWidth = npcNameFont:getWidth(name)
     local nameHeight = npcNameFont:getHeight(name)
     local padding = 2
-    love.graphics.setColor(0, 0, 0, 0.6)
-    love.graphics.rectangle("fill", (thisX) - (nameWidth / 2), thisY - nameHeight - 3, nameWidth + ((padding+2)*2), nameHeight + (padding*2))
+    love.graphics.setColor(0, 0, 0, 0.5)
+    roundRectangle("fill", (thisX) - (nameWidth / 2) + (padding * 0.5), thisY - nameHeight - 3, nameWidth + ((padding)*2), nameHeight + (padding*2), 3)
     love.graphics.setColor(1, 1, 1)
-    love.graphics.print(name, (thisX) - (nameWidth / 2) + (padding+2), thisY - nameHeight - 2 + padding)
+    love.graphics.print(name, (thisX) - (nameWidth * 0.5) + (padding), thisY - nameHeight - 2 + padding)
 end
 
 function updateOtherPlayers(dt)
