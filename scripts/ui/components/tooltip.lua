@@ -10,7 +10,10 @@ tooltip = {
 
 function setTooltip(title, desc)
     tooltip.x, tooltip.y = love.mouse.getPosition()
+
     tooltip.x = (tooltip.x + 16)/scale -- avoid getting cut off by the mouse
+   
+  
     tooltip.y = (tooltip.y + 16)/scale
     tooltip.alpha = 1
     tooltip.title = title
@@ -19,6 +22,9 @@ end
 
 function drawTooltip(thisX, thisY)
     love.graphics.setColor(0,0,0,tooltip.alpha)
+    if (tooltip.x - tooltip.padding) + (150 + (tooltip.padding*2)) > uiX then
+        tooltip.x = uiX - (150 + (tooltip.padding*2))
+    end
     love.graphics.rectangle("fill", tooltip.x - tooltip.padding,tooltip.y - tooltip.padding, 150 + (tooltip.padding*2), getToolTipTitleHeight(tooltip.title) + getToolTipDescHeight(tooltip.desc) + (tooltip.padding*2) + tooltip.spacing)
     love.graphics.setColor(1,1,1,tooltip.alpha)
     love.graphics.setFont(inventorySubHeaderFont)

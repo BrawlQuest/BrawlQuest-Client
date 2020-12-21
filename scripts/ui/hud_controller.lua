@@ -151,12 +151,13 @@ function drawHUD()
         love.graphics.scale(scale)
 
         
-        if showNPCChatBackground then drawNPCChatBackground((uiX/2)/i - 128, (uiY/2)/i - 128) end
-        drawCharacterHub(0, uiY/i)
-        drawToolBarInventory(0, uiY/i)
-        drawQuestHub(uiX/i, uiY/i)
-        if questsPanel.open then drawQuestsPanel((uiX/i) - 313, (uiY/i) + cerp(-14, 0 - ((uiY/1.25) - 15), questsPanel.amount)) end
+        if showNPCChatBackground then drawNPCChatBackground((uiX/2) - 128, (uiY/2) - 128) end
+        drawCharacterHub(0, uiY)
+        drawToolBarInventory(0, uiY)
+        drawQuestHub(uiX, uiY)
+        if questsPanel.open then drawQuestsPanel((uiX) - 313, (uiY) + cerp(-14, 0 - ((uiY/1.25) - 15), questsPanel.amount)) end
         drawTooltip()
+        drawAuraHeadings()
         
     love.graphics.pop()
 
@@ -169,7 +170,7 @@ function drawHUD()
     love.graphics.pop()
 
     love.graphics.setColor(1,1,1,1)
-    
+  
     drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
 end 
 
