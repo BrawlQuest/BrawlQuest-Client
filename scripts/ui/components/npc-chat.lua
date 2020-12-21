@@ -187,6 +187,8 @@ function initNPCChat()
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
         selectedOption = 0,
         hover = false,
+        velY = 0,
+        posY = 0,
     }
 end
 
@@ -238,6 +240,7 @@ function drawNPCChatBackground(x, y)
     love.graphics.setColor(1, 1, 1)
     love.graphics.stencil(drawNPCChatStencil, "replace", 1) -- stencils inventory
     love.graphics.setStencilTest("greater", 0) -- push
+        
         for i = -2, 2 do
             love.graphics.draw(worldImg[npcChatBackground[2]], x + (i * 128) - chatXpos, y + 78, 0, 4, 4)
         end
@@ -255,37 +258,50 @@ function drawNPCChatBackground(x, y)
         end
         love.graphics.draw(worldImg[npcChat.ImgPath], x + 128 - (chatXpos*2), y + (254 - worldImg[npcChat.ImgPath]:getWidth()*4) + 0, 0, 4, 4)
 
-        -- Clouds
-        
-            -- Draw Clouds Here
-            -- Draw Clouds Here
-            -- Draw Clouds Here
-            -- Draw Clouds Here
-            -- Draw Clouds Here
-
-            -- Testing Stuff
-            -- love.graphics.setColor(1,0,0,1)
-            -- love.graphics.rectangle("fill", 0,0,uiX,uiY)
-            
         love.graphics.setColor(1,1,1,chatOpacity)
         love.graphics.setFont(npcChatArg.font)
-        love.graphics.printf(chatWritten, x + 10, y + 10, 200, "left")
-        local ty = y + 125
+
+       
+        local ty = y + 100
         for i, v in pairs(npcChat.Options) do
             drawDialogueOption(x + 20 , ty + 0, v[1], i)
             ty = ty + getDialogueBoxHeight(v[1]) + 10
         end
 
     love.graphics.setStencilTest() -- pop
-
-    -- love.graphics.setColor(0, 0.4 + ((npcChat.reputation / 1) * 0.4), 0)
-    -- love.graphics.rectangle("fill", x + 128, y + 100, 120, smallTextFont:getHeight() + 4)
-    -- love.graphics.setColor(1, 1, 1)
-    -- love.graphics.printf("Reputation: " .. npcChat.reputation, x + 128, y + 102, 120, "center")
-
     love.graphics.setColor(1, 1, 1)
+
+    -- Scrolling the Text
+    love.graphics.stencil(drawNPCChatTextStencil, "replace", 1) -- stencils inventory
+    love.graphics.setStencilTest("greater", 0) -- push
+    local height = 0
+    if getTextHeight(chatWritten, 200, npcChatArg.font) > npcChatArg.font:getHeight() * 3 then
+        height = npcChatArg.font:getHeight() * 1
+    end
+    love.graphics.printf(chatWritten, x + 10, y + 10 - scrollNPCChatText(chatWritten) , 200, "left")
+    
+    love.graphics.setStencilTest() -- pop
+    
     love.graphics.rectangle("line", x, y, 256, 256)
-    -- drawNPCChatStencil()
+    print(npcChatArg.posY)
+end
+
+function scrollNPCChatText(text)
+    if getTextHeight(text, 200, npcChatArg.font) > npcChatArg.font:getHeight() * 4 then
+        local height = (getTextHeight(text, 200, npcChatArg.font) - (npcChatArg.font:getHeight() * 4))
+        if npcChatArg.posY < 0 then
+            npcChatArg.posY = 0
+            return height - 0
+        elseif npcChatArg.posY > height then
+            npcChatArg.posY = height
+            return height
+        else
+            return height - npcChatArg.posY
+        end
+    else 
+        npcChatArg.posY = 0
+        return 0 
+    end
 end
 
 function updateNPCChat(dt)
@@ -397,4 +413,8 @@ end
 
 function drawNPCChatStencil()
     love.graphics.rectangle("fill", (uiX/2) - 128, (uiY/2) - 128, 256, 256)
+end
+
+function drawNPCChatTextStencil()
+    love.graphics.rectangle("fill", (uiX/2) - 128, (uiY/2) - 128, 256, 78)
 end
