@@ -25,17 +25,12 @@ function drawAuraHeadings()
     love.graphics.setColor(1,1,1,1)
     local x = (uiX-36)
     for i,v in ipairs(auras) do
-        local img = getImgIfNotExist("assets/auras/"..v.Stat..".png")
-        if v.Stat == "HP" then
-            love.graphics.setColor(1,0,0,0.2)
-        elseif v.Stat == "INT" then
-            love.graphics.setColor(0,0,1,0.2)
-        end
-        love.graphics.rectangle("fill",x,4,32,32)
+        local img = getImgIfNotExist(v.Item.ImgPath)
+
         love.graphics.setColor(1,1,1)
         love.graphics.draw(img,x,4)
         if isMouseOver(x*scale,4*scale,32*scale,32*scale) then
-            setTooltip(v.Stat, "Your "..v.Stat.." is being increased by "..v.Value)
+            setTooltip(v.Item.Name, "Your "..v.Stat.." is being increased by "..v.Value)
 
         end
         x = x - 36
