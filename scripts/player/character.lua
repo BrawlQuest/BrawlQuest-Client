@@ -123,7 +123,9 @@ function movePlayer(dt)
             player.x = original[1]
             player.y = original[2]
             calculateLighting(player.x - lightRange, player.y - lightRange, player.x + lightRange, player.y + lightRange)
-            playFootstepSound(worldLookup[player.x][player.y])
+            if worldLookup[player.x]then
+                playFootstepSound(worldLookup[player.x][player.y])
+            end
         end
 
     else -- movement smoothing
