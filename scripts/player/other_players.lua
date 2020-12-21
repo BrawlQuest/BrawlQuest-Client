@@ -96,17 +96,17 @@ function drawPlayer(v, i)
         local padding = 2
 
         if v.previousDirection == "left" then
-            boi = 10
+            boi = 11
         else
             boi = 16
         end
 
         love.graphics.setColor(0, 0, 0, 0.6)
-        love.graphics.rectangle("fill", (v.X + boi) - (nameWidth / 2), v.Y - nameHeight - 3, nameWidth + ((padding+2)*2), nameHeight + (padding*2) + 1)
+        love.graphics.rectangle("fill", (v.X + boi) - (nameWidth / 2), v.Y - nameHeight - 5, nameWidth + ((padding+2)*2), nameHeight + (padding*2))
         love.graphics.setColor(1, 1, 1)
         love.graphics.push()
         love.graphics.scale(0.5)
-        love.graphics.print(v.Name, ((v.X + boi) - (nameWidth / 2) + (padding+2)) * 2, (v.Y - nameHeight - 2 + padding) * 2)
+        love.graphics.print(v.Name, ((v.X + boi) - (nameWidth / 2) + (padding+2)) * 2, (v.Y - nameHeight - 4 + padding) * 2)
         love.graphics.pop()
         
         if thisPlayer ~= nil and thisPlayer.AX then
@@ -129,14 +129,15 @@ function drawPlayer(v, i)
 end
 
 function drawNamePlate(x,y,name)
-    love.graphics.setFont(playerNameFont)
-    local nameWidth = playerNameFont:getWidth(name)
-    local nameHeight = playerNameFont:getHeight(name)
-    padding = 1
+    love.graphics.setFont(npcNameFont)
+    local thisX, thisY = x , y - 2
+    local nameWidth = npcNameFont:getWidth(name)
+    local nameHeight = npcNameFont:getHeight(name)
+    local padding = 2
     love.graphics.setColor(0, 0, 0, 0.6)
-    love.graphics.rectangle("fill", (x) - (nameWidth / 2),y- nameHeight - 3, nameWidth + ((padding+2)*2), nameHeight + (padding*2))
+    love.graphics.rectangle("fill", (thisX) - (nameWidth / 2), thisY - nameHeight - 3, nameWidth + ((padding+2)*2), nameHeight + (padding*2))
     love.graphics.setColor(1, 1, 1)
-    love.graphics.print(name, (x) - (nameWidth / 2) + (padding+2), y - nameHeight - 3 + padding)
+    love.graphics.print(name, (thisX) - (nameWidth / 2) + (padding+2), thisY - nameHeight - 2 + padding)
 end
 
 function updateOtherPlayers(dt)
