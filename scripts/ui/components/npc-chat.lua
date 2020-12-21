@@ -281,9 +281,7 @@ function drawNPCChatBackground(x, y)
     love.graphics.printf(chatWritten, x + 10, y + 10 - scrollNPCChatText(chatWritten) , 200, "left")
     
     love.graphics.setStencilTest() -- pop
-    
     love.graphics.rectangle("line", x, y, 256, 256)
-    print(npcChatArg.posY)
 end
 
 function scrollNPCChatText(text)
