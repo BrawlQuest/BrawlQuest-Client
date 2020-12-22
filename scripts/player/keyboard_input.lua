@@ -1,15 +1,3 @@
-keybinds = {
-    UP = "w",
-    DOWN = "s",
-    LEFT = "a",
-    RIGHT = "d",
-    ATTACK_UP = "up",
-    ATTACK_DOWN = "down",
-    ATTACK_LEFT = "left",
-    ATTACK_RIGHT = "right",
-    SHIELD = "lshift",
-    INTERACT = "e"
-}
 
 function love.keypressed(key) 
     if phase == "login" then
@@ -54,6 +42,10 @@ function love.keypressed(key)
             end
         elseif showNPCChatBackground then
             if key == keybinds.INTERACT or key == "escape" then showNPCChatBackground = false end
+        elseif crafting.open then
+            if key == keybinds.CRAFTING or key == "escape" then
+                crafting.open = false
+            end
         else
             -- if key == "m" then beginMounting() end
             checkTargeting()
@@ -99,6 +91,10 @@ function love.keypressed(key)
                 startConversation()
             end
 
+            if key == keybinds.CRAFTING then
+                crafting.open = true
+            end
+
             if key == "b" and buddies[player.name] ~= null then
                 print(buddies[player.name].img)
                 chatXpos = -64
@@ -128,13 +124,13 @@ function love.keypressed(key)
             end
 
             if key == "." then
-                scale = scale * 2
+                scale = scale * 1.5
                 uiX = love.graphics.getWidth()/scale -- scaling options
                 uiY = love.graphics.getHeight()/scale
             end
 
             if key == "," then
-                scale = scale * 0.5
+                scale = scale * 0.75
                 uiX = love.graphics.getWidth()/scale -- scaling options
                 uiY = love.graphics.getHeight()/scale
             end
