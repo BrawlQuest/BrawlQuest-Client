@@ -148,7 +148,7 @@ function drawHUD()
         local i = 1
         love.graphics.scale(scale)
         if showNPCChatBackground then drawNPCChatBackground((uiX/2)/i - 128, (uiY/2)/i - 128) end
-        if crafting.open then drawCrafting((uiX / 2) - (400 / 2), (uiY / 2) - (400 / 2)) end
+        if crafting.open then drawCrafting() end
         drawCharacterHub(0, uiY/i)
         drawToolBarInventory(0, uiY/i)
         drawQuestHub(uiX/i, uiY/i)

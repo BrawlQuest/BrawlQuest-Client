@@ -20,6 +20,32 @@ function setTooltip(title, desc)
     tooltip.desc = desc
 end
 
+function setItemTooltip(item)
+    love.graphics.setColor(0.6, 0.6, 0.6)
+    local valString = "Item"
+    if item.Type == "wep" then
+        valString = "+" .. item.Val .. " Weapon"
+    elseif item.Type == "arm_head" then
+        valString = "+" .. item.Val .. " Head Armour"
+    elseif item.Type == "arm_chest" then
+        valString = "+" .. item.Val .. " Chest Armour"
+    elseif item.Type == "arm_leg" then
+        valString = "+" .. item.Val .. " Leg Armour"
+    elseif item.Type == "spell" then
+        valString = "Spell (" .. item.Val .. " Mana)"
+    elseif item.Type == "hp_potion" then
+        valString = "Restores " .. item.Val .. " HP"
+    elseif item.Type == "mana_potion" then
+        valString = "Restores " .. item.Val .. " Mana"
+    elseif item.Type == "reagent" then
+        valString = "Reagent"
+    elseif item.Type == "buddy" then
+        valString = "Buddy"
+    end
+
+    setTooltip(item.Name, valString .. "\n" .. item.Desc)
+end
+
 function drawTooltip(thisX, thisY)
     love.graphics.setColor(0,0,0,tooltip.alpha)
     if (tooltip.x - tooltip.padding) + (150 + (tooltip.padding*2)) > uiX then
