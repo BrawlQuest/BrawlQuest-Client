@@ -150,7 +150,7 @@ function drawToolBarInventory(thisX, thisY)
     thisX, thisY = thisX, thisY - 97
     love.graphics.setColor(1, 1, 1, 1)
     for i = 0, 6 do
-        drawInventoryItem(thisX + 9 + (43 * i), thisY - 42, 0, toolbarItems[i + 1], i + 1)
+        drawInventoryItem(thisX + 9 + (43 * i), thisY - 42, 0, null, 1, i + 1)
     end
 
     if inventory.open then
@@ -178,64 +178,65 @@ function drawToolBarInventory(thisX, thisY)
 
 end
 
-function drawInventoryItem(thisX, thisY, field, item, number)
-    if number ~= null then
+function drawInventoryItem(thisX, thisY, field, item, amount, number)
+    if number then
         love.graphics.draw(inventory.images.itemBG, thisX, thisY)
-        if item ~= null then love.graphics.draw(item, top_left, thisX + 2, thisY + 2) end
+        if item then love.graphics.draw(item, top_left, thisX + 2, thisY + 2) end
 
         love.graphics.draw(inventory.images.numbers[number], thisX - 3, thisY + 26)
         -- love.graphics.setColor(1,1,1,1)
     else
         if isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale) and
-            isMouseOver((0) * scale, (0 + 50) * scale, 313 * scale, (uiY - 97 - 50 - 50) * scale) then
+            isMouseOver((0) * scale, (0 + 50) * scale, 313 * scale, (uiY - 97 - 50 - 50) * scale) and item then
             love.graphics.setColor(0.6, 0.6, 0.6, inventory.opacity)
             local valString = "Item"
-            if userInventory[field][item].Item.Type == "wep" then
-                valString = "+" .. userInventory[field][item].Item.Val .. " Weapon"
-            elseif userInventory[field][item].Item.Type == "arm_head" then
-                valString = "+" .. userInventory[field][item].Item.Val .. " Head Armour"
-            elseif userInventory[field][item].Item.Type == "arm_chest" then
-                valString = "+" .. userInventory[field][item].Item.Val .. " Chest Armour"
-            elseif userInventory[field][item].Item.Type == "arm_leg" then
-                valString = "+" .. userInventory[field][item].Item.Val .. " Leg Armour"
-            elseif userInventory[field][item].Item.Type == "spell" then
-                valString = "Spell (" .. userInventory[field][item].Item.Val .. " Mana)"
-            elseif userInventory[field][item].Item.Type == "hp_potion" then
-                valString = "Restores " .. userInventory[field][item].Item.Val .. " HP"
-            elseif userInventory[field][item].Item.Type == "mana_potion" then
-                valString = "Restores " .. userInventory[field][item].Item.Val .. " Mana"
-            elseif userInventory[field][item].Item.Type == "reagent" then
+            if item.Type == "wep" then
+                valString = "+" .. item.Val .. " Weapon"
+            elseif item.Type == "arm_head" then
+                valString = "+" .. item.Val .. " Head Armour"
+            elseif item.Type == "arm_chest" then
+                valString = "+" .. item.Val .. " Chest Armour"
+            elseif item.Type == "arm_leg" then
+                valString = "+" .. item.Val .. " Leg Armour"
+            elseif item.Type == "spell" then
+                valString = "Spell (" .. item.Val .. " Mana)"
+            elseif item.Type == "hp_potion" then
+                valString = "Restores " .. item.Val .. " HP"
+            elseif item.Type == "mana_potion" then
+                valString = "Restores " .. item.Val .. " Mana"
+            elseif item.Type == "reagent" then
                 valString = "Reagent"
-            elseif userInventory[field][item].Item.Type == "buddy" then
+            elseif item.Type == "buddy" then
                 valString = "Buddy"
             end
 
-            setTooltip(userInventory[field][item].Item.Name, valString .. "\n" .. userInventory[field][item].Item.Desc)
-            selectedItem = userInventory[field][item].Item
+            setTooltip(item.Name, valString .. "\n" .. item.Desc)
+            selectedItem = item
         end
       
         love.graphics.draw(inventory.images.itemBG, thisX, thisY)
-        if string.sub(userInventory[field][item].Item.Type, 1, 4) == "arm_" then
-            love.graphics.setColor(1, 1, 1, inventory.opacity * 0.5)
-            love.graphics.draw(playerImg, thisX + 2, thisY + 2)
+
+        if item then
+            if string.sub(item.Type, 1, 4) == "arm_" then
+                love.graphics.setColor(1, 1, 1, inventory.opacity * 0.5)
+                love.graphics.draw(playerImg, thisX + 2, thisY + 2)
+                love.graphics.setColor(1, 1, 1, inventory.opacity)
+            end
             love.graphics.setColor(1, 1, 1, inventory.opacity)
-        end
-        love.graphics.setColor(1, 1, 1, inventory.opacity)
-        if inventory.usedItemThisTick then
-            love.graphics.setColor(1,1,1,0.4)
-        end
-        if itemImg[userInventory[field][item].Item.ImgPath]:getWidth() <= 32 and
-            itemImg[userInventory[field][item].Item.ImgPath]:getHeight() <= 32 then
-            love.graphics.draw(itemImg[userInventory[field][item].Item.ImgPath],
-                thisX + 18 - (itemImg[userInventory[field][item].Item.ImgPath]:getWidth() / 2),
-                thisY + 18 - (itemImg[userInventory[field][item].Item.ImgPath]:getHeight() / 2))
-        else
-            love.graphics.draw(itemImg[userInventory[field][item].Item.ImgPath], thisX + 2, thisY + 2) -- Item
+            if inventory.usedItemThisTick then
+                love.graphics.setColor(1,1,1,0.4)
+            end
+            if itemImg[item.ImgPath]:getWidth() <= 32 and
+                itemImg[item.ImgPath]:getHeight() <= 32 then
+                love.graphics.draw(itemImg[item.ImgPath],
+                    thisX + 18 - (itemImg[item.ImgPath]:getWidth() / 2),
+                    thisY + 18 - (itemImg[item.ImgPath]:getHeight() / 2))
+            else
+                love.graphics.draw(itemImg[item.ImgPath], thisX + 2, thisY + 2) -- Item
+            end
         end
 
-        local amount = userInventory[field][item].Inventory.Amount
-
-        if amount > 1 then
+        if amount and amount > 1 then
             if amount <= 9 then
                 inventory.imageNumber = 1
             elseif amount > 9 and amount <= 99 then
@@ -260,20 +261,22 @@ function drawInventoryItemField(thisX, thisY, field)
     love.graphics.printf(inventory.fields[field], thisX + 2, thisY + 2, 483)
     love.graphics.setFont(inventory.itemFont)
     thisY = thisY + inventory.titleSpacing
+
     local itemWidth = 7
     for i = 1, #userInventory[field] do
+      
         if i <= 7 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 0), field, i)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 0), field, userInventory[field][i].Item, userInventory[field][i].Inventory.Amount)
         elseif i > 7 and i <= 14 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 1), field, i)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 1), field, userInventory[field][i].Item, userInventory[field][i].Inventory.Amount)
         elseif i > 14 and i <= 21 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 2), field, i)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 2), field, userInventory[field][i].Item, userInventory[field][i].Inventory.Amount)
         elseif i > 21 and i <= 28 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 3), field, i)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 3), field, userInventory[field][i].Item, userInventory[field][i].Inventory.Amount)
         elseif i > 28 and i <= 35 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 4), field, i)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 4), field, userInventory[field][i].Item, userInventory[field][i].Inventory.Amount)
         else
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 5), field, i)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 5), field, userInventory[field][i].Item, userInventory[field][i].Inventory.Amount)
         end
     end
 end
