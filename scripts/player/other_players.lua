@@ -164,9 +164,11 @@ function updateOtherPlayers(dt)
             love.audio.play(playerHitSfx)
         end
 
-        playersDrawable[i].RedAlpha = playersDrawable[i].RedAlpha - 1*dt
-        if playersDrawable[i].RedAlpha < 0 then
-            playersDrawable[i].RedAlpha = 0
+        if playersDrawable[i].RedAlpha then
+            playersDrawable[i].RedAlpha = playersDrawable[i].RedAlpha - 1*dt
+            if playersDrawable[i].RedAlpha < 0 then
+                playersDrawable[i].RedAlpha = 0
+            end
         end
         
 
