@@ -104,6 +104,7 @@ function initHUD()
     initToolBarInventory()
     initQuestHub()
     initNPCChat()
+    initCrafting()
 end
 
 function updateHUD( dt )
@@ -127,6 +128,7 @@ function updateHUD( dt )
     updateToolBarInventory(dt)
     updateCharacterHub(dt)
     updateQuestHub(dt)
+    updateCrafting(dt)
 
     if chatCursor.i < chatCursor.speed then
         chatCursor.i = chatCursor.i + 1
@@ -146,6 +148,7 @@ function drawHUD()
         local i = 1
         love.graphics.scale(scale)
         if showNPCChatBackground then drawNPCChatBackground((uiX/2)/i - 128, (uiY/2)/i - 128) end
+        if crafting.open then drawCrafting((uiX / 2) - (400 / 2), (uiY / 2) - (400 / 2)) end
         drawCharacterHub(0, uiY/i)
         drawToolBarInventory(0, uiY/i)
         drawQuestHub(uiX/i, uiY/i)

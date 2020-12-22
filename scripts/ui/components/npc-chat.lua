@@ -345,8 +345,6 @@ function updateNPCChat(dt)
         end
         chatXpos = 0
     end
-
-   
 end
 
 function drawDialogueOption(x, y, text, i)
