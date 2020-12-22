@@ -7,21 +7,35 @@ function initCrafting()
         craftableItems = {
             {
                 item = a0sword,
-                random = {X = math.random()*100, Y = math.random()*100},
                 chance = 90,
                 amount = 1,
             },
             {
                 item = a0sword,
-                random = {X = math.random()*100, Y = math.random()*100},
                 chance = 90,
                 amount = 1,
             },
             {
                 item = a0sword,
-                random = {X = math.random()*100, Y = math.random()*100},
                 chance = 90,
                 amount = 1,
+            },
+        },
+        enteredItems = {
+            {
+                item = a0sword,
+                random = {X = math.random()*100, Y = math.random()*100},
+                amount = 1,
+            },
+            {
+                item = a0sword,
+                random = {X = math.random()*100, Y = math.random()*100},
+                amount = 3,
+            },
+            {
+                item = a0sword,
+                random = {X = math.random()*100, Y = math.random()*100},
+                amount = 5,
             },
         },
         percentFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
@@ -57,8 +71,22 @@ function drawCraftingBackground(thisX, thisY)
 
     for i = 1 , #crafting.craftableItems do
         drawCraftingItem(thisX + 10, thisY + 50 + (45 * (i - 1)), crafting.craftableItems[i].item, crafting.craftableItems[i].amount, crafting.craftableItems[i].chance)
-        love.graphics.draw(a0sword ,thisX + 100 + crafting.craftableItems[i].random.X, thisY + 180 + crafting.craftableItems[i].random.Y, 0, 4, 2)
     end
+
+    for i = 1, #crafting.enteredItems do
+        drawCraftingItem(thisX + 10 + (45 * (i - 1)), thisY + 355 , crafting.enteredItems[i].item, crafting.enteredItems[i].amount)
+        love.graphics.draw(crafting.enteredItems[i].item, thisX + 100 + crafting.enteredItems[i].random.X, thisY + 180 + crafting.enteredItems[i].random.Y, 0, 4, 2)
+    end
+
+    drawCraftingButton(thisX + 10, thisY + 300, "Craft")
+end
+
+function drawCraftingButton(thisX, thisY, title)
+    roundRectangle("fill", thisX, thisY, 120, 36, 5)
+    love.graphics.setColor(0,0,0,1)
+    love.graphics.setFont(inventory.font)
+    love.graphics.printf(title, thisX, thisY + 5, 120, "center")
+    love.graphics.setColor(1,1,1,1)
 end
 
 function drawCraftingItem(thisX, thisY, item, amount, chance)
@@ -66,7 +94,8 @@ function drawCraftingItem(thisX, thisY, item, amount, chance)
     if item ~= null then love.graphics.draw(item, top_left, thisX + 2, thisY + 2) end
     
     love.graphics.setFont(crafting.percentFont)
-    love.graphics.print(chance .. "%", thisX + 45 , thisY + 11)
+
+    if chance ~= null then love.graphics.print(chance .. "%", thisX + 45 , thisY + 11) end
     
     love.graphics.setFont(inventory.itemFont)
     if amount > 1 then
