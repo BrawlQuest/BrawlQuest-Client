@@ -23,7 +23,6 @@ function initQuestHub()
         },
     }
 
-    
     quests = {
         -- {Tracking = {}, Backlog = {}, Completed = {},}
         {
@@ -247,3 +246,4 @@ function getQuestHubTextHeight(text, width)
 	local width, lines = questHub.titleFont:getWrap(text, width)
  	return ((#lines)*(questHub.titleFont:getHeight()))+2
 end
+

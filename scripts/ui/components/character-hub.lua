@@ -58,6 +58,7 @@ function drawCharacterHub(thisX, thisY)
         end  
         thisX = thisX + cerp(0, hubImages.statsBG:getWidth(), characterHub.amount)
         drawCharacterHubMeters(thisX, thisY)
+        if me.Weapon ~= null then drawBattlebarItem(thisX + 231 + 10, thisY + 97 - 10 - battlebarItemBg:getHeight(), itemImg[me.Weapon.ImgPath], "+"..me.Weapon.Val) end
     end
 end
 
@@ -147,4 +148,12 @@ end
 
 function getSTA(i)
     if i == 0 then return 15 * me.STA else return 0 end
+end
+
+function drawBattlebarItem(thisX, thisY, item, stats)
+    love.graphics.draw(battlebarItemBg, thisX, thisY)
+    love.graphics.draw(item, thisX+1, thisY+1)
+    love.graphics.setFont(headerSmallFont)
+    love.graphics.print(stats, thisX+(battlebarItemBg:getWidth()/2)-(font:getWidth(stats)/2), thisY+32)
+    love.graphics.setFont(headerFont)
 end
