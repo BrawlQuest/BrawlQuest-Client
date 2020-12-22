@@ -33,7 +33,7 @@ function updateCrafting(dt)
                 if crafting.whiteout > 1 then
                     crafting.hammerDown = 1
                     crafting.isCrafting = false
-                    crafting.whiteout = 1
+                    crafting.whiteout = 1.25
                     local itemsSoFar = {}
                     for i,v in ipairs(crafting.enteredItems) do
                         itemsSoFar[#itemsSoFar+1] = {

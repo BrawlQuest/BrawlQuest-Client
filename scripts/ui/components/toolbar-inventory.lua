@@ -194,7 +194,7 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
       
         love.graphics.draw(inventory.images.itemBG, thisX, thisY)
 
-        if item then
+        if item and itemImg[item.ImgPath] then
             if string.sub(item.Type, 1, 4) == "arm_" then
              
                 love.graphics.draw(playerImg, thisX + 2, thisY + 2)
