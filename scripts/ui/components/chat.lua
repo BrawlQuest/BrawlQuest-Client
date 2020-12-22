@@ -178,10 +178,10 @@ function drawEnterChatBox(thisX, thisY, text)
 	
 	if isTypingInChat then love.graphics.setColor(0,0,0,1) else love.graphics.setColor(1,1,1,1) end
 
-	love.graphics.printf(text, thisX+chatCorner:getHeight(), thisY+chatCorner:getHeight(), enterChatWidth, "right")
+	love.graphics.printf(text, thisX+chatCorner:getHeight(), thisY+chatCorner:getHeight(), enterChatWidth, "left")
 	love.graphics.setColor(1,1,1,1)
 	if not isTypingInChat and text == "" then
-		love.graphics.printf("Press Enter to Chat", thisX+chatCorner:getHeight(), thisY+chatCorner:getHeight(), enterChatWidth, "right")
+		love.graphics.printf("Press Enter to Chat", thisX+chatCorner:getHeight(), thisY+chatCorner:getHeight(), enterChatWidth, "left")
 	end
 end
 

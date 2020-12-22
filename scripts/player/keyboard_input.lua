@@ -20,25 +20,8 @@ function love.keypressed(key)
         elseif loginPhase == "characters" then
             checkLoginKeyPressedPhaseCharacters(key)
         end
+        if key == "escape" then love.event.quit() end
     else
-        if key == "q" then love.event.quit() end
-        if key == "b" and buddies[player.name] ~= null then
-            print(buddies[player.name].img)
-            chatXpos = -64
-            chatOpacity = 0
-            chatWritten = ""
-            npcChat = {
-                Title = ":)",
-                ImgPath = buddies[player.name].img,
-                Options = {
-                    {
-                        "Woohoo!",
-                        "1"
-                    },
-                }
-            }
-            showNPCChatBackground = true
-        end
         if isWorldEditWindowOpen then
             if key == "backspace" then
                 textfields[editingField] = string.sub(textfields[editingField], 1, string.len(textfields[editingField]) - 1)
@@ -56,6 +39,7 @@ function love.keypressed(key)
             if key == "backspace" then
                 enteredChatText = string.sub( enteredChatText, 1, string.len( enteredChatText) - 1)
             elseif key == "return" and enteredChatText ~= "" then
+                posYChat = 0
                 chatData = {
                     ["PlayerName"] = me.Name,
                     ["Channel"] = "Global",
@@ -114,17 +98,46 @@ function love.keypressed(key)
             elseif key == keybinds.INTERACT then
                 startConversation()
             end
-        end
-        if key == "." then
-            scale = scale * 1.25
-            uiX = love.graphics.getWidth()/scale -- scaling options
-            uiY = love.graphics.getHeight()/scale
-        end
 
-        if key == "," then
-            scale = scale / 1.25
-            uiX = love.graphics.getWidth()/scale -- scaling options
-            uiY = love.graphics.getHeight()/scale
+            if key == "b" and buddies[player.name] ~= null then
+                print(buddies[player.name].img)
+                chatXpos = -64
+                chatOpacity = 0
+                chatWritten = ""
+                npcChat = {
+                    Title = ":)",
+                    ImgPath = buddies[player.name].img,
+                    Options = {
+                        {
+                            "Woohoo!",
+                            "1"
+                        },
+                    }
+                }
+                showNPCChatBackground = true
+            end
+        end
+        
+        if not isTypingInChat then
+            if key == "l" then
+                worldScale = worldScale * 0.5
+            end
+            
+            if key == ";" then
+                worldScale = worldScale * 2
+            end
+
+            if key == "." then
+                scale = scale * 2
+                uiX = love.graphics.getWidth()/scale -- scaling options
+                uiY = love.graphics.getHeight()/scale
+            end
+
+            if key == "," then
+                scale = scale * 0.5
+                uiX = love.graphics.getWidth()/scale -- scaling options
+                uiY = love.graphics.getHeight()/scale
+            end
         end
     end
 end
