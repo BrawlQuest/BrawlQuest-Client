@@ -29,7 +29,9 @@ player = {
         stepSndPlay = 0.3
     },
     walk = 0,
-    cp = 0
+    cp = 0,
+    distance = 0,
+    direction = {x = 0, y = 0},
 }
 
 newInventoryItems = {}
@@ -157,10 +159,10 @@ function movePlayer(dt)
             player.dy = player.y * 32
         end
 
-        if distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) < 1 then -- snap to final position
-            player.dx = player.x * 32
-            player.dy = player.y * 32
-        end
+        -- if distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) < 1 then -- snap to final position
+        --     player.dx = player.x * 32
+        --     player.dy = player.y * 32
+        -- end
     end
 
 end
