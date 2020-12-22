@@ -360,3 +360,8 @@ function getDrawableWater(tileName, x, y)
 
     return "assets/world/water/"  .. assetName
 end
+
+function isNearbyTile(name)
+    return worldLookup and worldLookup[player.x] and worldLookup[player.x+1] and worldLookup[player.x-1] and worldLookup[player.x+1][player.y] and worldLookup[player.x-1][player.y] and worldLookup[player.x][player.y+1] and worldLookup[player.x][player.y-1] and (worldLookup[player.x+1][player.y].ForegroundTile == name or worldLookup[player.x-1][player.y].ForegroundTile == name or  worldLookup[player.x][player.y+1].ForegroundTile == name or  worldLookup[player.x][player.y-1].ForegroundTile == name)
+          
+end

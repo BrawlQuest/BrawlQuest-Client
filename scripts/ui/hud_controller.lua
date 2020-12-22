@@ -169,3 +169,10 @@ function drawHUD()
     drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
 end 
 
+function drawTextBelowPlayer(text)
+    love.graphics.setFont(smallTextFont)
+    love.graphics.setColor(0,0,0)
+    love.graphics.rectangle("fill",love.graphics.getWidth()/2-smallTextFont:getWidth(text)/2,love.graphics.getHeight()/2+38,smallTextFont:getWidth(text),smallTextFont:getHeight())
+    love.graphics.setColor(1,1,1)
+    love.graphics.print(text,love.graphics.getWidth()/2-smallTextFont:getWidth(text)/2,love.graphics.getHeight()/2+38)
+end

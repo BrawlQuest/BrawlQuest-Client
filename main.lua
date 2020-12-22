@@ -121,12 +121,11 @@ function love.draw()
 
         for i,v in ipairs(npcs) do
             if distanceToPoint(player.x,player.y,v.X,v.Y) <= 1 and not showNPCChatBackground  and v.Conversation ~= "" then
-                love.graphics.setFont(smallTextFont)
-                love.graphics.setColor(0,0,0)
-                love.graphics.rectangle("fill",love.graphics.getWidth()/2-smallTextFont:getWidth("Press E to talk")/2,love.graphics.getHeight()/2+38,smallTextFont:getWidth("Press E to talk"),smallTextFont:getHeight())
-                love.graphics.setColor(1,1,1)
-                love.graphics.print("Press E to talk",love.graphics.getWidth()/2-smallTextFont:getWidth("Press E to talk")/2,love.graphics.getHeight()/2+38)
+              drawTextBelowPlayer("Press "..keybinds.INTERACT.." to talk")
             end
+        end
+
+        if isNearbyTile("assets/world/objects/Anvil.png") then  drawTextBelowPlayer("Press "..keybinds.INTERACT.." to craft")
         end
        
              Luven.camera:draw()
