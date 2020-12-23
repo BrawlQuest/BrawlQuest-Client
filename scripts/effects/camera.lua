@@ -2,7 +2,7 @@ function initCamera()
     camera = {
         X = player.dx,
         Y = player.dy,
-        lookingDistance = {x = 32 * 1.5, y = 32},
+        lookingDistance = {x = 32 * 2, y = 32 * 2},
         smoothing = true,
         lookahead = true,
     }
@@ -12,20 +12,34 @@ function updateCamera(dt)
     local speed = {}
 
     if love.keyboard.isDown(keybinds.UP) then
-        player.direction.y = -1
+        player.direction.y = player.direction.y - 1 * dt
+        if player.direction.y < -1 then player.direction.y = -1 end
     elseif love.keyboard.isDown(keybinds.DOWN) then
-        player.direction.y = 1
-    -- else
-    --     player.direction.y = 0
+        player.direction.y = player.direction.y + 1 * dt
+        if player.direction.y > 1 then player.direction.y = 1 end
+    else
+        if  player.direction.y > 0.01 then
+            player.direction.y = player.direction.y - 1 * dt
+        elseif player.direction.y < -0.01 then
+            player.direction.y = player.direction.y + 1 * dt
+        end
     end
 
     if love.keyboard.isDown(keybinds.LEFT) then
-        player.direction.x = -1
+        player.direction.x = player.direction.x - 1 * dt
+        if player.direction.x < -1 then player.direction.x = -1 end
     elseif love.keyboard.isDown(keybinds.RIGHT) then
-        player.direction.x = 1
+        player.direction.x = player.direction.x + 1 * dt
+        if player.direction.x > 1 then player.direction.x = 1 end
     else
-        player.direction.x = 0
+        if  player.direction.x > 0.01 then
+            player.direction.x = player.direction.x - 1 * dt
+        elseif player.direction.x < -0.01 then
+            player.direction.x = player.direction.x + 1 * dt
+        end
     end
+
+    -- print( player.direction.x .. " " .. player.direction.y)
 
     if camera.lookahead then
         if player.target.active then
