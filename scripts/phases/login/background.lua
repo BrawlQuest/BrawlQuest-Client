@@ -15,7 +15,7 @@ function initLoginBackground()
     cloudImg = love.graphics.newImage("assets/ui/login/cloud.png")
     mountainImg = love.graphics.newImage("assets/ui/login/mountain.png")
     loginTreeImg = love.graphics.newImage("assets/ui/login/tree.png")
-    groundImg = love.graphics.newImage("assets/world/grounds/grass/grass08.png")
+    groundImg = love.graphics.newImage("assets/world/grounds/snow.png")
     monsterImgs ={
         love.graphics.newImage("assets/ui/login/monsters/1.png"),
         love.graphics.newImage("assets/ui/login/monsters/2.png"),
