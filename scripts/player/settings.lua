@@ -91,6 +91,7 @@ end
 function drawSettingsPanel(thisX, thisY)
     if isSettingsWindowOpen then
         thisX, thisY = thisX - (questPopUpWidth/2), thisY - (questPopUpHeight/2)
+        love.graphics.setColor(0,0,0,0.7)
         roundRectangle("fill", thisX, thisY, questPopUpWidth, questPopUpHeight, 10)
         love.graphics.setColor(1,1,1,1)
         local padding = 20
