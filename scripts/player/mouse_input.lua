@@ -8,6 +8,7 @@ function love.mousepressed(x, y, button)
         checkInventoryMousePressed()
         checkSettingsMousePressed(button)
         checkStatsMousePressed(button)
+        if crafting.open then checkCraftingMousePressed(button) end
         if showNPCChatBackground then
         checkNPCChatMousePressed(button)
         end

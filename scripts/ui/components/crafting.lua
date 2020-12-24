@@ -1,42 +1,22 @@
+
+
 function initCrafting()
     crafting = {
         open = false,
         anvil = love.graphics.newImage("assets/world/objects/Anvil.png"),
         hammer = love.graphics.newImage("assets/ui/hud/crafting/hammer.png"),
         hammerShake = 0,
+        hammerDown = 1,
+        hammerY = 0,
+        isCrafting = false,
+        sfx = love.audio.newSource("assets/sfx/player/actions/anvil.ogg", "static"),
+        swing = love.audio.newSource("assets/sfx/player/actions/swing.wav", "static"),
+        whiteout = 0,
         craftableItems = {
-            {
-                item = a0sword,
-                chance = 90,
-                amount = 1,
-            },
-            {
-                item = a0sword,
-                chance = 90,
-                amount = 1,
-            },
-            {
-                item = a0sword,
-                chance = 90,
-                amount = 1,
-            },
+          
         },
         enteredItems = {
-            {
-                item = a0sword,
-                random = {X = math.random()*100, Y = math.random()*100},
-                amount = 1,
-            },
-            {
-                item = a0sword,
-                random = {X = math.random()*100, Y = math.random()*100},
-                amount = 3,
-            },
-            {
-                item = a0sword,
-                random = {X = math.random()*100, Y = math.random()*100},
-                amount = 5,
-            },
+         
         },
         percentFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
     }
@@ -44,14 +24,52 @@ end
 
 function updateCrafting(dt)
     if crafting.open then
-        crafting.hammerShake = crafting.hammerShake + (1 * dt)
-        if crafting.hammerShake > 2 then
-            crafting.hammerShake = 0
+        if crafting.isCrafting then
+            
+            if crafting.hammerDown < 0 then
+                crafting.whiteout = crafting.whiteout + 20*dt
+                crafting.sfx:setPitch(love.math.random(50,100)/100)
+                love.audio.play(crafting.sfx)
+                if crafting.whiteout > 1 then
+                    crafting.hammerDown = 1
+                    crafting.isCrafting = false
+                    crafting.whiteout = 1.25
+                    local itemsSoFar = {}
+                    for i,v in ipairs(crafting.enteredItems) do
+                        itemsSoFar[#itemsSoFar+1] = {
+                            ItemID = v.item.ID,
+                            Amount = v.amount
+                        }
+                    end
+                    local b = {}
+                    body = json:encode(itemsSoFar)
+                    c, h = http.request{url = api.url.."/craft/"..player.name, method="POST", source=ltn12.source.string(body), headers={["token"]=token,["Content-Length"]=#body}, sink=ltn12.sink.table(b)}
+                    if json:decode(b[1])["success"] == null then
+                        crafting.result = json:decode(b[1])
+                    else
+                        crafting.result = null
+                    end
+                  
+                    crafting.enteredItems = {}
+                    crafting.craftableItems = {}
+                 
+                end
+            else
+                crafting.hammerDown = crafting.hammerDown - 2* dt
+            end
+        else
+            crafting.whiteout = crafting.whiteout - 1*dt
+            crafting.hammerShake = crafting.hammerShake + 1 * dt
         end
+            if crafting.hammerShake > 2 then
+                crafting.hammerShake = 0
+            end
+        
     end
 end
 
-function drawCrafting(thisX, thisY)
+function drawCrafting()
+    thisX, thisY = (uiX / 2) - (400 / 2), (uiY / 2) - (400 / 2)
     love.graphics.setColor(0,0,0,0.5)
     roundRectangle("fill", thisX, thisY, 400, 400, 10)
     love.graphics.setColor(1,1,1,1)
@@ -63,22 +81,42 @@ end
 
 function drawCraftingBackground(thisX, thisY)
 
+    if crafting.result then
+       -- drawInventoryItem(thisX + 200, thisY+200, 0, crafting.result,1)
+       if isMouseOver((thisX+160) * scale,(thisY+160)*scale,128*scale,128*scale) then
+            setItemTooltip(crafting.result)
+       end
+        love.graphics.draw(getImgIfNotExist(crafting.result.ImgPath),thisX+160,thisY+160,0,4,4)
+    end
+
+    if isMouseOver((thisX+100)* scale, (thisY + 270) * scale, (crafting.anvil:getWidth()*7)*scale, (crafting.anvil:getHeight()*7)*scale) then
+        love.graphics.setColor(0.6,0.6,0.6)
+    end
     love.graphics.draw(crafting.anvil, thisX + 100, thisY + 270, 0, 7)
-    love.graphics.draw(crafting.hammer, thisX + 470, thisY + 300, cerp(-0.01, 0.01, crafting.hammerShake), -10)
+    love.graphics.setColor(1,1,1)
+
+        love.graphics.draw(crafting.hammer, thisX + 490, thisY + 300 - crafting.hammerY, cerp(-0.01, 0.01, crafting.hammerShake) + cerp(-0.6,0.01, crafting.hammerDown), -10)
+  
 
     love.graphics.setFont(inventory.headerFont)
     love.graphics.print("Crafting", thisX + 10 , thisY + 7)
 
-    for i = 1 , #crafting.craftableItems do
-        drawCraftingItem(thisX + 10, thisY + 50 + (45 * (i - 1)), crafting.craftableItems[i].item, crafting.craftableItems[i].amount, crafting.craftableItems[i].chance)
+    for i,v in ipairs(crafting.craftableItems) do
+        drawInventoryItem(thisX + 10, thisY + 50 + (45 * (i - 1)), 0, v.Item, 1)
+        love.graphics.setFont(inventory.font)
+        if v.Chance then
+            love.graphics.print(v.Chance.. "%", thisX + 50 ,  thisY + 60 + (45 * (i - 1)))
+        end
     end
 
     for i = 1, #crafting.enteredItems do
-        drawCraftingItem(thisX + 10 + (45 * (i - 1)), thisY + 355 , crafting.enteredItems[i].item, crafting.enteredItems[i].amount)
-        love.graphics.draw(crafting.enteredItems[i].item, thisX + 100 + crafting.enteredItems[i].random.X, thisY + 180 + crafting.enteredItems[i].random.Y, 0, 4, 2)
+        drawInventoryItem(thisX + 10 + (45 * (i - 1)), thisY + 355, 0, crafting.enteredItems[i].item, crafting.enteredItems[i].amount)
     end
 
-    drawCraftingButton(thisX + 10, thisY + 300, "Craft")
+
+    
+    love.graphics.setColor(1,1,1,crafting.whiteout)
+    love.graphics.rectangle("fill",thisX,thisY,400,400)
 end
 
 function drawCraftingButton(thisX, thisY, title)
@@ -89,35 +127,18 @@ function drawCraftingButton(thisX, thisY, title)
     love.graphics.setColor(1,1,1,1)
 end
 
-function drawCraftingItem(thisX, thisY, item, amount, chance)
-    love.graphics.draw(inventory.images.itemBG, thisX, thisY)
-    if item ~= null then love.graphics.draw(item, top_left, thisX + 2, thisY + 2) end
-    
-    love.graphics.setFont(crafting.percentFont)
-
-    if chance ~= null then love.graphics.print(chance .. "%", thisX + 45 , thisY + 11) end
-    
-    love.graphics.setFont(inventory.itemFont)
-    if amount > 1 then
-        if amount <= 9 then
-            inventory.imageNumber = 1
-        elseif amount > 9 and amount <= 99 then
-            inventory.imageNumber = 2
-        elseif amount > 99 and amount <= 999 then
-            inventory.imageNumber = 3
-        else
-            inventory.imageNumber = 4
-        end
-        thisX, thisY = thisX + 39 - inventory.images.numberBg[inventory.imageNumber]:getWidth(),
-            thisY + 39 - inventory.images.numberBg[inventory.imageNumber]:getHeight()
-        love.graphics.draw(inventory.images.numberBg[inventory.imageNumber], thisX, thisY)
-        love.graphics.setColor(0, 0, 0, 1)
-        love.graphics.print(amount, thisX + 5, thisY + 4)
-        love.graphics.setColor(1, 1, 1, 1)
-    end
-end
-
 function drawCraftingStencil()
     roundRectangle("fill", (uiX / 2) - (400 / 2), (uiY / 2) - (400 / 2), 400, 400, 10)
+end
+
+function checkCraftingMousePressed(button)
+    thisX, thisY = (uiX / 2) - (400 / 2), (uiY / 2) - (400 / 2)
+    if isMouseOver((thisX+100)* scale, (thisY + 270) * scale, (crafting.anvil:getWidth()*7)*scale, (crafting.anvil:getHeight()*7)*scale) then
+        crafting.isCrafting = true
+        crafting.whiteout = 0
+        love.audio.stop(crafting.swing)
+        crafting.swing:setPitch(love.math.random(30,80)/100)
+        love.audio.play(crafting.swing)
+    end
 end
 

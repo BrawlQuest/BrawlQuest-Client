@@ -150,7 +150,7 @@ function drawToolBarInventory(thisX, thisY)
     thisX, thisY = thisX, thisY - 97
     love.graphics.setColor(1, 1, 1, 1)
     for i = 0, 6 do
-        drawInventoryItem(thisX + 9 + (43 * i), thisY - 42, 0, toolbarItems[i + 1], i + 1)
+        drawInventoryItem(thisX + 9 + (43 * i), thisY - 42, 0, null, 1, i + 1)
     end
 
     if inventory.open then
@@ -178,64 +178,43 @@ function drawToolBarInventory(thisX, thisY)
 
 end
 
-function drawInventoryItem(thisX, thisY, field, item, number)
-    if number ~= null then
+function drawInventoryItem(thisX, thisY, field, item, amount, number)
+    love.graphics.setFont(inventory.itemFont)
+    if number then
         love.graphics.draw(inventory.images.itemBG, thisX, thisY)
-        if item ~= null then love.graphics.draw(item, top_left, thisX + 2, thisY + 2) end
+        if item then love.graphics.draw(item, top_left, thisX + 2, thisY + 2) end
 
         love.graphics.draw(inventory.images.numbers[number], thisX - 3, thisY + 26)
         -- love.graphics.setColor(1,1,1,1)
     else
-        if isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale) and
-            isMouseOver((0) * scale, (0 + 50) * scale, 313 * scale, (uiY - 97 - 50 - 50) * scale) then
-            love.graphics.setColor(0.6, 0.6, 0.6, inventory.opacity)
-            local valString = "Item"
-            if userInventory[field][item].Item.Type == "wep" then
-                valString = "+" .. userInventory[field][item].Item.Val .. " Weapon"
-            elseif userInventory[field][item].Item.Type == "arm_head" then
-                valString = "+" .. userInventory[field][item].Item.Val .. " Head Armour"
-            elseif userInventory[field][item].Item.Type == "arm_chest" then
-                valString = "+" .. userInventory[field][item].Item.Val .. " Chest Armour"
-            elseif userInventory[field][item].Item.Type == "arm_leg" then
-                valString = "+" .. userInventory[field][item].Item.Val .. " Leg Armour"
-            elseif userInventory[field][item].Item.Type == "spell" then
-                valString = "Spell (" .. userInventory[field][item].Item.Val .. " Mana)"
-            elseif userInventory[field][item].Item.Type == "hp_potion" then
-                valString = "Restores " .. userInventory[field][item].Item.Val .. " HP"
-            elseif userInventory[field][item].Item.Type == "mana_potion" then
-                valString = "Restores " .. userInventory[field][item].Item.Val .. " Mana"
-            elseif userInventory[field][item].Item.Type == "reagent" then
-                valString = "Reagent"
-            elseif userInventory[field][item].Item.Type == "buddy" then
-                valString = "Buddy"
-            end
-
-            setTooltip(userInventory[field][item].Item.Name, valString .. "\n" .. userInventory[field][item].Item.Desc)
-            selectedItem = userInventory[field][item].Item
+        if isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale) and item then
+            setItemTooltip(item)
+            selectedItem = item
         end
       
         love.graphics.draw(inventory.images.itemBG, thisX, thisY)
-        if string.sub(userInventory[field][item].Item.Type, 1, 4) == "arm_" then
-            love.graphics.setColor(1, 1, 1, inventory.opacity * 0.5)
-            love.graphics.draw(playerImg, thisX + 2, thisY + 2)
-            love.graphics.setColor(1, 1, 1, inventory.opacity)
-        end
-        love.graphics.setColor(1, 1, 1, inventory.opacity)
-        if inventory.usedItemThisTick then
-            love.graphics.setColor(1,1,1,0.4)
-        end
-        if itemImg[userInventory[field][item].Item.ImgPath]:getWidth() <= 32 and
-            itemImg[userInventory[field][item].Item.ImgPath]:getHeight() <= 32 then
-            love.graphics.draw(itemImg[userInventory[field][item].Item.ImgPath],
-                thisX + 18 - (itemImg[userInventory[field][item].Item.ImgPath]:getWidth() / 2),
-                thisY + 18 - (itemImg[userInventory[field][item].Item.ImgPath]:getHeight() / 2))
-        else
-            love.graphics.draw(itemImg[userInventory[field][item].Item.ImgPath], thisX + 2, thisY + 2) -- Item
+
+        if item and itemImg[item.ImgPath] then
+            if string.sub(item.Type, 1, 4) == "arm_" then
+             
+                love.graphics.draw(playerImg, thisX + 2, thisY + 2)
+              
+            end
+          
+            if inventory.usedItemThisTick then
+                love.graphics.setColor(1,1,1,0.4)
+            end
+            if itemImg[item.ImgPath]:getWidth() <= 32 and
+                itemImg[item.ImgPath]:getHeight() <= 32 then
+                love.graphics.draw(itemImg[item.ImgPath],
+                    thisX + 18 - (itemImg[item.ImgPath]:getWidth() / 2),
+                    thisY + 18 - (itemImg[item.ImgPath]:getHeight() / 2))
+            else
+                love.graphics.draw(itemImg[item.ImgPath], thisX + 2, thisY + 2) -- Item
+            end
         end
 
-        local amount = userInventory[field][item].Inventory.Amount
-
-        if amount > 1 then
+        if amount and amount > 1 then
             if amount <= 9 then
                 inventory.imageNumber = 1
             elseif amount > 9 and amount <= 99 then
@@ -248,32 +227,34 @@ function drawInventoryItem(thisX, thisY, field, item, number)
             thisX, thisY = thisX + 39 - inventory.images.numberBg[inventory.imageNumber]:getWidth(),
                 thisY + 39 - inventory.images.numberBg[inventory.imageNumber]:getHeight()
             love.graphics.draw(inventory.images.numberBg[inventory.imageNumber], thisX, thisY)
-            love.graphics.setColor(0, 0, 0, inventory.opacity)
+            love.graphics.setColor(0, 0, 0)
             love.graphics.print(amount, thisX + 5, thisY + 4)
-            love.graphics.setColor(1, 1, 1, inventory.opacity)
         end
+        love.graphics.setColor(1,1,1)
     end
 end
 
 function drawInventoryItemField(thisX, thisY, field)
     love.graphics.setFont(inventory.font)
     love.graphics.printf(inventory.fields[field], thisX + 2, thisY + 2, 483)
-    love.graphics.setFont(inventory.itemFont)
+
     thisY = thisY + inventory.titleSpacing
+
     local itemWidth = 7
     for i = 1, #userInventory[field] do
+      
         if i <= 7 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 0), field, i)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 0), field, userInventory[field][i].Item, userInventory[field][i].Inventory.Amount)
         elseif i > 7 and i <= 14 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 1), field, i)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 1), field, userInventory[field][i].Item, userInventory[field][i].Inventory.Amount)
         elseif i > 14 and i <= 21 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 2), field, i)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 2), field, userInventory[field][i].Item, userInventory[field][i].Inventory.Amount)
         elseif i > 21 and i <= 28 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 3), field, i)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 3), field, userInventory[field][i].Item, userInventory[field][i].Inventory.Amount)
         elseif i > 28 and i <= 35 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 4), field, i)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 4), field, userInventory[field][i].Item, userInventory[field][i].Inventory.Amount)
         else
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 5), field, i)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 5), field, userInventory[field][i].Item, userInventory[field][i].Inventory.Amount)
         end
     end
 end
@@ -308,11 +289,53 @@ end
 function checkInventoryMousePressed()
     if selectedItem ~= nil and selectedItem.ID ~= nil and
         isMouseOver((0) * scale, (0 + 50) * scale, 313 * scale, (uiY - 97 - 50 - 50) * scale) then
-        apiGET("/item/" .. player.name .. "/" .. selectedItem.ID)
-        usedItemThisTick = true
+        if crafting.open then
+            local hasItem = false
+            for i,v in ipairs(crafting.enteredItems) do
+                if v.item == selectedItem and getItemAmount(selectedItem) > v.amount then
+                    v.amount = v.amount + 1
+                    hasItem = true
+                end
+                crafting.enteredItems[i] = v
+            end
+
+            if not hasItem then
+                crafting.enteredItems[#crafting.enteredItems+1] = {
+                    item = selectedItem,
+                    amount = 1,
+                    random = {X = math.random()*100, Y = math.random()*100},
+                }
+            end
+            local itemsSoFar = {}
+            for i,v in ipairs(crafting.enteredItems) do
+                itemsSoFar[#itemsSoFar+1] = {
+                    ItemID = v.item.ID,
+                    Amount = v.amount
+                }
+            end
+            local b = {}
+            body = json:encode(itemsSoFar)
+            c, h = http.request{url = api.url.."/craft/"..player.name, method="GET", source=ltn12.source.string(body), headers={["token"]=token,["Content-Length"]=#body}, sink=ltn12.sink.table(b)}
+            crafting.craftableItems = json:decode(b[1])
+        else
+            apiGET("/item/" .. player.name .. "/" .. selectedItem.ID)
+            usedItemThisTick = true
+        end
+       
     end
 end
 
 function drawInventoryStencil()
     love.graphics.rectangle("fill", (0), (0 + 50), 313, (uiY - 97 - 50 - 50))
+end
+
+function getItemAmount(item)
+    local amount = 0
+    for i, v in ipairs(inventoryAlpha) do
+        if v.Item == item then
+            amount = v.Inventory.Amount
+        end
+    end
+
+    return amount
 end
