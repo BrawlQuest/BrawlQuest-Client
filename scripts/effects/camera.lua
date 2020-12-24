@@ -10,6 +10,9 @@ end
 
 function updateCamera(dt)
     local speed = {}
+    
+    speed.X = difference(player.cx, camera.X) * 1
+    speed.Y = difference(player.cy, camera.Y) * 1
 
     if love.keyboard.isDown(keybinds.UP) then
         player.direction.y = player.direction.y - 1 * dt
@@ -59,8 +62,7 @@ function updateCamera(dt)
         end
     end
 
-    speed.X = difference(player.cx, camera.X) * 1
-    speed.Y = difference(player.cy, camera.Y) * 1
+    
 
     if camera.X > player.cx then
         camera.X = camera.X - speed.X * dt
