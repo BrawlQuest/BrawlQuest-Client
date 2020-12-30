@@ -130,26 +130,42 @@ function updateQuestHub(dt)
     if questHub.amount > 0 then questHub.open = true else questHub.open = false end
     questHub.opacity = cerp(0, 1, questHub.amount)
     
-    if isMouseOver(((uiX/1) - 313) * scale, 
-    ((uiY) + 55 - (uiY/1.25)) * scale,
-    (313) * scale,
-    (cerp((uiY/1.25) - 55 ,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale) and not isTypingInChat then -- Opens Quests Panel
+    if questsPanel.forceOpen then
         questsPanel.amount = questsPanel.amount + 4 * dt
         if questsPanel.amount > 1 then questsPanel.amount = 1 end
-
         velYQuest = velYQuest - velYQuest * math.min( dt * 15, 1 )
         if getFullQuestsPanelFieldHeight() * scale > (cerp((uiY/1.25) - 55,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale then
             posYQuest = posYQuest + velYQuest * dt
+            local questsFieldHeight = 0 - getFullQuestsPanelFieldHeight() + (cerp((uiY/1.25) - 55, ((uiY/1.25) - 106 - 14 - 55), questHub.amount))
             if posYQuest > 0 then
                 posYQuest = 0
-            elseif posYQuest < 0 - getFullQuestsPanelFieldHeight() + (cerp((uiY/1.25) - 55, ((uiY/1.25) - 106 - 14 - 55), questHub.amount)) then
-                posYQuest = 0 - getFullQuestsPanelFieldHeight() + (cerp((uiY/1.25) - 55, ((uiY/1.25) - 106 - 14 - 55), questHub.amount))
+            elseif posYQuest < questsFieldHeight then
+                posYQuest = questsFieldHeight
             end
         else posYQuest = 0
         end
     else
-        questsPanel.amount = questsPanel.amount - 4 * dt
-        if questsPanel.amount < 0 then questsPanel.amount = 0 end
+        if isMouseOver(((uiX/1) - 313) * scale, 
+        ((uiY) + 55 - (uiY/1.25)) * scale,
+        (313) * scale,
+        (cerp((uiY/1.25) - 55 ,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale) and not isTypingInChat then -- Opens Quests Panel
+            questsPanel.amount = questsPanel.amount + 4 * dt
+            if questsPanel.amount > 1 then questsPanel.amount = 1 end
+
+            velYQuest = velYQuest - velYQuest * math.min( dt * 15, 1 )
+            if getFullQuestsPanelFieldHeight() * scale > (cerp((uiY/1.25) - 55,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale then
+                posYQuest = posYQuest + velYQuest * dt
+                if posYQuest > 0 then
+                    posYQuest = 0
+                elseif posYQuest < 0 - getFullQuestsPanelFieldHeight() + (cerp((uiY/1.25) - 55, ((uiY/1.25) - 106 - 14 - 55), questHub.amount)) then
+                    posYQuest = 0 - getFullQuestsPanelFieldHeight() + (cerp((uiY/1.25) - 55, ((uiY/1.25) - 106 - 14 - 55), questHub.amount))
+                end
+            else posYQuest = 0
+            end
+        else
+            questsPanel.amount = questsPanel.amount - 4 * dt
+            if questsPanel.amount < 0 then questsPanel.amount = 0 end
+        end
     end
 
     if questsPanel.amount > 0 then questsPanel.open = true else questsPanel.open = false end

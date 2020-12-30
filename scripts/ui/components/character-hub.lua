@@ -30,19 +30,26 @@ function initCharacterHub()
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 9),
         nameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
         open = false,
+        forceOpen = false,
         amount = 0,
     }
 end
 
 function updateCharacterHub(dt)
-    if isMouseOver(0 * scale, (uiY - 97) * scale, 468 * scale, 97 * scale) then
+    if characterHub.forceOpen then
         characterHub.open = true
         characterHub.amount = characterHub.amount + 4 * dt
         if characterHub.amount > 1 then characterHub.amount = 1 end
     else
-        characterHub.open = false
-        characterHub.amount = characterHub.amount - 4 * dt
-        if characterHub.amount < 0 then characterHub.amount = 0 end
+        if isMouseOver(0 * scale, (uiY - 97) * scale, 468 * scale, 97 * scale) then
+            characterHub.open = true
+            characterHub.amount = characterHub.amount + 4 * dt
+            if characterHub.amount > 1 then characterHub.amount = 1 end
+        else
+            characterHub.open = false
+            characterHub.amount = characterHub.amount - 4 * dt
+            if characterHub.amount < 0 then characterHub.amount = 0 end
+        end
     end
     -- print(characterHub.amount)
 end

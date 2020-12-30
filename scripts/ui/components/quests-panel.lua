@@ -1,6 +1,7 @@
 function initQuestsPanel()
     questsPanel = {
         open = false,
+        forceOpen = false,
         amount = 0,
         opacity = 0,
         questGiver = "Mortus the Wise",

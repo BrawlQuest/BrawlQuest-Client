@@ -3,7 +3,7 @@ function initCamera()
         X = player.dx,
         Y = player.dy,
         lookingDistance = {x = 32 * 2, y = 32 * 2},
-        smoothing = true,
+        smoothing = false,
         lookahead = true,
     }
 end
@@ -62,8 +62,6 @@ function updateCamera(dt)
         end
     end
 
-    
-
     if camera.X > player.cx then
         camera.X = camera.X - speed.X * dt
     elseif camera.X < player.cx then
@@ -80,7 +78,7 @@ function updateCamera(dt)
         Luven.camera:setPosition(camera.X + 16, camera.Y + 16)
     else
         if player.target.active then
-            Luven.camera:setPosition(camera.X + 16, camera.Y + 16)
+            Luven.camera:setPosition(player.x * 32 + 16, player.y * 32 + 16)
         else
             Luven.camera:setPosition(player.dx + 16, player.dy + 16)
         end

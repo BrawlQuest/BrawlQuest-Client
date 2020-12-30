@@ -49,7 +49,7 @@ end
 
 function startConversation()
     for i,v in ipairs(npcs) do
-        if distanceToPoint(player.x,player.y,v.X,v.Y) <= 1 and not showNPCChatBackground  and v.Conversation ~= "" then
+        if distanceToPoint(player.x,player.y,v.X,v.Y) <= 1 and not showNPCChatBackground then--and v.Conversation ~= "" then
             local b = {}
             c, h = http.request{url = api.url.."/conversation/"..v.Conversation.."/"..username, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
             npcChat = json:decode(b[1])

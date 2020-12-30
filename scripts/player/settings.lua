@@ -16,6 +16,7 @@ function initSettings()
         SHIELD = "lshift",
         CRAFTING = "f",
         INTERACT = "e",
+        QUESETS = "q",
     }
     
     dpiScaling = true
@@ -25,7 +26,7 @@ function initSettings()
     info = love.filesystem.getInfo("settings.txt")
     isSettingsWindowOpen = false
 
-    if info and 1 == 2 then
+    if info  then
         contents, size = love.filesystem.read("string", "settings.txt")
         contents = json:decode(contents)
         keybinds = contents["keybinds"]

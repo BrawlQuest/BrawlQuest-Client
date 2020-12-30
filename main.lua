@@ -120,10 +120,11 @@ function love.draw()
             drawEditWorldWindow()
         end
 
-
+        inventory.notNPC = true
         for i,v in ipairs(npcs) do
             if distanceToPoint(player.x,player.y,v.X,v.Y) <= 1 and not showNPCChatBackground  and v.Conversation ~= "" then
-              drawTextBelowPlayer("Press "..keybinds.INTERACT.." to talk")
+                drawTextBelowPlayer("Press "..keybinds.INTERACT.." to talk")
+                inventory.notNPC = false
             end
         end
 

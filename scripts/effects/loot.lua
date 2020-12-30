@@ -29,7 +29,6 @@ function burstLoot(x, y, amount, type)
         if love.math.random(1,2) == 1 then
             loot[#loot].yv = -loot[#loot].yv
         end
-
     end
 end
 
@@ -38,8 +37,6 @@ function drawLoot()
         if v.type == "xp" then
             love.graphics.draw(xpImg, v.x, v.y)
         else
-            --love.graphics.draw(lootImg, v.x, v.y)
-            
             drawItemIfExists(v.type, v.x, v.y)
         end
     end
@@ -50,7 +47,6 @@ function updateLoot(dt)
         local targetX = player.dx+16
         local targetY = player.dy+16
 
-        
         v.timeToFly = v.timeToFly - 1*dt
         v.x = v.x + v.xv*dt
         v.y = v.y + v.yv*dt
@@ -115,12 +111,9 @@ function updateLoot(dt)
                     v.yv = v.yv - 128*dt
                 end
             end
-
-           
         end
 
-         --Accepts XP
-         if distanceToPoint(player.dx+16, player.dy+16, v.x, v.y) < 32 and v.phase ~= "initial" then
+        if distanceToPoint(player.dx+16, player.dy+16, v.x, v.y) < 32 and v.phase ~= "initial" then
             if v.type == "xp" then
                 xpSfx:stop()
                 xpSfx:setPitch(1 + (player.xp/100))
