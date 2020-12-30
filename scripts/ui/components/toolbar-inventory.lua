@@ -35,6 +35,8 @@ function initToolBarInventory()
     scrollInventory = {up = true, down = true,}
 
     inventory = {
+        forceOpen = false,
+        notNPC = true,
         open = false,
         amount = 0,
         opacity = 0,
@@ -116,30 +118,35 @@ function getInventory()
 end
 
 function updateToolBarInventory(dt)
-    if isMouseOver(0, 0, 313 * scale, (uiY - 97) * scale) then
+    if inventory.forceOpen then
         inventory.open = true
         inventory.amount = inventory.amount + 4 * dt
-        if inventory.amount > 1 then
-            inventory.amount = 1
-        end
+        if inventory.amount > 1 then inventory.amount = 1 end
+    else
+        if isMouseOver(0, 0, 313 * scale, (uiY - 97) * scale) then
+            inventory.open = true
+            inventory.amount = inventory.amount + 4 * dt
+            if inventory.amount > 1 then inventory.amount = 1 end
 
-        if getFullUserInventoryFieldHeight() * scale > (uiY - 97 - 50 - 50) * scale then
-            posYInventory = posYInventory + velyInventory * dt
-            if posYInventory > 0 then
+            if getFullUserInventoryFieldHeight() * scale > (uiY - 97 - 50 - 50) * scale then
+                posYInventory = posYInventory + velyInventory * dt
+                if posYInventory > 0 then
+                    posYInventory = 0
+                elseif posYInventory < 0 - getFullUserInventoryFieldHeight() + (uiY - 97 - 50 - 50) then
+                    posYInventory = 0 - getFullUserInventoryFieldHeight() + (uiY - 97 - 50 - 50)
+                end
+            else
                 posYInventory = 0
-            elseif posYInventory < 0 - getFullUserInventoryFieldHeight() + (uiY - 97 - 50 - 50) then
-                posYInventory = 0 - getFullUserInventoryFieldHeight() + (uiY - 97 - 50 - 50)
             end
         else
-            posYInventory = 0
-        end
-    else
-        inventory.open = false
-        inventory.amount = inventory.amount - 4 * dt
-        if inventory.amount < 0 then
-            inventory.amount = 0
+            inventory.open = false
+            inventory.amount = inventory.amount - 4 * dt
+            if inventory.amount < 0 then
+                inventory.amount = 0
+            end
         end
     end
+
     inventory.opacity = cerp(0, 1, inventory.amount)
 end
 

@@ -63,6 +63,9 @@ function updateSFX()
 end
 
 function setSFXVolumes()
+    crafting.sfx:setVolume(1 * sfxVolume)
+    crafting.swing:setVolume(1 * sfxVolume)
+    lvlSfx:setVolume(1 * sfxVolume)
     lootSfx:setVolume(1 * sfxVolume)
     shieldUpSfx:setVolume(0.4 * sfxVolume)
     shieldDownSfx:setVolume(0.4 * sfxVolume)

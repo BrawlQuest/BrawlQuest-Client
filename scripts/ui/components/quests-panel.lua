@@ -1,6 +1,7 @@
 function initQuestsPanel()
     questsPanel = {
         open = false,
+        forceOpen = false,
         amount = 0,
         opacity = 0,
         questGiver = "Mortus the Wise",
@@ -51,6 +52,7 @@ function drawQuestsPanel(thisX, thisY)
         end
 
     love.graphics.setStencilTest() -- pop
+    -- print(quests[1][questsPanel.selectedQuest[2]].currentAmount)
 end
 
 function drawQuestsPanelField(thisX, thisY, i)
@@ -111,7 +113,7 @@ function drawQuestsPanelQuestBox(thisX, thisY, i, j)
             love.graphics.setColor(1,1,1,questsPanel.opacity)
             love.graphics.draw(questsPanel.images[1], thisX - 6, thisY + 4)
         end
-    elseif i == 2 or (i == 3 and quests[i][j].replayable) then
+    elseif i == 2 and #quests[1] < 4 then -- (i == 3 and quests[i][j].replayable)
         if isIt then
             love.graphics.setColor(1,1,1,questsPanel.opacity)
             love.graphics.draw(questsPanel.images[4], thisX - 6, thisY + 4)
@@ -165,11 +167,18 @@ end
 function checkQuestPanelMousePressed(button)
     if button == 1 and questsPanel.hover then
         if questsPanel.selectedQuest[1] == 1 then 
-            table.insert(quests[2], questsPanel.selectedQuest[3])
+            questHub.selectedQuest = 1
+            -- if quests[1][questsPanel.selectedQuest[2]].currentAmount == quests[1][questsPanel.selectedQuest[2]].requiredAmount then
+            --     table.insert(quests[3], questsPanel.selectedQuest[3])
+            -- else
+                table.insert(quests[2], questsPanel.selectedQuest[3])
+            -- end
             table.remove(quests[questsPanel.selectedQuest[1]], questsPanel.selectedQuest[2])
-        elseif questsPanel.selectedQuest[1] == 2 then 
+        elseif questsPanel.selectedQuest[1] == 2 and #quests[1] < 4 then 
             table.insert(quests[1], questsPanel.selectedQuest[3])
             table.remove(quests[questsPanel.selectedQuest[1]], questsPanel.selectedQuest[2])
         end
+    elseif button == 1 and questHub.hover then
+        questHub.selectedQuest = questHub.hoveredQuest
     end
 end

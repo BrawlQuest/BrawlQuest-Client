@@ -11,6 +11,7 @@ require "scripts.effects.sfx"
 require "scripts.effects.loot"
 require "scripts.effects.buddies"
 require "scripts.effects.auras"
+require "scripts.effects.camera"
 require "scripts.ui.hud_controller"
 require "scripts.ui.components.character-hub"
 require "scripts.ui.components.crafting"
@@ -87,6 +88,7 @@ function love.load()
     loadMusic()
     initEditWorld()
     initSFX()
+    initCamera()
     love.graphics.setFont(textFont)
 end
 
@@ -118,17 +120,18 @@ function love.draw()
             drawEditWorldWindow()
         end
 
-
+        inventory.notNPC = true
         for i,v in ipairs(npcs) do
             if distanceToPoint(player.x,player.y,v.X,v.Y) <= 1 and not showNPCChatBackground  and v.Conversation ~= "" then
-              drawTextBelowPlayer("Press "..keybinds.INTERACT.." to talk")
+                drawTextBelowPlayer("Press "..keybinds.INTERACT.." to talk")
+                inventory.notNPC = false
             end
         end
 
         if isNearbyTile("assets/world/objects/Anvil.png") then  drawTextBelowPlayer("Press "..keybinds.INTERACT.." to craft")
         end
        
-             Luven.camera:draw()
+            Luven.camera:draw()
           
         -- print(brightnessSlider:getValue())
         
@@ -181,11 +184,7 @@ function love.update(dt)
         updateLoot(dt)
         updateNPCChat(dt)
         Luven.update(dt)
-
-        if not player.target.active then
-            Luven.camera:setPosition(player.dx + 16, player.dy + 16)
-        end
-        
+        updateCamera(dt)
         updateOtherPlayers(dt)
 
         local info = love.thread.getChannel('players'):pop()

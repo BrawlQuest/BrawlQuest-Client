@@ -1,4 +1,3 @@
-
 function love.keypressed(key) 
     if phase == "login" then
         if loginPhase == "login" then
@@ -89,6 +88,15 @@ function love.keypressed(key)
                 }
             elseif key == keybinds.INTERACT then
                 startConversation()
+            end
+
+            if (key == "i" or key == "e") and inventory.notNPC then
+                inventory.forceOpen = not inventory.forceOpen
+            end
+
+            if key == "q" then
+                questsPanel.forceOpen = not questsPanel.forceOpen
+                print("it was pressed")
             end
 
             if key == keybinds.CRAFTING then

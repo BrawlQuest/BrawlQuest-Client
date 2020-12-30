@@ -54,6 +54,7 @@ function initHUD()
     ShieldImgStencil = love.graphics.newQuad(12, 0, 16, 16, ShieldImg:getDimensions())
 
     -- Perks
+    
     perksBg = love.graphics.newImage("assets/ui/hud/perks/perksBg.png")
     mouseDown = love.graphics.newImage("assets/ui/hud/perks/BQ Mice - 1.png")
     mouseUp = love.graphics.newImage("assets/ui/hud/perks/BQ Mice + 1.png")

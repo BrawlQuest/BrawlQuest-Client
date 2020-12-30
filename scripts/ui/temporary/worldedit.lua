@@ -24,7 +24,6 @@ function initEditWorld()
     for k, file in ipairs(files) do
         if string.find(file, "Store", 1) == nil then
             worldFiles[#worldFiles+1] = file
-            -- print(k .. ". ".. file)
             worldImg[file] = love.graphics.newImage(file)
         end
     end
@@ -37,7 +36,6 @@ function drawEditWorldWindow()
 
     love.graphics.setFont(headerBigFont)
     love.graphics.print("Edit\nWorld", loginImageX+30, loginImageY+90)
-   -- drawTextField(loginImageX+35,loginImageY+240,5)
     
     love.graphics.setColor(0,0,0,0.7)
     love.graphics.rectangle("fill", 0, 0, (love.graphics.getWidth()*0.75)+20, (4 * 40)  + 40)
@@ -68,9 +66,6 @@ function drawEditWorldWindow()
         end
     end 
 
-
-    -- love.graphics.setColor(1,1,1)
-    -- drawTextField(loginImageX+35,loginImageY+280,6)
     love.graphics.setFont(headerFont)
     love.graphics.setColor(1,1,1)
     love.graphics.print("Name", loginImageX+30, loginImageY+180)
@@ -93,10 +88,6 @@ end
 function checkEditWorldTextinput(key)
     textfields[editingField] = textfields[editingField] .. key
 end
-
--- function checkEditWorldKeyPressed(key)
-    
--- end
 
 function checkEditWorldClick(x,y)
     local tx = 10

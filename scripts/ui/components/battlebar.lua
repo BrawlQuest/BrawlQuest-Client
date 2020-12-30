@@ -23,17 +23,10 @@ function battlebarPlayer(thisX, iy)
     end
     battlebarNameAndBars(thisX, thisY, player.name, player.hp, player.mhp)
     if me and me.Weapon and itemImg[me.Weapon.ImgPath] then
-        battlebarItem(thisX-44, thisY+18, itemImg[me.Weapon.ImgPath], "+"..me.Weapon.Val)
+        drawBattlebarItem(thisX-44, thisY+18, itemImg[me.Weapon.ImgPath], "+"..me.Weapon.Val)
     end
 end
 
-function battlebarItem(thisX, thisY, item, stats)
-    love.graphics.draw(battlebarItemBg, thisX, thisY)
-    love.graphics.draw(item, thisX+1, thisY+1)
-    love.graphics.setFont(headerSmallFont)
-    love.graphics.print(stats, thisX+(battlebarItemBg:getWidth()/2)-(font:getWidth(stats)/2), thisY+32)
-    love.graphics.setFont(headerFont)
-end
 
 function battlebarEnemy(thisX, iy, name, hp, mana)
     local thisY = iy-battlebarBackground:getHeight()
@@ -42,7 +35,7 @@ function battlebarEnemy(thisX, iy, name, hp, mana)
     drawProfilePic(thisX+270, thisY+10, 1, "left")
    -- drawCharacter(me,thisX+270, thisY+10)
     battlebarNameAndBars(thisX, thisY, name, hp, mana)
-    battlebarItem(thisX+354, thisY+18, a0sword, "+3")
+    drawBattlebarItem(thisX+354, thisY+18, a0sword, "+3")
 end
 
 function battlebarNameAndBars(ix, iy, name, hp, mana)

@@ -8,6 +8,8 @@ function initQuestHub()
         opacity = 0,
         commentOpacity = 0,
         selectedQuest = 1,
+        hover = false,
+        hoveredQuest = 1,
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
         titleFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 14),
         nameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
@@ -17,10 +19,10 @@ function initQuestHub()
             barCapRight = love.graphics.newImage("assets/ui/hud/quest-hub/barCapRight.png"),
             barComplete = love.graphics.newImage("assets/ui/hud/quest-hub/1.png"),
             barUnComplete = love.graphics.newImage("assets/ui/hud/quest-hub/0.png"),
+            arrow = love.graphics.newImage("assets/ui/hud/quest-hub/arrow.png")
         },
     }
 
-    
     quests = {
         -- {Tracking = {}, Backlog = {}, Completed = {},}
         {
@@ -55,7 +57,25 @@ function initQuestHub()
                 replayable = true,
             },
             {
-                title = "The Brotherhood",
+                title = "The people",
+                comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
+                giver = "Brother Dan",
+                task = "Kill 4 Mobs",
+                requiredAmount = 4,
+                currentAmount = 4,
+                replayable = false,
+            },
+            {
+                title = "Kill all the boars",
+                comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
+                giver = "Brother Dan",
+                task = "Kill 4 Mobs",
+                requiredAmount = 4,
+                currentAmount = 4,
+                replayable = false,
+            },
+            {
+                title = "I don't know what I'm doing",
                 comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
                 giver = "Brother Dan",
                 task = "Kill 4 Mobs",
@@ -75,7 +95,7 @@ function initQuestHub()
                 replayable = false,
             },
             {
-                title = "The Brotherhood",
+                title = "The Killer",
                 comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
                 giver = "Brother Dan",
                 task = "Kill 4 Mobs",
@@ -110,26 +130,42 @@ function updateQuestHub(dt)
     if questHub.amount > 0 then questHub.open = true else questHub.open = false end
     questHub.opacity = cerp(0, 1, questHub.amount)
     
-    if isMouseOver(((uiX/1) - 313) * scale, 
-    ((uiY) + 55 - (uiY/1.25)) * scale,
-    (313) * scale,
-    (cerp((uiY/1.25) - 55 ,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale) and not isTypingInChat then -- Opens Quests Panel
+    if questsPanel.forceOpen then
         questsPanel.amount = questsPanel.amount + 4 * dt
         if questsPanel.amount > 1 then questsPanel.amount = 1 end
-
         velYQuest = velYQuest - velYQuest * math.min( dt * 15, 1 )
         if getFullQuestsPanelFieldHeight() * scale > (cerp((uiY/1.25) - 55,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale then
             posYQuest = posYQuest + velYQuest * dt
+            local questsFieldHeight = 0 - getFullQuestsPanelFieldHeight() + (cerp((uiY/1.25) - 55, ((uiY/1.25) - 106 - 14 - 55), questHub.amount))
             if posYQuest > 0 then
                 posYQuest = 0
-            elseif posYQuest < 0 - getFullQuestsPanelFieldHeight() + (cerp((uiY/1.25) - 55, ((uiY/1.25) - 106 - 14 - 55), questHub.amount)) then
-                posYQuest = 0 - getFullQuestsPanelFieldHeight() + (cerp((uiY/1.25) - 55, ((uiY/1.25) - 106 - 14 - 55), questHub.amount))
+            elseif posYQuest < questsFieldHeight then
+                posYQuest = questsFieldHeight
             end
         else posYQuest = 0
         end
     else
-        questsPanel.amount = questsPanel.amount - 4 * dt
-        if questsPanel.amount < 0 then questsPanel.amount = 0 end
+        if isMouseOver(((uiX/1) - 313) * scale, 
+        ((uiY) + 55 - (uiY/1.25)) * scale,
+        (313) * scale,
+        (cerp((uiY/1.25) - 55 ,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale) and not isTypingInChat then -- Opens Quests Panel
+            questsPanel.amount = questsPanel.amount + 4 * dt
+            if questsPanel.amount > 1 then questsPanel.amount = 1 end
+
+            velYQuest = velYQuest - velYQuest * math.min( dt * 15, 1 )
+            if getFullQuestsPanelFieldHeight() * scale > (cerp((uiY/1.25) - 55,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale then
+                posYQuest = posYQuest + velYQuest * dt
+                if posYQuest > 0 then
+                    posYQuest = 0
+                elseif posYQuest < 0 - getFullQuestsPanelFieldHeight() + (cerp((uiY/1.25) - 55, ((uiY/1.25) - 106 - 14 - 55), questHub.amount)) then
+                    posYQuest = 0 - getFullQuestsPanelFieldHeight() + (cerp((uiY/1.25) - 55, ((uiY/1.25) - 106 - 14 - 55), questHub.amount))
+                end
+            else posYQuest = 0
+            end
+        else
+            questsPanel.amount = questsPanel.amount - 4 * dt
+            if questsPanel.amount < 0 then questsPanel.amount = 0 end
+        end
     end
 
     if questsPanel.amount > 0 then questsPanel.open = true else questsPanel.open = false end
@@ -137,6 +173,7 @@ function updateQuestHub(dt)
 end
 
 function drawQuestHub(thisX, thisY) 
+    questHub.hover = false
     if #quests[1] > 0 then
         love.graphics.setColor(0,0,0,0.5)
     else
@@ -161,7 +198,7 @@ end
 function drawQuestHubProifle(thisX, thisY)
     if me.Name ~= null then drawProfilePic(thisX, thisY, 1, "left", me.Name) end
     love.graphics.setFont(questHub.nameFont)
-    love.graphics.printf(questsPanel.questGiver, thisX, thisY + 64 + 6, 64, "center") 
+    love.graphics.printf(quests[1][questHub.selectedQuest].giver, thisX, thisY + 64 + 6, 64, "center") 
 end
 
 function drawQuestHubNPCTalk(thisX, thisY)
@@ -185,22 +222,27 @@ end
 function drawQuestHubMetersBar(thisX, thisY, i)
     love.graphics.setColor(0,0,0,0.5 * questHub.opacity)
     love.graphics.rectangle("fill", thisX + 28, thisY, 157, 19)
-    if quests[1][i] ~= null and #quests[1] > 0 then 
-        if not quests[1][i].complete then
-            love.graphics.setColor(1,0,0,1 *  questHub.opacity)
-        else
-            love.graphics.setColor(0,0.7,0,1 *  questHub.opacity)
+    if quests[1][i] ~= null then
+        if isMouseOver(thisX * scale, thisY * scale, 214 * scale, 19 * scale) then
+            love.graphics.setColor(0.88,0.6,0,1 *  questHub.opacity)
+            questHub.hoveredQuest = i
+            questHub.hover = true
+        elseif #quests[1] > 0 then 
+            if quests[1][i].requiredAmount == quests[1][i].currentAmount then
+                love.graphics.setColor(0,0.7,0,1 *  questHub.opacity)
+            else
+                love.graphics.setColor(1,0,0,1 *  questHub.opacity)
+            end
         end
     end
-
-    love.graphics.draw(questHub.images.barCapLeft, thisX, thisY)
     love.graphics.draw(questHub.images.barCapRight, thisX + 188, thisY)
-
+    love.graphics.draw(questHub.images.barCapLeft, thisX, thisY)
+ 
     if quests[1][i] ~= null and #quests[1] > 0 then 
         love.graphics.rectangle("fill", thisX + 28, thisY, (157 / quests[1][i].requiredAmount) * quests[1][i].currentAmount, 19)
         love.graphics.setColor(1,1,1,1 *  questHub.opacity)
 
-        if quests[1][i].complete then 
+        if quests[1][i].requiredAmount == quests[1][i].currentAmount then 
             love.graphics.draw(questHub.images.barComplete, thisX + 9, thisY + 4)
         else 
             love.graphics.draw(questHub.images.barUnComplete, thisX + 9, thisY + 4) 
@@ -209,9 +251,15 @@ function drawQuestHubMetersBar(thisX, thisY, i)
         love.graphics.printf(quests[1][i].task, thisX + 34, thisY + 7, 144, "left")
         love.graphics.printf(quests[1][i].currentAmount .. "/" .. quests[1][i].requiredAmount, thisX + 188, thisY + 7, 34, "center")
     end
+
+    if questHub.selectedQuest == i then
+        love.graphics.draw(questHub.images.arrow, thisX - 18, thisY - 1)
+    end
+
 end
 
 function getQuestHubTextHeight(text, width)
 	local width, lines = questHub.titleFont:getWrap(text, width)
  	return ((#lines)*(questHub.titleFont:getHeight()))+2
 end
+

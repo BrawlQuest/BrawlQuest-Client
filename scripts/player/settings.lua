@@ -16,6 +16,7 @@ function initSettings()
         SHIELD = "lshift",
         CRAFTING = "f",
         INTERACT = "e",
+        QUESETS = "q",
     }
     
     dpiScaling = true
@@ -25,7 +26,7 @@ function initSettings()
     info = love.filesystem.getInfo("settings.txt")
     isSettingsWindowOpen = false
 
-    if info and 1 == 2 then
+    if info  then
         contents, size = love.filesystem.read("string", "settings.txt")
         contents = json:decode(contents)
         keybinds = contents["keybinds"]
@@ -91,7 +92,9 @@ end
 function drawSettingsPanel(thisX, thisY)
     if isSettingsWindowOpen then
         thisX, thisY = thisX - (questPopUpWidth/2), thisY - (questPopUpHeight/2)
-        drawQuestPopUpBackground(thisX, thisY)
+        love.graphics.setColor(0,0,0,0.7)
+        roundRectangle("fill", thisX, thisY, questPopUpWidth, questPopUpHeight, 10)
+        love.graphics.setColor(1,1,1,1)
         local padding = 20
         thisX, thisY = thisX + padding, thisY + padding
 

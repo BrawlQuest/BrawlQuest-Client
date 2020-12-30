@@ -30,19 +30,26 @@ function initCharacterHub()
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 9),
         nameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
         open = false,
+        forceOpen = false,
         amount = 0,
     }
 end
 
 function updateCharacterHub(dt)
-    if isMouseOver(0 * scale, (uiY - 97) * scale, 468 * scale, 97 * scale) then
+    if characterHub.forceOpen then
         characterHub.open = true
         characterHub.amount = characterHub.amount + 4 * dt
         if characterHub.amount > 1 then characterHub.amount = 1 end
     else
-        characterHub.open = false
-        characterHub.amount = characterHub.amount - 4 * dt
-        if characterHub.amount < 0 then characterHub.amount = 0 end
+        if isMouseOver(0 * scale, (uiY - 97) * scale, 468 * scale, 97 * scale) then
+            characterHub.open = true
+            characterHub.amount = characterHub.amount + 4 * dt
+            if characterHub.amount > 1 then characterHub.amount = 1 end
+        else
+            characterHub.open = false
+            characterHub.amount = characterHub.amount - 4 * dt
+            if characterHub.amount < 0 then characterHub.amount = 0 end
+        end
     end
     -- print(characterHub.amount)
 end
@@ -58,6 +65,7 @@ function drawCharacterHub(thisX, thisY)
         end  
         thisX = thisX + cerp(0, hubImages.statsBG:getWidth(), characterHub.amount)
         drawCharacterHubMeters(thisX, thisY)
+        if me.Weapon ~= null then drawBattlebarItem(thisX + 231 + 10, thisY + 97 - 10 - battlebarItemBg:getHeight(), itemImg[me.Weapon.ImgPath], "+"..me.Weapon.Val) end
     end
 end
 
@@ -147,4 +155,12 @@ end
 
 function getSTA(i)
     if i == 0 then return 15 * me.STA else return 0 end
+end
+
+function drawBattlebarItem(thisX, thisY, item, stats)
+    love.graphics.draw(battlebarItemBg, thisX, thisY)
+    love.graphics.draw(item, thisX+1, thisY+1)
+    love.graphics.setFont(headerSmallFont)
+    love.graphics.print(stats, thisX+(battlebarItemBg:getWidth()/2)-(font:getWidth(stats)/2), thisY+32)
+    love.graphics.setFont(headerFont)
 end
