@@ -53,7 +53,7 @@ function drawLogin()
     love.graphics.setColor(1,1,1)
     love.graphics.setFont(smallTextFont)
     love.graphics.print("BrawlQuest " .. version ..
-    "\nLuven Interactive LTD 2020\n\nGraphics by David E. Gervais\nMusic by Joseph Pearce\n\nMade with LÖVE", 10, 10)
+    "\nLuven Interactive LTD 2020\n\nGraphics by David E. Gervais\nMusic by Joseph Pearce\n\nSpecial thanks to ThinkSometimes for the Minty sprite\nSpecial thanks to my entire Twitch community <3\n\nMade with LÖVE", 10, 10)
 end
 
 function updateLogin(dt)
