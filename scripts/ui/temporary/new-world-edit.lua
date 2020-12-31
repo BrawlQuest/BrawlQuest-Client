@@ -7,7 +7,7 @@ function initNewWorldEdit()
         boxHeight = 1,
         draw = {},
         selectableTile = "",
-        drawableTile = "",
+        drawableTile = {},
         selectedTile = {},
         selectedFloor = "",
         selectedObject = "",
@@ -20,7 +20,7 @@ function initNewWorldEdit()
     for x = getWidth * -1, getWidth do
         worldEdit.draw[x] = {}
         for y = getHeight * -1, getHeight do
-            worldEdit.draw[x][y] = ""
+            worldEdit.draw[x][y] = {"", "", ""}
         end
     end
 end
@@ -56,7 +56,6 @@ function drawNewWorldEditHud()
         drawNewWorldEditButton(thisX, thisY - 90, 50, 80, 10, "Object (2)", worldEdit.tileInputType == 2, 2)
         drawNewWorldEditButton(thisX, thisY, 50, 80, 10, "Enemy (3)", worldEdit.tileInputType == 3, 3)
 
-
         local x, y = 10, love.graphics.getHeight() - 42 + cerp((32 * (worldEdit.boxHeight + 1)), 0, worldEdit.toolbarAmount)
         worldEdit.boxHeight = 1
         for i,v in ipairs(worldFiles) do
@@ -66,7 +65,7 @@ function drawNewWorldEditHud()
                 if isMouseOver(x, y, 32, 32) then worldEdit.selectableTile = v end
                 love.graphics.draw(worldImg[v], x, y) 
 
-                if v == worldEdit.drawableTile then
+                if v == worldEdit.drawableTile[worldEdit.tileInputType] then
                     love.graphics.rectangle("fill", x - 2, y - 2, 36, 36)
                 end
 
@@ -106,7 +105,7 @@ function drawNewWorldEditTiles()
         for x = getWidth * -1, getWidth do
             for y = getHeight * -1, getHeight do
                 thisX, thisY = x * 32 , y * 32 
-                if worldEdit.draw[x][y] ~= "" then
+                if worldEdit.draw[x][y] ~= {"", "", ""} then
                     love.graphics.setColor(1,1,1,1)
                     love.graphics.draw(worldImg[worldEdit.draw[x][y]], thisX, thisY)
                     love.graphics.setColor(1,1,1,0.6)
@@ -118,10 +117,10 @@ function drawNewWorldEditTiles()
                     32 * worldScale) then
                     love.graphics.rectangle("fill", thisX, thisY, 32, 32)
                     if love.mouse.isDown(1) then
-                        worldEdit.draw[x][y] = worldEdit.drawableTile
+                        worldEdit.draw[x][y] = worldEdit.drawableTile[worldEdit.tileInputType]
                     end
                     if love.mouse.isDown(2) then
-                        worldEdit.draw[x][y] = ""
+                        worldEdit.draw[x][y][worldEdit.tileInputType] = ""
                     end
                 end
             end
@@ -136,6 +135,6 @@ function checkWorldEditMouseDown(button)
     end
 
     if button == 1 and worldEdit.selectableTile ~= "" then
-        worldEdit.drawableTile = worldEdit.selectableTile
+        worldEdit.drawableTile[worldEdit.tileInputType] = worldEdit.selectableTile
     end
 end
