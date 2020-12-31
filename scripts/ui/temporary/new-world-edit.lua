@@ -3,7 +3,7 @@ function initNewWorldEdit()
         open = false,
         drawable = true,
         isDrawing = false,
-        toolbarAmount = 0,
+        toolbarAmount = 1,
         boxHeight = 1,
         draw = {},
         selectableTile = "",
