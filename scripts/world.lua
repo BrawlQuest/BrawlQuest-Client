@@ -8,8 +8,8 @@ lowestY = 0
 function createWorld()
     
     lightSource = {}
-    local highestX = 0
-    local highestY = 0
+    highestX = 0
+    highestY = 0
     lowestX = 0
     lowestY = 0
     for i,v in ipairs(world) do

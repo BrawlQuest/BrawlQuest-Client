@@ -31,6 +31,7 @@ require "scripts.enemies"
 require "scripts.npcs"
 require "scripts.world"
 require "scripts.ui.temporary.worldedit"
+require "scripts.ui.temporary.new-world-edit"
 require "data.data_controller"
 require "scripts.player.settings"
 require "scripts.ui.components.npc-chat"
@@ -111,9 +112,10 @@ function love.draw()
         drawPlayer(me, -1)
         drawLoot()
         drawFloats()
+        drawNewWorldEdit()
         Luven.drawEnd()
         
-        if not isWorldEditWindowOpen then
+        if not isWorldEditWindowOpen and not worldEdit.open then
             drawHUD()
         end
         if isWorldEditWindowOpen then

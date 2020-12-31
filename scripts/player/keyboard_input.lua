@@ -67,7 +67,8 @@ function love.keypressed(key)
             end
 
             if key == "'" then
-                if isWorldEditWindowOpen then isWorldEditWindowOpen = false else isWorldEditWindowOpen = true end
+                -- if isWorldEditWindowOpen then isWorldEditWindowOpen = false else isWorldEditWindowOpen = true end
+                worldEdit.open = not worldEdit.open
             elseif key == "space" and love.keyboard.isDown("lshift") then
                 c, h = http.request{url = api.url.."/world", method="POST", source=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(pendingWorldChanges)),["token"]=token}}
                 pendingWorldChanges = {}
@@ -96,7 +97,6 @@ function love.keypressed(key)
 
             if key == "q" then
                 questsPanel.forceOpen = not questsPanel.forceOpen
-                print("it was pressed")
             end
 
             if key == keybinds.CRAFTING then

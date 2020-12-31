@@ -106,6 +106,7 @@ function initHUD()
     initQuestHub()
     initNPCChat()
     initCrafting()
+    initNewWorldEdit()
 end
 
 function updateHUD( dt )
@@ -130,6 +131,7 @@ function updateHUD( dt )
     updateCharacterHub(dt)
     updateQuestHub(dt)
     updateCrafting(dt)
+    updateNewWorldEdit(dt)
 
     if chatCursor.i < chatCursor.speed then
         chatCursor.i = chatCursor.i + 1
@@ -168,6 +170,7 @@ function drawHUD()
     love.graphics.setColor(1,1,1,1)
     
     drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
+    
 end 
 
 function drawTextBelowPlayer(text)
