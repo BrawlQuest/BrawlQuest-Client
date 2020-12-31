@@ -21,7 +21,7 @@ end
 
 function drawNewWorldEdit()
     if worldEdit.open then
-        local getWidth, getHeight = (highestX+math.abs(lowestX)+2), (highestY+math.abs(lowestY)+2)
+        local getWidth, getHeight = 100, 100
         love.graphics.setColor(1,1,1,0.6)
         for x = getWidth * -1, getWidth do
             for y = getHeight * -1, getHeight do
@@ -51,8 +51,7 @@ function drawNewWorldEdit()
                         worldEdit.draw[x][y] = 0
                     end
                 end
-                
-                worldEdit.selectedTile = {x, y}
+                -- worldEdit.selectedTile = {x, y}
             end
         end
     end
