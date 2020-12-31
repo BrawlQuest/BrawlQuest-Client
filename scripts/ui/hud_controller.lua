@@ -158,7 +158,6 @@ function drawHUD()
         if questsPanel.open then drawQuestsPanel((uiX/i) - 313, (uiY/i) + cerp(-14, 0 - ((uiY/1.25) - 15), questsPanel.amount)) end
         drawTooltip()
         drawAuraHeadings()
-        
     love.graphics.pop()
 
     love.graphics.push() -- chat and quests scaling TODO: Quests

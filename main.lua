@@ -112,12 +112,15 @@ function love.draw()
         drawPlayer(me, -1)
         drawLoot()
         drawFloats()
-        drawNewWorldEdit()
+        drawNewWorldEditTiles()
         Luven.drawEnd()
         
         if not isWorldEditWindowOpen and not worldEdit.open then
             drawHUD()
         end
+        
+        drawNewWorldEditHud()
+
         if isWorldEditWindowOpen then
             drawEditWorldWindow()
         end
