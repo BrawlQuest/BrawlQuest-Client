@@ -12,6 +12,7 @@ function love.mousepressed(x, y, button)
         if showNPCChatBackground then
         checkNPCChatMousePressed(button)
         end
+        checkWorldEditMouseDown(button)
     end
 end
 
