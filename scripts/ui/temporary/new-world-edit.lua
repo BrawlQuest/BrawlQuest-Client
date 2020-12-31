@@ -7,7 +7,7 @@ function initNewWorldEdit()
         boxHeight = 1,
         draw = {},
         selectableTile = "",
-        drawableTile = {},
+        drawableTile = {"assets/world/grounds/grass/grass01.png", "assets/world/grounds/grass/grass01.png", ""},
         selectedTile = {},
         selectedFloor = "",
         selectedObject = "",
@@ -61,13 +61,13 @@ function drawNewWorldEditHud()
         for i,v in ipairs(worldFiles) do
             if string.sub(v,1,25) ~= "assets/world/objects/Wall" and string.sub(v,1,18) ~= "assets/world/water" then
                 
-                
                 if isMouseOver(x, y, 32, 32) then worldEdit.selectableTile = v end
-                love.graphics.draw(worldImg[v], x, y) 
-
+                
                 if v == worldEdit.drawableTile[worldEdit.tileInputType] then
                     love.graphics.rectangle("fill", x - 2, y - 2, 36, 36)
                 end
+                
+                love.graphics.draw(worldImg[v], x, y) 
 
                 x = x + 32 + 5
                 if x > love.graphics.getWidth() - 32 - 70 then
@@ -78,7 +78,7 @@ function drawNewWorldEditHud()
                 
             end
         end 
-       print(worldEdit.selectableTile) 
+    --    print(worldEdit.drawableTile[worldEdit.tileInputType]) 
     end
 end
 
@@ -105,10 +105,12 @@ function drawNewWorldEditTiles()
         for x = getWidth * -1, getWidth do
             for y = getHeight * -1, getHeight do
                 thisX, thisY = x * 32 , y * 32 
-                if worldEdit.draw[x][y] ~= {"", "", ""} then
-                    love.graphics.setColor(1,1,1,1)
-                    love.graphics.draw(worldImg[worldEdit.draw[x][y]], thisX, thisY)
-                    love.graphics.setColor(1,1,1,0.6)
+                for z = 1, 3 do
+                    if worldEdit.draw[x][y][z] ~= (nil or "") then
+                        love.graphics.setColor(1,1,1,1) 
+                        love.graphics.draw(worldImg[worldEdit.draw[x][y][z]], thisX, thisY)
+                        love.graphics.setColor(1,1,1,0.6)
+                    end
                 end
                 if worldEdit.drawable and isMouseOver(
                     (((thisX - player.dx - 16) * worldScale) + (love.graphics.getWidth()/2)), 
@@ -117,7 +119,7 @@ function drawNewWorldEditTiles()
                     32 * worldScale) then
                     love.graphics.rectangle("fill", thisX, thisY, 32, 32)
                     if love.mouse.isDown(1) then
-                        worldEdit.draw[x][y] = worldEdit.drawableTile[worldEdit.tileInputType]
+                        worldEdit.draw[x][y][worldEdit.tileInputType] = worldEdit.drawableTile[worldEdit.tileInputType]
                     end
                     if love.mouse.isDown(2) then
                         worldEdit.draw[x][y][worldEdit.tileInputType] = ""
@@ -135,6 +137,11 @@ function checkWorldEditMouseDown(button)
     end
 
     if button == 1 and worldEdit.selectableTile ~= "" then
+        if worldEdit.tileInputType == 1 then 
         worldEdit.drawableTile[worldEdit.tileInputType] = worldEdit.selectableTile
+        worldEdit.drawableTile[2] = worldEdit.selectableTile
+        else
+            worldEdit.drawableTile[worldEdit.tileInputType] = worldEdit.selectableTile
+        end
     end
 end

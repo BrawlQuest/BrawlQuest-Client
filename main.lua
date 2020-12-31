@@ -100,6 +100,7 @@ function love.draw()
         Luven.drawBegin()
 
         drawWorld()
+        drawNewWorldEditTiles()
         drawAuras()
         love.graphics.setColor(1, 1, 1)
         drawNPCs()
@@ -112,7 +113,7 @@ function love.draw()
         drawPlayer(me, -1)
         drawLoot()
         drawFloats()
-        drawNewWorldEditTiles()
+        
         Luven.drawEnd()
         
         if not isWorldEditWindowOpen and not worldEdit.open then
