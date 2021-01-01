@@ -132,16 +132,18 @@ function drawNewWorldEditTiles()
 end
 
 function checkWorldEditMouseDown(button)
-    if worldEdit.mouseOverSelectionButtons > 0 then
-        if button == 1 then worldEdit.tileInputType = worldEdit.mouseOverSelectionButtons end
-    end
+    if worldEdit.open then
+        if worldEdit.mouseOverSelectionButtons > 0 then
+            if button == 1 then worldEdit.tileInputType = worldEdit.mouseOverSelectionButtons end
+        end
 
-    if button == 1 and worldEdit.selectableTile ~= "" then
-        if worldEdit.tileInputType == 1 then 
-        worldEdit.drawableTile[worldEdit.tileInputType] = worldEdit.selectableTile
-        worldEdit.drawableTile[2] = worldEdit.selectableTile
-        else
+        if button == 1 and worldEdit.selectableTile ~= "" then
+            if worldEdit.tileInputType == 1 then 
             worldEdit.drawableTile[worldEdit.tileInputType] = worldEdit.selectableTile
+            worldEdit.drawableTile[2] = worldEdit.selectableTile
+            else
+                worldEdit.drawableTile[worldEdit.tileInputType] = worldEdit.selectableTile
+            end
         end
     end
 end
