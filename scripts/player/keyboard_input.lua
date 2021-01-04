@@ -22,13 +22,15 @@ function love.keypressed(key)
             if key == "escape" or key == "'" then  
                 worldEdit.open = false 
             end
-            checkWorldEditkeyPressed(key)
+            if key == "space" and love.keyboard.isDown("lshift") then
+                saveWorldChanges()
+            end
         elseif isSettingsWindowOpen then
             if key == "escape" or key == "w" or key == "a" or key == "s" or key == "d" then
                 isSettingsWindowOpen = false
             end
             if key == "return" then
-                love.event.quit()
+                checkIfReadyToQuit()
             end
         elseif isTypingInChat then
             if key == "backspace" then

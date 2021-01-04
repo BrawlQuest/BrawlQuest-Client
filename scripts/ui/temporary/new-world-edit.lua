@@ -1,6 +1,7 @@
 function initNewWorldEdit()
     worldEdit = {
         open = false,
+        changed = false,
         drawable = true,
         isDrawing = false,
         toolbarAmount = 1,
@@ -14,16 +15,10 @@ function initNewWorldEdit()
         selectedObject = "",
         tileInputType = 1,
         mouseOverSelectionButtons = 0,
+        worldSize = 100,
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
     }
-
-    local getWidth, getHeight = 400, 400
-    for x = getWidth * -1, getWidth do
-        worldEdit.draw[x] = {}
-        for y = getHeight * -1, getHeight do
-            worldEdit.draw[x][y] = {"", "", ""}
-        end
-    end
+    initDrawableNewWorldEditTiles()
 end
 
 function updateNewWorldEdit(dt)
@@ -107,7 +102,7 @@ function drawNewWorldEditButton(thisX, thisY, width, height, padding, text, this
     
     love.graphics.draw(worldEdit.enemyImages[count], thisX + 5, thisY + 5)
 
-    love.graphics.printf(text, thisX + (padding * 0.5), thisY, width - ((padding * 0.5) * 2), "center")
+    love.graphics.printf(text, thisX - width, thisY, width - ((padding * 0.5) * 2), "right")
 end
 
 function drawNewWorldEditTiles()
@@ -136,8 +131,9 @@ function drawNewWorldEditTiles()
                             worldEdit.draw[x][y][i] = worldEdit.drawableTile[i]
                         end
                     end
-                    if love.mouse.isDown(2) and  worldEdit.draw[x][y][1] ~= "" then
-                        worldEdit.draw[x][y][2] = worldEdit.draw[x][y][1]
+                    if love.mouse.isDown(2) then
+                        worldEdit.draw[x][y][1] = worldEdit.drawableTile[1]
+                        worldEdit.draw[x][y][2] = worldEdit.drawableTile[1]
                     end
                 end
             end
@@ -153,6 +149,7 @@ function checkWorldEditMouseDown(button)
         end
 
         if worldEdit.selectableTile ~= "" then
+            worldEdit.changed = true
             if button == 1 then
                 worldEdit.drawableTile[2] = worldEdit.selectableTile
             elseif button == 2 then
@@ -162,34 +159,58 @@ function checkWorldEditMouseDown(button)
     end
 end
 
-function checkWorldEditkeyPressed(key)
-    if key == "space" and love.keyboard.isDown("lshift") then
-        local getWidth, getHeight = 100, 100
-        local count = 0
-        for x = getWidth * -1, getWidth do
-            for y = getHeight * -1, getHeight do
-                if worldEdit.draw[x][y][1] ~= "" then
-                    count = count + 1
-                    pendingWorldChanges[#pendingWorldChanges+1] = {
-                        GroundTile = worldEdit.draw[x][y][1],
-                        ForegroundTile = worldEdit.draw[x][y][2],
-                        Name =  "",
-                        Music = "*",
-                        Enemy = worldEdit.draw[x][y][3],
-                        Collision = worldEdit.draw[x][y][4],
-                        X = x,
-                        Y = y,
-                    }
-                end
+function saveWorldChanges()
+    worldEdit.changed = false
+    local getWidth, getHeight = 100, 100
+    local count = 0
+    for x = getWidth * -1, getWidth do
+        for y = getHeight * -1, getHeight do
+            if worldEdit.draw[x][y][1] ~= "" then
+                count = count + 1
+                pendingWorldChanges[#pendingWorldChanges+1] = {
+                    GroundTile = worldEdit.draw[x][y][1],
+                    ForegroundTile = worldEdit.draw[x][y][2],
+                    Name =  "",
+                    Music = "*",
+                    Enemy = worldEdit.draw[x][y][3],
+                    Collision = worldEdit.draw[x][y][4],
+                    X = x,
+                    Y = y,
+                }
             end
         end
-        local b = {}
-        print("World change amount = " .. count)
-        c, h = http.request{url = api.url.."/world", method="POST", source=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(pendingWorldChanges)),["token"]=token}}
-        pendingWorldChanges = {}
-        local b = {}
-        c, h = http.request{url = api.url.."/world", method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
-        world = json:decode(b[1])
-        createWorld()
     end
+    local b = {}
+    print("World change amount = " .. count)
+    c, h = http.request{url = api.url.."/world", method="POST", source=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(pendingWorldChanges)),["token"]=token}}
+    pendingWorldChanges = {}
+    local b = {}
+    c, h = http.request{url = api.url.."/world", method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
+    world = json:decode(b[1])
+    createWorld()
+    initDrawableNewWorldEditTiles()
 end 
+
+function checkIfReadyToQuit()
+    if worldEdit.changed then
+        local buttons = {"Save And Quit", "Quit Without Saving", "Cancel", enterbutton = 1, escapebutton = 3}
+        local savePopup = love.window.showMessageBox("Warning", "Do you want to quit without saving world changes?", buttons )
+        if savePopup == 1 then 
+            saveWorldChanges()
+            love.event.quit()
+        end
+        if savePopup == 2 then love.event.quit() end
+        if savePopup == 3 then end
+    else
+        love.event.quit()
+    end
+end
+
+function initDrawableNewWorldEditTiles()
+    for x = worldEdit.worldSize * -1, worldEdit.worldSize do
+        worldEdit.draw[x] = {}
+        for y = worldEdit.worldSize * -1, worldEdit.worldSize do
+            worldEdit.draw[x][y] = {"", "", ""}
+        end
+    end
+end
