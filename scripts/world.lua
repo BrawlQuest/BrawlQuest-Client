@@ -112,9 +112,7 @@ function drawWorld()
     for i,v in ipairs(pendingWorldChanges) do -- draw world edit pending changes
         local groundAsset = getWorldAsset(v.GroundTile, v.X, v.Y, true)
         local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y, true)
-        if groundAsset == "assets/world/grounds/grass.png" then 
-            groundAsset = getWorldAsset("assets/world/grounds/snow.png")
-        end
+       
         love.graphics.draw(worldImg[groundAsset], v.X*32, v.Y*32)
         love.graphics.draw(worldImg[foregroundAsset], v.X*32, v.Y*32)
     end
@@ -122,9 +120,7 @@ function drawWorld()
 end
 
 function getWorldAsset(v,x,y,notFindWall)
-    if isTileType(v, "grass") then -- TODO: remove, make server side
-        v = "assets/world/grounds/Snow.png"
-    end
+  
     if not worldImg[v] then
         if love.filesystem.getInfo(v) then
             worldImg[v] = love.graphics.newImage(v)

@@ -14,11 +14,13 @@ thisTile = {
 
 worldFiles = {}
 
+availableEnemies = {}
 pendingWorldChanges = {}
 
 isWorldEditWindowOpen = false
 
 function initEditWorld() 
+  
     local files = recursiveEnumerate("assets/world", {})
     print(#files)
     for k, file in ipairs(files) do
