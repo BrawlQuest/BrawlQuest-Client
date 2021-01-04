@@ -109,6 +109,7 @@ function drawWorld()
     love.graphics.draw(worldCanvas, lowestX*32, lowestY*32)
     love.graphics.setBlendMode("alpha")
     love.graphics.setColor(1,1,1,0.5)
+
     for i,v in ipairs(pendingWorldChanges) do -- draw world edit pending changes
         local groundAsset = getWorldAsset(v.GroundTile, v.X, v.Y, true)
         local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y, true)
@@ -116,6 +117,7 @@ function drawWorld()
         love.graphics.draw(worldImg[groundAsset], v.X*32, v.Y*32)
         love.graphics.draw(worldImg[foregroundAsset], v.X*32, v.Y*32)
     end
+    
     love.graphics.setColor(1,1,1)
 end
 
