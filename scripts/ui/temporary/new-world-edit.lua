@@ -8,7 +8,7 @@ function initNewWorldEdit()
         boxHeight = 1,
         draw = {},
         selectableTile = "",
-        drawableTile = {"assets/world/grounds/grass/grass01.png", "assets/world/grounds/grass/grass01.png", ""},
+        drawableTile = {"assets/world/grounds/grass/grass08.png", "assets/world/grounds/grass/grass08.png", ""},
         selectedTile = {},
         enemyImages = {},
         selectedFloor = "",

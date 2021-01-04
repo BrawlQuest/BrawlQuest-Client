@@ -116,15 +116,11 @@ function love.draw()
         
         Luven.drawEnd()
         
-        if not isWorldEditWindowOpen and not worldEdit.open then
+        if not worldEdit.open then
             drawHUD()
         end
         
         drawNewWorldEditHud()
-
-        if isWorldEditWindowOpen then
-            drawEditWorldWindow()
-        end
 
         inventory.notNPC = true
         for i,v in ipairs(npcs) do
