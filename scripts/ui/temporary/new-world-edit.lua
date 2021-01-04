@@ -14,6 +14,7 @@ function initNewWorldEdit()
         selectedFloor = "",
         selectedObject = "",
         enemyInputType = 1,
+        eraser = true,
         hoveringOverButton = false,
         mouseOverEnemyButtons = 0,
         mouseOverControlButtons = 0,
@@ -157,9 +158,15 @@ function drawNewWorldEditTiles()
                         worldEdit.draw[x][y][4] = editorCtl.state[3]
                     end
                     if love.mouse.isDown(2) then
-                        worldEdit.draw[x][y][1] = worldEdit.drawableTile[1]
-                        worldEdit.draw[x][y][2] = worldEdit.drawableTile[1]
-                        worldEdit.draw[x][y][4] = editorCtl.state[3]
+                        if worldEdit.eraser then
+                            for i = 1, 3, 1 do
+                                worldEdit.draw[x][y][i] = ""
+                            end
+                        else
+                            worldEdit.draw[x][y][1] = worldEdit.drawableTile[1]
+                            worldEdit.draw[x][y][2] = worldEdit.drawableTile[1]
+                            worldEdit.draw[x][y][4] = editorCtl.state[3]
+                        end
                     end
                 end
             end
