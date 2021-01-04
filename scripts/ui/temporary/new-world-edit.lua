@@ -113,13 +113,13 @@ end
 function drawNewWorldEditTiles()
     if worldEdit.open then 
         local getWidth, getHeight = 100, 100
-        love.graphics.setColor(1,1,1,0.6)
+        love.graphics.setColor(1,1,1,1)
         for x = getWidth * -1, getWidth do
             for y = getHeight * -1, getHeight do
                 thisX, thisY = x * 32 , y * 32 
+                love.graphics.setColor(1,1,1,1) 
                 for z = 1, 3 do
                     if worldEdit.draw[x][y][z] ~= (nil or "") then
-                        love.graphics.setColor(1,1,1,1) 
                         love.graphics.draw(worldImg[worldEdit.draw[x][y][z]], thisX, thisY)
                     end
                 end
@@ -161,3 +161,35 @@ function checkWorldEditMouseDown(button)
         end
     end
 end
+
+function checkWorldEditkeyPressed(key)
+    if key == "space" and love.keyboard.isDown("lshift") then
+        local getWidth, getHeight = 100, 100
+        local count = 0
+        for x = getWidth * -1, getWidth do
+            for y = getHeight * -1, getHeight do
+                if worldEdit.draw[x][y][1] ~= "" then
+                    count = count + 1
+                    pendingWorldChanges[#pendingWorldChanges+1] = {
+                        GroundTile = worldEdit.draw[x][y][1],
+                        ForegroundTile = worldEdit.draw[x][y][2],
+                        Name =  "",
+                        Music = "*",
+                        Enemy = worldEdit.draw[x][y][3],
+                        Collision = worldEdit.draw[x][y][4],
+                        X = x,
+                        Y = y,
+                    }
+                end
+            end
+        end
+        local b = {}
+        print("World change amount = " .. count)
+        c, h = http.request{url = api.url.."/world", method="POST", source=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(pendingWorldChanges)),["token"]=token}}
+        pendingWorldChanges = {}
+        local b = {}
+        c, h = http.request{url = api.url.."/world", method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
+        world = json:decode(b[1])
+        createWorld()
+    end
+end 
