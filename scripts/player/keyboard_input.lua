@@ -16,12 +16,7 @@ function love.keypressed(key)
                 editingField = editingField + 1
             elseif key == "escape" or key == "'" then isWorldEditWindowOpen = false end
         elseif worldEdit.open then 
-            if key == "escape" or key == "'" then  
-                worldEdit.open = false 
-            end
-            if (key == "space" and love.keyboard.isDown("lshift")) or (key == "space" and love.keyboard.isDown("lgui")) then
-                saveWorldChanges()
-            end
+            checkWorldEditKeyPressed(key)
         elseif isSettingsWindowOpen then
             if key == "escape" or key == "w" or key == "a" or key == "s" or key == "d" then
                 isSettingsWindowOpen = false
