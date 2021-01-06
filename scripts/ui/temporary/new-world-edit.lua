@@ -33,7 +33,7 @@ function initNewWorldEdit()
         mouseOverEnemyButtons = 0,
         mouseOverControlButtons = 0,
         mouseOverAreaDrawButtons = 0,
-        worldSize = 100,
+        worldSize = 50,
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
     }
     
@@ -197,10 +197,13 @@ end
 
 function drawNewWorldEditTiles()
     love.graphics.setColor(1,1,1,1)
-    if worldEdit.open then
-        for x = worldEdit.worldSize * -1, worldEdit.worldSize do
-            for y = worldEdit.worldSize * -1, worldEdit.worldSize do
-                thisX, thisY = x * 32 , y * 32 
+    local worldSize = {w = worldEdit.worldSize, h = worldEdit.worldSize}
+    print ((worldSize.h * -1) + player.y .. "  " .. worldSize.h + player.y)
+    if worldEdit.open and player then
+        for x = (worldSize.w * -1) + player.x, worldSize.w + player.x do
+            for y = (worldSize.h * -1) + player.y, worldSize.h + player.y do
+                -- x, y = x + 10, y + 10
+                thisX, thisY = x * 32 , y * 32 -- x,y  = x, y + player position?
                 love.graphics.setColor(1,1,1,1)
                 for z = 1, 3 do
                     if worldEdit.draw[x][y][z] ~= (nil or "") then
@@ -210,6 +213,7 @@ function drawNewWorldEditTiles()
                             love.graphics.draw(worldEdit.enemyImages[worldEdit.draw[x][y][5]], thisX, thisY) -- draw enemy
                         end
                     end
+                    -- print(worldEdit.draw[x][y][z])
                 end
 
                 if worldEdit.draw[x][y][4] then 
