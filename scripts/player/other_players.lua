@@ -19,9 +19,13 @@ function drawCharacter(v, x, y, ad)
 
         local rotation = 1
         local offsetX = 0
+        local mountOffsetX = 0
         if ad and ad.previousDirection and ad.previousDirection == "left" then
             rotation = -1
             offsetX = 32
+            if v.Mount ~= "None" then
+                mountOffsetX = getImgIfNotExist("assets/player/mounts/"..v.Mount.."/back.png"):getWidth()-8
+            end
             love.graphics.draw(itemImg[v.Weapon.ImgPath], x + (itemImg[v.Weapon.ImgPath]:getWidth() - 32) + 32,
                 y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, rotation, 1, 0, 0)
         elseif ad and ad.previousDirection and ad.previousDirection == "right" then
@@ -32,8 +36,8 @@ function drawCharacter(v, x, y, ad)
         -- if v.isMounted then
         --     love.graphics.draw(horseImg, player.dx + 6, player.dy + 9)
         -- end
-         if v.isMounted then
-            love.graphics.draw(horseImg, x + 6, y + 9)
+         if v.Mount ~= "None" then
+            love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..v.Mount.."/back.png"), x + 6 + mountOffsetX, y + 9, 0, rotation, 1, 0, 0)
         end
 
         drawBuddy(v.Name)
@@ -49,8 +53,8 @@ function drawCharacter(v, x, y, ad)
             drawItemIfExists(v.LegArmour.ImgPath, x, y, ad.previousDirection)
         end
 
-        if v.isMounted then
-            love.graphics.draw(horseForeImg, x + 6, y + 9)
+        if v.Mount ~= "None" then
+            love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..v.Mount.."/fore.png"), x + 6 + mountOffsetX, y + 9, 0, rotation, 1, 0, 0)
         end
         -- if v.isMounting then
         --     love.graphics.draw(horseImg, player.mount.x, player.mount.y)
@@ -154,9 +158,11 @@ function updateOtherPlayers(dt)
                 ['AX'] = 0,
                 ['AY'] = 0,
                 ['HP'] = v.HP,
-                ['RedAlpha'] = 0
+                ['RedAlpha'] = 0,
+                ['Mount'] = v.Mount
             }
         end
+        playersDrawable[i].Mount = v.Mount
 
         if playersDrawable[i].HP > v.HP then
             playersDrawable[i].HP = v.HP
@@ -172,23 +178,27 @@ function updateOtherPlayers(dt)
         end
         
 
-        if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X * 32, v.Y * 32) > 64 then
+        if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X * 32, v.Y * 32) > 128 then
             playersDrawable[i].X = v.X * 32
             playersDrawable[i].Y = v.Y * 32
         end
         if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X * 32, v.Y * 32) > 1 then
+            local speed = 64
+            if playersDrawable[i].Mount ~= "None" then
+                speed = 110
+            end
             if playersDrawable[i].X - 1 > v.X * 32 then
-                playersDrawable[i].X = playersDrawable[i].X - 64 * dt
+                playersDrawable[i].X = playersDrawable[i].X - speed * dt
                 playersDrawable[i].previousDirection = "left"
             elseif playersDrawable[i].X + 1 < v.X * 32 then
-                playersDrawable[i].X = playersDrawable[i].X + 64 * dt
+                playersDrawable[i].X = playersDrawable[i].X + speed * dt
                 playersDrawable[i].previousDirection = "right"
             end
 
             if playersDrawable[i].Y - 1 > v.Y * 32 then
-                playersDrawable[i].Y = playersDrawable[i].Y - 64 * dt
+                playersDrawable[i].Y = playersDrawable[i].Y - speed * dt
             elseif playersDrawable[i].Y + 1 < v.Y * 32 then
-                playersDrawable[i].Y = playersDrawable[i].Y + 64 * dt
+                playersDrawable[i].Y = playersDrawable[i].Y + speed * dt
             end
         end
 
