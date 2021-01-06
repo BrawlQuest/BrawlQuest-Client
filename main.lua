@@ -74,6 +74,7 @@ lightGivers = {
     ["assets/world/objects/Lamp.png"] = 1,
     ["assets/world/objects/Furnace.png"] = 1,
     ["assets/world/objects/Campfire.png"] = 1,
+    ["assets/world/grounds/Lava.png"] = 0.2,
 }
 
 oldInfo = {}

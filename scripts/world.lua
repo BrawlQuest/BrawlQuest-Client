@@ -59,7 +59,7 @@ function drawTile(v)
     end
     local backgroundAsset = getWorldAsset(v.GroundTile, v.X, v.Y)
     local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y)
-    
+
     if lightGivers[foregroundAsset] and not lightSource[v.X .. "," .. v.Y] then
         lightSource[v.X .. "," .. v.Y] = true
         Luven.addNormalLight(16 + v.X * 32, 16 + v.Y * 32, {1, 0.5, 0}, lightGivers[foregroundAsset])
@@ -72,11 +72,12 @@ function drawTile(v)
         blockMap[v.X .. "," .. v.Y] = true
     end
 
-    love.graphics.draw(worldImg[backgroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32)  
-    
+    if worldImg[backgroundAsset] then
+        love.graphics.draw(worldImg[backgroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32)  
+    end 
+
     if worldLookup[v.X][v.Y-1] and (isTileWall(worldLookup[v.X][v.Y-1].ForegroundTile) or isTileWall(worldLookup[v.X][v.Y-1].GroundTile)) and not isTileWall(v.ForegroundTile) then
         love.graphics.setColor(0,0,0,0.5)
-        -- print(timeOfDay)
         love.graphics.rectangle("fill", (v.X+math.abs(lowestX)) * 32 , (v.Y+math.abs(lowestY)) * 32, 32,16)
         love.graphics.setColor(1,1,1,1)
     elseif (isTileWall(v.GroundTile) or isTileWall(v.ForegroundTile)) and not worldLookup[v.X][v.Y+1] then -- no tile below us but we stil need to cast a shadow
@@ -85,7 +86,7 @@ function drawTile(v)
         love.graphics.setColor(1,1,1,1)
     end 
 
-    if foregroundAsset ~= backgroundAsset then love.graphics.draw(worldImg[foregroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32) end
+    if foregroundAsset ~= backgroundAsset and worldImg[foregroundAsset] then love.graphics.draw(worldImg[foregroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32) end
 
 end
 
@@ -124,6 +125,7 @@ function getWorldAsset(v,x,y,notFindWall)
             worldImg[v] = love.graphics.newImage("assets/error.png")
         end
     end
+
     local foregroundAsset = v['ForegroundTile']
     local backgroundAsset = v['GroundTile']
 
@@ -133,9 +135,9 @@ function getWorldAsset(v,x,y,notFindWall)
         end
     end
 
-        if isTileWater(v) then
-            v = getDrawableWater(v, x, y)
-        end
+    if isTileWater(v) then
+        v = getDrawableWater(v, x, y)
+    end
 
     return v
 end
@@ -168,8 +170,8 @@ function getDrawableWall(tileName, x, y) -- this is used to smooth the corners o
     }
  
 
-    for i =1 ,4 do
-         v = worldToCheck[i]
+    for i = 1, 4 do
+        v = worldToCheck[i]
             if v and (isTileWall(v.ForegroundTile) or isTileWall(v.GroundTile)) then
                 if v.X == x - 1 and v.Y == y then
                     nearby.left = true
