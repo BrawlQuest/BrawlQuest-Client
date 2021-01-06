@@ -68,8 +68,10 @@ function drawTile(v)
         blockMap[v.X .. "," .. v.Y] = true
     end
 
-    love.graphics.draw(worldImg[backgroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32)  
-    
+    if worldImg[backgroundAsset] then
+        love.graphics.draw(worldImg[backgroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32)  
+    end 
+
     if worldLookup[v.X][v.Y-1] and (isTileWall(worldLookup[v.X][v.Y-1].ForegroundTile) or isTileWall(worldLookup[v.X][v.Y-1].GroundTile)) and not isTileWall(v.ForegroundTile) then
         love.graphics.setColor(0,0,0,0.5)
         -- print(timeOfDay)
@@ -120,6 +122,7 @@ function getWorldAsset(v,x,y,notFindWall)
             worldImg[v] = love.graphics.newImage("assets/error.png")
         end
     end
+
     local foregroundAsset = v['ForegroundTile']
     local backgroundAsset = v['GroundTile']
 
@@ -129,9 +132,9 @@ function getWorldAsset(v,x,y,notFindWall)
         end
     end
 
-        if isTileWater(v) then
-            v = getDrawableWater(v, x, y)
-        end
+    if isTileWater(v) then
+        v = getDrawableWater(v, x, y)
+    end
 
     return v
 end
