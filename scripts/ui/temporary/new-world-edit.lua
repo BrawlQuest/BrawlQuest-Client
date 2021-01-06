@@ -7,6 +7,8 @@ function initNewWorldEdit()
         showHud = true,
         tileSelect = false,
         tileSelection = {x = 0, y = 0},
+        mousePosition = {x = 0, y = 0},
+        mousePositionStart = {x = 0, y = 0},
         toolbarAmount = 1,
         boxHeight = 1,
         draw = {},
@@ -199,7 +201,7 @@ function drawNewWorldEditTiles()
         for x = worldEdit.worldSize * -1, worldEdit.worldSize do
             for y = worldEdit.worldSize * -1, worldEdit.worldSize do
                 thisX, thisY = x * 32 , y * 32 
-                love.graphics.setColor(1,1,1,1) 
+                love.graphics.setColor(1,1,1,1)
                 for z = 1, 3 do
                     if worldEdit.draw[x][y][z] ~= (nil or "") then
                         if z < 3 then
@@ -216,19 +218,53 @@ function drawNewWorldEditTiles()
                     love.graphics.setColor(1,1,1,1) 
                 end 
                 
-                if worldEdit.drawable and not worldEdit.hoveringOverButton and isMouseOver(
+                if worldEdit.drawable and not worldEdit.hoveringOverButton and isMouseOver( -- draws the 
                     (((thisX - player.dx - 16) * worldScale) + (love.graphics.getWidth()/2)), 
                     (((thisY - player.dy - 16) * worldScale) + (love.graphics.getHeight()/2)), 
                     32 * worldScale, 
                     32 * worldScale) then
+
+                    worldEdit.mousePosition = {x = x, y = y}
+                    
                     if worldEdit.tileSelect then
                         love.graphics.setColor(1, 0, 1, 0.5)
                         worldEdit.tileSelection = {x = x, y = y}
                     else
                         love.graphics.setColor(1,1,1,0.5)
                     end
-                    love.graphics.rectangle("fill", thisX, thisY, 32, 32)
-                    if worldEdit.open and not worldEdit.tileSelect and (love.mouse.isDown(1) or love.mouse.isDown(2)) then
+
+                    if worldEdit.drawmode == "pencil" then
+                        love.graphics.rectangle("fill", thisX, thisY, 32, 32)
+                    elseif worldEdit.drawmode == "rectangle" and not worldEdit.tileSelect then
+                        local startx = (worldEdit.mousePositionStart.x * 32)
+                        local starty = (worldEdit.mousePositionStart.y * 32)
+                        local endx = (worldEdit.mousePosition.x * 32)
+                        local endy = (worldEdit.mousePosition.y * 32)
+                        local width = 0
+                        local height = 0
+
+                        if love.mouse.isDown(1) then
+
+                            if startx < endx then
+                                width = endx + 32 - startx
+                            else
+                                width = endx + 0 - startx
+                            end
+                            
+                            if starty < endy then
+                                height = endy + 32 - starty
+                            else
+                                height = endy + 0 - starty
+                            end
+                            
+                            love.graphics.rectangle("fill", startx, starty, width, height)
+                        else
+                            love.graphics.rectangle("fill", thisX, thisY, 32, 32)
+                        end
+                    end
+
+
+                    if worldEdit.drawmode == "pencil" and not worldEdit.tileSelect and (love.mouse.isDown(1) or love.mouse.isDown(2)) then
                         worldEdit.changed = true
                         editorCtl.state[1] = true
                         editorCtl.state[5] = true
@@ -303,6 +339,10 @@ function checkWorldEditMouseDown(button)
                 worldEdit.drawableTile[4] = false
                 editorCtl.state[2] = false
             end
+        end
+
+        if button == 1 and worldEdit.drawable then
+            worldEdit.mousePositionStart = worldEdit.mousePosition
         end
 
         if worldEdit.mouseOverEnemyButtons > 0 then
