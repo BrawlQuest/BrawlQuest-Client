@@ -30,6 +30,10 @@ function createWorld()
         if v.Y < lowestY then
             lowestY = v.Y
         end
+
+        if isTileType(v.ForegroundTile, "Tree") and love.math.random(1,20) == 1 then
+            addLeaf(v.X*32 + 16, v.Y*32 + 16)
+        end
     end
     worldCanvas = love.graphics.newCanvas(32*(highestX+math.abs(lowestX)+2), 32*(highestY+math.abs(lowestY)+2))
     reinitLighting(32*(highestX+math.abs(lowestX)+2), 32*(highestY+math.abs(lowestY)+2))

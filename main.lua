@@ -11,6 +11,7 @@ require "scripts.effects.sfx"
 require "scripts.effects.loot"
 require "scripts.effects.buddies"
 require "scripts.effects.auras"
+require "scripts.effects.leaves"
 require "scripts.effects.camera"
 require "scripts.ui.hud_controller"
 require "scripts.ui.components.character-hub"
@@ -85,7 +86,7 @@ function love.load()
     initHardData()
     initLogin()
     initHUD()
-    
+    initLeaves()
     initSettings()
     loadMusic()
     initEditWorld()
@@ -112,6 +113,7 @@ function love.draw()
         end
 
         drawPlayer(me, -1)
+        drawLeaves()
         drawLoot()
         drawFloats()
         
@@ -188,6 +190,7 @@ function love.update(dt)
         updateMusic(dt)
         updateLoot(dt)
         updateNPCChat(dt)
+        updateLeaves(dt)
         Luven.update(dt)
         updateCamera(dt)
         updateOtherPlayers(dt)
