@@ -33,7 +33,8 @@ function initNewWorldEdit()
         mouseOverEnemyButtons = 0,
         mouseOverControlButtons = 0,
         mouseOverAreaDrawButtons = 0,
-        worldSize = 50,
+        worldSize = 400,
+        drawnWorldSize = 20, -- +- value
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
     }
     
@@ -197,8 +198,7 @@ end
 
 function drawNewWorldEditTiles()
     love.graphics.setColor(1,1,1,1)
-    local worldSize = {w = worldEdit.worldSize, h = worldEdit.worldSize}
-    print ((worldSize.h * -1) + player.y .. "  " .. worldSize.h + player.y)
+    local worldSize = {w = worldEdit.drawnWorldSize, h = worldEdit.drawnWorldSize}
     if worldEdit.open and player then
         for x = (worldSize.w * -1) + player.x, worldSize.w + player.x do
             for y = (worldSize.h * -1) + player.y, worldSize.h + player.y do
@@ -239,7 +239,7 @@ function drawNewWorldEditTiles()
 
                     if worldEdit.drawmode == "pencil" then
                         love.graphics.rectangle("fill", thisX, thisY, 32, 32)
-                    elseif worldEdit.drawmode == "rectangle" and not worldEdit.tileSelect then
+                    elseif worldEdit.drawmode == "rectangle" and not worldEdit.tileSelect then -- if mouse down true fade if not.
                         local startx = (worldEdit.mousePositionStart.x * 32)
                         local starty = (worldEdit.mousePositionStart.y * 32)
                         local endx = (worldEdit.mousePosition.x * 32)
