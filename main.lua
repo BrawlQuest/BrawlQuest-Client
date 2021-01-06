@@ -31,6 +31,7 @@ require "scripts.enemies"
 require "scripts.npcs"
 require "scripts.world"
 require "scripts.ui.temporary.worldedit"
+require "scripts.ui.temporary.new-world-edit"
 require "data.data_controller"
 require "scripts.player.settings"
 require "scripts.ui.components.npc-chat"
@@ -99,6 +100,7 @@ function love.draw()
         Luven.drawBegin()
 
         drawWorld()
+        drawNewWorldEditTiles()
         drawAuras()
         love.graphics.setColor(1, 1, 1)
         drawNPCs()
@@ -111,14 +113,14 @@ function love.draw()
         drawPlayer(me, -1)
         drawLoot()
         drawFloats()
+        
         Luven.drawEnd()
         
-        if not isWorldEditWindowOpen then
+        if not worldEdit.open then
             drawHUD()
         end
-        if isWorldEditWindowOpen then
-            drawEditWorldWindow()
-        end
+        
+        drawNewWorldEditHud()
 
         inventory.notNPC = true
         for i,v in ipairs(npcs) do
@@ -135,8 +137,10 @@ function love.draw()
           
         -- print(brightnessSlider:getValue())
         
-        love.graphics.setFont(font)
-        love.graphics.print(player.x..", "..player.y,10,6)
+        if not worldEdit.open then
+            love.graphics.setFont(font)
+            love.graphics.print(player.x..", "..player.y,10,6)
+        end
     end
 
 

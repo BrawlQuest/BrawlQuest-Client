@@ -14,11 +14,13 @@ thisTile = {
 
 worldFiles = {}
 
+availableEnemies = {}
 pendingWorldChanges = {}
 
 isWorldEditWindowOpen = false
 
 function initEditWorld() 
+  
     local files = recursiveEnumerate("assets/world", {})
     print(#files)
     for k, file in ipairs(files) do
@@ -93,20 +95,20 @@ function checkEditWorldClick(x,y)
     local tx = 10
     local ty = 10
     
-        for i,v in ipairs(worldFiles) do
-            if string.sub(v,1,25) ~= "assets/world/objects/Wall" and string.sub(v,1,18) ~= "assets/world/water" then
-                if isMouseOver(tx,ty,32,32) then
-                    if love.mouse.isDown(1) then
-                        textfields[6] = v
-                    elseif love.mouse.isDown(2) then
-                        textfields[5] = v
-                    end
+    for i,v in ipairs(worldFiles) do
+        if string.sub(v,1,25) ~= "assets/world/objects/Wall" and string.sub(v,1,18) ~= "assets/world/water" then
+            if isMouseOver(tx,ty,32,32) then
+                if love.mouse.isDown(1) then
+                    textfields[6] = v
+                elseif love.mouse.isDown(2) then
+                    textfields[5] = v
                 end
-                tx = tx + 32 + 5
-                if tx > love.graphics.getWidth()*0.75 then
-                    ty = ty + 32 + 5
-                    tx = 10
-                end
+            end
+            tx = tx + 32 + 5
+            if tx > love.graphics.getWidth()*0.75 then
+                ty = ty + 32 + 5
+                tx = 10
+            end
         end 
     end
     if isMouseOver(loginImageX+35,loginImageY+240,288,44) then

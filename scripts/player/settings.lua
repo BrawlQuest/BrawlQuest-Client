@@ -179,7 +179,7 @@ function checkSettingsMousePressed(button)
         end
         
         if isMouseOver(thisX, thisY + (50 * 3), questPopUpWidth - (padding*2), 40) and button == 1 then
-            love.event.quit()
+            checkIfReadyToQuit()
         end
     end
 end
@@ -190,4 +190,4 @@ function dpiScaler(thisDPI)
         resizable = thisDPI,
         fullscreen = fullscreen,
     }) 
-end    
+end

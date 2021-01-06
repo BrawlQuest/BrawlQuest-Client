@@ -65,9 +65,9 @@ function updateCharacter(dt)
         }
         updateBuddy(dt, pl)
     end
-    if not isWorldEditWindowOpen then
-        movePlayer(dt)
-    end
+
+    movePlayer(dt)
+    
     if player.dhp > player.hp then
         player.dhp = player.dhp - ((player.dhp/player.hp)*100) * dt
     elseif player.dhp < player.hp then

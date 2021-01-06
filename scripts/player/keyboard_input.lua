@@ -15,12 +15,14 @@ function love.keypressed(key)
             elseif key == "tab" or key == "return" then
                 editingField = editingField + 1
             elseif key == "escape" or key == "'" then isWorldEditWindowOpen = false end
+        elseif worldEdit.open then 
+            checkWorldEditKeyPressed(key)
         elseif isSettingsWindowOpen then
             if key == "escape" or key == "w" or key == "a" or key == "s" or key == "d" then
                 isSettingsWindowOpen = false
             end
             if key == "return" then
-                love.event.quit()
+                checkIfReadyToQuit()
             end
         elseif isTypingInChat then
             if key == "backspace" then
@@ -53,42 +55,18 @@ function love.keypressed(key)
                 table.remove(quests[1], 1)
             end
 
-            if key == "return" and not isSettingsWindowOpen then
-                isTypingInChat = true
-            end
+            if key == "return" and not isSettingsWindowOpen then isTypingInChat = true end
 
-            if key == keybinds.SHIELD then
-                shieldUpSfx:play()
-            end
+            if key == keybinds.SHIELD then shieldUpSfx:play() end
 
             if key == "escape" then                 
                 isSettingsWindowOpen = true
                 loadSliders()
             end
 
-            if key == "'" then
-                if isWorldEditWindowOpen then isWorldEditWindowOpen = false else isWorldEditWindowOpen = true end
-            elseif key == "space" and love.keyboard.isDown("lshift") then
-                c, h = http.request{url = api.url.."/world", method="POST", source=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(pendingWorldChanges)),["token"]=token}}
-                pendingWorldChanges = {}
-                local b = {}
-                c, h = http.request{url = api.url.."/world", method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
-                world = json:decode(b[1])
-                createWorld()
-            elseif key == "lctrl" then
-                pendingWorldChanges[#pendingWorldChanges+1] = {
-                    GroundTile = textfields[5],
-                    ForegroundTile = textfields[6],
-                    Name =  textfields[7],
-                    Music = "*",
-                    Collision = thisTile.Collision,
-                    Enemy = textfields[8],
-                    X = player.x + 0,
-                    Y = player.y + 0,
-                }
-            elseif key == keybinds.INTERACT then
-                startConversation()
-            end
+            if key == "'" then worldEdit.open = not worldEdit.open end
+
+            if key == keybinds.INTERACT then startConversation() end
 
             if (key == "i" or key == "e") and inventory.notNPC then
                 inventory.forceOpen = not inventory.forceOpen
@@ -96,7 +74,6 @@ function love.keypressed(key)
 
             if key == "q" then
                 questsPanel.forceOpen = not questsPanel.forceOpen
-                print("it was pressed")
             end
 
             if key == keybinds.CRAFTING then

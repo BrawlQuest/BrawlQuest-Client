@@ -136,6 +136,21 @@ function login()
             end
             loginPhase = "characters"
         end
+        r, h = http.request {
+            url = api.url .. "/enemies",
+          
+            sink = ltn12.sink.table(availableEnemies)
+        }
+        
+       if c == 200 then
+            if type(availableEnemies[1]) == "string" then
+                availableEnemies = json:decode(availableEnemies[1])
+                -- print(json:encode(availableEnemies))
+                for i,v in ipairs(availableEnemies) do
+                    worldEdit.enemyImages[i] = love.graphics.newImage(v.Image)
+                end
+            end
+        end
     elseif c == 401 then
         textfields[2] = ""
         textfields[3] = ""

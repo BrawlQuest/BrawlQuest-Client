@@ -8,8 +8,8 @@ lowestY = 0
 function createWorld()
     
     lightSource = {}
-    local highestX = 0
-    local highestY = 0
+    highestX = 0
+    highestY = 0
     lowestX = 0
     lowestY = 0
     for i,v in ipairs(world) do
@@ -47,7 +47,7 @@ function createWorld()
     end
 end
 
-function drawTile(v, offset)
+function drawTile(v)
     if isTileLit(v.X, v.Y) then
         love.graphics.setColor(1, 1, 1)
     else
@@ -55,8 +55,7 @@ function drawTile(v, offset)
     end
     local backgroundAsset = getWorldAsset(v.GroundTile, v.X, v.Y)
     local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y)
-
-
+    
     if lightGivers[foregroundAsset] and not lightSource[v.X .. "," .. v.Y] then
         lightSource[v.X .. "," .. v.Y] = true
         Luven.addNormalLight(16 + v.X * 32, 16 + v.Y * 32, {1, 0.5, 0}, lightGivers[foregroundAsset])
@@ -108,23 +107,12 @@ function drawWorld()
     love.graphics.setBlendMode("alpha", "premultiplied")
     love.graphics.draw(worldCanvas, lowestX*32, lowestY*32)
     love.graphics.setBlendMode("alpha")
-    love.graphics.setColor(1,1,1,0.5)
-    for i,v in ipairs(pendingWorldChanges) do -- draw world edit pending changes
-        local groundAsset = getWorldAsset(v.GroundTile, v.X, v.Y, true)
-        local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y, true)
-        if groundAsset == "assets/world/grounds/grass.png" then 
-            groundAsset = getWorldAsset("assets/world/grounds/snow.png")
-        end
-        love.graphics.draw(worldImg[groundAsset], v.X*32, v.Y*32)
-        love.graphics.draw(worldImg[foregroundAsset], v.X*32, v.Y*32)
-    end
+    
     love.graphics.setColor(1,1,1)
 end
 
 function getWorldAsset(v,x,y,notFindWall)
-    if isTileType(v, "grass") then -- TODO: remove, make server side
-        v = "assets/world/grounds/Snow.png"
-    end
+  
     if not worldImg[v] then
         if love.filesystem.getInfo(v) then
             worldImg[v] = love.graphics.newImage(v)
