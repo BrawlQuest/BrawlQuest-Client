@@ -31,7 +31,7 @@ function createWorld()
             lowestY = v.Y
         end
 
-        if isTileType(v.ForegroundTile, "Tree") and love.math.random(1,20) == 1 then
+        if not isTileType(v.ForegroundTile, "Dead") and isTileType(v.ForegroundTile, "Tree") and love.math.random(1,5) == 1 then
             addLeaf(v.X*32 + 16, v.Y*32 + 16)
         end
     end
