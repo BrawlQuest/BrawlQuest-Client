@@ -18,6 +18,9 @@ function initNewWorldEdit()
             false, -- collisions
             0, -- enemy index
         },
+        drawmode = "pencil",
+        
+        areaDrawButtonsTotal = 0,
         selectedTile = {},
         enemyImages = {},
         selectedFloor = "",
@@ -27,8 +30,13 @@ function initNewWorldEdit()
         hoveringOverButton = false,
         mouseOverEnemyButtons = 0,
         mouseOverControlButtons = 0,
+        mouseOverAreaDrawButtons = 0,
         worldSize = 100,
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
+    }
+    
+    areaDraw = {
+        state = {false, false, false, false, },   
     }
 
     editorCtl = {
@@ -36,7 +44,9 @@ function initNewWorldEdit()
         state = {false, false, true, false, false},
         stateTitle = {{"", "",}, {"OFF", "ON"}, {"Closed", "Open",}, {"OFF", "ON"}, {"", "",},},
     }
+
     initDrawableNewWorldEditTiles()
+
 end
 
 function drawEditorButtons()
@@ -52,11 +62,19 @@ function drawEditorButtons()
 
     for i = 1, 4 do
         local x, y = cerp(10, 320, worldEdit.toolbarAmount) + (52 * (i - 1)), love.graphics.getHeight() - 45 - 52
-        drawNewWorldEditButton(x, y, 42, 42, false)
+        drawNewWorldEditButton(x, y, 42, 42, areaDraw.state[i])
         if i < 3 then love.graphics.draw(worldImg[worldEdit.drawableTile[i]], x + 5, y + 5)
-        elseif i == 3 and worldEdit.drawableTile[5] ~= 0 then love.graphics.draw(worldEdit.enemyImages[worldEdit.drawableTile[5]], x + 5, y + 5)
-        else love.graphics.printf("Collisions: " .. boolToString(worldEdit.drawableTile[4]), x + 5, y + 10, 32)
+        elseif i == 3 then 
+            if worldEdit.drawableTile[5] ~= 0 then
+                love.graphics.draw(worldEdit.enemyImages[worldEdit.drawableTile[5]], x + 5, y + 5)
+            else
+                love.graphics.printf("Enemy", x + 5, y + 10, 32)
+            end
+        elseif i == 4 then 
+            if areaDraw.state[4] then love.graphics.setColor(0,0,0,1) else love.graphics.setColor(1,1,1,1) end
+            love.graphics.printf("Collisions: " .. boolToString(editorCtl.state[2]), x + 5, y + 10, 32)
         end
+        if isMouseOver(x,y,42,42) then worldEdit.mouseOverAreaDrawButtons = i end
     end
 end
 
@@ -92,10 +110,11 @@ function updateNewWorldEdit(dt)
     end  
 end
 
-function drawNewWorldEditHud()
+function drawNewWorldEditHud() 
     if worldEdit.open then
         worldEdit.mouseOverEnemyButtons = 0
         worldEdit.mouseOverControlButtons = 0
+        worldEdit.mouseOverAreaDrawButtons = 0
         worldEdit.hoveringOverButton = false
         worldEdit.selectableTile = ""
         local thisX, thisY = 0, cerp(love.graphics.getHeight() + (32 * (worldEdit.boxHeight + 3)), love.graphics.getHeight(), worldEdit.toolbarAmount)
@@ -331,6 +350,46 @@ function checkWorldEditMouseDown(button)
                 end
 
             end
+
+        elseif worldEdit.mouseOverAreaDrawButtons > 0 then
+            if button == 1 then
+
+                if worldEdit.mouseOverAreaDrawButtons == 1 then -- Ground
+                    areaDraw.state[1] = not areaDraw.state[1]
+                end
+
+                if worldEdit.mouseOverAreaDrawButtons == 2 then -- Foreground
+                    areaDraw.state[2] = not areaDraw.state[2]
+                end
+
+                if worldEdit.mouseOverAreaDrawButtons == 3 and worldEdit.drawableTile[5] ~= 0 then -- enemies
+                    areaDraw.state[3] = not areaDraw.state[3]
+                end
+
+                if worldEdit.mouseOverAreaDrawButtons == 4 then -- Collisions
+                    areaDraw.state[4] = not areaDraw.state[4]
+                end
+
+                if worldEdit.mouseOverAreaDrawButtons == 5 then -- Area Name
+                    areaDraw.state[5] = not areaDraw.state[5]
+                end
+
+                local total = 0
+                for i, v in ipairs(areaDraw.state) do
+                    if v == true then
+                        total = total + 1
+                    end
+                end
+
+                if total <= 0 then
+                    worldEdit.drawmode = "pencil"
+                else
+                    worldEdit.drawmode = "rectangle"
+                end
+
+                print (worldEdit.drawmode .. ", " .. total)
+            end
+            
         elseif worldEdit.selectableTile ~= "" then
             if button == 1 then
                 worldEdit.drawableTile[2] = worldEdit.selectableTile
@@ -354,7 +413,7 @@ function checkWorldEditKeyPressed(key)
         worldEdit.open = false 
     end
 
-    if key == "s" and love.keyboard.isDown("lgui") then
+    if key == "s" and (love.keyboard.isDown("lgui") or love.keyboard.isDown("lalt")) then
         saveWorldChanges()
     end
 end
