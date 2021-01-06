@@ -242,22 +242,26 @@ function drawNewWorldEditTiles()
                         local endy = (worldEdit.mousePosition.y * 32)
                         local width = 0
                         local height = 0
-
                         if love.mouse.isDown(1) then
+                            width = endx - startx
+                            height = endy - starty
 
                             if startx < endx then
-                                width = endx + 32 - startx
+                                width = endx - startx
                             else
-                                width = endx + 0 - startx
+                                width = endx - startx - 32
+                                startx = startx + 32
                             end
-                            
+
                             if starty < endy then
-                                height = endy + 32 - starty
+                                height = endy - starty
                             else
-                                height = endy + 0 - starty
+                                height = endy - starty - 32
+                                starty = starty + 32
                             end
-                            
+
                             love.graphics.rectangle("fill", startx, starty, width, height)
+                            -- print (endx .. " " .. startx)
                         else
                             love.graphics.rectangle("fill", thisX, thisY, 32, 32)
                         end
