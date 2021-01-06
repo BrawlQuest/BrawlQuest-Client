@@ -162,6 +162,7 @@ function updateOtherPlayers(dt)
                 ['Mount'] = v.Mount
             }
         end
+        playersDrawable[i].Mount = v.Mount
 
         if playersDrawable[i].HP > v.HP then
             playersDrawable[i].HP = v.HP
@@ -177,7 +178,7 @@ function updateOtherPlayers(dt)
         end
         
 
-        if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X * 32, v.Y * 32) > 64 then
+        if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X * 32, v.Y * 32) > 128 then
             playersDrawable[i].X = v.X * 32
             playersDrawable[i].Y = v.Y * 32
         end
