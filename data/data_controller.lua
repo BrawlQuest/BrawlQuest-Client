@@ -28,6 +28,13 @@ function initHardData()
             [-1] = love.graphics.newImage("assets/ui/target/ne_arrow_1.png"),
             [1] = love.graphics.newImage("assets/ui/target/se_arrow_1.png")
         }
-    
+        
+        foliageImg = {
+            love.graphics.newImage("assets/world/objects/foliage/BQ Foliage-1.png"),
+            love.graphics.newImage("assets/world/objects/foliage/BQ Foliage-2.png"),
+            love.graphics.newImage("assets/world/objects/foliage/BQ Foliage-3.png"),
+            love.graphics.newImage("assets/world/objects/foliage/BQ Foliage-4.png"),
+        }
+
         initLighting()
 end
