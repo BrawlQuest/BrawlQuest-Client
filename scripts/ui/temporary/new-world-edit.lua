@@ -5,6 +5,8 @@ function initNewWorldEdit()
         drawable = true,
         isDrawing = false,
         showHud = true,
+        tileSelect = false,
+        tileSelection = {x = 0, y = 0},
         toolbarAmount = 1,
         boxHeight = 1,
         draw = {},
@@ -30,7 +32,7 @@ function initNewWorldEdit()
     }
 
     editorCtl = {
-        title = {"(Ctl + S) Save Changes", "(Q) Collisions: ", "(E) Hud: ", "(R or Space) Rubber: ", "Clear Changes", },
+        title = {"(CMD + S) Save Changes", "(Q) Collisions: ", "(E) Hud: ", "(R or Space) Rubber: ", "Clear Changes", },
         state = {false, false, true, false, false},
         stateTitle = {{"", "",}, {"OFF", "ON"}, {"Closed", "Open",}, {"OFF", "ON"}, {"", "",},},
     }
@@ -39,7 +41,7 @@ end
 
 function drawEditorButtons()
     for i,v in ipairs(editorCtl.title) do -- Top Left Control Buttons
-        local x, y, width, height, padding = 10 + (110 * (i - 1)), 10, 100, 35, 10
+        local x, y, width, height, padding = cerp(10, 320, worldEdit.toolbarAmount) + (110 * (i - 1)), love.graphics.getHeight() - 45, 100, 35, 10
         drawNewWorldEditButton(x, y, width, height, editorCtl.state[i])
         if isMouseOver(x, y, width, height) then
             worldEdit.mouseOverControlButtons = i
@@ -47,10 +49,23 @@ function drawEditorButtons()
         if editorCtl.state[i] then love.graphics.setColor(0,0,0,1) else love.graphics.setColor(1,1,1,1) end
         love.graphics.printf(editorCtl.title[i] .. editorCtl.stateTitle[i][boolToInt(editorCtl.state[i]) + 1], x + padding, y + padding, width - (padding * 2))
     end
+
+    for i = 1, 4 do
+        local x, y = cerp(10, 320, worldEdit.toolbarAmount) + (52 * (i - 1)), love.graphics.getHeight() - 45 - 52
+        drawNewWorldEditButton(x, y, 42, 42, false)
+        if i < 3 then love.graphics.draw(worldImg[worldEdit.drawableTile[i]], x + 5, y + 5)
+        elseif i == 3 and worldEdit.drawableTile[5] ~= 0 then love.graphics.draw(worldEdit.enemyImages[worldEdit.drawableTile[5]], x + 5, y + 5)
+        else love.graphics.printf("Collisions: " .. boolToString(worldEdit.drawableTile[4]), x + 5, y + 10, 32)
+        end
+    end
 end
 
 function boolToInt(value)
     return value and 1 or 0
+end
+
+function boolToString(bool)
+    if bool then return "On" else return "Off" end
 end
 
 function updateNewWorldEdit(dt)
@@ -69,6 +84,11 @@ function updateNewWorldEdit(dt)
             if worldEdit.toolbarAmount < 0 then worldEdit.toolbarAmount = 0 end
         end
 
+        if love.keyboard.isDown("lctrl") then
+            worldEdit.tileSelect = true
+        else
+            worldEdit.tileSelect = false
+        end
     end  
 end
 
@@ -178,21 +198,32 @@ function drawNewWorldEditTiles()
                 end 
                 
                 if worldEdit.drawable and not worldEdit.hoveringOverButton and isMouseOver(
-                        (((thisX - player.dx - 16) * worldScale) + (love.graphics.getWidth()/2)), 
-                        (((thisY - player.dy - 16) * worldScale) + (love.graphics.getHeight()/2)), 
-                        32 * worldScale, 
-                        32 * worldScale) then
-                    love.graphics.setColor(1,1,1,0.5)
+                    (((thisX - player.dx - 16) * worldScale) + (love.graphics.getWidth()/2)), 
+                    (((thisY - player.dy - 16) * worldScale) + (love.graphics.getHeight()/2)), 
+                    32 * worldScale, 
+                    32 * worldScale) then
+                    if worldEdit.tileSelect then
+                        love.graphics.setColor(1, 0, 1, 0.5)
+                        worldEdit.tileSelection = {x = x, y = y}
+                    else
+                        love.graphics.setColor(1,1,1,0.5)
+                    end
                     love.graphics.rectangle("fill", thisX, thisY, 32, 32)
-                    if worldEdit.open and (love.mouse.isDown(1) or love.mouse.isDown(2)) then
+                    if worldEdit.open and not worldEdit.tileSelect and (love.mouse.isDown(1) or love.mouse.isDown(2)) then
                         worldEdit.changed = true
                         editorCtl.state[1] = true
                         editorCtl.state[5] = true
                     
                         if love.mouse.isDown(1) then
-                            if editorCtl.state[4] then -- erasor
-                                for i = 1, 3 do
-                                    worldEdit.draw[x][y][i] = ""
+                            if editorCtl.state[4] then -- rubber
+                                if worldLookup[x][y] then
+                                    worldEdit.draw[x][y][1] = worldLookup[x][y].GroundTile
+                                    worldEdit.draw[x][y][2] = worldLookup[x][y].ForegroundTile
+                                    worldEdit.draw[x][y][3] = ""
+                                else
+                                    for i = 1, 3 do
+                                        worldEdit.draw[x][y][i] = ""
+                                    end
                                 end
                                 worldEdit.draw[x][y][4] = false -- collisions
                             else
@@ -205,16 +236,24 @@ function drawNewWorldEditTiles()
                         end
 
                         if love.mouse.isDown(2) then
-                            if editorCtl.state[4] then -- erasor
+                            if editorCtl.state[4] then -- rubber
                                 if worldEdit.draw[x][y][1] ~= "" then
                                     worldEdit.draw[x][y][1] = worldEdit.draw[x][y][1]
                                 end
                                 worldEdit.draw[x][y][2] = ""
                                 worldEdit.draw[x][y][3] = "" -- enemy
                             elseif love.keyboard.isDown("lshift") then
-                                for i = 1, 3 do
-                                    worldEdit.draw[x][y][i] = ""
+                                
+                                if worldLookup[x][y] then
+                                    worldEdit.draw[x][y][1] = worldLookup[x][y].GroundTile
+                                    worldEdit.draw[x][y][2] = worldLookup[x][y].ForegroundTile
+                                    worldEdit.draw[x][y][3] = ""
+                                else
+                                    for i = 1, 3 do
+                                        worldEdit.draw[x][y][i] = ""
+                                    end
                                 end
+
                                 worldEdit.draw[x][y][4] = false -- collisions
                             else
                                 worldEdit.draw[x][y][1] = worldEdit.drawableTile[1]
@@ -232,6 +271,21 @@ end
 
 function checkWorldEditMouseDown(button)
     if worldEdit.open then
+
+        if button == 1 and worldEdit.tileSelect then -- Selecting a tile to copy - enenmies
+            if worldLookup[worldEdit.tileSelection.x][worldEdit.tileSelection.y] then
+                worldEdit.drawableTile[1] = worldLookup[worldEdit.tileSelection.x][worldEdit.tileSelection.y].GroundTile
+                worldEdit.drawableTile[2] = worldLookup[worldEdit.tileSelection.x][worldEdit.tileSelection.y].ForegroundTile
+                worldEdit.drawableTile[4] = worldLookup[worldEdit.tileSelection.x][worldEdit.tileSelection.y].Collision
+                editorCtl.state[2] = worldLookup[worldEdit.tileSelection.x][worldEdit.tileSelection.y].Collision
+            else
+                worldEdit.drawableTile[1] = "assets/world/grounds/grass/grass08.png"
+                worldEdit.drawableTile[2] = "assets/world/grounds/grass/grass08.png"
+                worldEdit.drawableTile[4] = false
+                editorCtl.state[2] = false
+            end
+        end
+
         if worldEdit.mouseOverEnemyButtons > 0 then
             if button == 1 then
                 if worldEdit.enemyInputType == worldEdit.mouseOverEnemyButtons then
@@ -300,7 +354,7 @@ function checkWorldEditKeyPressed(key)
         worldEdit.open = false 
     end
 
-    if key == "s" and (love.keyboard.isDown("lctrl") or love.keyboard.isDown("lgui")) then
+    if key == "s" and love.keyboard.isDown("lgui") then
         saveWorldChanges()
     end
 end

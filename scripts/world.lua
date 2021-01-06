@@ -74,7 +74,6 @@ function drawTile(v)
 
     if worldLookup[v.X][v.Y-1] and (isTileWall(worldLookup[v.X][v.Y-1].ForegroundTile) or isTileWall(worldLookup[v.X][v.Y-1].GroundTile)) and not isTileWall(v.ForegroundTile) then
         love.graphics.setColor(0,0,0,0.5)
-        -- print(timeOfDay)
         love.graphics.rectangle("fill", (v.X+math.abs(lowestX)) * 32 , (v.Y+math.abs(lowestY)) * 32, 32,16)
         love.graphics.setColor(1,1,1,1)
     elseif (isTileWall(v.GroundTile) or isTileWall(v.ForegroundTile)) and not worldLookup[v.X][v.Y+1] then -- no tile below us but we stil need to cast a shadow
@@ -83,7 +82,7 @@ function drawTile(v)
         love.graphics.setColor(1,1,1,1)
     end 
 
-    if foregroundAsset ~= backgroundAsset then love.graphics.draw(worldImg[foregroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32) end
+    if foregroundAsset ~= backgroundAsset and worldImg[foregroundAsset] then love.graphics.draw(worldImg[foregroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32) end
 
 end
 
@@ -167,8 +166,8 @@ function getDrawableWall(tileName, x, y) -- this is used to smooth the corners o
     }
  
 
-    for i =1 ,4 do
-         v = worldToCheck[i]
+    for i = 1, 4 do
+        v = worldToCheck[i]
             if v and (isTileWall(v.ForegroundTile) or isTileWall(v.GroundTile)) then
                 if v.X == x - 1 and v.Y == y then
                     nearby.left = true
