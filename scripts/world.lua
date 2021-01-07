@@ -40,6 +40,14 @@ function createWorld()
     love.graphics.setCanvas(worldCanvas)
         love.graphics.clear()
         love.graphics.setColor(1, 1, 1)
+        
+        for x = worldEdit.worldSize * -1, worldEdit.worldSize do
+            for y = worldEdit.worldSize * -1, worldEdit.worldSize do
+                love.graphics.setColor(1,1,1,1)
+                love.graphics.draw(groundImg, x * 32, y * 32)
+            end
+        end
+        
         for i, v in ipairs(world) do
             drawTile(v)
         end
@@ -91,23 +99,23 @@ function drawTile(v)
 end
 
 function drawWorld()
-    for x = player.x - (love.graphics.getWidth()/2)/32, player.x + (love.graphics.getWidth()/2)/32 do
-        for y = player.y - (love.graphics.getHeight()/2)/32, player.y + (love.graphics.getHeight()/2)/32 do
-            -- if isTileLit(x, y) then
-            --     if not wasTileLit(x, y) then
-            --         love.graphics.setColor(1 - oldLightAlpha, 1 - oldLightAlpha, 1 - oldLightAlpha) -- light up a tile
-            --     else
-            --         love.graphics.setColor(1, 1, 1)
-            --     end
-            -- elseif wasTileLit(x, y) and oldLightAlpha > 0.2 then
-            --     love.graphics.setColor(oldLightAlpha, oldLightAlpha, oldLightAlpha)
-            -- else
-            --     love.graphics.setColor(0, 0, 0, 0)
-            -- end
-            love.graphics.setColor(1,1,1,1)
-            love.graphics.draw(groundImg, x * 32, y * 32)
-        end
-    end
+    -- for x = player.x - (love.graphics.getWidth()/2)/32, player.x + (love.graphics.getWidth()/2)/32 do
+    --     for y = player.y - (love.graphics.getHeight()/2)/32, player.y + (love.graphics.getHeight()/2)/32 do
+    --         -- if isTileLit(x, y) then
+    --         --     if not wasTileLit(x, y) then
+    --         --         love.graphics.setColor(1 - oldLightAlpha, 1 - oldLightAlpha, 1 - oldLightAlpha) -- light up a tile
+    --         --     else
+    --         --         love.graphics.setColor(1, 1, 1)
+    --         --     end
+    --         -- elseif wasTileLit(x, y) and oldLightAlpha > 0.2 then
+    --         --     love.graphics.setColor(oldLightAlpha, oldLightAlpha, oldLightAlpha)
+    --         -- else
+    --         --     love.graphics.setColor(0, 0, 0, 0)
+    --         -- end
+    --         love.graphics.setColor(1,1,1,1)
+    --         love.graphics.draw(groundImg, x * 32, y * 32)
+    --     end
+    -- end
     love.graphics.setColor(1,1,1,1)
     love.graphics.setBlendMode("alpha", "premultiplied")
     love.graphics.draw(worldCanvas, lowestX*32, lowestY*32)
