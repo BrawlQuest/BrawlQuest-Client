@@ -102,7 +102,11 @@ function love.draw()
         Luven.drawBegin()
 
         drawWorld()
-        drawNewWorldEditTiles()
+
+        if worldEdit.open and player then
+            drawNewWorldEditTiles()
+        end
+        
         drawAuras()
         love.graphics.setColor(1, 1, 1)
         drawNPCs()

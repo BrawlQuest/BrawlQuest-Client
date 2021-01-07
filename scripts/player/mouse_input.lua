@@ -17,7 +17,45 @@ function love.mousepressed(x, y, button)
 end
 
 function love.mousereleased(x, y, button)
-
+    if worldEdit.open and worldEdit.drawmode == "rectangle" then
+        if button == 1 and worldEdit.isDrawingRect then
+            print(worldEdit.drawableRect.ax .. ", " .. worldEdit.drawableRect.ay .. " : " .. worldEdit.drawableRect.bx .. ", " .. worldEdit.drawableRect.by)
+            local ax, ay, bx, by = worldEdit.drawableRect.ax, worldEdit.drawableRect.ay, worldEdit.drawableRect.bx, worldEdit.drawableRect.by
+            if ax < bx then
+                while ax < bx do
+                    if ay < by then
+                        while ay < by do
+                            print(ax .. ", " .. ay)
+                            ay = ay + 1 
+                        end
+                    elseif ay > by then
+                        while ay > by do
+                            ay = ay - 1 
+                            print(ax .. ", " .. ay)
+                        end
+                    end
+                    ax = ax + 1 
+                    ay = worldEdit.drawableRect.ay
+                end
+            elseif ax > bx then
+                while ax > bx do
+                    ax = ax - 1 
+                    if ay < by then
+                        while ay < by do
+                            print(ax .. ", " .. ay)
+                            ay = ay + 1 
+                        end
+                    elseif ay > by then
+                        while ay > by do
+                            ay = ay - 1 
+                            print(ax .. ", " .. ay)
+                        end
+                    end
+                    ay = worldEdit.drawableRect.ay
+                end
+            end
+        end
+    end
 end
 
 function love.wheelmoved( dx, dy )
