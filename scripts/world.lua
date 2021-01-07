@@ -133,13 +133,13 @@ end
 
 function getWorldAsset(v,x,y,notFindWall)
   
-    if not worldImg[v] then
-        if love.filesystem.getInfo(v) then
-            worldImg[v] = love.graphics.newImage(v)
-        else
-            worldImg[v] = love.graphics.newImage("assets/error.png")
-        end
-    end
+    -- if not worldImg[v] then
+    --     if love.filesystem.getInfo(v) then
+    --         worldImg[v] = love.graphics.newImage(v)
+    --     else
+    --         worldImg[v] = love.graphics.newImage("assets/error.png")
+    --     end
+    -- end
 
     local foregroundAsset = v['ForegroundTile']
     local backgroundAsset = v['GroundTile']

@@ -64,7 +64,7 @@ function love.keypressed(key)
                 loadSliders()
             end
 
-            if key == "'" then worldEdit.open = not worldEdit.open end
+            if key == "'" or key == "r" then worldEdit.open = not worldEdit.open end
 
             if key == keybinds.INTERACT then startConversation() end
 
