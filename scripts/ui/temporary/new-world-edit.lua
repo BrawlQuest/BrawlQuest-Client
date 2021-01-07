@@ -9,19 +9,21 @@ function initNewWorldEdit()
         tileSelection = {x = 0, y = 0},
         mousePosition = {x = 0, y = 0},
         mousePositionStart = {x = 0, y = 0},
-        toolbarAmount = 1,
+        toolbarAmount = 0,
         boxHeight = 1,
         draw = {},
         selectableTile = "",
         drawableTile = {
             "assets/world/grounds/grass/grass08.png", -- ground tile
             "assets/world/grounds/grass/grass08.png", -- foreground tile
-            "", -- enemy
+            "", -- enemy name
             true, -- collisions
+            "", -- name
             0, -- enemy index
         },
         drawmode = "pencil",
-        
+        drawableRect = {ax = 0, ay = 0, bx = 0, by = 0},
+        isDrawingRect = false,
         areaDrawButtonsTotal = 0,
         selectedTile = {},
         enemyImages = {},
@@ -45,7 +47,7 @@ function initNewWorldEdit()
 
     editorCtl = {
         title = {"(CMD + S) Save Changes", "(Q) Collisions: ", "(E) Hud: ", "(R or Space) Rubber: ", "Clear Changes", },
-        state = {false, false, true, false, false},
+        state = {false, true, true, false, false},
         stateTitle = {{"", "",}, {"OFF", "ON"}, {"Closed", "Open",}, {"OFF", "ON"}, {"", "",},},
     }
 
@@ -62,23 +64,6 @@ function drawEditorButtons()
         end
         if editorCtl.state[i] then love.graphics.setColor(0,0,0,1) else love.graphics.setColor(1,1,1,1) end
         love.graphics.printf(editorCtl.title[i] .. editorCtl.stateTitle[i][boolToInt(editorCtl.state[i]) + 1], x + padding, y + padding, width - (padding * 2))
-    end
-
-    for i = 1, 4 do
-        local x, y = cerp(10, 320, worldEdit.toolbarAmount) + (52 * (i - 1)), love.graphics.getHeight() - 45 - 52
-        drawNewWorldEditButton(x, y, 42, 42, areaDraw.state[i])
-        if i < 3 then love.graphics.draw(worldImg[worldEdit.drawableTile[i]], x + 5, y + 5)
-        elseif i == 3 then 
-            if worldEdit.drawableTile[5] ~= 0 then
-                love.graphics.draw(worldEdit.enemyImages[worldEdit.drawableTile[5]], x + 5, y + 5)
-            else
-                love.graphics.printf("Enemy", x + 5, y + 10, 32)
-            end
-        elseif i == 4 then 
-            if areaDraw.state[4] then love.graphics.setColor(0,0,0,1) else love.graphics.setColor(1,1,1,1) end
-            love.graphics.printf("Collisions: " .. boolToString(editorCtl.state[2]), x + 5, y + 10, 32)
-        end
-        if isMouseOver(x,y,42,42) then worldEdit.mouseOverAreaDrawButtons = i end
     end
 end
 
@@ -131,39 +116,44 @@ function drawNewWorldEditHud()
             drawEnemyButton(thisX, thisY - (52 * (i - 1)), 42, 42, 10, v.Name, worldEdit.enemyInputType == i, i, v.Image)
         end
 
-        local x, y = 10, love.graphics.getHeight() - 42 + cerp((32 * (worldEdit.boxHeight + 3)), 0, worldEdit.toolbarAmount)
-        worldEdit.boxHeight = 1
-
-        for i,v in ipairs(worldFiles) do -- draws the tiles to choose from
-            if string.sub(v,1,25) ~= "assets/world/objects/Wall" and string.sub(v,1,18) ~= "assets/world/water" then
-                if isMouseOver(x, y, 32, 32) then worldEdit.selectableTile = v end
-                if v == worldEdit.drawableTile[1] then
-                    love.graphics.setColor(0,1,0,1)
-                    love.graphics.rectangle("fill", x - 2, y - 2, 36, 36)
-                end
-                love.graphics.setColor(1,1,1,1)
-                love.graphics.draw(worldImg[v], x, y) 
-                if v == worldEdit.drawableTile[2] then
-                    love.graphics.setColor(0.5,0.5,1,0.6)
-                    love.graphics.rectangle("fill", x - 2, y - 2, 36, 36)
-                end
-
-                if v == "assets/world/grounds/grass/grass08.png" then
-                    love.graphics.setColor(1,0,1,1)
-                    roundRectangle("fill", x - 4, y - 4 , 10, 10, 5) -- Origin
-                    love.graphics.setColor(1,1,1,1)
-                end
-                
-                x = x + 32 + 5
-                if x > 300 then
-                    y = y - (32 + 5)
-                    x = 10
-                    worldEdit.boxHeight = worldEdit.boxHeight + 1
-                end
-            end
-        end 
+        drawTilePicker()
         drawEditorButtons()
+        drawAreaDrawButtons()
     end
+end
+
+function drawTilePicker()
+    local x, y = 10, love.graphics.getHeight() - 42 + cerp((32 * (worldEdit.boxHeight + 3)), 0, worldEdit.toolbarAmount)
+    worldEdit.boxHeight = 1
+
+    for i,v in ipairs(worldFiles) do -- draws the tiles to choose from
+        if string.sub(v,1,25) ~= "assets/world/objects/Wall" and string.sub(v,1,18) ~= "assets/world/water" then
+            if isMouseOver(x, y, 32, 32) then worldEdit.selectableTile = v end
+            if v == worldEdit.drawableTile[1] then
+                love.graphics.setColor(0,1,0,1)
+                love.graphics.rectangle("fill", x - 2, y - 2, 36, 36)
+            end
+            love.graphics.setColor(1,1,1,1)
+            love.graphics.draw(worldImg[v], x, y) 
+            if v == worldEdit.drawableTile[2] then
+                love.graphics.setColor(0.5,0.5,1,0.6)
+                love.graphics.rectangle("fill", x - 2, y - 2, 36, 36)
+            end
+
+            if v == "assets/world/grounds/grass/grass08.png" then
+                love.graphics.setColor(1,0,1,1)
+                roundRectangle("fill", x - 4, y - 4 , 10, 10, 5) -- Origin
+                love.graphics.setColor(1,1,1,1)
+            end
+            
+            x = x + 32 + 5
+            if x > 300 then
+                y = y - (32 + 5)
+                x = 10
+                worldEdit.boxHeight = worldEdit.boxHeight + 1
+            end
+        end
+    end 
 end
 
 function drawNewWorldEditButton(thisX, thisY, width, height, thisMode)
@@ -200,135 +190,134 @@ end
 function drawNewWorldEditTiles()
     love.graphics.setColor(1,1,1,1)
     local worldSize = {w = worldEdit.drawnWorldSize, h = worldEdit.drawnWorldSize}
-    if worldEdit.open and player then
-        for x = (worldSize.w * -1) + player.x, worldSize.w + player.x do
-            for y = (worldSize.h * -1) + player.y, worldSize.h + player.y do
-                -- x, y = x + 10, y + 10
-                thisX, thisY = x * 32 , y * 32 -- x,y  = x, y + player position?
-                love.graphics.setColor(1,1,1)
-                for z = 1, 3 do
-                    if worldEdit.draw[x][y][z] ~= (nil or "") then
-                        if z == 1 then 
+    for x = (worldSize.w * -1) + player.x, worldSize.w + player.x do
+        for y = (worldSize.h * -1) + player.y, worldSize.h + player.y do
+            -- x, y = x + 10, y + 10
+            thisX, thisY = x * 32 , y * 32 -- x,y  = x, y + player position?
+            love.graphics.setColor(1,1,1)
+            for z = 1, 3 do
+                if worldEdit.draw[x][y][z] ~= (nil or "") then
+                    if z == 1 then 
+                        love.graphics.draw(worldImg[worldEdit.draw[x][y][z]], thisX, thisY) -- draws new tiles
+                    elseif z == 2 then 
+                        if worldEdit.draw[x][y][1] ~= worldEdit.draw[x][y][2] then
                             love.graphics.draw(worldImg[worldEdit.draw[x][y][z]], thisX, thisY) -- draws new tiles
-                        elseif z == 2 then 
-                            if worldEdit.draw[x][y][1] ~= worldEdit.draw[x][y][2] then
-                                love.graphics.draw(worldImg[worldEdit.draw[x][y][z]], thisX, thisY) -- draws new tiles
-                            end
-                        elseif z == 3 and worldEdit.draw[x][y][5] ~= 0 then
-                            love.graphics.draw(worldEdit.enemyImages[worldEdit.draw[x][y][5]], thisX, thisY) -- draw enemy
                         end
+                    elseif z == 3 and worldEdit.draw[x][y][5] ~= 0 then
+                        love.graphics.draw(worldEdit.enemyImages[worldEdit.draw[x][y][5]], thisX, thisY) -- draw enemy
                     end
-                    -- print(worldEdit.draw[x][y][z])
+                end
+            end
+
+            if worldEdit.draw[x][y][4] then 
+                love.graphics.setColor(1,0,1,1) 
+                roundRectangle("fill", thisX - 5, thisY - 5 , 10, 10, 5) -- collisions indicator
+                love.graphics.setColor(1,1,1,1) 
+            end 
+            
+            if worldEdit.drawable and not worldEdit.hoveringOverButton and isMouseOver( -- draws the 
+                (((thisX - player.dx - 16) * worldScale) + (love.graphics.getWidth()/2)), 
+                (((thisY - player.dy - 16) * worldScale) + (love.graphics.getHeight()/2)), 
+                32 * worldScale, 
+                32 * worldScale) then
+
+                worldEdit.mousePosition = {x = x, y = y}
+                
+                if worldEdit.tileSelect then
+                    love.graphics.setColor(1, 0, 1, 0.5)
+                    worldEdit.tileSelection = {x = x, y = y}
+                else
+                    love.graphics.setColor(1,1,1,0.5)
                 end
 
-                if worldEdit.draw[x][y][4] then 
-                    love.graphics.setColor(1,0,1,1) 
-                    roundRectangle("fill", thisX - 5, thisY - 5 , 10, 10, 5) -- collisions indicator
-                    love.graphics.setColor(1,1,1,1) 
-                end 
-                
-                if worldEdit.drawable and not worldEdit.hoveringOverButton and isMouseOver( -- draws the 
-                    (((thisX - player.dx - 16) * worldScale) + (love.graphics.getWidth()/2)), 
-                    (((thisY - player.dy - 16) * worldScale) + (love.graphics.getHeight()/2)), 
-                    32 * worldScale, 
-                    32 * worldScale) then
+                if worldEdit.drawmode == "pencil" then
+                    love.graphics.rectangle("fill", thisX, thisY, 32, 32)
+                elseif worldEdit.drawmode == "rectangle" and not worldEdit.tileSelect then -- if mouse down true fade if not.
+                    local startx = worldEdit.mousePositionStart.x
+                    local starty = worldEdit.mousePositionStart.y
+                    local endx = worldEdit.mousePosition.x
+                    local endy = worldEdit.mousePosition.y
+                    local width = 0
+                    local height = 0
+                    local topLeft = {}
+                    if love.mouse.isDown(1) then
+                        worldEdit.isDrawingRect = true
 
-                    worldEdit.mousePosition = {x = x, y = y}
-                    
-                    if worldEdit.tileSelect then
-                        love.graphics.setColor(1, 0, 1, 0.5)
-                        worldEdit.tileSelection = {x = x, y = y}
-                    else
-                        love.graphics.setColor(1,1,1,0.5)
-                    end
-
-                    if worldEdit.drawmode == "pencil" then
-                        love.graphics.rectangle("fill", thisX, thisY, 32, 32)
-                    elseif worldEdit.drawmode == "rectangle" and not worldEdit.tileSelect then -- if mouse down true fade if not.
-                        local startx = worldEdit.mousePositionStart.x
-                        local starty = worldEdit.mousePositionStart.y
-                        local endx = worldEdit.mousePosition.x
-                        local endy = worldEdit.mousePosition.y
-                        local width = 0
-                        local height = 0
-                        if love.mouse.isDown(1) then
-
-                            if endx < startx then
-                                startx = startx + 1
-                            else
-                                endx = endx + 1
-                            end
-
-                            if endy < starty then
-                                starty = starty + 1
-                            else
-                                endy = endy + 1
-                            end
-
-                            width = endx - startx
-                            height = endy - starty
-
-                            love.graphics.rectangle("fill", startx * 32, starty * 32, width * 32, height * 32)
-                            print ("x: " .. startx .. " " .. endx)
-                            print ("y: " .. starty .. " " .. endy)
+                        if endx < startx then
+                            startx = startx + 1
                         else
-                            love.graphics.rectangle("fill", thisX, thisY, 32, 32)
+                            endx = endx + 1
                         end
+
+                        if endy < starty then
+                            starty = starty + 1
+                        else
+                            endy = endy + 1
+                        end
+
+                        width = endx - startx
+                        height = endy - starty
+
+                        love.graphics.rectangle("fill", startx * 32, starty * 32, width * 32, height * 32)
+                        worldEdit.drawableRect = {ax = startx, ay = starty, bx = endx, by = endy, w = width, h = height}
+                    else
+                        worldEdit.isDrawingRect = false
+                        love.graphics.rectangle("fill", thisX, thisY, 32, 32)
                     end
+                end
 
 
-                    if worldEdit.drawmode == "pencil" and not worldEdit.tileSelect and (love.mouse.isDown(1) or love.mouse.isDown(2)) then
-                        worldEdit.changed = true
-                        editorCtl.state[1] = true
-                        editorCtl.state[5] = true
-                    
-                        if love.mouse.isDown(1) then
-                            if editorCtl.state[4] then -- rubber
-                                if worldLookup[x][y] then
-                                    worldEdit.draw[x][y][1] = worldLookup[x][y].GroundTile
-                                    worldEdit.draw[x][y][2] = worldLookup[x][y].ForegroundTile
-                                    worldEdit.draw[x][y][3] = ""
-                                else
-                                    for i = 1, 3 do
-                                        worldEdit.draw[x][y][i] = ""
-                                    end
-                                end
-                                worldEdit.draw[x][y][4] = false -- collisions
+                if worldEdit.drawmode == "pencil" and not worldEdit.tileSelect and (love.mouse.isDown(1) or love.mouse.isDown(2)) then
+                    worldEdit.changed = true
+                    editorCtl.state[1] = true
+                    editorCtl.state[5] = true
+                
+                    if love.mouse.isDown(1) then
+                        if editorCtl.state[4] then -- rubber
+                            if worldLookup[x][y] then
+                                worldEdit.draw[x][y][1] = worldLookup[x][y].GroundTile
+                                worldEdit.draw[x][y][2] = worldLookup[x][y].ForegroundTile
+                                worldEdit.draw[x][y][3] = ""
                             else
                                 for i = 1, 3 do
-                                    worldEdit.draw[x][y][i] = worldEdit.drawableTile[i]
+                                    worldEdit.draw[x][y][i] = ""
                                 end
-                                worldEdit.draw[x][y][4] = editorCtl.state[2] -- collisions
-                                worldEdit.draw[x][y][5] = worldEdit.drawableTile[5]
-                            end
-                        end
-
-                        if love.mouse.isDown(2) then
-                            if editorCtl.state[4] then -- rubber
-                                if worldEdit.draw[x][y][1] ~= "" then
-                                    worldEdit.draw[x][y][1] = worldEdit.draw[x][y][1]
-                                end
-                                worldEdit.draw[x][y][2] = ""
-                                worldEdit.draw[x][y][3] = "" -- enemy
-                            elseif love.keyboard.isDown("lshift") then
-                                
-                                if worldLookup[x][y] then
-                                    worldEdit.draw[x][y][1] = worldLookup[x][y].GroundTile
-                                    worldEdit.draw[x][y][2] = worldLookup[x][y].ForegroundTile
-                                    worldEdit.draw[x][y][3] = ""
-                                else
-                                    for i = 1, 3 do
-                                        worldEdit.draw[x][y][i] = ""
-                                    end
-                                end
-
-                                worldEdit.draw[x][y][4] = false -- collisions
-                            else
-                                worldEdit.draw[x][y][1] = worldEdit.drawableTile[1]
-                                worldEdit.draw[x][y][2] = worldEdit.drawableTile[1]
                             end
                             worldEdit.draw[x][y][4] = false -- collisions
+                        else
+                            for i = 1, 3 do
+                                worldEdit.draw[x][y][i] = worldEdit.drawableTile[i]
+                            end
+                            worldEdit.draw[x][y][4] = editorCtl.state[2] -- collisions
+                            worldEdit.draw[x][y][5] = worldEdit.drawableTile[6]
                         end
+                    end
+
+                    if love.mouse.isDown(2) then
+                        if editorCtl.state[4] then -- rubber
+                            if worldEdit.draw[x][y][1] ~= "" then
+                                worldEdit.draw[x][y][1] = worldEdit.draw[x][y][1]
+                            end
+                            worldEdit.draw[x][y][2] = ""
+                            worldEdit.draw[x][y][3] = "" -- enemy
+                        elseif love.keyboard.isDown("lshift") then
+                            
+                            if worldLookup[x][y] then
+                                worldEdit.draw[x][y][1] = worldLookup[x][y].GroundTile
+                                worldEdit.draw[x][y][2] = worldLookup[x][y].ForegroundTile
+                                worldEdit.draw[x][y][3] = ""
+                            else
+                                for i = 1, 3 do
+                                    worldEdit.draw[x][y][i] = ""
+                                end
+                            end
+
+                            worldEdit.draw[x][y][4] = false -- collisions
+                        else
+                            worldEdit.draw[x][y][1] = worldEdit.drawableTile[1]
+                            worldEdit.draw[x][y][2] = worldEdit.drawableTile[1]
+                        end
+                        worldEdit.draw[x][y][4] = false -- collisions
                     end
                 end
             end
@@ -363,11 +352,11 @@ function checkWorldEditMouseDown(button)
                 if worldEdit.enemyInputType == worldEdit.mouseOverEnemyButtons then
                     worldEdit.enemyInputType = 0
                     worldEdit.drawableTile[3] = "" 
-                    worldEdit.drawableTile[5] = 0
+                    worldEdit.drawableTile[6] = 0
                 else
                     worldEdit.enemyInputType = worldEdit.mouseOverEnemyButtons
                     worldEdit.drawableTile[3] = availableEnemies[worldEdit.enemyInputType].Name 
-                    worldEdit.drawableTile[5] = worldEdit.enemyInputType
+                    worldEdit.drawableTile[6] = worldEdit.enemyInputType
                 end
             end
 
@@ -381,6 +370,7 @@ function checkWorldEditMouseDown(button)
                 
                 if worldEdit.mouseOverControlButtons == 2 then -- collisions
                     editorCtl.state[2] = not editorCtl.state[2]
+                    worldEdit.drawableTile[4] = not worldEdit.drawableTile[4]
                 end
                 
                 if worldEdit.mouseOverControlButtons == 3 then -- show hud
@@ -399,7 +389,7 @@ function checkWorldEditMouseDown(button)
                     editorCtl.state[5] = false
                     worldEdit.enemyInputType = 0
                     worldEdit.drawableTile[3] = "" 
-                    worldEdit.drawableTile[5] = 0
+                    worldEdit.drawableTile[6] = 0
                 end
 
             end
@@ -415,7 +405,7 @@ function checkWorldEditMouseDown(button)
                     areaDraw.state[2] = not areaDraw.state[2]
                 end
 
-                if worldEdit.mouseOverAreaDrawButtons == 3 and worldEdit.drawableTile[5] ~= 0 then -- enemies
+                if worldEdit.mouseOverAreaDrawButtons == 3 and worldEdit.drawableTile[6] ~= 0 then -- enemies
                     areaDraw.state[3] = not areaDraw.state[3]
                 end
 
@@ -458,6 +448,7 @@ function checkWorldEditKeyPressed(key)
         editorCtl.state[4] = not editorCtl.state[4]
     elseif key == "q" then
         editorCtl.state[2] = not editorCtl.state[2]
+        worldEdit.drawableTile[4] = true
     elseif key == "e" then
         editorCtl.state[3] = not editorCtl.state[3]
     end

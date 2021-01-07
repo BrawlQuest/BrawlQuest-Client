@@ -33,6 +33,7 @@ require "scripts.npcs"
 require "scripts.world"
 require "scripts.ui.temporary.worldedit"
 require "scripts.ui.temporary.new-world-edit"
+require "scripts.ui.temporary.world-edit-rect"
 require "data.data_controller"
 require "scripts.player.settings"
 require "scripts.ui.components.npc-chat"
@@ -102,7 +103,11 @@ function love.draw()
         Luven.drawBegin()
 
         drawWorld()
-        drawNewWorldEditTiles()
+
+        if worldEdit.open and player then
+            drawNewWorldEditTiles()
+        end
+
         drawAuras()
         love.graphics.setColor(1, 1, 1)
         drawNPCs()

@@ -18,6 +18,10 @@ end
 
 function love.mousereleased(x, y, button)
 
+    if worldEdit.open and worldEdit.drawmode == "rectangle" then
+       checkWorldEditRectMouseUp(button)
+    end
+    
 end
 
 function love.wheelmoved( dx, dy )
