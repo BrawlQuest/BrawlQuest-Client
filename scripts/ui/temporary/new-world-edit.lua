@@ -16,7 +16,7 @@ function initNewWorldEdit()
         drawableTile = {
             "assets/world/grounds/grass/grass08.png", -- ground tile
             "assets/world/grounds/grass/grass08.png", -- foreground tile
-            "", -- enemy
+            "", -- enemy name
             true, -- collisions
             "", -- name
             0, -- enemy index

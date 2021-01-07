@@ -59,40 +59,6 @@ function drawWorldEditTileFromRect(x, y)
             end
         end
     end
-
-
-    --     print ("Iteration " .. i)
-        
-    --     if i == 1 then
-    --         worldEdit.draw[x][y][1] = worldLookup[x][y].GroundTile
-
-    --     elseif i == 2 then
-    --         worldEdit.draw[x][y][2] = worldLookup[x][y].ForegroundTile
-
-    --     elseif i == 3 then
-    --         worldEdit.draw[x][y][3] = worldLookup[x][y].Enemy
-
-    --     elseif i == 4 then
-    --         worldEdit.draw[x][y][4] = worldLookup[x][y].Collision
-
-    --     elseif i == 5 then
-    --         worldEdit.draw[x][y][5] = worldLookup[x][y].Name
-
-    --     end
-
-
-    --     if v == true then
-    --         worldEdit.draw[x][y][i] = worldEdit.drawableTile[i]
-    --     end
-
-    --     -- if v == false then
-    --     --     -- if worldEdit.draw[x][y][1] ~= "" then
-    --     --     --     worldEdit.draw[x][y][i] = worldEdit.draw[x][y][i]
-            
-    --     -- end
-    -- end
-
-
 end
 
 function drawAreaDrawButtons()
