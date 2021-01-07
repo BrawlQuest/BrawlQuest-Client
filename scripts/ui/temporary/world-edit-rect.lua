@@ -1,6 +1,6 @@
 function checkWorldEditRectMouseUp(button)
     if button == 1 and worldEdit.isDrawingRect then
-        print(worldEdit.drawableRect.ax .. ", " .. worldEdit.drawableRect.ay .. " : " .. worldEdit.drawableRect.bx .. ", " .. worldEdit.drawableRect.by)
+        -- print(worldEdit.drawableRect.ax .. ", " .. worldEdit.drawableRect.ay .. " : " .. worldEdit.drawableRect.bx .. ", " .. worldEdit.drawableRect.by)
         local ax, ay, bx, by = worldEdit.drawableRect.ax, worldEdit.drawableRect.ay, worldEdit.drawableRect.bx, worldEdit.drawableRect.by
         if ax < bx then
             while ax < bx do
@@ -24,14 +24,14 @@ end
 function getYValue(ax, ay, bx, by)
     if ay < by then
         while ay < by do
-            print(ax .. ", " .. ay)
+            -- print(ax .. ", " .. ay)
             drawWorldEditTileFromRect(ax, ay)
             ay = ay + 1 
         end
     elseif ay > by then
         while ay > by do
             ay = ay - 1 
-            print(ax .. ", " .. ay)
+            -- print(ax .. ", " .. ay)
             drawWorldEditTileFromRect(ax, ay)
         end
     end
@@ -39,25 +39,60 @@ function getYValue(ax, ay, bx, by)
 end
 
 function drawWorldEditTileFromRect(x, y)
+    
+    if worldLookup[x][y] then
+        worldEdit.draw[x][y][1] = worldLookup[x][y].GroundTile
+        worldEdit.draw[x][y][2] = worldLookup[x][y].ForegroundTile
+        worldEdit.draw[x][y][3] = worldLookup[x][y].Enemy
+        worldEdit.draw[x][y][4] = worldLookup[x][y].Collision
+    end
+
     for i, v in ipairs(areaDraw.state) do
-        if v then
-            worldEdit.draw[x][y][i] = worldEdit.drawableTile[i]
-        else
-            if not worldEdit.draw[x][y][i] then
-                if i == 1 then
-                    worldEdit.draw[x][y][i] = worldLookup[x][y].GroundTile
-                elseif i == 2 then
-                    worldEdit.draw[x][y][i] = worldLookup[x][y].ForegroundTile
-                elseif i == 3 then
-                    worldEdit.draw[x][y][i] = worldLookup[x][y].Enemy
-                elseif i == 4 then
-                    -- worldEdit.draw[x][y][i] = worldLookup[x][y].Collision
-                elseif i == 5 then
-                    worldEdit.draw[x][y][i] = worldLookup[x][y].Name
+        if v == true then
+            if i == 1 and worldLookup[x][y] then
+                if  worldLookup[x][y].GroundTile == worldLookup[x][y].ForegroundTile then
+                    worldEdit.draw[x][y][2] = worldEdit.drawableTile[1]
                 end
+                worldEdit.draw[x][y][1] = worldEdit.drawableTile[1]
+            else
+                worldEdit.draw[x][y][i] = worldEdit.drawableTile[i]
             end
         end
     end
+
+
+    --     print ("Iteration " .. i)
+        
+    --     if i == 1 then
+    --         worldEdit.draw[x][y][1] = worldLookup[x][y].GroundTile
+
+    --     elseif i == 2 then
+    --         worldEdit.draw[x][y][2] = worldLookup[x][y].ForegroundTile
+
+    --     elseif i == 3 then
+    --         worldEdit.draw[x][y][3] = worldLookup[x][y].Enemy
+
+    --     elseif i == 4 then
+    --         worldEdit.draw[x][y][4] = worldLookup[x][y].Collision
+
+    --     elseif i == 5 then
+    --         worldEdit.draw[x][y][5] = worldLookup[x][y].Name
+
+    --     end
+
+
+    --     if v == true then
+    --         worldEdit.draw[x][y][i] = worldEdit.drawableTile[i]
+    --     end
+
+    --     -- if v == false then
+    --     --     -- if worldEdit.draw[x][y][1] ~= "" then
+    --     --     --     worldEdit.draw[x][y][i] = worldEdit.draw[x][y][i]
+            
+    --     -- end
+    -- end
+
+
 end
 
 function drawAreaDrawButtons()
