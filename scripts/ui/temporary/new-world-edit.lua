@@ -17,7 +17,7 @@ function initNewWorldEdit()
             "assets/world/grounds/grass/grass08.png", -- ground tile
             "assets/world/grounds/grass/grass08.png", -- foreground tile
             "", -- enemy
-            false, -- collisions
+            true, -- collisions
             0, -- enemy index
         },
         drawmode = "pencil",

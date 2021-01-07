@@ -140,10 +140,10 @@ function love.draw()
           
         -- print(brightnessSlider:getValue())
         
-        if not worldEdit.open then
+        -- if not worldEdit.open then
             love.graphics.setFont(font)
-            love.graphics.print(player.x..", "..player.y,10,6)
-        end
+            love.graphics.print(player.x..", "..player.y .. ", " .. tostring(love.timer.getFPS()), 10, 6)
+        -- end
     end
 
 
