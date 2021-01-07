@@ -5,6 +5,13 @@ lightSource = {}
 lowestX = 0
 lowestY = 0
 
+
+function drawSimplexNoise(x, y)
+    local noiseFactor = 0.23 -- 0.18
+    local noise = 1 - ((love.math.noise( x * 0.06, y * 0.06) - (love.math.noise( x * 0.5, y * 0.5) * 0.2)) * noiseFactor)
+    love.graphics.setColor(noise * 1 ,noise * 1 ,noise )
+end
+
 function createWorld()
     
     lightSource = {}
@@ -40,6 +47,14 @@ function createWorld()
     love.graphics.setCanvas(worldCanvas)
         love.graphics.clear()
         love.graphics.setColor(1, 1, 1)
+        
+        for x = worldEdit.worldSize * -1, worldEdit.worldSize do
+            for y = worldEdit.worldSize * -1, worldEdit.worldSize do
+                drawSimplexNoise(x, y)  -- sets background noise
+                love.graphics.draw(groundImg, x * 32, y * 32)
+            end
+        end
+        
         for i, v in ipairs(world) do
             drawTile(v)
         end
@@ -52,11 +67,7 @@ function createWorld()
 end
 
 function drawTile(v)
-    if isTileLit(v.X, v.Y) then
-        love.graphics.setColor(1, 1, 1)
-    else
-        love.graphics.setColor(0, 0, 0, 0)
-    end
+
     local backgroundAsset = getWorldAsset(v.GroundTile, v.X, v.Y)
     local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y)
 
@@ -72,9 +83,13 @@ function drawTile(v)
         blockMap[v.X .. "," .. v.Y] = true
     end
 
+    drawSimplexNoise(v.X+math.abs(lowestX), v.Y+math.abs(lowestY)) -- sets background noise
+
     if worldImg[backgroundAsset] then
         love.graphics.draw(worldImg[backgroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32)  
     end 
+    
+    love.graphics.setColor(1,1,1) 
 
     if worldLookup[v.X][v.Y-1] and (isTileWall(worldLookup[v.X][v.Y-1].ForegroundTile) or isTileWall(worldLookup[v.X][v.Y-1].GroundTile)) and not isTileWall(v.ForegroundTile) then
         love.graphics.setColor(0,0,0,0.5)
@@ -91,23 +106,23 @@ function drawTile(v)
 end
 
 function drawWorld()
-    for x = player.x - (love.graphics.getWidth()/2)/32, player.x + (love.graphics.getWidth()/2)/32 do
-        for y = player.y - (love.graphics.getHeight()/2)/32, player.y + (love.graphics.getHeight()/2)/32 do
-            -- if isTileLit(x, y) then
-            --     if not wasTileLit(x, y) then
-            --         love.graphics.setColor(1 - oldLightAlpha, 1 - oldLightAlpha, 1 - oldLightAlpha) -- light up a tile
-            --     else
-            --         love.graphics.setColor(1, 1, 1)
-            --     end
-            -- elseif wasTileLit(x, y) and oldLightAlpha > 0.2 then
-            --     love.graphics.setColor(oldLightAlpha, oldLightAlpha, oldLightAlpha)
-            -- else
-            --     love.graphics.setColor(0, 0, 0, 0)
-            -- end
-            love.graphics.setColor(1,1,1,1)
-            love.graphics.draw(groundImg, x * 32, y * 32)
-        end
-    end
+    -- for x = player.x - (love.graphics.getWidth()/2)/32, player.x + (love.graphics.getWidth()/2)/32 do
+    --     for y = player.y - (love.graphics.getHeight()/2)/32, player.y + (love.graphics.getHeight()/2)/32 do
+    --         -- if isTileLit(x, y) then
+    --         --     if not wasTileLit(x, y) then
+    --         --         love.graphics.setColor(1 - oldLightAlpha, 1 - oldLightAlpha, 1 - oldLightAlpha) -- light up a tile
+    --         --     else
+    --         --         love.graphics.setColor(1, 1, 1)
+    --         --     end
+    --         -- elseif wasTileLit(x, y) and oldLightAlpha > 0.2 then
+    --         --     love.graphics.setColor(oldLightAlpha, oldLightAlpha, oldLightAlpha)
+    --         -- else
+    --         --     love.graphics.setColor(0, 0, 0, 0)
+    --         -- end
+    --         love.graphics.setColor(1,1,1,1)
+    --         love.graphics.draw(groundImg, x * 32, y * 32)
+    --     end
+    -- end
     love.graphics.setColor(1,1,1,1)
     love.graphics.setBlendMode("alpha", "premultiplied")
     love.graphics.draw(worldCanvas, lowestX*32, lowestY*32)

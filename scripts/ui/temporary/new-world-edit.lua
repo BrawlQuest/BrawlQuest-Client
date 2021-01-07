@@ -17,7 +17,7 @@ function initNewWorldEdit()
             "assets/world/grounds/grass/grass08.png", -- ground tile
             "assets/world/grounds/grass/grass08.png", -- foreground tile
             "", -- enemy
-            false, -- collisions
+            true, -- collisions
             0, -- enemy index
         },
         drawmode = "pencil",
@@ -33,8 +33,10 @@ function initNewWorldEdit()
         mouseOverEnemyButtons = 0,
         mouseOverControlButtons = 0,
         mouseOverAreaDrawButtons = 0,
-        worldSize = 100,
+        worldSize = 400,
+        drawnWorldSize = 20, -- +- value
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
+        previousScrollPosition = 0,
     }
     
     areaDraw = {
@@ -197,19 +199,26 @@ end
 
 function drawNewWorldEditTiles()
     love.graphics.setColor(1,1,1,1)
-    if worldEdit.open then
-        for x = worldEdit.worldSize * -1, worldEdit.worldSize do
-            for y = worldEdit.worldSize * -1, worldEdit.worldSize do
-                thisX, thisY = x * 32 , y * 32 
-                love.graphics.setColor(1,1,1,1)
+    local worldSize = {w = worldEdit.drawnWorldSize, h = worldEdit.drawnWorldSize}
+    if worldEdit.open and player then
+        for x = (worldSize.w * -1) + player.x, worldSize.w + player.x do
+            for y = (worldSize.h * -1) + player.y, worldSize.h + player.y do
+                -- x, y = x + 10, y + 10
+                thisX, thisY = x * 32 , y * 32 -- x,y  = x, y + player position?
+                love.graphics.setColor(1,1,1)
                 for z = 1, 3 do
                     if worldEdit.draw[x][y][z] ~= (nil or "") then
-                        if z < 3 then
+                        if z == 1 then 
                             love.graphics.draw(worldImg[worldEdit.draw[x][y][z]], thisX, thisY) -- draws new tiles
+                        elseif z == 2 then 
+                            if worldEdit.draw[x][y][1] ~= worldEdit.draw[x][y][2] then
+                                love.graphics.draw(worldImg[worldEdit.draw[x][y][z]], thisX, thisY) -- draws new tiles
+                            end
                         elseif z == 3 and worldEdit.draw[x][y][5] ~= 0 then
                             love.graphics.draw(worldEdit.enemyImages[worldEdit.draw[x][y][5]], thisX, thisY) -- draw enemy
                         end
                     end
+                    -- print(worldEdit.draw[x][y][z])
                 end
 
                 if worldEdit.draw[x][y][4] then 
@@ -235,33 +244,33 @@ function drawNewWorldEditTiles()
 
                     if worldEdit.drawmode == "pencil" then
                         love.graphics.rectangle("fill", thisX, thisY, 32, 32)
-                    elseif worldEdit.drawmode == "rectangle" and not worldEdit.tileSelect then
-                        local startx = (worldEdit.mousePositionStart.x * 32)
-                        local starty = (worldEdit.mousePositionStart.y * 32)
-                        local endx = (worldEdit.mousePosition.x * 32)
-                        local endy = (worldEdit.mousePosition.y * 32)
+                    elseif worldEdit.drawmode == "rectangle" and not worldEdit.tileSelect then -- if mouse down true fade if not.
+                        local startx = worldEdit.mousePositionStart.x
+                        local starty = worldEdit.mousePositionStart.y
+                        local endx = worldEdit.mousePosition.x
+                        local endy = worldEdit.mousePosition.y
                         local width = 0
                         local height = 0
                         if love.mouse.isDown(1) then
+
+                            if endx < startx then
+                                startx = startx + 1
+                            else
+                                endx = endx + 1
+                            end
+
+                            if endy < starty then
+                                starty = starty + 1
+                            else
+                                endy = endy + 1
+                            end
+
                             width = endx - startx
                             height = endy - starty
 
-                            if startx < endx then
-                                width = endx - startx
-                            else
-                                width = endx - startx - 32
-                                startx = startx + 32
-                            end
-
-                            if starty < endy then
-                                height = endy - starty
-                            else
-                                height = endy - starty - 32
-                                starty = starty + 32
-                            end
-
-                            love.graphics.rectangle("fill", startx, starty, width, height)
-                            -- print (endx .. " " .. startx)
+                            love.graphics.rectangle("fill", startx * 32, starty * 32, width * 32, height * 32)
+                            print ("x: " .. startx .. " " .. endx)
+                            print ("y: " .. starty .. " " .. endy)
                         else
                             love.graphics.rectangle("fill", thisX, thisY, 32, 32)
                         end
