@@ -43,10 +43,9 @@ function initNewWorldEdit()
         previousScrollPosition = 0,
     }
 
-    availablePlaceNames = {
-        "",
-        "Spooky Forest",
-    }
+    availablePlaceNames = {}
+    avaliableMusic = {}
+
     
     areaDraw = {
         state = {false, false, false, false, },   
@@ -464,6 +463,7 @@ function saveWorldChanges()
     world = json:decode(b[1])
     createWorld()
     initDrawableNewWorldEditTiles()
+    getWorldInfo() 
     worldEdit.changed = false
     editorCtl.state[1] = false
     editorCtl.state[5] = false
@@ -485,13 +485,11 @@ function checkIfReadyToQuit()
 end
 
 function initDrawableNewWorldEditTiles()
+    local i = 0
     for x = worldEdit.worldSize * -1, worldEdit.worldSize do
         worldEdit.draw[x] = {}
         for y = worldEdit.worldSize * -1, worldEdit.worldSize do
-            worldEdit.draw[x][y] = {"", "", "", false, 0, "", "*"}
-            if worldLookup[x][y] then
-                
-            end
+            worldEdit.draw[x][y] = {"", "", "", false, 0, "", "*"}            
         end
     end
     worldEdit.changed = false
@@ -500,4 +498,20 @@ function initDrawableNewWorldEditTiles()
     worldEdit.enemyInputType = 0
     worldEdit.drawableTile[3] = "" 
     worldEdit.drawableTile[8] = 0
+end
+
+function getWorldInfo() 
+    availablePlaceNames = {}
+    avaliableMusic = {}
+    local count = 0
+    for i, v in ipairs(world) do
+        if not arrayContains(availablePlaceNames, worldLookup[v.X][v.Y].Name) then
+            availablePlaceNames[#availablePlaceNames + 1] = worldLookup[v.X][v.Y].Name
+        end
+        if not arrayContains(avaliableMusic, worldLookup[v.X][v.Y].Music) then
+            avaliableMusic[#avaliableMusic + 1] = worldLookup[v.X][v.Y].Music
+        end
+    end
+    print("Places: " .. json:encode(availablePlaceNames))
+    print("Music: " .. json:encode(avaliableMusic))
 end
