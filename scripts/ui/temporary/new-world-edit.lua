@@ -41,6 +41,9 @@ function initNewWorldEdit()
         drawnWorldSize = 50, -- +- value
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
         previousScrollPosition = 0,
+        isTyping = false,
+        enteredWorldText = "",
+        readyToWriteText = false,
     }
 
     availablePlaceNames = {}
@@ -48,7 +51,9 @@ function initNewWorldEdit()
 
     
     areaDraw = {
-        state = {false, false, false, false, },   
+        tabMode = false,
+        state = {false, false, false, false, false, false},
+        previousState = {true, true, true, true, true, true},
     }
 
     editorCtl = {
@@ -102,6 +107,7 @@ function drawNewWorldEditHud()
         worldEdit.mouseOverControlButtons = 0
         worldEdit.mouseOverAreaDrawButtons = 0
         worldEdit.hoveringOverButton = false
+        worldEdit.readyToWriteText = false
         worldEdit.selectableTile = ""
         local thisX, thisY = 0, cerp(love.graphics.getHeight() + (32 * (worldEdit.boxHeight + 3)), love.graphics.getHeight(), worldEdit.toolbarAmount)
         love.graphics.setColor(0,0,0,0.6)
@@ -349,6 +355,10 @@ function checkWorldEditMouseDown(button)
             worldEdit.mousePositionStart = worldEdit.mousePosition
         end
 
+        if worldEdit.readyToWriteText then
+            worldEdit.isTyping = not worldEdit.isTyping
+        end
+
         if worldEdit.mouseOverEnemyButtons > 0 then
 
             if button == 1 then
@@ -365,30 +375,23 @@ function checkWorldEditMouseDown(button)
 
         elseif worldEdit.mouseOverControlButtons > 0 then
             if button == 1 then
-
                 if worldEdit.mouseOverControlButtons == 1 then -- save
                     if worldEdit.changed then saveWorldChanges() end 
                 end
-
-                
                 if worldEdit.mouseOverControlButtons == 2 then -- collisions
                     editorCtl.state[2] = not editorCtl.state[2]
                     worldEdit.drawableTile[4] = not worldEdit.drawableTile[4]
                 end
-                
                 if worldEdit.mouseOverControlButtons == 3 then -- show hud
                     editorCtl.state[3] = not editorCtl.state[3]
                 end
-
                 
                 if worldEdit.mouseOverControlButtons == 4 then -- rubber
                     editorCtl.state[4] = not editorCtl.state[4]
                 end
-
                 if worldEdit.mouseOverControlButtons == 5 then -- clear
                     initDrawableNewWorldEditTiles()
                 end
-
             end
 
         elseif worldEdit.mouseOverAreaDrawButtons > 0 then
@@ -405,33 +408,50 @@ function checkWorldEditMouseDown(button)
 end
 
 function checkWorldEditKeyPressed(key)
-    if key == "r" or key == "space" then
-        editorCtl.state[4] = not editorCtl.state[4]
-    elseif key == "q" then
-        editorCtl.state[2] = not editorCtl.state[2]
-        worldEdit.drawableTile[4] = true
-    elseif key == "e" then
-        editorCtl.state[3] = not editorCtl.state[3]
-    elseif key == "x" then
-        editorCtl.state[3] = not editorCtl.state[3]
-    end
+    if worldEdit.isTyping then
+        if key == "backspace" then
+            worldEdit.enteredWorldText = string.sub( worldEdit.enteredWorldText, 1, string.len( worldEdit.enteredWorldText) - 1)
+        elseif key == "return" and worldEdit.enteredWorldText ~= "" then
+            worldEdit.isTyping = false
+            worldEdit.drawableTile[6] = worldEdit.enteredWorldText
+        elseif key == "escape" then 
+            worldEdit.isTyping = false
+        end
+    else
+        if key == "r" or key == "space" then
+            editorCtl.state[4] = not editorCtl.state[4]
+        elseif key == "q" then
+            editorCtl.state[2] = not editorCtl.state[2]
+            worldEdit.drawableTile[4] = true
+        elseif key == "e" then
+            editorCtl.state[3] = not editorCtl.state[3]
+        elseif key == "x" then
+            editorCtl.state[3] = not editorCtl.state[3]
+        end
 
-    if key == "1" then
-        areaDraw.state[1] = not areaDraw.state[1]
-    elseif key == "2" then
-        areaDraw.state[2] = not areaDraw.state[2]
-    elseif key == "3" then
-        areaDraw.state[3] = not areaDraw.state[3]
-    elseif key == "4" then
-        areaDraw.state[4] = not areaDraw.state[4]
-    end
+        for i, v in ipairs(areaDraw.state) do -- check areaDraw buttons pressed
+            if key == tostring(i) then
+                areaDraw.state[i] = not areaDraw.state[i]
+            end
+        end
 
-    if key == "escape" or key == "'" then  
-        worldEdit.open = false 
-    end
+        if key == "tab" then
+            areaDraw.tabMode = not areaDraw.tabMode
+            if areaDraw.tabMode then
+                areaDraw.state = copy(areaDraw.previousState)
+            else
+                areaDraw.previousState = copy(areaDraw.state)
+                areaDraw.state = {false, false, false, false, false, false}
+            end
+        end
 
-    if key == "s" and (love.keyboard.isDown("lgui") or love.keyboard.isDown("lalt")) then
-        saveWorldChanges()
+        if key == "escape" or key == "'" then  
+            worldEdit.open = false 
+        end
+
+        if key == "s" and (love.keyboard.isDown("lgui") or love.keyboard.isDown("lalt")) then
+            saveWorldChanges()
+        end
     end
 end
 
@@ -514,4 +534,8 @@ function getWorldInfo()
     end
     print("Places: " .. json:encode(availablePlaceNames))
     print("Music: " .. json:encode(avaliableMusic))
+end
+
+function checkWorldEditTextinput(key)
+    worldEdit.enteredWorldText = worldEdit.enteredWorldText .. key
 end

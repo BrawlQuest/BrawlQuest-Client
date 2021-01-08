@@ -91,9 +91,9 @@ end
 
 function drawAreaDrawButtons()
 
-    thisX, thisY = cerp(10, 320, worldEdit.toolbarAmount), love.graphics.getHeight() - 45 - 52
+    local thisX, thisY = cerp(10, 320, worldEdit.toolbarAmount), love.graphics.getHeight() - 45 - 52
     
-    for i = 1, 4 do
+    for i, v in ipairs(areaDraw.state) do
         local x, y = thisX + (52 * (i - 1)), thisY
         drawNewWorldEditButton(x, y, 42, 42, areaDraw.state[i])
         if i < 3 then love.graphics.draw(worldImg[worldEdit.drawableTile[i]], x + 5, y + 5)
@@ -110,29 +110,30 @@ function drawAreaDrawButtons()
         if isMouseOver(x,y,42,42) then worldEdit.mouseOverAreaDrawButtons = i end
     end
 
-    drawNewWorldEditButton(thisX, thisY - 42, 202, 32, false)
+    thisX, thisY = thisX, thisY - 42
+    local width, height = 202, 32
+    drawNewWorldEditButton(thisX, thisY, width, height, false)
     -- love.graphics.printf("Collisions: " .. boolToString(worldEdit.drawableTile[4]), x + 5, y + 10, 32)
-    love.graphics.print("Enemy: ''" .. worldEdit.drawableTile[3] .. "''", thisX + 10, thisY - 52 + 20, 0, 2)
+    love.graphics.print("Enemy: ''" .. worldEdit.drawableTile[3] .. "''", thisX + 10, thisY + 10, 0, 1.5)
+
+    thisX, thisY = thisX + width + 10, thisY
+    drawNewWorldEditButton(thisX, thisY, width, height, worldEdit.isTyping)
+    if isMouseOver(thisX, thisY, width, height) then worldEdit.readyToWriteText = true end
+    if worldEdit.isTyping then love.graphics.setColor(0,0,0) else love.graphics.setColor(1,1,1) end
+    love.graphics.print("Area Name: ''" .. worldEdit.enteredWorldText .. "''", thisX + 10, thisY + 10, 0, 1.5)
 end
 
 function checkAreaDrawButtonsPressed(button)
     if button == 1 then
-                
-        if worldEdit.mouseOverAreaDrawButtons == 1 then -- Ground
-            areaDraw.state[1] = not areaDraw.state[1]
+        
+        for i, v in ipairs(areaDraw.state) do
+            if worldEdit.mouseOverAreaDrawButtons == i then -- Ground
+                areaDraw.state[i] = not areaDraw.state[i]
+            end
         end
-        if worldEdit.mouseOverAreaDrawButtons == 2 then -- Foreground
-            areaDraw.state[2] = not areaDraw.state[2]
-        end
-        if worldEdit.mouseOverAreaDrawButtons == 3 then -- enemies
-            areaDraw.state[3] = not areaDraw.state[3]
-        end
-        if worldEdit.mouseOverAreaDrawButtons == 4 then -- Collisions
-            areaDraw.state[4] = not areaDraw.state[4]
-        end
-        if worldEdit.mouseOverAreaDrawButtons == 5 then -- Area Name
-            areaDraw.state[5] = not areaDraw.state[5]
-        end
+
+        areaDraw.previousState = copy(areaDraw.state)
+
         local total = 0
         for i, v in ipairs(areaDraw.state) do
             if v == true then

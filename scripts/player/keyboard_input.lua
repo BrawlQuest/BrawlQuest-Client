@@ -17,6 +17,7 @@ function love.keypressed(key)
             elseif key == "escape" or key == "'" then isWorldEditWindowOpen = false end
         elseif worldEdit.open then 
             checkWorldEditKeyPressed(key)
+        elseif worldEdit.isTyping then
         elseif isSettingsWindowOpen then
             if key == "escape" or key == "w" or key == "a" or key == "s" or key == "d" then
                 isSettingsWindowOpen = false
@@ -139,5 +140,7 @@ function love.textinput(key)
         checkEditWorldTextinput(key)
     elseif isTypingInChat then
         checkChatTextinput(key)
+    elseif worldEdit.isTyping then
+        checkWorldEditTextinput(key)
     end
 end
