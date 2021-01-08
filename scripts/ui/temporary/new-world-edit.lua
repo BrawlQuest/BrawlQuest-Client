@@ -36,7 +36,7 @@ function initNewWorldEdit()
         mouseOverControlButtons = 0,
         mouseOverAreaDrawButtons = 0,
         worldSize = 400,
-        drawnWorldSize = 20, -- +- value
+        drawnWorldSize = 50, -- +- value
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
         previousScrollPosition = 0,
     }
@@ -52,7 +52,6 @@ function initNewWorldEdit()
     }
 
     initDrawableNewWorldEditTiles()
-
 end
 
 function drawEditorButtons()
@@ -119,6 +118,7 @@ function drawNewWorldEditHud()
         drawTilePicker()
         drawEditorButtons()
         drawAreaDrawButtons()
+        love.graphics.setColor(1,1,1)
     end
 end
 
@@ -198,10 +198,10 @@ function drawNewWorldEditTiles()
             for z = 1, 3 do
                 if worldEdit.draw[x][y][z] ~= (nil or "") then
                     if z == 1 then 
-                        love.graphics.draw(worldImg[worldEdit.draw[x][y][z]], thisX, thisY) -- draws new tiles
+                        love.graphics.draw(worldImg[worldEdit.draw[x][y][1]], thisX, thisY) -- draws new tiles
                     elseif z == 2 then 
                         if worldEdit.draw[x][y][1] ~= worldEdit.draw[x][y][2] then
-                            love.graphics.draw(worldImg[worldEdit.draw[x][y][z]], thisX, thisY) -- draws new tiles
+                            love.graphics.draw(worldImg[worldEdit.draw[x][y][2]], thisX, thisY) -- draws new tiles
                         end
                     elseif z == 3 and worldEdit.draw[x][y][5] ~= 0 then
                         love.graphics.draw(worldEdit.enemyImages[worldEdit.draw[x][y][5]], thisX, thisY) -- draw enemy
@@ -240,7 +240,7 @@ function drawNewWorldEditTiles()
                     local width = 0
                     local height = 0
                     local topLeft = {}
-                    if love.mouse.isDown(1) then
+                    if love.mouse.isDown(1) or love.mouse.isDown(2) then
                         worldEdit.isDrawingRect = true
 
                         if endx < startx then
@@ -343,11 +343,12 @@ function checkWorldEditMouseDown(button)
             end
         end
 
-        if button == 1 and worldEdit.drawable then
+        if (button == 1 or button == 2) and worldEdit.drawable then
             worldEdit.mousePositionStart = worldEdit.mousePosition
         end
 
         if worldEdit.mouseOverEnemyButtons > 0 then
+
             if button == 1 then
                 if worldEdit.enemyInputType == worldEdit.mouseOverEnemyButtons then
                     worldEdit.enemyInputType = 0
@@ -395,44 +396,8 @@ function checkWorldEditMouseDown(button)
             end
 
         elseif worldEdit.mouseOverAreaDrawButtons > 0 then
-            if button == 1 then
+            checkAreaDrawButtonsPressed(button)
 
-                if worldEdit.mouseOverAreaDrawButtons == 1 then -- Ground
-                    areaDraw.state[1] = not areaDraw.state[1]
-                end
-
-                if worldEdit.mouseOverAreaDrawButtons == 2 then -- Foreground
-                    areaDraw.state[2] = not areaDraw.state[2]
-                end
-
-                if worldEdit.mouseOverAreaDrawButtons == 3 and worldEdit.drawableTile[6] ~= 0 then -- enemies
-                    areaDraw.state[3] = not areaDraw.state[3]
-                end
-
-                if worldEdit.mouseOverAreaDrawButtons == 4 then -- Collisions
-                    areaDraw.state[4] = not areaDraw.state[4]
-                end
-
-                if worldEdit.mouseOverAreaDrawButtons == 5 then -- Area Name
-                    areaDraw.state[5] = not areaDraw.state[5]
-                end
-
-                local total = 0
-                for i, v in ipairs(areaDraw.state) do
-                    if v == true then
-                        total = total + 1
-                    end
-                end
-
-                if total <= 0 then
-                    worldEdit.drawmode = "pencil"
-                else
-                    worldEdit.drawmode = "rectangle"
-                end
-
-                print (worldEdit.drawmode .. ", " .. total)
-            end
-            
         elseif worldEdit.selectableTile ~= "" then
             if button == 1 then
                 worldEdit.drawableTile[2] = worldEdit.selectableTile
@@ -451,6 +416,16 @@ function checkWorldEditKeyPressed(key)
         worldEdit.drawableTile[4] = true
     elseif key == "e" then
         editorCtl.state[3] = not editorCtl.state[3]
+    end
+
+    if key == "1" then
+        areaDraw.state[1] = not areaDraw.state[1]
+    elseif key == "2" then
+        areaDraw.state[2] = not areaDraw.state[2]
+    elseif key == "3" then
+        areaDraw.state[3] = not areaDraw.state[3]
+    elseif key == "4" then
+        areaDraw.state[4] = not areaDraw.state[4]
     end
 
     if key == "escape" or key == "'" then  
