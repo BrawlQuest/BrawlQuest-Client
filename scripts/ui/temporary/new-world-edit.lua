@@ -18,7 +18,9 @@ function initNewWorldEdit()
             "assets/world/grounds/grass/grass08.png", -- foreground tile
             "", -- enemy name
             true, -- collisions
-            "", -- name
+            "", -- enemy name
+            "", -- Name
+            "*", -- Music
             0, -- enemy index
         },
         drawmode = "pencil",
@@ -39,6 +41,11 @@ function initNewWorldEdit()
         drawnWorldSize = 50, -- +- value
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
         previousScrollPosition = 0,
+    }
+
+    availablePlaceNames = {
+        "",
+        "Spooky Forest",
     }
     
     areaDraw = {
@@ -64,14 +71,6 @@ function drawEditorButtons()
         if editorCtl.state[i] then love.graphics.setColor(0,0,0,1) else love.graphics.setColor(1,1,1,1) end
         love.graphics.printf(editorCtl.title[i] .. editorCtl.stateTitle[i][boolToInt(editorCtl.state[i]) + 1], x + padding, y + padding, width - (padding * 2))
     end
-end
-
-function boolToInt(value)
-    return value and 1 or 0
-end
-
-function boolToString(bool)
-    if bool then return "On" else return "Off" end
 end
 
 function updateNewWorldEdit(dt)
@@ -284,13 +283,15 @@ function drawNewWorldEditTiles()
                                 end
                             end
                             worldEdit.draw[x][y][4] = false -- collisions
+                            
                         else
                             for i = 1, 3 do
                                 worldEdit.draw[x][y][i] = worldEdit.drawableTile[i]
                             end
                             worldEdit.draw[x][y][4] = editorCtl.state[2] -- collisions
-                            worldEdit.draw[x][y][5] = worldEdit.drawableTile[6]
+                            worldEdit.draw[x][y][5] = worldEdit.drawableTile[8]
                         end
+                        standardIfStatement(x, y)
                     end
 
                     if love.mouse.isDown(2) then
@@ -317,7 +318,9 @@ function drawNewWorldEditTiles()
                             worldEdit.draw[x][y][1] = worldEdit.drawableTile[1]
                             worldEdit.draw[x][y][2] = worldEdit.drawableTile[1]
                         end
+
                         worldEdit.draw[x][y][4] = false -- collisions
+                        standardIfStatement(x, y)
                     end
                 end
             end
@@ -353,11 +356,11 @@ function checkWorldEditMouseDown(button)
                 if worldEdit.enemyInputType == worldEdit.mouseOverEnemyButtons then
                     worldEdit.enemyInputType = 0
                     worldEdit.drawableTile[3] = "" 
-                    worldEdit.drawableTile[6] = 0
+                    worldEdit.drawableTile[8] = 0
                 else
                     worldEdit.enemyInputType = worldEdit.mouseOverEnemyButtons
                     worldEdit.drawableTile[3] = availableEnemies[worldEdit.enemyInputType].Name 
-                    worldEdit.drawableTile[6] = worldEdit.enemyInputType
+                    worldEdit.drawableTile[8] = worldEdit.enemyInputType
                 end
             end
 
@@ -385,12 +388,6 @@ function checkWorldEditMouseDown(button)
 
                 if worldEdit.mouseOverControlButtons == 5 then -- clear
                     initDrawableNewWorldEditTiles()
-                    worldEdit.changed = false
-                    editorCtl.state[1] = false
-                    editorCtl.state[5] = false
-                    worldEdit.enemyInputType = 0
-                    worldEdit.drawableTile[3] = "" 
-                    worldEdit.drawableTile[6] = 0
                 end
 
             end
@@ -415,6 +412,8 @@ function checkWorldEditKeyPressed(key)
         editorCtl.state[2] = not editorCtl.state[2]
         worldEdit.drawableTile[4] = true
     elseif key == "e" then
+        editorCtl.state[3] = not editorCtl.state[3]
+    elseif key == "x" then
         editorCtl.state[3] = not editorCtl.state[3]
     end
 
@@ -446,8 +445,8 @@ function saveWorldChanges()
                 pendingWorldChanges[#pendingWorldChanges+1] = {
                     GroundTile = worldEdit.draw[x][y][1],
                     ForegroundTile = worldEdit.draw[x][y][2],
-                    Name =  "",
-                    Music = "*",
+                    Name =  worldEdit.draw[x][y][6],
+                    Music = worldEdit.draw[x][y][7],
                     Enemy = worldEdit.draw[x][y][3],
                     Collision = worldEdit.draw[x][y][4],
                     X = x,
@@ -457,7 +456,7 @@ function saveWorldChanges()
         end
     end
     local b = {}
-    print("World change amount = " .. count)
+    print("World change amount: " .. count)
     c, h = http.request{url = api.url.."/world", method="POST", source=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(pendingWorldChanges)),["token"]=token}}
     pendingWorldChanges = {}
     local b = {}
@@ -489,7 +488,16 @@ function initDrawableNewWorldEditTiles()
     for x = worldEdit.worldSize * -1, worldEdit.worldSize do
         worldEdit.draw[x] = {}
         for y = worldEdit.worldSize * -1, worldEdit.worldSize do
-            worldEdit.draw[x][y] = {"", "", "", false, 0,}
+            worldEdit.draw[x][y] = {"", "", "", false, 0, "", "*"}
+            if worldLookup[x][y] then
+                
+            end
         end
     end
+    worldEdit.changed = false
+    editorCtl.state[1] = false
+    editorCtl.state[5] = false
+    worldEdit.enemyInputType = 0
+    worldEdit.drawableTile[3] = "" 
+    worldEdit.drawableTile[8] = 0
 end

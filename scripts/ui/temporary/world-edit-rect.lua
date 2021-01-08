@@ -1,6 +1,7 @@
 function checkWorldEditRectMouseUp(button)
     if (button == 1 or button == 2) and worldEdit.isDrawingRect then
         -- print(worldEdit.drawableRect.ax .. ", " .. worldEdit.drawableRect.ay .. " : " .. worldEdit.drawableRect.bx .. ", " .. worldEdit.drawableRect.by)
+        print("------------- drawing -------------")
         local ax, ay, bx, by = worldEdit.drawableRect.ax, worldEdit.drawableRect.ay, worldEdit.drawableRect.bx, worldEdit.drawableRect.by
         if ax < bx then
             while ax < bx do
@@ -16,6 +17,7 @@ function checkWorldEditRectMouseUp(button)
         worldEdit.changed = true
         editorCtl.state[1] = true
         editorCtl.state[5] = true
+        -- print(json:encode(worldEdit.draw[worldEdit.drawableRect.ax][worldEdit.drawableRect.ay]))
     end
 end
 
@@ -45,6 +47,7 @@ function drawWorldEditTileFromRect(x, y, button)
     end
 
     if button == 1 then
+        -- print(json:encode(worldLookup[x][y]))
         for i, v in ipairs(areaDraw.state) do
             if v == true then
                 if i == 1 and worldLookup[x][y] then
@@ -58,9 +61,9 @@ function drawWorldEditTileFromRect(x, y, button)
                         end
                     end
                     worldEdit.draw[x][y][1] = worldEdit.drawableTile[1]
-                elseif i == 3 then
+                elseif i == 3 then -- enemies
                     worldEdit.draw[x][y][3] = worldEdit.drawableTile[3]
-                    worldEdit.draw[x][y][5] = worldEdit.drawableTile[6]
+                    worldEdit.draw[x][y][5] = worldEdit.drawableTile[8]
                 else
                     worldEdit.draw[x][y][i] = worldEdit.drawableTile[i]
                 end
@@ -82,6 +85,8 @@ function drawWorldEditTileFromRect(x, y, button)
             end
         end
     end
+    standardIfStatement(x, y)
+    print(json:encode(worldEdit.draw[x][y]))
 end
 
 function drawAreaDrawButtons()
@@ -93,8 +98,8 @@ function drawAreaDrawButtons()
         drawNewWorldEditButton(x, y, 42, 42, areaDraw.state[i])
         if i < 3 then love.graphics.draw(worldImg[worldEdit.drawableTile[i]], x + 5, y + 5)
         elseif i == 3 then 
-            if worldEdit.drawableTile[6] ~= 0 then
-                love.graphics.draw(worldEdit.enemyImages[worldEdit.drawableTile[6]], x + 5, y + 5)
+            if worldEdit.drawableTile[8] ~= 0 then
+                love.graphics.draw(worldEdit.enemyImages[worldEdit.drawableTile[8]], x + 5, y + 5)
             else
                 love.graphics.printf("Enemy", x + 5, y + 10, 32)
             end
@@ -140,5 +145,21 @@ function checkAreaDrawButtonsPressed(button)
             worldEdit.drawmode = "rectangle"
         end
     end
-    
+end
+
+function standardIfStatement(x, y)
+    if worldLookup[x][y] then
+        worldEdit.draw[x][y][8] = worldLookup[x][y].Name
+    else
+        worldEdit.draw[x][y][8] = ""
+    end
+    worldEdit.draw[x][y][7] = "*"
+end
+
+function boolToInt(value)
+    return value and 1 or 0
+end
+
+function boolToString(bool)
+    if bool then return "On" else return "Off" end
 end
