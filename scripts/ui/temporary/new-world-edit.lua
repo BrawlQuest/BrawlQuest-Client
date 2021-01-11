@@ -61,7 +61,14 @@ function initNewWorldEdit()
         tabMode = false,
         showPlaceNames = false,
         showMusic = false, 
-        state = {false, false, false, false, false, false},
+        state = {
+            false, -- 1. ground tile
+            false, -- 2. foreground tile
+            false, -- 3. enemy name
+            false, -- 4. collisions
+            false, -- 5. tile name
+            false, -- 6. tile music
+        },
         previousState = {true, true, true, true, true, true},
     }
 
@@ -546,8 +553,6 @@ function getWorldInfo()
             avaliableMusic[#avaliableMusic + 1] = worldLookup[v.X][v.Y].Music
         end
     end
-
-    
 
     for i, v in ipairs(availablePlaceNames) do
         love.math.setRandomSeed(i)

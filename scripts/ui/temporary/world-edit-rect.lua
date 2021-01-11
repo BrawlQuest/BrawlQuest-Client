@@ -132,6 +132,17 @@ function drawAreaDrawButtons()
 
         if isMouseOver(x,y,42,42) then worldEdit.mouseOverAreaDrawButtons = i end
     end
+
+    if areaDraw.state[5] then -- draw avaliable world names
+        local x, y = love.graphics.getWidth() - 62, love.graphics.getHeight()
+
+        for i,v in ipairs(availablePlaceNames) do
+            local thisX, thisY = x - 100, y - (52 * (i - 1))
+            drawNewWorldEditButton(thisX, thisY, 100, 42, false)
+            love.graphics.setColor(1,1,1)
+            love.graphics.printf("''" .. v.name .. "''", thisX + 5, thisY + 10, 80, "right")
+        end
+    end
 end
 
 function checkAreaDrawButtonsPressed(button)
