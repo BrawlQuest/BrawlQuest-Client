@@ -19,6 +19,7 @@ function initNewWorldEdit()
             -- 5. tile name
             -- 6. tile music
             -- 7. enemy index
+            -- 8. tile name color
         },
         selectableTile = "",
         drawableTile = {
@@ -70,6 +71,10 @@ function initNewWorldEdit()
             false, -- 6. tile music
         },
         previousState = {true, true, true, true, true, true},
+        nextPlaceColor = {0,0,0,0},
+        nextMusicColor = {0,0,0,0},
+        selectedColor = null,
+        mouseOverPlaceNames = 0,
     }
 
     editorCtl = {
@@ -79,6 +84,22 @@ function initNewWorldEdit()
     }
 
     initDrawableNewWorldEditTiles()
+end
+
+function initDrawableNewWorldEditTiles()
+    local i = 0
+    for x = worldEdit.worldSize * -1, worldEdit.worldSize do
+        worldEdit.draw[x] = {}
+        for y = worldEdit.worldSize * -1, worldEdit.worldSize do
+            worldEdit.draw[x][y] = {"", "", "", false, "", "*", 0, null, null}            
+        end
+    end
+    worldEdit.changed = false
+    editorCtl.state[1] = false
+    editorCtl.state[5] = false
+    worldEdit.enemyInputType = 0
+    worldEdit.drawableTile[3] = "" 
+    worldEdit.drawableTile[7] = 0
 end
 
 function drawEditorButtons()
@@ -122,6 +143,7 @@ function drawNewWorldEditHud()
         worldEdit.mouseOverEnemyButtons = 0
         worldEdit.mouseOverControlButtons = 0
         worldEdit.mouseOverAreaDrawButtons = 0
+        areaDraw.mouseOverPlaceNames = -1
         worldEdit.hoveringOverButton = false
         worldEdit.readyToWriteText = false
         worldEdit.selectableTile = ""
@@ -214,29 +236,38 @@ function drawNewWorldEditTiles()
             -- x, y = x + 10, y + 10
             thisX, thisY = x * 32 , y * 32 -- x,y  = x, y + player position?
             love.graphics.setColor(1,1,1)
-            for z = 1, 3 do
-                if worldEdit.draw[x][y][z] ~= (nil or "") then
-                    if z == 1 then 
-                        love.graphics.draw(worldImg[worldEdit.draw[x][y][1]], thisX, thisY) -- draws new tiles
-                    elseif z == 2 then 
-                        if worldEdit.draw[x][y][1] ~= worldEdit.draw[x][y][2] then
-                            love.graphics.draw(worldImg[worldEdit.draw[x][y][2]], thisX, thisY) -- draws new tiles
-                        end
-                    elseif z == 3 and worldEdit.draw[x][y][7] ~= 0 then
-                        love.graphics.draw(worldEdit.enemyImages[worldEdit.draw[x][y][7]], thisX, thisY) -- draw enemy
-                    end
+
+            if worldEdit.draw[x][y][1] ~= (nil or "") then
+
+                love.graphics.draw(worldImg[worldEdit.draw[x][y][1]], thisX, thisY) -- draws new tiles
+
+                if worldEdit.draw[x][y][1] ~= worldEdit.draw[x][y][2] then
+                    love.graphics.draw(worldImg[worldEdit.draw[x][y][2]], thisX, thisY) -- draws new tiles
+                end
+
+                if worldEdit.draw[x][y][7] > 0 then
+                    love.graphics.draw(worldEdit.enemyImages[worldEdit.draw[x][y][7]], thisX, thisY) -- draw enemy
+                end
+
+                if worldEdit.draw[x][y][4] then 
+                    love.graphics.setColor(1,0,1,1) 
+                    roundRectangle("fill", thisX - 5, thisY - 5 , 10, 10, 5) -- collisions indicator
+                    love.graphics.setColor(1,1,1,1) 
                 end
             end
 
             drawAreaDrawAreas(x, y, areaDraw.showPlaceNames)
             drawAreaDrawAreas(x, y, areaDraw.showMusic)
 
-            if worldEdit.draw[x][y][4] then 
-                love.graphics.setColor(1,0,1,1) 
-                roundRectangle("fill", thisX - 5, thisY - 5 , 10, 10, 5) -- collisions indicator
-                love.graphics.setColor(1,1,1,1) 
-            end 
-            
+            if worldEdit.draw[x][y][8] ~= null then
+                love.graphics.setColor(unpack(worldEdit.draw[x][y][8]))
+                love.graphics.rectangle("fill", thisX, thisY, 32, 32)
+            elseif worldEdit.draw[x][y][1] ~= (nil or "") then
+                love.graphics.setColor(unpack(areaDraw.nextPlaceColor))
+                love.graphics.rectangle("fill", thisX, thisY, 32, 32)
+            end
+    
+            love.graphics.setColor(1,1,1,1)    
             if worldEdit.drawable and not worldEdit.hoveringOverButton and isMouseOver( -- draws the 
                 (((thisX - player.dx - 16) * worldScale) + (love.graphics.getWidth()/2)), 
                 (((thisY - player.dy - 16) * worldScale) + (love.graphics.getHeight()/2)), 
@@ -416,6 +447,22 @@ function checkWorldEditMouseDown(button)
         elseif worldEdit.mouseOverAreaDrawButtons > 0 then
             checkAreaDrawButtonsPressed(button)
 
+        elseif areaDraw.mouseOverPlaceNames > -1 then
+            if button == 1 then
+                local count = 1
+                for i,v in ipairs(availablePlaceNames) do
+                    if areaDraw.mouseOverPlaceNames == count then
+                        worldEdit.enteredWorldText = v.name
+                        worldEdit.drawableTile[5] = v.name
+                    elseif areaDraw.mouseOverPlaceNames == 0 then
+                        worldEdit.enteredWorldText = ""
+                        worldEdit.drawableTile[5] = ""
+                    end
+                    if v.name ~= "" then 
+                        count = count + 1
+                    end
+                end
+            end
         elseif worldEdit.selectableTile ~= "" then
             if button == 1 then
                 worldEdit.drawableTile[2] = worldEdit.selectableTile
@@ -525,22 +572,6 @@ function checkIfReadyToQuit()
     end
 end
 
-function initDrawableNewWorldEditTiles()
-    local i = 0
-    for x = worldEdit.worldSize * -1, worldEdit.worldSize do
-        worldEdit.draw[x] = {}
-        for y = worldEdit.worldSize * -1, worldEdit.worldSize do
-            worldEdit.draw[x][y] = {"", "", "", false, 0, "", "*"}            
-        end
-    end
-    worldEdit.changed = false
-    editorCtl.state[1] = false
-    editorCtl.state[5] = false
-    worldEdit.enemyInputType = 0
-    worldEdit.drawableTile[3] = "" 
-    worldEdit.drawableTile[8] = 0
-end
-
 function getWorldInfo() 
     availablePlaceNames = {}
     avaliableMusic = {}
@@ -563,6 +594,12 @@ function getWorldInfo()
         love.math.setRandomSeed(i)
         avaliableMusic[i] = {name = v, color = {getAreaColor(), getAreaColor(), getAreaColor(), 0.7}}
     end
+    
+    love.math.setRandomSeed(#availablePlaceNames + 1)
+    areaDraw.nextPlaceColor = {getAreaColor(), getAreaColor(), getAreaColor(), 0.7}
+
+    love.math.setRandomSeed(#avaliableMusic + 1)
+    areaDraw.nextMusicColor = {getAreaColor(), getAreaColor(), getAreaColor(), 0.7}
 
     print("Places: " .. json:encode(availablePlaceNames))
     print("Music: " .. json:encode(avaliableMusic))

@@ -64,6 +64,9 @@ function drawWorldEditTileFromRect(x, y, button)
                 elseif i == 3 then -- enemies
                     worldEdit.draw[x][y][3] = worldEdit.drawableTile[3] 
                     worldEdit.draw[x][y][5] = worldEdit.drawableTile[5]
+                elseif i == 5 then
+                    worldEdit.draw[x][y][i] = worldEdit.drawableTile[i]
+                    worldEdit.draw[x][y][8] = areaDraw.selectedColor
                 else
                     worldEdit.draw[x][y][i] = worldEdit.drawableTile[i]
                 end
@@ -85,20 +88,20 @@ function drawWorldEditTileFromRect(x, y, button)
             end
         end
     end
-    standardIfStatement(x, y)
     -- print(json:encode(worldEdit.draw[x][y]))
 end
 
 function drawAreaDrawButtons()
     local thisX, thisY = cerp(10, 320, worldEdit.toolbarAmount), love.graphics.getHeight() - 45 - 42 
+    areaDraw.selectedColor = null
 
     local width, height = 202, 32
     drawNewWorldEditButton(thisX, thisY, width, height, false) -- Draws the name of an enemy, no input
     love.graphics.print("Enemy: ''" .. worldEdit.drawableTile[3] .. "''", thisX + 10, thisY + 10, 0, 1.5)
 
     thisX, thisY = thisX + width + 10, thisY
-    drawNewWorldEditButton(thisX, thisY, width, height, worldEdit.isTyping)
-    if isMouseOver(thisX, thisY, width, height) then worldEdit.readyToWriteText = true end
+    drawNewWorldEditButton(thisX, thisY, width * 2, height, worldEdit.isTyping)
+    if isMouseOver(thisX, thisY, width * 2, height) then worldEdit.readyToWriteText = true end
     if worldEdit.isTyping then love.graphics.setColor(0,0,0) else love.graphics.setColor(1,1,1) end
     love.graphics.print("Area Name: ''" .. worldEdit.enteredWorldText .. "''", thisX + 10, thisY + 10, 0, 1.5)
 
@@ -111,8 +114,8 @@ function drawAreaDrawButtons()
             love.graphics.draw(worldImg[worldEdit.drawableTile[i]], x + 5, y + 5)
 
         elseif i == 3 then 
-            if worldEdit.drawableTile[8] ~= 0 then
-                love.graphics.draw(worldEdit.enemyImages[worldEdit.drawableTile[8]], x + 5, y + 5)
+            if worldEdit.drawableTile[7] ~= 0 then
+                love.graphics.draw(worldEdit.enemyImages[worldEdit.drawableTile[7]], x + 5, y + 5)
             else
                 love.graphics.printf("Enemy", x + 5, y + 10, 32, "center")
             end
@@ -134,13 +137,39 @@ function drawAreaDrawButtons()
     end
 
     if areaDraw.state[5] then -- draw avaliable world names
-        local x, y = love.graphics.getWidth() - 62, love.graphics.getHeight()
-
+        local thisX, thisY = love.graphics.getWidth() - 62 - 150, love.graphics.getHeight() - 104
+        local count = 0
         for i,v in ipairs(availablePlaceNames) do
-            local thisX, thisY = x - 100, y - (52 * (i - 1))
-            drawNewWorldEditButton(thisX, thisY, 100, 42, false)
-            love.graphics.setColor(1,1,1)
-            love.graphics.printf("''" .. v.name .. "''", thisX + 5, thisY + 10, 80, "right")
+            if v.name ~= "" then 
+                local bool = v.name == worldEdit.drawableTile[5]
+                
+                drawNewWorldEditButton(thisX, thisY, 150, 42, bool)
+
+                count = count + 1
+                if bool then
+                    areaDraw.selectedColor = v.color
+                end
+
+                if isMouseOver(thisX, thisY, 150, 42) then
+                    areaDraw.mouseOverPlaceNames = count
+                end
+
+                love.graphics.setColor(1,1,1)
+                love.graphics.printf("''" .. v.name .. "''", thisX + 5, thisY + 10, 100, "left")
+            
+                love.graphics.setColor(unpack(v.color))
+                roundRectangle("fill", thisX + 150 - 37, thisY + 5, 32, 32, 5)
+                thisY = thisY - 52
+            else
+                local x, y = love.graphics.getWidth() - 62 - 150, love.graphics.getHeight() - 52
+                drawNewWorldEditButton(x, y, 150, 42, bool)
+
+                if isMouseOver(x, y, 150, 42) then
+                    areaDraw.mouseOverPlaceNames = 0
+                end
+
+                love.graphics.printf("''" .. v.name .. "''", x + 5, y + 10, 100, "left")
+            end
         end
     end
 end
