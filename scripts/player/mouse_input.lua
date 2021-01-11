@@ -38,7 +38,6 @@ function love.wheelmoved( dx, dy )
             worldScale = worldScale * 0.5
         end
         worldEdit.previousScrollPosition = dy
-        print(dy)
     else 
         if isTypingInChat then velyChat = velyChat + dy * 512 end
     end

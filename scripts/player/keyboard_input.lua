@@ -17,6 +17,7 @@ function love.keypressed(key)
             elseif key == "escape" or key == "'" then isWorldEditWindowOpen = false end
         elseif worldEdit.open then 
             checkWorldEditKeyPressed(key)
+        elseif worldEdit.isTyping then
         elseif isSettingsWindowOpen then
             if key == "escape" or key == "w" or key == "a" or key == "s" or key == "d" then
                 isSettingsWindowOpen = false
@@ -64,7 +65,10 @@ function love.keypressed(key)
                 loadSliders()
             end
 
-            if key == "'" or key == "r" then worldEdit.open = not worldEdit.open end
+            if key == "'" or key == "r" then 
+                -- getWorldInfo() 
+                worldEdit.open = not worldEdit.open 
+            end
 
             if key == keybinds.INTERACT then startConversation() end
 
@@ -99,7 +103,7 @@ function love.keypressed(key)
             end
         end
         
-        if not isTypingInChat then
+        if not isTypingInChat and not worldEdit.isTyping then
             if key == "l" then
                 worldScale = worldScale * 0.5
             end
@@ -124,7 +128,7 @@ function love.keypressed(key)
 end
 
 function love.keyreleased(key)
-    if key == keybinds.SHIELD and not isTypingInChat and phase == "game" then
+    if key == keybinds.SHIELD and not isTypingInChat and phase == "game" and not worldEdit.isTyping then
         shieldDownSfx:play()
     end
 end
@@ -136,5 +140,7 @@ function love.textinput(key)
         checkEditWorldTextinput(key)
     elseif isTypingInChat then
         checkChatTextinput(key)
+    elseif worldEdit.isTyping then
+        checkWorldEditTextinput(key)
     end
 end
