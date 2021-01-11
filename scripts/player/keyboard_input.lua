@@ -66,7 +66,7 @@ function love.keypressed(key)
             end
 
             if key == "'" or key == "r" then 
-                getWorldInfo() 
+                -- getWorldInfo() 
                 worldEdit.open = not worldEdit.open 
             end
 
@@ -103,7 +103,7 @@ function love.keypressed(key)
             end
         end
         
-        if not isTypingInChat then
+        if not isTypingInChat and not worldEdit.isTyping then
             if key == "l" then
                 worldScale = worldScale * 0.5
             end
@@ -128,7 +128,7 @@ function love.keypressed(key)
 end
 
 function love.keyreleased(key)
-    if key == keybinds.SHIELD and not isTypingInChat and phase == "game" then
+    if key == keybinds.SHIELD and not isTypingInChat and phase == "game" and not worldEdit.isTyping then
         shieldDownSfx:play()
     end
 end
