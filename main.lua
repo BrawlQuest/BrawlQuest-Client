@@ -147,7 +147,12 @@ function love.draw()
         
         -- if not worldEdit.open then
             love.graphics.setFont(font)
-            love.graphics.print(player.x..", "..player.y .. ", " .. tostring(love.timer.getFPS()), 10, 6)
+            if worldLookup[player.x] and worldLookup[player.x][player.y] then
+                love.graphics.print(player.x..", "..player.y .. ", " .. tostring(love.timer.getFPS()).."\n"..tostring(worldLookup[player.x][player.y].Name), 10, 6)
+                if worldLookup[me.X] and worldLookup[me.X][me.Y] then
+                    love.graphics.print(tostring(worldLookup[me.X][me.Y].Title), 100,100)
+                end
+            end
         -- end
     end
 
