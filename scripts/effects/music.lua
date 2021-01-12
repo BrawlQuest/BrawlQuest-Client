@@ -17,14 +17,17 @@ function loadMusic()
         Sax = love.audio.newSource("assets/music/album1/Sax.mp3", "stream"),
         Titans = love.audio.newSource("assets/music/album1/Titans.mp3", "stream"),
         Skirmish = love.audio.newSource("assets/music/album1/Skirmish.mp3", "stream"),
-        Skirmish2 = love.audio.newSource("assets/music/album1/Skirmish2.mp3", "stream")
+        Skirmish2 = love.audio.newSource("assets/music/album1/Skirmish2.mp3", "stream"),
+        CaperOfCruelty = love.audio.newSource("assets/music/album1/CAPER_OF_CRUELTY_1.0.mp3", "stream"),
     }
 
     worldMusic = {"PuerLavari", "Mining", "Sax"}
+    battleMusic = {"Titans", "Skirmish", "Skirmish2", "CaperOfCruelty"}
+
+    musicSwitchAmount = 0
 
     titleMusic = love.audio.newSource("assets/music/album1/Longing.mp3", "stream")
-
-    battleMusic = {"Titans", "Skirmish", "Skirmish2"}
+    previousMusicTile = null
 
     if musicVolume ~= 0 then
         currentPlaying = titleMusic:play()
@@ -35,29 +38,58 @@ end
 function updateMusic(dt)
     if volumeSlider:getValue() ~= previousMusicVolume then
         musicVolume = volumeSlider:getValue()
-        music[currentTrack]:setVolume(musicVolume)
         previousMusicVolume = musicVolume
-        print("Music Volume: " .. musicVolume)
-        writeSettings()
+        -- print("Music Volume: " .. musicVolume)
         if musicVolume == 0 then
             playMusic = false
         else
             playMusic = true
+            currentPlaying = "PuerLavari"
+            music[currentTrack]:setVolume(musicVolume)
         end
+        writeSettings()
     end
 
     if playMusic then
-        if enemiesInAggro == 0 and not arrayContains(worldMusic, currentTrack) then
-            switchMusic(worldMusic[love.math.random(1, #worldMusic)])
-        elseif not arrayContains(battleMusic, currentTrack) and enemiesInAggro > 0 then
-            switchMusic(battleMusic[love.math.random(1, #battleMusic)])
+        if worldLookup[player.x] and worldLookup[player.x][player.y] then
+            local foundMusic = worldLookup[player.x][player.y].Music
+            if foundMusic ~= (previousMusicTile) then
+                -- if foundMusic == "*" then
+                --     switchMusic("PuerLavari")
+                --     previousMusicTile = "PuerLavari"
+                -- else
+                    switchMusic(foundMusic)
+                    previousMusicTile = foundMusic
+                -- end
+            end
         end
 
+        -- if enemiesInAggro == 0 and not arrayContains(worldMusic, currentTrack) then
+        --     switchMusic(worldMusic[love.math.random(1, #worldMusic)])
+        -- elseif not arrayContains(battleMusic, currentTrack) and enemiesInAggro > 0 then
+        --     switchMusic(battleMusic[love.math.random(1, #battleMusic)])
+        -- end
+
         if isSwitching then
-            if music[currentTrack]:getVolume() > 0.01 then
-                music[currentTrack]:setVolume(music[currentTrack]:getVolume() - 0.3 * dt)
+            musicSwitchAmount = musicSwitchAmount - 1 * dt
+            if musicSwitchAmount <= 0 then musicSwitchAmount = 0 end
+
+            if musicSwitchAmount > 0 then
+                music[currentTrack]:setVolume(cerp(0, musicVolume, musicSwitchAmount))
+                music[nextTrack]:setVolume(cerp(musicVolume, 0, musicSwitchAmount))
             else
-                -- print("new track playing")
+                music[currentTrack]:stop()
+                isSwitching = false
+                currentTrack = nextTrack
+            end
+            --[[
+            if music[currentTrack]:getVolume() > 0.01 then
+                if arrayContains(battleMusic, nextTrack) then
+                    music[currentTrack]:setVolume(music[currentTrack]:getVolume() - 2 * dt)
+                else
+                    music[currentTrack]:setVolume(music[currentTrack]:getVolume() - 0.8 * dt)
+                end
+            else
                 music[currentTrack]:stop()
                 isSwitching = false
                 currentTrack = nextTrack
@@ -65,6 +97,7 @@ function updateMusic(dt)
                 music[currentTrack]:setLooping(true)
                 currentPlaying = music[currentTrack]:play()
             end
+            ]]
         end
     end
 end
@@ -74,9 +107,13 @@ function switchMusic(newTrack)
     if music[newTrack] ~= nil and newTrack ~= currentTrack then
         nextTrack = newTrack
         isSwitching = true
-    elseif newTrack == currentTrack then
+        musicSwitchAmount = 1
+        music[nextTrack]:setVolume(musicVolume)
+        music[nextTrack]:setLooping(true)
+        currentPlaying = music[nextTrack]:play()
+    -- elseif newTrack == currentTrack then
         -- print("Attempted to restart playback of already playing track.")
-    else
+    -- else
         -- print("Attempted to play a track that doesn't exist: " .. newTrack)
     end
 end

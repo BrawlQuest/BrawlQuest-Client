@@ -71,7 +71,7 @@ function initNewWorldEdit()
             false, -- 5. tile name
             false, -- 6. tile music
         },
-        previousState = {true, true, true, true, true, true},
+        previousState = {true, true, true, true, false, false},
         nextPlaceColor = {0,0,0,0},
         nextMusicColor = {0,0,0,0},
         selectedColor = null,
@@ -483,7 +483,7 @@ function checkWorldEditMouseDown(button)
                     if areaDraw.mouseOverMusicNames == count then
                         worldEdit.drawableTile[6] = v.name
                     elseif areaDraw.mouseOverMusicNames == 0 then
-                        worldEdit.drawableTile[6] = ""
+                        worldEdit.drawableTile[6] = "*"
                     end
                     if v.name ~= "" then 
                         count = count + 1
@@ -521,13 +521,17 @@ function checkWorldEditKeyPressed(key)
             editorCtl.state[3] = not editorCtl.state[3]
         elseif key == "x" then
             editorCtl.state[3] = not editorCtl.state[3]
+        elseif key == "return" then 
+            worldEdit.isTyping = true
         end
 
         for i, v in ipairs(areaDraw.state) do -- check areaDraw buttons pressed
             if key == tostring(i) then
                 checkAreaDrawSingleButtonPressed(i)
+                checkAreaDrawButtonsPressedTotal()
             end
         end
+        
 
         if key == "tab" then
             areaDraw.tabMode = not areaDraw.tabMode
@@ -535,7 +539,7 @@ function checkWorldEditKeyPressed(key)
                 areaDraw.state = copy(areaDraw.previousState)
             else
                 areaDraw.previousState = copy(areaDraw.state)
-                areaDraw.state = {false, false, false, false, false, false}
+                areaDraw.state = {false, false, false, false, areaDraw.previousState[5], areaDraw.previousState[6]}
             end
         end
 

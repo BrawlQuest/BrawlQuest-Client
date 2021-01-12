@@ -86,7 +86,7 @@ function transitionToPhaseGame()
     love.graphics.setBackgroundColor(0, 0, 0)
     phase = "game"
     love.audio.stop( titleMusic )
-    switchMusic(worldMusic[love.math.random(1, #worldMusic)])
+    -- switchMusic(worldMusic[love.math.random(1, #worldMusic)])
     createWorld()
 end
 

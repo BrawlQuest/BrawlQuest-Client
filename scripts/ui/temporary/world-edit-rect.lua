@@ -37,13 +37,15 @@ function getYValue(ax, ay, bx, by, button)
 end
 
 function drawWorldEditTileFromRect(x, y, button)
-    
-    worldEdit.draw[x][y][1] = worldLookup[x][y].GroundTile
-    worldEdit.draw[x][y][2] = worldLookup[x][y].ForegroundTile
-    worldEdit.draw[x][y][3] = worldLookup[x][y].Enemy
-    worldEdit.draw[x][y][4] = worldLookup[x][y].Collision
-    worldEdit.draw[x][y][5] = worldLookup[x][y].Name
-    -- worldEdit.draw[x][y][6] = worldLookup[x][y].Music
+
+    if worldLookup[x] and worldEdit.draw[x][y] then
+        worldEdit.draw[x][y][1] = worldLookup[x][y].GroundTile
+        worldEdit.draw[x][y][2] = worldLookup[x][y].ForegroundTile
+        worldEdit.draw[x][y][3] = worldLookup[x][y].Enemy
+        worldEdit.draw[x][y][4] = worldLookup[x][y].Collision
+        worldEdit.draw[x][y][5] = worldLookup[x][y].Name
+        -- worldEdit.draw[x][y][6] = worldLookup[x][y].Music
+    end
 
     -- print ("First: " .. json:encode(worldEdit.draw[x][y]))
 
@@ -229,18 +231,21 @@ function checkAreaDrawButtonsPressed(button)
         end
 
         areaDraw.previousState = copy(areaDraw.state)
+        checkAreaDrawButtonsPressedTotal()
+    end
+end
 
-        local total = 0
-        for i, v in ipairs(areaDraw.state) do
-            if v == true then
-                total = total + 1
-            end
+function checkAreaDrawButtonsPressedTotal()
+    local total = 0
+    for i, v in ipairs(areaDraw.state) do
+        if v == true then
+            total = total + 1
         end
-        if total <= 0 then
-            worldEdit.drawmode = "pencil"
-        else
-            worldEdit.drawmode = "rectangle"
-        end
+    end
+    if total <= 0 then
+        worldEdit.drawmode = "pencil"
+    else
+        worldEdit.drawmode = "rectangle"
     end
 end
 
@@ -262,22 +267,29 @@ function boolToString(bool)
 end
 
 function checkAreaDrawSingleButtonPressed(i)
-
     if i == 5 then
+        if areaDraw.state[6] then 
+            areaDraw.showMusic = false
+            areaDraw.state[6] = false 
+        end
         areaDraw.showPlaceNames = not areaDraw.showPlaceNames
         if not areaDraw.state[5] then
             getWorldInfo()
         end
-    end
-
-    if i == 6 then
+        areaDraw.state[i] = not areaDraw.state[i]
+    elseif i == 6 then
+        if areaDraw.state[5] then 
+            areaDraw.showPlaceNames = false
+            areaDraw.state[5] = false 
+        end
         areaDraw.showMusic = not areaDraw.showMusic
         if not areaDraw.state[6] then
             getWorldInfo()
         end
+        areaDraw.state[i] = not areaDraw.state[i]
+    else
+        areaDraw.state[i] = not areaDraw.state[i]
     end
-
-    areaDraw.state[i] = not areaDraw.state[i]
 end
 
 function drawAreaDrawAreas(x, y)
