@@ -19,9 +19,10 @@ function loadMusic()
         Skirmish = love.audio.newSource("assets/music/album1/Skirmish.mp3", "stream"),
         Skirmish2 = love.audio.newSource("assets/music/album1/Skirmish2.mp3", "stream"),
         CaperOfCruelty = love.audio.newSource("assets/music/album1/CAPER_OF_CRUELTY_1.0.mp3", "stream"),
+        ToFindTheOne = love.audio.newSource("assets/music/album1/To Find The one.mp3", "stream"),
     }
 
-    worldMusic = {"PuerLavari", "Mining", "Sax"}
+    worldMusic = {"PuerLavari", "Mining", "Sax", "ToFindTheOne",}
     battleMusic = {"Titans", "Skirmish", "Skirmish2", "CaperOfCruelty"}
 
     musicSwitchAmount = 0
@@ -53,14 +54,9 @@ function updateMusic(dt)
     if playMusic then
         if worldLookup[player.x] and worldLookup[player.x][player.y] then
             local foundMusic = worldLookup[player.x][player.y].Music
-            if foundMusic ~= (previousMusicTile) then
-                -- if foundMusic == "*" then
-                --     switchMusic("PuerLavari")
-                --     previousMusicTile = "PuerLavari"
-                -- else
-                    switchMusic(foundMusic)
-                    previousMusicTile = foundMusic
-                -- end
+            if foundMusic ~= (previousMusicTile) and not isSwitching then
+                switchMusic(foundMusic)
+                previousMusicTile = foundMusic
             end
         end
 
@@ -71,7 +67,11 @@ function updateMusic(dt)
         -- end
 
         if isSwitching then
-            musicSwitchAmount = musicSwitchAmount - 1 * dt
+            if arrayContains(battleMusic, nextTrack) then
+                musicSwitchAmount = musicSwitchAmount - 2 * dt
+            else
+                musicSwitchAmount = musicSwitchAmount - 0.5 * dt
+            end
             if musicSwitchAmount <= 0 then musicSwitchAmount = 0 end
 
             if musicSwitchAmount > 0 then
