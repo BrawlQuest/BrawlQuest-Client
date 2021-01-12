@@ -44,6 +44,8 @@ function drawWorldEditTileFromRect(x, y, button)
         worldEdit.draw[x][y][2] = worldLookup[x][y].ForegroundTile
         worldEdit.draw[x][y][3] = worldLookup[x][y].Enemy
         worldEdit.draw[x][y][4] = worldLookup[x][y].Collision
+        worldEdit.draw[x][y][5] = worldLookup[x][y].Name
+        -- worldEdit.draw[x][y][6] = worldLookup[x][y].Music`
     end
 
     if button == 1 then
@@ -65,8 +67,11 @@ function drawWorldEditTileFromRect(x, y, button)
                     worldEdit.draw[x][y][3] = worldEdit.drawableTile[3] 
                     worldEdit.draw[x][y][5] = worldEdit.drawableTile[5]
                 elseif i == 5 then
-                    worldEdit.draw[x][y][i] = worldEdit.drawableTile[i]
-                    worldEdit.draw[x][y][8] = areaDraw.selectedColor
+                    worldEdit.draw[x][y][i] = worldEdit.drawableTile[i] 
+                    worldEdit.draw[x][y][8] = areaDraw.selectedColor -- color
+                elseif i == 6 then
+                    worldEdit.draw[x][y][i] = worldEdit.drawableTile[i] 
+                    worldEdit.draw[x][y][9] = areaDraw.selectedColor -- color         
                 else
                     worldEdit.draw[x][y][i] = worldEdit.drawableTile[i]
                 end
@@ -88,7 +93,6 @@ function drawWorldEditTileFromRect(x, y, button)
             end
         end
     end
-    -- print(json:encode(worldEdit.draw[x][y]))
 end
 
 function drawAreaDrawButtons()
@@ -172,6 +176,44 @@ function drawAreaDrawButtons()
             end
         end
     end
+
+    if areaDraw.state[6] then -- draw avaliable world names
+        local thisX, thisY = love.graphics.getWidth() - 62 - 150, love.graphics.getHeight() - 104
+        local count = 0
+        for i,v in ipairs(availablePlaceNames) do
+            if v.name ~= "" then 
+                local bool = v.name == worldEdit.drawableTile[5]
+                
+                drawNewWorldEditButton(thisX, thisY, 150, 42, bool)
+
+                count = count + 1
+                if bool then
+                    areaDraw.selectedColor = v.color
+                end
+
+                if isMouseOver(thisX, thisY, 150, 42) then
+                    areaDraw.mouseOverPlaceNames = count
+                end
+
+                love.graphics.setColor(1,1,1)
+                love.graphics.printf("''" .. v.name .. "''", thisX + 5, thisY + 10, 100, "left")
+            
+                love.graphics.setColor(unpack(v.color))
+                roundRectangle("fill", thisX + 150 - 37, thisY + 5, 32, 32, 5)
+                thisY = thisY - 52
+            else
+                local x, y = love.graphics.getWidth() - 62 - 150, love.graphics.getHeight() - 52
+                drawNewWorldEditButton(x, y, 150, 42, bool)
+
+                if isMouseOver(x, y, 150, 42) then
+                    areaDraw.mouseOverPlaceNames = 0
+                end
+
+                love.graphics.printf("''" .. v.name .. "''", x + 5, y + 10, 100, "left")
+            end
+        end
+    end
+
 end
 
 function checkAreaDrawButtonsPressed(button)
@@ -238,7 +280,7 @@ end
 function drawAreaDrawAreas(x, y, bool)
     if bool then
         love.graphics.setColor(1, 0, 1, 0.5)
-        if worldLookup[x][y] then
+        if worldLookup[x] and worldLookup[x][y] then
             if worldLookup[x][y].Name ~= "" then
                 for j,v in ipairs(availablePlaceNames) do
                     if v.name == worldLookup[x][y].Name then
