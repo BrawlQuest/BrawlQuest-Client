@@ -39,20 +39,21 @@ end
 function drawWorldEditTileFromRect(x, y, button)
     
     if worldEdit.draw[x][y][1] ~= "" then -- You're already drawing a tile
-    elseif worldLookup[x][y] then -- Draw a tile from the current world
-        worldEdit.draw[x][y][1] = worldLookup[x][y].GroundTile
-        worldEdit.draw[x][y][2] = worldLookup[x][y].ForegroundTile
-        worldEdit.draw[x][y][3] = worldLookup[x][y].Enemy
-        worldEdit.draw[x][y][4] = worldLookup[x][y].Collision
-        worldEdit.draw[x][y][5] = worldLookup[x][y].Name
-        -- worldEdit.draw[x][y][6] = worldLookup[x][y].Music`
+        -- if worldLookup[x] and worldLookup[x][y] then -- Draw a tile from the current world
+            worldEdit.draw[x][y][1] = worldLookup[x][y].GroundTile
+            worldEdit.draw[x][y][2] = worldLookup[x][y].ForegroundTile
+            worldEdit.draw[x][y][3] = worldLookup[x][y].Enemy
+            worldEdit.draw[x][y][4] = worldLookup[x][y].Collision
+            worldEdit.draw[x][y][5] = worldLookup[x][y].Name
+            -- worldEdit.draw[x][y][6] = worldLookup[x][y].Music`
+        -- end
     end
 
     if button == 1 then
         -- print(json:encode(worldLookup[x][y]))
         for i, v in ipairs(areaDraw.state) do
             if v == true then
-                if i == 1 and worldLookup[x][y] then
+                if i == 1 and worldLookup[x] and worldLookup[x][y] then
                     if worldEdit.draw[x][y][1] ~= "" then
                         if worldEdit.draw[x][y][1] == worldEdit.draw[x][y][2] then -- if ground and foreground match
                             worldEdit.draw[x][y][2] = worldEdit.drawableTile[1]
@@ -180,9 +181,9 @@ function drawAreaDrawButtons()
     if areaDraw.state[6] then -- draw avaliable world names
         local thisX, thisY = love.graphics.getWidth() - 62 - 150, love.graphics.getHeight() - 104
         local count = 0
-        for i,v in ipairs(availablePlaceNames) do
-            if v.name ~= "" then 
-                local bool = v.name == worldEdit.drawableTile[5]
+        for i,v in ipairs(avaliableMusic) do
+            if v.name ~= "*" then 
+                local bool = v.name == worldEdit.drawableTile[6]
                 
                 drawNewWorldEditButton(thisX, thisY, 150, 42, bool)
 
@@ -192,7 +193,7 @@ function drawAreaDrawButtons()
                 end
 
                 if isMouseOver(thisX, thisY, 150, 42) then
-                    areaDraw.mouseOverPlaceNames = count
+                    areaDraw.mouseOverMusicNames = count
                 end
 
                 love.graphics.setColor(1,1,1)
@@ -206,14 +207,13 @@ function drawAreaDrawButtons()
                 drawNewWorldEditButton(x, y, 150, 42, bool)
 
                 if isMouseOver(x, y, 150, 42) then
-                    areaDraw.mouseOverPlaceNames = 0
+                    areaDraw.mouseOverMusicNames = 0
                 end
 
                 love.graphics.printf("''" .. v.name .. "''", x + 5, y + 10, 100, "left")
             end
         end
     end
-
 end
 
 function checkAreaDrawButtonsPressed(button)
@@ -242,7 +242,7 @@ function checkAreaDrawButtonsPressed(button)
 end
 
 function standardIfStatement(x, y)
-    if worldLookup[x][y] then
+    if worldLookup[x] and worldLookup[x][y] then
         worldEdit.draw[x][y][5] = worldLookup[x][y].Name
     else
         worldEdit.draw[x][y][5] = ""
