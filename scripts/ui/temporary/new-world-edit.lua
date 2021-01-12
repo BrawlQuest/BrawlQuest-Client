@@ -67,7 +67,7 @@ function initNewWorldEdit()
             false, -- 1. ground tile
             false, -- 2. foreground tile
             false, -- 3. enemy name
-            true, -- 4. collisions
+            false, -- 4. collisions
             false, -- 5. tile name
             false, -- 6. tile music
         },
@@ -258,8 +258,7 @@ function drawNewWorldEditTiles()
                 end
             end
 
-            drawAreaDrawAreas(x, y, areaDraw.showPlaceNames)
-            drawAreaDrawAreas(x, y, areaDraw.showMusic)
+            drawAreaDrawAreas(x, y)
 
             if areaDraw.state[5] then
                 if worldEdit.draw[x][y][8] ~= null then
@@ -267,6 +266,16 @@ function drawNewWorldEditTiles()
                     love.graphics.rectangle("fill", thisX, thisY, 32, 32)
                 elseif worldEdit.draw[x][y][1] ~= (nil or "") and worldEdit.draw[x][y][5] ~= "" then
                     love.graphics.setColor(unpack(areaDraw.nextPlaceColor))
+                    love.graphics.rectangle("fill", thisX, thisY, 32, 32)
+                end
+            end
+
+            if areaDraw.state[6] then
+                if worldEdit.draw[x][y][9] ~= null then
+                    love.graphics.setColor(unpack(worldEdit.draw[x][y][9]))
+                    love.graphics.rectangle("fill", thisX, thisY, 32, 32)
+                elseif worldEdit.draw[x][y][1] ~= (nil or "") and worldEdit.draw[x][y][6] ~= "" then
+                    love.graphics.setColor(unpack(areaDraw.nextMusicColor))
                     love.graphics.rectangle("fill", thisX, thisY, 32, 32)
                 end
             end
@@ -507,7 +516,7 @@ function checkWorldEditKeyPressed(key)
             editorCtl.state[4] = not editorCtl.state[4]
         elseif key == "q" then
             editorCtl.state[2] = not editorCtl.state[2]
-            worldEdit.drawableTile[4] = true
+            worldEdit.drawableTile[4] = not worldEdit.drawableTile[4]
         elseif key == "e" then
             editorCtl.state[3] = not editorCtl.state[3]
         elseif key == "x" then
@@ -593,6 +602,14 @@ end
 function getWorldInfo() 
     availablePlaceNames = {}
     avaliableMusic = {}
+
+    for i, v in ipairs(worldMusic) do -- Gets all current music
+        avaliableMusic[i] = v
+    end
+    for i, v in ipairs(battleMusic) do -- Gets all current music
+        avaliableMusic[i + #worldMusic] = v
+    end
+
     local count = 0
     for i, v in ipairs(world) do
         if not arrayContains(availablePlaceNames, worldLookup[v.X][v.Y].Name) then

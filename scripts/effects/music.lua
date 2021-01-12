@@ -30,7 +30,6 @@ function loadMusic()
         currentPlaying = titleMusic:play()
         titleMusic:setVolume(musicVolume)
     end
-
 end
 
 function updateMusic(dt)
