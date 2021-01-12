@@ -44,6 +44,8 @@ function drawWorldEditTileFromRect(x, y, button)
         worldEdit.draw[x][y][2] = worldLookup[x][y].ForegroundTile
         worldEdit.draw[x][y][3] = worldLookup[x][y].Enemy
         worldEdit.draw[x][y][4] = worldLookup[x][y].Collision
+        worldEdit.draw[x][y][5] = worldLookup[x][y].Name
+        -- worldEdit.draw[x][y][6] = worldLookup[x][y].Music
     end
 
     if button == 1 then
@@ -88,7 +90,6 @@ function drawWorldEditTileFromRect(x, y, button)
             end
         end
     end
-    -- print(json:encode(worldEdit.draw[x][y]))
 end
 
 function drawAreaDrawButtons()

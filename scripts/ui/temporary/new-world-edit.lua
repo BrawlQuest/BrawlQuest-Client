@@ -66,7 +66,7 @@ function initNewWorldEdit()
             false, -- 1. ground tile
             false, -- 2. foreground tile
             false, -- 3. enemy name
-            false, -- 4. collisions
+            true, -- 4. collisions
             false, -- 5. tile name
             false, -- 6. tile music
         },
@@ -259,12 +259,14 @@ function drawNewWorldEditTiles()
             drawAreaDrawAreas(x, y, areaDraw.showPlaceNames)
             drawAreaDrawAreas(x, y, areaDraw.showMusic)
 
-            if worldEdit.draw[x][y][8] ~= null then
-                love.graphics.setColor(unpack(worldEdit.draw[x][y][8]))
-                love.graphics.rectangle("fill", thisX, thisY, 32, 32)
-            elseif worldEdit.draw[x][y][1] ~= (nil or "") then
-                love.graphics.setColor(unpack(areaDraw.nextPlaceColor))
-                love.graphics.rectangle("fill", thisX, thisY, 32, 32)
+            if areaDraw.state[5] then
+                if worldEdit.draw[x][y][8] ~= null then
+                    love.graphics.setColor(unpack(worldEdit.draw[x][y][8]))
+                    love.graphics.rectangle("fill", thisX, thisY, 32, 32)
+                elseif worldEdit.draw[x][y][1] ~= (nil or "") and worldEdit.draw[x][y][5] ~= "" then
+                    love.graphics.setColor(unpack(areaDraw.nextPlaceColor))
+                    love.graphics.rectangle("fill", thisX, thisY, 32, 32)
+                end
             end
     
             love.graphics.setColor(1,1,1,1)    
