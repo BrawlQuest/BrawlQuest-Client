@@ -23,6 +23,7 @@ function createWorld()
         if not worldLookup[v.X] then
             worldLookup[v.X] = {}
         end
+
         worldLookup[v.X][v.Y] = copy(v)
 
         if v.X > highestX then
@@ -44,6 +45,8 @@ function createWorld()
     end
     worldCanvas = love.graphics.newCanvas(32*(highestX+math.abs(lowestX)+2), 32*(highestY+math.abs(lowestY)+2))
     reinitLighting(32*(highestX+math.abs(lowestX)+2), 32*(highestY+math.abs(lowestY)+2))
+    -- worldCanvas = love.graphics.newCanvas(32*((worldEdit.worldSize * 2)), 32*((worldEdit.worldSize * 2)))
+    -- reinitLighting(32*((worldEdit.worldSize)), 32*((worldEdit.worldSize)))
     love.graphics.setCanvas(worldCanvas)
         love.graphics.clear()
         love.graphics.setColor(1, 1, 1)

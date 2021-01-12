@@ -20,6 +20,7 @@ function initNewWorldEdit()
             -- 6. tile music
             -- 7. enemy index
             -- 8. tile name color
+            -- 9. tile name color
         },
         selectableTile = "",
         drawableTile = {
@@ -45,7 +46,7 @@ function initNewWorldEdit()
         mouseOverEnemyButtons = 0,
         mouseOverControlButtons = 0,
         mouseOverAreaDrawButtons = 0,
-        worldSize = 400,
+        worldSize = 500,
         drawnWorldSize = 50, -- +- value
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
         previousScrollPosition = 0,
@@ -74,7 +75,8 @@ function initNewWorldEdit()
         nextPlaceColor = {0,0,0,0},
         nextMusicColor = {0,0,0,0},
         selectedColor = null,
-        mouseOverPlaceNames = 0,
+        mouseOverPlaceNames = -1,
+        mouseOverMusicNames = -1,
     }
 
     editorCtl = {
@@ -329,7 +331,7 @@ function drawNewWorldEditTiles()
                 
                     if love.mouse.isDown(1) then
                         if editorCtl.state[4] then -- rubber
-                            if worldLookup[x][y] then
+                            if worldLookup[x] and worldLookup[x][y] then
                                 worldEdit.draw[x][y][1] = worldLookup[x][y].GroundTile
                                 worldEdit.draw[x][y][2] = worldLookup[x][y].ForegroundTile
                                 worldEdit.draw[x][y][3] = ""
@@ -359,7 +361,7 @@ function drawNewWorldEditTiles()
                             worldEdit.draw[x][y][2] = ""
 
                         elseif love.keyboard.isDown("lshift") then
-                            if worldLookup[x][y] then
+                            if worldLookup[x] and worldLookup[x][y] then
                                 worldEdit.draw[x][y][1] = worldLookup[x][y].GroundTile
                                 worldEdit.draw[x][y][2] = worldLookup[x][y].ForegroundTile
                             else
@@ -459,6 +461,20 @@ function checkWorldEditMouseDown(button)
                     elseif areaDraw.mouseOverPlaceNames == 0 then
                         worldEdit.enteredWorldText = ""
                         worldEdit.drawableTile[5] = ""
+                    end
+                    if v.name ~= "" then 
+                        count = count + 1
+                    end
+                end
+            end
+        elseif areaDraw.mouseOverMusicNames > -1 then
+            if button == 1 then
+                local count = 1
+                for i,v in ipairs(avaliableMusic) do
+                    if areaDraw.mouseOverMusicNames == count then
+                        worldEdit.drawableTile[6] = v.name
+                    elseif areaDraw.mouseOverMusicNames == 0 then
+                        worldEdit.drawableTile[6] = ""
                     end
                     if v.name ~= "" then 
                         count = count + 1
