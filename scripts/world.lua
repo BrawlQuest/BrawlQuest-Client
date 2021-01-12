@@ -40,7 +40,15 @@ function createWorld()
         end
 
         if not isTileType(v.ForegroundTile, "Dead") and isTileType(v.ForegroundTile, "Tree") and love.math.random(1,5) == 1 then
-            addLeaf(v.X*32 + 16, v.Y*32 + 16)
+            if isTileType(v.ForegroundTile, "Snowy") then
+                addLeaf(v.X*32 + 16, v.Y*32 + 16, "snowy tree")
+            else
+                addLeaf(v.X*32 + 16, v.Y*32 + 16, "tree")
+            end
+        elseif isTileType(v.ForegroundTile, "Campfire") then
+            addLeaf(v.X*32 + 16, v.Y*32 + 8, "fire")
+        elseif isTileType(v.ForegroundTile, "Sand") then
+            -- addLeaf(v.X*32 + 16, v.Y*32 + 16, "sand")
         end
     end
     worldCanvas = love.graphics.newCanvas(32*(highestX+math.abs(lowestX)+2), 32*(highestY+math.abs(lowestY)+2))
