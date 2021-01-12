@@ -109,7 +109,7 @@ end
 function movePlayer(dt)
     local lightRange = 6
 
-    if player.x * 32 == player.dx and player.y * 32 == player.dy and not isTypingInChat then -- movement smoothing has finished
+    if player.x * 32 == player.dx and player.y * 32 == player.dy and not isTypingInChat and not worldEdit.isTyping then -- movement smoothing has finished
         local original = {player.x, player.y}
         if love.keyboard.isDown(keybinds.UP) then
             original[2] = original[2] - 1

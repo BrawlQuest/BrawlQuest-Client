@@ -58,7 +58,7 @@ function updateMusic(dt)
             if music[currentTrack]:getVolume() > 0.01 then
                 music[currentTrack]:setVolume(music[currentTrack]:getVolume() - 0.3 * dt)
             else
-                print("new track playing")
+                -- print("new track playing")
                 music[currentTrack]:stop()
                 isSwitching = false
                 currentTrack = nextTrack
@@ -76,8 +76,8 @@ function switchMusic(newTrack)
         nextTrack = newTrack
         isSwitching = true
     elseif newTrack == currentTrack then
-        print("Attempted to restart playback of already playing track.")
+        -- print("Attempted to restart playback of already playing track.")
     else
-        print("Attempted to play a track that doesn't exist: " .. newTrack)
+        -- print("Attempted to play a track that doesn't exist: " .. newTrack)
     end
 end

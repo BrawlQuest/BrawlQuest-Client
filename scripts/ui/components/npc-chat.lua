@@ -221,15 +221,15 @@ function createNPCChatBackground(x, y)
         npcChatBackground[2] = "none"
     end
 
-    for i, v in ipairs(npcChatBackground) do
-        if not worldImg[v] then
-            if love.filesystem.getInfo(v) then
-                worldImg[v] = love.graphics.newImage(v)
-            else
-                worldImg[v] = love.graphics.newImage("assets/error.png")
-            end
-        end
-    end
+    -- for i, v in ipairs(npcChatBackground) do
+    --     if not worldImg[v] then
+    --         if love.filesystem.getInfo(v) then
+    --             worldImg[v] = love.graphics.newImage(v)
+    --         else
+    --             worldImg[v] = love.graphics.newImage("assets/error.png")
+    --         end
+    --     end
+    -- end
 end
 
 function drawNPCChatBackground(x, y)

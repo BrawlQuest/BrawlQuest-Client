@@ -17,6 +17,7 @@ function love.keypressed(key)
             elseif key == "escape" or key == "'" then isWorldEditWindowOpen = false end
         elseif worldEdit.open then 
             checkWorldEditKeyPressed(key)
+        elseif worldEdit.isTyping then
         elseif isSettingsWindowOpen then
             if key == "escape" or key == "w" or key == "a" or key == "s" or key == "d" then
                 isSettingsWindowOpen = false
@@ -64,15 +65,18 @@ function love.keypressed(key)
                 loadSliders()
             end
 
-            if key == "'" then worldEdit.open = not worldEdit.open end
+            if key == "'" or key == "r" then 
+                -- getWorldInfo() 
+                worldEdit.open = not worldEdit.open 
+            end
 
             if key == keybinds.INTERACT then startConversation() end
 
-            if (key == "i" or key == "e") and inventory.notNPC then
+            if (key == "i" or key == "q") then
                 inventory.forceOpen = not inventory.forceOpen
             end
 
-            if key == "q" then
+            if key == "e" and inventory.notNPC then
                 questsPanel.forceOpen = not questsPanel.forceOpen
             end
 
@@ -99,7 +103,7 @@ function love.keypressed(key)
             end
         end
         
-        if not isTypingInChat then
+        if not isTypingInChat and not worldEdit.isTyping then
             if key == "l" then
                 worldScale = worldScale * 0.5
             end
@@ -124,7 +128,7 @@ function love.keypressed(key)
 end
 
 function love.keyreleased(key)
-    if key == keybinds.SHIELD and not isTypingInChat and phase == "game" then
+    if key == keybinds.SHIELD and not isTypingInChat and phase == "game" and not worldEdit.isTyping then
         shieldDownSfx:play()
     end
 end
@@ -136,5 +140,7 @@ function love.textinput(key)
         checkEditWorldTextinput(key)
     elseif isTypingInChat then
         checkChatTextinput(key)
+    elseif worldEdit.isTyping then
+        checkWorldEditTextinput(key)
     end
 end

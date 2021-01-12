@@ -33,6 +33,7 @@ require "scripts.npcs"
 require "scripts.world"
 require "scripts.ui.temporary.worldedit"
 require "scripts.ui.temporary.new-world-edit"
+require "scripts.ui.temporary.world-edit-rect"
 require "data.data_controller"
 require "scripts.player.settings"
 require "scripts.ui.components.npc-chat"
@@ -102,7 +103,11 @@ function love.draw()
         Luven.drawBegin()
 
         drawWorld()
-        drawNewWorldEditTiles()
+
+        if worldEdit.open and player then
+            drawNewWorldEditTiles()
+        end
+
         drawAuras()
         love.graphics.setColor(1, 1, 1)
         drawNPCs()
@@ -140,10 +145,15 @@ function love.draw()
           
         -- print(brightnessSlider:getValue())
         
-        if not worldEdit.open then
+        -- if not worldEdit.open then
             love.graphics.setFont(font)
-            love.graphics.print(player.x..", "..player.y,10,6)
-        end
+            if worldLookup[player.x] and worldLookup[player.x][player.y] then
+                love.graphics.print(player.x..", "..player.y .. ", " .. tostring(love.timer.getFPS()).."\n"..tostring(worldLookup[player.x][player.y].Name), 10, 6)
+                if worldLookup[me.X] and worldLookup[me.X][me.Y] then
+                    love.graphics.print(tostring(worldLookup[me.X][me.Y].Title), 100,100)
+                end
+            end
+        -- end
     end
 
 

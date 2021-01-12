@@ -28,7 +28,7 @@ end
 
 function updateLeaves(dt)
     for i,v in ipairs(leaves) do
-        if distanceToPoint(player.dx, player.dy, v.bx, v.by) < 256 then
+        if distanceToPoint(player.dx, player.dy, v.bx, v.by) < 1024 then
             v.x = v.x - v.xv*dt
             v.r = v.r + v.rs*dt
             v.alpha = v.alpha - love.math.random(0,300)/100*dt

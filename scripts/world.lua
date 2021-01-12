@@ -5,6 +5,13 @@ lightSource = {}
 lowestX = 0
 lowestY = 0
 
+
+function drawSimplexNoise(x, y)
+    local noiseFactor = 0.23 -- 0.18
+    local noise = 1 - ((love.math.noise( x * 0.06, y * 0.06) - (love.math.noise( x * 0.5, y * 0.5) * 0.2)) * noiseFactor)
+    love.graphics.setColor(noise * 1 ,noise * 1 ,noise )
+end
+
 function createWorld()
     
     lightSource = {}
@@ -40,6 +47,14 @@ function createWorld()
     love.graphics.setCanvas(worldCanvas)
         love.graphics.clear()
         love.graphics.setColor(1, 1, 1)
+        
+        for x = worldEdit.worldSize * -1, worldEdit.worldSize do
+            for y = worldEdit.worldSize * -1, worldEdit.worldSize do
+                drawSimplexNoise(x, y)  -- sets background noise
+                love.graphics.draw(groundImg, x * 32, y * 32)
+            end
+        end
+        
         for i, v in ipairs(world) do
             drawTile(v)
         end
@@ -52,11 +67,7 @@ function createWorld()
 end
 
 function drawTile(v)
-    if isTileLit(v.X, v.Y) then
-        love.graphics.setColor(1, 1, 1)
-    else
-        love.graphics.setColor(0, 0, 0, 0)
-    end
+
     local backgroundAsset = getWorldAsset(v.GroundTile, v.X, v.Y)
     local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y)
 
@@ -72,9 +83,13 @@ function drawTile(v)
         blockMap[v.X .. "," .. v.Y] = true
     end
 
+    drawSimplexNoise(v.X+math.abs(lowestX), v.Y+math.abs(lowestY)) -- sets background noise
+
     if worldImg[backgroundAsset] then
         love.graphics.draw(worldImg[backgroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32)  
     end 
+    
+    love.graphics.setColor(1,1,1) 
 
     if worldLookup[v.X][v.Y-1] and (isTileWall(worldLookup[v.X][v.Y-1].ForegroundTile) or isTileWall(worldLookup[v.X][v.Y-1].GroundTile)) and not isTileWall(v.ForegroundTile) then
         love.graphics.setColor(0,0,0,0.5)
@@ -91,23 +106,23 @@ function drawTile(v)
 end
 
 function drawWorld()
-    for x = player.x - (love.graphics.getWidth()/2)/32, player.x + (love.graphics.getWidth()/2)/32 do
-        for y = player.y - (love.graphics.getHeight()/2)/32, player.y + (love.graphics.getHeight()/2)/32 do
-            -- if isTileLit(x, y) then
-            --     if not wasTileLit(x, y) then
-            --         love.graphics.setColor(1 - oldLightAlpha, 1 - oldLightAlpha, 1 - oldLightAlpha) -- light up a tile
-            --     else
-            --         love.graphics.setColor(1, 1, 1)
-            --     end
-            -- elseif wasTileLit(x, y) and oldLightAlpha > 0.2 then
-            --     love.graphics.setColor(oldLightAlpha, oldLightAlpha, oldLightAlpha)
-            -- else
-            --     love.graphics.setColor(0, 0, 0, 0)
-            -- end
-            love.graphics.setColor(1,1,1,1)
-            love.graphics.draw(groundImg, x * 32, y * 32)
-        end
-    end
+    -- for x = player.x - (love.graphics.getWidth()/2)/32, player.x + (love.graphics.getWidth()/2)/32 do
+    --     for y = player.y - (love.graphics.getHeight()/2)/32, player.y + (love.graphics.getHeight()/2)/32 do
+    --         -- if isTileLit(x, y) then
+    --         --     if not wasTileLit(x, y) then
+    --         --         love.graphics.setColor(1 - oldLightAlpha, 1 - oldLightAlpha, 1 - oldLightAlpha) -- light up a tile
+    --         --     else
+    --         --         love.graphics.setColor(1, 1, 1)
+    --         --     end
+    --         -- elseif wasTileLit(x, y) and oldLightAlpha > 0.2 then
+    --         --     love.graphics.setColor(oldLightAlpha, oldLightAlpha, oldLightAlpha)
+    --         -- else
+    --         --     love.graphics.setColor(0, 0, 0, 0)
+    --         -- end
+    --         love.graphics.setColor(1,1,1,1)
+    --         love.graphics.draw(groundImg, x * 32, y * 32)
+    --     end
+    -- end
     love.graphics.setColor(1,1,1,1)
     love.graphics.setBlendMode("alpha", "premultiplied")
     love.graphics.draw(worldCanvas, lowestX*32, lowestY*32)
@@ -118,13 +133,13 @@ end
 
 function getWorldAsset(v,x,y,notFindWall)
   
-    if not worldImg[v] then
-        if love.filesystem.getInfo(v) then
-            worldImg[v] = love.graphics.newImage(v)
-        else
-            worldImg[v] = love.graphics.newImage("assets/error.png")
-        end
-    end
+    -- if not worldImg[v] then
+    --     if love.filesystem.getInfo(v) then
+    --         worldImg[v] = love.graphics.newImage(v)
+    --     else
+    --         worldImg[v] = love.graphics.newImage("assets/error.png")
+    --     end
+    -- end
 
     local foregroundAsset = v['ForegroundTile']
     local backgroundAsset = v['GroundTile']
@@ -230,126 +245,132 @@ function isTileWater(tileName)
 end
 
 function getDrawableWater(tileName, x, y)
-    local fp = explode(tileName, "/")
-    tileName = explode(fp[#fp], ".")[1]
-    local nearby = {
-        top = false,
-        left = false,
-        right = false,
-        bottom = false,
-        topLeft = false,
-        topRight = false,
-        bottomLeft = false,
-        bottomRight = false
-    }
+    if  worldLookup[x-1] and 
+    worldLookup[x+1] and 
+    worldLookup[x] and worldLookup[x-1][y]  then
+        local fp = explode(tileName, "/")
+        tileName = explode(fp[#fp], ".")[1]
+        local nearby = {
+            top = false,
+            left = false,
+            right = false,
+            bottom = false,
+            topLeft = false,
+            topRight = false,
+            bottomLeft = false,
+            bottomRight = false
+        }
 
-    local worldToCheck = {
-        worldLookup[x-1][y],
-        worldLookup[x+1][y],
-        worldLookup[x][y+1],
-        worldLookup[x][y-1],
-        worldLookup[x-1][y-1],
-        worldLookup[x+1][y-1],
-        worldLookup[x-1][y+1],
-        worldLookup[x+1][y+1]
-    }
- 
+        local worldToCheck = {
+            worldLookup[x-1][y],
+            worldLookup[x+1][y],
+            worldLookup[x][y+1],
+            worldLookup[x][y-1],
+            worldLookup[x-1][y-1],
+            worldLookup[x+1][y-1],
+            worldLookup[x-1][y+1],
+            worldLookup[x+1][y+1]
+        }
+    
 
-    for i = 1, 8 do
-        v = worldToCheck[i]
-        if v and (isTileWater(v.ForegroundTile) or isTileWater(v.GroundTile)) then
-            if v.X == x - 1 and v.Y == y then
-                nearby.left = true
-            elseif v.X == x + 1 and v.Y == y then
-                nearby.right = true
-            elseif v.X == x and v.Y == y + 1 then
-                nearby.bottom = true
-            elseif v.X == x and v.Y == y - 1 then
-                nearby.top = true
-            elseif v.X == x - 1 and v.Y == y - 1 then
-                nearby.topLeft = true
-            elseif v.X == x + 1 and v.Y == y - 1 then
-                nearby.topRight = true
-            elseif v.X == x - 1 and v.Y == y + 1 then
-                nearby.bottomLeft = true
-            elseif v.X == x + 1 and v.Y == y + 1 then
-                nearby.bottomRight = true
+        for i = 1, 8 do
+            v = worldToCheck[i]
+            if v and (isTileWater(v.ForegroundTile) or isTileWater(v.GroundTile)) then
+                if v.X == x - 1 and v.Y == y then
+                    nearby.left = true
+                elseif v.X == x + 1 and v.Y == y then
+                    nearby.right = true
+                elseif v.X == x and v.Y == y + 1 then
+                    nearby.bottom = true
+                elseif v.X == x and v.Y == y - 1 then
+                    nearby.top = true
+                elseif v.X == x - 1 and v.Y == y - 1 then
+                    nearby.topLeft = true
+                elseif v.X == x + 1 and v.Y == y - 1 then
+                    nearby.topRight = true
+                elseif v.X == x - 1 and v.Y == y + 1 then
+                    nearby.bottomLeft = true
+                elseif v.X == x + 1 and v.Y == y + 1 then
+                    nearby.bottomRight = true
+                end
             end
+
         end
 
-    end
+        local assetName = "1.png"
 
-    local assetName = "1.png"
+        if nearby.top and nearby.bottom and nearby.left and nearby.right then
+            assetName = "12.png"
+            if not nearby.topLeft and not nearby.topRight and not nearby.bottomLeft and not nearby.bottomRight then
+                assetName = "25.png"
+            elseif not nearby.topRight and not nearby.bottomLeft and not nearby.bottomRight then
+                assetName = "17.png"
+            elseif not nearby.topLeft and not nearby.bottomLeft and not nearby.bottomRight then
+                assetName = "18.png"
+            elseif not nearby.topLeft and not nearby.topRight and not nearby.bottomRight then
+                assetName = "19.png"
+            elseif not nearby.topLeft and not nearby.topRight and not nearby.bottomLeft then
+                assetName = "20.png"
+            elseif not nearby.topLeft and not nearby.topRight then
+                assetName = "28.png"
+            elseif not nearby.topLeft and not nearby.bottomLeft then
+                assetName = "26.png"
+            elseif not nearby.topRight and not nearby.bottomRight then
+                assetName = "24.png"
+            elseif not nearby.bottomLeft and not nearby.bottomRight then
+                assetName = "22.png"
 
-    if nearby.top and nearby.bottom and nearby.left and nearby.right then
-        assetName = "12.png"
-        if not nearby.topLeft and not nearby.topRight and not nearby.bottomLeft and not nearby.bottomRight then
-            assetName = "25.png"
-        elseif not nearby.topRight and not nearby.bottomLeft and not nearby.bottomRight then
-            assetName = "17.png"
-        elseif not nearby.topLeft and not nearby.bottomLeft and not nearby.bottomRight then
-            assetName = "18.png"
-        elseif not nearby.topLeft and not nearby.topRight and not nearby.bottomRight then
-            assetName = "19.png"
-        elseif not nearby.topLeft and not nearby.topRight and not nearby.bottomLeft then
-            assetName = "20.png"
-        elseif not nearby.topLeft and not nearby.topRight then
-            assetName = "28.png"
-        elseif not nearby.topLeft and not nearby.bottomLeft then
-            assetName = "26.png"
-        elseif not nearby.topRight and not nearby.bottomRight then
-            assetName = "24.png"
-        elseif not nearby.bottomLeft and not nearby.bottomRight then
-            assetName = "22.png"
+            elseif not nearby.topLeft and not nearby.bottomRight then
+                assetName = "30.png"
+            elseif not nearby.bottomLeft and not nearby.topRight then
+                assetName = "31.png"
 
-        elseif not nearby.topLeft and not nearby.bottomRight then
-            assetName = "30.png"
-        elseif not nearby.bottomLeft and not nearby.topRight then
-            assetName = "31.png"
+            elseif not nearby.topLeft then
+                assetName = "29.png"
+            elseif not nearby.topRight then
+                assetName = "27.png"
+            elseif not nearby.bottomLeft then
+                assetName = "23.png"
+            elseif not nearby.bottomRight then
+                assetName = "21.png"
+            end
 
-        elseif not nearby.topLeft then
-            assetName = "29.png"
-        elseif not nearby.topRight then
-            assetName = "27.png"
-        elseif not nearby.bottomLeft then
-            assetName = "23.png"
-        elseif not nearby.bottomRight then
-            assetName = "21.png"
+        elseif nearby.top and nearby.bottom and nearby.left then
+            assetName = "13.png"
+        elseif nearby.top and nearby.bottom and nearby.right then
+            assetName = "11.png"
+        elseif nearby.left and nearby.right and nearby.bottom then
+            assetName = "9.png"
+        elseif nearby.left and nearby.right and nearby.top then
+            assetName = "15.png"
+        elseif nearby.top and nearby.left then
+            assetName = "16.png"
+        elseif nearby.top and nearby.right then
+            assetName = "14.png"
+        elseif nearby.bottom and nearby.left then
+            assetName = "10.png"
+        elseif nearby.bottom and nearby.right then
+            assetName = "8.png"
+        elseif nearby.left and nearby.right then
+            assetName = "6.png"
+        elseif nearby.top and nearby.bottom then
+            assetName = "3.png"
+        elseif nearby.top then
+            assetName = "4.png"
+        elseif nearby.bottom then
+            assetName = "2.png"
+        elseif nearby.left then
+            assetName = "7.png"
+        elseif nearby.right then
+            assetName = "5.png"
+        else
+            
         end
 
-    elseif nearby.top and nearby.bottom and nearby.left then
-        assetName = "13.png"
-    elseif nearby.top and nearby.bottom and nearby.right then
-        assetName = "11.png"
-    elseif nearby.left and nearby.right and nearby.bottom then
-        assetName = "9.png"
-    elseif nearby.left and nearby.right and nearby.top then
-        assetName = "15.png"
-    elseif nearby.top and nearby.left then
-        assetName = "16.png"
-    elseif nearby.top and nearby.right then
-        assetName = "14.png"
-    elseif nearby.bottom and nearby.left then
-        assetName = "10.png"
-    elseif nearby.bottom and nearby.right then
-        assetName = "8.png"
-    elseif nearby.left and nearby.right then
-        assetName = "6.png"
-    elseif nearby.top and nearby.bottom then
-        assetName = "3.png"
-    elseif nearby.top then
-        assetName = "4.png"
-    elseif nearby.bottom then
-        assetName = "2.png"
-    elseif nearby.left then
-        assetName = "7.png"
-    elseif nearby.right then
-        assetName = "5.png"
+        return "assets/world/water/"  .. assetName
     else
-        
+        return "assets/world/water/1.png" 
     end
-
-    return "assets/world/water/"  .. assetName
 end
 
 function isNearbyTile(name)
