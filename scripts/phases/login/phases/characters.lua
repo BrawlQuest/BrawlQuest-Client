@@ -81,13 +81,19 @@ function transitionToPhaseGame()
     local b = {}
     c, h = http.request{url = api.url.."/world", method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
     world = json:decode(b[1])
- 
+
     love.audio.play(awakeSfx)
     love.graphics.setBackgroundColor(0, 0, 0)
     phase = "game"
     love.audio.stop( titleMusic )
-    switchMusic(worldMusic[love.math.random(1, #worldMusic)])
+
     createWorld()
+    if worldLookup[player.x] and worldLookup[player.x][player.y] and worldLookup[player.x][player.y].Music ~= ("*" or null) then
+        currentPlaying = music[worldLookup[player.x][player.y].Music]:play()
+    else
+        currentPlaying = music["PuerLavari"]:play()
+        print("else it be")
+    end  
 end
 
 function checkLoginKeyPressedPhaseCharacters(key)

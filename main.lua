@@ -103,57 +103,54 @@ function love.draw()
     else
         Luven.drawBegin()
 
-        drawWorld()
+            drawWorld()
 
-        if worldEdit.open and player then
-            drawNewWorldEditTiles()
-        end
-
-        drawAuras()
-        love.graphics.setColor(1, 1, 1)
-        drawNPCs()
-        drawEnemies()
-
-        for i, v in ipairs(playersDrawable) do
-            drawPlayer(v, i)
-        end
-
-        drawPlayer(me, -1)
-        drawLeaves()
-        drawLoot()
-        drawFloats()
-        
-        Luven.drawEnd()
-        
-        if not worldEdit.open then
-            drawHUD()
-        end
-        
-        drawNewWorldEditHud()
-
-        inventory.notNPC = true
-        for i,v in ipairs(npcs) do
-            if distanceToPoint(player.x,player.y,v.X,v.Y) <= 1 and not showNPCChatBackground  and v.Conversation ~= "" then
-                drawTextBelowPlayer("Press "..keybinds.INTERACT.." to talk")
-                inventory.notNPC = false
+            if worldEdit.open and player then
+                drawNewWorldEditTiles()
             end
-        end
 
-        if isNearbyTile("assets/world/objects/Anvil.png") then  drawTextBelowPlayer("Press "..keybinds.INTERACT.." to craft")
-        end
-       
-            Luven.camera:draw()
-          
-        -- print(brightnessSlider:getValue())
-        
-        -- if not worldEdit.open then
-            love.graphics.setFont(font)
-            if worldLookup[player.x] and worldLookup[player.x][player.y] then
-                love.graphics.print(player.x..", "..player.y .. ", " .. tostring(love.timer.getFPS()).."\n"..tostring(worldLookup[player.x][player.y].Name), 10, 6)
-                if worldLookup[me.X] and worldLookup[me.X][me.Y] then
-                    love.graphics.print(tostring(worldLookup[me.X][me.Y].Title), 100,100)
+            drawAuras()
+            love.graphics.setColor(1, 1, 1)
+            drawNPCs()
+            drawEnemies()
+
+            for i, v in ipairs(playersDrawable) do
+                drawPlayer(v, i)
+            end
+
+            drawPlayer(me, -1)
+            drawLeaves()
+            drawLoot()
+            drawFloats()
+            
+            Luven.drawEnd()
+            
+            if not worldEdit.open then
+                drawHUD()
+            end
+            
+            drawNewWorldEditHud()
+
+            inventory.notNPC = true
+            for i,v in ipairs(npcs) do
+                if distanceToPoint(player.x,player.y,v.X,v.Y) <= 1 and not showNPCChatBackground  and v.Conversation ~= "" then
+                    drawTextBelowPlayer("Press "..keybinds.INTERACT.." to talk")
+                    inventory.notNPC = false
                 end
             end
+
+            if isNearbyTile("assets/world/objects/Anvil.png") then  drawTextBelowPlayer("Press "..keybinds.INTERACT.." to craft")
+            end
+        
+        Luven.camera:draw()
+
+        love.graphics.setFont(font)
+        love.graphics.print(player.x..", "..player.y .. ", " .. tostring(love.timer.getFPS()), 10, 6)
+        -- if worldLookup[player.x] and worldLookup[player.x][player.y] then    
+        --     if worldLookup[me.X] and worldLookup[me.X][me.Y] then
+        --         love.graphics.print("\n"..tostring(worldLookup[player.x][player.y].Name), 10, 6)
+        --         -- love.graphics.print(tostring(worldLookup[me.X][me.Y].Title), 100,100)
+        --     end
         -- end
     end
 
