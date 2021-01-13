@@ -18,9 +18,10 @@ function initSettings()
     isSettingsWindowOpen = false
     musicVolume = 1
     sfxVolume = 1  
-    dpiScaling = true
+    highdpi = true
     fullscreen = false
     chatRepeat = false
+    display = 1
     screenDimentions = {width = love.graphics.getWidth(), height = love.graphics.getHeight(),}
     
     info = love.filesystem.getInfo("settings.txt")
@@ -28,12 +29,13 @@ function initSettings()
 
     if info ~= null and getSettingsVersion() then
         print ("Initiating Saved Settings")
+        display = contents["display"]
         screenDimentions = contents["screenDimentions"]
         keybinds = contents["keybinds"]
         musicVolume = contents["musicVolume"]
         sfxVolume = contents["sfxVolume"]
         selectedServer = contents["selectedServer"]
-        dpiScaling = contents["dpiScaling"]
+        highdpi = contents["highdpi"]
         fullscreen = contents["fullscreen"]
         chatRepeat = contents["chatRepeat"]
         scale = contents["scale"]
@@ -47,11 +49,12 @@ end
 function setWindowOptions()
     love.window.setMode(screenDimentions.width, screenDimentions.height, {
         fullscreen = fullscreen,
-        highdpi = dpiScaling,
+        highdpi = highdpi,
         resizable = not fullscreen,
         highdpi = thisDPI,
-        -- stencil = true,
+        usedpiscale = false,
         vsync = 0,
+        display = display,
     })
     uiX, uiY = love.graphics.getWidth()/scale, love.graphics.getHeight()/scale
     loadSliders()
@@ -59,18 +62,22 @@ function setWindowOptions()
 end
 
 function writeSettings()
+    -- local x, y, thisdisplay = love.window.getPosition( )
+    -- display = thisdisplay
     print ("Writing Settings")
+    print (highdpi)
     success,msg = love.filesystem.write("settings.txt", json:encode({
         version = version .. " " .. versionNumber,
         keybinds = keybinds,
         musicVolume = musicVolume,
         sfxVolume = sfxVolume,
         selectedServer = selectedServer,
-        dpiScaling = dpiScaling,
+        highdpi = highdpi,
         fullscreen = fullscreen,
         chatRepeat = chatRepeat,
         scale = scale,
         screenDimentions = {width = love.graphics.getWidth(), height = love.graphics.getHeight(),},
+        display = love.window.getPosition(display),
     }))
 end
 
@@ -124,7 +131,7 @@ function drawSettingsPanel(thisX, thisY)
             love.graphics.print(names[i], thisX, thisY + 83)
             thisY = thisY + spacing
         end
-        drawSettingsToggleButton(thisX, thisY, dpiScaling, "Highest", "Lowest",  padding)
+        drawSettingsToggleButton(thisX, thisY, highdpi, "Highest", "Lowest",  padding)
         drawSettingsToggleButton(thisX, thisY + (50*1), fullscreen, "Fullscreen", "Windowed",  padding)
         drawSettingsToggleButton(thisX, thisY + (50*2), chatRepeat, "Chat Remain On Enter", "Chat Close On Enter",  padding)
         drawSettingsButton(thisX, thisY+ (50*3), "Quit Game (return)", padding)
@@ -156,8 +163,8 @@ function checkSettingsMousePressed(button)
         local spacing = 75
         local thisX, thisY = (love.graphics.getWidth()/2) - (questPopUpWidth/2)+20, (love.graphics.getHeight()/2)-(questPopUpHeight/2)+20+(75*3)+40
         if isMouseOver(thisX, thisY, questPopUpWidth - (padding*2), 40) and button == 1 then
-            dpiScaling = not dpiScaling
-            print(dpiScaling )
+            highdpi = not highdpi
+            -- print(highdpi)
             setWindowOptions()
             writeSettings()
             createWorld()
