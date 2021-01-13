@@ -23,6 +23,7 @@ function initSettings()
     chatRepeat = false
     display = 1
     screenDimentions = {width = love.graphics.getWidth(), height = love.graphics.getHeight(),}
+    window = {x = 0, y = 0}
     
     info = love.filesystem.getInfo("settings.txt")
     getSettingsVersion()
@@ -30,6 +31,7 @@ function initSettings()
     if info ~= null and getSettingsVersion() then
         print ("Initiating Saved Settings")
         display = contents["display"]
+        window = contents["window"]
         screenDimentions = contents["screenDimentions"]
         keybinds = contents["keybinds"]
         musicVolume = contents["musicVolume"]
@@ -49,6 +51,9 @@ end
 function setWindowOptions()
     love.window.setMode(screenDimentions.width, screenDimentions.height, {
         display = display,
+        centered = false,
+        x = window.x,
+        y = window.y,
         highdpi = highdpi,
         fullscreen = fullscreen,
         resizable = not fullscreen,
@@ -71,11 +76,13 @@ function writeSettings()
         selectedServer = selectedServer,
         highdpi = highdpi,
         fullscreen = fullscreen,
+        window = window,
         chatRepeat = chatRepeat,
         scale = scale,
-        screenDimentions = {width = love.graphics.getWidth(), height = love.graphics.getHeight(),},
+        screenDimentions = screenDimentions,
         display = display,
     }))
+    print (json:encode(screenDimentions))
 end
 
 function getSettingsVersion()
@@ -167,7 +174,9 @@ function checkSettingsMousePressed(button)
 
         if isMouseOver(thisX, thisY + (50 * 1), questPopUpWidth - (padding*2), 40) and button == 1 then
             fullscreen = not fullscreen
+            local width, height = love.window.getDesktopDimensions( display )
             setWindowOptions()
+            createWorld()
         end
 
         if isMouseOver(thisX, thisY + (50 * 2), questPopUpWidth - (padding*2), 40) and button == 1 then
@@ -196,4 +205,8 @@ end
 function getDisplay()
     local x, y, thisdisplay = love.window.getPosition( )
     display = thisdisplay
+    if not fullscreen then
+        window = {x = x, y = y}
+        screenDimentions = {width = love.graphics.getWidth(), height = love.graphics.getHeight(),}
+    end
 end

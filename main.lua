@@ -45,7 +45,7 @@ http = require("socket.http")
 ltn12 = require("ltn12")
 
 version = "Pre-Release" 
-versionNumber = "2.0" -- very important for settings
+versionNumber = "1.1" -- very important for settings
 
 phase = "login"
 
