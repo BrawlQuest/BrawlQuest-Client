@@ -239,12 +239,13 @@ function drawNewWorldEditTiles()
             thisX, thisY = x * 32 , y * 32 -- x,y  = x, y + player position?
             love.graphics.setColor(1,1,1)
 
-            if worldEdit.draw[x][y][1] ~= (nil or "") then
-
-                love.graphics.draw(worldImg[worldEdit.draw[x][y][1]], thisX, thisY) -- draws new tiles
+            if worldEdit.draw[x][y][1] ~= (nil or "") and worldEdit.draw[x] and worldEdit.draw[x][y] then
+                local img1 = getImgIfNotExist(worldEdit.draw[x][y][1])
+                local img2 = getImgIfNotExist(worldEdit.draw[x][y][2])
+                love.graphics.draw(img1, thisX, thisY) -- draws new tiles
 
                 if worldEdit.draw[x][y][1] ~= worldEdit.draw[x][y][2] then
-                    love.graphics.draw(worldImg[worldEdit.draw[x][y][2]], thisX, thisY) -- draws new tiles
+                    love.graphics.draw(img2, thisX, thisY) -- draws new tiles
                 end
 
                 if worldEdit.draw[x][y][7] > 0 then

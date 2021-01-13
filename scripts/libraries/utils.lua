@@ -1,10 +1,10 @@
 
 function getImgIfNotExist(v)
     if not worldImg[v] then
-        if love.filesystem.getInfo(v) then
+        if v and love.filesystem.getInfo(v) then
             worldImg[v] = love.graphics.newImage(v)
         else
-            worldImg[v] = love.graphics.newImage("assets/error.png")
+            return love.graphics.newImage("assets/error.png")
         end
     end
 
