@@ -2,13 +2,11 @@
     This file contains the logic for the music system.
     This is a dynamic system that fades music in and out as it's replaced.
 ]]
-currentTrack = "PuerLavari"
-nextTrack = "Titans"
-isSwitching = false
-playMusic = true
-
 function loadMusic()
-
+    currentTrack = "PuerLavari"
+    nextTrack = "Titans"
+    isSwitching = false
+    playMusic = true
     previousMusicVolume = musicVolume
 
     music = {
@@ -40,13 +38,12 @@ function updateMusic(dt)
     if volumeSlider:getValue() ~= previousMusicVolume then
         musicVolume = volumeSlider:getValue()
         previousMusicVolume = musicVolume
-        -- print("Music Volume: " .. musicVolume)
         if musicVolume == 0 then
+            love.audio.stop( music[currentTrack] )
             playMusic = false
         else
             playMusic = true
-            currentPlaying = "PuerLavari"
-            music[currentTrack]:setVolume(musicVolume)
+            checkMusic()
         end
         writeSettings()
     end
@@ -82,22 +79,6 @@ function updateMusic(dt)
                 isSwitching = false
                 currentTrack = nextTrack
             end
-            --[[
-            if music[currentTrack]:getVolume() > 0.01 then
-                if arrayContains(battleMusic, nextTrack) then
-                    music[currentTrack]:setVolume(music[currentTrack]:getVolume() - 2 * dt)
-                else
-                    music[currentTrack]:setVolume(music[currentTrack]:getVolume() - 0.8 * dt)
-                end
-            else
-                music[currentTrack]:stop()
-                isSwitching = false
-                currentTrack = nextTrack
-                music[currentTrack]:setVolume(musicVolume)
-                music[currentTrack]:setLooping(true)
-                currentPlaying = music[currentTrack]:play()
-            end
-            ]]
         end
     end
 end
@@ -116,4 +97,13 @@ function switchMusic(newTrack)
     -- else
         -- print("Attempted to play a track that doesn't exist: " .. newTrack)
     end
+end
+
+function checkMusic()
+    if worldLookup[player.x] and worldLookup[player.x][player.y] and worldLookup[player.x][player.y].Music ~= ("*" or null) then
+        currentPlaying = music[worldLookup[player.x][player.y].Music]:play()
+    else
+        currentPlaying = music["PuerLavari"]:play()
+    end  
+    music[currentTrack]:setVolume(musicVolume)
 end

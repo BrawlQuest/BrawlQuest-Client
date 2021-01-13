@@ -88,12 +88,10 @@ function transitionToPhaseGame()
     love.audio.stop( titleMusic )
 
     createWorld()
-    if worldLookup[player.x] and worldLookup[player.x][player.y] and worldLookup[player.x][player.y].Music ~= ("*" or null) then
-        currentPlaying = music[worldLookup[player.x][player.y].Music]:play()
-    else
-        currentPlaying = music["PuerLavari"]:play()
-        print("else it be")
-    end  
+
+    if musicVolume > 0 then
+        checkMusic()
+    end
 end
 
 function checkLoginKeyPressedPhaseCharacters(key)

@@ -24,6 +24,24 @@ loginPhase = "login" -- login / character / creation
 editingField = 1
 
 function initLogin()
+
+    loginText = {
+        "BrawlQuest " .. version .. " " .. versionNumber,
+        "Luven Interactive LTD 2020",
+        "",
+        "Created By:" ,
+        "Thomas Lock -- Creator and Founder",
+        "Dan Stubbs -- Designer and Other Stuff",
+        "",
+        "Graphics by David E. Gervais",
+        "Music by Joseph Pearce",
+        "",
+        "Special thanks to ThinkSometimes for the Minty sprite",
+        "Special thanks to my entire Twitch community <3",
+        "",
+        "Made with LÖVE",
+    }
+
     loginEntryImage = love.graphics.newImage("assets/ui/login/login.png")
     charactersEntryImage = love.graphics.newImage("assets/ui/login/characterbackground.png")
     charactersButtonImage = love.graphics.newImage("assets/ui/login/characterwidget.png")
@@ -51,9 +69,9 @@ function drawLogin()
     end
 
     love.graphics.setColor(1,1,1)
-    love.graphics.setFont(smallTextFont)
-    love.graphics.print("BrawlQuest " .. version ..
-    "\nLuven Interactive LTD 2020\n\nGraphics by David E. Gervais\nMusic by Joseph Pearce\n\nSpecial thanks to ThinkSometimes for the Minty sprite\nSpecial thanks to my entire Twitch community <3\n\nMade with LÖVE", 10, 10)
+    for i, v in ipairs(loginText) do
+        love.graphics.print(v, smallTextFont, 10, 10 + (smallTextFont:getHeight() * (i-1)))
+    end
 end
 
 function updateLogin(dt)

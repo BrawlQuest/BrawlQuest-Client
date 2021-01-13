@@ -1,7 +1,3 @@
-
-musicVolume = 0
-sfxVolume = 1
-
 function initSettings()
 
     keybinds = {
@@ -18,17 +14,21 @@ function initSettings()
         INTERACT = "e",
         QUESETS = "q",
     }
-    
+
+    isSettingsWindowOpen = false
+    musicVolume = 1
+    sfxVolume = 1  
     dpiScaling = true
     fullscreen = false
     chatRepeat = false
     
     info = love.filesystem.getInfo("settings.txt")
-    isSettingsWindowOpen = false
+    getSettingsVersion()
 
-    if info then
-        contents, size = love.filesystem.read("string", "settings.txt")
-        contents = json:decode(contents)
+    if info ~= null and getSettingsVersion() then
+        print ("Initiating Saved Settings")
+        -- contents, size = love.filesystem.read("string", "settings.txt")
+        -- contents = json:decode(contents)
         keybinds = contents["keybinds"]
         musicVolume = contents["musicVolume"]
         sfxVolume = contents["sfxVolume"]
@@ -38,18 +38,8 @@ function initSettings()
         chatRepeat = contents["chatRepeat"]
         scale = contents["scale"]
         api.url = servers[selectedServer].url
-        print("File Initiated")
     else
-        success,msg = love.filesystem.write("settings.txt", json:encode({
-            keybinds = keybinds,
-            musicVolume = musicVolume,
-            sfxVolume = sfxVolume,
-            selectedServer = 1,
-            dpiScaling = dpiScaling,
-            fullscreen = fullscreen,
-            chatRepeat = chatRepeat,
-            scale = scale,
-        }))
+        writeSettings()
     end  
 
     uiX, uiY = love.graphics.getWidth()/scale, love.graphics.getHeight()/scale
@@ -58,6 +48,33 @@ function initSettings()
 
     if fullscreen then love.window.setFullscreen(true) end
     loadSliders()
+end
+
+function writeSettings()
+    print ("Writing Settings")
+    success,msg = love.filesystem.write("settings.txt", json:encode({
+        version = version .. " " .. versionNumber,
+        keybinds = keybinds,
+        musicVolume = musicVolume,
+        sfxVolume = sfxVolume,
+        selectedServer = selectedServer,
+        dpiScaling = dpiScaling,
+        fullscreen = fullscreen,
+        chatRepeat = chatRepeat,
+        scale = scale,
+    }))
+end
+
+function getSettingsVersion()
+    if info ~= null then
+        contents, size = love.filesystem.read("string", "settings.txt")
+        contents = json:decode(contents)
+        if  contents["version"] ~= version .. " " .. versionNumber then
+            return false -- I didn't get the correct version
+        else
+            return true -- We're up to date
+        end
+    end
 end
 
 function loadSliders()
@@ -74,19 +91,6 @@ function updateSliders()
         volumeSlider:update()
         sfxSlider:update()
     end
-end
-
-function writeSettings()
-    success,msg = love.filesystem.write("settings.txt", json:encode({
-        keybinds = keybinds,
-        musicVolume = musicVolume,
-        sfxVolume = sfxVolume,
-        selectedServer = selectedServer,
-        dpiScaling = dpiScaling,
-        fullscreen = fullscreen,
-        chatRepeat = chatRepeat,
-        scale = scale,
-    }))
 end
 
 function drawSettingsPanel(thisX, thisY)
@@ -187,7 +191,7 @@ end
 function dpiScaler(thisDPI)
     return love.window.setMode(love.graphics.getWidth(), love.graphics.getHeight(), {
         highdpi = thisDPI,
-        resizable = thisDPI,
+        resizable = true,
         fullscreen = fullscreen,
     }) 
 end

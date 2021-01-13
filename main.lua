@@ -44,7 +44,9 @@ json = require("scripts.libraries.json")
 http = require("socket.http")
 ltn12 = require("ltn12")
 
-version = "Pre-Release"
+version = "Pre-Release" 
+versionNumber = "2.0" -- very important for settings
+
 phase = "login"
 
 blockMap = {}
@@ -146,12 +148,9 @@ function love.draw()
 
         love.graphics.setFont(font)
         love.graphics.print(player.x..", "..player.y .. ", " .. tostring(love.timer.getFPS()), 10, 6)
-        -- if worldLookup[player.x] and worldLookup[player.x][player.y] then    
-        --     if worldLookup[me.X] and worldLookup[me.X][me.Y] then
-        --         love.graphics.print("\n"..tostring(worldLookup[player.x][player.y].Name), 10, 6)
-        --         -- love.graphics.print(tostring(worldLookup[me.X][me.Y].Title), 100,100)
-        --     end
-        -- end
+        if worldLookup[player.x] and worldLookup[player.x][player.y] then    
+            love.graphics.print("\n"..tostring(worldLookup[player.x][player.y].Name), 10, 6)
+        end
     end
 
 
