@@ -171,7 +171,7 @@ function drawHUD()
     love.graphics.setColor(1,1,1,1)
     
     drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
-    
+    if isSettingsWindowOpen then drawLargeSettingsPanel() end
 end 
 
 function drawTextBelowPlayer(text)

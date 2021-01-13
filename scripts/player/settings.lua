@@ -1,4 +1,6 @@
 function initSettings()
+    
+    initSettingsPanel()
 
     keybinds = {
         UP = "w",
@@ -29,7 +31,7 @@ function initSettings()
     getSettingsVersion()
 
     if info ~= null and getSettingsVersion() then
-        print ("Initiating Saved Settings")
+        -- print ("Initiating Saved Settings")
         display = contents["display"]
         window = contents["window"]
         screenDimentions = contents["screenDimentions"]
@@ -67,7 +69,7 @@ function setWindowOptions()
 end
 
 function writeSettings()
-    print ("Writing Settings")
+    -- print ("Writing Settings")
     success,msg = love.filesystem.write("settings.txt", json:encode({
         version = version .. " " .. versionNumber,
         keybinds = keybinds,
@@ -82,7 +84,6 @@ function writeSettings()
         screenDimentions = screenDimentions,
         display = display,
     }))
-    print (json:encode(screenDimentions))
 end
 
 function getSettingsVersion()
@@ -97,33 +98,17 @@ function getSettingsVersion()
     end
 end
 
-function loadSliders()
-    local thisX, thisY = love.graphics.getWidth()/2, (love.graphics.getHeight()/2)-(questPopUpHeight/2)+150
-    local spacing = 75
-    local width = questPopUpWidth - 68
-    -- settingSlider = newSlider(thisX, thisY, 0, 0, 1, sliderValue(v))
-    volumeSlider = newSlider(thisX, thisY + (spacing*0), width, musicVolume, 0, 1, sliderValueA(v))
-    sfxSlider = newSlider(thisX, thisY + (spacing*1), width, sfxVolume, 0, 1, sliderValueA(v))
-end
-
-function updateSliders()
-    if isSettingsWindowOpen then
-        volumeSlider:update()
-        sfxSlider:update()
-    end
-end
-
 function drawSettingsPanel(thisX, thisY)
     if isSettingsWindowOpen then
-        thisX, thisY = thisX - (questPopUpWidth/2), thisY - (questPopUpHeight/2)
+        thisX, thisY = thisX - (questPopUpWidth), thisY - (questPopUpHeight/2)
         love.graphics.setColor(0,0,0,0.7)
-        roundRectangle("fill", thisX, thisY, questPopUpWidth, questPopUpHeight, 10)
+        roundRectangle("fill", thisX, thisY, questPopUpWidth * 2, questPopUpHeight, 10)
         love.graphics.setColor(1,1,1,1)
         local padding = 20
         thisX, thisY = thisX + padding, thisY + padding
 
-        volumeSlider:draw()
-        sfxSlider:draw()
+        -- volumeSlider:draw()
+        -- sfxSlider:draw()
 
         love.graphics.setFont(headerBigFont)
         love.graphics.print("Settings", thisX, thisY)
@@ -158,8 +143,6 @@ function drawSettingsToggleButton(thisX, thisY, var, textA, textB,  padding)
     end
     love.graphics.setColor(1,0,0,1)
 end
-
-function sliderValueA(v) end
 
 function checkSettingsMousePressed(button)
     if isSettingsWindowOpen then
