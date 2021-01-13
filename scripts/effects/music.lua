@@ -38,6 +38,7 @@ function updateMusic(dt)
     if volumeSlider:getValue() ~= previousMusicVolume then
         musicVolume = volumeSlider:getValue()
         previousMusicVolume = musicVolume
+        print("Music Volume: " .. musicVolume)
         if musicVolume == 0 then
             love.audio.stop( music[currentTrack] )
             playMusic = false

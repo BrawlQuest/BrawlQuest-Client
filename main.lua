@@ -276,6 +276,7 @@ function love.resize(width, height)
     else
         createWorld()
         loadSliders()
+        writeSettings()
     end
     if scale then
         uiX = love.graphics.getWidth()/scale -- scaling options

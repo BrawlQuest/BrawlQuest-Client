@@ -106,22 +106,26 @@ function love.keypressed(key)
         if not isTypingInChat and not worldEdit.isTyping then
             if key == "l" then
                 worldScale = worldScale * 0.5
+                writeSettings()
             end
             
             if key == ";" then
                 worldScale = worldScale * 2
+                writeSettings()
             end
 
             if key == "." then
                 scale = scale * 1.5
                 uiX = love.graphics.getWidth()/scale -- scaling options
                 uiY = love.graphics.getHeight()/scale
+                writeSettings()
             end
 
             if key == "," then
                 scale = scale * 0.75
                 uiX = love.graphics.getWidth()/scale -- scaling options
                 uiY = love.graphics.getHeight()/scale
+                writeSettings()
             end
         end
     end

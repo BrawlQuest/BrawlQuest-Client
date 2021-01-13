@@ -21,14 +21,14 @@ function initSettings()
     dpiScaling = true
     fullscreen = false
     chatRepeat = false
+    screenDimentions = {width = love.graphics.getWidth(), height = love.graphics.getHeight(),}
     
     info = love.filesystem.getInfo("settings.txt")
     getSettingsVersion()
 
     if info ~= null and getSettingsVersion() then
         print ("Initiating Saved Settings")
-        -- contents, size = love.filesystem.read("string", "settings.txt")
-        -- contents = json:decode(contents)
+        screenDimentions = contents["screenDimentions"]
         keybinds = contents["keybinds"]
         musicVolume = contents["musicVolume"]
         sfxVolume = contents["sfxVolume"]
@@ -41,13 +41,21 @@ function initSettings()
     else
         writeSettings()
     end  
+    setWindowOptions()
+end
 
+function setWindowOptions()
+    love.window.setMode(screenDimentions.width, screenDimentions.height, {
+        fullscreen = fullscreen,
+        highdpi = dpiScaling,
+        resizable = not fullscreen,
+        highdpi = thisDPI,
+        -- stencil = true,
+        vsync = 0,
+    })
     uiX, uiY = love.graphics.getWidth()/scale, love.graphics.getHeight()/scale
-
-    if not dpiScaling then dpiScaler(false) end
-
-    if fullscreen then love.window.setFullscreen(true) end
     loadSliders()
+    initLogin()
 end
 
 function writeSettings()
@@ -62,6 +70,7 @@ function writeSettings()
         fullscreen = fullscreen,
         chatRepeat = chatRepeat,
         scale = scale,
+        screenDimentions = {width = love.graphics.getWidth(), height = love.graphics.getHeight(),},
     }))
 end
 
@@ -147,38 +156,21 @@ function checkSettingsMousePressed(button)
         local spacing = 75
         local thisX, thisY = (love.graphics.getWidth()/2) - (questPopUpWidth/2)+20, (love.graphics.getHeight()/2)-(questPopUpHeight/2)+20+(75*3)+40
         if isMouseOver(thisX, thisY, questPopUpWidth - (padding*2), 40) and button == 1 then
-            if dpiScaling then
-                dpiScaling = false
-                dpiScaler(false)
-            else
-                dpiScaling = true
-                dpiScaler(true)
-            end
+            dpiScaling = not dpiScaling
+            print(dpiScaling )
+            setWindowOptions()
             writeSettings()
             createWorld()
-            
         end
 
         if isMouseOver(thisX, thisY + (50 * 1), questPopUpWidth - (padding*2), 40) and button == 1 then
-            if fullscreen then
-                fullscreen = false
-                love.window.setFullscreen(false)
-                uiX = love.graphics.getWidth()/scale -- scaling options
-                uiY = love.graphics.getHeight()/scale
-            else
-                fullscreen = true
-                love.window.setFullscreen(true)
-            end
-            writeSettings()
-            loadSliders()        
+            fullscreen = not fullscreen
+            setWindowOptions()
+            writeSettings()  
         end
 
         if isMouseOver(thisX, thisY + (50 * 2), questPopUpWidth - (padding*2), 40) and button == 1 then
-            if chatRepeat then
-                chatRepeat = false
-            else
-                chatRepeat = true
-            end
+            chatRepeat = not chatRepeat
             writeSettings()
         end
         
@@ -186,12 +178,4 @@ function checkSettingsMousePressed(button)
             checkIfReadyToQuit()
         end
     end
-end
-
-function dpiScaler(thisDPI)
-    return love.window.setMode(love.graphics.getWidth(), love.graphics.getHeight(), {
-        highdpi = thisDPI,
-        resizable = true,
-        fullscreen = fullscreen,
-    }) 
 end
