@@ -38,7 +38,7 @@ end
 
 function drawWorldEditTileFromRect(x, y, button)
 
-    if worldLookup[x] and worldEdit.draw[x][y] then
+    if worldLookup[x] and worldEdit.draw[x] and worldEdit.draw[x][y] then
         worldEdit.draw[x][y][1] = worldLookup[x][y].GroundTile
         worldEdit.draw[x][y][2] = worldLookup[x][y].ForegroundTile
         worldEdit.draw[x][y][3] = worldLookup[x][y].Enemy
