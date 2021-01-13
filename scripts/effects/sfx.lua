@@ -57,8 +57,6 @@ function updateSFX()
         sfxVolume = sfxSlider:getValue()
         setSFXVolumes()
         previousSFXVolume = sfxVolume
-        print("SFX Volume: " .. sfxVolume)
-        writeSettings()
     end
 end
 

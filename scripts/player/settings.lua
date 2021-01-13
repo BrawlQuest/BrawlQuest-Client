@@ -48,13 +48,13 @@ end
 
 function setWindowOptions()
     love.window.setMode(screenDimentions.width, screenDimentions.height, {
-        fullscreen = fullscreen,
+        display = display,
         highdpi = highdpi,
+        fullscreen = fullscreen,
         resizable = not fullscreen,
         highdpi = thisDPI,
         usedpiscale = false,
         vsync = 0,
-        display = display,
     })
     uiX, uiY = love.graphics.getWidth()/scale, love.graphics.getHeight()/scale
     loadSliders()
@@ -62,10 +62,7 @@ function setWindowOptions()
 end
 
 function writeSettings()
-    -- local x, y, thisdisplay = love.window.getPosition( )
-    -- display = thisdisplay
     print ("Writing Settings")
-    print (highdpi)
     success,msg = love.filesystem.write("settings.txt", json:encode({
         version = version .. " " .. versionNumber,
         keybinds = keybinds,
@@ -77,7 +74,7 @@ function writeSettings()
         chatRepeat = chatRepeat,
         scale = scale,
         screenDimentions = {width = love.graphics.getWidth(), height = love.graphics.getHeight(),},
-        display = love.window.getPosition(display),
+        display = display,
     }))
 end
 
@@ -164,25 +161,39 @@ function checkSettingsMousePressed(button)
         local thisX, thisY = (love.graphics.getWidth()/2) - (questPopUpWidth/2)+20, (love.graphics.getHeight()/2)-(questPopUpHeight/2)+20+(75*3)+40
         if isMouseOver(thisX, thisY, questPopUpWidth - (padding*2), 40) and button == 1 then
             highdpi = not highdpi
-            -- print(highdpi)
             setWindowOptions()
-            writeSettings()
             createWorld()
         end
 
         if isMouseOver(thisX, thisY + (50 * 1), questPopUpWidth - (padding*2), 40) and button == 1 then
             fullscreen = not fullscreen
             setWindowOptions()
-            writeSettings()  
         end
 
         if isMouseOver(thisX, thisY + (50 * 2), questPopUpWidth - (padding*2), 40) and button == 1 then
             chatRepeat = not chatRepeat
-            writeSettings()
         end
         
         if isMouseOver(thisX, thisY + (50 * 3), questPopUpWidth - (padding*2), 40) and button == 1 then
+            writeSettings()
             checkIfReadyToQuit()
         end
     end
+end
+
+function checkSettingsButtonPressed(key)
+    if key == "escape" or key == "w" or key == "a" or key == "s" or key == "d" then
+        getDisplay()
+        writeSettings()
+        isSettingsWindowOpen = false
+    end
+    if key == "return" then
+        writeSettings()
+        checkIfReadyToQuit()
+    end
+end
+
+function getDisplay()
+    local x, y, thisdisplay = love.window.getPosition( )
+    display = thisdisplay
 end

@@ -19,12 +19,7 @@ function love.keypressed(key)
             checkWorldEditKeyPressed(key)
         elseif worldEdit.isTyping then
         elseif isSettingsWindowOpen then
-            if key == "escape" or key == "w" or key == "a" or key == "s" or key == "d" then
-                isSettingsWindowOpen = false
-            end
-            if key == "return" then
-                checkIfReadyToQuit()
-            end
+            checkSettingsButtonPressed(key)
         elseif isTypingInChat then
             if key == "backspace" then
                 enteredChatText = string.sub( enteredChatText, 1, string.len( enteredChatText) - 1)

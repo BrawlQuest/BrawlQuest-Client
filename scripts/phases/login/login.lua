@@ -70,7 +70,7 @@ function drawLogin()
 
     love.graphics.setColor(1,1,1)
     for i, v in ipairs(loginText) do
-        love.graphics.print(v, smallTextFont, 10, 10 + (smallTextFont:getHeight() * (i-1)))
+        love.graphics.print(v, playerNameFont, 10, 10 + ((playerNameFont:getHeight() + 2) * (i-1)), 0, 1)
     end
 end
 

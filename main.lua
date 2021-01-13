@@ -271,18 +271,16 @@ function tick()
 end
 
 function love.resize(width, height)
-    local x, y, thisdisplay = love.window.getPosition( )
-    display = thisdisplay
     if phase == "login" then
         initLogin()
     else
         createWorld()
         loadSliders()
-        
     end
     if scale then
         uiX = love.graphics.getWidth()/scale -- scaling options
         uiY = love.graphics.getHeight()/scale
     end
+    getDisplay()
     writeSettings()
 end
