@@ -146,32 +146,32 @@ function drawSettingsToggleButton(thisX, thisY, var, textA, textB,  padding)
 end
 
 function checkSettingsMousePressed(button)
-    if isSettingsWindowOpen then
-        local padding = 20
-        local spacing = 75
-        local thisX, thisY = (love.graphics.getWidth()/2) - (questPopUpWidth/2)+20, (love.graphics.getHeight()/2)-(questPopUpHeight/2)+20+(75*3)+40
-        if isMouseOver(thisX, thisY, questPopUpWidth - (padding*2), 40) and button == 1 then
-            highdpi = not highdpi
-            setWindowOptions()
-            createWorld()
-        end
+    -- if isSettingsWindowOpen then
+    --     local padding = 20
+    --     local spacing = 75
+    --     local thisX, thisY = (love.graphics.getWidth()/2) - (questPopUpWidth/2)+20, (love.graphics.getHeight()/2)-(questPopUpHeight/2)+20+(75*3)+40
+    --     if isMouseOver(thisX, thisY, questPopUpWidth - (padding*2), 40) and button == 1 then
+    --         highdpi = not highdpi
+    --         setWindowOptions()
+    --         createWorld()
+    --     end
 
-        if isMouseOver(thisX, thisY + (50 * 1), questPopUpWidth - (padding*2), 40) and button == 1 then
-            fullscreen = not fullscreen
-            local width, height = love.window.getDesktopDimensions( display )
-            setWindowOptions()
-            createWorld()
-        end
+    --     if isMouseOver(thisX, thisY + (50 * 1), questPopUpWidth - (padding*2), 40) and button == 1 then
+    --         fullscreen = not fullscreen
+    --         local width, height = love.window.getDesktopDimensions( display )
+    --         setWindowOptions()
+    --         createWorld()
+    --     end
 
-        if isMouseOver(thisX, thisY + (50 * 2), questPopUpWidth - (padding*2), 40) and button == 1 then
-            chatRepeat = not chatRepeat
-        end
+    --     if isMouseOver(thisX, thisY + (50 * 2), questPopUpWidth - (padding*2), 40) and button == 1 then
+    --         chatRepeat = not chatRepeat
+    --     end
         
-        if isMouseOver(thisX, thisY + (50 * 3), questPopUpWidth - (padding*2), 40) and button == 1 then
-            writeSettings()
-            checkIfReadyToQuit()
-        end
-    end
+    --     if isMouseOver(thisX, thisY + (50 * 3), questPopUpWidth - (padding*2), 40) and button == 1 then
+    --         writeSettings()
+    --         checkIfReadyToQuit()
+    --     end
+    -- end
 end
 
 function checkSettingsButtonPressed(key)

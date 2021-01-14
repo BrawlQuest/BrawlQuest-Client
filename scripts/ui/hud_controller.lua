@@ -179,7 +179,7 @@ function drawHUD()
 
     love.graphics.setColor(1,1,1,1)
     
-    drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
+    -- drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
     if settPan.opacity > 0 then drawLargeSettingsPanel() end
 end 
 
