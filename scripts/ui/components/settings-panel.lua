@@ -22,19 +22,19 @@ function initSettingsPanel()
     settings = {    
         {
             title = "Graphics",
-            {title = "Render Quality", v = false, },
-            {title = "Fullscreen", v = false, },
+            {name = "Render Quality", v = false, type = "button",},
+            {name = "Fullscreen", v = false, type = "button",},
         },
         {
             title = "Sound",
-            {title = "Music Volume", v = 1,},
-            {title = "SFX Volume", v = 1,},       
+            {name = "Music Volume", v = 1, type = "fader",},
+            {name = "SFX Volume", v = 1, type = "fader",},       
         },
         {
             title = "HUD",
-            {title = "GUI Scale", v = 1},
-            {title = "Open on Mouse Over", v = true},
-            {title = "Show Chat", v = true}
+            {name = "GUI Scale", v = 1, type = "button",},
+            {name = "Open on Mouse Over", v = true, type = "button",},
+            {name = "Show Chat", v = true, type = "button",}
         },
     }
 
@@ -55,9 +55,14 @@ function initSettingsPanel()
         titleOffset = 75,
         titleFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
         itemFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
-        objectPadding = 10,
+        objectPadding = 6,
         objectValueWidth = 80,
+        headerSpacing = 30,
+        buttonSpacing = 36,
+        fontHeight = 0,
     }
+
+    settPan.fontHeight = (32 * 0.5) - (settPan.itemFont:getHeight() * 0.45)
 
     questPopUpWidth = 335
     questPopUpHeight = 496
@@ -107,7 +112,6 @@ function drawLargeSettingsPanel()
 
         local thisX, thisY = x - (settPan.width * 0.5) + settPan.padding, y - (settPan.height * 0.5) + settPan.padding + settPan.titleOffset
         local width, height = (settPan.width * 0.5) - (settPan.padding * 2), 32
-        local fontHeight = (height * 0.5) - (settPan.itemFont:getHeight() * 0.45)
 
         for i,v in ipairs(controls.keybinds.v) do
             if isMouseOver(thisX, thisY, width, height) then
@@ -121,8 +125,8 @@ function drawLargeSettingsPanel()
             local nextX, nextY = thisX + width - settPan.objectValueWidth, thisY
             roundRectangle("fill", nextX, nextY, settPan.objectValueWidth, height, 6) -- value backing
             love.graphics.setColor(1,1,1, settPan.opacityCERP * 1)
-            love.graphics.print(v.name, thisX + 10, thisY + fontHeight) -- prints the name of things
-            love.graphics.printf("\"" .. v.v .. "\"", nextX, nextY + fontHeight, settPan.objectValueWidth, "center") -- prints the value of things
+            love.graphics.print(v.name, thisX + 10, thisY + settPan.fontHeight) -- prints the name of things
+            love.graphics.printf("\"" .. v.v .. "\"", nextX, nextY + settPan.fontHeight, settPan.objectValueWidth, "center") -- prints the value of things
 
             thisY = thisY + height + settPan.objectPadding
         end
@@ -131,10 +135,52 @@ function drawLargeSettingsPanel()
 
     -- Right Side Buttons
     local thisX, thisY = x + settPan.padding, y - (settPan.height * 0.5) + settPan.padding
+    local width, height = (settPan.width * 0.5) - (settPan.padding * 2), 32
 
-    for i,v in ipairs(settings) do
-        love.graphics.print(v.title, thisX, thisY) -- Subheader
-        thisY = thisY + height + settPan.objectPadding
+    for ai,av in ipairs(settings) do
+        love.graphics.setColor(1,1,1,settPan.opacityCERP)
+        love.graphics.print(av.title, thisX, thisY + 5) -- Subheader
+        thisY = thisY + settPan.headerSpacing
+        for bi,bv in ipairs(settings[ai]) do
+            if bv.type == "button" then
+                drawSettingsButton("description button", thisX, thisY, width, height, false, bv)
+            elseif bv.type == "fader" then
+                
+            end
+            thisY = thisY + settPan.buttonSpacing
+        end
+    end
+
+    local width, height = (settPan.width * 0.5) - (settPan.padding * 2), 40
+    local thisX, thisY = x + settPan.padding, y + (settPan.height * 0.5) - settPan.padding - height
+
+    drawSettingsButton("button big", thisX, thisY, width, height, bool, table)
+
+end
+
+function drawSettingsButton(type, thisX, thisY, width, height, bool, table)
+    if type == "button big" then
+
+        love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)    
+        roundRectangle("fill", thisX, thisY, width, height, 6)
+
+    elseif type == "description button" then
+
+        love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)            
+        roundRectangle("fill", thisX, thisY, width - 90 - settPan.objectPadding, height, 6)
+        roundRectangle("fill", thisX + width - 90, thisY, 90, height, 6)
+        love.graphics.setColor(1,1,1, settPan.opacityCERP)
+        love.graphics.print(table.name, thisX + 10, thisY + settPan.fontHeight) -- prints the name of things
+        
+        local value = 0
+        if table.v == (true or false) then
+            value = boolToString(table.v)
+        else
+            value = table.v
+        end
+        local nextX, nextY = thisX + width - settPan.objectValueWidth, thisY
+        love.graphics.printf("\"" .. boolToString(table.v) .. "\"", nextX, nextY + settPan.fontHeight, 90, "center") -- prints the value of things
+    
     end
 end
 
@@ -148,8 +194,13 @@ function loadSliders()
     local thisX, thisY = love.graphics.getWidth()/2 - (questPopUpWidth/2) + (settPan.width * 0.5), (love.graphics.getHeight()/2)-(questPopUpHeight/2)+150
     local spacing = 75
     local width = questPopUpWidth - 68
-    volumeSlider = newSlider(thisX, thisY + (spacing*0), width, musicVolume, 0, 1, sliderValueA(v))
-    sfxSlider = newSlider(thisX, thisY + (spacing*1), width, sfxVolume, 0, 1, sliderValueA(v))
+    local style = {
+        track = "line",
+        knob = "rectangle",
+        width = 20,
+    } 
+    volumeSlider = newSlider(thisX, thisY + (spacing*0), width, musicVolume, 0, 1, sliderValueA(v), style)
+    sfxSlider = newSlider(thisX, thisY + (spacing*1), width, sfxVolume, 0, 1, sliderValueA(v), style)
 end
 
 function updateSliders()

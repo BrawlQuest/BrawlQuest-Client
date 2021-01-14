@@ -128,11 +128,11 @@ function drawSettingsPanel(thisX, thisY)
     end
 end
 
-function drawSettingsButton(thisX, thisY, text, padding)
-    roundRectangle("fill", thisX, thisY + 40, questPopUpWidth - (padding*2), 40, 10)
-    love.graphics.setColor(1,1,1,1)
-    love.graphics.printf(text, thisX, thisY + 46, questPopUpWidth - (padding*2), "center")
-end
+-- function drawSettingsButton(thisX, thisY, text, padding)
+--     roundRectangle("fill", thisX, thisY + 40, questPopUpWidth - (padding*2), 40, 10)
+--     love.graphics.setColor(1,1,1,1)
+--     love.graphics.printf(text, thisX, thisY + 46, questPopUpWidth - (padding*2), "center")
+-- end
 
 function drawSettingsToggleButton(thisX, thisY, var, textA, textB,  padding)
     if var then
