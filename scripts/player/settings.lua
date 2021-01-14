@@ -15,8 +15,9 @@ function initSettings()
         CRAFTING = "f",
         INTERACT = "e",
         QUESETS = "q",
+        "things",
     }
-
+    
     isSettingsWindowOpen = false
     musicVolume = 1
     sfxVolume = 1  

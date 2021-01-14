@@ -147,6 +147,7 @@ function love.draw()
         
         Luven.camera:draw()
 
+        love.graphics.setColor(1,1,1)
         love.graphics.setFont(font)
         love.graphics.print(player.x..", "..player.y .. ", " .. tostring(love.timer.getFPS()), 10, 6)
         if worldLookup[player.x] and worldLookup[player.x][player.y] then    
@@ -167,7 +168,7 @@ end
 
 function love.update(dt)
 
-    Luven.camera:setScale(worldScale)
+    Luven.camera:setScale(worldScale - (settPan.opacityCERP * 0.5))
     totalCoverAlpha = totalCoverAlpha - 1 * dt
     if phase == "login" then
         updateLogin(dt)

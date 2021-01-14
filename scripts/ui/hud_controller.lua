@@ -133,6 +133,15 @@ function updateHUD( dt )
     updateCrafting(dt)
     updateNewWorldEdit(dt)
 
+    if isSettingsWindowOpen then
+        updateSettingsPanel(dt)
+    elseif settPan.opacity > 0 then
+        settPan.opacity = settPan.opacity - settPan.opacitySpeed * dt
+        if settPan.opacity <= 0 then settPan.opacity = 0 end
+    end
+
+    settPan.opacityCERP = cerp(0,1,settPan.opacity)
+
     if chatCursor.i < chatCursor.speed then
         chatCursor.i = chatCursor.i + 1
     else
@@ -171,7 +180,7 @@ function drawHUD()
     love.graphics.setColor(1,1,1,1)
     
     drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
-    if isSettingsWindowOpen then drawLargeSettingsPanel() end
+    if settPan.opacity > 0 then drawLargeSettingsPanel() end
 end 
 
 function drawTextBelowPlayer(text)

@@ -55,7 +55,8 @@ function love.keypressed(key)
 
             if key == keybinds.SHIELD then shieldUpSfx:play() end
 
-            if key == "escape" then                 
+            if key == "escape" then
+                settPan.movement.x, settPan.movement.y = 0, 0 
                 isSettingsWindowOpen = true
                 loadSliders()
             end
