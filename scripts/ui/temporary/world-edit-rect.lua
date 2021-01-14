@@ -266,7 +266,7 @@ function boolToInt(value)
 end
 
 function boolToString(bool)
-    if bool then return "true" else return "false" end
+    if bool == true then return "true" elseif bool == false then return "false" else return bool end
 end
 
 function checkAreaDrawSingleButtonPressed(i)

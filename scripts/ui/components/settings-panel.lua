@@ -22,8 +22,8 @@ function initSettingsPanel()
     settings = {    
         {
             title = "Graphics",
-            {name = "Render Quality", v = false, type = "button",},
-            {name = "Fullscreen", v = false, type = "button",},
+            {name = "Render Quality", v = false, type = "button", "Full", "Fast",},
+            {name = "Fullscreen", v = false, type = "button", "On", "Off",},
         },
         {
             title = "Sound",
@@ -34,7 +34,8 @@ function initSettingsPanel()
             title = "HUD",
             {name = "GUI Scale", v = 1, type = "button",},
             {name = "Open on Mouse Over", v = true, type = "button",},
-            {name = "Show Chat", v = true, type = "button",}
+            {name = "Show Chat", v = true, type = "button",},
+            {name = "Chat Remain On Enter", v = true, type = "button",},
         },
     }
 
@@ -144,10 +145,13 @@ function drawLargeSettingsPanel()
         for bi,bv in ipairs(settings[ai]) do
             if bv.type == "button" then
                 drawSettingsButton("description button", thisX, thisY, width, height, false, bv)
+                thisY = thisY + settPan.buttonSpacing
             elseif bv.type == "fader" then
-                
+                love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)   
+                roundRectangle("fill", thisX, thisY, width, 67, 6)
+                thisY = thisY + 67 + 6
             end
-            thisY = thisY + settPan.buttonSpacing
+            
         end
     end
 
@@ -171,15 +175,8 @@ function drawSettingsButton(type, thisX, thisY, width, height, bool, table)
         roundRectangle("fill", thisX + width - 90, thisY, 90, height, 6)
         love.graphics.setColor(1,1,1, settPan.opacityCERP)
         love.graphics.print(table.name, thisX + 10, thisY + settPan.fontHeight) -- prints the name of things
-        
-        local value = 0
-        if table.v == (true or false) then
-            value = boolToString(table.v)
-        else
-            value = table.v
-        end
-        local nextX, nextY = thisX + width - settPan.objectValueWidth, thisY
-        love.graphics.printf("\"" .. boolToString(table.v) .. "\"", nextX, nextY + settPan.fontHeight, 90, "center") -- prints the value of things
+
+        love.graphics.printf(boolToString(table.v), thisX + width - 90, thisY + settPan.fontHeight, 90, "center") -- prints the value of things
     
     end
 end
