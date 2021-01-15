@@ -17,7 +17,7 @@ function initSettings()
         QUESETS = "q",
         "things",
     }
-    
+
     isSettingsWindowOpen = false
     musicVolume = 1
     sfxVolume = 1  
@@ -25,8 +25,13 @@ function initSettings()
     fullscreen = false
     chatRepeat = false
     display = 1
-    screenDimentions = {width = love.graphics.getWidth(), height = love.graphics.getHeight(),}
-    window = {x = 0, y = 0}
+
+    displayWidth, displayHeight = love.window.getDesktopDimensions(display)
+
+    screenDimentions = {width = 1920, height = 1080,}
+    window = {x = (displayWidth * 0.5) - (screenDimentions.width * 0.5), y = (displayHeight * 0.5) - (screenDimentions.height * 0.5)}
+    showChat = true
+    openUiOnHover = true
     
     info = love.filesystem.getInfo("settings.txt")
     getSettingsVersion()
@@ -43,12 +48,35 @@ function initSettings()
         highdpi = contents["highdpi"]
         fullscreen = contents["fullscreen"]
         chatRepeat = contents["chatRepeat"]
-        scale = contents["scale"]
+        settPan.scaleValue = contents["scaleValue"]
+        showChat = contents["showChat"]
+        openUiOnHover = contents["openUiOnHover"]
         api.url = servers[selectedServer].url
     else
         writeSettings()
     end  
     setWindowOptions()
+
+
+    settings = {    
+        {
+            title = "Graphics",
+            {name = "Render Quality", v = highdpi, type = "button", "Full", "Fast",},
+            {name = "Fullscreen", v = fullscreen, type = "button", "On", "Off",},
+        },
+        {
+            title = "Sound",
+            {name = "Music Volume", type = "fader",},
+            {name = "SFX Volume", type = "fader",},       
+        },
+        {
+            title = "HUD",
+            {name = "GUI Scale", v = settPan.scaleTypes[settPan.scaleValue], type = "button",},
+            {name = "Open on Mouse Over", v = true, type = "button",},
+            {name = "Show Chat", v = true, type = "button",},
+            {name = "Chat Remain On Enter", v = chatRepeat, type = "button",},
+        },
+    }
 end
 
 function setWindowOptions()
@@ -64,6 +92,7 @@ function setWindowOptions()
         usedpiscale = false,
         vsync = 0,
     })
+    scale = settPan.scaleTypes[settPan.scaleValue]
     uiX, uiY = love.graphics.getWidth()/scale, love.graphics.getHeight()/scale
     loadSliders()
     initLogin()
@@ -81,9 +110,11 @@ function writeSettings()
         fullscreen = fullscreen,
         window = window,
         chatRepeat = chatRepeat,
-        scale = scale,
+        scaleValue = settPan.scaleValue,
         screenDimentions = screenDimentions,
         display = display,
+        showChat = showChat,
+        openUiOnHover = openUiOnHover,
     }))
 end
 
@@ -97,81 +128,6 @@ function getSettingsVersion()
             return true -- We're up to date
         end
     end
-end
-
-function drawSettingsPanel(thisX, thisY)
-    if isSettingsWindowOpen then
-        thisX, thisY = thisX - (questPopUpWidth), thisY - (questPopUpHeight/2)
-        love.graphics.setColor(0,0,0,0.7)
-        roundRectangle("fill", thisX, thisY, questPopUpWidth * 2, questPopUpHeight, 10)
-        love.graphics.setColor(1,1,1,1)
-        local padding = 20
-        thisX, thisY = thisX + padding, thisY + padding
-
-        -- volumeSlider:draw()
-        -- sfxSlider:draw()
-
-        love.graphics.setFont(headerBigFont)
-        love.graphics.print("Settings", thisX, thisY)
-
-        love.graphics.setFont(headerFont)
-        local names = {"Music Volume", "SFX Volume", "Render Quality"}
-        local spacing = 75
-        for i = 1, #names do 
-            love.graphics.print(names[i], thisX, thisY + 83)
-            thisY = thisY + spacing
-        end
-        drawSettingsToggleButton(thisX, thisY, highdpi, "Highest", "Lowest",  padding)
-        drawSettingsToggleButton(thisX, thisY + (50*1), fullscreen, "Fullscreen", "Windowed",  padding)
-        drawSettingsToggleButton(thisX, thisY + (50*2), chatRepeat, "Chat Remain On Enter", "Chat Close On Enter",  padding)
-        drawSettingsButton(thisX, thisY+ (50*3), "Quit Game (return)", padding)
-    end
-end
-
--- function drawSettingsButton(thisX, thisY, text, padding)
---     roundRectangle("fill", thisX, thisY + 40, questPopUpWidth - (padding*2), 40, 10)
---     love.graphics.setColor(1,1,1,1)
---     love.graphics.printf(text, thisX, thisY + 46, questPopUpWidth - (padding*2), "center")
--- end
-
-function drawSettingsToggleButton(thisX, thisY, var, textA, textB,  padding)
-    if var then
-        love.graphics.setColor(1,0,0,1)
-        drawSettingsButton(thisX, thisY, textA, padding)
-    else
-        love.graphics.setColor(0.1,0.1,1,1)
-        drawSettingsButton(thisX, thisY, textB, padding)
-    end
-    love.graphics.setColor(1,0,0,1)
-end
-
-function checkSettingsMousePressed(button)
-    -- if isSettingsWindowOpen then
-    --     local padding = 20
-    --     local spacing = 75
-    --     local thisX, thisY = (love.graphics.getWidth()/2) - (questPopUpWidth/2)+20, (love.graphics.getHeight()/2)-(questPopUpHeight/2)+20+(75*3)+40
-    --     if isMouseOver(thisX, thisY, questPopUpWidth - (padding*2), 40) and button == 1 then
-    --         highdpi = not highdpi
-    --         setWindowOptions()
-    --         createWorld()
-    --     end
-
-    --     if isMouseOver(thisX, thisY + (50 * 1), questPopUpWidth - (padding*2), 40) and button == 1 then
-    --         fullscreen = not fullscreen
-    --         local width, height = love.window.getDesktopDimensions( display )
-    --         setWindowOptions()
-    --         createWorld()
-    --     end
-
-    --     if isMouseOver(thisX, thisY + (50 * 2), questPopUpWidth - (padding*2), 40) and button == 1 then
-    --         chatRepeat = not chatRepeat
-    --     end
-        
-    --     if isMouseOver(thisX, thisY + (50 * 3), questPopUpWidth - (padding*2), 40) and button == 1 then
-    --         writeSettings()
-    --         checkIfReadyToQuit()
-    --     end
-    -- end
 end
 
 function checkSettingsButtonPressed(key)

@@ -123,7 +123,7 @@ function updateToolBarInventory(dt)
         inventory.amount = inventory.amount + 4 * dt
         if inventory.amount > 1 then inventory.amount = 1 end
     else
-        if isMouseOver(0, 0, 313 * scale, (uiY - 97) * scale) then
+        if isMouseOver(0, 0, 313 * scale, (uiY - 97) * scale) and openUiOnHover then
             inventory.open = true
             inventory.amount = inventory.amount + 4 * dt
             if inventory.amount > 1 then inventory.amount = 1 end

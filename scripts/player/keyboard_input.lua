@@ -111,16 +111,12 @@ function love.keypressed(key)
             end
 
             if key == "." then
-                scale = scale * 1.5
-                uiX = love.graphics.getWidth()/scale -- scaling options
-                uiY = love.graphics.getHeight()/scale
+                scaleHUD("up")
                 writeSettings()
             end
 
             if key == "," then
-                scale = scale * 0.75
-                uiX = love.graphics.getWidth()/scale -- scaling options
-                uiY = love.graphics.getHeight()/scale
+                scaleHUD("down")
                 writeSettings()
             end
         end

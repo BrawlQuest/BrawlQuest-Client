@@ -155,7 +155,6 @@ function updateHUD( dt )
 end
 
 function drawHUD()
-    if settPan.opacity > 0 then drawLargeSettingsPanel() end
     love.graphics.push()
         local i = 1
         love.graphics.scale(scale)
@@ -173,13 +172,16 @@ function drawHUD()
     love.graphics.push() -- chat and quests scaling TODO: Quests
         local i = 0.5
         love.graphics.scale(scale*i)
-        drawChatPanel(uiX/i, (uiY - cerp(cerp(0, 100, questHub.amount), ((uiY/1.25)-15), questsPanel.amount)) / i)
+        if showChat then
+            drawChatPanel(uiX/i, (uiY - cerp(cerp(0, 100, questHub.amount), ((uiY/1.25)-15), questsPanel.amount)) / i)
+        end
         drawZoneTitle()
     love.graphics.pop()
 
     love.graphics.setColor(1,1,1,1)
     
     -- drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
+    if settPan.opacity > 0 then drawSettingsPanel() end
     
 end 
 
