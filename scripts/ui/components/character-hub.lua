@@ -25,7 +25,7 @@ function initCharacterHub()
 
     showStatsPanel = false
     characterHub = {
-        backgroundColor = {0,0,0,0.5},
+        backgroundColor = {0,0,0,0.6},
         barColors = {{1,0,0,1}, {0,0.5,1,1}, {1,0.5,0,1}, },
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 9),
         nameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),

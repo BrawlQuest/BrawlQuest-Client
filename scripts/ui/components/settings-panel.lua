@@ -178,9 +178,11 @@ function drawLargeSettingsPanel()
                     max = max + settPan.buttonSpacing
                 elseif bv.type == "fader" then
                     love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)   
-                    roundRectangle("fill", thisX, thisY, width, 67, 6)
-                    thisY = thisY + 67 + 6
-                    max = max + 67 + 6
+                    roundRectangle("fill", thisX, thisY, width, 60, 6)
+                    love.graphics.setColor(1,1,1, settPan.opacityCERP)
+                    love.graphics.print(bv.name, thisX + 10, thisY + 10)
+                    thisY = thisY + 60 + 6
+                    max = max + 60 + 6
                 end
             end
         end 
@@ -198,26 +200,20 @@ function drawLargeSettingsPanel()
     local width, height = (settPan.width * 0.5) - (settPan.padding * 2), 40
     local thisX, thisY = x + settPan.padding, y + (settPan.height * 0.5) - settPan.padding - height
 
-    drawSettingsButton("button big", thisX, thisY, width, height, bool, table)
+    love.graphics.setColor(1, 0, 0, settPan.opacityCERP * 1)    
+    roundRectangle("fill", thisX, thisY, width, height, 6)
+    love.graphics.setColor(1,1,1, settPan.opacityCERP * 1)    
+    love.graphics.printf("CLOSE GAME", thisX, thisY + 20 - (settPan.itemFont:getHeight() * 0.5), width, "center") -- prints the name of things
 end
 
 function drawSettingsButton(type, thisX, thisY, width, height, bool, table)
-    if type == "button big" then
 
-        love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)    
-        roundRectangle("fill", thisX, thisY, width, height, 6)
-
-    elseif type == "description button" then
-
-        love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)            
-        roundRectangle("fill", thisX, thisY, width - 90 - settPan.objectPadding, height, 6)
-        roundRectangle("fill", thisX + width - 90, thisY, 90, height, 6)
-        love.graphics.setColor(1,1,1, settPan.opacityCERP)
-        love.graphics.print(table.name, thisX + 10, thisY + settPan.fontHeight) -- prints the name of things
-
-        love.graphics.printf(boolToString(table.v), thisX + width - 90, thisY + settPan.fontHeight, 90, "center") -- prints the value of things
-    
-    end
+    love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)            
+    roundRectangle("fill", thisX, thisY, width - 90 - settPan.objectPadding, height, 6)
+    roundRectangle("fill", thisX + width - 90, thisY, 90, height, 6)
+    love.graphics.setColor(1,1,1, settPan.opacityCERP)
+    love.graphics.print(table.name, thisX + 10, thisY + settPan.fontHeight) -- prints the name of things
+    love.graphics.printf(boolToString(table.v), thisX + width - 90, thisY + settPan.fontHeight, 90, "center") -- prints the value of things
 end
 
 function drawSettingsStencilLeft()
@@ -235,9 +231,9 @@ end
 function loadSliders()
     local x,y = (love.graphics.getWidth() * 0.5), (love.graphics.getHeight() * 0.5)
     local thisX = x - (settPan.width * 0.25) + (settPan.width * 0.5)
-    local thisY = y - (settPan.height * 0.5) + settPan.padding + settSrl[2].posy + 50
+    local thisY = y - (settPan.height * 0.5) + settPan.padding + settSrl[2].posy + 49 - 7
     local spacing = 75
-    local width = (settPan.width * 0.5) - 8 - 68
+    local width = (settPan.width * 0.5) - 10 - 68
     
     local style = {
         track = "line",
@@ -246,8 +242,7 @@ function loadSliders()
     } 
 
     volumeSlider = newSlider(thisX, thisY + 132, width, musicVolume, 0, 1, sliderValueA(v), style)
-    sfxSlider = newSlider(thisX, thisY + 205, width, sfxVolume, 0, 1, sliderValueA(v), style)
-
+    sfxSlider = newSlider(thisX, thisY + 198, width, sfxVolume, 0, 1, sliderValueA(v), style)
 end
 
 function updateSliders()
