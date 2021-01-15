@@ -125,6 +125,10 @@ function love.keypressed(key)
             end
         end
     end
+
+    if key == "p" and love.keyboard.isDown("lgui") then
+        love.event.quit()
+    end
 end
 
 function love.keyreleased(key)

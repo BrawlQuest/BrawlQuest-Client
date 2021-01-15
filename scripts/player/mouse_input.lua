@@ -25,20 +25,24 @@ function love.mousereleased(x, y, button)
 end
 
 function love.wheelmoved( dx, dy )
-    if isMouseOver(0, 0, 313 * scale, (uiY - 97) * scale) then
-        velyInventory = velyInventory + dy * 512
-    elseif isMouseOver(((uiX) - 313) * scale, ((uiY) - ((uiY/1.25) - 15)) * scale, (313) * scale, ((uiY/1.25) - 106 - 14) * scale) then
-        velYQuest = velYQuest + dy * 512
-    elseif showNPCChatBackground then
-        npcChatArg.posY = npcChatArg.posY + (dy * (npcChatArg.font:getHeight() * 0.5))
-    elseif worldEdit.open then
-        if dy > 0 then
-            worldScale = worldScale * 1.5
-        else
-            worldScale = worldScale * 0.5
+    if phase == "game" then
+        if isSettingsWindowOpen then
+            scrollSettings(dx, dy)
+        elseif isMouseOver(0, 0, 313 * scale, (uiY - 97) * scale) then
+            velyInventory = velyInventory + dy * 512
+        elseif isMouseOver(((uiX) - 313) * scale, ((uiY) - ((uiY/1.25) - 15)) * scale, (313) * scale, ((uiY/1.25) - 106 - 14) * scale) then
+            velYQuest = velYQuest + dy * 512
+        elseif showNPCChatBackground then
+            npcChatArg.posY = npcChatArg.posY + (dy * (npcChatArg.font:getHeight() * 0.5))
+        elseif worldEdit.open then
+            if dy > 0 then
+                worldScale = worldScale * 1.5
+            else
+                worldScale = worldScale * 0.5
+            end
+            worldEdit.previousScrollPosition = dy
+        else 
+            if isTypingInChat then velyChat = velyChat + dy * 512 end
         end
-        worldEdit.previousScrollPosition = dy
-    else 
-        if isTypingInChat then velyChat = velyChat + dy * 512 end
     end
 end

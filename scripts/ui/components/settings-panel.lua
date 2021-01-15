@@ -63,6 +63,11 @@ function initSettingsPanel()
         fontHeight = 0,
     }
 
+    settSrl = {
+        {posy = 0, vely = 0, max = -1000, prevmax = -0,},
+        {posy = 0, vely = 0, max = -1000, prevmax = -0, prevposy = 0,},
+    }
+
     settPan.fontHeight = (32 * 0.5) - (settPan.itemFont:getHeight() * 0.45)
 
     questPopUpWidth = 335
@@ -74,6 +79,21 @@ function updateSettingsPanel(dt)
     if settPan.opacity > 1 then settPan.opacity = 1 end
     settPan.movement.x = (settPan.movement.x) - settPan.movement.speed.x * dt
     settPan.movement.y = (settPan.movement.y)- settPan.movement.speed.y * dt
+
+    for i,v in ipairs(settSrl) do --scrolls the settings panels
+        v.vely = v.vely - v.vely * math.min( dt * 15, 1 )
+        v.posy = v.posy + v.vely * dt
+        if v.posy > 0 then
+            v.posy = 0
+        elseif v.posy < v.max then
+            v.posy = v.max
+        end
+    end
+
+    if settSrl[2].posy > settSrl[2].prevposy + 1 or settSrl[2].posy < settSrl[2].prevposy - 1 then
+        loadSliders()
+        settSrl[2].prevposy = settSrl[2].posy
+    end
 end
 
 function drawLargeSettingsPanel()
@@ -100,19 +120,17 @@ function drawLargeSettingsPanel()
     roundRectangle("fill", thisX, thisY, settPan.width, settPan.height, 10) -- draws the background
     love.graphics.setColor(1,1,1, settPan.opacityCERP * 1)
     roundRectangle("fill", x - 1, y - (settPan.height * 0.5) + settPan.padding, 2, settPan.height - (settPan.padding * 2), 2) -- divider
-    love.graphics.print("SETTINGS", thisX + settPan.padding, thisY + settPan.padding, 0, 2) -- title
+    love.graphics.print("SETTINGS", thisX + settPan.padding, thisY + settPan.padding + 2, 0, 2) -- title
     love.graphics.print("CONTROLS", thisX + settPan.padding, thisY + settPan.titleOffset - 10) -- Subheader
-
-    volumeSlider:draw() -- sliders
-    sfxSlider:draw()
 
     settings[1].selKeybindCount = 0
 
-    love.graphics.stencil(drawSettingsStencil, "replace", 1) -- stencils inventory
+    love.graphics.stencil(drawSettingsStencilLeft, "replace", 1) -- stencils Left Side
     love.graphics.setStencilTest("greater", 0) -- push
 
-        local thisX, thisY = x - (settPan.width * 0.5) + settPan.padding, y - (settPan.height * 0.5) + settPan.padding + settPan.titleOffset
+        local thisX, thisY = x - (settPan.width * 0.5) + settPan.padding, y - (settPan.height * 0.5) + settPan.padding + settPan.titleOffset + settSrl[1].posy
         local width, height = (settPan.width * 0.5) - (settPan.padding * 2), 32
+        local max = 0
 
         for i,v in ipairs(controls.keybinds.v) do
             if isMouseOver(thisX, thisY, width, height) then
@@ -130,36 +148,57 @@ function drawLargeSettingsPanel()
             love.graphics.printf("\"" .. v.v .. "\"", nextX, nextY + settPan.fontHeight, settPan.objectValueWidth, "center") -- prints the value of things
 
             thisY = thisY + height + settPan.objectPadding
+            max = max + height + settPan.objectPadding
+        end
+
+        if settSrl[1].max ~= settSrl[1].prevmax then
+            settSrl[1].max = (max - ((settPan.height) - (settPan.padding * 2) - settPan.titleOffset)) * -1
+            settSrl[1].prevmax = settSrl[1].max
         end
 
     love.graphics.setStencilTest() -- pop
 
-    -- Right Side Buttons
-    local thisX, thisY = x + settPan.padding, y - (settPan.height * 0.5) + settPan.padding
-    local width, height = (settPan.width * 0.5) - (settPan.padding * 2), 32
+    love.graphics.stencil(drawSettingsStencilRight, "replace", 1) -- stencils Right Side
+    love.graphics.setStencilTest("greater", 0) -- push
 
-    for ai,av in ipairs(settings) do
-        love.graphics.setColor(1,1,1,settPan.opacityCERP)
-        love.graphics.print(av.title, thisX, thisY + 5) -- Subheader
-        thisY = thisY + settPan.headerSpacing
-        for bi,bv in ipairs(settings[ai]) do
-            if bv.type == "button" then
-                drawSettingsButton("description button", thisX, thisY, width, height, false, bv)
-                thisY = thisY + settPan.buttonSpacing
-            elseif bv.type == "fader" then
-                love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)   
-                roundRectangle("fill", thisX, thisY, width, 67, 6)
-                thisY = thisY + 67 + 6
+        -- Right Side Buttons
+        local thisX, thisY = x + settPan.padding, y - (settPan.height * 0.5) + settPan.padding + settSrl[2].posy
+        local width, height = (settPan.width * 0.5) - (settPan.padding * 2), 32
+        local max = 0
+
+        for ai,av in ipairs(settings) do
+            love.graphics.setColor(1,1,1,settPan.opacityCERP)
+            love.graphics.print(av.title, thisX, thisY + 5) -- Subheader
+            thisY = thisY + settPan.headerSpacing
+            max = max + settPan.headerSpacing
+            for bi,bv in ipairs(settings[ai]) do
+                if bv.type == "button" then
+                    drawSettingsButton("description button", thisX, thisY, width, height, false, bv)
+                    thisY = thisY + settPan.buttonSpacing
+                    max = max + settPan.buttonSpacing
+                elseif bv.type == "fader" then
+                    love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)   
+                    roundRectangle("fill", thisX, thisY, width, 67, 6)
+                    thisY = thisY + 67 + 6
+                    max = max + 67 + 6
+                end
             end
-            
+        end 
+
+        if settSrl[2].max ~= settSrl[2].prevmax then
+            settSrl[2].max = (max - ((settPan.height) - (settPan.padding * 2) - 40 - settPan.objectPadding)) * -1
+            settSrl[2].prevmax = settSrl[2].max
         end
-    end
+
+        volumeSlider:draw() -- sliders
+        sfxSlider:draw()
+
+    love.graphics.setStencilTest() -- pop
 
     local width, height = (settPan.width * 0.5) - (settPan.padding * 2), 40
     local thisX, thisY = x + settPan.padding, y + (settPan.height * 0.5) - settPan.padding - height
 
     drawSettingsButton("button big", thisX, thisY, width, height, bool, table)
-
 end
 
 function drawSettingsButton(type, thisX, thisY, width, height, bool, table)
@@ -181,29 +220,62 @@ function drawSettingsButton(type, thisX, thisY, width, height, bool, table)
     end
 end
 
-function drawSettingsStencil()
+function drawSettingsStencilLeft()
     local x,y = love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5
     local thisX, thisY = x - (settPan.width * 0.5) + settPan.padding, y - (settPan.height * 0.5)  + settPan.padding + settPan.titleOffset
     roundRectangle("fill", thisX, thisY, (settPan.width * 0.5) - (settPan.padding * 2), (settPan.height) - (settPan.padding * 2) - settPan.titleOffset, 6)
 end
 
+function drawSettingsStencilRight()
+    local x,y = love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5
+    local thisX, thisY = x + settPan.padding, y - (settPan.height * 0.5) + settPan.padding
+    roundRectangle("fill", thisX, thisY, (settPan.width * 0.5) - (settPan.padding * 2), (settPan.height) - (settPan.padding * 2) - 40 - settPan.objectPadding, 6)
+end
+
 function loadSliders()
-    local thisX, thisY = love.graphics.getWidth()/2 - (questPopUpWidth/2) + (settPan.width * 0.5), (love.graphics.getHeight()/2)-(questPopUpHeight/2)+150
+    local x,y = (love.graphics.getWidth() * 0.5), (love.graphics.getHeight() * 0.5)
+    local thisX = x - (settPan.width * 0.25) + (settPan.width * 0.5)
+    local thisY = y - (settPan.height * 0.5) + settPan.padding + settSrl[2].posy + 50
     local spacing = 75
-    local width = questPopUpWidth - 68
+    local width = (settPan.width * 0.5) - 8 - 68
+    
     local style = {
         track = "line",
         knob = "rectangle",
-        width = 20,
+        width = 18,
     } 
-    volumeSlider = newSlider(thisX, thisY + (spacing*0), width, musicVolume, 0, 1, sliderValueA(v), style)
-    sfxSlider = newSlider(thisX, thisY + (spacing*1), width, sfxVolume, 0, 1, sliderValueA(v), style)
+
+    volumeSlider = newSlider(thisX, thisY + 132, width, musicVolume, 0, 1, sliderValueA(v), style)
+    sfxSlider = newSlider(thisX, thisY + 205, width, sfxVolume, 0, 1, sliderValueA(v), style)
+
 end
 
 function updateSliders()
     if isSettingsWindowOpen then
         volumeSlider:update()
         sfxSlider:update()
+    end
+end
+
+function scrollSettings(dx, dy)
+    local x,y = (love.graphics.getWidth() * 0.5), (love.graphics.getHeight() * 0.5)
+    if isMouseOver(
+        x - (settPan.width * 0.5) + settPan.padding, 
+        y - (settPan.height * 0.5)  + settPan.padding + settPan.titleOffset, 
+        (settPan.width * 0.5) - (settPan.padding * 2), 
+        (settPan.height) - (settPan.padding * 2) - settPan.titleOffset) then
+
+            settSrl[1].vely =  settSrl[1].vely + dy * 512
+            print("Position: " .. settSrl[1].posy .. ", Maximum: " .. settSrl[1].max)
+
+    elseif isMouseOver(
+        x + settPan.padding, 
+        y - (settPan.height * 0.5) + settPan.padding, 
+        (settPan.width * 0.5) - (settPan.padding * 2), 
+        (settPan.height) - (settPan.padding * 2) - 40 - settPan.objectPadding) then
+
+            settSrl[2].vely =  settSrl[2].vely + dy * 512
+            print("Position: " .. settSrl[2].posy .. ", Maximum: " .. settSrl[2].max)
     end
 end
 
