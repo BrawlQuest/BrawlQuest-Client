@@ -83,19 +83,19 @@ function updateSettingsPanel(dt)
 end
 
 function drawSettingsPanel()
-    local noiseFactor = 0.3 -- 0.18
-    local gridSize = 16
-    local x, y = 0, 0
-    while x < love.graphics.getWidth() do  -- draws the clouds
-        while y < love.graphics.getHeight() do
-            local noise = ((love.math.noise(((x + player.dx) * 0.008) + settPan.movement.x , ((y + player.dy) * 0.008) + settPan.movement.y )) * noiseFactor)
-            love.graphics.setColor(0.2,0.2,0.3, settPan.opacityCERP * noise)
-            love.graphics.rectangle("fill", x, y, gridSize, gridSize)
-            y = y + gridSize
-        end
-        x = x + gridSize
-        y = 0
-    end
+    -- local noiseFactor = 0.3 -- 0.18
+    -- local gridSize = 16
+    -- local x, y = 0, 0
+    -- while x < love.graphics.getWidth() do  -- draws the clouds
+    --     while y < love.graphics.getHeight() do
+    --         local noise = ((love.math.noise(((x + player.dx) * 0.008) + settPan.movement.x , ((y + player.dy) * 0.008) + settPan.movement.y )) * noiseFactor)
+    --         love.graphics.setColor(0.2,0.2,0.3, settPan.opacityCERP * noise)
+    --         love.graphics.rectangle("fill", x, y, gridSize, gridSize)
+    --         y = y + gridSize
+    --     end
+    --     x = x + gridSize
+    --     y = 0
+    -- end
 
     local x,y = love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5
     local thisX, thisY = x - (settPan.width * 0.5), y - (settPan.height * 0.5)
@@ -298,6 +298,7 @@ function checkSettingsMousePressed(button)
                     openUiOnHover = settings[3][2].v -- sets the values
                     showChat = settings[3][3].v
                     chatRepeat = settings[3][4].v
+                    showClouds = settings[1][3].v
                 end
             end
         end

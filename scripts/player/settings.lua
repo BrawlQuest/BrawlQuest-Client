@@ -32,6 +32,7 @@ function initSettings()
     window = {x = (displayWidth * 0.5) - (screenDimentions.width * 0.5), y = (displayHeight * 0.5) - (screenDimentions.height * 0.5)}
     showChat = true
     openUiOnHover = true
+    showClouds = true
     
     info = love.filesystem.getInfo("settings.txt")
     getSettingsVersion()
@@ -50,6 +51,7 @@ function initSettings()
         chatRepeat = contents["chatRepeat"]
         settPan.scaleValue = contents["scaleValue"]
         showChat = contents["showChat"]
+        showClouds = contents["showClouds"]
         openUiOnHover = contents["openUiOnHover"]
         api.url = servers[selectedServer].url
     else
@@ -63,6 +65,7 @@ function initSettings()
             title = "Graphics",
             {name = "Render Quality", v = highdpi, type = "button", "Full", "Fast",},
             {name = "Fullscreen", v = fullscreen, type = "button", "On", "Off",},
+            {name = "Clouds", v = fullscreen, type = "button", "On", "Off",},
         },
         {
             title = "Sound",
@@ -114,6 +117,7 @@ function writeSettings()
         screenDimentions = screenDimentions,
         display = display,
         showChat = showChat,
+        showClouds = showClouds,
         openUiOnHover = openUiOnHover,
     }))
 end
