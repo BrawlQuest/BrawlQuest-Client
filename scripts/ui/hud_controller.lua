@@ -10,6 +10,8 @@ UITextFields = {
 function initHUD()
     --scaling
     scale = 1
+    velyWorldScale = 0
+    posYWorldScale = 1
 
     -- fonts
     textFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 24)
@@ -112,6 +114,18 @@ end
 function updateHUD( dt )
     velyInventory = velyInventory - velyInventory * math.min( dt * 15, 1 )
     velyChat = velyChat - velyChat * math.min( dt * 15, 1 )
+
+    velyWorldScale = velyWorldScale - velyWorldScale * math.min( dt * 15, 1 )
+    posYWorldScale = posYWorldScale + velyWorldScale * dt
+    
+    if not worldEdit.open then
+        if posYWorldScale > 4 then posYWorldScale = 4 end
+        if posYWorldScale < 2 then posYWorldScale = 2 end
+    else
+        if posYWorldScale > 4 then posYWorldScale = 4 end
+        if posYWorldScale <= 0 then posYWorldScale = 0.001 end
+    end
+    worldScale = posYWorldScale
 
     if (getFullChatHeight() + cerp(10, 115, questHub.amount)) * scale > uiY then -- take into account spacing from the bottom
         posYChat = posYChat + velyChat * dt

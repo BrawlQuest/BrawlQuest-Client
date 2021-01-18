@@ -17,7 +17,7 @@ function updateClouds(dt)
 
     cloud.opacity = (1 / worldScale) + settPan.opacityCERP
     if cloud.opacity > 1 then cloud.opacity = 1 end
-    print(cloud.opacity)
+    -- print(cloud.opacity)
 end
 
 function drawClouds()

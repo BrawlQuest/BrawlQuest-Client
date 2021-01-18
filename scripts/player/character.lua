@@ -32,6 +32,8 @@ player = {
     cp = 0,
     distance = 0,
     direction = {x = 0, y = 0},
+    wobble = 0, 
+    wobbleValue = 0,
 }
 
 newInventoryItems = {}
@@ -51,7 +53,7 @@ function drawItemIfExists(path, x, y, previousDirection)
             itemImg[path] = love.graphics.newImage("assets/error.png")
         end
     end
-    love.graphics.draw(itemImg[path], x + offsetX, y, 0, rotation, 1, 0, 0)
+    love.graphics.draw(itemImg[path], x + offsetX, y, player.wobble, rotation, 1, 0, 0)
 end
 
 function updateCharacter(dt)
@@ -104,6 +106,9 @@ function updateCharacter(dt)
             player.isMounting = false
         end
     end
+    -- player.wobbleValue = player.wobbleValue + 0.5 * dt
+    -- if player.wobbleValue > 2 then player.wobbleValue = 0 end
+    -- player.wobble = cerp(-0.05, 0.05, player.wobbleValue)
 end
 
 function movePlayer(dt)

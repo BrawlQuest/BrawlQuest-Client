@@ -27,10 +27,10 @@ function drawCharacter(v, x, y, ad)
                 mountOffsetX = getImgIfNotExist("assets/player/mounts/"..v.Mount.."/back.png"):getWidth()-8
             end
             love.graphics.draw(itemImg[v.Weapon.ImgPath], x + (itemImg[v.Weapon.ImgPath]:getWidth() - 32) + 32,
-                y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, rotation, 1, 0, 0)
+                y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), player.wobble, rotation, 1, 0, 0)
         elseif ad and ad.previousDirection and ad.previousDirection == "right" then
             love.graphics.draw(itemImg[v.Weapon.ImgPath], x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32),
-                y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, rotation, 1, 0, 0)
+                y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), player.wobble, rotation, 1, 0, 0)
         end
 
         -- if v.isMounted then
@@ -41,7 +41,7 @@ function drawCharacter(v, x, y, ad)
         end
 
         drawBuddy(v.Name)
-        love.graphics.draw(playerImg, x + offsetX, y, 0, rotation, 1, 0, 0)
+        love.graphics.draw(playerImg, x + offsetX, y, player.wobble, rotation, 1, 0, 0)
 
         if v.HeadArmourID ~= 0 then
             drawItemIfExists(v.HeadArmour.ImgPath, x, y, ad.previousDirection)

@@ -6,9 +6,6 @@ function initToolBarInventory()
     toolbarY = 0
     toolbarItems = {}
     toolbarTitles = {1,2,3,4,5,6,7,8,9,0}
-
-    
-
     toolbarBg = love.graphics.newImage("assets/ui/hud/toolbar/toolbar-backing.png")
     toolbarItem = love.graphics.newImage("assets/ui/hud/toolbar/toolbarItem.png")
     top_left = love.graphics.newQuad(0, 0, 34, 34, a0sword:getDimensions())
@@ -127,17 +124,6 @@ function updateToolBarInventory(dt)
             inventory.open = true
             inventory.amount = inventory.amount + 4 * dt
             if inventory.amount > 1 then inventory.amount = 1 end
-
-            if getFullUserInventoryFieldHeight() * scale > (uiY - 97 - 50 - 50) * scale then
-                posYInventory = posYInventory + velyInventory * dt
-                if posYInventory > 0 then
-                    posYInventory = 0
-                elseif posYInventory < 0 - getFullUserInventoryFieldHeight() + (uiY - 97 - 50 - 50) then
-                    posYInventory = 0 - getFullUserInventoryFieldHeight() + (uiY - 97 - 50 - 50)
-                end
-            else
-                posYInventory = 0
-            end
         else
             inventory.open = false
             inventory.amount = inventory.amount - 4 * dt
@@ -145,6 +131,17 @@ function updateToolBarInventory(dt)
                 inventory.amount = 0
             end
         end
+    end
+
+    if getFullUserInventoryFieldHeight() * scale > (uiY - 97 - 50 - 50) * scale then
+        posYInventory = posYInventory + velyInventory * dt
+        if posYInventory > 0 then
+            posYInventory = 0
+        elseif posYInventory < 0 - getFullUserInventoryFieldHeight() + (uiY - 97 - 50 - 50) then
+            posYInventory = 0 - getFullUserInventoryFieldHeight() + (uiY - 97 - 50 - 50)
+        end
+    else
+        posYInventory = 0
     end
 
     inventory.opacity = cerp(0, 1, inventory.amount)
@@ -197,9 +194,13 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
         if isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale) and item then
             setItemTooltip(item)
             selectedItem = item
+            love.graphics.setColor(1,0,0,1)
+
         end
-      
-        love.graphics.draw(inventory.images.itemBG, thisX, thisY)
+        
+        drawItemBacking(thisX, thisY)
+        love.graphics.setColor(1,1,1,1)
+            -- love.graphics.draw(inventory.images.itemBG, thisX, thisY)
 
         if item and itemImg[item.ImgPath] then
             if string.sub(item.Type, 1, 4) == "arm_" then
@@ -241,27 +242,51 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
     end
 end
 
+function drawInventoryItemBackings(thisX, thisY, field)
+    love.graphics.setColor(1,1,1,0.2)    
+    for i,v in ipairs(userInventory) do
+        inventroyItmeBackings(thisX, thisY + (inventory.itemSpacing * 0), #v, 0, 7)
+        inventroyItmeBackings(thisX, thisY + (inventory.itemSpacing * 1), #v, 7, 14)
+        inventroyItmeBackings(thisX, thisY + (inventory.itemSpacing * 2), #v, 14, 21)
+        inventroyItmeBackings(thisX, thisY + (inventory.itemSpacing * 3), #v, 21, 28)
+        inventroyItmeBackings(thisX, thisY + (inventory.itemSpacing * 4), #v, 28, 35)
+        inventroyItmeBackings(thisX, thisY + (inventory.itemSpacing * 5), #v, 35, 42)
+    end
+    love.graphics.setColor(1,1,1,1)    
+end
+
+function inventroyItmeBackings(thisX, thisY, value, min, max)
+    if value > min and value <= max then
+        for i = 1, 7 do 
+            -- love.graphics.draw(inventory.images.itemBG, thisX + (43 * (i - 1)), thisY)
+            drawItemBacking(thisX + (43 * (i - 1)), thisY)
+        end
+    end
+end
+
+function drawItemBacking(thisX, thisY)
+    roundRectangle("fill", thisX, thisY, inventory.images.itemBG:getWidth(), inventory.images.itemBG:getHeight(), 2)
+end
+
 function drawInventoryItemField(thisX, thisY, field)
     love.graphics.setFont(inventory.font)
     love.graphics.printf(inventory.fields[field], thisX + 2, thisY + 2, 483)
-
     thisY = thisY + inventory.titleSpacing
+    -- drawInventoryItemBackings(thisX, thisY, field)
 
-    local itemWidth = 7
-    for i = 1, #userInventory[field] do
-      
+    for i,v in ipairs(userInventory[field]) do  
         if i <= 7 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 0), field, userInventory[field][i].Item, userInventory[field][i].Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 0), field, v.Item, v.Inventory.Amount)
         elseif i > 7 and i <= 14 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 1), field, userInventory[field][i].Item, userInventory[field][i].Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 1), field, v.Item, v.Inventory.Amount)
         elseif i > 14 and i <= 21 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 2), field, userInventory[field][i].Item, userInventory[field][i].Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 2), field, v.Item, v.Inventory.Amount)
         elseif i > 21 and i <= 28 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 3), field, userInventory[field][i].Item, userInventory[field][i].Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 3), field, v.Item, v.Inventory.Amount)
         elseif i > 28 and i <= 35 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 4), field, userInventory[field][i].Item, userInventory[field][i].Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 4), field, v.Item, v.Inventory.Amount)
         else
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 5), field, userInventory[field][i].Item, userInventory[field][i].Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 5), field, v.Item, v.Inventory.Amount)
         end
     end
 end

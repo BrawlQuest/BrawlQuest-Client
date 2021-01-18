@@ -35,14 +35,11 @@ function love.wheelmoved( dx, dy )
         elseif showNPCChatBackground then
             npcChatArg.posY = npcChatArg.posY + (dy * (npcChatArg.font:getHeight() * 0.5))
         elseif worldEdit.open then
-            if dy > 0 then
-                worldScale = worldScale * 1.5
-            else
-                worldScale = worldScale * 0.5
-            end
+            velyWorldScale = velyWorldScale + dy * 1
             worldEdit.previousScrollPosition = dy
         else 
             if isTypingInChat then velyChat = velyChat + dy * 512 end
+            velyWorldScale = velyWorldScale + dy * 1
         end
     end
 end
