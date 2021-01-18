@@ -13,6 +13,7 @@ require "scripts.effects.buddies"
 require "scripts.effects.auras"
 require "scripts.effects.leaves"
 require "scripts.effects.camera"
+require "scripts.effects.clouds"
 require "scripts.ui.hud_controller"
 require "scripts.ui.components.character-hub"
 require "scripts.ui.components.crafting"
@@ -97,6 +98,7 @@ function love.load()
     initEditWorld()
     initSFX()
     initCamera()
+    initClouds()
     love.graphics.setFont(textFont)
 end
 
@@ -111,7 +113,7 @@ function love.draw()
             if worldEdit.open and player then
                 drawNewWorldEditTiles()
             end
-
+            drawClouds()
             drawAuras()
             love.graphics.setColor(1, 1, 1)
             drawNPCs()
@@ -199,6 +201,7 @@ function love.update(dt)
         updateMusic(dt)
         updateLoot(dt)
         updateNPCChat(dt)
+        updateClouds(dt)
         updateLeaves(dt)
         Luven.update(dt)
         updateCamera(dt)
