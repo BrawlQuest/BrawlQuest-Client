@@ -52,6 +52,7 @@ function initSettingsPanel()
         {posy = 0, vely = 0, max = -1000, prevmax = -0, prevposy = 0,},
     }
 
+    faderPosition = {168, 234,}
     settPan.fontHeight = (32 * 0.5) - (settPan.itemFont:getHeight() * 0.45)
 
     questPopUpWidth = 335
@@ -78,8 +79,6 @@ function updateSettingsPanel(dt)
         loadSliders()
         settSrl[2].prevposy = settSrl[2].posy
     end
-
-    -- print(settPan.mouseOver)
 end
 
 function drawSettingsPanel()
@@ -164,6 +163,8 @@ function drawSettingsPanel()
                     thisY = thisY + settPan.buttonSpacing
                     max = max + settPan.buttonSpacing
                 elseif bv.type == "fader" then
+                    -- print(max)
+                    faderPosition[bi] = max 
                     love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)   
                     roundRectangle("fill", thisX, thisY, width, 60, 6)
                     love.graphics.setColor(1,1,1, settPan.opacityCERP)
@@ -227,8 +228,8 @@ function loadSliders()
     local thisY = y - (settPan.height * 0.5) + settPan.padding + settSrl[2].posy + 49 - 7
     local width = (settPan.width * 0.5) - 10 - 68
     local style = {track = "line", knob = "rectangle", width = 18,} 
-    volumeSlider = newSlider(thisX, thisY + 132, width, musicVolume, 0, 1, sliderValueA(v), style)
-    sfxSlider = newSlider(thisX, thisY + 198, width, sfxVolume, 0, 1, sliderValueA(v), style)
+    volumeSlider = newSlider(thisX, thisY + faderPosition[1], width, musicVolume, 0, 1, sliderValueA(v), style)
+    sfxSlider = newSlider(thisX, thisY + faderPosition[2], width, sfxVolume, 0, 1, sliderValueA(v), style)
 end
 
 function updateSliders()

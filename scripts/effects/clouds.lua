@@ -1,6 +1,7 @@
 function initClouds()
     cloud = {
-        movement = {x = 0,  y = 0, z = 0, speed = {x = 1, y = 1},},
+        movement = {x = 0,  y = 0, z = 0, speed = {x = 0.3, y = 0.2},},
+        opacity = 1,
         fade = 0,
     }
 end
@@ -13,17 +14,20 @@ function updateClouds(dt)
     cloud.fade = cloud.fade + 0.05 * dt
     if cloud.fade > 2 then cloud.fade = 0 end
     cloud.movement.z = cerp(0.2, 0.9, cloud.fade)
+
+    cloud.opacity = (1 / worldScale) + settPan.opacityCERP
+    if cloud.opacity > 1 then cloud.opacity = 1 end
+    print(cloud.opacity)
 end
 
 function drawClouds()
     local thisWorldScale = worldScale - ((worldScale * settPan.opacityCERP) * 0.2)
-    local noiseFactor = 0.3
+    local noiseFactor = 0.6 * (cloud.opacity + 0.1)
     local gridSize = 32 / worldScale
     local gridScale = 32 / gridSize
     local cloudScale = 1 / thisWorldScale
     local width  = math.floor(((love.graphics.getWidth()  * cloudScale)/2) / gridSize) + 2 + (worldScale)
     local height = math.floor(((love.graphics.getHeight() * cloudScale)/2) / gridSize) + 2 + (worldScale)
-    -- width, height = math.clamp(0, width, worldEdit.worldSize / 3), math.clamp(0, height, worldEdit.worldSize / 3)
     local movement = {x = cloud.movement.x * gridScale, y = cloud.movement.y * gridScale}
 
     for x = (player.x * gridScale) - width, (player.x * gridScale) + width do

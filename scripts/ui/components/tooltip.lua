@@ -65,22 +65,19 @@ function drawTooltip(thisX, thisY)
     end
     love.graphics.rectangle("fill", tooltip.x - tooltip.padding,tooltip.y - tooltip.padding, 150 + (tooltip.padding*2), getToolTipTitleHeight(tooltip.title) + getToolTipDescHeight(tooltip.desc) + (tooltip.padding*2) + tooltip.spacing)
     love.graphics.setColor(1,1,1,tooltip.alpha)
-    love.graphics.setFont(inventorySubHeaderFont)
-    
-    love.graphics.printf(tooltip.title,tooltip.x,tooltip.y,150,"left")
-    love.graphics.setFont(smallTextFont)
-    love.graphics.printf(tooltip.desc,tooltip.x,tooltip.y+getToolTipTitleHeight(tooltip.title)+tooltip.spacing,150,"left")
+    love.graphics.printf(tooltip.title, npcChatFont, tooltip.x,tooltip.y,150,"left")
+    love.graphics.printf(tooltip.desc, playerNameFont, tooltip.x,tooltip.y+getToolTipTitleHeight(tooltip.title)+tooltip.spacing,150,"left")
     love.graphics.setColor(1,1,1,1)
 end
 
 function getToolTipTitleHeight(title)
-    local width, lines = inventorySubHeaderFont:getWrap( title, 150 )
-    return ((#lines)*(inventorySubHeaderFont:getHeight()))
+    local width, lines = npcChatFont:getWrap( title, 150 )
+    return ((#lines)*(npcChatFont:getHeight()))
 end
 
 function getToolTipDescHeight(title)
-    local width, lines = smallTextFont:getWrap( title, 150 )
-    return ((#lines)*(smallTextFont:getHeight()))
+    local width, lines = playerNameFont:getWrap( title, 150 )
+    return ((#lines)*(playerNameFont:getHeight()))
 end
 
 function updateTooltip(dt)
