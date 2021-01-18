@@ -117,7 +117,7 @@ function updateHUD( dt )
 
     velyWorldScale = velyWorldScale - velyWorldScale * math.min( dt * 15, 1 )
     posYWorldScale = posYWorldScale + velyWorldScale * dt
-    
+
     if not worldEdit.open then
         if posYWorldScale > 4 then posYWorldScale = 4 end
         if posYWorldScale < 2 then posYWorldScale = 2 end

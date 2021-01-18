@@ -185,7 +185,9 @@ end
 function drawInventoryItem(thisX, thisY, field, item, amount, number)
     love.graphics.setFont(inventory.itemFont)
     if number then
-        love.graphics.draw(inventory.images.itemBG, thisX, thisY)
+        love.graphics.setColor(0,0,0,1)
+        drawItemBacking(thisX, thisY)
+        love.graphics.setColor(1,1,1,1)
         if item then love.graphics.draw(item, top_left, thisX + 2, thisY + 2) end
 
         love.graphics.draw(inventory.images.numbers[number], thisX - 3, thisY + 26)

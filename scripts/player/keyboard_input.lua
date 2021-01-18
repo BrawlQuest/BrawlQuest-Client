@@ -100,27 +100,27 @@ function love.keypressed(key)
         end
         
         if not isTypingInChat and not worldEdit.isTyping then
-            if key == "l" then
-                worldScale = worldScale * 0.5
-                print(worldScale)
-                writeSettings()
-            end
+            -- if key == "l" then
+            --     worldScale = worldScale * 0.5
+            --     print(worldScale)
+            --     writeSettings()
+            -- end
             
-            if key == ";" then
-                worldScale = worldScale * 2
-                print(worldScale)
-                writeSettings()
-            end
+            -- if key == ";" then
+            --     worldScale = worldScale * 2
+            --     print(worldScale)
+            --     writeSettings()
+            -- end
 
-            if key == "." then
-                scaleHUD("up")
-                writeSettings()
-            end
+            -- if key == "." then
+            --     scaleHUD("up")
+            --     writeSettings()
+            -- end
 
-            if key == "," then
-                scaleHUD("down")
-                writeSettings()
-            end
+            -- if key == "," then
+            --     scaleHUD("down")
+            --     writeSettings()
+            -- end
         end
     end
 

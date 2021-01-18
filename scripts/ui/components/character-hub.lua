@@ -25,9 +25,9 @@ function initCharacterHub()
 
     showStatsPanel = false
     characterHub = {
-        backgroundColor = {0,0,0,0.6},
+        backgroundColor = {0,0,0,0.7},
         barColors = {{1,0,0,1}, {0,0.5,1,1}, {1,0.5,0,1}, },
-        font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 9),
+        font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
         nameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
         open = false,
         forceOpen = false,
@@ -82,7 +82,7 @@ function drawCharacterHubProfile(thisX, thisY)
     
     love.graphics.draw(hubImages.profileFG, thisX, thisY)
     love.graphics.setColor(0,0,0,1)
-    love.graphics.print(me.LVL, thisX + 56 - (characterHub.font:getWidth(me.LVL)/2), thisY + 85 - (characterHub.font:getHeight(me.LVL)/2))
+    love.graphics.print(me.LVL, thisX + 56 - math.floor(characterHub.font:getWidth(me.LVL)/2), thisY + 85 - (characterHub.font:getHeight(me.LVL)/2))
 end
 
 function drawCharacterHubStats(thisX, thisY)
