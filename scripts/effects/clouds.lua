@@ -1,8 +1,10 @@
 function initClouds()
+    local Now = os.date('*t')
     cloud = {
-        movement = {x = 0,  y = 0, z = 0, speed = {x = 0.3, y = 0.2},},
+        movement = {x = (Now.hour * 60) + Now.min,  y = 0, z = 0, speed = {x = 0.3, y = 0.2},},
         opacity = 1,
         fade = 0,
+        offset = 0,
     }
 end
 
