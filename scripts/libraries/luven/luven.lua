@@ -92,7 +92,7 @@ luven.camera.rotation = 0
 luven.camera.transform = nil
 
 luven.camera.shakeDuration = 0
-luven.camera.shakeMagnitude = 0
+luven.camera.shakeMagnitude = 1
 
 luven.camera.fading = false
 luven.camera.fadeDuration = 0

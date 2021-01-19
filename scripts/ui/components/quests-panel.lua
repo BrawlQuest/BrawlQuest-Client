@@ -4,10 +4,10 @@ function initQuestsPanel()
         forceOpen = false,
         amount = 0,
         opacity = 0,
-        questGiver = "Mortus the Wise",
+        questGiver = "MORTUS THE WISE",
         titleFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 10),
         commentFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
-        titles = {"Tracking", "Backlog", "Completed",},
+        titles = {"TRACKING", "BACKLOG", "COMPLETED",},
         spacing = 40,
         titleSpacing = 16,
         fieldSpacing = 10,
@@ -31,7 +31,7 @@ function drawQuestsPanel(thisX, thisY)
     questsPanel.hover = false
     love.graphics.setColor(1,1,1,questsPanel.opacity)
     love.graphics.setFont(inventory.headerFont)
-    love.graphics.print("Quests", thisX + 20, thisY)
+    love.graphics.print("QUESTS", thisX + 20, thisY)
     
     love.graphics.stencil(drawQuestsPanelStencil, "replace", 1) -- stencils inventory
     love.graphics.setStencilTest("greater", 0) -- push
