@@ -65,7 +65,7 @@ function initSettings()
             title = "Graphics",
             {name = "Render Quality", v = highdpi, type = "button", "Full", "Fast",},
             {name = "Fullscreen", v = fullscreen, type = "button", "On", "Off",},
-            {name = "Clouds", v = fullscreen, type = "button", "On", "Off",},
+            {name = "Clouds", v = showClouds, type = "button", "On", "Off",},
         },
         {
             title = "Sound",
@@ -75,8 +75,8 @@ function initSettings()
         {
             title = "HUD",
             {name = "GUI Scale", v = settPan.scaleTypes[settPan.scaleValue], type = "button",},
-            {name = "Open on Mouse Over", v = true, type = "button",},
-            {name = "Show Chat", v = true, type = "button",},
+            {name = "Open on Mouse Over", v = openUiOnHover, type = "button",},
+            {name = "Show Chat", v = showChat, type = "button",},
             {name = "Chat Remain On Enter", v = chatRepeat, type = "button",},
         },
     }
