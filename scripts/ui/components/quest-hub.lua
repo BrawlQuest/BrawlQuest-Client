@@ -1,30 +1,30 @@
-questHub = {
-    open = true,
-    commentOpen = false,
-    amount = 0,
-    commentAmount = 0,
-    opacity = 0,
-    commentOpacity = 0,
-    selectedQuest = 1,
-    hover = false,
-    hoveredQuest = 1,
-    font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
-    titleFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 14),
-    nameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
-    images = {
-        npcTalkBG = love.graphics.newImage("assets/ui/hud/quest-hub/npcTalkBG.png"),
-        barCapLeft = love.graphics.newImage("assets/ui/hud/quest-hub/barCapLeft.png"),
-        barCapRight = love.graphics.newImage("assets/ui/hud/quest-hub/barCapRight.png"),
-        barComplete = love.graphics.newImage("assets/ui/hud/quest-hub/1.png"),
-        barUnComplete = love.graphics.newImage("assets/ui/hud/quest-hub/0.png"),
-        arrow = love.graphics.newImage("assets/ui/hud/quest-hub/arrow.png")
-    },
-}
-
 function initQuestHub()
+    
+    questHub = {
+        open = true,
+        commentOpen = false,  
+        amount = 0,
+        commentAmount = 0,
+        opacity = 0,
+        commentOpacity = 0,
+        selectedQuest = 1,
+        hover = false,
+        hoveredQuest = 1,
+        font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
+        titleFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
+        nameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
+        images = {
+            npcTalkBG = love.graphics.newImage("assets/ui/hud/quest-hub/npcTalkBG.png"),
+            barCapLeft = love.graphics.newImage("assets/ui/hud/quest-hub/barCapLeft.png"),
+            barCapRight = love.graphics.newImage("assets/ui/hud/quest-hub/barCapRight.png"),
+            barComplete = love.graphics.newImage("assets/ui/hud/quest-hub/1.png"),
+            barUnComplete = love.graphics.newImage("assets/ui/hud/quest-hub/0.png"),
+            arrow = love.graphics.newImage("assets/ui/hud/quest-hub/arrow.png")
+        },
+    }
+
     initQuestsPanel()
     
-
     quests = {
         -- {Tracking = {}, Backlog = {}, Completed = {},}
         {

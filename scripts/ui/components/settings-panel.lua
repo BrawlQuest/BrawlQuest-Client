@@ -44,7 +44,7 @@ function initSettingsPanel()
         mouseOver = 0,
         isMouseOver = false,
         scaleTypes = {1, 2, 3, 4},
-        scaleValue = 2,
+        scaleValue = 1,
     }
 
     settSrl = {
@@ -259,10 +259,8 @@ end
 function scrollSettings(dx, dy)
     if getSettingsMouseOver("left") then
         settSrl[1].vely =  settSrl[1].vely + dy * 512
-        print("Position: " .. settSrl[1].posy .. ", Maximum: " .. settSrl[1].max)
     elseif getSettingsMouseOver("right") then
         settSrl[2].vely =  settSrl[2].vely + dy * 512
-        print("Position: " .. settSrl[2].posy .. ", Maximum: " .. settSrl[2].max)
     end
 end
 

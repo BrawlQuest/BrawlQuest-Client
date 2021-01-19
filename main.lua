@@ -233,9 +233,6 @@ function love.update(dt)
              end
             
            timeOfDay = cerp(0.1, 1, ((math.abs(response['CurrentHour']) * 60) + 0) / 720)
-           local Now = os.date('*t')
-           cloud.offset = ((math.abs(response['CurrentHour']) * 60) + Now.min)
-           print((math.abs(response['CurrentHour']) * 60) + Now.min)
         
           if not worldEdit.open then
              Luven.setAmbientLightColor({timeOfDay, timeOfDay, timeOfDay+0.1})

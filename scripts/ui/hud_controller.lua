@@ -13,9 +13,10 @@ function initHUD()
     velyWorldScale = 0
     posYWorldScale = 1
     worldScales = {8, 4, 3, 2, 1,}
-    selectedWorldScale = 2
-    previousWorldScale = 0
-    worldScaleAmount = 0
+    worldEditScales = {8, 4, 3, 2, 1, 0.5, 0.25, 0.125}
+    selectedWorldScale = 4
+    previousWorldScale = 4
+    worldScaleAmount = 1
     worldScaleSmooting = false
 
     -- fonts
@@ -31,7 +32,7 @@ function initHUD()
     headerBigFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 32) -- TODO: get a license for this font
     font = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 18)
    
-    chatFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 24)
+    chatFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16)
 
     npcChatFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16)
 
@@ -127,10 +128,18 @@ function updateHUD( dt )
             worldScaleSmooting = false
         end
     end
-    if difference(worldScale, worldScales[selectedWorldScale]) > 0 then
-        worldScale = cerp(previousWorldScale, worldScales[selectedWorldScale], worldScaleAmount)
+
+    if worldEdit.open then
+        if difference(worldScale, worldEditScales[selectedWorldScale]) > 0 then
+            worldScale = cerp(previousWorldScale, worldEditScales[selectedWorldScale], worldScaleAmount)
+        end
+    else
+        if selectedWorldScale > #worldScales then selectedWorldScale = #worldScales end
+        if difference(worldScale, worldScales[selectedWorldScale]) > 0 then
+            worldScale = cerp(previousWorldScale, worldScales[selectedWorldScale], worldScaleAmount)
+        end
     end
-    
+
     if (getFullChatHeight() + cerp(10, 115, questHub.amount)) * scale > uiY then -- take into account spacing from the bottom
         posYChat = posYChat + velyChat * dt
         if posYChat < 0 then

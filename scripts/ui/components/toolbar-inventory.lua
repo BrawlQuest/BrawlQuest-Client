@@ -43,11 +43,11 @@ function initToolBarInventory()
         imageNumber = 0,
         items = {},
 
-        fields = {"weapons", "spells", "armour", "reagent", "consumables", "mounts", "buddies", "other",},
+        fields = {"WEAPONS", "SPELLS", "ARMOUR", "REAGENT", "CONSUMABLES", "MOUNTS", "BUDDIES", "OTHER",},
         fieldLength = {0, 0, 0, 0, 0, 0, 0,},
 
-        font = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 12),
-        headerFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 26),
+        font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
+        headerFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 32),
         itemFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
         images = {
             itemBG = love.graphics.newImage("assets/ui/hud/character-inventory/item-bg.png"),
@@ -67,6 +67,11 @@ function initToolBarInventory()
                         love.graphics.newImage("assets/ui/hud/character-inventory/number-backgrounds/04.png")}
         }
     }
+
+    inventory.font:setFilter( "nearest", "nearest" )
+    inventory.headerFont:setFilter( "nearest", "nearest" )
+    inventory.itemFont:setFilter( "nearest", "nearest" )
+
 end
 
 function getInventory()
@@ -163,7 +168,7 @@ function drawToolBarInventory(thisX, thisY)
         thisY = thisY - cerp(0, (uiY - 97), inventory.amount)
 
         love.graphics.setFont(inventory.headerFont)
-        love.graphics.print("Inventory", thisX + 8, thisY + 14)
+        love.graphics.print("INVENTORY", thisX + 8, thisY + 14)
 
         love.graphics.stencil(drawInventoryStencil, "replace", 1) -- stencils inventory
         love.graphics.setStencilTest("greater", 0) -- push
@@ -272,7 +277,7 @@ end
 
 function drawInventoryItemField(thisX, thisY, field)
     love.graphics.setFont(inventory.font)
-    love.graphics.printf(inventory.fields[field], thisX + 2, thisY + 2, 483)
+    love.graphics.printf(inventory.fields[field], thisX + 2, thisY + 4, 483)
     thisY = thisY + inventory.titleSpacing
     -- drawInventoryItemBackings(thisX, thisY, field)
 

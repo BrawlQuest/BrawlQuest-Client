@@ -34,28 +34,24 @@ function love.wheelmoved( dx, dy )
             velYQuest = velYQuest + dy * 512
         elseif showNPCChatBackground then
             npcChatArg.posY = npcChatArg.posY + (dy * (npcChatArg.font:getHeight() * 0.5))
-        -- elseif worldEdit.open then
-        --     if dy > 0 then
-        --         worldScale = worldScale * 1.5
-        --     else
-        --         worldScale = worldScale * 0.5
-        --     end
-            velyWorldScale = velyWorldScale + dy * 1
-            worldEdit.previousScrollPosition = dy
+        elseif worldEdit.open then
+            zoomCamera(dy, worldEditScales)
         else 
             if isTypingInChat then velyChat = velyChat + dy * 512 end
-            -- velyWorldScale = velyWorldScale + dy * 1  -- We need to use integer values, then smooth between the integers.
-
-            if not worldScaleSmooting then worldScaleSmooting = true end
-            previousWorldScale = worldScale
-            worldScaleAmount = 0
-            if dy > 0 then
-                selectedWorldScale = selectedWorldScale - 1
-            else
-                selectedWorldScale = selectedWorldScale + 1
-            end
-            if selectedWorldScale < 1 then selectedWorldScale = 1
-            elseif selectedWorldScale > #worldScales then selectedWorldScale = #worldScales end
+            zoomCamera(dy, worldScales)
         end
     end
+end
+
+function zoomCamera(dy, table)
+    if not worldScaleSmooting then worldScaleSmooting = true end
+    previousWorldScale = worldScale
+    worldScaleAmount = 0
+    if dy > 0 then
+        selectedWorldScale = selectedWorldScale - 1
+    else
+        selectedWorldScale = selectedWorldScale + 1
+    end
+    if selectedWorldScale < 1 then selectedWorldScale = 1
+    elseif selectedWorldScale > #table then selectedWorldScale = #table end
 end

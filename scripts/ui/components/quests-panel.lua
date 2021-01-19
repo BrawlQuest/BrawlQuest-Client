@@ -9,7 +9,7 @@ function initQuestsPanel()
         commentFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
         titles = {"Tracking", "Backlog", "Completed",},
         spacing = 40,
-        titleSpacing = 12,
+        titleSpacing = 16,
         fieldSpacing = 10,
         boxSpacing = 0,
         images = {
@@ -44,7 +44,7 @@ function drawQuestsPanel(thisX, thisY)
                 love.graphics.rectangle("fill", thisX + 19, thisY, questsPanel.boxBgWidth, 2)
                 thisY = thisY + 6
                 love.graphics.setFont(inventory.font)
-                love.graphics.print(questsPanel.titles[i], thisX + 38, thisY)
+                love.graphics.print(questsPanel.titles[i], thisX + 38, thisY + 5)
                 drawQuestsPanelField(thisX, thisY + questsPanel.titleSpacing, i)
                 -- love.graphics.rectangle("fill", thisX + 200, thisY, 40, getQuestsPanelFieldHeight(i))
                 thisY = thisY + getQuestsPanelFieldHeight(i) + questsPanel.fieldSpacing
