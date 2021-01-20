@@ -137,6 +137,7 @@ function drawWorld()
     love.graphics.setColor(1,1,1,1)
     love.graphics.setBlendMode("alpha", "premultiplied")
     love.graphics.draw(worldCanvas, lowestX*32, lowestY*32)
+    if not worldEdit.open then drawWorldMask() end
     love.graphics.setBlendMode("alpha")
     
     love.graphics.setColor(1,1,1)
