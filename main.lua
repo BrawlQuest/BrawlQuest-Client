@@ -210,6 +210,7 @@ function love.update(dt)
         if showClouds then updateClouds(dt) end
         updateLeaves(dt)
         Luven.update(dt)
+        updateWorldMask(dt)
         updateCamera(dt)
         updateOtherPlayers(dt)
 

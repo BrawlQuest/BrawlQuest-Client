@@ -121,12 +121,13 @@ function updateHUD( dt )
     velyInventory = velyInventory - velyInventory * math.min( dt * 15, 1 )
     velyChat = velyChat - velyChat * math.min( dt * 15, 1 )
 
-    if worldScaleSmooting then
+    if worldScaleSmooting then        
         worldScaleAmount = worldScaleAmount + 4 * dt
         if worldScaleAmount > 1 then 
             worldScaleAmount = 1 
             worldScaleSmooting = false
         end
+        updateWorldMask(dt)
     end
 
     if worldEdit.open then
