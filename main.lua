@@ -31,6 +31,7 @@ require "scripts.libraries.api"
 require "scripts.libraries.utils"
 require "scripts.libraries.colorize"
 require "scripts.libraries.simple-slider"
+-- require "scripts.libraries.bresenham"
 require "scripts.phases.login.login"
 require "scripts.player.other_players"
 require "scripts.enemies"
@@ -101,6 +102,7 @@ function love.load()
     initSFX()
     initCamera()
     initClouds()
+    initWorldMask()
     love.graphics.setFont(textFont)
 end
 
@@ -129,6 +131,7 @@ function love.draw()
             drawLeaves()
             drawLoot()
             drawFloats()
+            if not worldEdit.open then drawWorldMask() end
             
             if showClouds then drawClouds() end       
             Luven.drawEnd()
