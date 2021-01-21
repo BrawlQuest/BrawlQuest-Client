@@ -15,13 +15,13 @@ end
 
 function updateWorldMask(dt)
 
-    if worldMask.flipFlop == 2 then
-        worldMask.flipFlopAmount = worldMask.flipFlopAmount + 4 * dt
+    if worldMask.flipFlop == 1 then
+        worldMask.flipFlopAmount = worldMask.flipFlopAmount + 2 * dt
         if worldMask.flipFlopAmount > 1 then worldMask.flipFlopAmount = 1 end
     end
 
-    if worldMask.flipFlop == 1 then 
-        worldMask.flipFlopAmount = worldMask.flipFlopAmount - 4 * dt
+    if worldMask.flipFlop == 2 then 
+        worldMask.flipFlopAmount = worldMask.flipFlopAmount - 2 * dt
         if worldMask.flipFlopAmount < 0 then worldMask.flipFlopAmount = 0 end
     end
 
@@ -106,20 +106,23 @@ function drawWorldMask()
         end
     end
 
+
+    thisFlipFlopAmount = lerp(0,1,worldMask.flipFlopAmount)
+
     for i,v in ipairs(worldMaskTables[1]) do
         if v.visable then 
-            love.graphics.setColor(0,0,0, v.intensity * worldMask.flipFlopAmount)
+            love.graphics.setColor(0,0,0, v.intensity * thisFlipFlopAmount)
         else
-            love.graphics.setColor(0,0,0,0.7 * worldMask.flipFlopAmount)
+            love.graphics.setColor(0,0,0,0.7 * thisFlipFlopAmount)
         end
         love.graphics.rectangle("fill", math.round(v.x) * gridSize, math.round(v.y) * gridSize, gridSize, gridSize)
     end
 
     for i,v in ipairs(worldMaskTables[2]) do
         if v.visable then 
-            love.graphics.setColor(0,0,0, v.intensity * ((-1 * worldMask.flipFlopAmount) + 1))
+            love.graphics.setColor(0,0,0, v.intensity * ((-1 * thisFlipFlopAmount) + 1))
         else
-            love.graphics.setColor(0,0,0,0.7 * ((-1 * worldMask.flipFlopAmount) + 1))
+            love.graphics.setColor(0,0,0,0.7 * ((-1 * thisFlipFlopAmount) + 1))
         end
         love.graphics.rectangle("fill", math.round(v.x) * gridSize, math.round(v.y) * gridSize, gridSize, gridSize)
     end
