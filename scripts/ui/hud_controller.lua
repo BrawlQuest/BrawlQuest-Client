@@ -127,7 +127,6 @@ function updateHUD( dt )
             worldScaleAmount = 1 
             worldScaleSmooting = false
         end
-        updateWorldMask(dt)
     end
 
     if worldEdit.open then
