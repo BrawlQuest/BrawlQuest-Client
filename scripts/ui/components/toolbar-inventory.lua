@@ -26,6 +26,10 @@ function initToolBarInventory()
     userInventory[8] = {}
     inventoryFieldLength = {0, 0, 0, 0, 0, 0, 0, 0,}
 
+    hotbar = {}
+    for i = 1, 7 do
+        hotbar[#hotbar + 1] = {item = null,}
+    end
 
     userInventoryFieldHeight = {}
 
@@ -42,6 +46,7 @@ function initToolBarInventory()
         itemSpacing = 42,
         imageNumber = 0,
         items = {},
+        mouseOverButtonsAmount = 0,
 
         fields = {"WEAPONS", "SPELLS", "ARMOUR", "REAGENT", "CONSUMABLES", "MOUNTS", "BUDDIES", "OTHER",},
         fieldLength = {0, 0, 0, 0, 0, 0, 0,},
@@ -158,8 +163,9 @@ function drawToolBarInventory(thisX, thisY)
     love.graphics.rectangle("fill", thisX, thisY - 97, 313, 0 - cerp(23, 23 + (uiY - 97 - 23), inventory.amount))
     thisX, thisY = thisX, thisY - 97
     love.graphics.setColor(1, 1, 1, 1)
-    for i = 0, 6 do
-        drawInventoryItem(thisX + 9 + (43 * i), thisY - 42, 0, null, 1, i + 1)
+
+    for i,v in ipairs(hotbar) do
+        drawInventoryItem(thisX + 9 + (43 * (i - 1)), thisY - 42, 0, v.item, 1, i)
     end
 
     if inventory.open then
@@ -173,12 +179,11 @@ function drawToolBarInventory(thisX, thisY)
         love.graphics.stencil(drawInventoryStencil, "replace", 1) -- stencils inventory
         love.graphics.setStencilTest("greater", 0) -- push
         thisY = thisY + 50 + posYInventory
+
+        inventory.mouseOverButtonsAmount = 0
         for i = 1, #inventory.fields do -- Draws each inventory field
             if inventoryFieldLength[i] ~= 0 then
                 drawInventoryItemField(thisX + 8, thisY, i)
-                -- love.graphics.setColor(1,1,1, 0.25 * inventory.opacity)
-                -- love.graphics.rectangle("fill", thisX, thisY, 313, getUserInventoryFieldHeight(i))
-                -- love.graphics.setColor(1,1,1, 1 * inventory.opacity)
                 thisY = thisY + getUserInventoryFieldHeight(i)
             end
         end
@@ -190,37 +195,49 @@ end
 function drawInventoryItem(thisX, thisY, field, item, amount, number)
     love.graphics.setFont(inventory.itemFont)
     if number then
-        love.graphics.setColor(0,0,0,1)
-        drawItemBacking(thisX, thisY)
-        love.graphics.setColor(1,1,1,1)
-        if item then love.graphics.draw(item, top_left, thisX + 2, thisY + 2) end
 
+        if isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale) then
+            love.graphics.setColor(1,0,0,1)
+            inventory.mouseOverButtonsAmount = number
+        else love.graphics.setColor(1,1,1,0.9)
+        end
+
+        drawItemBacking(thisX, thisY)
+
+        love.graphics.setColor(1,1,1)   
+        
+        if item then
+            if itemImg[item.ImgPath]:getWidth() <= 32 and itemImg[item.ImgPath]:getHeight() <= 32 then
+                love.graphics.draw(itemImg[item.ImgPath],
+                    thisX + 18 - (itemImg[item.ImgPath]:getWidth() / 2),
+                    thisY + 18 - (itemImg[item.ImgPath]:getHeight() / 2))
+            else
+                love.graphics.draw(itemImg[item.ImgPath], thisX + 2, thisY + 2) -- Item
+            end       
+        end 
+        -- if item then love.graphics.draw(item, top_left, thisX + 2, thisY + 2) end
         love.graphics.draw(inventory.images.numbers[number], thisX - 3, thisY + 26)
-        -- love.graphics.setColor(1,1,1,1)
+
     else
         if isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale) and item then
             setItemTooltip(item)
             selectedItem = item
             love.graphics.setColor(1,0,0,1)
-
         end
-        
         drawItemBacking(thisX, thisY)
-        love.graphics.setColor(1,1,1,1)
-            -- love.graphics.draw(inventory.images.itemBG, thisX, thisY)
 
+        love.graphics.setColor(1,1,1,1)
         if item and itemImg[item.ImgPath] then
+
             if string.sub(item.Type, 1, 4) == "arm_" then
-             
                 love.graphics.draw(playerImg, thisX + 2, thisY + 2)
-              
             end
           
             if inventory.usedItemThisTick then
                 love.graphics.setColor(1,1,1,0.4)
             end
-            if itemImg[item.ImgPath]:getWidth() <= 32 and
-                itemImg[item.ImgPath]:getHeight() <= 32 then
+
+            if itemImg[item.ImgPath]:getWidth() <= 32 and itemImg[item.ImgPath]:getHeight() <= 32 then
                 love.graphics.draw(itemImg[item.ImgPath],
                     thisX + 18 - (itemImg[item.ImgPath]:getWidth() / 2),
                     thisY + 18 - (itemImg[item.ImgPath]:getHeight() / 2))
@@ -279,7 +296,6 @@ function drawInventoryItemField(thisX, thisY, field)
     love.graphics.setFont(inventory.font)
     love.graphics.printf(inventory.fields[field], thisX + 2, thisY + 4, 483)
     thisY = thisY + inventory.titleSpacing
-    -- drawInventoryItemBackings(thisX, thisY, field)
 
     for i,v in ipairs(userInventory[field]) do  
         if i <= 7 then
@@ -326,9 +342,20 @@ function getFullUserInventoryFieldHeight()
 end
 
 function checkInventoryMousePressed()
+
     if selectedItem ~= nil and selectedItem.ID ~= nil and
         isMouseOver((0) * scale, (0 + 50) * scale, 313 * scale, (uiY - 97 - 50 - 50) * scale) then
-        if crafting.open then
+
+        if love.keyboard.isDown("lshift") then
+
+            for i,v in ipairs(hotbar) do
+                if love.keyboard.isDown("lshift") and love.keyboard.isDown(i) then
+                    v.item = selectedItem
+                end
+            end
+
+        elseif crafting.open then
+
             local hasItem = false
             for i,v in ipairs(crafting.enteredItems) do
                 if v.item == selectedItem and getItemAmount(selectedItem) > v.amount then
