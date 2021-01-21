@@ -80,6 +80,8 @@ function love.keypressed(key)
                 crafting.open = true
             end
 
+            checkInventoryKeyPressed(key)
+
             if key == "b" and buddies[player.name] ~= null then
                 print(buddies[player.name].img)
                 chatXpos = -64

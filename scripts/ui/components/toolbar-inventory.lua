@@ -341,6 +341,17 @@ function getFullUserInventoryFieldHeight()
     return j
 end
 
+function checkInventoryKeyPressed(key)
+    for i,v in ipairs(hotbar) do
+        print(i)
+        if i == key then
+            v.item = selectedItem
+            print(selectedItem)
+        end
+    end
+    print(key)
+end
+
 function checkInventoryMousePressed()
 
     if selectedItem ~= nil and selectedItem.ID ~= nil and
