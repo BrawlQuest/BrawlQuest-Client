@@ -481,7 +481,7 @@ function getItemAmount(item)
     local amount = 0
     if item ~= null then
         for i, v in ipairs(inventoryAlpha) do
-            print(json:encode(v.Item) .. "    " .. json:encode(item))
+            -- print(json:encode(v.Item) .. "    " .. json:encode(item))
             if v.Item == item then
                 
                 amount = v.Inventory.Amount
