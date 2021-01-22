@@ -26,9 +26,12 @@ function initToolBarInventory()
     userInventory[8] = {}
     inventoryFieldLength = {0, 0, 0, 0, 0, 0, 0, 0,}
 
+    useItemColorChanged = false
+    useItemColor = {}
     hotbar = {}
     for i = 1, 7 do
         hotbar[#hotbar + 1] = {item = null,}
+        useItemColor[#useItemColor + 1] = 0 
     end
 
     userInventoryFieldHeight = {}
@@ -80,6 +83,27 @@ function initToolBarInventory()
 
 end
 
+function getItemType(v)
+    local t = 8
+    if v.Item.Type == "wep" then
+        t = 1
+    elseif v.Item.Type == "spell" then
+        t = 2
+    elseif string.sub(v.Item.Type, 1, 4) == "arm_" or v.Item.Type == "shield" then
+        t = 3
+    elseif v.Item.Type == "reagent" then
+        t = 4
+    elseif v.Item.Type == "consumable" then 
+        t = 5
+    elseif v.Item.Type == "mount" then
+        t = 6
+    elseif v.Item.Type == "buddy" then
+        t = 7
+    end
+
+    return t
+end
+
 function getInventory()
 
     userInventory = {}
@@ -95,23 +119,7 @@ function getInventory()
 
 
     for i, v in ipairs(inventoryAlpha) do
-        local t = 8
-
-        if v.Item.Type == "wep" then
-            t = 1
-        elseif v.Item.Type == "spell" then
-            t = 2
-        elseif string.sub(v.Item.Type, 1, 4) == "arm_" or v.Item.Type == "shield" then
-            t = 3
-        elseif v.Item.Type == "reagent" then
-            t = 4
-        elseif v.Item.Type == "consumable" then 
-            t = 5
-        elseif v.Item.Type == "mount" then
-            t = 6
-        elseif v.Item.Type == "buddy" then
-            t = 7
-        end
+        local t = getItemType(v)
 
         inventoryFieldLength[t] = inventoryFieldLength[t] + 1
         if not itemImg[v.Item.ImgPath] then
@@ -144,6 +152,22 @@ function updateToolBarInventory(dt)
         end
     end
 
+    if useItemColorChanged then
+        local colorCount = 0
+        for i, v in ipairs(useItemColor) do
+            if v > 0 then
+                useItemColor[i] = v - 2 * dt
+            else
+                useItemColor[i] = 0
+            end
+            colorCount = colorCount + v
+        end
+
+        if colorCount == 0 then 
+            useItemColorChanged = false
+        end
+    end
+
     if getFullUserInventoryFieldHeight() * scale > (uiY - 97 - 50 - 50) * scale then
         posYInventory = posYInventory + velyInventory * dt
         if posYInventory > 0 then
@@ -168,7 +192,7 @@ function drawToolBarInventory(thisX, thisY)
     
     inventory.mouseOverButtonsAmount = 0
     for i,v in ipairs(hotbar) do
-        drawInventoryItem(thisX + 9 + (43 * (i - 1)), thisY - 42, 0, v.item, 1, i)
+        drawInventoryItem(thisX + 9 + (43 * (i - 1)), thisY - 42, 0, v.item, getItemAmount(v.item), i)
     end
 
     if inventory.open then
@@ -193,32 +217,51 @@ function drawToolBarInventory(thisX, thisY)
         love.graphics.setStencilTest() -- pop
     end
 
+    -- roundRectangle("fill", 100, 100, 200, 200, 20, {false, false, false, false})
 end
 
 function drawInventoryItem(thisX, thisY, field, item, amount, number)
     love.graphics.setFont(inventory.itemFont)
     if number then
 
+        local height = 19
         if isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale) then
             love.graphics.setColor(1,0,0,1)
             inventory.mouseOverButtonsAmount = number
-        else love.graphics.setColor(1,1,1,0.9)
+            height = inventory.images.itemBG:getHeight()
+        else
+            local amount = inventory.amount
+            love.graphics.setColor(
+                cerp(useItemColor[number], 1, amount),
+                cerp(useItemColor[number], 1 - useItemColor[number], amount),
+                cerp(useItemColor[number], 1 - useItemColor[number], amount),
+                cerp(useItemColor[number] + (0.7 * (1 - useItemColor[number])), 1, amount))
+        end
+
+        if inventory.amount < 0.02 then 
+            roundRectangle("fill", thisX, thisY, inventory.images.itemBG:getWidth(), height, 4, {true, true, false, false})
         end
 
         drawItemBacking(thisX, thisY)
-
-        love.graphics.setColor(1,1,1)   
         
         if item then
+
+            if amount == 0 then
+                love.graphics.setColor(1,1,1,0.5)
+            else
+                love.graphics.setColor(1,1,1,1)
+            end
+
             if itemImg[item.ImgPath]:getWidth() <= 32 and itemImg[item.ImgPath]:getHeight() <= 32 then
                 love.graphics.draw(itemImg[item.ImgPath],
-                    thisX + 18 - (itemImg[item.ImgPath]:getWidth() / 2),
-                    thisY + 18 - (itemImg[item.ImgPath]:getHeight() / 2))
+                    thisX + 18 - (itemImg[item.ImgPath]:getWidth() / (2 - useItemColor[number])),
+                    thisY + 18 - (itemImg[item.ImgPath]:getHeight() / (2 - useItemColor[number])),  0, 1 + useItemColor[number])
             else
-                love.graphics.draw(itemImg[item.ImgPath], thisX + 2, thisY + 2) -- Item
+                love.graphics.draw(itemImg[item.ImgPath], thisX + 2 - (16 * useItemColor[number]), thisY + 2 - (16 * useItemColor[number]), 0, 1 + useItemColor[number]) -- Item
             end       
         end 
         -- if item then love.graphics.draw(item, top_left, thisX + 2, thisY + 2) end
+        love.graphics.setColor(1,1,1,1)
         love.graphics.draw(inventory.images.numbers[number], thisX - 3, thisY + 26)
 
     else
@@ -293,7 +336,7 @@ function inventroyItemBackings(thisX, thisY, value, min, max)
 end
 
 function drawItemBacking(thisX, thisY)
-    roundRectangle("fill", thisX, thisY, inventory.images.itemBG:getWidth(), inventory.images.itemBG:getHeight(), 2)
+    roundRectangle("fill", thisX, thisY, inventory.images.itemBG:getWidth(), inventory.images.itemBG:getHeight(), 4)
 end
 
 function drawInventoryItemField(thisX, thisY, field)
@@ -350,11 +393,18 @@ function checkInventoryKeyPressed(key)
         if love.keyboard.isDown(i) then
             if inventory.isMouseOverInventoryItem then
                 v.item = selectedItem
-                print(v.item)
-                print(json:encode(selectedItem))
             elseif v.item ~= nil and v.item.ID ~= nil then
+                useItemColor[i] = 1
+                useItemColorChanged = true
+            
                 apiGET("/item/" .. player.name .. "/" .. v.item.ID)
                 usedItemThisTick = true
+
+                -- print(getItemAmount(v.item))
+                -- if getItemAmount(v.item) ~= 0 and getItemAmount(v.item) < 1 then 
+                --     hotbar[i] = {item = null,}
+                -- end
+
             end
         end
     end
@@ -362,17 +412,14 @@ end
 
 function checkInventoryMousePressed(button)
 
-    print(inventory.mouseOverButtonsAmount)
-
     if inventory.mouseOverButtonsAmount > 0 then
         for i,v in ipairs(hotbar) do
-            if i == inventory.mouseOverButtonsAmount then
-                print("COOL")
-                if button == 1 and v.item ~= nil and v.item.ID ~= nil then
+            if i == inventory.mouseOverButtonsAmount and v.item ~= nil and v.item.ID ~= nil then
+                if button == 1  then
                     apiGET("/item/" .. player.name .. "/" .. v.item.ID)
                     usedItemThisTick = true
                 elseif button == 2 then
-                    v = {}
+                    hotbar[i] = {item = null,}
                 end 
             end
         end
@@ -432,9 +479,13 @@ end
 
 function getItemAmount(item)
     local amount = 0
-    for i, v in ipairs(inventoryAlpha) do
-        if v.Item == item then
-            amount = v.Inventory.Amount
+    if item ~= null then
+        for i, v in ipairs(inventoryAlpha) do
+            print(json:encode(v.Item) .. "    " .. json:encode(item))
+            if v.Item == item then
+                
+                amount = v.Inventory.Amount
+            end
         end
     end
 
