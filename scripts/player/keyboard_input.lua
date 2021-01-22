@@ -114,10 +114,10 @@ function love.keypressed(key)
             --     writeSettings()
             -- end
 
-            -- if key == "." then
-            --     scaleHUD("up")
-            --     writeSettings()
-            -- end
+            if key == "." then
+                -- scaleHUD("up")
+                -- writeSettings()
+            end
 
             -- if key == "," then
             --     scaleHUD("down")

@@ -14,6 +14,7 @@ require "scripts.effects.auras"
 require "scripts.effects.leaves"
 require "scripts.effects.camera"
 require "scripts.effects.clouds"
+require "scripts.effects.world-mask"
 require "scripts.ui.hud_controller"
 require "scripts.ui.components.character-hub"
 require "scripts.ui.components.crafting"
@@ -28,7 +29,9 @@ require "scripts.ui.components.zone-titles"
 require "scripts.ui.components.profile"
 require "scripts.libraries.api"
 require "scripts.libraries.utils"
+require "scripts.libraries.colorize"
 require "scripts.libraries.simple-slider"
+-- require "scripts.libraries.bresenham"
 require "scripts.phases.login.login"
 require "scripts.player.other_players"
 require "scripts.enemies"
@@ -99,6 +102,7 @@ function love.load()
     initSFX()
     initCamera()
     initClouds()
+    initWorldMask()
     love.graphics.setFont(textFont)
 end
 
@@ -127,6 +131,7 @@ function love.draw()
             drawLeaves()
             drawLoot()
             drawFloats()
+            if not worldEdit.open then drawWorldMask() end
             
             if showClouds then drawClouds() end       
             Luven.drawEnd()
@@ -205,6 +210,7 @@ function love.update(dt)
         if showClouds then updateClouds(dt) end
         updateLeaves(dt)
         Luven.update(dt)
+        updateWorldMask(dt)
         updateCamera(dt)
         updateOtherPlayers(dt)
 
