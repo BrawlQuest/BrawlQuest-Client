@@ -36,6 +36,7 @@ function initToolBarInventory()
     scrollInventory = {up = true, down = true,}
 
     inventory = {
+        isMouseOverInventoryItem = false,
         forceOpen = false,
         notNPC = true,
         open = false,
@@ -159,11 +160,13 @@ end
 
 function drawToolBarInventory(thisX, thisY)
     love.graphics.setColor(unpack(characterHub.backgroundColor))
+    inventory.isMouseOverInventoryItem = false
 
     love.graphics.rectangle("fill", thisX, thisY - 97, 313, 0 - cerp(23, 23 + (uiY - 97 - 23), inventory.amount))
     thisX, thisY = thisX, thisY - 97
     love.graphics.setColor(1, 1, 1, 1)
-
+    
+    inventory.mouseOverButtonsAmount = 0
     for i,v in ipairs(hotbar) do
         drawInventoryItem(thisX + 9 + (43 * (i - 1)), thisY - 42, 0, v.item, 1, i)
     end
@@ -180,7 +183,7 @@ function drawToolBarInventory(thisX, thisY)
         love.graphics.setStencilTest("greater", 0) -- push
         thisY = thisY + 50 + posYInventory
 
-        inventory.mouseOverButtonsAmount = 0
+
         for i = 1, #inventory.fields do -- Draws each inventory field
             if inventoryFieldLength[i] ~= 0 then
                 drawInventoryItemField(thisX + 8, thisY, i)
@@ -222,6 +225,7 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
         if isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale) and item then
             setItemTooltip(item)
             selectedItem = item
+            inventory.isMouseOverInventoryItem = true
             love.graphics.setColor(1,0,0,1)
         end
         drawItemBacking(thisX, thisY)
@@ -269,17 +273,17 @@ end
 function drawInventoryItemBackings(thisX, thisY, field)
     love.graphics.setColor(1,1,1,0.2)    
     for i,v in ipairs(userInventory) do
-        inventroyItmeBackings(thisX, thisY + (inventory.itemSpacing * 0), #v, 0, 7)
-        inventroyItmeBackings(thisX, thisY + (inventory.itemSpacing * 1), #v, 7, 14)
-        inventroyItmeBackings(thisX, thisY + (inventory.itemSpacing * 2), #v, 14, 21)
-        inventroyItmeBackings(thisX, thisY + (inventory.itemSpacing * 3), #v, 21, 28)
-        inventroyItmeBackings(thisX, thisY + (inventory.itemSpacing * 4), #v, 28, 35)
-        inventroyItmeBackings(thisX, thisY + (inventory.itemSpacing * 5), #v, 35, 42)
+        inventroyItemBackings(thisX, thisY + (inventory.itemSpacing * 0), #v, 0, 7)
+        inventroyItemBackings(thisX, thisY + (inventory.itemSpacing * 1), #v, 7, 14)
+        inventroyItemBackings(thisX, thisY + (inventory.itemSpacing * 2), #v, 14, 21)
+        inventroyItemBackings(thisX, thisY + (inventory.itemSpacing * 3), #v, 21, 28)
+        inventroyItemBackings(thisX, thisY + (inventory.itemSpacing * 4), #v, 28, 35)
+        inventroyItemBackings(thisX, thisY + (inventory.itemSpacing * 5), #v, 35, 42)
     end
     love.graphics.setColor(1,1,1,1)    
 end
 
-function inventroyItmeBackings(thisX, thisY, value, min, max)
+function inventroyItemBackings(thisX, thisY, value, min, max)
     if value > min and value <= max then
         for i = 1, 7 do 
             -- love.graphics.draw(inventory.images.itemBG, thisX + (43 * (i - 1)), thisY)
@@ -343,16 +347,36 @@ end
 
 function checkInventoryKeyPressed(key)
     for i,v in ipairs(hotbar) do
-        print(i)
-        if i == key then
-            v.item = selectedItem
-            print(selectedItem)
+        if love.keyboard.isDown(i) then
+            if inventory.isMouseOverInventoryItem then
+                v.item = selectedItem
+                print(v.item)
+                print(json:encode(selectedItem))
+            elseif v.item ~= nil and v.item.ID ~= nil then
+                apiGET("/item/" .. player.name .. "/" .. v.item.ID)
+                usedItemThisTick = true
+            end
         end
     end
-    print(key)
 end
 
-function checkInventoryMousePressed()
+function checkInventoryMousePressed(button)
+
+    print(inventory.mouseOverButtonsAmount)
+
+    if inventory.mouseOverButtonsAmount > 0 then
+        for i,v in ipairs(hotbar) do
+            if i == inventory.mouseOverButtonsAmount then
+                print("COOL")
+                if button == 1 and v.item ~= nil and v.item.ID ~= nil then
+                    apiGET("/item/" .. player.name .. "/" .. v.item.ID)
+                    usedItemThisTick = true
+                elseif button == 2 then
+                    v = {}
+                end 
+            end
+        end
+    end
 
     if selectedItem ~= nil and selectedItem.ID ~= nil and
         isMouseOver((0) * scale, (0 + 50) * scale, 313 * scale, (uiY - 97 - 50 - 50) * scale) then
