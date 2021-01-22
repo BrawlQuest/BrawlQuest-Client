@@ -35,29 +35,34 @@ function updateWorldMask(dt)
                 worldMask.detected = false            
                 local distance = distanceToPoint(player.dx, player.dy, x * gridSize, y * gridSize)
                 if distance <= range then 
-                    local success, counter = Bresenham.line(math.floor((player.dx / 32) * gridScale), math.floor((player.dy / 32) * gridScale), math.round(x), math.round(y), function (x,y) 
-                        local thisX, thisY = x / gridScale, y / gridScale
-                        local elseX, elseY = thisX - 0.5, thisY - 0.5
+                    if showShadows then
+                        local success, counter = Bresenham.line(math.floor((player.dx / 32) * gridScale), math.floor((player.dy / 32) * gridScale), math.round(x), math.round(y), function (x,y) 
+                            local thisX, thisY = x / gridScale, y / gridScale
+                            local elseX, elseY = thisX - 0.5, thisY - 0.5
 
-                        if worldLookup[thisX] and worldLookup[thisX][thisY] and worldLookup[thisX][thisY].Collision ~= null then
-                            return checkIfCollision(thisX, thisY)
-                        elseif worldLookup[thisX] and worldLookup[thisX][elseY] and worldLookup[thisX][elseY].Collision ~= null then
-                            return checkIfCollision(thisX, elseY)
-                        elseif worldLookup[elseX] and worldLookup[elseX][thisY] and worldLookup[elseX][thisY].Collision ~= null then
-                            return checkIfCollision(elseX, thisY)
-                        elseif worldLookup[elseX] and worldLookup[elseX][elseY] and worldLookup[elseX][elseY].Collision ~= null then
-                            return checkIfCollision(elseX, elseY)
+                            if worldLookup[thisX] and worldLookup[thisX][thisY] and worldLookup[thisX][thisY].Collision ~= null then
+                                return checkIfCollision(thisX, thisY)
+                            elseif worldLookup[thisX] and worldLookup[thisX][elseY] and worldLookup[thisX][elseY].Collision ~= null then
+                                return checkIfCollision(thisX, elseY)
+                            elseif worldLookup[elseX] and worldLookup[elseX][thisY] and worldLookup[elseX][thisY].Collision ~= null then
+                                return checkIfCollision(elseX, thisY)
+                            elseif worldLookup[elseX] and worldLookup[elseX][elseY] and worldLookup[elseX][elseY].Collision ~= null then
+                                return checkIfCollision(elseX, elseY)
+                            else
+                                return true -- if there is no tile, just count it as blank.
+                            end
+                        end)
+
+                        if success then
+                            local intensity = range / (range + (difference(range, distance) * 4))
+                            worldMaskTables[1][#worldMaskTables[1] + 1] = {x = x, y = y, visable = true, intensity = intensity}
                         else
-                            return true -- if there is no tile, just count it as blank.
-                        end
-                    end)
-
-                    if success then
+                            worldMaskTables[1][#worldMaskTables[1] + 1] = {x = x, y = y, visable = false,}
+                        end       
+                    else -- if not drawing shadows
                         local intensity = range / (range + (difference(range, distance) * 4))
                         worldMaskTables[1][#worldMaskTables[1] + 1] = {x = x, y = y, visable = true, intensity = intensity}
-                    else
-                        worldMaskTables[1][#worldMaskTables[1] + 1] = {x = x, y = y, visable = false,}
-                    end         
+                    end
                 else
                     worldMaskTables[2][#worldMaskTables[2] + 1] = {x = x, y = y,}
                 end

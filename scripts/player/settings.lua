@@ -25,6 +25,7 @@ function initSettings()
     fullscreen = false
     chatRepeat = false
     display = 1
+    
 
     displayWidth, displayHeight = love.window.getDesktopDimensions(display)
 
@@ -33,6 +34,7 @@ function initSettings()
     showChat = true
     openUiOnHover = true
     showClouds = true
+    showShadows = false
     
     info = love.filesystem.getInfo("settings.txt")
     getSettingsVersion()
@@ -52,6 +54,7 @@ function initSettings()
         settPan.scaleValue = contents["scaleValue"]
         showChat = contents["showChat"]
         showClouds = contents["showClouds"]
+        showShadows = contents["showShadows"]
         openUiOnHover = contents["openUiOnHover"]
         api.url = servers[selectedServer].url
     else
@@ -66,6 +69,7 @@ function initSettings()
             {name = "Render Quality", v = highdpi, type = "button", "Full", "Fast",},
             {name = "Fullscreen", v = fullscreen, type = "button", "On", "Off",},
             {name = "Clouds", v = showClouds, type = "button", "On", "Off",},
+            {name = "Shadows (Alpha)", v = showShadows, type = "button", "On", "Off",},
         },
         {
             title = "Sound",
@@ -80,6 +84,27 @@ function initSettings()
             {name = "Chat Remain On Enter", v = chatRepeat, type = "button",},
         },
     }
+end
+
+function writeSettings()
+    success,msg = love.filesystem.write("settings.txt", json:encode({
+        version = version .. " " .. versionNumber,
+        keybinds = keybinds,
+        musicVolume = musicVolume,
+        sfxVolume = sfxVolume,
+        selectedServer = selectedServer,
+        highdpi = highdpi,
+        fullscreen = fullscreen,
+        window = window,
+        chatRepeat = chatRepeat,
+        scaleValue = settPan.scaleValue,
+        screenDimentions = screenDimentions,
+        display = display,
+        showChat = showChat,
+        showClouds = showClouds,
+        showShadows = showShadows,
+        openUiOnHover = openUiOnHover,
+    }))
 end
 
 function setWindowOptions()
@@ -99,27 +124,6 @@ function setWindowOptions()
     uiX, uiY = love.graphics.getWidth()/scale, love.graphics.getHeight()/scale
     loadSliders()
     initLogin()
-end
-
-function writeSettings()
-    -- print ("Writing Settings")
-    success,msg = love.filesystem.write("settings.txt", json:encode({
-        version = version .. " " .. versionNumber,
-        keybinds = keybinds,
-        musicVolume = musicVolume,
-        sfxVolume = sfxVolume,
-        selectedServer = selectedServer,
-        highdpi = highdpi,
-        fullscreen = fullscreen,
-        window = window,
-        chatRepeat = chatRepeat,
-        scaleValue = settPan.scaleValue,
-        screenDimentions = screenDimentions,
-        display = display,
-        showChat = showChat,
-        showClouds = showClouds,
-        openUiOnHover = openUiOnHover,
-    }))
 end
 
 function getSettingsVersion()
