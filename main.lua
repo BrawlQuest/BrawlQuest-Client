@@ -50,7 +50,7 @@ http = require("socket.http")
 ltn12 = require("ltn12")
 
 version = "Pre-Release" 
-versionNumber = "0.1.6" -- very important for settings
+versionNumber = "0.1.7" -- very important for settings
 
 phase = "login"
 
@@ -132,8 +132,8 @@ function love.draw()
             drawLoot()
             drawFloats()
             if not worldEdit.open then drawWorldMask() end
-            
-            if showClouds then drawClouds() end       
+            if showClouds then drawClouds() end     
+
             Luven.drawEnd()
             
             if not worldEdit.open then
@@ -210,6 +210,7 @@ function love.update(dt)
         if showClouds then updateClouds(dt) end
         updateLeaves(dt)
         Luven.update(dt)
+        -- if showShadows then updateWorldMask(dt) end
         updateWorldMask(dt)
         updateCamera(dt)
         updateOtherPlayers(dt)

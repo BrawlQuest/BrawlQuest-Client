@@ -15,7 +15,7 @@ function initWorldMask()
 end
 
 function updateWorldMask(dt)
-    worldMask.current = {x = math.floor((player.dx / 32) * 4), y = math.floor((player.dy / 32) * 4),}
+    worldMask.current = {x = math.floor((player.dx / 32) * 8), y = math.floor((player.dy / 32) * 8),}
 
     if (worldMask.current.x ~= worldMask.previous.x) or (worldMask.current.y ~= worldMask.previous.y) or worldScaleSmooting or isSettingsWindowOpen then -- 
         
@@ -100,7 +100,10 @@ function drawWorldMask()
         love.graphics.rectangle("fill", math.round(v.x) * gridSize, math.round(v.y) * gridSize, gridSize, gridSize)
     end
     love.graphics.setColor(0,0,0,worldMask.opacity)
+
     for i,v in ipairs(worldMaskTables[2]) do
         love.graphics.rectangle("fill", math.round(v.x) * gridSize, math.round(v.y) * gridSize, gridSize, gridSize)
     end 
+    
+    love.graphics.setColor(1,1,1,1)
 end

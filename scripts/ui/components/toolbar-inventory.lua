@@ -27,13 +27,6 @@ function initToolBarInventory()
     inventoryFieldLength = {0, 0, 0, 0, 0, 0, 0, 0,}
 
     useItemColorChanged = false
-    useItemColor = {}
-    hotbar = {}
-    for i = 1, 7 do
-        hotbar[#hotbar + 1] = {item = null,}
-        useItemColor[#useItemColor + 1] = 0 
-    end
-
     userInventoryFieldHeight = {}
 
     scrollInventory = {up = true, down = true,}
@@ -183,20 +176,21 @@ function updateToolBarInventory(dt)
 end
 
 function drawToolBarInventory(thisX, thisY)
+    getInventory()
     love.graphics.setColor(unpack(characterHub.backgroundColor))
     inventory.isMouseOverInventoryItem = false
 
     love.graphics.rectangle("fill", thisX, thisY - 97, 313, 0 - cerp(23, 23 + (uiY - 97 - 23), inventory.amount))
     thisX, thisY = thisX, thisY - 97
     love.graphics.setColor(1, 1, 1, 1)
-    
+
     inventory.mouseOverButtonsAmount = 0
     for i,v in ipairs(hotbar) do
         drawInventoryItem(thisX + 9 + (43 * (i - 1)), thisY - 42, 0, v.item, getItemAmount(v.item), i)
     end
 
     if inventory.open then
-        getInventory()
+        
         love.graphics.setColor(1, 1, 1, inventory.opacity)
         thisY = thisY - cerp(0, (uiY - 97), inventory.amount)
 
@@ -229,6 +223,7 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
             love.graphics.setColor(1,0,0,1)
             inventory.mouseOverButtonsAmount = number
             height = inventory.images.itemBG:getHeight()
+            thisY = thisY - 2
         else
             local amount = inventory.amount
             love.graphics.setColor(
@@ -243,15 +238,9 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
         end
 
         drawItemBacking(thisX, thisY)
-        
-        if item then
 
-            if amount == 0 then
-                love.graphics.setColor(1,1,1,0.5)
-            else
-                love.graphics.setColor(1,1,1,1)
-            end
-
+        love.graphics.setColor(1,1,1,1)
+        if item and itemImg[item.ImgPath] then
             if itemImg[item.ImgPath]:getWidth() <= 32 and itemImg[item.ImgPath]:getHeight() <= 32 then
                 love.graphics.draw(itemImg[item.ImgPath],
                     thisX + 18 - (itemImg[item.ImgPath]:getWidth() / (2 - useItemColor[number])),
@@ -270,6 +259,7 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
             selectedItem = item
             inventory.isMouseOverInventoryItem = true
             love.graphics.setColor(1,0,0,1)
+            thisY = thisY - 2
         end
         drawItemBacking(thisX, thisY)
 
@@ -390,21 +380,19 @@ end
 
 function checkInventoryKeyPressed(key)
     for i,v in ipairs(hotbar) do
-        if love.keyboard.isDown(i) then
+        if love.keyboard.isDown(i) or (i == 7 and love.keyboard.isDown("space")) then
             if inventory.isMouseOverInventoryItem then
                 v.item = selectedItem
-            elseif v.item ~= nil and v.item.ID ~= nil then
-                useItemColor[i] = 1
-                useItemColorChanged = true
-            
-                apiGET("/item/" .. player.name .. "/" .. v.item.ID)
-                usedItemThisTick = true
-
-                -- print(getItemAmount(v.item))
-                -- if getItemAmount(v.item) ~= 0 and getItemAmount(v.item) < 1 then 
-                --     hotbar[i] = {item = null,}
-                -- end
-
+                print(getItemAmount(v.item))
+            else
+                if v.item ~= nil and v.item.ID ~= nil then
+                    useItemColor[i] = 1
+                    useItemColorChanged = true
+                    apiGET("/item/" .. player.name .. "/" .. v.item.ID)
+                    usedItemThisTick = true
+                else
+                    hotbar[i] = {item = null,}
+                end
             end
         end
     end
@@ -478,12 +466,11 @@ function drawInventoryStencil()
 end
 
 function getItemAmount(item)
-    local amount = 0
+    local amount = null
     if item ~= null then
         for i, v in ipairs(inventoryAlpha) do
             -- print(json:encode(v.Item) .. "    " .. json:encode(item))
             if v.Item == item then
-                
                 amount = v.Inventory.Amount
             end
         end

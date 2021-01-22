@@ -15,10 +15,10 @@ function initSettingsPanel()
             {name = "CRAFTING", v = "f", sel = false,},
             {name = "INTERACT", v = "e", sel = false,},
             {name = "QUESETS", v = "q", sel = false,},
-            }, 
+            },
         },
     }
-    
+
     sliderPosition = {
         music = {0, 0,},
         sfx = {0, 0,},
@@ -114,16 +114,16 @@ function drawSettingsPanel()
     love.graphics.stencil(drawSettingsStencilLeft, "replace", 1) -- stencils Left Side
     love.graphics.setStencilTest("greater", 0) -- push
 
-        local thisX, thisY = x - (settPan.width * 0.5) + settPan.padding, y - (settPan.height * 0.5) + settPan.padding + settPan.titleOffset + settSrl[1].posy
-        local width, height = (settPan.width * 0.5) - (settPan.padding * 2), 32
+        thisX, thisY = x - (settPan.width * 0.5) + settPan.padding, y - (settPan.height * 0.5) + settPan.padding + settPan.titleOffset + settSrl[1].posy
+        width, height = (settPan.width * 0.5) - (settPan.padding * 2), 32
         local max = 0
 
         for i,v in ipairs(controls.keybinds.v) do
             if isMouseOver(thisX, thisY, width, height) and getSettingsMouseOver("left") then
                 controls.selKeybindCount = i
-                love.graphics.setColor(1, 0, 0, settPan.opacityCERP * 1)            
+                love.graphics.setColor(1, 0, 0, settPan.opacityCERP * 1)
             else
-                love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)            
+                love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)
             end
 
             roundRectangle("fill", thisX, thisY, width - (settPan.objectValueWidth + 10), height, 6) -- name backing
@@ -148,9 +148,9 @@ function drawSettingsPanel()
     love.graphics.setStencilTest("greater", 0) -- push
 
         -- Right Side Buttons
-        local thisX, thisY = x + settPan.padding, y - (settPan.height * 0.5) + settPan.padding + settSrl[2].posy
-        local width, height = (settPan.width * 0.5) - (settPan.padding * 2), 32
-        local max = 0
+        thisX, thisY = x + settPan.padding, y - (settPan.height * 0.5) + settPan.padding + settSrl[2].posy
+        width, height = (settPan.width * 0.5) - (settPan.padding * 2), 32
+        max = 0
 
         for ai,av in ipairs(settings) do
             love.graphics.setColor(1,1,1,settPan.opacityCERP)
@@ -164,8 +164,8 @@ function drawSettingsPanel()
                     max = max + settPan.buttonSpacing
                 elseif bv.type == "fader" then
                     -- print(max)
-                    faderPosition[bi] = max 
-                    love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)   
+                    faderPosition[bi] = max
+                    love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)
                     roundRectangle("fill", thisX, thisY, width, 60, 6)
                     love.graphics.setColor(1,1,1, settPan.opacityCERP)
                     love.graphics.print(bv.name, thisX + 10, thisY + 10)
@@ -173,7 +173,7 @@ function drawSettingsPanel()
                     max = max + 60 + 6
                 end
             end
-        end 
+        end
 
         if settSrl[2].max ~= settSrl[2].prevmax then
             settSrl[2].max = (max - ((settPan.height) - (settPan.padding * 2) - 40 - settPan.objectPadding)) * -1
@@ -188,26 +188,38 @@ function drawSettingsPanel()
     local width, height = (settPan.width * 0.5) - (settPan.padding * 2), 40
     local thisX, thisY = x + settPan.padding, y + (settPan.height * 0.5) - settPan.padding - height
 
-    love.graphics.setColor(1, 0, 0, settPan.opacityCERP * 1)    
+    love.graphics.setColor(1, 0, 0, settPan.opacityCERP * 1)
     roundRectangle("fill", thisX, thisY, width, height, 6)
-    love.graphics.setColor(1,1,1, settPan.opacityCERP * 1)    
+    love.graphics.setColor(1,1,1, settPan.opacityCERP * 1)
     love.graphics.printf("CLOSE GAME", thisX, thisY + 20 - (settPan.itemFont:getHeight() * 0.5), width, "center") -- prints the name of things
 end
 
 function drawSettingsButton(thisX, thisY, width, height, ai, av, bi, bv)
-    love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)       
+    love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)
     roundRectangle("fill", thisX, thisY, width - 90 - settPan.objectPadding, height, 6)
-    
-    if isMouseOver(thisX + width - 90, thisY, 90, height) and getSettingsMouseOver("right") then
+    local isMouse = isMouseOver(thisX + width - 90, thisY, 90, height)
+
+    if isMouse and getSettingsMouseOver("right") then
         settPan.mouseOver = (ai * 10) + bi
         settPan.isMouseOver = true
-        love.graphics.setColor(0.1, 0.1, 0.1, settPan.opacityCERP * 0.7)
+        love.graphics.setColor(1, 0, 0, settPan.opacityCERP)
+    elseif bv.v == true then
+        love.graphics.setColor(1,1,1, settPan.opacityCERP)
     end
 
-    roundRectangle("fill", thisX + width - 90, thisY, 90, height, 6)    
+    roundRectangle("fill", thisX + width - 90, thisY, 90, height, 6)
+
+    if isMouse then
+        love.graphics.setColor(1,1,1, settPan.opacityCERP)
+    elseif bv.v == true then
+        love.graphics.setColor(0,0,0, settPan.opacityCERP)
+    else love.graphics.setColor(1,1,1, settPan.opacityCERP)
+    end
+
+    love.graphics.printf(boolToString(bv.v), thisX + width - 90, thisY + settPan.fontHeight, 90, "center") -- prints the value of things
+
     love.graphics.setColor(1,1,1, settPan.opacityCERP)
     love.graphics.print(bv.name, thisX + 10, thisY + settPan.fontHeight) -- prints the name of things
-    love.graphics.printf(boolToString(bv.v), thisX + width - 90, thisY + settPan.fontHeight, 90, "center") -- prints the value of things
 end
 
 function drawSettingsStencilLeft()
@@ -227,7 +239,7 @@ function loadSliders()
     local thisX = x - (settPan.width * 0.25) + (settPan.width * 0.5)
     local thisY = y - (settPan.height * 0.5) + settPan.padding + settSrl[2].posy + 49 - 7
     local width = (settPan.width * 0.5) - 10 - 68
-    local style = {track = "line", knob = "rectangle", width = 18,} 
+    local style = {track = "line", knob = "rectangle", width = 18,}
     volumeSlider = newSlider(thisX, thisY + faderPosition[1], width, musicVolume, 0, 1, sliderValueA(v), style)
     sfxSlider = newSlider(thisX, thisY + faderPosition[2], width, sfxVolume, 0, 1, sliderValueA(v), style)
 end
@@ -243,15 +255,15 @@ function getSettingsMouseOver(dir)
     local x,y = (love.graphics.getWidth() * 0.5), (love.graphics.getHeight() * 0.5)
     if dir == "left" then
         return isMouseOver(
-            x - (settPan.width * 0.5) + settPan.padding, 
-            y - (settPan.height * 0.5)  + settPan.padding + settPan.titleOffset, 
-            (settPan.width * 0.5) - (settPan.padding * 2), 
+            x - (settPan.width * 0.5) + settPan.padding,
+            y - (settPan.height * 0.5)  + settPan.padding + settPan.titleOffset,
+            (settPan.width * 0.5) - (settPan.padding * 2),
             (settPan.height) - (settPan.padding * 2) - settPan.titleOffset)
     elseif dir == "right" then
         return isMouseOver(
-            x + settPan.padding, 
-            y - (settPan.height * 0.5) + settPan.padding, 
-            (settPan.width * 0.5) - (settPan.padding * 2), 
+            x + settPan.padding,
+            y - (settPan.height * 0.5) + settPan.padding,
+            (settPan.width * 0.5) - (settPan.padding * 2),
             (settPan.height) - (settPan.padding * 2) - 40 - settPan.objectPadding)
     end
 end
@@ -265,7 +277,7 @@ function scrollSettings(dx, dy)
 end
 
 function scaleHUD(dir)
-    if dir == "up" then 
+    if dir == "up" then
         settPan.scaleValue = settPan.scaleValue + 1
         if settPan.scaleValue > #settPan.scaleTypes then settPan.scaleValue = 1 end
     elseif dir == "down" then

@@ -35,6 +35,13 @@ function initSettings()
     openUiOnHover = true
     showClouds = true
     showShadows = false
+
+    useItemColor = {}
+    hotbar = {}
+    for i = 1, 7 do
+        hotbar[#hotbar + 1] = {item = null,}
+        useItemColor[#useItemColor + 1] = 0 
+    end
     
     info = love.filesystem.getInfo("settings.txt")
     getSettingsVersion()
@@ -56,6 +63,7 @@ function initSettings()
         showClouds = contents["showClouds"]
         showShadows = contents["showShadows"]
         openUiOnHover = contents["openUiOnHover"]
+        hotbar = contents["hotbar"]
         api.url = servers[selectedServer].url
     else
         writeSettings()
@@ -104,6 +112,7 @@ function writeSettings()
         showClouds = showClouds,
         showShadows = showShadows,
         openUiOnHover = openUiOnHover,
+        hotbar = hotbar,
     }))
 end
 
