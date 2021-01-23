@@ -125,7 +125,6 @@ function setWindowOptions()
         highdpi = highdpi,
         fullscreen = fullscreen,
         resizable = not fullscreen,
-        highdpi = thisDPI,
         usedpiscale = false,
         vsync = 0,
     })
