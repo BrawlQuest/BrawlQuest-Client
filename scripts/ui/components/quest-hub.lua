@@ -177,15 +177,16 @@ end
 function drawQuestHub(thisX, thisY) 
     questHub.hover = false
     if #quests[1] > 0 then
-        love.graphics.setColor(0,0,0,0.5)
+        love.graphics.setColor(0,0,0,0.7)
     else
-        love.graphics.setColor(0,0,0,0.5 * questsPanel.opacity)
+        love.graphics.setColor(0,0,0,0.7 * questsPanel.opacity)
     end
-    love.graphics.rectangle("fill", thisX, thisY - 106, -313, cerp(-14, 0 - ((uiY/1.25) - 102), questsPanel.amount)) -- Quests Panel Background
-    love.graphics.rectangle("fill", thisX, thisY, cerp(-313, -462, questHub.commentAmount), -106) -- Quests Hub Background
+
+    roundRectangle("fill", thisX - 313, thisY - 106 - 14 - cerp(0, ((uiY/1.25) - 102), questsPanel.amount), 313, 14 + cerp(0, ((uiY/1.25) - 102), questsPanel.amount), 5 , {true, false, false, false}) -- Quests Panel Background
+    roundRectangle("fill", thisX - cerp(313, 462, questHub.commentAmount), thisY - 106, cerp(313, 462, questHub.commentAmount), 106, cerp(0, 10, questHub.commentAmount), {true, false, false, false}) -- Quests Hub Background
+
+
     love.graphics.setColor(1,1,1,1 * questHub.opacity)
-
-
     thisX, thisY = thisX - 73, thisY - cerp(0, 100, questHub.amount)
     if #quests[1] > 0 then 
         drawQuestHubProifle(thisX, thisY)
@@ -205,7 +206,7 @@ end
 
 function drawQuestHubNPCTalk(thisX, thisY)
     if questHub.commentOpen and #quests[1] > 0 then
-        love.graphics.setColor(0,0,0, questHub.commentOpacity * 0.6 )
+        love.graphics.setColor(0,0,0, questHub.commentOpacity * 0.7 )
         love.graphics.draw(questHub.images.npcTalkBG, thisX, thisY)
         love.graphics.setColor(1,1,1,questHub.commentOpacity)
         love.graphics.setFont(questHub.titleFont)
@@ -222,7 +223,7 @@ function drawQuestHubMeters(thisX, thisY)
 end
 
 function drawQuestHubMetersBar(thisX, thisY, i)
-    love.graphics.setColor(0,0,0,0.5 * questHub.opacity)
+    love.graphics.setColor(0,0,0,0.7 * questHub.opacity)
     love.graphics.rectangle("fill", thisX + 28, thisY, 157, 19)
     if quests[1][i] ~= null then
         if isMouseOver(thisX * scale, thisY * scale, 214 * scale, 19 * scale) then

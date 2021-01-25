@@ -180,7 +180,12 @@ function drawToolBarInventory(thisX, thisY)
     love.graphics.setColor(unpack(characterHub.backgroundColor))
     inventory.isMouseOverInventoryItem = false
 
-    love.graphics.rectangle("fill", thisX, thisY - 97, 313, 0 - cerp(23, 23 + (uiY - 97 - 23), inventory.amount))
+    roundRectangle("fill", thisX, 
+    thisY - 97 - 23 - cerp(0, 0 + (uiY - 97 - 23), inventory.amount), 
+    313,
+    23 + cerp(0, 0 + (uiY - 97 - 23), inventory.amount), 
+    cerp(10, 0, inventory.amount),
+    {false, true, false, false} )
     thisX, thisY = thisX, thisY - 97
     love.graphics.setColor(1, 1, 1, 1)
 

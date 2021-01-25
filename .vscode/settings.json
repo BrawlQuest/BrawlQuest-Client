@@ -4,6 +4,8 @@
     ],
     "Lua.diagnostics.disable": [
         "lowercase-global",
-        "undefined-global"
+        "undefined-global",
+        "unused-local",
+        "unbalanced-assignments"
     ]
 }

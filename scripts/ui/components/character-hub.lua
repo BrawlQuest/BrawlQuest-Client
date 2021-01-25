@@ -55,7 +55,7 @@ function updateCharacterHub(dt)
 end
 
 function drawCharacterHub(thisX, thisY)
-    if me ~= null and me.HP ~= null or me.XP ~= null then
+    if me ~= null and me.HP ~= null or me.XP ~= null then
         love.graphics.setFont(characterHub.font)
         thisX, thisY = thisX, thisY - hubImages.profileBG:getHeight()
         drawCharacterHubProfile(thisX, thisY)
@@ -113,7 +113,7 @@ end
 function drawCharacterHubMeters(thisX, thisY)
     love.graphics.setColor(unpack(characterHub.backgroundColor))
     -- love.graphics.draw(hubImages.metersBG, thisX, thisY)
-    love.graphics.rectangle("fill", thisX, thisY, 231, 97)
+    roundRectangle("fill", thisX, thisY, 231, 97, cerp(0, 10, characterHub.amount), {false, true, false, false})
     love.graphics.setFont(characterHub.nameFont)
     love.graphics.setColor(1,1,1,1)
     love.graphics.print(me.Name, thisX + 6, thisY+4)
