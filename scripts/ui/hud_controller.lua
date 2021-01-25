@@ -32,7 +32,7 @@ function initHUD()
     headerBigFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 32) -- TODO: get a license for this font
     font = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 18)
    
-    chatFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16)
+    chatFont = love.graphics.newFont("assets/ui/fonts/C&C Red Alert [INET].ttf", 26)
 
     npcChatFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16)
 

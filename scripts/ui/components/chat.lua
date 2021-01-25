@@ -161,7 +161,7 @@ function drawEnterChatBox(thisX, thisY, text)
 	
 	if isTypingInChat then
 		-- if chatCursor.on then text = text .. "£" end
-		text = text .. "£"
+		text = text .. "|"
 		love.graphics.setColor(1,1,1,1)
 	else
 		love.graphics.setColor(1,1,1,1)

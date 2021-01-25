@@ -26,87 +26,103 @@ function initQuestHub()
     initQuestsPanel()
     
     quests = {
-        -- {Tracking = {}, Backlog = {}, Completed = {},}
-        {
+        -- -- {Tracking = {}, Backlog = {}, Completed = {},}
+        -- {
             
-        },
-        {
-            {
-                title = "The Fall of Man and his friends, he had it bad man",
-                comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
-                giver = "Mortus",
-                task = "Get 12 Apples",
-                requiredAmount = 12,
-                currentAmount = 6,
-                replayable = true,
-            },
-            {
-                title = "The Brotherhood",
-                comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
-                giver = "Brother Dan",
-                task = "Kill 4 Mobs",
-                requiredAmount = 4,
-                currentAmount = 4,
-                replayable = false,
-            },
-            {
-                title = "The Fall of Man",
-                comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
-                giver = "Mortus",
-                task = "Get 12 Apples",
-                requiredAmount = 12,
-                currentAmount = 6,
-                replayable = true,
-            },
-            {
-                title = "The people",
-                comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
-                giver = "Brother Dan",
-                task = "Kill 4 Mobs",
-                requiredAmount = 4,
-                currentAmount = 4,
-                replayable = false,
-            },
-            {
-                title = "Kill all the boars",
-                comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
-                giver = "Brother Dan",
-                task = "Kill 4 Mobs",
-                requiredAmount = 4,
-                currentAmount = 4,
-                replayable = false,
-            },
-            {
-                title = "I don't know what I'm doing",
-                comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
-                giver = "Brother Dan",
-                task = "Kill 4 Mobs",
-                requiredAmount = 4,
-                currentAmount = 4,
-                replayable = false,
-            },
-        },
-        {
-            {
-                title = "The Fall of Man",
-                comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
-                giver = "Mortus",
-                task = "Get 12 Apples",
-                requiredAmount = 12,
-                currentAmount = 6,
-                replayable = false,
-            },
-            {
-                title = "The Killer",
-                comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
-                giver = "Brother Dan",
-                task = "Kill 4 Mobs",
-                requiredAmount = 4,
-                currentAmount = 4,
-                replayable = true,
-            },
-        },
+        -- },
+        -- {
+        --     {
+        --         title = "The Fall of Man and his friends, he had it bad man",
+        --         comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
+        --         giver = "Mortus",
+        --         task = "Get 12 Apples",
+        --         requiredAmount = 12,
+        --         currentAmount = 6,
+        --         replayable = true,
+        --     },
+        --     {
+        --         title = "The Brotherhood",
+        --         comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
+        --         giver = "Brother Dan",
+        --         task = "Kill 4 Mobs",
+        --         requiredAmount = 4,
+        --         currentAmount = 4,
+        --         replayable = false,
+        --     },
+        --     {
+        --         title = "The Fall of Man",
+        --         comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
+        --         giver = "Mortus",
+        --         task = "Get 12 Apples",
+        --         requiredAmount = 12,
+        --         currentAmount = 6,
+        --         replayable = true,
+        --     },
+        --     {
+        --         title = "The people",
+        --         comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
+        --         giver = "Brother Dan",
+        --         task = "Kill 4 Mobs",
+        --         requiredAmount = 4,
+        --         currentAmount = 4,
+        --         replayable = false,
+        --     },
+        --     {
+        --         title = "Kill all the boars",
+        --         comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
+        --         giver = "Brother Dan",
+        --         task = "Kill 4 Mobs",
+        --         requiredAmount = 4,
+        --         currentAmount = 4,
+        --         replayable = false,
+        --     },
+        --     {
+        --         title = "I don't know what I'm doing",
+        --         comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
+        --         giver = "Brother Dan",
+        --         task = "Kill 4 Mobs",
+        --         requiredAmount = 4,
+        --         currentAmount = 4,
+        --         replayable = false,
+        --     },
+        -- },
+        -- {
+        --     {
+        --         title = "The Fall of Man",
+        --         comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
+        --         giver = "Mortus",
+        --         task = "Get 12 Apples",
+        --         requiredAmount = 12,
+        --         currentAmount = 6,
+        --         replayable = false,
+        --     },
+        --     {
+        --         title = "The Killer",
+        --         comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
+        --         giver = "Brother Dan",
+        --         task = "Kill 4 Mobs",
+        --         requiredAmount = 4,
+        --         currentAmount = 4,
+        --         replayable = true,
+        --     },
+        -- },
     }
+
+    local randomQuest = {love.math.random(0, 4), love.math.random(1, 5), love.math.random(1, 2),}
+    for i = 1, 3 do
+        quests[i] = {}
+        for j = 1, randomQuest[i] do
+            quests[i][j] = {
+                title = "The Fall of Man and his friends, he had it bad man",
+                comment = "The long path is unclear at best",
+                giver = "Mortus",
+                task = "Get 12 Apples",
+                requiredAmount = 12,
+                currentAmount = 6,
+                replayable = true,
+            }
+        end
+    end
 end
 
 function updateQuestHub(dt)
