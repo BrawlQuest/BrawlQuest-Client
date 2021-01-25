@@ -31,10 +31,11 @@ function drawChatPanel(thisX, thisY) -- the function to recall it all
 	love.graphics.stencil(drawChatStencil, "replace", 1) -- stencils inventory
     love.graphics.setStencilTest("greater", 0) -- push
 
-		for i = 1, #messages do -- the most important thing here
-			thisY = thisY - getChatHeight(messages[i].username, messages[i].text, i)
-			drawChatbox(thisX - (chatWidth+130), thisY, messages[i].username, messages[i].text,  messages[i].player, i)
-			previousUsername = messages[i].username
+		for i,v in ipairs (messages) do-- the most important thing here
+			thisY = thisY - getChatHeight(v.username, v.text, i)
+			-- print(json:encode_pretty(v.player.Name))
+			drawChatbox(thisX - (chatWidth+130), thisY, v.username, v.text,  v.player, i)
+			previousUsername = v.username
 		end
 
 	love.graphics.setStencilTest() -- pop
@@ -44,9 +45,9 @@ end
 
 function getFullChatHeight()
 	local height = 0
-	for i = 1, #messages do
-		height = height - getChatHeight(messages[i].username, messages[i].text, i)
-		previousUsername = messages[i].username
+	for i,v in ipairs (messages) do
+		height = height - getChatHeight(v.username, v.text, i)
+		previousUsername = v.username
 	end
 	return height * -0.5
 end
@@ -97,13 +98,13 @@ end
 
 function drawChatboxProfilePic(thisX, thisY, username, text, player, i)
 	if username == me.Name then
-		drawProfilePic(thisX+chatWidth+(chatCorner:getWidth() * 2) + 8, getProfilePicY(thisY, text, username), 1, "left", me.Name, player)
+		-- drawProfilePic(thisX+chatWidth+(chatCorner:getWidth() * 2) + 8, getProfilePicY(thisY, text, username), 1, "left", me)
 		drawChatboxBackground(thisX, thisY, username, text, "right")
 		drawChatboxText(thisX, thisY, text, "right")
 	else
 		local i = thisX + profilePic:getWidth()+8
 		local j = thisY + chatFont:getHeight()
-		drawProfilePic(thisX, getProfilePicY(thisY, text, username)+chatFont:getHeight(), 1, "right", username)
+		drawProfilePic(thisX, getProfilePicY(thisY, text, username)+chatFont:getHeight(), 1, "right", player)
 		drawChatboxBackground(i, thisY, username, text, "left")
 		drawChatboxText(i, thisY, text, "left")
 		love.graphics.setColor(1,1,1,1)
@@ -160,7 +161,6 @@ function drawEnterChatBox(thisX, thisY, text)
 	local enterChatWidth = chatWidth + 90
 	
 	if isTypingInChat then
-		-- if chatCursor.on then text = text .. "£" end
 		text = text .. "|"
 		love.graphics.setColor(1,1,1,1)
 	else
@@ -198,3 +198,75 @@ function drawChatStencil()
 	)
 end
 
+--[[
+	{
+  "AX": -4,
+  "AY": 4,
+  "Buddy": "assets/items/buddy/Penguin.png",
+  "ChestArmour": {
+    "Desc": "It hangs a bit loose, but it's good for being about the town.",
+    "ID": 3,
+    "ImgPath": "assets/player/gear/custom/green shirt.png",
+    "Name": "Green Shirt",
+    "Type": "arm_chest",
+    "Val": "0",
+    "Worth": 1
+  },
+  "ChestArmourID": 3,
+  "HP": 343,
+  "HeadArmour": {
+    "Desc": "A long cloak used by petty bandits to hide their face in towns and conceal the weapons they carry. Allows you to blend in with Bandit enemies.",
+    "ID": 13,
+    "ImgPath": "assets/player/gear/custom/cloak full.png",
+    "Name": "Bandit's Cloak",
+    "Type": "arm_head",
+    "Val": "5",
+    "Worth": 10
+  },
+  "HeadArmourID": 13,
+  "ID": 13,
+  "INT": 2,
+  "IsShield": false,
+  "LVL": 12,
+  "LastUpdate": 1611592178,
+  "LegArmour": {
+    "Desc": "Smart casual, for sure.",
+    "ID": 2,
+    "ImgPath": "assets/player/gear/custom/brown trousers.png",
+    "Name": "Brown Trousers",
+    "Type": "arm_legs",
+    "Val": "0",
+    "Worth": 1
+  },
+  "LegArmourID": 2,
+  "Mana": 100,
+  "Mount": "Horse",
+  "Name": "Danjoe",
+  "Owner": "Danjoe",
+  "STA": 20,
+  "STR": 58,
+  "Shield": {
+    "Desc": "An error has ocurred. Run!!!",
+    "ID": 0,
+    "ImgPath": "assets/error.png",
+    "Name": "Error",
+    "Type": "Error",
+    "Val": "Error",
+    "Worth": 0
+  },
+  "ShieldID": 0,
+  "Weapon": {
+    "Desc": "A short but somewhat sharpened knife designed for opening small parcels.",
+    "ID": 20,
+    "ImgPath": "assets/player/gear/a1/dagger.png",
+    "Name": "Sharpened Letter Opener",
+    "Type": "wep",
+    "Val": "5",
+    "Worth": 10
+  },
+  "WeaponID": 20,
+  "X": -4,
+  "XP": 79,
+  "Y": 4
+}
+]]

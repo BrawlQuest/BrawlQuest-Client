@@ -1,43 +1,7 @@
-function drawProfile()
-	
-	if isMouseOver(0,0,perksBg:getWidth()*scale,perksBg:getHeight()*scale) then
-		drawPerks()
-    end
-    
-	love.graphics.draw(profileBackground)
-	drawProfilePic(19, 5, 0.5, "right", me.Name)
-	love.graphics.draw(level, 7, 5)
-	love.graphics.draw(profileBars, 7, 51)
-	love.graphics.setColor(1,1,1,1)
 
-	for i = 1, 3 do
-		love.graphics.rectangle("fill", 20, 80+(14*(i-1)), 42, 10) -- Backing Rectangles
-	end
 
-	local j = 2.380952380952381
-	
-	if me ~= null and me.HP ~= null or me.XP ~= null then
-		love.graphics.setColor(0,0,0,1)
-		love.graphics.setFont(circleFont)
-		love.graphics.printf(me.LVL, 33, 33, 30, "center")
-		love.graphics.setFont(font)
-		love.graphics.setColor(1,1,1,1)
-		
-		love.graphics.setColor(1,0,0,1)
-		love.graphics.rectangle("fill", 20, 80, me.HP / j, 10) -- Health
-
-		love.graphics.setColor(0,0.5,1,1)
-		love.graphics.rectangle("fill", 20, 94, me.Mana / j, 10) -- Mana
-		
-		love.graphics.setColor(1,0.5,0,1)
-		love.graphics.rectangle("fill", 20, 108, me.XP / j, 10) -- XP
-	end
-
-	love.graphics.setColor(1,1,1,1)
-end
-
-function drawProfilePic(thisX, thisY, thisScale, thisRotation, tplayer)
-	if not tplayer then tplayer = me end
+function drawProfilePic(thisX, thisY, thisScale, thisRotation, v)
+	-- if not v then v = me end
 	love.graphics.push()
 		local i = 1 * thisScale
 		love.graphics.scale(i)
@@ -47,7 +11,7 @@ function drawProfilePic(thisX, thisY, thisScale, thisRotation, tplayer)
 	love.graphics.pop()
 	
 	love.graphics.push()
-		local i = 4 * thisScale
+		i = 4 * thisScale
 		love.graphics.scale(i)
 
 		if thisRotation == "left" then
@@ -58,20 +22,68 @@ function drawProfilePic(thisX, thisY, thisScale, thisRotation, tplayer)
 			r = 1
 		end
 
-		if itemImg[tplayer.Shield] ~= nil then
-			love.graphics.draw(itemImg[tplayer.Shield.ImgPath], ShieldImgStencil, thisX, thisY/i, 0, r, 1)
+		love.graphics.draw(playerImg, profileImgStencil, thisX, thisY/i, 0, r, 1)
+
+		if v == me then
+			print("Yooooo")
+
+			if v.HeadArmourID ~= 0 then
+				drawItemIfExists(v.HeadArmour.ImgPath, x, y, r)
+			end
+			if v.ChestArmourID ~= 0 then
+				drawItemIfExists(v.ChestArmour.ImgPath, x, y, r)
+			end
+			if v.LegArmourID ~= 0 then
+				drawItemIfExists(v.LegArmour.ImgPath, x, y, r)
+			end
+
+			-- if v.HeadArmourID ~= 0 then
+			-- 	drawItemIfExists(v.HeadArmour.ImgPath, x, y, ad.previousDirection)
+			-- end
+			-- if v.ChestArmourID ~= 0 then
+			-- 	drawItemIfExists(v.ChestArmour.ImgPath, x, y, ad.previousDirection)
+			-- end
+
 		end
 		
-		if playerImg ~= null then
-			love.graphics.draw(playerImg, profileImgStencil, thisX, thisY/i, 0, r, 1)
-		end
+		-- for j,v in ipairs(players) do
+		-- 	print(json:encode_pretty(v) .. ",,, " .. v)
+		-- 	if v.Name == v then
+		-- 		print("trueee")
+		-- 		love.graphics.rectangle("fill", thisX, thisY, 100, 100)
+		-- 		drawItemIfExists(v.ChestArmour.ImgPath, thisX, thisY, r)
+		-- 	end
+		-- end
 
-		if itemImg[tplayer.ChestArmour] ~= nil then
-			love.graphics.draw(itemImg[tplayer.ChestArmour.ImgPath], profileImgStencil, thisX, thisY/i, 0, r, 1)
-		end
-
-		if itemImg[tplayer.HeadArmour] ~= nil then
-			love.graphics.draw(itemImg[tplayer.HeadArmour.ImgPath], profileImgStencil, thisX, thisY/i, 0, r, 1)
-		end
 	love.graphics.pop()
 end
+
+--[[{
+"AX":-2,
+"AY":1,
+"Buddy":"None",
+"ChestArmour":{"Desc":"It hangs a bit loose, but it's good for being about the town.","ID":3,"ImgPath":"assets/player/gear/custom/green shirt.png","Name":"Green Shirt","Type":"arm_chest","Val":"0","Worth":1},
+"ChestArmourID":3,
+"HP":115,
+"HeadArmour":{"Desc":"An error has ocurred. Run!!!","ID":0,"ImgPath":"assets/error.png","Name":"Error","Type":"Error","Val":"Error","Worth":0},
+"HeadArmourID":0,
+"ID":14,
+"INT":1,
+"IsShield":false,
+"LVL":1,
+"LastUpdate":1611588815,
+"LegArmour":{"Desc":"Smart casual, for sure.","ID":2,"ImgPath":"assets/player/gear/custom/brown trousers.png","Name":"Brown Trousers","Type":"arm_legs","Val":"0","Worth":1},
+"LegArmourID":2,
+"Mana":100,
+"Mount":"None",
+"Name":"Lord Squabulus",
+"Owner":"Danjoe",
+"STA":1,
+"STR":1,
+"Shield":{"Desc":"An error has ocurred. Run!!!","ID":0,"ImgPath":"assets/error.png","Name":"Error","Type":"Error","Val":"Error","Worth":0},
+"ShieldID":0,
+"Weapon":{"Desc":"A long stick with the end sharpened to be somewhat pointy.","ID":1,"ImgPath":"assets/player/gear/a0/dagger.png","Name":"Long Stick","Type":"wep","Val":"1","Worth":1},
+"WeaponID":1,
+"X":-2,
+"XP":91,
+"Y":1}]]--

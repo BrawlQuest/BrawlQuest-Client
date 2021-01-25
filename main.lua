@@ -25,7 +25,6 @@ require "scripts.ui.components.quests-panel"
 require "scripts.ui.components.settings-panel"
 require "scripts.ui.components.chat"
 require "scripts.ui.components.toolbar"
-require "scripts.ui.components.battlebar"
 require "scripts.ui.components.zone-titles"
 require "scripts.ui.components.profile"
 require "scripts.libraries.api"
@@ -238,7 +237,7 @@ function love.update(dt)
                     text = v["Message"],
                     player = v["Sender"]
                 }
-             end
+            end
             
            timeOfDay = cerp(0.1, 1, ((math.abs(response['CurrentHour']) * 60) + 0) / 720)
         

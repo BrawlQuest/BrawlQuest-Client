@@ -97,7 +97,7 @@ end
 function drawQuestsPanelQuestBox(thisX, thisY, i, j)
     love.graphics.setColor(0,0,0,0.75 * questsPanel.opacity)
     drawQuestsPanelQuestBoxBg(thisX, thisY + 10, questsPanel.boxBgWidth, getQuestsPanelBoxHeight(i, j) - 10)
-    drawProfilePic(thisX + 10, thisY + 10 + 10, 0.5, "right", me.Name)
+    -- drawProfilePic(thisX + 10, thisY + 10 + 10, 0.5, "right", me)
 
     local isIt = isMouseOver((thisX  - 6) * scale, (thisY + 4) * scale, questsPanel.images[4]:getWidth() * scale, questsPanel.images[4]:getHeight() * scale)
 
