@@ -59,6 +59,7 @@ function initHUD()
     profileBackground = love.graphics.newImage("assets/ui/hud/profile/profile-backing.png")
     ShieldImg = love.graphics.newImage("assets/player/gen/shield false.png")
     profileImgStencil = love.graphics.newQuad(12, 0, 16, 16, playerImg:getDimensions())
+    npcImgStencil = love.graphics.newQuad(7, 0, 16, 16, playerImg:getDimensions())
     ShieldImgStencil = love.graphics.newQuad(12, 0, 16, 16, ShieldImg:getDimensions())
 
     -- Perks

@@ -24,106 +24,46 @@ function initQuestHub()
     }
 
     initQuestsPanel()
-    
-    quests = {
-        -- -- {Tracking = {}, Backlog = {}, Completed = {},}
-        -- {
-            
-        -- },
-        -- {
-        --     {
-        --         title = "The Fall of Man and his friends, he had it bad man",
-        --         comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
-        --         giver = "Mortus",
-        --         task = "Get 12 Apples",
-        --         requiredAmount = 12,
-        --         currentAmount = 6,
-        --         replayable = true,
-        --     },
-        --     {
-        --         title = "The Brotherhood",
-        --         comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
-        --         giver = "Brother Dan",
-        --         task = "Kill 4 Mobs",
-        --         requiredAmount = 4,
-        --         currentAmount = 4,
-        --         replayable = false,
-        --     },
-        --     {
-        --         title = "The Fall of Man",
-        --         comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
-        --         giver = "Mortus",
-        --         task = "Get 12 Apples",
-        --         requiredAmount = 12,
-        --         currentAmount = 6,
-        --         replayable = true,
-        --     },
-        --     {
-        --         title = "The people",
-        --         comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
-        --         giver = "Brother Dan",
-        --         task = "Kill 4 Mobs",
-        --         requiredAmount = 4,
-        --         currentAmount = 4,
-        --         replayable = false,
-        --     },
-        --     {
-        --         title = "Kill all the boars",
-        --         comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
-        --         giver = "Brother Dan",
-        --         task = "Kill 4 Mobs",
-        --         requiredAmount = 4,
-        --         currentAmount = 4,
-        --         replayable = false,
-        --     },
-        --     {
-        --         title = "I don't know what I'm doing",
-        --         comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
-        --         giver = "Brother Dan",
-        --         task = "Kill 4 Mobs",
-        --         requiredAmount = 4,
-        --         currentAmount = 4,
-        --         replayable = false,
-        --     },
-        -- },
-        -- {
-        --     {
-        --         title = "The Fall of Man",
-        --         comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
-        --         giver = "Mortus",
-        --         task = "Get 12 Apples",
-        --         requiredAmount = 12,
-        --         currentAmount = 6,
-        --         replayable = false,
-        --     },
-        --     {
-        --         title = "The Killer",
-        --         comment = "fas poijhfoiwjff oifjwoefhi ofoefh ofofjofhoihf onfohf ofoif if oknvp poif",
-        --         giver = "Brother Dan",
-        --         task = "Kill 4 Mobs",
-        --         requiredAmount = 4,
-        --         currentAmount = 4,
-        --         replayable = true,
-        --     },
-        -- },
-    }
+    quests = {}
 
     local randomQuest = {love.math.random(0, 4), love.math.random(1, 5), love.math.random(1, 2),}
+    local randomGiver = {
+        {"Mortus", "assets/npc/Mortus.png",},
+        {"Lumberjack", "assets/npc/Lumberjack.png",},
+        {"Drunk Man", "assets/npc/Drunk Man.png",},
+        {"Blacksmith", "assets/npc/Blacksmith.png",},
+        {"Bartender", "assets/npc/Bartender.png",},
+        {"Brother Dan", "assets/npc/Priest.png",},
+    }
+
     for i = 1, 3 do
         quests[i] = {}
         for j = 1, randomQuest[i] do
+            local rand = love.math.random(1, 6)
+            local max = love.math.random(1, 20)
+            local min = love.math.random(0, max)
             quests[i][j] = {
-                title = "The Fall of Man and his friends, he had it bad man",
+                title = generateRandomTitle(),
                 comment = "The long path is unclear at best",
-                giver = "Mortus",
-                profilePic = "assets/npc/Mortus.png",
-                task = "Get 12 Apples",
-                requiredAmount = 12,
-                currentAmount = 6,
+                giver = randomGiver[rand][1],
+                profilePic = randomGiver[rand][2],
+                task = "Get " .. max .. " Apples",
+                requiredAmount = max,
+                currentAmount = min,
                 replayable = true,
             }
         end
     end
+end
+
+function generateRandomTitle()
+    local randText = {desc = {"Great", "Ominous", "Dark", "Evil", "Hungry"}, thing = {"Woods", "Night", "Day", "Road", "Nightmare",}}
+    -- local rand = 
+    local text = ""
+    for i = 1, love.math.random(1, 5) do
+        text = text .. randText.desc[love.math.random(1, #randText.desc)] .. " "
+    end
+    return "The " .. text .. randText.thing[love.math.random(1, #randText.thing)]
 end
 
 function updateQuestHub(dt)

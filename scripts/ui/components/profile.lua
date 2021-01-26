@@ -2,8 +2,6 @@ local r = 0
 
 function drawProfilePic(thisX, thisY, thisScale, thisRotation, v)
 	v = v or me
-	-- print (profileCount .. "=  " .. json:encode_pretty(v))
-
 	drawProfileBackground(thisX, thisY, thisScale)
 
 	love.graphics.push()
@@ -37,14 +35,14 @@ function drawNPCProfilePic(thisX, thisY, thisScale, thisRotation, image)
 			print("AN ERROR OCURRED. "..image.." can't be found.")
 		end
 	end
-	
+
 	drawProfileBackground(thisX, thisY, thisScale)
 	love.graphics.push()
 		i = 4 * thisScale
 		love.graphics.scale(i)
 
 		r, thisX = getProfileRotation(thisRotation, thisX, i)
-		love.graphics.draw(worldImg[image], profileImgStencil, thisX, thisY / i, 0, r, 1)
+		love.graphics.draw(worldImg[image], npcImgStencil, thisX, thisY / i, 0, r, 1)
 	love.graphics.pop()
 end
 
