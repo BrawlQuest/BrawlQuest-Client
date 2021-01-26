@@ -75,13 +75,13 @@ function roundRectangle(type, x, y, width, height, radius, table)
         love.graphics.rectangle(type, x + width - radius, y, radius, radius)
     end
 
-    if table[3] then
+    if table[4] then
         love.graphics.arc(type, x + radius, y + height - radius, radius, math.rad(-180), math.rad(-270))
     else
         love.graphics.rectangle(type, x, y + height - radius, radius, radius)
     end
 
-    if table[4] then
+    if table[3] then
         love.graphics.arc(type, x + width - radius , y + height - radius, radius, math.rad(0), math.rad(90))
     else
         love.graphics.rectangle(type, x + width - radius , y + height - radius, radius, radius)

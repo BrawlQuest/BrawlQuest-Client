@@ -86,8 +86,8 @@ function getQuestsPanelBoxHeight(i, j)
     local height = getTextHeight(
         quests[i][j].title, questsPanel.boxTextWidth, questsPanel.titleFont
     ) + 8 + getTextHeight(
-        quests[i][j].task, questsPanel.boxTextWidth, questsPanel.commentFont
-    ) + 10 + (10 * 2)
+        "- " .. quests[i][j].task, questsPanel.boxTextWidth, questsPanel.commentFont
+    ) + 20 + 16 + (10 * 2)
 
     local profileHeight = (profilePic:getHeight() * 0.5) + 20 + 10
 
@@ -99,33 +99,31 @@ function drawQuestsPanelQuestBox(thisX, thisY, i, j)
     drawQuestsPanelQuestBoxBg(thisX, thisY + 10, questsPanel.boxBgWidth, getQuestsPanelBoxHeight(i, j) - 10)
     drawNPCProfilePic(thisX + 10, thisY + 10 + 10, 0.5, "right", quests[i][j].profilePic)
 
+    love.graphics.printf(quests[i][j].giver, questsPanel.commentFont, thisX + 10, thisY + 58, 32, "center")
+
     local isIt = isMouseOver((thisX  - 6) * scale, (thisY + 4) * scale, questsPanel.images[4]:getWidth() * scale, questsPanel.images[4]:getHeight() * scale)
 
     if i == 1 then
         if isIt then
             love.graphics.setColor(1,1,1,questsPanel.opacity)
             drawQuestAddButton(thisX, thisY)
-            -- love.graphics.draw(questsPanel.images[4], thisX - 6, thisY + 4)
             love.graphics.setColor(0,0,0,questsPanel.opacity)
             love.graphics.draw(questsPanel.images[1], thisX - 6, thisY + 4)
         else
             love.graphics.setColor(0.75,0,0,questsPanel.opacity)
             drawQuestAddButton(thisX, thisY)
-            -- love.graphics.draw(questsPanel.images[4], thisX - 6, thisY + 4)
             love.graphics.setColor(1,1,1,questsPanel.opacity)
             love.graphics.draw(questsPanel.images[1], thisX - 6, thisY + 4)
         end
-    elseif i == 2 and #quests[1] < 4 then -- (i == 3 and quests[i][j].replayable)
+    elseif i == 2 and #quests[1] < 4 then
         if isIt then
             love.graphics.setColor(1,1,1,questsPanel.opacity)
             drawQuestAddButton(thisX, thisY)
-            -- love.graphics.draw(questsPanel.images[4], thisX - 6, thisY + 4)
             love.graphics.setColor(0,0,0,questsPanel.opacity)
             love.graphics.draw(questsPanel.images[2], thisX - 6, thisY + 4)
         else
             love.graphics.setColor(0,0.75,0,questsPanel.opacity)
             drawQuestAddButton(thisX, thisY)
-            -- love.graphics.draw(questsPanel.images[4], thisX - 6, thisY + 4)
             love.graphics.setColor(1,1,1,questsPanel.opacity)
             love.graphics.draw(questsPanel.images[2], thisX - 6, thisY + 4)
         end
@@ -138,12 +136,32 @@ function drawQuestsPanelQuestBox(thisX, thisY, i, j)
 
     love.graphics.setColor(1,1,1,questsPanel.opacity)
 
-    thisX, thisY = thisX + (profilePic:getWidth() * 0.5) + (10 * 2), thisY + 10 + 10
-    love.graphics.setFont(questsPanel.titleFont)
-    love.graphics.printf(quests[i][j].title, thisX, thisY, questsPanel.boxTextWidth, "left")
+    thisX, thisY = thisX + profilePic:getWidth() * 0.5 + 10 * 2, thisY + 10 + 10
+    love.graphics.printf(quests[i][j].title, questsPanel.titleFont, thisX, thisY, questsPanel.boxTextWidth, "left")
     thisY = thisY + getTextHeight(quests[i][j].title, questsPanel.boxTextWidth, questsPanel.titleFont) + 8
-    love.graphics.setFont(questsPanel.commentFont)
-    love.graphics.printf("- " .. quests[i][j].task, thisX, thisY, questsPanel.boxTextWidth, "left")
+    love.graphics.printf("- " .. quests[i][j].task, questsPanel.commentFont, thisX, thisY, questsPanel.boxTextWidth, "left")
+    thisY = thisY + getTextHeight("- " .. quests[i][j].task, questsPanel.boxTextWidth, questsPanel.commentFont) + 8
+    drawQuestsPanelMeter(thisX, thisY, i, j)
+end
+
+function drawQuestsPanelMeter(thisX, thisY, i, j)
+    local width = questsPanel.boxBgWidth - (profilePic:getWidth() * 0.5 + 10 * 3)
+    love.graphics.setColor(0,0,0,0.7)
+    roundRectangle("fill", thisX, thisY, width, 18, 4)
+    love.graphics.setColor(1,0,0,1)
+    if quests[i][j].currentAmount > 0 then
+        local table = {true, false, false, true}
+        if quests[i][j].requiredAmount == quests[i][j].currentAmount then 
+            love.graphics.setColor(0, 0.7, 0, 1) 
+            table = {true, true, true, true}
+        end
+        roundRectangle("fill", thisX, thisY, width / quests[i][j].requiredAmount * quests[i][j].currentAmount, 18, 4, table)
+    end
+
+    love.graphics.setColor(1,1,1,1)    
+    love.graphics.print(quests[i][j].task, questsPanel.commentFont, thisX + 7, thisY + 6)
+    local text = quests[i][j].currentAmount .. "/" .. quests[i][j].requiredAmount
+    love.graphics.print(text, questsPanel.commentFont, thisX + width - questsPanel.commentFont:getWidth(text) - 7, thisY + 6)
 end
 
 function drawQuestAddButton(thisX, thisY)

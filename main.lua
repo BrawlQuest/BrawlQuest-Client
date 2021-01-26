@@ -237,15 +237,15 @@ function love.update(dt)
                 }
             end
             
-           timeOfDay = cerp(0.1, 1, ((math.abs(response['CurrentHour']) * 60) + 0) / 720)
+            timeOfDay = cerp(0.1, 1, ((math.abs(response['CurrentHour']) * 60) + 0) / 720)
         
-          if not worldEdit.open then
-             Luven.setAmbientLightColor({timeOfDay, timeOfDay, timeOfDay+0.1})
-          else
-            Luven.setAmbientLightColor({1,1,1})
-          end
+            if not worldEdit.open then
+                Luven.setAmbientLightColor({timeOfDay, timeOfDay, timeOfDay+0.1})
+            else
+                Luven.setAmbientLightColor({1,1,1})
+            end
 
-           me = response['Me']
+            me = response['Me']
 
             if distanceToPoint(me.X, me.Y, player.x, player.y) > 4 then
                 player.x = me.X

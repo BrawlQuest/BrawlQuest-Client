@@ -51,7 +51,6 @@ function updateCharacterHub(dt)
             if characterHub.amount < 0 then characterHub.amount = 0 end
         end
     end
-    -- print(characterHub.amount)
 end
 
 function drawCharacterHub(thisX, thisY)
@@ -69,28 +68,22 @@ function drawCharacterHub(thisX, thisY)
     end
 end
 
--- max health = 100 + (15 * me.STA) 
--- remember that me and me.STA might not be set
---- if (me and me.STA) then
-
 function drawCharacterHubProfile(thisX, thisY)
     love.graphics.setColor(unpack(characterHub.backgroundColor))
-    -- love.graphics.draw(hubImages.profileBG, thisX, thisY)
     love.graphics.rectangle("fill", thisX, thisY, 82, 97)
     love.graphics.setColor(1,1,1,1)
     drawProfilePic(thisX + 9, thisY + 8, 1, "right")
     
+    if player.cp > 0 then love.graphics.setColor(1,0,0,1) end
     love.graphics.draw(hubImages.profileFG, thisX, thisY)
-    love.graphics.setColor(0,0,0,1)
+    if player.cp > 0 then love.graphics.setColor(1,1,1,1) else love.graphics.setColor(0,0,0,1) end
     love.graphics.print(me.LVL, thisX + 56 - math.floor(characterHub.font:getWidth(me.LVL)/2), thisY + 85 - (characterHub.font:getHeight(me.LVL)/2))
 end
 
 function drawCharacterHubStats(thisX, thisY)
     love.graphics.setColor(unpack(characterHub.backgroundColor))
-    -- love.graphics.draw(hubImages.statsBG, thisX, thisY)
     love.graphics.rectangle("fill", thisX, thisY, cerp(0, 155, characterHub.amount), 97)
     love.graphics.setFont(characterHub.font)
-    -- local statNumbers = {me.STA, me.INT, me.DEF}
     for i = 0, 2 do
         if isMouseOver((thisX + (49 * i) + 3) * scale, (thisY + 43) * scale, hubImages.statCardBg:getWidth() * scale, hubImages.statCardBg:getHeight() * scale) then
             love.graphics.setColor(1,0,0, cerp(0, 1, characterHub.amount))
@@ -112,7 +105,6 @@ end
 
 function drawCharacterHubMeters(thisX, thisY)
     love.graphics.setColor(unpack(characterHub.backgroundColor))
-    -- love.graphics.draw(hubImages.metersBG, thisX, thisY)
     roundRectangle("fill", thisX, thisY, 231, 97, cerp(0, 10, characterHub.amount), {false, true, false, false})
     love.graphics.setFont(characterHub.nameFont)
     love.graphics.setColor(1,1,1,1)
