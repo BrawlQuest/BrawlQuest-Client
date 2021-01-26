@@ -78,7 +78,7 @@ function drawCharacterHubProfile(thisX, thisY)
     -- love.graphics.draw(hubImages.profileBG, thisX, thisY)
     love.graphics.rectangle("fill", thisX, thisY, 82, 97)
     love.graphics.setColor(1,1,1,1)
-    -- drawProfilePic(thisX + 9, thisY + 8, 1, "right", me)
+    drawProfilePic(thisX + 9, thisY + 8, 1, "right")
     
     love.graphics.draw(hubImages.profileFG, thisX, thisY)
     love.graphics.setColor(0,0,0,1)

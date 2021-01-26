@@ -215,7 +215,7 @@ function drawQuestHub(thisX, thisY)
 end
 
 function drawQuestHubProifle(thisX, thisY)
-    -- if me.Name ~= null then drawProfilePic(thisX, thisY, 1, "left", me) end
+    drawProfilePic(thisX, thisY, 1, "left")
     love.graphics.setFont(questHub.nameFont)
     love.graphics.printf(quests[1][questHub.selectedQuest].giver, thisX, thisY + 64 + 6, 64, "center") 
 end

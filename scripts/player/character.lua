@@ -39,13 +39,16 @@ player = {
 newInventoryItems = {}
 me = {}
 
-function drawItemIfExists(path, x, y, previousDirection)
-    local rotation = 1
+function drawItemIfExists(path, x, y, previousDirection, rotation, stencil, width)
     local offsetX = 0
-    if previousDirection and previousDirection == "left" then
-        rotation = -1
-        offsetX = 32
+    if not rotation then
+        rotaiton = 1
+        if previousDirection and previousDirection == "left" then
+            rotation = -1
+            offsetX = 32
+        end
     end
+
     if not itemImg[path] then
         if love.filesystem.getInfo(path) then
             itemImg[path] = love.graphics.newImage(path)
@@ -53,7 +56,12 @@ function drawItemIfExists(path, x, y, previousDirection)
             itemImg[path] = love.graphics.newImage("assets/error.png")
         end
     end
-    love.graphics.draw(itemImg[path], x + offsetX, y, player.wobble, rotation, 1, 0, 0)
+
+    if stencil then
+        love.graphics.draw(itemImg[path], stencil, x + offsetX, y, player.wobble, rotation, 1, 0, 0)
+    else
+        love.graphics.draw(itemImg[path], x + offsetX, y, player.wobble, rotation, 1, 0, 0)
+    end
 end
 
 function updateCharacter(dt)
