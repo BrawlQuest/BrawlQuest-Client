@@ -128,7 +128,7 @@ function movePlayer(dt)
             original[1] = original[1] + 1
             player.previousDirection = "right"
         end
-        if (original[1] ~= player.x or original[2] ~= player.y) and (not blockMap[original[1] .. "," .. original[2]] or not thisTile.Collision) then
+        if (original[1] ~= player.x or original[2] ~= player.y) and (worldLookup[ original[1]] and worldLookup[ original[1]][ original[2]] and not worldLookup[ original[1]][ original[2]].Collision) then
             player.x = original[1]
             player.y = original[2]
             calculateLighting(player.x - lightRange, player.y - lightRange, player.x + lightRange, player.y + lightRange)
