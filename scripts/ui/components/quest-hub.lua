@@ -50,7 +50,6 @@ function initQuestHub()
                 task = "Get " .. max .. " Apples",
                 requiredAmount = max,
                 currentAmount = min,
-                replayable = true,
             }
         end
     end

@@ -33,9 +33,6 @@ function drawCharacter(v, x, y, ad)
                 y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), player.wobble, rotation, 1, 0, 0)
         end
 
-        -- if v.isMounted then
-        --     love.graphics.draw(horseImg, player.dx + 6, player.dy + 9)
-        -- end
          if v.Mount ~= "None" then
             love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..v.Mount.."/back.png"), x + 6 + mountOffsetX, y + 9, 0, rotation, 1, 0, 0)
         end
@@ -56,9 +53,6 @@ function drawCharacter(v, x, y, ad)
         if v.Mount ~= "None" then
             love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..v.Mount.."/fore.png"), x + 6 + mountOffsetX, y + 9, 0, rotation, 1, 0, 0)
         end
-        -- if v.isMounting then
-        --     love.graphics.draw(horseImg, player.mount.x, player.mount.y)
-        -- end
 
         if v.IsShield and v.ShieldID ~= 0 then
             drawItemIfExists(v.Shield.ImgPath, x, y, ad.previousDirection)

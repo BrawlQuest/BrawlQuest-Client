@@ -101,14 +101,14 @@ end
 function drawEnemies()
     for i, v in pairs(enemies) do
         if v.HP > 0 then
-            if isTileLit(v.X, v.Y) then
 
-        local rotation = 1
-        local offsetX = 0
-        if v and v.previousDirection and v.previousDirection == "left" then
-            rotation = -1
-            offsetX = 32
-        end
+
+                local rotation = 1
+                local offsetX = 0
+                if v and v.previousDirection and v.previousDirection == "left" then
+                    rotation = -1
+                    offsetX = 32
+                end
 
                 love.graphics.setColor(1, 1 - v.red, 1 - v.red)
                 love.graphics.draw(enemyImg[v.Enemy.Name], v.dx + offsetX, v.dy, 0, rotation, 1, 0, 0)
@@ -126,7 +126,7 @@ function drawEnemies()
                 love.graphics.setColor(1, 1, 1)
                 -- love.graphics.setFont(smallTextFont)
           --      love.graphics.printf(tostring(v.IsAggro), v.dx, v.dy-6, 32, "center")
-            end
+
 
          if distanceToPoint(v.dx,v.dy,player.dx,player.dy) < (v.Enemy.Range+1)*32 and v.Target == me.id then
             love.graphics.setColor(1, 0, 0)

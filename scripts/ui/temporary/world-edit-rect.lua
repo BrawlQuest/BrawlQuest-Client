@@ -1,7 +1,5 @@
 function checkWorldEditRectMouseUp(button)
     if (button == 1 or button == 2) and worldEdit.isDrawingRect then
-        -- print(worldEdit.drawableRect.ax .. ", " .. worldEdit.drawableRect.ay .. " : " .. worldEdit.drawableRect.bx .. ", " .. worldEdit.drawableRect.by)
-        -- print("------------- drawing -------------")
         local ax, ay, bx, by = worldEdit.drawableRect.ax, worldEdit.drawableRect.ay, worldEdit.drawableRect.bx, worldEdit.drawableRect.by
         if ax < bx then
             while ax < bx do
@@ -17,7 +15,6 @@ function checkWorldEditRectMouseUp(button)
         worldEdit.changed = true
         editorCtl.state[1] = true
         editorCtl.state[5] = true
-        -- print(json:encode(worldEdit.draw[worldEdit.drawableRect.ax][worldEdit.drawableRect.ay]))
     end
 end
 
@@ -47,13 +44,9 @@ function drawWorldEditTileFromRect(x, y, button)
         worldEdit.draw[x][y][3] = worldLookup[x][y].Enemy
         worldEdit.draw[x][y][4] = worldLookup[x][y].Collision
         worldEdit.draw[x][y][5] = worldLookup[x][y].Name
-        -- worldEdit.draw[x][y][6] = worldLookup[x][y].Music
     end
 
-    -- print ("First: " .. json:encode(worldEdit.draw[x][y]))
-
     if button == 1 then
-        -- print(json:encode(worldLookup[x][y]))
         for i, v in ipairs(areaDraw.state) do
             if v == true then
                 if i == 1 then

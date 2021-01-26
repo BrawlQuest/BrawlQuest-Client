@@ -114,14 +114,9 @@ function updateCharacter(dt)
             player.isMounting = false
         end
     end
-    -- player.wobbleValue = player.wobbleValue + 0.5 * dt
-    -- if player.wobbleValue > 2 then player.wobbleValue = 0 end
-    -- player.wobble = cerp(-0.05, 0.05, player.wobbleValue)
 end
 
 function movePlayer(dt)
-    local lightRange = 6
-
     if player.x * 32 == player.dx and player.y * 32 == player.dy and not isTypingInChat and not worldEdit.isTyping then -- movement smoothing has finished
         local original = {player.x, player.y}
         if love.keyboard.isDown(keybinds.UP) then
@@ -139,7 +134,6 @@ function movePlayer(dt)
         if (original[1] ~= player.x or original[2] ~= player.y) and (not blockMap[original[1] .. "," .. original[2]] or not thisTile.Collision) then
             player.x = original[1]
             player.y = original[2]
-            calculateLighting(player.x - lightRange, player.y - lightRange, player.x + lightRange, player.y + lightRange)
             if worldLookup[player.x]then
                 playFootstepSound(worldLookup[player.x][player.y])
             end
@@ -235,7 +229,6 @@ end
 
 function updateInventory(response)
     newInventoryItems = {}
-    -- print(json:encode(inventoryAlpha))
     if json:encode(inventoryAlpha) ~= "[]" then
         for i, v in ipairs(response['Inventory']) do
             local newItem = true

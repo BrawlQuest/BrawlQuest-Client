@@ -90,16 +90,6 @@ function checkClickLogin(x, y)
     end
 end
 
--- function checkLoginKeyPressed(key)
---     if loginPhase == "login" then
---         checkLoginKeyPressedPhaseLogin(key)
---     elseif loginPhase == "creation" then
---         checkLoginKeyPressedPhaseCreation(key)
---     elseif loginPhase == "characters" then
---         checkLoginKeyPressedPhaseCharacters(key)
---     end
--- end
-
 function checkLoginTextinput(key)
     if loginPhase == "login" then
         checkLoginTextinputPhaseLogin(key)

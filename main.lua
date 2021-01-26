@@ -31,7 +31,6 @@ require "scripts.libraries.api"
 require "scripts.libraries.utils"
 require "scripts.libraries.colorize"
 require "scripts.libraries.simple-slider"
--- require "scripts.libraries.bresenham"
 require "scripts.phases.login.login"
 require "scripts.player.other_players"
 require "scripts.enemies"
@@ -210,7 +209,6 @@ function love.update(dt)
         if showClouds then updateClouds(dt) end
         updateLeaves(dt)
         Luven.update(dt)
-        -- if showShadows then updateWorldMask(dt) end
         updateWorldMask(dt)
         updateCamera(dt)
         updateOtherPlayers(dt)
@@ -280,7 +278,6 @@ function love.update(dt)
 end
 
 function tick()
-    -- tickDummyEnemies()
     tickOtherPlayers()
     tickEnemies()
     tickAuras()

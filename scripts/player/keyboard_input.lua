@@ -62,7 +62,6 @@ function love.keypressed(key)
             end
 
             if key == "'" or key == "r" then 
-                -- getWorldInfo() 
                 worldEdit.open = not worldEdit.open 
             end
 

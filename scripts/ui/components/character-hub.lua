@@ -158,7 +158,9 @@ function getSTA(i)
 end
 
 function drawBattlebarItem(thisX, thisY, item, stats)
-    love.graphics.draw(battlebarItemBg, thisX, thisY)
+    love.graphics.setColor(0,0,0,0.7)
+    roundRectangle("fill", thisX, thisY, battlebarItemBg:getWidth(), battlebarItemBg:getHeight(), 5)
+    love.graphics.setColor(1,1,1)
     love.graphics.draw(item, thisX+1, thisY+1)
     love.graphics.setFont(headerSmallFont)
     love.graphics.print(stats, thisX+(battlebarItemBg:getWidth()/2)-(font:getWidth(stats)/2), thisY+32)

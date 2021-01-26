@@ -38,7 +38,6 @@ function drawCreationPhase()
         love.graphics.draw(v, loginImageX+35+(i-1)*50 + 24, loginImageY+332)
     end
 
-    -- button
     local thisX, thisY = loginImageX+38, loginImageY+390
     drawButton("CREATE", thisX, thisY)
 end

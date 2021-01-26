@@ -12,14 +12,12 @@ function updateClouds(dt)
     local gridScale = 32 / worldScale
     cloud.movement.x = ((cloud.movement.x) - (cloud.movement.speed.x * worldScale) * dt)
     cloud.movement.y = ((cloud.movement.y) - (cloud.movement.speed.y * worldScale) * dt)
-    -- print(cloud.movement.x .. ", " .. cloud.movement.y  .. ", " .. worldScale)
     cloud.fade = cloud.fade + 0.05 * dt
     if cloud.fade > 2 then cloud.fade = 0 end
     cloud.movement.z = cerp(0.2, 0.9, cloud.fade)
 
     cloud.opacity = (1 / worldScale) + settPan.opacityCERP
     if cloud.opacity > 1 then cloud.opacity = 1 end
-    -- print(cloud.opacity)
 end
 
 function drawClouds()
