@@ -115,7 +115,7 @@ function love.keypressed(key)
             -- end
 
             if key == "." then
-                print(json:encode(players))
+                print(json:encode(npcs))
                 -- scaleHUD("up")
                 -- writeSettings()
             end

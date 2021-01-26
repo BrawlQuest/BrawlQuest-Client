@@ -116,6 +116,7 @@ function initQuestHub()
                 title = "The Fall of Man and his friends, he had it bad man",
                 comment = "The long path is unclear at best",
                 giver = "Mortus",
+                profilePic = "assets/npc/Mortus.png",
                 task = "Get 12 Apples",
                 requiredAmount = 12,
                 currentAmount = 6,
@@ -215,7 +216,7 @@ function drawQuestHub(thisX, thisY)
 end
 
 function drawQuestHubProifle(thisX, thisY)
-    drawProfilePic(thisX, thisY, 1, "left")
+    drawNPCProfilePic(thisX, thisY, 1, "left", quests[1][questHub.selectedQuest].profilePic)
     love.graphics.setFont(questHub.nameFont)
     love.graphics.printf(quests[1][questHub.selectedQuest].giver, thisX, thisY + 64 + 6, 64, "center") 
 end
