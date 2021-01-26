@@ -20,6 +20,8 @@ function love.keypressed(key)
         elseif worldEdit.isTyping then
         elseif isSettingsWindowOpen then
             checkSettingsButtonPressed(key)
+        elseif tutorialOpen then
+            checkTutorialKeyPressed(key)
         elseif isTypingInChat then
             if key == "backspace" then
                 enteredChatText = string.sub( enteredChatText, 1, string.len( enteredChatText) - 1)

@@ -115,6 +115,7 @@ function initHUD()
     initNPCChat()
     initCrafting()
     initNewWorldEdit()
+    initTutorial()
 end
 
 function updateHUD( dt )
@@ -159,6 +160,7 @@ function updateHUD( dt )
     updateQuestHub(dt)
     updateCrafting(dt)
     updateNewWorldEdit(dt)
+    updateTutorial(dt)
 
     if isSettingsWindowOpen then
         updateSettingsPanel(dt)
@@ -203,8 +205,11 @@ function drawHUD()
             drawChatPanel(uiX/i, (uiY - cerp(cerp(0, 100, questHub.amount), ((uiY/1.25)-15), questsPanel.amount)) / i)
         end
         drawZoneTitle()
+       
     love.graphics.pop()
-
+   
+        drawTutorial()
+    
     love.graphics.setColor(1,1,1,1)
     
     -- drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)

@@ -16,6 +16,7 @@ require "scripts.effects.camera"
 require "scripts.effects.clouds"
 require "scripts.effects.world-mask"
 require "scripts.ui.hud_controller"
+
 require "scripts.ui.components.character-hub"
 require "scripts.ui.components.crafting"
 require "scripts.ui.components.toolbar-inventory"
@@ -43,6 +44,7 @@ require "scripts.ui.temporary.world-edit-rect"
 require "data.data_controller"
 require "scripts.player.settings"
 require "scripts.ui.components.npc-chat"
+require "scripts.ui.components.tutorial"
 Luven = require "scripts.libraries.luven.luven"
 
 json = require("scripts.libraries.json")
@@ -136,8 +138,10 @@ function love.draw()
 
             Luven.drawEnd()
             
+           
             if not worldEdit.open then
                 drawHUD()
+          
             end
             
             drawNewWorldEditHud()
@@ -214,6 +218,7 @@ function love.update(dt)
         updateWorldMask(dt)
         updateCamera(dt)
         updateOtherPlayers(dt)
+    
 
         local info = love.thread.getChannel('players'):pop()
         if info then
