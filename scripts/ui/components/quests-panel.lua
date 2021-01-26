@@ -30,8 +30,7 @@ function drawQuestsPanel(thisX, thisY)
     -- questsPanel.selectedQuest = {}
     questsPanel.hover = false
     love.graphics.setColor(1,1,1,questsPanel.opacity)
-    love.graphics.setFont(inventory.headerFont)
-    love.graphics.print("QUESTS", thisX + 20, thisY)
+    love.graphics.print("QUESTS", inventory.headerFont, thisX + 20, thisY + 3)
 
     love.graphics.stencil(drawQuestsPanelStencil, "replace", 1) -- stencils inventory
     love.graphics.setStencilTest("greater", 0) -- push
@@ -44,7 +43,7 @@ function drawQuestsPanel(thisX, thisY)
                 love.graphics.rectangle("fill", thisX + 19, thisY, questsPanel.boxBgWidth, 2)
                 thisY = thisY + 6
                 love.graphics.setFont(inventory.font)
-                love.graphics.print(questsPanel.titles[i], thisX + 38, thisY + 5)
+                love.graphics.print(questsPanel.titles[i], thisX + 42, thisY + 5)
                 drawQuestsPanelField(thisX, thisY + questsPanel.titleSpacing, i)
                 -- love.graphics.rectangle("fill", thisX + 200, thisY, 40, getQuestsPanelFieldHeight(i))
                 thisY = thisY + getQuestsPanelFieldHeight(i) + questsPanel.fieldSpacing

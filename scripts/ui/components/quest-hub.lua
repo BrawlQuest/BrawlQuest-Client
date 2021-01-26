@@ -10,9 +10,9 @@ function initQuestHub()
         selectedQuest = 1,
         hover = false,
         hoveredQuest = 1,
-        font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
-        titleFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
-        nameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
+        font = love.graphics.newFont("assets/ui/fonts/C&C Red Alert [INET].ttf", 13),
+        titleFont = love.graphics.newFont("assets/ui/fonts/C&C Red Alert [INET].ttf", 13),
+        nameFont = love.graphics.newFont("assets/ui/fonts/C&C Red Alert [INET].ttf", 13),
         images = {
             npcTalkBG = love.graphics.newImage("assets/ui/hud/quest-hub/npcTalkBG.png"),
             barCapLeft = love.graphics.newImage("assets/ui/hud/quest-hub/barCapLeft.png"),
@@ -41,7 +41,8 @@ function initQuestHub()
         for j = 1, randomQuest[i] do
             local rand = love.math.random(1, 6)
             local max = love.math.random(1, 20)
-            local min = love.math.random(0, max)
+            local min = love.math.random(0, max - 1)
+            if i == 3 then min = max end
             quests[i][j] = {
                 title = generateRandomTitle(),
                 comment = "The long path is unclear at best",
@@ -165,56 +166,45 @@ function drawQuestHubNPCTalk(thisX, thisY)
         love.graphics.setColor(0,0,0, questHub.commentOpacity * 0.7 )
         love.graphics.draw(questHub.images.npcTalkBG, thisX, thisY)
         love.graphics.setColor(1,1,1,questHub.commentOpacity)
-        love.graphics.setFont(questHub.titleFont)
-        love.graphics.printf(quests[1][questHub.selectedQuest].title , thisX + 7, thisY + 7, 127)
-        love.graphics.setFont(questHub.font)
-        love.graphics.printf(quests[1][questHub.selectedQuest].comment, thisX + 7, thisY + 7 + getQuestHubTextHeight(quests[1][questHub.selectedQuest].title, 127), 127)
+        love.graphics.printf(quests[1][questHub.selectedQuest].comment, questHub.font, thisX + 8, thisY + 7, 127)
     end
 end
 
 function drawQuestHubMeters(thisX, thisY)
     for i = 1, 4 do
-        drawQuestHubMetersBar(thisX , thisY + (24 * (i-1)), i)
+        drawQuestHubMetersBar(thisX + 2, thisY + (24 * (i-1)), i)
     end
 end
 
 function drawQuestHubMetersBar(thisX, thisY, i)
-    love.graphics.setColor(0,0,0,0.7 * questHub.opacity)
-    love.graphics.rectangle("fill", thisX + 28, thisY, 157, 19)
+    
+    local width = 222
+    local isMouse = isMouseOver(thisX * scale, thisY * scale, width * scale, 19 * scale)
+    if isMouse then love.graphics.setColor(0.1, 0.1, 0.1, 0.7 * questHub.opacity) else love.graphics.setColor(0,0,0,0.7 * questHub.opacity) end
+    roundRectangle("fill", thisX, thisY, width, 19, 4)
+    love.graphics.setColor(1,0,0,1)
     if quests[1][i] ~= null then
-        if isMouseOver(thisX * scale, thisY * scale, 214 * scale, 19 * scale) then
+        if isMouse then
             love.graphics.setColor(0.88,0.6,0,1 *  questHub.opacity)
             questHub.hoveredQuest = i
             questHub.hover = true
-        elseif #quests[1] > 0 then 
+        end
+        if quests[1][i].currentAmount > 0 then -- draw a bar
+            local table = {true, false, false, true}
             if quests[1][i].requiredAmount == quests[1][i].currentAmount then
-                love.graphics.setColor(0,0.7,0,1 *  questHub.opacity)
-            else
-                love.graphics.setColor(1,0,0,1 *  questHub.opacity)
+                love.graphics.setColor(0, 0.7, 0, 1)
+                table = {true, true, true, true}
             end
+            roundRectangle("fill", thisX, thisY, width / quests[1][i].requiredAmount * quests[1][i].currentAmount, 19, 4, table)
         end
+        love.graphics.setColor(1,1,1,1)    
+        love.graphics.print(quests[1][i].task, questsPanel.commentFont, thisX + 7, thisY + 6)
+        local text = quests[1][i].currentAmount .. "/" .. quests[1][i].requiredAmount
+        love.graphics.print(text, questsPanel.commentFont, thisX + width - questsPanel.commentFont:getWidth(text) - 7, thisY + 6)
     end
-    love.graphics.draw(questHub.images.barCapRight, thisX + 188, thisY)
-    love.graphics.draw(questHub.images.barCapLeft, thisX, thisY)
- 
-    if quests[1][i] ~= null and #quests[1] > 0 then 
-        love.graphics.rectangle("fill", thisX + 28, thisY, (157 / quests[1][i].requiredAmount) * quests[1][i].currentAmount, 19)
-        love.graphics.setColor(1,1,1,1 *  questHub.opacity)
-
-        if quests[1][i].requiredAmount == quests[1][i].currentAmount then 
-            love.graphics.draw(questHub.images.barComplete, thisX + 9, thisY + 4)
-        else 
-            love.graphics.draw(questHub.images.barUnComplete, thisX + 9, thisY + 4) 
-        end
-
-        love.graphics.printf(quests[1][i].task, thisX + 34, thisY + 7, 144, "left")
-        love.graphics.printf(quests[1][i].currentAmount .. "/" .. quests[1][i].requiredAmount, thisX + 188, thisY + 7, 34, "center")
-    end
-
     if questHub.selectedQuest == i then
         love.graphics.draw(questHub.images.arrow, thisX - 18, thisY - 1)
     end
-
 end
 
 function getQuestHubTextHeight(text, width)
