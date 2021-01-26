@@ -28,6 +28,7 @@ player = {
         y = -100,
         stepSndPlay = 0.3
     },
+    color = {1,0.4,0.2,1},
     walk = 0,
     cp = 0,
     distance = 0,
@@ -140,7 +141,7 @@ function movePlayer(dt)
         end
 
     else -- movement smoothing
-        local speed = 64
+        local speed = 80--64
 
         if me.Mount ~= "None" then
             speed = 110 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.

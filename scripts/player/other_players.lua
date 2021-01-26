@@ -38,7 +38,10 @@ function drawCharacter(v, x, y, ad)
         end
 
         drawBuddy(v.Name)
+
+        love.graphics.setColor(unpack(v.color))
         love.graphics.draw(playerImg, x + offsetX, y, player.wobble, rotation, 1, 0, 0)
+        love.graphics.setColor(1,1,1)
 
         if v.HeadArmourID ~= 0 then
             drawItemIfExists(v.HeadArmour.ImgPath, x, y, ad.previousDirection)
@@ -142,7 +145,8 @@ function updateOtherPlayers(dt)
                 ['AY'] = 0,
                 ['HP'] = v.HP,
                 ['RedAlpha'] = 0,
-                ['Mount'] = v.Mount
+                ['Mount'] = v.Mount,
+                ['Color'] = {1,1,1,1},
             }
         end
         playersDrawable[i].Mount = v.Mount
