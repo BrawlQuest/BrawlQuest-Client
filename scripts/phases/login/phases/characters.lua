@@ -88,7 +88,7 @@ function transitionToPhaseGame()
     love.audio.stop( titleMusic )
 
     createWorld()
-
+    openTutorial(1)
     if musicVolume > 0 then
         checkMusic()
     end

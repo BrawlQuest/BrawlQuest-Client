@@ -13,7 +13,7 @@ function drawSimplexNoise(x, y)
 end
 
 function createWorld()
-    
+    leaves = {}
     lightSource = {}
     highestX = 0
     highestY = 0

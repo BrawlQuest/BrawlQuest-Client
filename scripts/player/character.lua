@@ -19,6 +19,7 @@ player = {
         y = 0,
         active = false
     },
+    lvl = 0,
     xp = 0,
     isMounted = false,
     name = "",
@@ -132,7 +133,7 @@ function movePlayer(dt)
             original[1] = original[1] + 1
             player.previousDirection = "right"
         end
-        if (original[1] ~= player.x or original[2] ~= player.y) and (not blockMap[original[1] .. "," .. original[2]] or not thisTile.Collision) then
+        if (original[1] ~= player.x or original[2] ~= player.y) and (worldLookup[ original[1]] and worldLookup[ original[1]][ original[2]] and not worldLookup[ original[1]][ original[2]].Collision) then
             player.x = original[1]
             player.y = original[2]
             if worldLookup[player.x]then

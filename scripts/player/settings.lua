@@ -1,6 +1,3 @@
-function initSettings()
-    
-    initSettingsPanel()
 
     keybinds = {
         UP = "w",
@@ -17,6 +14,11 @@ function initSettings()
         QUESETS = "q",
         "things",
     }
+
+
+function initSettings()
+    
+    initSettingsPanel()
 
     isSettingsWindowOpen = false
     musicVolume = 1

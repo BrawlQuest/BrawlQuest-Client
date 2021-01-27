@@ -16,6 +16,7 @@ require "scripts.effects.camera"
 require "scripts.effects.clouds"
 require "scripts.effects.world-mask"
 require "scripts.ui.hud_controller"
+
 require "scripts.ui.components.character-hub"
 require "scripts.ui.components.crafting"
 require "scripts.ui.components.toolbar-inventory"
@@ -42,6 +43,7 @@ require "scripts.ui.temporary.world-edit-rect"
 require "data.data_controller"
 require "scripts.player.settings"
 require "scripts.ui.components.npc-chat"
+require "scripts.ui.components.tutorial"
 Luven = require "scripts.libraries.luven.luven"
 
 json = require("scripts.libraries.json")
@@ -135,8 +137,10 @@ function love.draw()
 
             Luven.drawEnd()
             
+           
             if not worldEdit.open then
                 drawHUD()
+          
             end
             
             drawNewWorldEditHud()
@@ -146,6 +150,7 @@ function love.draw()
                 if distanceToPoint(player.x,player.y,v.X,v.Y) <= 1 and not showNPCChatBackground  and v.Conversation ~= "" then
                     drawTextBelowPlayer("Press "..keybinds.INTERACT.." to talk")
                     inventory.notNPC = false
+                    openTutorial(4)
                 end
             end
 
@@ -212,6 +217,7 @@ function love.update(dt)
         if showWorldMask then updateWorldMask(dt) end
         updateCamera(dt)
         updateOtherPlayers(dt)
+    
 
         local info = love.thread.getChannel('players'):pop()
         if info then
@@ -288,6 +294,9 @@ function love.update(dt)
        
             player.xp = me.XP
             if player.lvl ~= me.LVL then
+                if player.lvl ~= 0 then
+                    openTutorial(6)
+                end
                 love.audio.play(lvlSfx)
                 player.lvl = me.LVL
             end
