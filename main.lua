@@ -211,7 +211,7 @@ function love.update(dt)
         updateMusic(dt)
         updateLoot(dt)
         updateNPCChat(dt)
-        if showClouds then updateClouds(dt) end
+        -- if showClouds then updateClouds(dt) end
         updateLeaves(dt)
         Luven.update(dt)
         if showWorldMask then updateWorldMask(dt) end
@@ -316,6 +316,7 @@ function tick()
     tickEnemies()
     tickAuras()
     nextTick = 1
+    if showClouds then updateClouds(0.2) end
 end
 
 function love.resize(width, height)

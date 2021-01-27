@@ -23,7 +23,7 @@ function initSettings()
     isSettingsWindowOpen = false
     musicVolume = 1
     sfxVolume = 1  
-    highdpi = true
+    highdpi = false
     fullscreen = false
     chatRepeat = false
     display = 1
@@ -35,7 +35,7 @@ function initSettings()
     window = {x = (displayWidth * 0.5) - (screenDimentions.width * 0.5), y = (displayHeight * 0.5) - (screenDimentions.height * 0.5)}
     showChat = true
     openUiOnHover = true
-    showClouds = true
+    showClouds = false
     showShadows = false
     showWorldMask = true
 
