@@ -25,7 +25,6 @@ end
 function updateCrafting(dt)
     if crafting.open then
         if crafting.isCrafting then
-            
             if crafting.hammerDown < 0 then
                 crafting.whiteout = crafting.whiteout + 20*dt
                 crafting.sfx:setPitch(love.math.random(50,100)/100)
@@ -64,14 +63,13 @@ function updateCrafting(dt)
             if crafting.hammerShake > 2 then
                 crafting.hammerShake = 0
             end
-        
     end
 end
 
 function drawCrafting()
     thisX, thisY = (uiX / 2) - (400 / 2), (uiY / 2) - (400 / 2)
-    love.graphics.setColor(0,0,0,0.5)
-    roundRectangle("fill", thisX, thisY, 400, 400, 10)
+    love.graphics.setColor(0,0,0,0.7)
+    roundRectangle("fill", thisX, thisY, 400, 400, 8)
     love.graphics.setColor(1,1,1,1)
     love.graphics.stencil(drawCraftingStencil, "replace", 1) -- stencils inventory
     love.graphics.setStencilTest("greater", 0) -- push
@@ -94,13 +92,19 @@ function drawCraftingBackground(thisX, thisY)
     end
     love.graphics.draw(crafting.anvil, thisX + 100, thisY + 270, 0, 7)
     love.graphics.setColor(1,1,1)
+    love.graphics.draw(crafting.hammer, thisX + 490, thisY + 300 - crafting.hammerY, cerp(-0.01, 0.01, crafting.hammerShake) + cerp(-0.6,0.01, crafting.hammerDown), -10)
+    love.graphics.print("CRAFTING", inventory.headerFont, thisX + 10 , thisY + 7)
 
-        love.graphics.draw(crafting.hammer, thisX + 490, thisY + 300 - crafting.hammerY, cerp(-0.01, 0.01, crafting.hammerShake) + cerp(-0.6,0.01, crafting.hammerDown), -10)
-  
 
-    love.graphics.setFont(inventory.headerFont)
-    love.graphics.print("Crafting", thisX + 10 , thisY + 7)
+    love.graphics.setColor(0,0,0,0.7)
+    for i = 1, 4 do
+        drawItemBacking(thisX + 10, thisY + 50 + (45 * (i - 1)))
+    end
+    for i = 1, 9 do
+        drawItemBacking(thisX + 10 + (45 * (i - 1)), thisY + 355)
+    end
 
+    love.graphics.setColor(1,1,1)
     for i,v in ipairs(crafting.craftableItems) do
         drawInventoryItem(thisX + 10, thisY + 50 + (45 * (i - 1)), 0, v.Item, 1)
         love.graphics.setFont(inventory.font)
@@ -113,8 +117,6 @@ function drawCraftingBackground(thisX, thisY)
         drawInventoryItem(thisX + 10 + (45 * (i - 1)), thisY + 355, 0, crafting.enteredItems[i].item, crafting.enteredItems[i].amount)
     end
 
-
-    
     love.graphics.setColor(1,1,1,crafting.whiteout)
     love.graphics.rectangle("fill",thisX,thisY,400,400)
 end

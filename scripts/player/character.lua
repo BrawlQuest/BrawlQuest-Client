@@ -79,15 +79,15 @@ function updateCharacter(dt)
 
     movePlayer(dt)
     
-    if player.dhp > player.hp then
-        player.dhp = player.dhp - ((player.dhp/player.hp)*100) * dt
-    elseif player.dhp < player.hp then
-        player.dhp = player.dhp + ((player.dhp/player.hp)*100) * dt
-    end
+    -- if player.dhp > player.hp then
+    --     player.dhp = player.dhp - ((player.dhp/player.hp)*100) * dt
+    -- elseif player.dhp < player.hp then
+    --     player.dhp = player.dhp + ((player.dhp/player.hp)*100) * dt
+    -- end
 
-    if difference(player.dhp, player.hp) < 0.2 then
-        player.dhp = player.hp
-    end
+    -- if difference(player.dhp, player.hp) < 0.2 then
+    --     player.dhp = player.hp
+    -- end
 
     if player.isMounting then
         player.mount.stepSndPlay = player.mount.stepSndPlay - 1 * dt

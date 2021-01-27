@@ -112,7 +112,7 @@ function drawCharacterHubMeters(thisX, thisY)
     thisX, thisY = thisX + 5, thisY + 25
     love.graphics.setFont(characterHub.font)
     local j = (100/151)
-    local meterLevels = {player.dhp, me.Mana, me.XP}
+    local meterLevels = {me.HP, me.Mana, me.XP}
     for i = 0, 2 do
         local spacing = 23 * i
         love.graphics.setColor(unpack(characterHub.backgroundColor))
