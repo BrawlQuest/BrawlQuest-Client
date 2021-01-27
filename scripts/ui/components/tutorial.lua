@@ -8,6 +8,10 @@ tutorial = {
         desc = "Press "..keybinds.UP..", "..keybinds.LEFT..", "..keybinds.DOWN.." and "..keybinds.RIGHT.." to move, and hold "..keybinds.ATTACK_UP..", "..keybinds.ATTACK_LEFT..", "..keybinds.ATTACK_DOWN.." and "..keybinds.ATTACK_RIGHT.." to attack.",
     },
     {
+        title = "What is there to do?",
+        desc = "In BrawlQuest you can fight monsters, gain XP, level up, find new gear (including weapons, armour, spells, mounts and non-combat pets!), harvest natural resources, craft new items (experiment!) and have a relaxed time with others.\n\nThere is a story woven throughout the world but you aren't a central part of it (unless you want to be!) BrawlQuest is about gearing up and having a good time."
+    },
+    {
         title = "Questing & NPCs",
         desc = "When standing near an NPC press "..keybinds.INTERACT.." to speak to them. Some NPCs offer quests, some just fancy a chat and others are trying to sell you things.\n\nPress E to view your active quests. You can pin a quest to your HUD by clicking the..next to the quest's name.",
     },
@@ -18,6 +22,10 @@ tutorial = {
     {
         title = "You've levelled up!",
         desc = "Everytime you level up you gain character points which can be spent in STR, INT or STA. Hover over your character window to spend these points.\n\nSTR increases your melee attack potential. INT increases your mana recovery rate and the effects of spells. STA increases your maximum health.\n\nYou can adjust these values at any time out of combat by right clicking on the stat you want to alter.",
+    },
+    {
+        title = "You died. Sort of.",
+        desc = "When you die you will re-awaken at the nearest graveyard. You don't lose your items or level or anything like that: dust yourself off and try again!"
     }
 }
 
@@ -28,6 +36,8 @@ tutorialFont = {
 tutorialActive = 1
 tutorialOpen = false
 tutorialOpacity = 0
+pressEnterOpacity = 0
+pressEnterGoUp = true
 tutorialCompleted = {}
 
 function initTutorial()
@@ -47,12 +57,27 @@ function drawTutorial()
     love.graphics.setColor(1,1,1,tutorialOpacity)
     love.graphics.printf(tutorial[tutorialActive].title,40,love.graphics.getHeight()/3,love.graphics.getWidth()-40,"center")
     love.graphics.setFont(tutorialFont[2])
-    love.graphics.printf(tutorial[tutorialActive].desc.."\n\nPress ENTER to continue",40,(love.graphics.getHeight()/3)*2,love.graphics.getWidth()-40,"center")
+    love.graphics.printf(tutorial[tutorialActive].desc,40,(love.graphics.getHeight()/3)*2,love.graphics.getWidth()-40,"center")
+    love.graphics.setColor(1,1,1,pressEnterOpacity*tutorialOpacity)
+    love.graphics.printf("Press ENTER to continue",40,(love.graphics.getHeight()/3)*2.5,love.graphics.getWidth()-40,"center")
+  
 end
 
 function updateTutorial(dt)
     if tutorialOpen then
-        tutorialOpacity = tutorialOpacity + 0.5*dt
+        if pressEnterGoUp then
+            pressEnterOpacity = pressEnterOpacity + 2*dt
+            if pressEnterOpacity > 2 then
+                pressEnterGoUp = false
+            end
+        else
+            pressEnterOpacity = pressEnterOpacity - 2*dt
+            if pressEnterOpacity < 0 then
+                pressEnterGoUp = true
+            end
+        end
+                
+        tutorialOpacity = tutorialOpacity + 2*dt
         if tutorialOpacity > 1 then
             tutorialOpacity = 1 
         end
@@ -62,6 +87,7 @@ function updateTutorial(dt)
             tutorialOpacity = 0 
         end
     end
+    
 end
 
 function checkTutorialKeyPressed(key)
@@ -84,5 +110,8 @@ function closeTutorial(i)
     if i == 1 then
         tutorialOpen = true
         tutorialActive = 2
+    elseif i == 2 then
+        tutorialOpen = true
+        tutorialActive = 3
     end
 end

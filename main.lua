@@ -151,6 +151,7 @@ function love.draw()
                 if distanceToPoint(player.x,player.y,v.X,v.Y) <= 1 and not showNPCChatBackground  and v.Conversation ~= "" then
                     drawTextBelowPlayer("Press "..keybinds.INTERACT.." to talk")
                     inventory.notNPC = false
+                    openTutorial(4)
                 end
             end
 
@@ -271,6 +272,9 @@ function love.update(dt)
        
             player.xp = me.XP
             if player.lvl ~= me.LVL then
+                if player.lvl ~= 0 then
+                    openTutorial(6)
+                end
                 love.audio.play(lvlSfx)
                 player.lvl = me.LVL
             end

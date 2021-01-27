@@ -19,6 +19,7 @@ player = {
         y = 0,
         active = false
     },
+    lvl = 0,
     xp = 0,
     isMounted = false,
     name = "",
