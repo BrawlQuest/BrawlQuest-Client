@@ -145,6 +145,7 @@ function drawNewWorldEditHud()
         worldEdit.mouseOverEnemyButtons = 0
         worldEdit.mouseOverControlButtons = 0
         worldEdit.mouseOverAreaDrawButtons = 0
+        areaDraw.mouseOverMusicNames = -1
         areaDraw.mouseOverPlaceNames = -1
         worldEdit.hoveringOverButton = false
         worldEdit.readyToWriteText = false
