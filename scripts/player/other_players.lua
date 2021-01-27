@@ -39,7 +39,8 @@ function drawCharacter(v, x, y, ad)
 
         drawBuddy(v.Name)
 
-        love.graphics.setColor(unpack(v.color))
+        if v.Color ~= null then love.graphics.setColor(unpack(v.Color)) end
+        -- print(json:encode(v.Color))
         love.graphics.draw(playerImg, x + offsetX, y, player.wobble, rotation, 1, 0, 0)
         love.graphics.setColor(1,1,1)
 
@@ -146,7 +147,7 @@ function updateOtherPlayers(dt)
                 ['HP'] = v.HP,
                 ['RedAlpha'] = 0,
                 ['Mount'] = v.Mount,
-                ['Color'] = {1,1,1,1},
+                ['Color'] = v.Color,
             }
         end
         playersDrawable[i].Mount = v.Mount

@@ -8,6 +8,9 @@ UITextFields = {
 }
 
 function initHUD()
+
+    previousPlayerColor = {}
+
     --scaling
     scale = 1
     velyWorldScale = 0

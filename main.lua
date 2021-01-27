@@ -217,14 +217,27 @@ function love.update(dt)
         if info then
             local response = json:decode(info)
 
+            local previousPlayers = copy(players) -- Temp
             players = response['Players']
             npcs = response['NPC']
             auras = response['Auras']
+
+            if json:encode(players) ~= json:encode(previousPlayers) then -- Temp [
+                for i,v in ipairs(players) do
+                    if v.Color == null then -- New thing for the people
+                        if previousPlayers[i] and previousPlayers[i].Color then
+                            players[i].Color = previousPlayers[i].Color
+                        else
+                            players[i].Color = {love.math.random(), love.math.random(), love.math.random(),  1}
+                        end
+                    end
+                end
+            end -- Temp ]
+
             if json:encode(inventoryAlpha) ~= json:encode(response['Inventory']) then
                 updateInventory(response)
                 inventoryAlpha = response['Inventory']
             end
-         
             player.cp = response['CharPoints']
             messages = {}
             for i=1, #response['Chat']['Global'] do
@@ -245,7 +258,18 @@ function love.update(dt)
                 Luven.setAmbientLightColor({1,1,1})
             end
 
+            local previousMe = copy(me) -- Temp
             me = response['Me']
+
+            if json:encode(me) ~= json:encode(previousMe) then -- Temp [
+                if me.Color == null then -- New thing for the people
+                    if previousMe and previousMe.Color then
+                        me.Color = previousMe.Color
+                    else
+                        me.Color = {love.math.random(), love.math.random(), love.math.random(),  1}
+                    end
+                end
+            end -- Temp ]
 
             if distanceToPoint(me.X, me.Y, player.x, player.y) > 4 then
                 player.x = me.X
@@ -273,7 +297,7 @@ function love.update(dt)
                 tick()
                 previousTick = response['Tick']
             end
-            me.color = {0,1,0,1}
+            -- me.Color = {0,1,0,1}
         end
     end
 end
