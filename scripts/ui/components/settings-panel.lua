@@ -52,7 +52,7 @@ function initSettingsPanel()
         {posy = 0, vely = 0, max = -1000, prevmax = -0, prevposy = 0,},
     }
 
-    faderPosition = {204, 270,}
+    faderPosition = {240, 306,}
     settPan.fontHeight = (32 * 0.5) - (settPan.itemFont:getHeight() * 0.45)
 
     questPopUpWidth = 335
@@ -297,6 +297,7 @@ function checkSettingsMousePressed(button)
                     chatRepeat = settings[3][4].v
                     showClouds = settings[1][3].v
                     showShadows = settings[1][4].v
+                    showWorldMask = settings[1][5].v
                 end
             end
         end

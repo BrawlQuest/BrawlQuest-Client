@@ -141,8 +141,7 @@ function movePlayer(dt)
         end
 
     else -- movement smoothing
-        local speed = 80--64
-
+        local speed = 64
         if me.Mount ~= "None" then
             speed = 110 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
         end

@@ -35,6 +35,7 @@ function initSettings()
     openUiOnHover = true
     showClouds = true
     showShadows = false
+    showWorldMask = true
 
     useItemColor = {}
     hotbar = {}
@@ -62,6 +63,7 @@ function initSettings()
         showChat = contents["showChat"]
         showClouds = contents["showClouds"]
         showShadows = contents["showShadows"]
+        showWorldMask = contents["showWorldMask"]
         openUiOnHover = contents["openUiOnHover"]
         hotbar = contents["hotbar"]
         api.url = servers[selectedServer].url
@@ -78,6 +80,7 @@ function initSettings()
             {name = "Fullscreen", v = fullscreen, type = "button", "On", "Off",},
             {name = "Clouds", v = showClouds, type = "button", "On", "Off",},
             {name = "Shadows (Alpha)", v = showShadows, type = "button", "On", "Off",},
+            {name = "World Mask", v = showWorldMask, type = "button", "On", "Off",},
         },
         {
             title = "Sound",
@@ -111,6 +114,7 @@ function writeSettings()
         showChat = showChat,
         showClouds = showClouds,
         showShadows = showShadows,
+        showWorldMask = showWorldMask,
         openUiOnHover = openUiOnHover,
         hotbar = hotbar,
     }))
