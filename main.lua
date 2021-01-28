@@ -135,7 +135,16 @@ function love.draw()
             drawFloats()
             if not worldEdit.open then drawWorldMask() end
             if showClouds then drawClouds() end     
-
+            for i,v in ipairs(npcs) do
+                if distanceToPoint(player.x,player.y,v.X,v.Y) <= 1 and not showNPCChatBackground  and v.Conversation ~= "" then
+                    drawTextBelowPlayer("Press "..keybinds.INTERACT.." to talk")
+                    inventory.notNPC = false
+                    openTutorial(4)
+                end
+            end
+        
+            if isNearbyTile("assets/world/objects/Anvil.png") then  drawTextBelowPlayer("Press "..keybinds.INTERACT.." to craft")
+            end
             Luven.drawEnd()
             
            
@@ -146,17 +155,7 @@ function love.draw()
             
             drawNewWorldEditHud()
 
-            inventory.notNPC = true
-            for i,v in ipairs(npcs) do
-                if distanceToPoint(player.x,player.y,v.X,v.Y) <= 1 and not showNPCChatBackground  and v.Conversation ~= "" then
-                    drawTextBelowPlayer("Press "..keybinds.INTERACT.." to talk")
-                    inventory.notNPC = false
-                    openTutorial(4)
-                end
-            end
-
-            if isNearbyTile("assets/world/objects/Anvil.png") then  drawTextBelowPlayer("Press "..keybinds.INTERACT.." to craft")
-            end
+       
         
         Luven.camera:draw()
 
