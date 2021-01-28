@@ -103,11 +103,11 @@ function updateQuestHub(dt)
             end
         else posYQuest = 0
         end
-    else
+    elseif not isTypingInChat and openUiOnHover then
         if isMouseOver(((uiX/1) - 313) * scale, 
         ((uiY) + 55 - (uiY/1.25)) * scale,
         (313) * scale,
-        (cerp((uiY/1.25) - 55 ,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale) and not isTypingInChat and openUiOnHover then -- Opens Quests Panel
+        (cerp((uiY/1.25) - 55 ,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale) then -- Opens Quests Panel
             questsPanel.amount = questsPanel.amount + 4 * dt
             if questsPanel.amount > 1 then questsPanel.amount = 1 end
 

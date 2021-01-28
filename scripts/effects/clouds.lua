@@ -37,8 +37,10 @@ function drawClouds()
                 (love.math.noise((((x + (movement.x * 2)) * gridSize) * 0.001), (((y + (movement.y * 2)) * gridSize) * 0.001)) * cloud.movement.z) - 
                 (love.math.noise((((x + movement.x) * gridSize) * 0.0001), (((y + movement.y) * gridSize) * 0.0001)))
             ) * noiseFactor)
-            love.graphics.setColor(1,1,1, noise)
-            love.graphics.rectangle("fill", x * gridSize, y * gridSize, gridSize, gridSize)
+            if noise > 0.01 then 
+                love.graphics.setColor(1,1,1, noise)
+                love.graphics.rectangle("fill", x * gridSize, y * gridSize, gridSize, gridSize)
+            end
         end
     end
 end

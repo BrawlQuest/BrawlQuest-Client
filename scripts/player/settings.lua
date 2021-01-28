@@ -38,6 +38,7 @@ function initSettings()
     showClouds = false
     showShadows = false
     showWorldMask = true
+    showWorldAnimations = true
 
     useItemColor = {}
     hotbar = {}
@@ -66,6 +67,7 @@ function initSettings()
         showClouds = contents["showClouds"]
         showShadows = contents["showShadows"]
         showWorldMask = contents["showWorldMask"]
+        showWorldAnimations = contents["showWorldAnimations"]
         openUiOnHover = contents["openUiOnHover"]
         hotbar = contents["hotbar"]
         api.url = servers[selectedServer].url
@@ -83,6 +85,7 @@ function initSettings()
             {name = "Clouds", v = showClouds, type = "button", "On", "Off",},
             {name = "Shadows (Alpha)", v = showShadows, type = "button", "On", "Off",},
             {name = "World Mask", v = showWorldMask, type = "button", "On", "Off",},
+            {name = "World Animtions", v = showWorldAnimations, type = "button", "On", "Off",},
         },
         {
             title = "Sound",
@@ -117,10 +120,53 @@ function writeSettings()
         showClouds = showClouds,
         showShadows = showShadows,
         showWorldMask = showWorldMask,
+        showWorldAnimations = showWorldAnimations,
         openUiOnHover = openUiOnHover,
         hotbar = hotbar,
     }))
 end
+
+function checkSettingsMousePressed(button)
+    if button == 1 and settPan.isMouseOver then
+        for ai,av in ipairs(settings) do
+            for bi,bv in ipairs(settings[ai]) do -- loops through every option
+                if settPan.mouseOver == (ai * 10) + bi then -- if the mouse is over the correct button
+                    if settPan.mouseOver == 31 then
+                        scaleHUD("up")
+                    elseif settPan.mouseOver == 11 or settPan.mouseOver == 12 then
+                        bv.v = not bv.v
+                        highdpi = settings[1][1].v
+                        fullscreen = settings[1][2].v
+                        setWindowOptions()
+                        createWorld()
+                    else
+                        bv.v = not bv.v
+                    end
+                    openUiOnHover = settings[3][2].v -- sets the values
+                    showChat = settings[3][3].v
+                    chatRepeat = settings[3][4].v
+                    showClouds = settings[1][3].v
+                    showShadows = settings[1][4].v
+                    showWorldMask = settings[1][5].v
+                    showWorldAnimations = settings[1][6].v
+                end
+            end
+        end
+    end
+
+    if button == 2 and settPan.mouseOver == 31 then
+        scaleHUD("down")
+    end
+
+    local x,y = love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5
+    local width, height = (settPan.width * 0.5) - (settPan.padding * 2), 40
+    local thisX, thisY = x + settPan.padding, y + (settPan.height * 0.5) - settPan.padding - height
+    if isMouseOver(thisX, thisY, width, height) and button == 1 then
+        writeSettings()
+        checkIfReadyToQuit()
+    end
+end
+
 
 function setWindowOptions()
     love.window.setMode(screenDimentions.width, screenDimentions.height, {

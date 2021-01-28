@@ -95,34 +95,37 @@ function updateToolBarInventory(dt)
         end
     end
 
-    if useItemColorChanged then
-        local colorCount = 0
-        for i, v in ipairs(useItemColor) do
-            if v > 0 then
-                useItemColor[i] = v - 2 * dt
-            else
-                useItemColor[i] = 0
+
+    if inventory.open then
+        if useItemColorChanged then
+            local colorCount = 0
+            for i, v in ipairs(useItemColor) do
+                if v > 0 then
+                    useItemColor[i] = v - 2 * dt
+                else
+                    useItemColor[i] = 0
+                end
+                colorCount = colorCount + v
             end
-            colorCount = colorCount + v
+
+            if colorCount == 0 then 
+                useItemColorChanged = false
+            end
         end
 
-        if colorCount == 0 then 
-            useItemColorChanged = false
-        end
-    end
-
-    if getFullUserInventoryFieldHeight() * scale > (uiY - 97 - 50 - 50) * scale then
-        posYInventory = posYInventory + velyInventory * dt
-        if posYInventory > 0 then
+        if getFullUserInventoryFieldHeight() * scale > (uiY - 97 - 50 - 50) * scale then
+            posYInventory = posYInventory + velyInventory * dt
+            if posYInventory > 0 then
+                posYInventory = 0
+            elseif posYInventory < 0 - getFullUserInventoryFieldHeight() + (uiY - 97 - 50 - 50) then
+                posYInventory = 0 - getFullUserInventoryFieldHeight() + (uiY - 97 - 50 - 50)
+            end
+        else
             posYInventory = 0
-        elseif posYInventory < 0 - getFullUserInventoryFieldHeight() + (uiY - 97 - 50 - 50) then
-            posYInventory = 0 - getFullUserInventoryFieldHeight() + (uiY - 97 - 50 - 50)
         end
-    else
-        posYInventory = 0
-    end
 
-    inventory.opacity = cerp(0, 1, inventory.amount)
+        inventory.opacity = cerp(0, 1, inventory.amount)
+    end
 end
 
 function getItemType(v)

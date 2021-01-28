@@ -104,6 +104,7 @@ function drawWorldMask()
                     local success, counter = Bresenham.line(math.floor((player.dx / 32) * gridScale), math.floor((player.dy / 32) * gridScale), math.round(x), math.round(y), function (x,y) 
                         local thisX, thisY = x / gridScale, y / gridScale
                         local elseX, elseY = thisX - 0.5, thisY - 0.5
+                        local show = true
 
                         if worldLookup[thisX] and worldLookup[thisX][thisY] and worldLookup[thisX][thisY].Collision ~= null then
                             return checkIfCollision(thisX, thisY)
@@ -120,17 +121,20 @@ function drawWorldMask()
 
                     if success then
                         local intensity = range / (range + (difference(range, distance) * 4))
+                        if intensity < 0.1 then show = false end
                         love.graphics.setColor(0,0,0, (intensity - 0.2) * (worldMask.opacity + 0.2))
                         -- worldMaskTables[1][#worldMaskTables[1] + 1] = {x = x, y = y, visable = true, intensity = intensity}
                     else
                         love.graphics.setColor(0,0,0,worldMask.opacity)
                         -- worldMaskTables[1][#worldMaskTables[1] + 1] = {x = x, y = y, visable = false,}
                     end       
-                    love.graphics.rectangle("fill", math.round(x) * gridSize, math.round(y) * gridSize, gridSize, gridSize)
+                    if show then love.graphics.rectangle("fill", math.round(x) * gridSize, math.round(y) * gridSize, gridSize, gridSize) end
                 else -- if not drawing shadows
                     local intensity = range / (range + (difference(range, distance) * 4))
-                    love.graphics.setColor(0,0,0, (intensity - 0.2) * (worldMask.opacity + 0.2))
-                    love.graphics.rectangle("fill", math.round(x) * gridSize, math.round(y) * gridSize, gridSize, gridSize)
+                    if intensity > 0.1 then
+                        love.graphics.setColor(0,0,0, (intensity - 0.2) * (worldMask.opacity + 0.2))
+                        love.graphics.rectangle("fill", math.round(x) * gridSize, math.round(y) * gridSize, gridSize, gridSize)
+                    end
                     -- worldMaskTables[1][#worldMaskTables[1] + 1] = {x = x, y = y, visable = true, intensity = intensity}
                 end
             else
