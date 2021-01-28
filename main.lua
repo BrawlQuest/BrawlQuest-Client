@@ -317,6 +317,7 @@ function tick()
     tickAuras()
     nextTick = 1
     if showClouds then updateClouds(0.2) end
+    getInventory()
 end
 
 function love.resize(width, height)

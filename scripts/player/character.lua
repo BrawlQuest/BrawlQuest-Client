@@ -36,6 +36,7 @@ player = {
     direction = {x = 0, y = 0},
     wobble = 0, 
     wobbleValue = 0,
+    speed = {x = 0, y = 0},
 }
 
 newInventoryItems = {}
@@ -118,53 +119,105 @@ function updateCharacter(dt)
     end
 end
 
+function worldCollison(x, y)
+    if (worldLookup[x] and worldLookup[x][y] and worldLookup[x][y].Collision) then
+        return worldLookup[x][y].Collision
+    end
+end
+
 function movePlayer(dt)
     if player.x * 32 == player.dx and player.y * 32 == player.dy and not isTypingInChat and not worldEdit.isTyping then -- movement smoothing has finished
-        local original = {player.x, player.y}
-        if love.keyboard.isDown(keybinds.UP) then
-            original[2] = original[2] - 1
-        elseif love.keyboard.isDown(keybinds.DOWN) then
-            original[2] = original[2] + 1
-        end
-        if love.keyboard.isDown(keybinds.LEFT) then
-            original[1] = original[1] - 1
+        local prev = {x = player.x, y = player.y}
+
+        if love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.LEFT) and not (worldCollison(prev.x - 1, prev.y - 1) or worldCollison(prev.x - 1, prev.y) or worldCollison(prev.x, prev.y - 1)) then
+            prev.y = prev.y - 1
+            prev.x = prev.x - 1
             player.previousDirection = "left"
-        elseif love.keyboard.isDown(keybinds.RIGHT) then
-            original[1] = original[1] + 1
+        elseif love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.RIGHT) and not (worldCollison(prev.x + 1, prev.y - 1) or worldCollison(prev.x + 1, prev.y) or worldCollison(prev.x, prev.y - 1)) then
+            prev.y = prev.y - 1
+            prev.x = prev.x + 1
             player.previousDirection = "right"
+        elseif love.keyboard.isDown(keybinds.DOWN) and love.keyboard.isDown(keybinds.RIGHT) and not (worldCollison(prev.x + 1, prev.y + 1) or worldCollison(prev.x + 1, prev.y) or worldCollison(prev.x, prev.y + 1)) then
+            prev.y = prev.y + 1
+            prev.x = prev.x + 1
+            player.previousDirection = "right"
+        elseif love.keyboard.isDown(keybinds.DOWN) and love.keyboard.isDown(keybinds.LEFT) and not (worldCollison(prev.x - 1, prev.y + 1) or worldCollison(prev.x - 1, prev.y) or worldCollison(prev.x, prev.y + 1)) then
+            prev.y = prev.y + 1
+            prev.x = prev.x - 1
+            player.previousDirection = "left"
+        else
+            if love.keyboard.isDown(keybinds.LEFT) and not worldCollison(prev.x - 1, prev.y) then
+                prev.x = prev.x - 1
+                player.previousDirection = "left"
+            elseif love.keyboard.isDown(keybinds.RIGHT) and not worldCollison(prev.x + 1, prev.y) then
+                prev.x = prev.x + 1
+                player.previousDirection = "right"
+            else
+                player.speed.x = 0
+            end 
+            
+            if love.keyboard.isDown(keybinds.UP) and not worldCollison(prev.x, prev.y - 1) then
+                prev.y = prev.y - 1
+            elseif love.keyboard.isDown(keybinds.DOWN) and not worldCollison(prev.x, prev.y + 1) then
+                prev.y = prev.y + 1
+            else
+                player.speed.y = 0
+            end
         end
-        if (original[1] ~= player.x or original[2] ~= player.y) and (worldLookup[ original[1]] and worldLookup[ original[1]][ original[2]] and not worldLookup[ original[1]][ original[2]].Collision) then
-            player.x = original[1]
-            player.y = original[2]
+
+        if (prev.x ~= player.x) or (prev.y ~= player.y) then
+            player.x = prev.x
+            player.y = prev.y
             if worldLookup[player.x]then
                 playFootstepSound(worldLookup[player.x][player.y])
             end
         end
 
+        -- if (prev.x ~= player.x) or (prev.y ~= player.y) then
+        --     if (worldLookup[prev.x] and worldLookup[prev.x][prev.y] and not worldLookup[prev.x][prev.y].Collision) then
+        --         player.x = prev.x
+        --         if worldLookup[player.x]then
+        --             playFootstepSound(worldLookup[player.x][player.y])
+        --         end
+        --     end
+        --     if (worldLookup[prev.x] and worldLookup[prev.x][prev.y] and not worldLookup[prev.x][prev.y].Collision) then
+        --         player.y = prev.y
+
+        --     end
+        -- end
+
     else -- movement smoothing
         local speed = 64
+
         if me.Mount ~= "None" then
             speed = 110 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
         end
         if difference(player.x * 32, player.dx) > 1 then
+            player.speed.x = player.speed.x + 10 * dt
+            if player.speed.x > 1 then player.speed.x = 1 end
 
             if player.dx > player.x * 32 then
-                player.dx = player.dx - speed * dt
+                player.dx = player.dx - cerp(speed, speed, player.speed.x) * dt
             else
-                player.dx = player.dx + speed * dt
+                player.dx = player.dx + cerp(speed, speed, player.speed.x) * dt
             end
         else
             player.dx = player.x * 32
+            -- player.speed.x = 0
         end
 
         if difference(player.y * 32, player.dy) > 1 then
+            player.speed.y = player.speed.y + 10 * dt
+            if player.speed.y > 1 then player.speed.y = 1 end
+
             if player.dy > player.y * 32 then
-                player.dy = player.dy - speed * dt
+                player.dy = player.dy - cerp(speed, speed, player.speed.y) * dt
             else
-                player.dy = player.dy + speed * dt
+                player.dy = player.dy + cerp(speed, speed, player.speed.y) * dt
             end
         else
             player.dy = player.y * 32
+            -- player.speed.y = 0
         end
 
         -- if distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) < 1 then -- snap to final position
@@ -176,10 +229,8 @@ function movePlayer(dt)
 end
 
 function checkTargeting() -- Check which keys are down and place the player target accordingly
-    player.target.x = player.x
-    player.target.y = player.y
     local wasActive = player.target.active
-    player.target.active = false
+    player.target = {x = player.x, y = player.y, active = false}
 
     if love.keyboard.isDown(keybinds.ATTACK_UP) then
         player.target.active = true

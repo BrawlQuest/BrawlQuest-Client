@@ -3,7 +3,7 @@
 ]]
 
 function drawToolBarInventory(thisX, thisY)
-    getInventory()
+    -- getInventory()
     love.graphics.setColor(unpack(characterHub.backgroundColor))
     inventory.isMouseOverInventoryItem = false
 
@@ -22,6 +22,7 @@ function drawToolBarInventory(thisX, thisY)
     end
 
     if inventory.open then
+        getInventory()
         love.graphics.setColor(1, 1, 1, inventory.opacity)
         thisY = thisY - cerp(0, (uiY - 97), inventory.amount)
 
