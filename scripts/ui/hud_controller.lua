@@ -161,6 +161,7 @@ function updateHUD( dt )
     updateCrafting(dt)
     updateNewWorldEdit(dt)
     updateTutorial(dt)
+    updateZoneTitle(dt)
 
     if isSettingsWindowOpen then
         updateSettingsPanel(dt)
