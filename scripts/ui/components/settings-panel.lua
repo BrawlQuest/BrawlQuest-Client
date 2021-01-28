@@ -1,24 +1,4 @@
 function initSettingsPanel()
-    controls = {
-        title = "Controls",
-        selKeybindCount = 0,
-        keybinds = {title = "Keybinds", v = {
-            {name = "UP", v = "w", sel = false,},
-            {name = "DOWN", v = "s", sel = false,},
-            {name = "LEFT", v = "a", sel = false,},
-            {name = "RIGHT", v = "d", sel = false,},
-            {name = "ATTACK_UP", v = "up", sel = false,},
-            {name = "ATTACK_DOWN", v = "down", sel = false,},
-            {name = "ATTACK_LEFT", v = "left", sel = false,},
-            {name = "ATTACK_RIGHT", v = "right", sel = false,},
-            {name = "SHIELD", v = "lshift", sel = false,},
-            {name = "CRAFTING", v = "f", sel = false,},
-            {name = "INTERACT", v = "e", sel = false,},
-            {name = "QUESETS", v = "q", sel = false,},
-            },
-        },
-    }
-
     sliderPosition = {
         music = {0, 0,},
         sfx = {0, 0,},
@@ -94,7 +74,7 @@ function drawSettingsPanel()
     love.graphics.print("SETTINGS", thisX + settPan.padding, thisY + settPan.padding + 2, 0, 2) -- title
     love.graphics.print("CONTROLS", thisX + settPan.padding, thisY + settPan.titleOffset - 10) -- Subheader
 
-    settings[1].selKeybindCount = 0
+    controls.selKeybindCount = 0
     settPan.mouseOver = 0
     settPan.isMouseOver = false
 
@@ -106,23 +86,44 @@ function drawSettingsPanel()
         local max = 0
 
         for i,v in ipairs(controls.keybinds.v) do
-            if isMouseOver(thisX, thisY, width, height) and getSettingsMouseOver("left") then
+            love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)
+            roundRectangle("fill", thisX, thisY, width - (settPan.objectValueWidth + 10), height, 6) -- name backing
+            local nextX, nextY = thisX + width - settPan.objectValueWidth, thisY
+            local isMouse = isMouseOver(nextX, nextY, settPan.objectValueWidth, height)
+            
+            if isMouse and getSettingsMouseOver("left") and controls.currentKeybind ~= i then
                 controls.selKeybindCount = i
                 love.graphics.setColor(1, 0, 0, settPan.opacityCERP * 1)
+            elseif controls.currentKeybind == i then
+                love.graphics.setColor(1, 1, 1, settPan.opacityCERP * 1)
             else
                 love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)
             end
 
-            roundRectangle("fill", thisX, thisY, width - (settPan.objectValueWidth + 10), height, 6) -- name backing
-            local nextX, nextY = thisX + width - settPan.objectValueWidth, thisY
             roundRectangle("fill", nextX, nextY, settPan.objectValueWidth, height, 6) -- value backing
             love.graphics.setColor(1,1,1, settPan.opacityCERP * 1)
             love.graphics.print(v.name, thisX + 10, thisY + settPan.fontHeight) -- prints the name of things
+
+            if controls.currentKeybind == i and not isMouse then 
+                love.graphics.setColor(0,0,0, settPan.opacityCERP * 1)
+            end
             love.graphics.printf("\"" .. v.v .. "\"", nextX, nextY + settPan.fontHeight, settPan.objectValueWidth, "center") -- prints the value of things
 
             thisY = thisY + height + settPan.objectPadding
             max = max + height + settPan.objectPadding
         end
+
+        if isMouseOver(thisX, thisY, width, height) then
+            love.graphics.setColor(1, 0, 0, settPan.opacityCERP * 1)
+            controls.keybinds.reset = true
+        else
+            love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)
+            controls.keybinds.reset = false
+        end
+        roundRectangle("fill", thisX, thisY, width, height, 6)
+        love.graphics.setColor(1, 1, 1, settPan.opacityCERP * 1)
+        love.graphics.printf("Reset Keybinds", thisX, thisY + settPan.fontHeight, width, "center")
+        max = max + height
 
         if settSrl[1].max ~= settSrl[1].prevmax then
             settSrl[1].max = (max - ((settPan.height) - (settPan.padding * 2) - settPan.titleOffset)) * -1

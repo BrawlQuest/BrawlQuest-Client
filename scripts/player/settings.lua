@@ -1,25 +1,23 @@
-
-    keybinds = {
-        UP = "w",
-        DOWN = "s",
-        LEFT = "a",
-        RIGHT = "d",
-        ATTACK_UP = "up",
-        ATTACK_DOWN = "down",
-        ATTACK_LEFT = "left",
-        ATTACK_RIGHT = "right",
-        SHIELD = "lshift",
-        CRAFTING = "f",
-        INTERACT = "e",
-        QUESETS = "q",
-        "things",
-    }
-
+keybinds = {
+    UP = "w",
+    DOWN = "s",
+    LEFT = "a",
+    RIGHT = "d",
+    ATTACK_UP = "up",
+    ATTACK_DOWN = "down",
+    ATTACK_LEFT = "left",
+    ATTACK_RIGHT = "right",
+    SHIELD = "lshift",
+    CRAFTING = "f",
+    INTERACT = "e",
+    QUESETS = "q",
+    "things",
+}
+defaultKeybinds = copy(keybinds)
 
 function initSettings()
     
     initSettingsPanel()
-
     isSettingsWindowOpen = false
     musicVolume = 1
     sfxVolume = 1  
@@ -76,6 +74,13 @@ function initSettings()
     end  
     setWindowOptions()
 
+    controls = {
+        title = "Controls",
+        selKeybindCount = 0,
+        currentKeybind = 0,
+        previousKeybind = 0,
+        keybinds = {title = "Keybinds", reset = false, v = setDefualtKeybinds(),},
+    }
 
     settings = {    
         {
@@ -126,31 +131,62 @@ function writeSettings()
     }))
 end
 
+function setDefualtKeybinds()
+    return {
+        {name = "UP", v = keybinds.UP, sel = false,},
+        {name = "DOWN", v = keybinds.DOWN, sel = false,},
+        {name = "LEFT", v = keybinds.LEFT, sel = false,},
+        {name = "RIGHT", v = keybinds.RIGHT, sel = false,},
+        {name = "ATTACK_UP", v = keybinds.ATTACK_UP, sel = false,},
+        {name = "ATTACK_DOWN", v = keybinds.ATTACK_DOWN, sel = false,},
+        {name = "ATTACK_LEFT", v = keybinds.ATTACK_LEFT, sel = false,},
+        {name = "ATTACK_RIGHT", v = keybinds.ATTACK_RIGHT, sel = false,},
+        {name = "SHIELD", v = keybinds.SHIELD, sel = false,},
+        {name = "CRAFTING", v = keybinds.CRAFTING, sel = false,},
+        {name = "INTERACT", v = keybinds.INTERACT, sel = false,},
+        {name = "QUESETS", v = keybinds.QUESETS, sel = false,},
+    }
+end
+
 function checkSettingsMousePressed(button)
-    if button == 1 and settPan.isMouseOver then
-        for ai,av in ipairs(settings) do
-            for bi,bv in ipairs(settings[ai]) do -- loops through every option
-                if settPan.mouseOver == (ai * 10) + bi then -- if the mouse is over the correct button
-                    if settPan.mouseOver == 31 then
-                        scaleHUD("up")
-                    elseif settPan.mouseOver == 11 or settPan.mouseOver == 12 then
-                        bv.v = not bv.v
-                        highdpi = settings[1][1].v
-                        fullscreen = settings[1][2].v
-                        setWindowOptions()
-                        createWorld()
-                    else
-                        bv.v = not bv.v
+    if button == 1 then
+        if settPan.isMouseOver then
+            for ai,av in ipairs(settings) do
+                for bi,bv in ipairs(settings[ai]) do -- loops through every option
+                    if settPan.mouseOver == (ai * 10) + bi then -- if the mouse is over the correct button
+                        if settPan.mouseOver == 31 then
+                            scaleHUD("up")
+                        elseif settPan.mouseOver == 11 or settPan.mouseOver == 12 then
+                            bv.v = not bv.v
+                            highdpi = settings[1][1].v
+                            fullscreen = settings[1][2].v
+                            setWindowOptions()
+                            createWorld()
+                        else
+                            bv.v = not bv.v
+                        end
+                        openUiOnHover = settings[3][2].v -- sets the values
+                        showChat = settings[3][3].v
+                        chatRepeat = settings[3][4].v
+                        showClouds = settings[1][3].v
+                        showShadows = settings[1][4].v
+                        showWorldMask = settings[1][5].v
+                        showWorldAnimations = settings[1][6].v
                     end
-                    openUiOnHover = settings[3][2].v -- sets the values
-                    showChat = settings[3][3].v
-                    chatRepeat = settings[3][4].v
-                    showClouds = settings[1][3].v
-                    showShadows = settings[1][4].v
-                    showWorldMask = settings[1][5].v
-                    showWorldAnimations = settings[1][6].v
                 end
             end
+        elseif controls.selKeybindCount > 0 then
+            if  controls.selKeybindCount ~= controls.previousKeybind then
+                controls.currentKeybind = controls.selKeybindCount
+                controls.previousKeybind = controls.currentKeybind
+            else
+                controls.currentKeybind = 0
+            end
+        end
+
+        if controls.keybinds.reset == true then
+            keybinds = copy(defaultKeybinds)
+            controls.keybinds.v = setDefualtKeybinds()
         end
     end
 
@@ -167,6 +203,24 @@ function checkSettingsMousePressed(button)
     end
 end
 
+function checkSettingKeyPressed(key)
+    print(controls.currentKeybind)
+    if controls.currentKeybind > 0 then
+        controls.keybinds.v[controls.currentKeybind].v = key
+        keybinds[controls.keybinds.v[controls.currentKeybind].name] = key
+        controls.currentKeybind = 0
+        writeSettings()
+    else
+        if key == "escape" or key == "w" or key == "a" or key == "s" or key == "d" then
+            getDisplay()
+            writeSettings()
+            isSettingsWindowOpen = false
+        elseif key == "return" then
+            writeSettings()
+            checkIfReadyToQuit()
+        end
+    end
+end
 
 function setWindowOptions()
     love.window.setMode(screenDimentions.width, screenDimentions.height, {
@@ -199,15 +253,7 @@ function getSettingsVersion()
 end
 
 function checkSettingsButtonPressed(key)
-    if key == "escape" or key == "w" or key == "a" or key == "s" or key == "d" then
-        getDisplay()
-        writeSettings()
-        isSettingsWindowOpen = false
-    end
-    if key == "return" then
-        writeSettings()
-        checkIfReadyToQuit()
-    end
+
 end
 
 function getDisplay()

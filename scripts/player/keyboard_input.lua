@@ -19,6 +19,7 @@ function love.keypressed(key)
             checkWorldEditKeyPressed(key)
         elseif worldEdit.isTyping then
         elseif isSettingsWindowOpen then
+            checkSettingKeyPressed(key)
             checkSettingsButtonPressed(key)
         elseif tutorialOpen then
             checkTutorialKeyPressed(key)
