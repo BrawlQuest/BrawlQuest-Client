@@ -509,7 +509,7 @@ function checkWorldEditKeyPressed(key)
         elseif key == "return" and worldEdit.enteredWorldText ~= "" then
             worldEdit.isTyping = false
             worldEdit.drawableTile[5] = worldEdit.enteredWorldText
-            print(worldEdit.drawableTile[5])
+            -- print(worldEdit.drawableTile[5])
         elseif key == "escape" then 
             worldEdit.isTyping = false
         end

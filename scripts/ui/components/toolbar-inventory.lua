@@ -96,7 +96,7 @@ function updateToolBarInventory(dt)
     end
 
 
-    if inventory.open then
+    
         if useItemColorChanged then
             local colorCount = 0
             for i, v in ipairs(useItemColor) do
@@ -112,7 +112,8 @@ function updateToolBarInventory(dt)
                 useItemColorChanged = false
             end
         end
-
+        
+    if inventory.open then 
         if getFullUserInventoryFieldHeight() * scale > (uiY - 97 - 50 - 50) * scale then
             posYInventory = posYInventory + velyInventory * dt
             if posYInventory > 0 then

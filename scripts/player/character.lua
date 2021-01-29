@@ -120,9 +120,14 @@ function updateCharacter(dt)
 end
 
 function worldCollison(x, y)
-    if (worldLookup[x] and worldLookup[x][y] and worldLookup[x][y].Collision) then
-        return worldLookup[x][y].Collision
+    local output = false
+    if worldEdit.open then return output end
+    if worldLookup[x] and worldLookup[x][y] and worldLookup[x][y].Collision == true then
+        output = true
+    elseif enemyCollisions[x] and enemyCollisions[x][y] == true then
+        output = true
     end
+    return output
 end
 
 function movePlayer(dt)
@@ -193,13 +198,13 @@ function movePlayer(dt)
             speed = 110 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
         end
         if difference(player.x * 32, player.dx) > 1 then
-            player.speed.x = player.speed.x + 10 * dt
-            if player.speed.x > 1 then player.speed.x = 1 end
+            -- player.speed.x = player.speed.x + 10 * dt
+            -- if player.speed.x > 1 then player.speed.x = 1 end
 
             if player.dx > player.x * 32 then
-                player.dx = player.dx - cerp(speed, speed, player.speed.x) * dt
+                player.dx = player.dx - speed * dt
             else
-                player.dx = player.dx + cerp(speed, speed, player.speed.x) * dt
+                player.dx = player.dx + speed * dt
             end
         else
             player.dx = player.x * 32
@@ -207,13 +212,13 @@ function movePlayer(dt)
         end
 
         if difference(player.y * 32, player.dy) > 1 then
-            player.speed.y = player.speed.y + 10 * dt
-            if player.speed.y > 1 then player.speed.y = 1 end
+            -- player.speed.y = player.speed.y + 10 * dt
+            -- if player.speed.y > 1 then player.speed.y = 1 end
 
             if player.dy > player.y * 32 then
-                player.dy = player.dy - cerp(speed, speed, player.speed.y) * dt
+                player.dy = player.dy - speed * dt
             else
-                player.dy = player.dy + cerp(speed, speed, player.speed.y) * dt
+                player.dy = player.dy + speed * dt
             end
         else
             player.dy = player.y * 32

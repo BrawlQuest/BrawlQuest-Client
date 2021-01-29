@@ -137,7 +137,7 @@ end
 function updateOtherPlayers(dt)
     for i, v in pairs(players) do
         if playersDrawable[i] == nil then
-            print("Setting drawable")
+            -- print("Setting drawable")
             playersDrawable[i] = {
                 ['Name'] = v.Name,
                 ['X'] = v.X * 32,
