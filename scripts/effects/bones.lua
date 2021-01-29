@@ -1,16 +1,36 @@
 bones = {}
 
 function boneSpurt(x,y,amount,velocity,r,g,b) 
+    local distX = (player.x - player.target.x) * -velocity
+    local distY = (player.y - player.target.y) * -velocity
+    
     for i=1,amount do
+        local xv, yv
+        local range = 25
+        local rand = 1 - love.math.random() * 0.3
+
+        if (distX == 0 or distY == 0) then
+            -- if (distX) == 0 then
+                xv = love.math.random(distX - range, distX + range)
+                yv = love.math.random(distY - range, distY + range)
+            -- elseif distY == 0 then
+                -- xv = love.math.random(distY - range, distY + range)
+                -- yv = love.math.random(distX - range, distX + range)
+            -- end
+        else
+            xv = love.math.random(distX - (range * (player.y - player.target.y)), distX + (range * (player.y - player.target.y))) * 0.7
+            yv = love.math.random(distY - (range * (player.x - player.target.x)), distY + (range * (player.x - player.target.x))) * 0.7
+        end
+
         bones[#bones+1] = {
             x = x,
             y = y,
-            xv = love.math.random(-velocity,velocity),
-            yv = love.math.random(-velocity,velocity),
-            alpha = 10,
-            r = r,
-            g = g, 
-            b = b
+            xv = xv,
+            yv = yv,
+            alpha = 10 * love.math.random(),
+            r = r * rand,
+            g = g * rand, 
+            b = b * rand,
         }
     end
 end
@@ -56,6 +76,6 @@ end
 function drawBones()
     for i,v in ipairs(bones) do
         love.graphics.setColor(v.r,v.g,v.b,v.alpha)
-        love.graphics.rectangle("fill",v.x,v.y,1,1)
+        love.graphics.rectangle("fill",v.x,v.y,2, 2)
     end
 end

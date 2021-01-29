@@ -16,7 +16,7 @@ end
 
 function updateWorldMask(dt)
 
-    -- worldMask.current = {x = math.floor((player.dx / 32) * 1), y = math.floor((player.dy / 32) * 1),}
+    -- worldMask.current = {x = math.floor((player.cx / 32) * 1), y = math.floor((player.cy / 32) * 1),}
     -- if (worldMask.current.x ~= worldMask.previous.x) or (worldMask.current.y ~= worldMask.previous.y) or worldScaleSmooting or isSettingsWindowOpen then
     --     worldMaskTables = {{},{},}
     --     local thisWorldScale = worldScale - ((worldScale * settPan.opacityCERP) * 0.2)
@@ -30,10 +30,10 @@ function updateWorldMask(dt)
     --     for x = ((player.x) * gridScale) - worldMask.range, (player.x * gridScale) + worldMask.range do
     --         for y = (player.y * gridScale) - worldMask.range, (player.y * gridScale) + worldMask.range do
     --             worldMask.detected = false            
-    --             local distance = distanceToPoint(player.dx, player.dy, x * gridSize, y * gridSize)
+    --             local distance = distanceToPoint(player.cx, player.cy, x * gridSize, y * gridSize)
     --             if distance <= range then 
     --                 if showShadows then
-    --                     local success, counter = Bresenham.line(math.floor((player.dx / 32) * gridScale), math.floor((player.dy / 32) * gridScale), math.round(x), math.round(y), function (x,y) 
+    --                     local success, counter = Bresenham.line(math.floor((player.cx / 32) * gridScale), math.floor((player.cy / 32) * gridScale), math.round(x), math.round(y), function (x,y) 
     --                         local thisX, thisY = x / gridScale, y / gridScale
     --                         -- local elseX, elseY = thisX - 0.5, thisY - 0.5
 
@@ -98,10 +98,10 @@ function drawWorldMask()
     for x = ((player.x) * gridScale) - worldMask.range, (player.x * gridScale) + worldMask.range do
         for y = (player.y * gridScale) - worldMask.range, (player.y * gridScale) + worldMask.range do
             worldMask.detected = false            
-            local distance = distanceToPoint(player.dx, player.dy, x * gridSize, y * gridSize)
+            local distance = distanceToPoint(player.cx, player.cy, x * gridSize, y * gridSize)
             if distance <= range then 
                 if showShadows then
-                    local success, counter = Bresenham.line(math.floor((player.dx / 32) * gridScale), math.floor((player.dy / 32) * gridScale), math.round(x), math.round(y), function (x,y) 
+                    local success, counter = Bresenham.line(math.floor((player.cx / 32) * gridScale), math.floor((player.cy / 32) * gridScale), math.round(x), math.round(y), function (x,y) 
                         local thisX, thisY = x / gridScale, y / gridScale
                         local elseX, elseY = thisX - 0.5, thisY - 0.5
                         local show = true

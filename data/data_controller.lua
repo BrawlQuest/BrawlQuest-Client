@@ -28,6 +28,26 @@ function initHardData()
             [-1] = love.graphics.newImage("assets/ui/target/ne_arrow_1.png"),
             [1] = love.graphics.newImage("assets/ui/target/se_arrow_1.png")
         }
+
+        cornerArrowImage = love.graphics.newImage("assets/ui/target/corner.png")
+        edgeArrowImage = love.graphics.newImage("assets/ui/target/edge.png")
+
+        arrowData = {
+            [-1] = {
+                [-1] = {image = cornerArrowImage, position = {x = 0, y = 0,}, rotation = math.rad(180),},
+                [0] = {image = edgeArrowImage, position = {x = 0, y = 16,}, rotation = math.rad(180)},
+                [1] = {image = cornerArrowImage, position = {x = 0, y = 0,}, rotation = math.rad(90),},
+            },
+            [0] = {
+                [-1] = {image = edgeArrowImage, position = {x = -16, y = 0,}, rotation = math.rad(-90),},
+                [1] = {image = edgeArrowImage, position = {x = 16, y = 0,}, rotation = math.rad(90),},
+            },
+            [1] = {
+                [-1] = {image = cornerArrowImage, position = {x = 0, y = 0,}, rotation = math.rad(-90),},
+                [0] = {image = edgeArrowImage, position = {x = 0, y = -16,}, rotation = math.rad(0),},
+                [1] = {image = cornerArrowImage, position = {x = 0, y = 0,}, rotation = math.rad(0),},
+            },
+        }
         
         foliageImg = {
             love.graphics.newImage("assets/world/objects/foliage/BQ Foliage-1.png"),

@@ -63,6 +63,7 @@ function newEnemyData(data) -- called when nearby data is returned
                 elseif player.dy < me.AY * 32 then
                     player.dy = player.dy + 16
                 end
+                attackHitAmount = 1
             end
             addFloat(enemy.X*32,enemy.Y*32,enemy.HP - v.HP,{1,0,0})
             enemy.HP = v.HP
@@ -70,7 +71,7 @@ function newEnemyData(data) -- called when nearby data is returned
 
             enemyHitSfx:setPitch(love.math.random(50, 100) / 100)
             love.audio.play(enemyHitSfx)
-            boneSpurt(enemy.dx + 16, enemy.dy + 16, 4, 48, 1, 1, 1)
+            boneSpurt(enemy.dx + 16, enemy.dy + 16, 4, 20, 1, 1, 1)
         end
 
         if enemy.IsAggro == false and v.IsAggro then
@@ -159,7 +160,7 @@ function drawEnemies()
 --            love.audio.play(enemyHitSfx)
 
             love.audio.play(deathSfxs[love.math.random(1, #deathSfxs)])
-            boneSpurt(v.dx + 16, v.dy + 16, 48, 72, 0.8, 0.8, 1)
+            boneSpurt(v.dx + 16, v.dy + 16, 48, 50, 1, 1, 1)
             v.hasBurst = true
         end
     end
@@ -191,7 +192,7 @@ end
 
 function smoothMovement(v, dt)
     if distanceToPoint(v.dx, v.dy, v.X * 32, v.Y * 32) > 3 then
-        local speed = v.speed * 3
+        local speed = v.speed * 1
         if v.dx > v.X * 32 + 3 then
             v.previousDirection = "left"
             v.dx = v.dx - speed * dt
@@ -206,8 +207,8 @@ function smoothMovement(v, dt)
             v.dy = v.dy + speed * dt
         end
     else
-        v.dx = math.floor(v.dx) -- v.X * 32 -- preventing blurring from fractional pixels
-        v.dy = math.floor(v.dy) --v.Y * 32
+        v.dx = v.X * 32 -- preventing blurring from fractional pixels
+        v.dy = v.Y * 32
     end
 end
 

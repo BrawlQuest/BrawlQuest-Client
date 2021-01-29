@@ -118,8 +118,9 @@ function love.draw()
             if worldEdit.open and player then
                 drawNewWorldEditTiles()
             end
-
+            
             drawAuras()
+            drawBones() 
             love.graphics.setColor(1, 1, 1)
             drawNPCs()
             drawEnemies()

@@ -106,19 +106,30 @@ function drawPlayer(v, i)
         if thisPlayer ~= nil and thisPlayer.AX then
             local diffX
             local diffY
-            if i == -1 and (love.keyboard.isDown(keybinds.ATTACK_UP) or love.keyboard.isDown(keybinds.ATTACK_DOWN) or love.keyboard.isDown(keybinds.ATTACK_LEFT) or love.keyboard.isDown(keybinds.ATTACK_RIGHT)) then
+            if i == -1 and player.target.active then
                 diffX = player.target.x - player.x
                 diffY = player.target.y - player.y
             else
                 diffX = thisPlayer.AX - thisPlayer.X
                 diffY = thisPlayer.AY - thisPlayer.Y
             end
-            if arrowImg[diffX] ~= nil and arrowImg[diffX][diffY] ~= nil then
-                love.graphics.setColor(1, 1, 1, 1 - nextTick)
-                love.graphics.draw(arrowImg[diffX][diffY], v.X - 32 + (32 * (nextTick)), v.Y - 32 + (32 * (nextTick)), 0, (1 - nextTick))
-            end
+
+            drawArrowImage(diffX, diffY, v.X, v.Y)
         end
         love.graphics.setColor(1, 1, 1)
+    end
+end
+
+function drawArrowImage(diffX, diffY, x, y)
+    if arrowData[diffX] ~= nil and arrowData[diffX][diffY] ~= nil then
+        local v = arrowData[diffX][diffY]
+        local size = 32
+        love.graphics.setColor(1, cerp(0.1, 0.8, attackHitAmount), 0, 1)
+        love.graphics.draw(v.image,
+        x + 16 + v.position.x + cerp(0, v.position.x * 0.25, attackHitAmount), 
+        y + 16 + v.position.y + cerp(0, v.position.y * 0.25, attackHitAmount), 
+        v.rotation, 
+        cerp(1, 1.25, attackHitAmount))
     end
 end
 
@@ -134,7 +145,14 @@ function drawNamePlate(x,y,name)
     love.graphics.print(name, playerNameFont, (thisX) - (nameWidth * 0.5), thisY - nameHeight - 2 + padding)
 end
 
+attackHitAmount = 0
+
 function updateOtherPlayers(dt)
+
+    if attackHitAmount > 0 then
+        attackHitAmount = attackHitAmount - 2 * dt
+    end
+
     for i, v in pairs(players) do
         if playersDrawable[i] == nil then
             -- print("Setting drawable")
