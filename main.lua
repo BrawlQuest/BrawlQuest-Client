@@ -270,9 +270,11 @@ function love.update(dt)
 
             if distanceToPoint(me.X, me.Y, player.x, player.y) > 4 then
                 player.x = me.X
+                player.y = me.Y
                 player.dx = me.X*32
                 player.dy = me.Y*32
-                player.y = me.Y
+                player.cx = me.X*32
+                player.cy = me.Y*32
                 totalCoverAlpha = 2
                 love.audio.play(awakeSfx)
             end

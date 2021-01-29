@@ -22,7 +22,7 @@ alertImg = love.graphics.newImage("assets/ui/alert.png")
 function newEnemyData(data) -- called when nearby data is returned
     enemiesInAggro = 0
     enemyCollisions = copy(enemyCollisionsPrevious[enemyCollisionsI])
-    if enemyCollisionsI == 0 then enemyCollisionsI = 1 else enemyCollisionsI = 0 end
+
 
     for i, v in ipairs(data) do
         local id = v.ID
@@ -63,7 +63,6 @@ function newEnemyData(data) -- called when nearby data is returned
                 elseif player.dy < me.AY * 32 then
                     player.dy = player.dy + 16
                 end
-
             end
             addFloat(enemy.X*32,enemy.Y*32,enemy.HP - v.HP,{1,0,0})
             enemy.HP = v.HP
@@ -108,7 +107,7 @@ function newEnemyData(data) -- called when nearby data is returned
     end
 
     -- print(json:encode_pretty(enemyCollisions))
-    if enemyCollisionsI == 1 then 
+    if enemyCollisionsI == 0 then 
         enemyCollisionsPrevious[0] = copy(enemyCollisions)
         enemyCollisionsPrevious[1] = {}
     else
@@ -213,6 +212,7 @@ function smoothMovement(v, dt)
 end
 
 function tickEnemies()
+    if enemyCollisionsI == 0 then enemyCollisionsI = 1 else enemyCollisionsI = 0 end
     -- for i, v in ipairs(enemies) do
     --     local enemy = v
     --     enemy.speed = distanceToPoint(enemy.dx, enemy.dy, v.X * 32, v.Y * 32)

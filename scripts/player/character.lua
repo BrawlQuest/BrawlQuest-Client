@@ -198,9 +198,6 @@ function movePlayer(dt)
             speed = 110 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
         end
         if difference(player.x * 32, player.dx) > 1 then
-            -- player.speed.x = player.speed.x + 10 * dt
-            -- if player.speed.x > 1 then player.speed.x = 1 end
-
             if player.dx > player.x * 32 then
                 player.dx = player.dx - speed * dt
             else
@@ -208,13 +205,19 @@ function movePlayer(dt)
             end
         else
             player.dx = player.x * 32
-            -- player.speed.x = 0
+        end
+
+        if difference(player.x * 32, player.cx) > 1 then
+            if player.cx > player.x * 32 then
+                player.cx = player.cx - speed * dt
+            else
+                player.cx = player.cx + speed * dt
+            end
+        else
+            player.cx = player.x * 32
         end
 
         if difference(player.y * 32, player.dy) > 1 then
-            -- player.speed.y = player.speed.y + 10 * dt
-            -- if player.speed.y > 1 then player.speed.y = 1 end
-
             if player.dy > player.y * 32 then
                 player.dy = player.dy - speed * dt
             else
@@ -222,12 +225,21 @@ function movePlayer(dt)
             end
         else
             player.dy = player.y * 32
-            -- player.speed.y = 0
         end
 
-        -- if distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) < 1 then -- snap to final position
-        --     player.dx = player.x * 32
-        --     player.dy = player.y * 32
+        if difference(player.y * 32, player.cy) > 1 then
+            if player.cy > player.y * 32 then
+                player.cy = player.cy - speed * dt
+            else
+                player.cy = player.cy + speed * dt
+            end
+        else
+            player.cy = player.y * 32
+        end
+
+        -- if distanceToPoint(player.x * 32, player.y * 32, player.cx, player.cy) > 4 * 32 then -- snap to final position
+        --     player.cx = player.x * 32
+        --     player.cy = player.y * 32
         -- end
     end
 

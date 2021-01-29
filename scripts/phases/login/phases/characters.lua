@@ -77,6 +77,8 @@ function transitionToPhaseGame()
     player.y = response['Me']['Y']
     player.dx = player.x*32
     player.dy = player.y*32
+    player.cx = player.x*32
+    player.cy = player.y*32
     totalCoverAlpha = 2
     local b = {}
     c, h = http.request{url = api.url.."/world", method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}

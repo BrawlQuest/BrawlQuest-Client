@@ -115,7 +115,7 @@ function drawPlayer(v, i)
             end
             if arrowImg[diffX] ~= nil and arrowImg[diffX][diffY] ~= nil then
                 love.graphics.setColor(1, 1, 1, 1 - nextTick)
-                love.graphics.draw(arrowImg[diffX][diffY], v.X - 32, v.Y - 32)
+                love.graphics.draw(arrowImg[diffX][diffY], v.X - 32 + (32 * (nextTick)), v.Y - 32 + (32 * (nextTick)), 0, (1 - nextTick))
             end
         end
         love.graphics.setColor(1, 1, 1)

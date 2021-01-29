@@ -9,6 +9,8 @@ function initCamera()
 end
 
 function updateCamera(dt)
+    Luven.camera:setPosition(player.cx + 16, player.cy + 16)
+
     -- local speed = {}
     
     -- speed.X = difference(player.cx, camera.X) * 1
@@ -77,10 +79,11 @@ function updateCamera(dt)
     -- if camera.smoothing then
     --     Luven.camera:setPosition(camera.X + 16, camera.Y + 16)
     -- else
-        if player.target.active then
-            Luven.camera:setPosition(player.x * 32 + 16, player.y * 32 + 16)
-        else
-            Luven.camera:setPosition(player.dx + 16, player.dy + 16)
-        end
+
+        -- if player.target.active then
+        --     Luven.camera:setPosition(player.x * 32 + 16, player.y * 32 + 16)
+        -- else
+        --     Luven.camera:setPosition(player.dx + 16, player.dy + 16)
+        -- end
     -- end
 end
