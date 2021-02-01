@@ -232,7 +232,7 @@ function tickDummyEnemies()
             moveToPlayer(v.x, v.y, v)
             
             if distanceToPoint(v.x,v.y,player.x,player.y) < v.range+1 then
-                boneSpurt(player.dx+16,player.dy+16,v.atk,48,1,0,0)
+                boneSpurt(player.dx+16,player.dy+16,v.atk,100,1,0,0)
                 local attackSfx = attackSfxs[love.math.random(1,#attackSfxs)]
                 attackSfx:setPitch(love.math.random(50,100)/100)
                 love.audio.play(attackSfx)
@@ -268,7 +268,7 @@ function tickDummyEnemies()
                 pushBack = 12*modifier
                 critHitSfx:setPitch(1 * (modifier/14))
                 love.audio.play(critHitSfx)
-                boneSpurt(v.dx+16,v.dy+16,4*modifier,12*modifier,1,1,1)
+                boneSpurt(v.dx+16,v.dy+16,4*modifier,100,1,1,1)
                 if v.dx > player.x*32 then
                     moveEnemy(v.x+1,v.y,v)
                 elseif v.dx < player.x*32 then

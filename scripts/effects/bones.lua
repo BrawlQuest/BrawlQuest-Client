@@ -1,4 +1,16 @@
-bones = {}
+local boneMultiple = 4
+
+function initBones()
+    bones = {}
+
+    bone = {
+        image = {
+            love.graphics.newImage("assets/world/objects/Blood.png"),
+            love.graphics.newImage("assets/world/objects/Blood2.png"),
+            love.graphics.newImage("assets/world/objects/Bone.png")
+        },
+    }
+end
 
 function boneSpurt(x,y,amount,velocity,r,g,b) 
     local distX = (player.x - player.target.x) * -velocity
@@ -8,35 +20,40 @@ function boneSpurt(x,y,amount,velocity,r,g,b)
         local xv, yv
         local range = 25
         local rand = 1 - love.math.random() * 0.3
+        local deviance = 30
+        
 
         if (distX == 0 or distY == 0) then
-            -- if (distX) == 0 then
-                xv = love.math.random(distX - range, distX + range)
-                yv = love.math.random(distY - range, distY + range)
-            -- elseif distY == 0 then
-                -- xv = love.math.random(distY - range, distY + range)
-                -- yv = love.math.random(distX - range, distX + range)
-            -- end
+            if (distX) == 0 then
+                xv = love.math.random(distX - range, distX + range) + love.math.random(-deviance, deviance)
+                yv = love.math.random(distY - range, distY + range) + love.math.random(-deviance, deviance)
+            elseif distY == 0 then
+                xv = love.math.random(distX - range, distX + range) + love.math.random(-deviance, deviance)
+                yv = love.math.random(distY - range, distY + range) + love.math.random(-deviance, deviance)
+            end
         else
-            xv = love.math.random(distX - (range * (player.y - player.target.y)), distX + (range * (player.y - player.target.y))) * 0.7
-            yv = love.math.random(distY - (range * (player.x - player.target.x)), distY + (range * (player.x - player.target.x))) * 0.7
+            xv = love.math.random(distX - (range * (player.y - player.target.y)), distX + (range * (player.y - player.target.y))) + love.math.random(-deviance, deviance)
+            yv = love.math.random(distY - (range * (player.x - player.target.x)), distY + (range * (player.x - player.target.x))) + love.math.random(-deviance, deviance)
         end
 
         bones[#bones+1] = {
             x = x,
             y = y,
-            xv = xv,
-            yv = yv,
+            xv = xv * boneMultiple,
+            yv = yv * boneMultiple,
             alpha = 10 * love.math.random(),
             r = r * rand,
             g = g * rand, 
             b = b * rand,
+            image = love.math.random(1, 2),
+            scale =  1 - love.math.random() * 0.5,
+            rota = math.rad(love.math.random(0, 360)),
         }
     end
 end
 
 function updateBones(dt)
-    local drag = 32
+    local drag = 128 * boneMultiple
     for i,v in ipairs(bones) do
         v.x = v.x + v.xv*dt
         v.y = v.y + v.yv*dt
@@ -76,6 +93,9 @@ end
 function drawBones()
     for i,v in ipairs(bones) do
         love.graphics.setColor(v.r,v.g,v.b,v.alpha)
-        love.graphics.rectangle("fill",v.x,v.y,2, 2)
+        local r = 0
+        if v.image == 3 then r = v.rota end
+        love.graphics.draw(bone.image[v.image], v.x - (16 * v.scale), v.y - (16 * v.scale), r, v.scale)
+        -- love.graphics.rectangle("fill",v.x,v.y,2, 2)
     end
 end

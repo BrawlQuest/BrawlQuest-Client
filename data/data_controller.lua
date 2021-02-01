@@ -57,4 +57,5 @@ function initHardData()
         }
 
         initLighting()
+        initBones()
 end
