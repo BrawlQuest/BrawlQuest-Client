@@ -60,20 +60,21 @@ function checkMouseTargeting()
     local mx, my = love.mouse.getPosition()
     mx = player.cx - (player.cx - (mx - love.graphics.getWidth() * 0.5))
     my = player.cy - (player.cy - (my - love.graphics.getHeight() * 0.5))
-    local range = 5 * 32
+    
+    local range = {x = 4 * 32, y = 4 * 32}
 
-    if my < -range then 
+    if my < -range.y then 
         player.target.active = true
         player.target.y = player.y - 1
-    elseif my > range then
+    elseif my > range.y then
         player.target.active = true
         player.target.y = player.y + 1
     end
 
-    if mx < -range then
+    if mx < -range.x then
         player.target.active = true
         player.target.x = player.x - 1
-    elseif mx > range then
+    elseif mx > range.x then
         player.target.active = true
         player.target.x = player.x + 1
     end

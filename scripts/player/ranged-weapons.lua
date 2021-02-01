@@ -12,7 +12,7 @@ end
 
 function updateRangedWeapons(dt)
     if target.amount > 0 then
-        target.amount = target.amount - 1.1 * dt
+        target.amount = target.amount - 1.5 * dt
         if target.amount < 0 then
             target.selected = false
             target.amount = 0
@@ -51,7 +51,7 @@ function drawRangedWeaponsGrid(x,y)
         -- love.graphics.rectangle("fill", target.x * 32, target.y * 32, 32, 32)
         -- love.graphics.setColor(1,1,1, targetCerp)
         for i,v in ipairs(target.path) do
-            if i > 2 then -- and i < #target.path then
+            if i > 2 and i < #target.path then
                 love.graphics.rectangle("fill", v.x * 32, v.y * 32, 32, 32) 
             end
         end
@@ -60,10 +60,20 @@ end
 
 function drawRangedWeaponEffects()
     if target.amount > 0 then 
-        love.graphics.setColor(1,1,1,cerp(0, 1, target.amount))
-        love.graphics.setLineWidth( 2 )
+        love.graphics.setColor(1,1,1,target.amount + 0.2)
+        love.graphics.setLineWidth( 2 + target.amount )
         local origin, dest = target.path.origin, target.path
-        love.graphics.line(origin.x * 32 + 16, origin.y * 32 + 16, dest[#dest-1].x * 32 + 16, dest[#dest-1].y * 32 + 16)
+        local offset = -1
+        if target.shootable == true then offset = 0 end
+        if #dest > 1 then
+            local originX = player.dx + 16
+            local originY = player.dy + 16
+            -- local destX = cerp(originX, dest[#dest + offset].x * 32 + 16, 1 - target.amount)
+            -- local destY = cerp(originY, dest[#dest + offset].y * 32 + 16, 1 - target.amount)
+            local destX = dest[#dest + offset].x * 32 + 16
+            local destY = dest[#dest + offset].y * 32 + 16
+            love.graphics.line(originX, originY, destX, destY)
+        end
     end
     love.graphics.setColor(1,1,1,1)
 end
