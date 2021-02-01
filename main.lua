@@ -34,6 +34,7 @@ require "scripts.libraries.colorize"
 require "scripts.libraries.simple-slider"
 require "scripts.phases.login.login"
 require "scripts.player.other_players"
+require "scripts.player.ranged-weapons"
 require "scripts.enemies"
 require "scripts.npcs"
 require "scripts.world"
@@ -104,6 +105,7 @@ function love.load()
     initCamera()
     initClouds()
     initWorldMask()
+    initRangedWeapons()
     love.graphics.setFont(textFont)
 end
 
@@ -124,6 +126,7 @@ function love.draw()
             love.graphics.setColor(1, 1, 1)
             drawNPCs()
             drawEnemies()
+            drawRangedWeaponEffects()
 
             for i, v in ipairs(playersDrawable) do
                 drawPlayer(v, i)
@@ -203,6 +206,7 @@ function love.update(dt)
         updateAuras(dt)
         updateMusic(dt)
         updateLoot(dt)
+        updateRangedWeapons(dt)
         if showNPCChatBackground then updateNPCChat(dt) end
         -- if showClouds then updateClouds(dt) end
         if showWorldAnimations then updateLeaves(dt) end
@@ -307,6 +311,7 @@ function tick()
     tickAuras()
     nextTick = 1
     getInventory()
+    tickRangedWeapons() 
 end
 
 function love.resize(width, height)

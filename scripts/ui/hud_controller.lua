@@ -124,7 +124,6 @@ end
 
 function updateHUD( dt )
 
-
     if worldScaleSmooting then
         worldScaleAmount = worldScaleAmount + 4 * dt
         if worldScaleAmount > 1 then
@@ -144,10 +143,7 @@ function updateHUD( dt )
         end
     end
 
-
-
     if showHUD then
-
         if inventory.open or inventory.forceOpen then velyInventory = velyInventory - velyInventory * math.min( dt * 15, 1 ) end
         if showChat and messages and #messages > 0 then velyChat = velyChat - velyChat * math.min( dt * 15, 1 ) end
 
@@ -168,8 +164,8 @@ function updateHUD( dt )
         updateCrafting(dt)
     end
 
-    updateFloats(dt)    
-    updateSFX()    
+    updateFloats(dt)
+    updateSFX()
     updateTutorial(dt)
     updateNewWorldEdit(dt)
 
@@ -184,7 +180,7 @@ function updateHUD( dt )
 end
 
 function drawHUD()
-    if showHUD then 
+    if showHUD then
         love.graphics.push()
             local i = 1
             love.graphics.scale(scale)
@@ -222,4 +218,8 @@ function drawTextBelowPlayer(text)
     love.graphics.rectangle("fill",love.graphics.getWidth()/2-smallTextFont:getWidth(text)/2,love.graphics.getHeight()/2+38,smallTextFont:getWidth(text),smallTextFont:getHeight())
     love.graphics.setColor(1,1,1)
     love.graphics.print(text,love.graphics.getWidth()/2-smallTextFont:getWidth(text)/2,love.graphics.getHeight()/2+38)
+end
+
+function isMouseOverTile(thisX, thisY)
+    return isMouseOver((((thisX - player.cx - 16) * worldScale) + (love.graphics.getWidth() * 0.5)),(((thisY - player.cy - 16) * worldScale) + (love.graphics.getHeight() * 0.5)),32 * worldScale,32 * worldScale)
 end

@@ -89,7 +89,7 @@ function updateQuestHub(dt)
     if questHub.amount > 0 then questHub.open = true else questHub.open = false end
     questHub.opacity = cerp(0, 1, questHub.amount)
     
-    if questsPanel.forceOpen and not isTypingInChat then
+    if questsPanel.forceOpen and not isTypingInChat and not isMouseDown() then
         questsPanel.amount = questsPanel.amount + 4 * dt
         if questsPanel.amount > 1 then questsPanel.amount = 1 end
         velYQuest = velYQuest - velYQuest * math.min( dt * 15, 1 )

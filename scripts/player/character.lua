@@ -249,20 +249,24 @@ function checkTargeting() -- Check which keys are down and place the player targ
     local wasActive = player.target.active
     player.target = {x = player.x, y = player.y, active = false}
 
-    if love.keyboard.isDown(keybinds.ATTACK_UP) then
-        player.target.active = true
-        player.target.y = player.y - 1
-    elseif love.keyboard.isDown(keybinds.ATTACK_DOWN) then
-        player.target.active = true
-        player.target.y = player.y + 1
-    end
+    if isMouseDown() then
+        checkMouseTargeting()
+    else
+        if love.keyboard.isDown(keybinds.ATTACK_UP) then
+            player.target.active = true
+            player.target.y = player.y - 1
+        elseif love.keyboard.isDown(keybinds.ATTACK_DOWN) then
+            player.target.active = true
+            player.target.y = player.y + 1
+        end
 
-    if love.keyboard.isDown(keybinds.ATTACK_LEFT) then
-        player.target.active = true
-        player.target.x = player.x - 1
-    elseif love.keyboard.isDown(keybinds.ATTACK_RIGHT) then
-        player.target.active = true
-        player.target.x = player.x + 1
+        if love.keyboard.isDown(keybinds.ATTACK_LEFT) then
+            player.target.active = true
+            player.target.x = player.x - 1
+        elseif love.keyboard.isDown(keybinds.ATTACK_RIGHT) then
+            player.target.active = true
+            player.target.x = player.x + 1
+        end
     end
 
     if not wasActive and player.target.active then

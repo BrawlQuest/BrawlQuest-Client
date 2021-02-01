@@ -20,8 +20,8 @@ function initSettings()
     initSettingsPanel()
     isSettingsWindowOpen = false
     musicVolume = 1
-    sfxVolume = 1  
-    highdpi = false
+    sfxVolume = 1 
+    if love.system.getOS( ) == "Windows" then highdpi = true else highdpi = false end
     fullscreen = false
     chatRepeat = false
     display = 1

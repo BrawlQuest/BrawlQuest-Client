@@ -97,6 +97,11 @@ function tableDifference(a, b)
     end
 end
 
+function isMouseDown()
+    if love.mouse.isDown(1) or love.mouse.isDown(2) then return true
+    else return false end
+end
+
 function math.averageAngles(...)
 	local x,y = 0,0
 	for i=1,select('#',...) do local a= select(i,...) x, y = x+math.cos(a), y+math.sin(a) end
