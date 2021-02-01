@@ -37,6 +37,7 @@ function initSettings()
     showShadows = false
     showWorldMask = true
     showWorldAnimations = true
+    showHUD = true
 
     useItemColor = {}
     hotbar = {}
@@ -66,6 +67,7 @@ function initSettings()
         showShadows = contents["showShadows"]
         showWorldMask = contents["showWorldMask"]
         showWorldAnimations = contents["showWorldAnimations"]
+        showHUD = contents["showHUD"]
         openUiOnHover = contents["openUiOnHover"]
         hotbar = contents["hotbar"]
         api.url = servers[selectedServer].url
@@ -99,6 +101,7 @@ function initSettings()
         },
         {
             title = "HUD",
+            {name = "Show HUD", v = showHUD, type = "button",},
             {name = "GUI Scale", v = settPan.scaleTypes[settPan.scaleValue], type = "button",},
             {name = "Open on Mouse Over", v = openUiOnHover, type = "button",},
             {name = "Show Chat", v = showChat, type = "button",},
@@ -125,6 +128,7 @@ function writeSettings()
         showClouds = showClouds,
         showShadows = showShadows,
         showWorldMask = showWorldMask,
+        showHUD = showHUD,
         showWorldAnimations = showWorldAnimations,
         openUiOnHover = openUiOnHover,
         hotbar = hotbar,
@@ -154,7 +158,7 @@ function checkSettingsMousePressed(button)
             for ai,av in ipairs(settings) do
                 for bi,bv in ipairs(settings[ai]) do -- loops through every option
                     if settPan.mouseOver == (ai * 10) + bi then -- if the mouse is over the correct button
-                        if settPan.mouseOver == 31 then
+                        if settPan.mouseOver == 32 then
                             scaleHUD("up")
                         elseif settPan.mouseOver == 11 or settPan.mouseOver == 12 then
                             bv.v = not bv.v
@@ -165,9 +169,10 @@ function checkSettingsMousePressed(button)
                         else
                             bv.v = not bv.v
                         end
-                        openUiOnHover = settings[3][2].v -- sets the values
-                        showChat = settings[3][3].v
-                        chatRepeat = settings[3][4].v
+                        showHUD = settings[3][1].v
+                        openUiOnHover = settings[3][3].v -- sets the values
+                        showChat = settings[3][4].v
+                        chatRepeat = settings[3][5].v
                         showClouds = settings[1][3].v
                         showShadows = settings[1][4].v
                         showWorldMask = settings[1][5].v
@@ -190,7 +195,7 @@ function checkSettingsMousePressed(button)
         end
     end
 
-    if button == 2 and settPan.mouseOver == 31 then
+    if button == 2 and settPan.mouseOver == 32 then
         scaleHUD("down")
     end
 

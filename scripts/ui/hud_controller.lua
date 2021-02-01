@@ -123,8 +123,7 @@ function initHUD()
 end
 
 function updateHUD( dt )
-    if inventory.open or inventory.forceOpen then velyInventory = velyInventory - velyInventory * math.min( dt * 15, 1 ) end
-    if showChat and messages and #messages > 0 then velyChat = velyChat - velyChat * math.min( dt * 15, 1 ) end
+
 
     if worldScaleSmooting then
         worldScaleAmount = worldScaleAmount + 4 * dt
@@ -145,25 +144,35 @@ function updateHUD( dt )
         end
     end
 
-    if showChat then
-        if (getFullChatHeight() + cerp(10, 115, questHub.amount)) * scale > uiY then -- take into account spacing from the bottom
-            posYChat = posYChat + velyChat * dt
-            if posYChat < 0 then
-                posYChat = 0
+
+
+    if showHUD then
+
+        if inventory.open or inventory.forceOpen then velyInventory = velyInventory - velyInventory * math.min( dt * 15, 1 ) end
+        if showChat and messages and #messages > 0 then velyChat = velyChat - velyChat * math.min( dt * 15, 1 ) end
+
+        if showChat then
+            if (getFullChatHeight() + cerp(10, 115, questHub.amount)) * scale > uiY then -- take into account spacing from the bottom
+                posYChat = posYChat + velyChat * dt
+                if posYChat < 0 then
+                    posYChat = 0
+                end
+            else posYChat = 0
             end
-        else posYChat = 0
         end
+
+        updateTooltip(dt)
+        updateToolBarInventory(dt)
+        updateCharacterHub(dt)
+        updateQuestHub(dt)
+        updateCrafting(dt)
     end
 
-    updateTooltip(dt)
-    updateFloats(dt)
-    updateSFX()
-    updateToolBarInventory(dt)
-    updateCharacterHub(dt)
-    updateQuestHub(dt)
-    updateCrafting(dt)
-    updateNewWorldEdit(dt)
+    updateFloats(dt)    
+    updateSFX()    
     updateTutorial(dt)
+    updateNewWorldEdit(dt)
+
 
     if isSettingsWindowOpen then
         updateSettingsPanel(dt)
@@ -175,34 +184,34 @@ function updateHUD( dt )
 end
 
 function drawHUD()
-    love.graphics.push()
-        local i = 1
-        love.graphics.scale(scale)
-        if showNPCChatBackground then drawNPCChatBackground((uiX/2)/i - 128, (uiY/2)/i - 128) end
-        if crafting.open then drawCrafting() end
-        drawCharacterHub(0, uiY/i)
-        drawToolBarInventory(0, uiY/i)
-        drawQuestHub(uiX/i, uiY/i)
-        if questsPanel.open then drawQuestsPanel((uiX/i) - 313, (uiY/i) + cerp(-14, 0 - ((uiY/1.25) - 15), questsPanel.amount)) end
-        drawTooltip()
-        drawAuraHeadings()
+    if showHUD then 
+        love.graphics.push()
+            local i = 1
+            love.graphics.scale(scale)
+            if showNPCChatBackground then drawNPCChatBackground((uiX/2)/i - 128, (uiY/2)/i - 128) end
+            if crafting.open then drawCrafting() end
+            drawCharacterHub(0, uiY/i)
+            drawToolBarInventory(0, uiY/i)
+            drawQuestHub(uiX/i, uiY/i)
+            if questsPanel.open then drawQuestsPanel((uiX/i) - 313, (uiY/i) + cerp(-14, 0 - ((uiY/1.25) - 15), questsPanel.amount)) end
+            drawTooltip()
+            drawAuraHeadings()
 
-    love.graphics.pop()
+        love.graphics.pop()
 
-    love.graphics.push() -- chat and quests scaling TODO: Quests
-        local i = 0.5
-        love.graphics.scale(scale*i)
-        if showChat then
-            drawChatPanel(uiX/i, (uiY - cerp(cerp(0, 100, questHub.amount), ((uiY/1.25)-15), questsPanel.amount)) / i)
-        end
-        drawZoneTitle()
+        love.graphics.push() -- chat and quests scaling TODO: Quests
+            local i = 0.5
+            love.graphics.scale(scale*i)
+            if showChat then
+                drawChatPanel(uiX/i, (uiY - cerp(cerp(0, 100, questHub.amount), ((uiY/1.25)-15), questsPanel.amount)) / i)
+            end
+            drawZoneTitle()
 
-    love.graphics.pop()
-
-        drawTutorial()
+        love.graphics.pop()
+    end
 
     love.graphics.setColor(1,1,1,1)
-
+    drawTutorial()
     -- drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
     if settPan.opacity > 0 then drawSettingsPanel() end
 end

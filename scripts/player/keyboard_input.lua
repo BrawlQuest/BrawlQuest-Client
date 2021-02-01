@@ -64,6 +64,12 @@ function love.keypressed(key)
                 loadSliders()
             end
 
+            if key == "tab" then
+                showHUD = not showHUD
+                settings[3][1].v = showHUD
+                writeSettings()
+            end
+
             if key == "'" or key == "r" then 
                 worldEdit.open = not worldEdit.open 
             end
@@ -117,7 +123,7 @@ function love.keypressed(key)
             -- end
 
             if key == "." then
-                print(json:encode_pretty(players))
+                print(json:encode_pretty(enemies))
                 -- scaleHUD("up")
                 -- writeSettings()
             end

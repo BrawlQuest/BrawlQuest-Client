@@ -12,7 +12,7 @@ function initBones()
     }
 end
 
-function boneSpurt(x,y,amount,velocity,r,g,b) 
+function boneSpurt(x, y, amount, velocity, r, g, b, type) 
     local distX = (player.x - player.target.x) * -velocity
     local distY = (player.y - player.target.y) * -velocity
     
@@ -45,6 +45,7 @@ function boneSpurt(x,y,amount,velocity,r,g,b)
             r = r * rand,
             g = g * rand, 
             b = b * rand,
+            type = type or "mob",
             image = love.math.random(1, 2),
             scale =  1 - love.math.random() * 0.5,
             rota = math.rad(love.math.random(0, 360)),
@@ -95,7 +96,10 @@ function drawBones()
         love.graphics.setColor(v.r,v.g,v.b,v.alpha)
         local r = 0
         if v.image == 3 then r = v.rota end
-        love.graphics.draw(bone.image[v.image], v.x - (16 * v.scale), v.y - (16 * v.scale), r, v.scale)
-        -- love.graphics.rectangle("fill",v.x,v.y,2, 2)
+        if v.type == "mob" then
+            love.graphics.draw(bone.image[v.image], v.x - (16 * v.scale), v.y - (16 * v.scale), r, v.scale)
+        else
+            love.graphics.rectangle("fill",v.x,v.y,2, 2)
+        end
     end
 end

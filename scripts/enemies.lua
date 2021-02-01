@@ -122,31 +122,27 @@ function drawEnemies()
     for i, v in pairs(enemies) do
         if v.HP > 0 then
 
+            local rotation = 1
+            local offsetX = 0
+            if v and v.previousDirection and v.previousDirection == "left" then
+                rotation = -1
+                offsetX = 32
+            end
 
-                local rotation = 1
-                local offsetX = 0
-                if v and v.previousDirection and v.previousDirection == "left" then
-                    rotation = -1
-                    offsetX = 32
+            love.graphics.setColor(1, 1 - v.red, 1 - v.red)
+            love.graphics.draw(enemyImg[v.Enemy.Name], v.dx + offsetX, v.dy, 0, rotation, 1, 0, 0)
+            if distanceToPoint(v.dx, v.dy, player.dx, player.dy) < 256 then
+                if v.Enemy.CanMove then
+                    love.graphics.setColor(1, 0, 0, 1 - (distanceToPoint(v.dx, v.dy, player.dx, player.dy)/256))
+                    love.graphics.rectangle("fill", v.dx, v.dy - 6, (v.dhp / v.mhp) * 32, 6)
+                else
+                    love.graphics.setColor(1,0,0)
+                    love.graphics.rectangle("fill", v.dx, v.dy - 2, (v.dhp / v.mhp) * 32, 2)
                 end
-
-                love.graphics.setColor(1, 1 - v.red, 1 - v.red)
-                love.graphics.draw(enemyImg[v.Enemy.Name], v.dx + offsetX, v.dy, 0, rotation, 1, 0, 0)
-                if distanceToPoint(v.dx, v.dy, player.dx, player.dy) < 256 then
-                    if v.Enemy.CanMove then
-                        love.graphics.setColor(1, 0, 0, 1 - (distanceToPoint(v.dx, v.dy, player.dx, player.dy)/256))
-                        love.graphics.rectangle("fill", v.dx, v.dy - 6, (v.dhp / v.mhp) * 32, 6)
-                    else
-                        love.graphics.setColor(1,0,0)
-                        love.graphics.rectangle("fill", v.dx, v.dy - 2, (v.dhp / v.mhp) * 32, 2)
-                    end
-                end
-                love.graphics.setColor(1, 1, 1, v.aggroAlpha)
-                love.graphics.draw(alertImg, v.dx + 8, v.dy - 16)
-                love.graphics.setColor(1, 1, 1)
-                -- love.graphics.setFont(smallTextFont)
-          --      love.graphics.printf(tostring(v.IsAggro), v.dx, v.dy-6, 32, "center")
-
+            end
+            love.graphics.setColor(1, 1, 1, v.aggroAlpha)
+            love.graphics.draw(alertImg, v.dx + 8, v.dy - 16)
+            love.graphics.setColor(1, 1, 1)
 
          if distanceToPoint(v.dx,v.dy,player.dx,player.dy) < (v.Enemy.Range+1)*32 and v.Target == me.id then
             love.graphics.setColor(1, 0, 0)
@@ -155,9 +151,7 @@ function drawEnemies()
          end
         elseif not v.hasBurst then
             burstLoot(v.dx + 16, v.dy + 16, math.abs(v.Enemy.HP / 3), "xp")
-           
             enemyHitSfx:setPitch(love.math.random(50, 100) / 100)
---            love.audio.play(enemyHitSfx)
 
             love.audio.play(deathSfxs[love.math.random(1, #deathSfxs)])
             boneSpurt(v.dx + 16, v.dy + 16, 48, 50, 1, 1, 1)
@@ -214,8 +208,4 @@ end
 
 function tickEnemies()
     if enemyCollisionsI == 0 then enemyCollisionsI = 1 else enemyCollisionsI = 0 end
-    -- for i, v in ipairs(enemies) do
-    --     local enemy = v
-    --     enemy.speed = distanceToPoint(enemy.dx, enemy.dy, v.X * 32, v.Y * 32)
-    -- end
 end

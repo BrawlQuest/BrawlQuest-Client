@@ -75,7 +75,7 @@ end
 
 function drawDummyEnemies()
     for i, v in ipairs(enemies) do
-       if isTileLit(v.x,v.y) then
+        if isTileLit(v.x,v.y) then
             love.graphics.setColor(1,1-v.red,1-v.red)
             if v.range == 1 then
                 love.graphics.draw(enemyImg, v.dx, v.dy)

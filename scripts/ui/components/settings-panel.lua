@@ -272,7 +272,7 @@ function scaleHUD(dir)
         settPan.scaleValue = settPan.scaleValue - 1
         if settPan.scaleValue < 1 then settPan.scaleValue = #settPan.scaleTypes end
     end
-    settings[3][1].v = settPan.scaleTypes[settPan.scaleValue]
+    settings[3][2].v = settPan.scaleTypes[settPan.scaleValue]
     scale = settPan.scaleTypes[settPan.scaleValue]
     uiX = love.graphics.getWidth()/scale
     uiY = love.graphics.getHeight()/scale
