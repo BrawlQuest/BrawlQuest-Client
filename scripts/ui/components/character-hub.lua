@@ -38,17 +38,14 @@ end
 function updateCharacterHub(dt)
     if characterHub.forceOpen then
         characterHub.open = true
-        characterHub.amount = characterHub.amount + 4 * dt
-        if characterHub.amount > 1 then characterHub.amount = 1 end
+        panelMovement(dt, characterHub, 1)
     else
         if isMouseOver(0 * scale, (uiY - 97) * scale, 468 * scale, 97 * scale) then
             characterHub.open = true
-            characterHub.amount = characterHub.amount + 4 * dt
-            if characterHub.amount > 1 then characterHub.amount = 1 end
+            panelMovement(dt, characterHub, 1)
         else
             characterHub.open = false
-            characterHub.amount = characterHub.amount - 4 * dt
-            if characterHub.amount < 0 then characterHub.amount = 0 end
+            panelMovement(dt, characterHub, -1)
         end
     end
 end

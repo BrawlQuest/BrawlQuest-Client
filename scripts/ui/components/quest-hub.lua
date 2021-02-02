@@ -68,15 +68,9 @@ end
 
 function updateQuestHub(dt)
     if isMouseOver((uiX - 468) * scale, (uiY - 102) * scale, 468 * scale, 102 * scale) and #quests[1] > 0 then -- Opens Comment
-        if questHub.commentAmount < 1 then
-            questHub.commentAmount = questHub.commentAmount + 4 * dt
-            if questHub.commentAmount > 1 then questHub.commentAmount = 1 end
-        end
+        panelMovement(dt, questHub,  1, "commentAmount")
     else
-        if questHub.commentAmount > 0 then
-            questHub.commentAmount = questHub.commentAmount - 4 * dt
-            if questHub.commentAmount < 0 then questHub.commentAmount = 0 end
-        end
+        panelMovement(dt, questHub, -1, "commentAmount")
     end
 
     if questHub.commentAmount > 0 then 
@@ -85,15 +79,9 @@ function updateQuestHub(dt)
     else questHub.commentOpen = false end
 
     if #quests[1] > 0 then
-        if questHub.amount < 1 then
-            questHub.amount = questHub.amount + 4 * dt
-            if questHub.amount > 1 then questHub.amount = 1 end
-        end
+        panelMovement(dt, questHub, 1)
     else
-        if questHub.amount > 0 then
-            questHub.amount = questHub.amount - 4 * dt
-            if questHub.amount < 0 then questHub.amount = 0 end
-        end
+        panelMovement(dt, questHub, -1)
     end
 
     if questHub.amount > 0 then questHub.open = true
@@ -101,9 +89,7 @@ function updateQuestHub(dt)
     else questHub.open = false end
     
     if questsPanel.forceOpen and not isTypingInChat and not isMouseDown() then
-        questsPanel.amount = questsPanel.amount + 4 * dt
-        if questsPanel.amount > 1 then questsPanel.amount = 1 end
-        velYQuest = velYQuest - velYQuest * math.min( dt * 15, 1 )
+        panelMovement(dt, questsPanel, 1)
         if getFullQuestsPanelFieldHeight() * scale > (cerp((uiY/1.25) - 55,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale then
             posYQuest = posYQuest + velYQuest * dt
             local questsFieldHeight = 0 - getFullQuestsPanelFieldHeight() + (cerp((uiY/1.25) - 55, ((uiY/1.25) - 106 - 14 - 55), questHub.amount))
@@ -119,10 +105,7 @@ function updateQuestHub(dt)
         ((uiY) + 55 - (uiY/1.25)) * scale,
         (313) * scale,
         (cerp((uiY/1.25) - 55 ,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale) then -- Opens Quests Panel
-            questsPanel.amount = questsPanel.amount + 4 * dt
-            if questsPanel.amount > 1 then questsPanel.amount = 1 end
-
-            velYQuest = velYQuest - velYQuest * math.min( dt * 15, 1 )
+            panelMovement(dt, questsPanel, 1)
             if getFullQuestsPanelFieldHeight() * scale > (cerp((uiY/1.25) - 55,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale then
                 posYQuest = posYQuest + velYQuest * dt
                 if posYQuest > 0 then
@@ -133,8 +116,7 @@ function updateQuestHub(dt)
             else posYQuest = 0
             end
         else
-            questsPanel.amount = questsPanel.amount - 4 * dt
-            if questsPanel.amount < 0 then questsPanel.amount = 0 end
+            panelMovement(dt, questsPanel, -1)
         end
     end
 
@@ -222,4 +204,3 @@ function getQuestHubTextHeight(text, width)
 	local width, lines = questHub.titleFont:getWrap(text, width)
  	return ((#lines)*(questHub.titleFont:getHeight()))+2
 end
-
