@@ -176,7 +176,6 @@ function love.draw()
 end
 
 function love.update(dt)
-
     Luven.camera:setScale(worldScale - ((worldScale * settPan.opacityCERP) * 0.2))
     totalCoverAlpha = totalCoverAlpha - 1 * dt
     if phase == "login" then

@@ -17,9 +17,14 @@ textfields = {"", -- username
 "" -- enemy name (world edit)
 }
 
+local launchColor, launchColorcerp = 0, 0
+local count, countCerp = 0, 0
+local luvenImage = love.graphics.newImage("assets/ui/login/new-login/Luven Logo.png")
+local luvenFont = love.graphics.newFont("assets/ui/fonts/AmaticSC-Regular.ttf", 400)
+
 characters = {}
 
-loginPhase = "login" -- login / character / creation
+loginPhase = "prelaunch" -- login / character / creation
 
 editingField = 1
 
@@ -56,26 +61,59 @@ end
 
 function drawLogin()
     -- background stuff
-    drawLoginBackground()
-
-    if loginPhase == "login" then
+    
+    if loginPhase == "prelaunch" then   
+        local imageScale = 0.4 * (1 / launchColorcerp)
+        local width, height = love.graphics.getWidth(), love.graphics.getHeight()
+        local iwidth, iheight = luvenImage:getWidth() * imageScale, luvenImage:getHeight() * imageScale
+        love.graphics.setColor(1,1,1,1)
+        drawLoginBackground()
         drawLoginPhase()
-    elseif loginPhase == "characters" then
-        drawCharactersPhase()
-    elseif loginPhase == "creation" then
-        drawCreationPhase()
-    elseif loginPhase == "server" then
-        drawServerPhase()
-    end
+        love.graphics.setColor(launchColorcerp, launchColorcerp, launchColorcerp, 1 - countCerp)
+        love.graphics.rectangle("fill", 0, 0, width, height)
+        love.graphics.setColor(1 - launchColorcerp, 1 - launchColorcerp, 1 - launchColorcerp, launchColorcerp - countCerp)
+        love.graphics.draw(luvenImage, width * 0.5 - iwidth * 0.5, height * 0.5 - iheight * 0.5, 0, imageScale)
+        love.graphics.print("LUVEN INTERACTIVE", luvenFont, width * 0.5 - iwidth + 100, height * 0.5 + 100, 0, imageScale) 
+    else
+        drawLoginBackground()
+        if loginPhase == "login" then
+            drawLoginPhase()
+        elseif loginPhase == "characters" then
+            drawCharactersPhase()
+        elseif loginPhase == "creation" then
+            drawCreationPhase()
+        elseif loginPhase == "server" then
+            drawServerPhase()
+        end
 
-    love.graphics.setColor(1,1,1)
-    for i, v in ipairs(loginText) do
-        love.graphics.print(v, playerNameFont, 10, 10 + ((playerNameFont:getHeight() + 2) * (i-1)), 0, 1)
+        love.graphics.setColor(1,1,1)
+        for i, v in ipairs(loginText) do
+            love.graphics.print(v, playerNameFont, 10, 10 + ((playerNameFont:getHeight() + 2) * (i-1)), 0, 1)
+        end
     end
 end
 
+
 function updateLogin(dt)
-    updateLoginBackground(dt)
+    if loginPhase == "prelaunch" then
+        if launchColor < 1 then
+            launchColor = launchColor + 0.22 * dt
+            if launchColor > 1 then 
+                birds:setLooping(true)
+                love.audio.play(birds)
+                launchColor = 1
+                countable = true
+            end
+            launchColorcerp = cerp(0, 1, launchColor)
+        elseif count < 1 then 
+            count = count + 1 * dt
+            if count > 1 then 
+                loginPhase = "login"
+            end
+            countCerp = cerp(0,1,count)
+        end
+    end
+    updateLoginBackground(dt) 
 end
 
 function checkClickLogin(x, y)

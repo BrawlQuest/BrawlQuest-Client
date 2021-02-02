@@ -28,7 +28,7 @@ function loadMusic()
 
     musicSwitchAmount = 0
 
-    titleMusic = love.audio.newSource("assets/music/album1/Longing.mp3", "stream")
+    titleMusic = love.audio.newSource("assets/music/album1/Longing Startup.mp3", "stream")
     previousMusicTile = null
 
     if musicVolume ~= 0 then
