@@ -68,26 +68,37 @@ end
 
 function updateQuestHub(dt)
     if isMouseOver((uiX - 468) * scale, (uiY - 102) * scale, 468 * scale, 102 * scale) and #quests[1] > 0 then -- Opens Comment
-        questHub.commentAmount = questHub.commentAmount + 4 * dt
-        if questHub.commentAmount > 1 then questHub.commentAmount = 1 end
+        if questHub.commentAmount < 1 then
+            questHub.commentAmount = questHub.commentAmount + 4 * dt
+            if questHub.commentAmount > 1 then questHub.commentAmount = 1 end
+        end
     else
-        questHub.commentAmount = questHub.commentAmount - 4 * dt
-        if questHub.commentAmount < 0 then questHub.commentAmount = 0 end
+        if questHub.commentAmount > 0 then
+            questHub.commentAmount = questHub.commentAmount - 4 * dt
+            if questHub.commentAmount < 0 then questHub.commentAmount = 0 end
+        end
     end
 
-    if questHub.commentAmount > 0 then questHub.commentOpen = true else questHub.commentOpen = false end
-    questHub.commentOpacity = cerp(0, 1, questHub.commentAmount)
+    if questHub.commentAmount > 0 then 
+        questHub.commentOpen = true 
+        questHub.commentOpacity = cerp(0, 1, questHub.commentAmount)
+    else questHub.commentOpen = false end
 
     if #quests[1] > 0 then
-        questHub.amount = questHub.amount + 4 * dt
-        if questHub.amount > 1 then questHub.amount = 1 end
+        if questHub.amount < 1 then
+            questHub.amount = questHub.amount + 4 * dt
+            if questHub.amount > 1 then questHub.amount = 1 end
+        end
     else
-        questHub.amount = questHub.amount - 4 * dt
-        if questHub.amount < 0 then questHub.amount = 0 end
+        if questHub.amount > 0 then
+            questHub.amount = questHub.amount - 4 * dt
+            if questHub.amount < 0 then questHub.amount = 0 end
+        end
     end
 
-    if questHub.amount > 0 then questHub.open = true else questHub.open = false end
-    questHub.opacity = cerp(0, 1, questHub.amount)
+    if questHub.amount > 0 then questHub.open = true
+        questHub.opacity = cerp(0, 1, questHub.amount) 
+    else questHub.open = false end
     
     if questsPanel.forceOpen and not isTypingInChat and not isMouseDown() then
         questsPanel.amount = questsPanel.amount + 4 * dt

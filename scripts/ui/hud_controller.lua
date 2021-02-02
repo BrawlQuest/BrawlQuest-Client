@@ -161,7 +161,7 @@ function updateHUD( dt )
         updateToolBarInventory(dt)
         updateCharacterHub(dt)
         updateQuestHub(dt)
-        updateCrafting(dt)
+        updateCrafting(dt) -- fine
     end
 
     updateFloats(dt)
