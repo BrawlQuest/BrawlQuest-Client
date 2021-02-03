@@ -110,7 +110,7 @@ function updateLogin(dt)
             end
             launch.inCERP = cerp(0, 1, launch.inAmount)
         elseif launch.outAmount < 1 then
-            launch.outAmount = launch.outAmount + 0.5 * dt
+            launch.outAmount = launch.outAmount + 0.8 * dt
             if launch.outAmount > 1 then
                 loginPhase = "login"
             end
@@ -126,7 +126,7 @@ function checkClickLogin(x, y)
     if loginPhase == "login" then
         checkClickLoginPhaseLogin(x,y)
     elseif loginPhase == "characters" then
-        checkClickLoginPhaseCharacter(x,y)
+        -- checkClickLoginPhaseCharacter(x,y)
     elseif loginPhase == "creation" then
         checkClickLoginPhaseCreation(x,y)
     elseif loginPhase == "server" then

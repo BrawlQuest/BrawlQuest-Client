@@ -1,6 +1,7 @@
 function love.mousepressed(x, y, button)
     if phase == "login" then
         checkClickLogin(x, y)
+        checkCharacterSelectorMousePressed()
     elseif isWorldEditWindowOpen then
         checkEditWorldClick(x, y)
     elseif phase == "game" then

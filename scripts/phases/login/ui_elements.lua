@@ -54,6 +54,7 @@ function drawLargeButton(text,x,y)
 end
 
 function roundRectangle(type, x, y, width, height, radius, table)
+    radius = radius or 0
     table = table or {true, true, true, true}
 	--RECTANGLES
 	love.graphics.rectangle(type, x + radius, y + radius, width - (radius * 2), height - radius * 2)

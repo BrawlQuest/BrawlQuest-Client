@@ -179,16 +179,17 @@ function findIntersect(l1p1x,l1p1y, l1p2x,l1p2y, l2p1x,l2p1y, l2p2x,l2p2y, seg1,
 	return x,y
 end
 
-function panelMovement(dt, table, dir, ID)
+function panelMovement(dt, table, dir, ID, speed)
+    speed = speed or 4
     ID = ID or "amount"
     if dir > 0 then
         if table[ID] < 1 then
-            table[ID] = table[ID] + 4 * dt
+            table[ID] = table[ID] + speed * dt
             if table[ID] > 1 then table[ID] = 1 end
         end
     else
         if table[ID] > 0 then
-            table[ID] = table[ID] - 4 * dt
+            table[ID] = table[ID] - speed * dt
             if table[ID] < 0 then table[ID] = 0 end
         end
     end
