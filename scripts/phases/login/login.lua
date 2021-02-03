@@ -68,16 +68,16 @@ function drawLogin()
         local iwidth, iheight = luvenImage:getWidth() * imageScale, luvenImage:getHeight() * imageScale
         love.graphics.setColor(1,1,1,1)
         drawLoginBackground()
-        drawLoginPhase()
+        drawLoginPhase(countCerp)
         love.graphics.setColor(launchColorcerp, launchColorcerp, launchColorcerp, 1 - countCerp)
         love.graphics.rectangle("fill", 0, 0, width, height)
         love.graphics.setColor(1 - launchColorcerp, 1 - launchColorcerp, 1 - launchColorcerp, launchColorcerp - countCerp)
-        love.graphics.draw(luvenImage, width * 0.5 - iwidth * 0.5, height * 0.5 - iheight * 0.5, 0, imageScale)
-        love.graphics.print("LUVEN INTERACTIVE", luvenFont, width * 0.5 - iwidth + 100, height * 0.5 + 100, 0, imageScale) 
+        love.graphics.draw(luvenImage, width * 0.5 - iwidth * 0.5, height * 0.5 - iheight * 0.5 - 200 * imageScale, 0, imageScale)
+        love.graphics.print("LUVEN INTERACTIVE", luvenFont, width * 0.5 - (luvenFont:getWidth("LUVEN INTERACTIVE") * imageScale) * 0.5, height * 0.5 + 300 * imageScale, 0, imageScale)
     else
         drawLoginBackground()
         if loginPhase == "login" then
-            drawLoginPhase()
+            drawLoginPhase(countCerp)
         elseif loginPhase == "characters" then
             drawCharactersPhase()
         elseif loginPhase == "creation" then
@@ -105,9 +105,9 @@ function updateLogin(dt)
                 countable = true
             end
             launchColorcerp = cerp(0, 1, launchColor)
-        elseif count < 1 then 
-            count = count + 1 * dt
-            if count > 1 then 
+        elseif count < 1 then
+            count = count + 0.5 * dt
+            if count > 1 then
                 loginPhase = "login"
             end
             countCerp = cerp(0,1,count)
