@@ -16,7 +16,7 @@ function drawNPCs()
         love.graphics.draw(worldImg[v.ImgPath], v.X, v.Y)
         drawNamePlate(v.X+16, v.Y, v.Name)
 
-        v.GivesQuest = true
+     
         if v.GivesItem and not v.GivesQuest then
             love.graphics.draw(itemAlertImg, v.X+9, v.Y-32+v.AlertY)
         elseif v.GivesQuest and not v.GivesItem then
