@@ -1,6 +1,11 @@
 function love.keypressed(key) 
     if phase == "login" then
-        if loginPhase == "login" then
+        if loginPhase == "prelaunch" then
+            launch.inAmount = 1
+            launch.outAmount = 1
+            launch.outCERP = 1
+            loginPhase = "login"
+        elseif loginPhase == "login" then
             checkLoginKeyPressedPhaseLogin(key)
         elseif loginPhase == "creation" then
             checkLoginKeyPressedPhaseCreation(key)

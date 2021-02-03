@@ -6,6 +6,7 @@ require 'scripts.phases.login.phases.login'
 require 'scripts.phases.login.phases.characters'
 require 'scripts.phases.login.phases.creation'
 require 'scripts.phases.login.phases.server'
+require 'scripts.phases.login.phases.character-selection'
 
 textfields = {"", -- username
 "", -- password
@@ -17,10 +18,14 @@ textfields = {"", -- username
 "" -- enemy name (world edit)
 }
 
-local launchColor, launchColorcerp = 0, 0
-local count, countCerp = 0, 0
-local luvenImage = love.graphics.newImage("assets/ui/login/new-login/Luven Logo.png")
-local luvenFont = love.graphics.newFont("assets/ui/fonts/AmaticSC-Regular.ttf", 400)
+launch = {
+    logo = love.graphics.newImage("assets/ui/login/new-login/Luven Logo.png"),
+    font = love.graphics.newFont("assets/ui/fonts/AmaticSC-Regular.ttf", 400),
+    inAmount = 0,
+    inCERP = 0,
+    outAmount = 0,
+    outCERP = 0,
+}
 
 characters = {}
 
@@ -29,6 +34,8 @@ loginPhase = "prelaunch" -- login / character / creation
 editingField = 1
 
 function initLogin()
+
+    initCharacterSelection()
 
     loginText = {
         "BrawlQuest " .. version .. " " .. versionNumber,
@@ -60,26 +67,25 @@ function initLogin()
 end
 
 function drawLogin()
-    -- background stuff
-    
     if loginPhase == "prelaunch" then   
-        local imageScale = 0.4 * (1 / launchColorcerp)
+        local imageScale = 0.4 * (1 / launch.inCERP)
         local width, height = love.graphics.getWidth(), love.graphics.getHeight()
-        local iwidth, iheight = luvenImage:getWidth() * imageScale, luvenImage:getHeight() * imageScale
+        local iwidth, iheight = launch.logo:getWidth() * imageScale, launch.logo:getHeight() * imageScale
         love.graphics.setColor(1,1,1,1)
         drawLoginBackground()
-        drawLoginPhase(countCerp)
-        love.graphics.setColor(launchColorcerp, launchColorcerp, launchColorcerp, 1 - countCerp)
+        drawLoginPhase(launch.outCERP)
+        love.graphics.setColor(launch.inCERP, launch.inCERP, launch.inCERP, 1 - launch.outCERP)
         love.graphics.rectangle("fill", 0, 0, width, height)
-        love.graphics.setColor(1 - launchColorcerp, 1 - launchColorcerp, 1 - launchColorcerp, launchColorcerp - countCerp)
-        love.graphics.draw(luvenImage, width * 0.5 - iwidth * 0.5, height * 0.5 - iheight * 0.5 - 200 * imageScale, 0, imageScale)
-        love.graphics.print("LUVEN INTERACTIVE", luvenFont, width * 0.5 - (luvenFont:getWidth("LUVEN INTERACTIVE") * imageScale) * 0.5, height * 0.5 + 300 * imageScale, 0, imageScale)
+        love.graphics.setColor(1 - launch.inCERP, 1 - launch.inCERP, 1 - launch.inCERP, launch.inCERP - launch.outCERP)
+        love.graphics.draw(launch.logo, width * 0.5 - iwidth * 0.5, height * 0.5 - iheight * 0.5 - 200 * imageScale, 0, imageScale)
+        love.graphics.print("LUVEN INTERACTIVE", launch.font, width * 0.5 - (launch.font:getWidth("LUVEN INTERACTIVE") * imageScale) * 0.5, height * 0.5 + 300 * imageScale, 0, imageScale)
     else
         drawLoginBackground()
         if loginPhase == "login" then
-            drawLoginPhase(countCerp)
+            drawLoginPhase(launch.outCERP)
         elseif loginPhase == "characters" then
-            drawCharactersPhase()
+            drawCharacterSelection()
+            -- drawCharactersPhase()
         elseif loginPhase == "creation" then
             drawCreationPhase()
         elseif loginPhase == "server" then
@@ -93,27 +99,27 @@ function drawLogin()
     end
 end
 
-
 function updateLogin(dt)
     if loginPhase == "prelaunch" then
-        if launchColor < 1 then
-            launchColor = launchColor + 0.22 * dt
-            if launchColor > 1 then 
+        if launch.inAmount < 1 then
+            launch.inAmount = launch.inAmount + 0.22 * dt
+            if launch.inAmount > 1 then 
                 birds:setLooping(true)
                 love.audio.play(birds)
-                launchColor = 1
-                countable = true
+                launch.inAmount = 1
             end
-            launchColorcerp = cerp(0, 1, launchColor)
-        elseif count < 1 then
-            count = count + 0.5 * dt
-            if count > 1 then
+            launch.inCERP = cerp(0, 1, launch.inAmount)
+        elseif launch.outAmount < 1 then
+            launch.outAmount = launch.outAmount + 0.5 * dt
+            if launch.outAmount > 1 then
                 loginPhase = "login"
             end
-            countCerp = cerp(0,1,count)
+            launch.outCERP = cerp(0,1,launch.outAmount)
         end
+    elseif loginPhase == "characters" then
+        updateCharaterSelection(dt)
     end
-    updateLoginBackground(dt) 
+    updateLoginBackground(dt)
 end
 
 function checkClickLogin(x, y)

@@ -92,13 +92,13 @@ function quickLogin(name, character)
     textfields[3] = "********"
     editingField = 2
     login()
-    characterSelected = character
-    if characters[characterSelected] ~= null then
-        transitionToPhaseGame() 
-    else
-        newCharacterPosition = characterSelected
-        loginPhase = "creation"
-    end
+    -- characterSelected = character
+    -- if characters[characterSelected] ~= null then
+    --     transitionToPhaseGame() 
+    -- else
+    --     newCharacterPosition = characterSelected
+    --     loginPhase = "creation"
+    -- end
 end
 
 function checkLoginTextinputPhaseLogin(key)
