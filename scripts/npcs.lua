@@ -15,6 +15,16 @@ function drawNPCs()
        
         love.graphics.draw(worldImg[v.ImgPath], v.X, v.Y)
         drawNamePlate(v.X+16, v.Y, v.Name)
+
+        v.GivesQuest = true
+        if v.GivesItem and not v.GivesQuest then
+            love.graphics.draw(itemAlertImg, v.X+9, v.Y-32+v.AlertY)
+        elseif v.GivesQuest and not v.GivesItem then
+            love.graphics.draw(questAlertImg, v.X+9, v.Y-32+v.AlertY)
+        elseif v.GivesItem and v.GivesQuest then
+            love.graphics.draw(itemAlertImg, v.X+5, v.Y-32+v.AlertY)
+            love.graphics.draw(questAlertImg, v.X+13, v.Y-32+v.AlertY)
+        end
     end
 end
 
@@ -24,9 +34,19 @@ function updateNPCs(dt)
             npcsDrawable[v.ID] = copy(v)
             npcsDrawable[v.ID].X = v.X*32
             npcsDrawable[v.ID].Y = v.Y*32
+            npcsDrawable[v.ID].AlertY = 0
+            npcsDrawable[v.ID].AlertDir = 1
         end
       
         local n = npcsDrawable[v.ID]
+        
+        n.AlertY = n.AlertY + n.AlertDir   
+        if n.AlertY > 2 then
+            n.AlertDir = -1*dt
+        elseif n.AlertY < -2 then
+            n.AlertDir = 1*dt
+        end
+     
 
         if distanceToPoint(n.X, n.Y, v.X * 32, v.Y * 32) > 64 then
             n.X = v.X*32
