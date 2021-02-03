@@ -2,14 +2,32 @@ zoneTitle = {
     y = 0,
     title = "Spooky Forest",
     previousTitle = "Spooky Forest2",
-    font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16)
+    font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 48),
+    alpha = 2,
+    alphaUp = false
 }
 
 function drawZoneTitle()
-    love.graphics.setFont(font)
-    local x = love.graphics.getWidth()
-    love.graphics.setColor(0,0,0,0.5)
-    love.graphics.rectangle("fill",  x, zoneTitle.y, font:getWidth(zoneTitle.title)+12, 72)
-    love.graphics.setColor(1,1,1,1)
-    love.graphics.printf(zoneTitle.title, x, zoneTitle.y + 4, font:getWidth(zoneTitle.title), "center")
+    love.graphics.setFont(zoneTitle.font)
+    local x = love.graphics.getWidth()/2-(zoneTitle.font:getWidth(zoneTitle.title))/2
+ 
+    love.graphics.setColor(1,1,1,zoneTitle.alpha)
+    love.graphics.printf(zoneTitle.title, x, 20, zoneTitle.font:getWidth(zoneTitle.title), "center")
+end
+
+function updateZoneTitle(dt)
+    if worldLookup[player.x] and worldLookup[player.x][player.y] and worldLookup[player.x][player.y].Name ~= zoneTitle.title then
+        zoneTitle.title = worldLookup[player.x][player.y].Name 
+        zoneTitle.alphaUp = true
+        zoneTitle.alpha = 0
+    end
+
+    if zoneTitle.alphaUp then
+        zoneTitle.alpha = zoneTitle.alpha + 1*dt
+        if zoneTitle.alpha > 2 then
+            zoneTitle.alphaUp = false
+        end
+    else
+        zoneTitle.alpha = zoneTitle.alpha - 1*dt
+    end
 end
