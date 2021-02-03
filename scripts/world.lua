@@ -62,7 +62,7 @@ function createWorld()
         for x = worldEdit.worldSize * -1, worldEdit.worldSize do
             for y = worldEdit.worldSize * -1, worldEdit.worldSize do
                 drawSimplexNoise(x, y)  -- sets background noise
---                love.graphics.draw(groundImg, x * 32, y * 32)
+                love.graphics.draw(groundImg, x * 32, y * 32)
             end
         end
         
