@@ -20,21 +20,21 @@ require "scripts.ui.hud_controller"
 require "scripts.ui.components.character-hub"
 require "scripts.ui.components.crafting"
 require "scripts.ui.components.toolbar-inventory"
+require "scripts.ui.components.draw-inventory"
 require "scripts.ui.components.quest-hub"
 require "scripts.ui.components.quests-panel"
 require "scripts.ui.components.settings-panel"
 require "scripts.ui.components.chat"
 require "scripts.ui.components.toolbar"
-require "scripts.ui.components.battlebar"
 require "scripts.ui.components.zone-titles"
 require "scripts.ui.components.profile"
 require "scripts.libraries.api"
 require "scripts.libraries.utils"
 require "scripts.libraries.colorize"
 require "scripts.libraries.simple-slider"
--- require "scripts.libraries.bresenham"
 require "scripts.phases.login.login"
 require "scripts.player.other_players"
+require "scripts.player.ranged-weapons"
 require "scripts.enemies"
 require "scripts.npcs"
 require "scripts.world"
@@ -52,7 +52,7 @@ http = require("socket.http")
 ltn12 = require("ltn12")
 
 version = "Pre-Release" 
-versionNumber = "0.1.7" -- very important for settings
+versionNumber = "0.1.11" -- very important for settings
 
 phase = "login"
 
@@ -105,6 +105,7 @@ function love.load()
     initCamera()
     initClouds()
     initWorldMask()
+    initRangedWeapons()
     love.graphics.setFont(textFont)
 end
 
@@ -120,20 +121,23 @@ function love.draw()
             if worldEdit.open and player then
                 drawNewWorldEditTiles()
             end
-
+            
             drawAuras()
+            drawBones() 
             love.graphics.setColor(1, 1, 1)
             drawNPCs()
             drawEnemies()
+            drawRangedWeaponEffects()
 
             for i, v in ipairs(playersDrawable) do
                 drawPlayer(v, i)
             end
 
             drawPlayer(me, -1)
-            drawLeaves()
+            if showWorldAnimations then drawLeaves() end
             drawLoot()
             drawFloats()
+
             if not worldEdit.open then drawWorldMask() end
             if showClouds then drawClouds() end     
             for i,v in ipairs(npcs) do
@@ -148,24 +152,21 @@ function love.draw()
             if isNearbyTile("assets/world/objects/Anvil.png") then  drawTextBelowPlayer("Press "..keybinds.INTERACT.." to craft")
                 inventory.notNPC = false
             end
+
+            if showWorldMask then drawWorldMask() end --not worldEdit.open or
+            if showClouds then drawClouds() end
+
             Luven.drawEnd()
-            
-           
-            if not worldEdit.open then
-                drawHUD()
-          
-            end
-            
+
+            if not worldEdit.open then drawHUD() end
             drawNewWorldEditHud()
 
-       
-        
         Luven.camera:draw()
 
         love.graphics.setColor(1,1,1)
         love.graphics.setFont(font)
         love.graphics.print(player.x..", "..player.y .. ", " .. tostring(love.timer.getFPS()), 10, 6)
-        if worldLookup[player.x] and worldLookup[player.x][player.y] then    
+        if worldLookup[player.x] and worldLookup[player.x][player.y] then
             love.graphics.print("\n"..tostring(worldLookup[player.x][player.y].Name), 10, 6)
         end
     end
@@ -174,15 +175,12 @@ function love.draw()
     mx, my = love.mouse.getPosition()
     love.graphics.setColor(1,1,1)
     love.graphics.draw(mouseImg, mx, my)
-    
 
     love.graphics.setColor(1, 1, 1, totalCoverAlpha)
-    love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
-    
+    if totalCoverAlpha > 0 then love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight()) end
 end
 
 function love.update(dt)
-
     Luven.camera:setScale(worldScale - ((worldScale * settPan.opacityCERP) * 0.2))
     totalCoverAlpha = totalCoverAlpha - 1 * dt
     if phase == "login" then
@@ -203,9 +201,8 @@ function love.update(dt)
 
             nextUpdate = 0.5
         end
-        
-        updateHUD(dt)
 
+        updateHUD(dt)
         updateEnemies(dt)
         updateNPCs(dt)
         updateCharacter(dt)
@@ -213,65 +210,87 @@ function love.update(dt)
         updateAuras(dt)
         updateMusic(dt)
         updateLoot(dt)
-        updateNPCChat(dt)
-        if showClouds then updateClouds(dt) end
-        updateLeaves(dt)
+        updateRangedWeapons(dt)
+        if showNPCChatBackground then updateNPCChat(dt) end
+        -- if showClouds then updateClouds(dt) end
+        if showWorldAnimations then updateLeaves(dt) end
         Luven.update(dt)
-        -- if showShadows then updateWorldMask(dt) end
-        updateWorldMask(dt)
+        if showClouds then updateClouds(dt) end
+        if showWorldMask then updateWorldMask(dt) end
         updateCamera(dt)
         updateOtherPlayers(dt)
-    
 
         local info = love.thread.getChannel('players'):pop()
         if info then
             local response = json:decode(info)
 
+            local previousPlayers = copy(players) -- Temp
             players = response['Players']
             npcs = response['NPC']
             auras = response['Auras']
+
+            if json:encode(players) ~= json:encode(previousPlayers) then -- Temp [
+                for i,v in ipairs(players) do
+                    if v.Color == null then -- New thing for the people
+                        if previousPlayers[i] and previousPlayers[i].Color then
+                            players[i].Color = previousPlayers[i].Color
+                        else
+                            players[i].Color = {love.math.random(), love.math.random(), love.math.random(),  1}
+                        end
+                    end
+                end
+            end -- Temp ]
+
             if json:encode(inventoryAlpha) ~= json:encode(response['Inventory']) then
                 updateInventory(response)
                 inventoryAlpha = response['Inventory']
             end
-         
             player.cp = response['CharPoints']
             messages = {}
             for i=1, #response['Chat']['Global'] do
                 local v = response['Chat']['Global'][#response['Chat']['Global'] + 1 - i]
-             
                 messages[#messages+1] = {
                     username = v["Sender"]["Name"],
                     text = v["Message"],
                     player = v["Sender"]
                 }
-             end
-            
-           timeOfDay = cerp(0.1, 1, ((math.abs(response['CurrentHour']) * 60) + 0) / 720)
-        
-          if not worldEdit.open then
-             Luven.setAmbientLightColor({timeOfDay, timeOfDay, timeOfDay+0.1})
-          else
-            Luven.setAmbientLightColor({1,1,1})
-          end
+            end
 
-           me = response['Me']
+            timeOfDay = cerp(0.1, 1, ((math.abs(response['CurrentHour']) * 60) + 0) / 720)
+
+            if not worldEdit.open then
+                Luven.setAmbientLightColor({timeOfDay, timeOfDay, timeOfDay+  0.1})
+            else
+                Luven.setAmbientLightColor({1,1,1})
+            end
+
+            local previousMe = copy(me) -- Temp
+            me = response['Me']
+
+            if json:encode(me) ~= json:encode(previousMe) then -- Temp [
+                if me.Color == null then -- New thing for the people
+                    if previousMe and previousMe.Color then
+                        me.Color = previousMe.Color
+                    else
+                        me.Color = {love.math.random(), love.math.random(), love.math.random(),  1}
+                    end
+                end
+            end -- Temp ]
 
             if distanceToPoint(me.X, me.Y, player.x, player.y) > 4 then
                 player.x = me.X
+                player.y = me.Y
                 player.dx = me.X*32
                 player.dy = me.Y*32
-                player.y = me.Y
-          
+                player.cx = me.X*32
+                player.cy = me.Y*32
                 totalCoverAlpha = 2
                 love.audio.play(awakeSfx)
             end
             -- update player
             player.name = me.Name
-  
             player.buddy = me.Buddy
             player.hp = me.HP
-       
             player.xp = me.XP
             if player.lvl ~= me.LVL then
                 if player.lvl ~= 0 then
@@ -291,11 +310,12 @@ function love.update(dt)
 end
 
 function tick()
-    -- tickDummyEnemies()
     tickOtherPlayers()
     tickEnemies()
     tickAuras()
     nextTick = 1
+    getInventory()
+    tickRangedWeapons() 
 end
 
 function love.resize(width, height)

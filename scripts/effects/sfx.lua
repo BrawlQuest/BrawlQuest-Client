@@ -3,8 +3,8 @@ function initSFX()
     previousSFXVolume = sfxVolume
 
     birds = love.audio.newSource("assets/sfx/ambient/forest/jungle.ogg", "stream")
-    birds:setLooping(true)
-    love.audio.play(birds)
+    -- birds:setLooping(true)
+    -- love.audio.play(birds)
 
     stepSfx = love.audio.newSource("assets/sfx/step/grass.mp3", "static")
     xpSfx = love.audio.newSource("assets/sfx/xp.wav", "static")

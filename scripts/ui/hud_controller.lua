@@ -8,6 +8,9 @@ UITextFields = {
 }
 
 function initHUD()
+
+    previousPlayerColor = {}
+
     --scaling
     scale = 1
     velyWorldScale = 0
@@ -31,8 +34,8 @@ function initHUD()
     headerMediumFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 28)
     headerBigFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 32) -- TODO: get a license for this font
     font = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 18)
-   
-    chatFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16)
+
+    chatFont = love.graphics.newFont("assets/ui/fonts/C&C Red Alert [INET].ttf", 26)
 
     npcChatFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16)
 
@@ -43,7 +46,7 @@ function initHUD()
     -- mouse
 	love.mouse.setVisible(false) -- make default mouse invisible
     mouseImg = love.graphics.newImage("assets/ui/mouse.png") -- load in a custom mouse image
-    
+
     -- chatbox
     initChat()
     chatCursor = {
@@ -59,10 +62,11 @@ function initHUD()
     profileBackground = love.graphics.newImage("assets/ui/hud/profile/profile-backing.png")
     ShieldImg = love.graphics.newImage("assets/player/gen/shield false.png")
     profileImgStencil = love.graphics.newQuad(12, 0, 16, 16, playerImg:getDimensions())
+    npcImgStencil = love.graphics.newQuad(7, 0, 16, 16, playerImg:getDimensions())
     ShieldImgStencil = love.graphics.newQuad(12, 0, 16, 16, ShieldImg:getDimensions())
 
     -- Perks
-    
+
     perksBg = love.graphics.newImage("assets/ui/hud/perks/perksBg.png")
     mouseDown = love.graphics.newImage("assets/ui/hud/perks/BQ Mice - 1.png")
     mouseUp = love.graphics.newImage("assets/ui/hud/perks/BQ Mice + 1.png")
@@ -99,8 +103,8 @@ function initHUD()
     buttonBacking = love.graphics.newImage("assets/ui/hud/quests/ButtonBacking.png")
     buttonOutline = love.graphics.newImage("assets/ui/hud/quests/ButtonOutline.png")
 
-    selectedQuest = {npcName = "Mortus", npcDialogue = "I have a quest for you", title = "The long and winding road", 
-    "Create a new passport", 
+    selectedQuest = {npcName = "Mortus", npcDialogue = "I have a quest for you", title = "The long and winding road",
+    "Create a new passport",
     "Have lots of fun, it really is fun, like I have all the fun in the world",
     "Make a lot of money",
     "Have a great time!"}
@@ -109,7 +113,7 @@ function initHUD()
     questPopUpHeight = 496
     questPopUpPanelGap = 400
 
-    initCharacterHub() 
+    initCharacterHub()
     initToolBarInventory()
     initQuestHub()
     initNPCChat()
@@ -119,13 +123,11 @@ function initHUD()
 end
 
 function updateHUD( dt )
-    velyInventory = velyInventory - velyInventory * math.min( dt * 15, 1 )
-    velyChat = velyChat - velyChat * math.min( dt * 15, 1 )
 
-    if worldScaleSmooting then        
+    if worldScaleSmooting then
         worldScaleAmount = worldScaleAmount + 4 * dt
-        if worldScaleAmount > 1 then 
-            worldScaleAmount = 1 
+        if worldScaleAmount > 1 then
+            worldScaleAmount = 1
             worldScaleSmooting = false
         end
     end
@@ -141,27 +143,35 @@ function updateHUD( dt )
         end
     end
 
-    if (getFullChatHeight() + cerp(10, 115, questHub.amount)) * scale > uiY then -- take into account spacing from the bottom
-        posYChat = posYChat + velyChat * dt
-        if posYChat < 0 then
-            posYChat = 0
-        -- elseif posYChat > uiY - getFullChatHeight() then
-        --     posYChat = uiY - getFullChatHeight()
+    if showHUD then
+        if inventory.open or inventory.forceOpen then velyInventory = velyInventory - velyInventory * math.min( dt * 15, 1 ) end
+        if showChat and messages and #messages > 0 then velyChat = velyChat - velyChat * math.min( dt * 15, 1 ) end
+
+        if showChat then
+            if (getFullChatHeight() + cerp(10, 115, questHub.amount)) * scale > uiY then -- take into account spacing from the bottom
+                posYChat = posYChat + velyChat * dt
+                if posYChat < 0 then
+                    posYChat = 0
+                end
+            else posYChat = 0
+            end
         end
-    else posYChat = 0
+
+        updateTooltip(dt)
+        updateToolBarInventory(dt)
+        updateCharacterHub(dt)
+        updateQuestHub(dt)
+        updateCrafting(dt) -- fine
     end
 
-    updateTooltip(dt)
     updateFloats(dt)
-    updateSliders()
     updateSFX()
-    updateToolBarInventory(dt)
-    updateCharacterHub(dt)
-    updateQuestHub(dt)
-    updateCrafting(dt)
-    updateNewWorldEdit(dt)
     updateTutorial(dt)
+
     updateZoneTitle(dt)
+
+    updateNewWorldEdit(dt)
+
 
     if isSettingsWindowOpen then
         updateSettingsPanel(dt)
@@ -169,19 +179,7 @@ function updateHUD( dt )
         settPan.opacity = settPan.opacity - settPan.opacitySpeed * dt
         if settPan.opacity <= 0 then settPan.opacity = 0 end
     end
-
     settPan.opacityCERP = cerp(0,1,settPan.opacity)
-
-    if chatCursor.i < chatCursor.speed then
-        chatCursor.i = chatCursor.i + 1
-    else
-        if chatCursor.on then
-            chatCursor.on = false
-        else
-            chatCursor.on = true
-        end
-        chatCursor.i = 0
-    end
 end
 
 function drawHUD()
@@ -216,8 +214,7 @@ function drawHUD()
 
     -- drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
     if settPan.opacity > 0 then drawSettingsPanel() end
-    
-end 
+end
 
 function drawTextBelowPlayer(text)
         love.graphics.setFont(playerNameFont)
@@ -230,4 +227,8 @@ function drawTextBelowPlayer(text)
         love.graphics.setColor(1, 1, 1, 1)
         love.graphics.print(text, (thisX) - (nameWidth * 0.5), thisY - nameHeight - 2 + padding)
  
+end
+
+function isMouseOverTile(thisX, thisY)
+    return isMouseOver((((thisX - player.cx - 16) * worldScale) + (love.graphics.getWidth() * 0.5)),(((thisY - player.cy - 16) * worldScale) + (love.graphics.getHeight() * 0.5)),32 * worldScale,32 * worldScale)
 end

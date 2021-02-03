@@ -1,5 +1,8 @@
 enemies = {}
 enemyImg = {}
+enemyCollisions = {}
+enemyCollisionsPrevious = {[0] = {}, [1] = {},} 
+enemyCollisionsI = 0
 
 attackSfxs = {love.audio.newSource("assets/sfx/monsters/skeletons/attack/1.ogg", "static"),
               love.audio.newSource("assets/sfx/monsters/skeletons/attack/2.ogg", "static"),
@@ -18,6 +21,8 @@ alertImg = love.graphics.newImage("assets/ui/alert.png")
 
 function newEnemyData(data) -- called when nearby data is returned
     enemiesInAggro = 0
+    enemyCollisions = copy(enemyCollisionsPrevious[enemyCollisionsI])
+
 
     for i, v in ipairs(data) do
         local id = v.ID
@@ -58,7 +63,7 @@ function newEnemyData(data) -- called when nearby data is returned
                 elseif player.dy < me.AY * 32 then
                     player.dy = player.dy + 16
                 end
-
+                attackHitAmount = 1
             end
             addFloat(enemy.X*32,enemy.Y*32,enemy.HP - v.HP,{1,0,0})
             enemy.HP = v.HP
@@ -66,7 +71,7 @@ function newEnemyData(data) -- called when nearby data is returned
 
             enemyHitSfx:setPitch(love.math.random(50, 100) / 100)
             love.audio.play(enemyHitSfx)
-            boneSpurt(enemy.dx + 16, enemy.dy + 16, 4, 48, 1, 1, 1)
+            boneSpurt(enemy.dx + 16, enemy.dy + 16, 4, 20, 1, 1, 1)
         end
 
         if enemy.IsAggro == false and v.IsAggro then
@@ -82,6 +87,11 @@ function newEnemyData(data) -- called when nearby data is returned
         enemy.X = v.X
         enemy.Y = v.Y
 
+        if enemy.HP > 0 then
+            if enemyCollisions[v.X] == null then enemyCollisions[v.X] = {} end
+            enemyCollisions[v.X][v.Y] = true
+        end
+
         enemy.IsAggro = v.IsAggro
         if v.IsAggro then
             if v.HP > 0 then enemiesInAggro = enemiesInAggro + 1 end
@@ -96,37 +106,43 @@ function newEnemyData(data) -- called when nearby data is returned
             --  end
         end
     end
+
+    -- print(json:encode_pretty(enemyCollisions))
+    if enemyCollisionsI == 0 then 
+        enemyCollisionsPrevious[0] = copy(enemyCollisions)
+        enemyCollisionsPrevious[1] = {}
+    else
+        enemyCollisionsPrevious[1] = copy(enemyCollisions)
+        enemyCollisionsPrevious[0] = {}
+    end
+
 end
 
 function drawEnemies()
     for i, v in pairs(enemies) do
         if v.HP > 0 then
-            if isTileLit(v.X, v.Y) then
 
-        local rotation = 1
-        local offsetX = 0
-        if v and v.previousDirection and v.previousDirection == "left" then
-            rotation = -1
-            offsetX = 32
-        end
-
-                love.graphics.setColor(1, 1 - v.red, 1 - v.red)
-                love.graphics.draw(enemyImg[v.Enemy.Name], v.dx + offsetX, v.dy, 0, rotation, 1, 0, 0)
-                if distanceToPoint(v.dx, v.dy, player.dx, player.dy) < 256 then
-                    if v.Enemy.CanMove then
-                        love.graphics.setColor(1, 0, 0, 1 - (distanceToPoint(v.dx, v.dy, player.dx, player.dy)/256))
-                        love.graphics.rectangle("fill", v.dx, v.dy - 6, (v.dhp / v.mhp) * 32, 6)
-                    else
-                        love.graphics.setColor(1,0,0)
-                        love.graphics.rectangle("fill", v.dx, v.dy - 2, (v.dhp / v.mhp) * 32, 2)
-                    end
-                end
-                love.graphics.setColor(1, 1, 1, v.aggroAlpha)
-                love.graphics.draw(alertImg, v.dx + 8, v.dy - 16)
-                love.graphics.setColor(1, 1, 1)
-                -- love.graphics.setFont(smallTextFont)
-          --      love.graphics.printf(tostring(v.IsAggro), v.dx, v.dy-6, 32, "center")
+            local rotation = 1
+            local offsetX = 0
+            if v and v.previousDirection and v.previousDirection == "left" then
+                rotation = -1
+                offsetX = 32
             end
+
+            love.graphics.setColor(1, 1 - v.red, 1 - v.red)
+            love.graphics.draw(enemyImg[v.Enemy.Name], v.dx + offsetX, v.dy, 0, rotation, 1, 0, 0)
+            if distanceToPoint(v.dx, v.dy, player.dx, player.dy) < 256 then
+                if v.Enemy.CanMove then
+                    love.graphics.setColor(1, 0, 0, 1 - (distanceToPoint(v.dx, v.dy, player.dx, player.dy)/256))
+                    love.graphics.rectangle("fill", v.dx, v.dy - 6, (v.dhp / v.mhp) * 32, 6)
+                else
+                    love.graphics.setColor(1,0,0)
+                    love.graphics.rectangle("fill", v.dx, v.dy - 2, (v.dhp / v.mhp) * 32, 2)
+                end
+            end
+            love.graphics.setColor(1, 1, 1, v.aggroAlpha)
+            love.graphics.draw(alertImg, v.dx + 8, v.dy - 16)
+            love.graphics.setColor(1, 1, 1)
 
          if distanceToPoint(v.dx,v.dy,player.dx,player.dy) < (v.Enemy.Range+1)*32 and v.Target == me.id then
             love.graphics.setColor(1, 0, 0)
@@ -135,12 +151,10 @@ function drawEnemies()
          end
         elseif not v.hasBurst then
             burstLoot(v.dx + 16, v.dy + 16, math.abs(v.Enemy.HP / 3), "xp")
-           
             enemyHitSfx:setPitch(love.math.random(50, 100) / 100)
---            love.audio.play(enemyHitSfx)
 
             love.audio.play(deathSfxs[love.math.random(1, #deathSfxs)])
-            boneSpurt(v.dx + 16, v.dy + 16, 48, 72, 0.8, 0.8, 1)
+            boneSpurt(v.dx + 16, v.dy + 16, 48, 50, 1, 1, 1)
             v.hasBurst = true
         end
     end
@@ -172,18 +186,19 @@ end
 
 function smoothMovement(v, dt)
     if distanceToPoint(v.dx, v.dy, v.X * 32, v.Y * 32) > 3 then
+        local speed = v.speed * 1
         if v.dx > v.X * 32 + 3 then
             v.previousDirection = "left"
-            v.dx = v.dx - v.speed * dt
+            v.dx = v.dx - speed * dt
         elseif v.dx < v.X * 32 - 3 then
             v.previousDirection = "right"
-            v.dx = v.dx + v.speed * dt
+            v.dx = v.dx + speed * dt
         end
 
         if v.dy > v.Y * 32 + 3 then
-            v.dy = v.dy - v.speed * dt
+            v.dy = v.dy - speed * dt
         elseif v.dy < v.Y * 32 - 3 then
-            v.dy = v.dy + v.speed * dt
+            v.dy = v.dy + speed * dt
         end
     else
         v.dx = v.X * 32 -- preventing blurring from fractional pixels
@@ -192,9 +207,5 @@ function smoothMovement(v, dt)
 end
 
 function tickEnemies()
-    for i, v in ipairs(enemies) do
-        local enemy = v
-        enemy.speed = distanceToPoint(enemy.dx, enemy.dy, v.X * 32, v.Y * 32)
-        --if tostring(enemy.IsAggro) == "true" then enemy.atkAlpha = 1 end
-    end
+    if enemyCollisionsI == 0 then enemyCollisionsI = 1 else enemyCollisionsI = 0 end
 end

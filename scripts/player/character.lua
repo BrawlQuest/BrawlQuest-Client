@@ -29,24 +29,29 @@ player = {
         y = -100,
         stepSndPlay = 0.3
     },
+    color = {1,0.4,0.2,1},
     walk = 0,
     cp = 0,
     distance = 0,
     direction = {x = 0, y = 0},
     wobble = 0, 
     wobbleValue = 0,
+    speed = {x = 0, y = 0},
 }
 
 newInventoryItems = {}
 me = {}
 
-function drawItemIfExists(path, x, y, previousDirection)
-    local rotation = 1
+function drawItemIfExists(path, x, y, previousDirection, rotation, stencil, width)
     local offsetX = 0
-    if previousDirection and previousDirection == "left" then
-        rotation = -1
-        offsetX = 32
+    if not rotation then
+        rotaiton = 1
+        if previousDirection and previousDirection == "left" then
+            rotation = -1
+            offsetX = 32
+        end
     end
+
     if not itemImg[path] then
         if love.filesystem.getInfo(path) then
             itemImg[path] = love.graphics.newImage(path)
@@ -54,7 +59,12 @@ function drawItemIfExists(path, x, y, previousDirection)
             itemImg[path] = love.graphics.newImage("assets/error.png")
         end
     end
-    love.graphics.draw(itemImg[path], x + offsetX, y, player.wobble, rotation, 1, 0, 0)
+
+    if stencil then
+        love.graphics.draw(itemImg[path], stencil, x + offsetX, y, player.wobble, rotation, 1, 0, 0)
+    else
+        love.graphics.draw(itemImg[path], x + offsetX, y, player.wobble, rotation, 1, 0, 0)
+    end
 end
 
 function updateCharacter(dt)
@@ -71,15 +81,15 @@ function updateCharacter(dt)
 
     movePlayer(dt)
     
-    if player.dhp > player.hp then
-        player.dhp = player.dhp - ((player.dhp/player.hp)*100) * dt
-    elseif player.dhp < player.hp then
-        player.dhp = player.dhp + ((player.dhp/player.hp)*100) * dt
-    end
+    -- if player.dhp > player.hp then
+    --     player.dhp = player.dhp - ((player.dhp/player.hp)*100) * dt
+    -- elseif player.dhp < player.hp then
+    --     player.dhp = player.dhp + ((player.dhp/player.hp)*100) * dt
+    -- end
 
-    if difference(player.dhp, player.hp) < 0.2 then
-        player.dhp = player.hp
-    end
+    -- if difference(player.dhp, player.hp) < 0.2 then
+    --     player.dhp = player.hp
+    -- end
 
     if player.isMounting then
         player.mount.stepSndPlay = player.mount.stepSndPlay - 1 * dt
@@ -107,36 +117,79 @@ function updateCharacter(dt)
             player.isMounting = false
         end
     end
-    -- player.wobbleValue = player.wobbleValue + 0.5 * dt
-    -- if player.wobbleValue > 2 then player.wobbleValue = 0 end
-    -- player.wobble = cerp(-0.05, 0.05, player.wobbleValue)
+end
+
+function worldCollison(x, y)
+    local output = false
+    if worldEdit.open then return output end
+    if worldLookup[x] and worldLookup[x][y] and worldLookup[x][y].Collision == true then
+        output = true
+    elseif enemyCollisions[x] and enemyCollisions[x][y] == true then
+        output = true
+    end
+    return output
 end
 
 function movePlayer(dt)
-    local lightRange = 6
-
     if player.x * 32 == player.dx and player.y * 32 == player.dy and not isTypingInChat and not worldEdit.isTyping then -- movement smoothing has finished
-        local original = {player.x, player.y}
-        if love.keyboard.isDown(keybinds.UP) then
-            original[2] = original[2] - 1
-        elseif love.keyboard.isDown(keybinds.DOWN) then
-            original[2] = original[2] + 1
-        end
-        if love.keyboard.isDown(keybinds.LEFT) then
-            original[1] = original[1] - 1
+        local prev = {x = player.x, y = player.y}
+
+        if love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.LEFT) and not (worldCollison(prev.x - 1, prev.y - 1) or worldCollison(prev.x - 1, prev.y) or worldCollison(prev.x, prev.y - 1)) then
+            prev.y = prev.y - 1
+            prev.x = prev.x - 1
             player.previousDirection = "left"
-        elseif love.keyboard.isDown(keybinds.RIGHT) then
-            original[1] = original[1] + 1
+        elseif love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.RIGHT) and not (worldCollison(prev.x + 1, prev.y - 1) or worldCollison(prev.x + 1, prev.y) or worldCollison(prev.x, prev.y - 1)) then
+            prev.y = prev.y - 1
+            prev.x = prev.x + 1
             player.previousDirection = "right"
+        elseif love.keyboard.isDown(keybinds.DOWN) and love.keyboard.isDown(keybinds.RIGHT) and not (worldCollison(prev.x + 1, prev.y + 1) or worldCollison(prev.x + 1, prev.y) or worldCollison(prev.x, prev.y + 1)) then
+            prev.y = prev.y + 1
+            prev.x = prev.x + 1
+            player.previousDirection = "right"
+        elseif love.keyboard.isDown(keybinds.DOWN) and love.keyboard.isDown(keybinds.LEFT) and not (worldCollison(prev.x - 1, prev.y + 1) or worldCollison(prev.x - 1, prev.y) or worldCollison(prev.x, prev.y + 1)) then
+            prev.y = prev.y + 1
+            prev.x = prev.x - 1
+            player.previousDirection = "left"
+        else
+            if love.keyboard.isDown(keybinds.LEFT) and not worldCollison(prev.x - 1, prev.y) then
+                prev.x = prev.x - 1
+                player.previousDirection = "left"
+            elseif love.keyboard.isDown(keybinds.RIGHT) and not worldCollison(prev.x + 1, prev.y) then
+                prev.x = prev.x + 1
+                player.previousDirection = "right"
+            else
+                player.speed.x = 0
+            end 
+            
+            if love.keyboard.isDown(keybinds.UP) and not worldCollison(prev.x, prev.y - 1) then
+                prev.y = prev.y - 1
+            elseif love.keyboard.isDown(keybinds.DOWN) and not worldCollison(prev.x, prev.y + 1) then
+                prev.y = prev.y + 1
+            else
+                player.speed.y = 0
+            end
         end
-        if (original[1] ~= player.x or original[2] ~= player.y) and (worldLookup[ original[1]] and worldLookup[ original[1]][ original[2]] and not worldLookup[ original[1]][ original[2]].Collision) then
-            player.x = original[1]
-            player.y = original[2]
-            calculateLighting(player.x - lightRange, player.y - lightRange, player.x + lightRange, player.y + lightRange)
+
+        if (prev.x ~= player.x) or (prev.y ~= player.y) then
+            player.x = prev.x
+            player.y = prev.y
             if worldLookup[player.x]then
                 playFootstepSound(worldLookup[player.x][player.y])
             end
         end
+
+        -- if (prev.x ~= player.x) or (prev.y ~= player.y) then
+        --     if (worldLookup[prev.x] and worldLookup[prev.x][prev.y] and not worldLookup[prev.x][prev.y].Collision) then
+        --         player.x = prev.x
+        --         if worldLookup[player.x]then
+        --             playFootstepSound(worldLookup[player.x][player.y])
+        --         end
+        --     end
+        --     if (worldLookup[prev.x] and worldLookup[prev.x][prev.y] and not worldLookup[prev.x][prev.y].Collision) then
+        --         player.y = prev.y
+
+        --     end
+        -- end
 
     else -- movement smoothing
         local speed = 64
@@ -145,7 +198,6 @@ function movePlayer(dt)
             speed = 110 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
         end
         if difference(player.x * 32, player.dx) > 1 then
-
             if player.dx > player.x * 32 then
                 player.dx = player.dx - speed * dt
             else
@@ -153,6 +205,16 @@ function movePlayer(dt)
             end
         else
             player.dx = player.x * 32
+        end
+
+        if difference(player.x * 32, player.cx) > 1 then
+            if player.cx > player.x * 32 then
+                player.cx = player.cx - speed * dt
+            else
+                player.cx = player.cx + speed * dt
+            end
+        else
+            player.cx = player.x * 32
         end
 
         if difference(player.y * 32, player.dy) > 1 then
@@ -165,34 +227,46 @@ function movePlayer(dt)
             player.dy = player.y * 32
         end
 
-        -- if distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) < 1 then -- snap to final position
-        --     player.dx = player.x * 32
-        --     player.dy = player.y * 32
+        if difference(player.y * 32, player.cy) > 1 then
+            if player.cy > player.y * 32 then
+                player.cy = player.cy - speed * dt
+            else
+                player.cy = player.cy + speed * dt
+            end
+        else
+            player.cy = player.y * 32
+        end
+
+        -- if distanceToPoint(player.x * 32, player.y * 32, player.cx, player.cy) > 4 * 32 then -- snap to final position
+        --     player.cx = player.x * 32
+        --     player.cy = player.y * 32
         -- end
     end
 
 end
 
 function checkTargeting() -- Check which keys are down and place the player target accordingly
-    player.target.x = player.x
-    player.target.y = player.y
     local wasActive = player.target.active
-    player.target.active = false
+    player.target = {x = player.x, y = player.y, active = false}
 
-    if love.keyboard.isDown(keybinds.ATTACK_UP) then
-        player.target.active = true
-        player.target.y = player.y - 1
-    elseif love.keyboard.isDown(keybinds.ATTACK_DOWN) then
-        player.target.active = true
-        player.target.y = player.y + 1
-    end
+    if isMouseDown() then
+        checkMouseTargeting()
+    else
+        if love.keyboard.isDown(keybinds.ATTACK_UP) then
+            player.target.active = true
+            player.target.y = player.y - 1
+        elseif love.keyboard.isDown(keybinds.ATTACK_DOWN) then
+            player.target.active = true
+            player.target.y = player.y + 1
+        end
 
-    if love.keyboard.isDown(keybinds.ATTACK_LEFT) then
-        player.target.active = true
-        player.target.x = player.x - 1
-    elseif love.keyboard.isDown(keybinds.ATTACK_RIGHT) then
-        player.target.active = true
-        player.target.x = player.x + 1
+        if love.keyboard.isDown(keybinds.ATTACK_LEFT) then
+            player.target.active = true
+            player.target.x = player.x - 1
+        elseif love.keyboard.isDown(keybinds.ATTACK_RIGHT) then
+            player.target.active = true
+            player.target.x = player.x + 1
+        end
     end
 
     if not wasActive and player.target.active then
@@ -228,7 +302,6 @@ end
 
 function updateInventory(response)
     newInventoryItems = {}
-    -- print(json:encode(inventoryAlpha))
     if json:encode(inventoryAlpha) ~= "[]" then
         for i, v in ipairs(response['Inventory']) do
             local newItem = true

@@ -18,14 +18,17 @@ function loadMusic()
         Skirmish2 = love.audio.newSource("assets/music/album1/Skirmish2.mp3", "stream"),
         CaperOfCruelty = love.audio.newSource("assets/music/album1/CAPER_OF_CRUELTY_1.0.mp3", "stream"),
         ToFindTheOne = love.audio.newSource("assets/music/album1/To Find The one.mp3", "stream"),
+        Heat = love.audio.newSource("assets/music/album1/HEAT 2.0.mp3", "stream"),
+        HIJINKS = love.audio.newSource("assets/music/album1/HIJINKS 2.0.mp3", "stream"),
+        Longing = love.audio.newSource("assets/music/album1/Longing.mp3", "stream"),
     }
 
-    worldMusic = {"PuerLavari", "Mining", "Sax", "ToFindTheOne",}
-    battleMusic = {"Titans", "Skirmish", "Skirmish2", "CaperOfCruelty"}
+    worldMusic = {"PuerLavari", "Mining", "Sax", "ToFindTheOne", "Heat", "Longing", }
+    battleMusic = {"Titans", "Skirmish", "Skirmish2", "CaperOfCruelty", "HIJINKS", }
 
     musicSwitchAmount = 0
 
-    titleMusic = love.audio.newSource("assets/music/album1/Longing.mp3", "stream")
+    titleMusic = love.audio.newSource("assets/music/album1/Longing Startup.mp3", "stream")
     previousMusicTile = null
 
     if musicVolume ~= 0 then

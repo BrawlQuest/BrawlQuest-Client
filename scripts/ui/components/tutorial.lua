@@ -83,11 +83,8 @@ function updateTutorial(dt)
         end
     else
         tutorialOpacity = tutorialOpacity - 2*dt
-        if tutorialOpacity < 0 then
-            tutorialOpacity = 0 
-        end
+        if tutorialOpacity < 0 then tutorialOpacity = 0 end
     end
-    
 end
 
 function checkTutorialKeyPressed(key)

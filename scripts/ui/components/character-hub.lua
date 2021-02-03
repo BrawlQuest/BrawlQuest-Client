@@ -38,24 +38,20 @@ end
 function updateCharacterHub(dt)
     if characterHub.forceOpen then
         characterHub.open = true
-        characterHub.amount = characterHub.amount + 4 * dt
-        if characterHub.amount > 1 then characterHub.amount = 1 end
+        panelMovement(dt, characterHub, 1)
     else
         if isMouseOver(0 * scale, (uiY - 97) * scale, 468 * scale, 97 * scale) then
             characterHub.open = true
-            characterHub.amount = characterHub.amount + 4 * dt
-            if characterHub.amount > 1 then characterHub.amount = 1 end
+            panelMovement(dt, characterHub, 1)
         else
             characterHub.open = false
-            characterHub.amount = characterHub.amount - 4 * dt
-            if characterHub.amount < 0 then characterHub.amount = 0 end
+            panelMovement(dt, characterHub, -1)
         end
     end
-    -- print(characterHub.amount)
 end
 
 function drawCharacterHub(thisX, thisY)
-    if me ~= null and me.HP ~= null or me.XP ~= null then
+    if me ~= null and me.HP ~= null or me.XP ~= null then
         love.graphics.setFont(characterHub.font)
         thisX, thisY = thisX, thisY - hubImages.profileBG:getHeight()
         drawCharacterHubProfile(thisX, thisY)
@@ -69,28 +65,22 @@ function drawCharacterHub(thisX, thisY)
     end
 end
 
--- max health = 100 + (15 * me.STA) 
--- remember that me and me.STA might not be set
---- if (me and me.STA) then
-
 function drawCharacterHubProfile(thisX, thisY)
     love.graphics.setColor(unpack(characterHub.backgroundColor))
-    -- love.graphics.draw(hubImages.profileBG, thisX, thisY)
     love.graphics.rectangle("fill", thisX, thisY, 82, 97)
     love.graphics.setColor(1,1,1,1)
-    drawProfilePic(thisX + 9, thisY + 8, 1, "right", me.Name)
+    drawProfilePic(thisX + 9, thisY + 8, 1, "right")
     
+    if player.cp > 0 then love.graphics.setColor(1,0,0,1) end
     love.graphics.draw(hubImages.profileFG, thisX, thisY)
-    love.graphics.setColor(0,0,0,1)
+    if player.cp > 0 then love.graphics.setColor(1,1,1,1) else love.graphics.setColor(0,0,0,1) end
     love.graphics.print(me.LVL, thisX + 56 - math.floor(characterHub.font:getWidth(me.LVL)/2), thisY + 85 - (characterHub.font:getHeight(me.LVL)/2))
 end
 
 function drawCharacterHubStats(thisX, thisY)
     love.graphics.setColor(unpack(characterHub.backgroundColor))
-    -- love.graphics.draw(hubImages.statsBG, thisX, thisY)
     love.graphics.rectangle("fill", thisX, thisY, cerp(0, 155, characterHub.amount), 97)
     love.graphics.setFont(characterHub.font)
-    -- local statNumbers = {me.STA, me.INT, me.DEF}
     for i = 0, 2 do
         if isMouseOver((thisX + (49 * i) + 3) * scale, (thisY + 43) * scale, hubImages.statCardBg:getWidth() * scale, hubImages.statCardBg:getHeight() * scale) then
             love.graphics.setColor(1,0,0, cerp(0, 1, characterHub.amount))
@@ -112,15 +102,14 @@ end
 
 function drawCharacterHubMeters(thisX, thisY)
     love.graphics.setColor(unpack(characterHub.backgroundColor))
-    -- love.graphics.draw(hubImages.metersBG, thisX, thisY)
-    love.graphics.rectangle("fill", thisX, thisY, 231, 97)
+    roundRectangle("fill", thisX, thisY, 231, 97, cerp(0, 10, characterHub.amount), {false, true, false, false})
     love.graphics.setFont(characterHub.nameFont)
     love.graphics.setColor(1,1,1,1)
     love.graphics.print(me.Name, thisX + 6, thisY+4)
     thisX, thisY = thisX + 5, thisY + 25
     love.graphics.setFont(characterHub.font)
     local j = (100/151)
-    local meterLevels = {player.dhp, me.Mana, me.XP}
+    local meterLevels = {me.HP, me.Mana, me.XP}
     for i = 0, 2 do
         local spacing = 23 * i
         love.graphics.setColor(unpack(characterHub.backgroundColor))
@@ -158,7 +147,9 @@ function getSTA(i)
 end
 
 function drawBattlebarItem(thisX, thisY, item, stats)
-    love.graphics.draw(battlebarItemBg, thisX, thisY)
+    love.graphics.setColor(0,0,0,0.7)
+    roundRectangle("fill", thisX, thisY, battlebarItemBg:getWidth(), battlebarItemBg:getHeight(), 5)
+    love.graphics.setColor(1,1,1)
     love.graphics.draw(item, thisX+1, thisY+1)
     love.graphics.setFont(headerSmallFont)
     love.graphics.print(stats, thisX+(battlebarItemBg:getWidth()/2)-(font:getWidth(stats)/2), thisY+32)

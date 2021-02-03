@@ -33,15 +33,16 @@ function drawCharacter(v, x, y, ad)
                 y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), player.wobble, rotation, 1, 0, 0)
         end
 
-        -- if v.isMounted then
-        --     love.graphics.draw(horseImg, player.dx + 6, player.dy + 9)
-        -- end
          if v.Mount ~= "None" then
             love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..v.Mount.."/back.png"), x + 6 + mountOffsetX, y + 9, 0, rotation, 1, 0, 0)
         end
 
         drawBuddy(v.Name)
+
+        if v.Color ~= null then love.graphics.setColor(unpack(v.Color)) end
+        -- print(json:encode(v.Color))
         love.graphics.draw(playerImg, x + offsetX, y, player.wobble, rotation, 1, 0, 0)
+        love.graphics.setColor(1,1,1)
 
         if v.HeadArmourID ~= 0 then
             drawItemIfExists(v.HeadArmour.ImgPath, x, y, ad.previousDirection)
@@ -56,9 +57,6 @@ function drawCharacter(v, x, y, ad)
         if v.Mount ~= "None" then
             love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..v.Mount.."/fore.png"), x + 6 + mountOffsetX, y + 9, 0, rotation, 1, 0, 0)
         end
-        -- if v.isMounting then
-        --     love.graphics.draw(horseImg, player.mount.x, player.mount.y)
-        -- end
 
         if v.IsShield and v.ShieldID ~= 0 then
             drawItemIfExists(v.Shield.ImgPath, x, y, ad.previousDirection)
@@ -95,48 +93,48 @@ function drawPlayer(v, i)
 
         love.graphics.setColor(1,1,1)
         love.graphics.setFont(playerNameFont)
-        -- local nameWidth = playerNameFont:getWidth(v.Name) * 0.5
-        -- local nameHeight = playerNameFont:getHeight(v.Name) * 0.5
-        -- local padding = 2
-
+        
+        local boi = 0
         if v.previousDirection == "left" then
             boi = 11 + 3
         else
             boi = 16 + 3
         end
-        -- boi = 0
 
         drawNamePlate(v.X + boi, v.Y, v.Name)
-
-        -- love.graphics.setColor(0, 0, 0, 0.6)
-        -- love.graphics.rectangle("fill", (v.X + boi) - (nameWidth / 2), v.Y - nameHeight - 5, nameWidth + ((padding+2)*2), nameHeight + (padding*2))
-        -- love.graphics.setColor(1, 1, 1)
-        -- love.graphics.push()
-        -- love.graphics.scale(0.5)
-        -- love.graphics.print(v.Name, ((v.X + boi) - (nameWidth / 2) + (padding+2)) * 2, (v.Y - nameHeight - 4 + padding) * 2)
-        -- love.graphics.pop()
         
         if thisPlayer ~= nil and thisPlayer.AX then
             local diffX
             local diffY
-            if i == -1 and (love.keyboard.isDown(keybinds.ATTACK_UP) or love.keyboard.isDown(keybinds.ATTACK_DOWN) or love.keyboard.isDown(keybinds.ATTACK_LEFT) or love.keyboard.isDown(keybinds.ATTACK_RIGHT)) then
+            if i == -1 and player.target.active then
                 diffX = player.target.x - player.x
                 diffY = player.target.y - player.y
             else
                 diffX = thisPlayer.AX - thisPlayer.X
                 diffY = thisPlayer.AY - thisPlayer.Y
             end
-            if arrowImg[diffX] ~= nil and arrowImg[diffX][diffY] ~= nil then
-                love.graphics.setColor(1, 1, 1, 1 - nextTick)
-                love.graphics.draw(arrowImg[diffX][diffY], v.X - 32, v.Y - 32)
-            end
+
+            drawArrowImage(diffX, diffY, v.X, v.Y)
         end
         love.graphics.setColor(1, 1, 1)
     end
 end
 
+function drawArrowImage(diffX, diffY, x, y)
+    if arrowData[diffX] ~= nil and arrowData[diffX][diffY] ~= nil then
+        local v = arrowData[diffX][diffY]
+        local size = 32
+        love.graphics.setColor(1, cerp(0.1, 0.8, attackHitAmount), 0, 1)
+        love.graphics.draw(v.image,
+        x + 16 + v.position.x + cerp(0, v.position.x * 0.25, attackHitAmount), 
+        y + 16 + v.position.y + cerp(0, v.position.y * 0.25, attackHitAmount), 
+        v.rotation, 
+        cerp(1, 1.25, attackHitAmount))
+    end
+end
+
 function drawNamePlate(x,y,name)
-    love.graphics.setFont(playerNameFont)
+    love.graphics.setColor(1,1,1,1)
     local thisX, thisY = x , y - 2
     local nameWidth = playerNameFont:getWidth(name)
     local nameHeight = playerNameFont:getHeight(name)
@@ -144,13 +142,20 @@ function drawNamePlate(x,y,name)
     love.graphics.setColor(0, 0, 0, 0.6)
     roundRectangle("fill", (thisX) - (nameWidth / 2) - (padding) - 2, thisY - nameHeight - 3, nameWidth + (padding * 2) + 3, nameHeight + (padding * 2), 3)
     love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.print(name, (thisX) - (nameWidth * 0.5), thisY - nameHeight - 2 + padding)
+    love.graphics.print(name, playerNameFont, (thisX) - (nameWidth * 0.5), thisY - nameHeight - 2 + padding)
 end
 
+attackHitAmount = 0
+
 function updateOtherPlayers(dt)
+
+    if attackHitAmount > 0 then
+        attackHitAmount = attackHitAmount - 2 * dt
+    end
+
     for i, v in pairs(players) do
         if playersDrawable[i] == nil then
-            print("Setting drawable")
+            -- print("Setting drawable")
             playersDrawable[i] = {
                 ['Name'] = v.Name,
                 ['X'] = v.X * 32,
@@ -159,7 +164,8 @@ function updateOtherPlayers(dt)
                 ['AY'] = 0,
                 ['HP'] = v.HP,
                 ['RedAlpha'] = 0,
-                ['Mount'] = v.Mount
+                ['Mount'] = v.Mount,
+                ['Color'] = v.Color,
             }
         end
         playersDrawable[i].Mount = v.Mount

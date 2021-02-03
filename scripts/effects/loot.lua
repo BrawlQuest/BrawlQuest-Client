@@ -33,6 +33,7 @@ function burstLoot(x, y, amount, type)
 end
 
 function drawLoot()
+    love.graphics.setColor(1,1,1,1)
     for i,v in ipairs(loot) do
         if v.type == "xp" then
             love.graphics.draw(xpImg, v.x, v.y)

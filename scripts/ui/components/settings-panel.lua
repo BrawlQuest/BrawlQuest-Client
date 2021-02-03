@@ -1,24 +1,4 @@
 function initSettingsPanel()
-    controls = {
-        title = "Controls",
-        selKeybindCount = 0,
-        keybinds = {title = "Keybinds", v = {
-            {name = "UP", v = "w", sel = false,},
-            {name = "DOWN", v = "s", sel = false,},
-            {name = "LEFT", v = "a", sel = false,},
-            {name = "RIGHT", v = "d", sel = false,},
-            {name = "ATTACK_UP", v = "up", sel = false,},
-            {name = "ATTACK_DOWN", v = "down", sel = false,},
-            {name = "ATTACK_LEFT", v = "left", sel = false,},
-            {name = "ATTACK_RIGHT", v = "right", sel = false,},
-            {name = "SHIELD", v = "lshift", sel = false,},
-            {name = "CRAFTING", v = "f", sel = false,},
-            {name = "INTERACT", v = "e", sel = false,},
-            {name = "QUESETS", v = "q", sel = false,},
-            },
-        },
-    }
-
     sliderPosition = {
         music = {0, 0,},
         sfx = {0, 0,},
@@ -52,7 +32,7 @@ function initSettingsPanel()
         {posy = 0, vely = 0, max = -1000, prevmax = -0, prevposy = 0,},
     }
 
-    faderPosition = {204, 270,}
+    faderPosition = {276, 342,}
     settPan.fontHeight = (32 * 0.5) - (settPan.itemFont:getHeight() * 0.45)
 
     questPopUpWidth = 335
@@ -60,6 +40,7 @@ function initSettingsPanel()
 end
 
 function updateSettingsPanel(dt)
+    updateSliders()
     settPan.opacity = settPan.opacity + settPan.opacitySpeed * dt
     if settPan.opacity > 1 then settPan.opacity = 1 end
     settPan.movement.x = (settPan.movement.x) - settPan.movement.speed.x * dt
@@ -82,20 +63,6 @@ function updateSettingsPanel(dt)
 end
 
 function drawSettingsPanel()
-    -- local noiseFactor = 0.3 -- 0.18
-    -- local gridSize = 16
-    -- local x, y = 0, 0
-    -- while x < love.graphics.getWidth() do  -- draws the clouds
-    --     while y < love.graphics.getHeight() do
-    --         local noise = ((love.math.noise(((x + player.dx) * 0.008) + settPan.movement.x , ((y + player.dy) * 0.008) + settPan.movement.y )) * noiseFactor)
-    --         love.graphics.setColor(0.2,0.2,0.3, settPan.opacityCERP * noise)
-    --         love.graphics.rectangle("fill", x, y, gridSize, gridSize)
-    --         y = y + gridSize
-    --     end
-    --     x = x + gridSize
-    --     y = 0
-    -- end
-
     local x,y = love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5
     local thisX, thisY = x - (settPan.width * 0.5), y - (settPan.height * 0.5)
 
@@ -107,7 +74,7 @@ function drawSettingsPanel()
     love.graphics.print("SETTINGS", thisX + settPan.padding, thisY + settPan.padding + 2, 0, 2) -- title
     love.graphics.print("CONTROLS", thisX + settPan.padding, thisY + settPan.titleOffset - 10) -- Subheader
 
-    settings[1].selKeybindCount = 0
+    controls.selKeybindCount = 0
     settPan.mouseOver = 0
     settPan.isMouseOver = false
 
@@ -119,23 +86,44 @@ function drawSettingsPanel()
         local max = 0
 
         for i,v in ipairs(controls.keybinds.v) do
-            if isMouseOver(thisX, thisY, width, height) and getSettingsMouseOver("left") then
+            love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)
+            roundRectangle("fill", thisX, thisY, width - (settPan.objectValueWidth + 10), height, 6) -- name backing
+            local nextX, nextY = thisX + width - settPan.objectValueWidth, thisY
+            local isMouse = isMouseOver(nextX, nextY, settPan.objectValueWidth, height)
+            
+            if isMouse and getSettingsMouseOver("left") and controls.currentKeybind ~= i then
                 controls.selKeybindCount = i
                 love.graphics.setColor(1, 0, 0, settPan.opacityCERP * 1)
+            elseif controls.currentKeybind == i then
+                love.graphics.setColor(1, 1, 1, settPan.opacityCERP * 1)
             else
                 love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)
             end
 
-            roundRectangle("fill", thisX, thisY, width - (settPan.objectValueWidth + 10), height, 6) -- name backing
-            local nextX, nextY = thisX + width - settPan.objectValueWidth, thisY
             roundRectangle("fill", nextX, nextY, settPan.objectValueWidth, height, 6) -- value backing
             love.graphics.setColor(1,1,1, settPan.opacityCERP * 1)
             love.graphics.print(v.name, thisX + 10, thisY + settPan.fontHeight) -- prints the name of things
+
+            if controls.currentKeybind == i and not isMouse then 
+                love.graphics.setColor(0,0,0, settPan.opacityCERP * 1)
+            end
             love.graphics.printf("\"" .. v.v .. "\"", nextX, nextY + settPan.fontHeight, settPan.objectValueWidth, "center") -- prints the value of things
 
             thisY = thisY + height + settPan.objectPadding
             max = max + height + settPan.objectPadding
         end
+
+        if isMouseOver(thisX, thisY, width, height) then
+            love.graphics.setColor(1, 0, 0, settPan.opacityCERP * 1)
+            controls.keybinds.reset = true
+        else
+            love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)
+            controls.keybinds.reset = false
+        end
+        roundRectangle("fill", thisX, thisY, width, height, 6)
+        love.graphics.setColor(1, 1, 1, settPan.opacityCERP * 1)
+        love.graphics.printf("Reset Keybinds", thisX, thisY + settPan.fontHeight, width, "center")
+        max = max + height
 
         if settSrl[1].max ~= settSrl[1].prevmax then
             settSrl[1].max = (max - ((settPan.height) - (settPan.padding * 2) - settPan.titleOffset)) * -1
@@ -284,49 +272,10 @@ function scaleHUD(dir)
         settPan.scaleValue = settPan.scaleValue - 1
         if settPan.scaleValue < 1 then settPan.scaleValue = #settPan.scaleTypes end
     end
-    settings[3][1].v = settPan.scaleTypes[settPan.scaleValue]
+    settings[3][2].v = settPan.scaleTypes[settPan.scaleValue]
     scale = settPan.scaleTypes[settPan.scaleValue]
     uiX = love.graphics.getWidth()/scale
     uiY = love.graphics.getHeight()/scale
-end
-
-function checkSettingsMousePressed(button)
-    if button == 1 and settPan.isMouseOver then
-        for ai,av in ipairs(settings) do
-            for bi,bv in ipairs(settings[ai]) do -- loops through every option
-                if settPan.mouseOver == (ai * 10) + bi then -- if the mouse is over the correct button
-                    if settPan.mouseOver == 31 then
-                        scaleHUD("up")
-                    elseif settPan.mouseOver == 11 or settPan.mouseOver == 12 then
-                        bv.v = not bv.v
-                        highdpi = settings[1][1].v
-                        fullscreen = settings[1][2].v
-                        setWindowOptions()
-                        createWorld()
-                    else
-                        bv.v = not bv.v
-                    end
-                    openUiOnHover = settings[3][2].v -- sets the values
-                    showChat = settings[3][3].v
-                    chatRepeat = settings[3][4].v
-                    showClouds = settings[1][3].v
-                    showShadows = settings[1][4].v
-                end
-            end
-        end
-    end
-
-    if button == 2 and settPan.mouseOver == 31 then
-        scaleHUD("down")
-    end
-
-    local x,y = love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5
-    local width, height = (settPan.width * 0.5) - (settPan.padding * 2), 40
-    local thisX, thisY = x + settPan.padding, y + (settPan.height * 0.5) - settPan.padding - height
-    if isMouseOver(thisX, thisY, width, height) and button == 1 then
-        writeSettings()
-        checkIfReadyToQuit()
-    end
 end
 
 function sliderValueA(v) end

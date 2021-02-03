@@ -119,7 +119,7 @@ end
 function updateNewWorldEdit(dt)
     if worldEdit.open then
         
-        if love.mouse.isDown(1) or love.mouse.isDown(2) then worldEdit.isDrawing = true else worldEdit.isDrawing = false end
+        if isMouseDown() then worldEdit.isDrawing = true else worldEdit.isDrawing = false end
         local isMouse = isMouseOver(0, love.graphics.getHeight() - (32 * (worldEdit.boxHeight + 3)), 310, (32 * (worldEdit.boxHeight + 3)))
         
         if editorCtl.state[3] then
@@ -145,6 +145,7 @@ function drawNewWorldEditHud()
         worldEdit.mouseOverEnemyButtons = 0
         worldEdit.mouseOverControlButtons = 0
         worldEdit.mouseOverAreaDrawButtons = 0
+        areaDraw.mouseOverMusicNames = -1
         areaDraw.mouseOverPlaceNames = -1
         worldEdit.hoveringOverButton = false
         worldEdit.readyToWriteText = false
@@ -282,11 +283,7 @@ function drawNewWorldEditTiles()
             end
     
             love.graphics.setColor(1,1,1,1)    
-            if worldEdit.drawable and not worldEdit.hoveringOverButton and isMouseOver( -- draws the 
-                (((thisX - player.dx - 16) * worldScale) + (love.graphics.getWidth()/2)), 
-                (((thisY - player.dy - 16) * worldScale) + (love.graphics.getHeight()/2)), 
-                32 * worldScale, 
-                32 * worldScale) then
+            if worldEdit.drawable and not worldEdit.hoveringOverButton and isMouseOverTile(thisX, thisY) then
 
                 worldEdit.mousePosition = {x = x, y = y}
                 
@@ -307,7 +304,7 @@ function drawNewWorldEditTiles()
                     local width = 0
                     local height = 0
                     local topLeft = {}
-                    if love.mouse.isDown(1) or love.mouse.isDown(2) then
+                    if isMouseDown() then
                         worldEdit.isDrawingRect = true
 
                         if endx < startx then
@@ -334,7 +331,7 @@ function drawNewWorldEditTiles()
                 end
 
 
-                if worldEdit.drawmode == "pencil" and not worldEdit.tileSelect and (love.mouse.isDown(1) or love.mouse.isDown(2)) then
+                if worldEdit.drawmode == "pencil" and not worldEdit.tileSelect and isMouseDown() then
                     worldEdit.changed = true
                     editorCtl.state[1] = true
                     editorCtl.state[5] = true
@@ -508,7 +505,7 @@ function checkWorldEditKeyPressed(key)
         elseif key == "return" and worldEdit.enteredWorldText ~= "" then
             worldEdit.isTyping = false
             worldEdit.drawableTile[5] = worldEdit.enteredWorldText
-            print(worldEdit.drawableTile[5])
+            -- print(worldEdit.drawableTile[5])
         elseif key == "escape" then 
             worldEdit.isTyping = false
         end
