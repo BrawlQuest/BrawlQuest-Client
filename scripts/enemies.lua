@@ -3,6 +3,7 @@ enemyImg = {}
 enemyCollisions = {}
 enemyCollisionsPrevious = {[0] = {}, [1] = {},} 
 enemyCollisionsI = 0
+enemySounds = {}
 
 attackSfxs = {love.audio.newSource("assets/sfx/monsters/skeletons/attack/1.ogg", "static"),
               love.audio.newSource("assets/sfx/monsters/skeletons/attack/2.ogg", "static"),
@@ -49,6 +50,35 @@ function newEnemyData(data) -- called when nearby data is returned
             if enemyImg[enemy.Enemy.Name] == null then
                 enemyImg[enemy.Enemy.Name] = love.graphics.newImage(enemy.Enemy.Image)
             end
+
+            -- load enemy sounds
+            if enemySounds[enemy.Enemy.Name] == null then
+                enemySounds[enemy.Enemy.Name] = {
+                    attack = {},
+                    aggro = {},
+                    death = {},
+                    taunt = {}
+                }
+            --    print("Time to load sounds for "..enemy.Enemy.Name)
+                if love.filesystem.getInfo("assets/sfx/monsters/" .. enemy.Enemy.Name .. "/") then
+                 --   print("They have a SFX folder!")
+                    for i,v in pairs(enemySounds[enemy.Enemy.Name]) do
+                     --   print("Adding "..i.." sounds from " .. "assets/sfx/monsters/" .. enemy.Enemy.Name .. "/" .. i)
+                        local files = recursiveEnumerate("assets/sfx/monsters/" .. enemy.Enemy.Name .. "/" .. i, {})
+                        for k, file in ipairs(files) do
+                       --     print("Found "..file)
+                            enemySounds[enemy.Enemy.Name][i][#enemySounds[enemy.Enemy.Name][i]+1] = love.audio.newSource(file, "static")
+                        end
+                    end
+                else
+                    enemySounds[enemy.Enemy.Name] = {
+                        attack = attackSfxs,
+                        aggro = aggroSfxs,
+                        death = deathSfxs,
+                        taunt = attackSfxs
+                    }
+                end
+            end
         end
 
         if enemy.HP ~= v.HP then
@@ -77,7 +107,7 @@ function newEnemyData(data) -- called when nearby data is returned
         if enemy.IsAggro == false and v.IsAggro then
             enemy.aggroAlpha = 2
             enemy.IsAggro = true
-            local aggroSfx = aggroSfxs[love.math.random(1, #aggroSfxs)]
+            local aggroSfx = enemySounds[v.Enemy.Name].aggro[love.math.random(1, #enemySounds[v.Enemy.Name].aggro)]
             aggroSfx:setPitch(love.math.random(80, 150) / 100)
             --   aggroSfx:setPosition(v.x-player.x,v.y-player.y)
             love.audio.play(aggroSfx)
@@ -95,11 +125,11 @@ function newEnemyData(data) -- called when nearby data is returned
         enemy.IsAggro = v.IsAggro
         if v.IsAggro then
             if v.HP > 0 then enemiesInAggro = enemiesInAggro + 1 end
-            --  if v.TargetName == player.name then -- TODO: fix v.TargetName on the API so this can work properly
-            --  boneSpurt(player.dx+16,player.dy+16,v.Enemy.ATK,48,1,0,0)
-         --   local attackSfx = attackSfxs[love.math.random(1, #attackSfxs)]
-          --  attackSfx:setPitch(love.math.random(50, 100) / 100)
-         --   love.audio.play(attackSfx)
+        --      if v.TargetName == player.name then -- TODO: fix v.TargetName on the API so this can work properly
+        --      boneSpurt(player.dx+16,player.dy+16,v.Enemy.ATK,48,1,0,0)
+        --    local attackSfx = attackSfxs[love.math.random(1, #attackSfxs)]
+        --    attackSfx:setPitch(love.math.random(50, 100) / 100)
+        --    love.audio.play(attackSfx)
             if player.isMounted or player.isMounting then
                 beginMounting()
             end
@@ -151,9 +181,8 @@ function drawEnemies()
          end
         elseif not v.hasBurst then
             burstLoot(v.dx + 16, v.dy + 16, math.abs(v.Enemy.HP / 3), "xp")
-            enemyHitSfx:setPitch(love.math.random(50, 100) / 100)
 
-            love.audio.play(deathSfxs[love.math.random(1, #deathSfxs)])
+            love.audio.play(enemySounds[v.Enemy.Name].death[love.math.random(1, #enemySounds[v.Enemy.Name].death)])
             boneSpurt(v.dx + 16, v.dy + 16, 48, 50, 1, 1, 1)
             v.hasBurst = true
         end
