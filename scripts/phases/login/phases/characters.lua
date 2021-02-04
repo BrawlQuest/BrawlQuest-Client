@@ -57,7 +57,6 @@ function checkClickLoginPhaseCharacter(x,y)
                 characterSelected = i
             else
                 newCharacterPosition = i
-
                 loginPhase = "creation"
             end
         end
@@ -69,7 +68,7 @@ function checkClickLoginPhaseCharacter(x,y)
 end
 
 function transitionToPhaseGame()
-    username = characters[characterSelected]["Name"]
+    username = characters[crtSel.selectedCharacter]["Name"]
     local b = {}
     c, h = http.request{url = api.url.."/players/"..username, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
     local response = json:decode(b[1])

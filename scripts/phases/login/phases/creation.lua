@@ -61,7 +61,6 @@ function checkClickLoginPhaseCreation(x,y)
                 ['token'] = token
             },
         }
-
         print("Login Status = " .. h)
         if h == 200 then
             login()

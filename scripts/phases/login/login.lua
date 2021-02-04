@@ -137,6 +137,8 @@ end
 function checkLoginTextinput(key)
     if loginPhase == "login" then
         checkLoginTextinputPhaseLogin(key)
+    elseif loginPhase == "characters" then
+        checkCharacterSelectorKeyInput(key)
     elseif loginPhase == "creation" then
         checkLoginTextinputPhaseCreation(key)
     end

@@ -2,6 +2,9 @@ function initCharacterSelection()
     bqLogo = love.graphics.newImage("assets/logo.png")
      
     crtSel = { -- character selection
+        overName = false,
+        isTyping = false,
+        nameText = "",
         selectableI = 0,
         selectedCharacter = 0,
         dualAmount = 0,
@@ -28,6 +31,7 @@ end
 
 function drawCharacterSelection()
     crtSel.selectableI = 0
+    crtSel.overName = false
     love.graphics.setFont(crtSel.font)
 
 
@@ -40,15 +44,37 @@ function drawCharacterSelection()
         love.graphics.setColor(1,1,1, crtSel.dualCERP)
         local x, y = love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5 + 20
         local thisX, thisY = x + crtSel.p, y - crtSel.h * 0.5 + crtSel.p
-        -- love.graphics.rectangle("fill", thisX, thisY, 100, 100)
-        love.graphics.print("Character Name", thisX, thisY, 0, 2)
+        love.graphics.line(x, y - crtSel.h * 0.5 + 20, x, y + crtSel.h * 0.5 - 20)
+        love.graphics.print("CHARACTER NAME", thisX + 5, thisY)
 
-        love.graphics.setColor(0,0,0,0.5 * crtSel.dualCERP)
-        roundRectangle("fill", thisX, thisY + 30, crtSel.cw, 50, 10)
+        if crtSel.isTyping then 
+            love.graphics.setColor(1,1,1,crtSel.dualCERP)
+        elseif isMouseOver(thisX, thisY + 25, crtSel.cw, crtSel.font:getHeight() + crtSel.s * 2) then
+            love.graphics.setColor(43 / 255, 134 / 255, crtSel.dualCERP)
+            crtSel.overName = true
+        else
+            love.graphics.setColor(0,0,0,0.5 * crtSel.dualCERP)
+            
+        end
+
+        roundRectangle("fill", thisX, thisY + 25, crtSel.cw, crtSel.font:getHeight() + crtSel.s * 2, 10)
+
+        local text = ""
+
+        if crtSel.isTyping then 
+            love.graphics.setColor(0,0,0, crtSel.dualCERP)
+            text = crtSel.nameText
+        else
+            love.graphics.setColor(1,1,1, crtSel.dualCERP)
+            text = characters[crtSel.selectedCharacter].Name
+        end
+        love.graphics.print(text, thisX + crtSel.s, thisY + 25 + crtSel.s + 2)
+
+
     end
 
     love.graphics.setColor(1,1,1)
-    local scale = 4
+    local scale = 4.1
     love.graphics.draw(bqLogo, x - (bqLogo:getWidth() * 0.5) * scale, y - crtSel.h * 0.5 + 20 - (bqLogo:getHeight() * 0.5) * scale, 0, scale)
 
     local thisX, thisY = x - crtSel.w * 0.5 + crtSel.p, y - crtSel.h * 0.5 + crtSel.p + 120
@@ -57,12 +83,6 @@ function drawCharacterSelection()
         drawCharacterSelector(thisX, thisY, i, v.Name)
     end
     if #characters < 3 then drawCharacterSelector(thisX, thisY, #characters, "NEW CHARACTER") end
-
-    if crtSel.selectedCharacter > 0  then
-        love.graphics.setColor(1,1,1, crtSel.dualCERP)
-        love.graphics.line(x * 1.5, y - crtSel.h * 0.5 + 20, x * 1.5, y + crtSel.h * 0.5 - 20) 
-        love.graphics.rectangle("fill", x * 1.5 - 1, y - crtSel.h * 0.5 + 20, 2, crtSel.h - 20)
-    end
 end
 
 function drawCharacterSelector(x, y, i, text)
@@ -96,5 +116,35 @@ end
 function checkCharacterSelectorMousePressed()
     if crtSel.selectableI > 0 then
         crtSel.selectedCharacter = crtSel.selectableI
+        crtSel.nameText = characters[crtSel.selectedCharacter].Name
     end
+
+    if crtSel.overName then
+        crtSel.isTyping = true
+    end
+end
+
+function checkCharacterSelectorKeyPressed(key)
+
+    if crtSel.isTyping == true then
+        if key == "backspace" then
+            crtSel.nameText = string.sub(crtSel.nameText, 1, string.len(crtSel.nameText) - 1)
+        end
+
+        if key == "return" then
+            crtSel.isTyping = false
+        end
+
+    else
+        if key == "return" then
+            if characters[crtSel.selectedCharacter] ~= null then
+                print("True")
+                transitionToPhaseGame() 
+            end
+        end
+    end
+end
+
+function checkCharacterSelectorKeyInput(key)
+    crtSel.nameText = crtSel.nameText .. key
 end
