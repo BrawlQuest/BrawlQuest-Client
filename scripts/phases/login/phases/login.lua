@@ -135,6 +135,10 @@ function login()
                 characters = characters[1]
             end
             loginPhase = "characters"
+            for i,v in ipairs(characters) do
+                characters[i].Color = {love.math.random(), love.math.random(), love.math.random(),  1}
+            end
+
         end
         r, h = http.request {
             url = api.url .. "/enemies",

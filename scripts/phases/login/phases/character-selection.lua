@@ -1,7 +1,18 @@
 function initCharacterSelection()
     bqLogo = love.graphics.newImage("assets/logo.png")
      
-    crtSel = { -- character selection
+    cs = { -- character selection
+        colors = {"RED", "GREEN", "BLUE",},
+        colorI = {
+            {1,0,0,},
+            {0,1,0,},
+            {0,0,1,},
+        },
+        slider = {
+            newSlider(400, 300, 300, 0.5, 0, 1, function (v) end),
+            newSlider(400, 300, 300, 0.5, 0, 1, function (v) end),
+            newSlider(400, 300, 300, 0.5, 0, 1, function (v) end),
+        },
         overName = false,
         isTyping = false,
         nameText = "",
@@ -16,68 +27,42 @@ function initCharacterSelection()
         p = 28, -- padding
         ch = 84 -- content height
     }
-    crtSel.cw = crtSel.w - crtSel.p * 2 -- content width
+    cs.cw = cs.w - cs.p * 2 -- content width
 end
 
 function updateCharaterSelection(dt)
     -- print(json:encode_pretty(characters))
-    if crtSel.selectedCharacter > 0 then
-        panelMovement(dt, crtSel, 1, "dualAmount", 2)
+    if cs.selectedCharacter > 0 then
+        panelMovement(dt, cs, 1, "dualAmount", 2)
     else
-        panelMovement(dt, crtSel, -1, "dualAmount", 2)
+        panelMovement(dt, cs, -1, "dualAmount", 2)
     end
-    crtSel.dualCERP = cerp(0, 1, crtSel.dualAmount)
+    cs.dualCERP = cerp(0, 1, cs.dualAmount)
+
+    for i, v in ipairs(cs.slider) do
+        v:update()
+    end
 end
 
 function drawCharacterSelection()
-    crtSel.selectableI = 0
-    crtSel.overName = false
-    love.graphics.setFont(crtSel.font)
+    cs.selectableI = 0
+    cs.overName = false
+    love.graphics.setFont(cs.font)
 
-
-
-    local x, y = love.graphics.getWidth() * 0.5 - cerp(0, crtSel.w * 0.5, crtSel.dualAmount), love.graphics.getHeight() * 0.5 + 20
+    local x, y = love.graphics.getWidth() * 0.5 - cerp(0, cs.w * 0.5, cs.dualAmount), love.graphics.getHeight() * 0.5 + 20
     love.graphics.setColor(0,0,0,0.7)
-    roundRectangle("fill", x - crtSel.w * 0.5, y - crtSel.h * 0.5, crtSel.w * cerp(1, 2, crtSel.dualAmount), crtSel.h, 25)
+    roundRectangle("fill", x - cs.w * 0.5, y - cs.h * 0.5, cs.w * cerp(1, 2, cs.dualAmount), cs.h, 25)
 
-    if crtSel.selectedCharacter > 0 then
-        love.graphics.setColor(1,1,1, crtSel.dualCERP)
-        local x, y = love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5 + 20
-        local thisX, thisY = x + crtSel.p, y - crtSel.h * 0.5 + crtSel.p
-        love.graphics.line(x, y - crtSel.h * 0.5 + 20, x, y + crtSel.h * 0.5 - 20)
-        love.graphics.print("CHARACTER NAME", thisX + 5, thisY)
-
-        if crtSel.isTyping then 
-            love.graphics.setColor(1,1,1,crtSel.dualCERP)
-        elseif isMouseOver(thisX, thisY + 25, crtSel.cw, crtSel.font:getHeight() + crtSel.s * 2) then
-            love.graphics.setColor(43 / 255, 134 / 255, crtSel.dualCERP)
-            crtSel.overName = true
-        else
-            love.graphics.setColor(0,0,0,0.5 * crtSel.dualCERP)
-            
-        end
-
-        roundRectangle("fill", thisX, thisY + 25, crtSel.cw, crtSel.font:getHeight() + crtSel.s * 2, 10)
-
-        local text = ""
-
-        if crtSel.isTyping then 
-            love.graphics.setColor(0,0,0, crtSel.dualCERP)
-            text = crtSel.nameText
-        else
-            love.graphics.setColor(1,1,1, crtSel.dualCERP)
-            text = characters[crtSel.selectedCharacter].Name
-        end
-        love.graphics.print(text, thisX + crtSel.s, thisY + 25 + crtSel.s + 2)
-
+    if cs.selectedCharacter > 0 then
+        drawCharacterCreator()
 
     end
 
     love.graphics.setColor(1,1,1)
     local scale = 4.1
-    love.graphics.draw(bqLogo, x - (bqLogo:getWidth() * 0.5) * scale, y - crtSel.h * 0.5 + 20 - (bqLogo:getHeight() * 0.5) * scale, 0, scale)
+    love.graphics.draw(bqLogo, x - (bqLogo:getWidth() * 0.5) * scale, y - cs.h * 0.5 + 20 - (bqLogo:getHeight() * 0.5) * scale, 0, scale)
 
-    local thisX, thisY = x - crtSel.w * 0.5 + crtSel.p, y - crtSel.h * 0.5 + crtSel.p + 120
+    local thisX, thisY = x - cs.w * 0.5 + cs.p, y - cs.h * 0.5 + cs.p + 120
 
     for i,v in ipairs(characters) do
         drawCharacterSelector(thisX, thisY, i, v.Name)
@@ -85,59 +70,136 @@ function drawCharacterSelection()
     if #characters < 3 then drawCharacterSelector(thisX, thisY, #characters, "NEW CHARACTER") end
 end
 
+
+
+function drawCharacterCreator() 
+    love.graphics.setColor(1,1,1, cs.dualCERP)
+    local v = characters[cs.selectedCharacter]
+    local x, y = math.floor(love.graphics.getWidth() * 0.5), math.floor(love.graphics.getHeight() * 0.5 + 20)
+    local thisX, thisY = x + cs.p, y - cs.h * 0.5 + cs.p
+    love.graphics.line(x, y - cs.h * 0.5 + 20, x, y + cs.h * 0.5 - 20)
+    love.graphics.print("CHARACTER NAME", thisX + 5, thisY)
+
+    if cs.isTyping then 
+        love.graphics.setColor(1,1,1,cs.dualCERP)
+    elseif isMouseOver(thisX, thisY + 25, cs.cw, cs.font:getHeight() + cs.s * 2) then
+        love.graphics.setColor(43 / 255, 134 / 255, cs.dualCERP)
+        cs.overName = true
+    else
+        love.graphics.setColor(0,0,0,0.5 * cs.dualCERP)
+    end
+
+    roundRectangle("fill", thisX, thisY + 25, cs.cw, cs.font:getHeight() + cs.s * 2, 10)
+
+    local text = ""
+
+    if cs.isTyping then 
+        love.graphics.setColor(0,0,0, cs.dualCERP)
+        text = cs.nameText
+    else
+        love.graphics.setColor(1,1,1, cs.dualCERP)
+        text = v.Name
+    end
+    love.graphics.print(text, thisX + cs.s, thisY + 25 + cs.s + 2)
+
+    love.graphics.setColor(1,1,1,cs.dualCERP)
+    love.graphics.print("CHARACER COLOUR", thisX + 5, thisY + 80)
+    love.graphics.setColor(0,0,0,0.5 * cs.dualCERP)
+    local w, h = cs.cw * 0.5, 105  -- cs.p * 0.5
+    thisX, thisY =  thisX, thisY + h
+    roundRectangle("fill", thisX, thisY, 100, 100, 10)
+    thisX, thisY =  thisX + 100 + cs.p * 0.5, thisY
+    roundRectangle("fill", thisX, thisY, cs.cw - 100 - cs.p * 0.5, 100, 10)
+
+    love.graphics.setColor(v.Color[1], v.Color[2], v.Color[3], cs.dualCERP)
+    roundRectangle("fill", thisX + cs.s, thisY + cs.s, cs.cw - 100 - cs.p * 0.5 - cs.s * 2, 100 - cs.s * 2, 5)
+    love.graphics.draw(playerImg, x + cs.p + 12, thisY + 18, 0, 2)
+
+    love.graphics.setColor(1 - v.Color[1], 1 - v.Color[2], 1 - v.Color[3], cs.dualCERP)
+    text = math.floor(v.Color[1] * 255) .. ", " .. math.floor(v.Color[2] * 255) .. ", " .. math.floor(v.Color[3] * 255)
+    love.graphics.printf(text, thisX + cs.s, thisY + cs.s + 40 - cs.font:getHeight() * 0.5, cs.cw - 100 - cs.p * 0.5 - cs.s * 2, "center")
+
+    w, h = cs.cw, 120
+    thisX, thisY = x + cs.p, y + cs.h * 0.5 - cs.p - 50 - cs.s - h
+    love.graphics.setColor(0,0,0,0.5 * cs.dualCERP)
+    roundRectangle("fill", thisX, thisY, w, h, 10)
+    love.graphics.setColor(1,1,1,cs.dualCERP)
+
+    thisX, thisY = thisX + cs.s + 4, thisY + cs.s + 4
+    for i,color in ipairs(cs.colors) do
+        -- love.graphics.setColor(unpack(cs.colorI[i]))
+        love.graphics.print(color, thisX, thisY)
+        cs.slider[i]:draw()
+        thisY = thisY + 38
+    end
+    
+    thisX, thisY = x + cs.p, y + cs.h * 0.5 - cs.p - 50
+    love.graphics.setColor(0,0,0,0.5 * cs.dualCERP)
+    roundRectangle("fill", thisX, thisY, cs.cw, 50, 10)
+    love.graphics.setColor(1,1,1, cs.dualCERP)
+    love.graphics.printf("ENTER WORLD", thisX + cs.s, thisY + 25 - cs.font:getHeight() * 0.5, cs.cw - cs.s * 2, "center")
+end
+
 function drawCharacterSelector(x, y, i, text)
 
-    local addHeight = (crtSel.ch + crtSel.s) * (i - 1)
-    local isMouse = isMouseOver(x, y + addHeight, crtSel.cw, crtSel.ch)
+    local addHeight = (cs.ch + cs.s) * (i - 1)
+    local isMouse = isMouseOver(x, y + addHeight, cs.cw, cs.ch)
 
-    if i == crtSel.selectedCharacter then
+    if i == cs.selectedCharacter then
         love.graphics.setColor(1,1,1, 1)
     elseif isMouse then
         love.graphics.setColor(43 / 255, 134 / 255, 1)
-        crtSel.selectableI = i
+        cs.selectableI = i
     else love.graphics.setColor(0,0,0,0.5) end
 
-    roundRectangle("fill", x, y + addHeight, crtSel.cw, crtSel.ch, 10)
+    roundRectangle("fill", x, y + addHeight, cs.cw, cs.ch, 10)
 
     if characters[i] ~= null then
-        drawProfilePic(x + crtSel.s + 2, y + crtSel.s + addHeight, 1, "right", characters[i])
+        drawProfilePic(x + cs.s + 2, y + cs.s + addHeight, 1, "right", characters[i])
     end    
     
     -- if isMouse then love.graphics.setColor(1,1,1)
     -- else love.graphics.setColor(0,0,0)end
 
     
-    if i == crtSel.selectedCharacter then love.graphics.setColor(0,0,0)
+    if i == cs.selectedCharacter then love.graphics.setColor(0,0,0)
     else love.graphics.setColor(1,1,1) end
 
-    love.graphics.print(text, x + 64 + crtSel.s * 2, y + crtSel.ch * 0.5 - crtSel.font:getHeight() * 0.5 + addHeight)
+    love.graphics.print(text, x + 64 + cs.s * 2, y + cs.ch * 0.5 - cs.font:getHeight() * 0.5 + addHeight)
 end
 
 function checkCharacterSelectorMousePressed()
-    if crtSel.selectableI > 0 then
-        crtSel.selectedCharacter = crtSel.selectableI
-        crtSel.nameText = characters[crtSel.selectedCharacter].Name
+    if cs.selectableI > 0 then
+        cs.selectedCharacter = cs.selectableI
+        cs.nameText = characters[cs.selectedCharacter].Name
+        local v = characters[cs.selectedCharacter]
+        local style = {track = "line", knob = "rectangle", width = 18,}
+        local x = 775 + cs.cw * 0.55
+        local width = cs.cw - 100
+        for i, slider in ipairs(cs.slider) do
+            cs.slider[i] = newSlider(x, 476 + 5 + 38 * (i - 1), width, v.Color[i], 0.2, 1, function (sv) v.Color[i] = sv end, style)
+        end
     end
 
-    if crtSel.overName then
-        crtSel.isTyping = true
+    if cs.overName then
+        cs.isTyping = true
     end
 end
 
 function checkCharacterSelectorKeyPressed(key)
 
-    if crtSel.isTyping == true then
+    if cs.isTyping == true then
         if key == "backspace" then
-            crtSel.nameText = string.sub(crtSel.nameText, 1, string.len(crtSel.nameText) - 1)
+            cs.nameText = string.sub(cs.nameText, 1, string.len(cs.nameText) - 1)
         end
 
         if key == "return" then
-            crtSel.isTyping = false
+            cs.isTyping = false
         end
 
     else
         if key == "return" then
-            if characters[crtSel.selectedCharacter] ~= null then
+            if characters[cs.selectedCharacter] ~= null then
                 print("True")
                 transitionToPhaseGame() 
             end
@@ -146,5 +208,5 @@ function checkCharacterSelectorKeyPressed(key)
 end
 
 function checkCharacterSelectorKeyInput(key)
-    crtSel.nameText = crtSel.nameText .. key
+    cs.nameText = cs.nameText .. key
 end
