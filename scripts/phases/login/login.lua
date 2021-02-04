@@ -103,14 +103,16 @@ function updateLogin(dt)
     if loginPhase == "prelaunch" then
         if launch.inAmount < 1 then
             launch.inAmount = launch.inAmount + 0.22 * dt
-            if launch.inAmount > 1 then 
+            if launch.inAmount > 1 then
                 birds:setLooping(true)
                 love.audio.play(birds)
+                -- love.audio.play(titleMusic)
                 launch.inAmount = 1
             end
             launch.inCERP = cerp(0, 1, launch.inAmount)
         elseif launch.outAmount < 1 then
             launch.outAmount = launch.outAmount + 0.8 * dt
+            -- titleMusic:setVolume(musicVolume * launch.outAmount)
             if launch.outAmount > 1 then
                 loginPhase = "login"
             end

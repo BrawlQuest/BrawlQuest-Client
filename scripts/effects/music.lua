@@ -28,11 +28,14 @@ function loadMusic()
 
     musicSwitchAmount = 0
 
+    titleMusicFade = love.audio.newSource("assets/music/album1/Longing fadein.mp3", "stream")
+
     titleMusic = love.audio.newSource("assets/music/album1/Longing Startup - Bass.mp3", "stream")
     previousMusicTile = null
 
     if musicVolume ~= 0 then
         currentPlaying = titleMusic:play()
+        -- titleMusicFade:setVolume(musicVolume)
         titleMusic:setVolume(musicVolume)
     end
 end

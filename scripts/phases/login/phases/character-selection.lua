@@ -52,7 +52,6 @@ function drawCharacterSelection()
 
     if cs.selectedCharacter > 0 then
         drawCharacterCreator()
-
     end
 
     love.graphics.setColor(1,1,1)
@@ -64,7 +63,7 @@ function drawCharacterSelection()
     for i,v in ipairs(characters) do
         drawCharacterSelector(thisX, thisY, i, v.Name)
     end
-    if #characters < 3 then drawCharacterSelector(thisX, thisY, #characters, "NEW CHARACTER") end
+    if #characters < 3 then drawCharacterSelector(thisX, thisY, math.clamp(1,#characters,3), "NEW CHARACTER") end
 end
 
 
@@ -132,16 +131,21 @@ function drawCharacterCreator()
     w, h = cs.cw, 50
     thisX, thisY = x + cs.p, y + cs.h * 0.5 - cs.p - h
 
-    if isMouseOver(thisX, thisY, w, h) then
+    local isMouse = isMouseOver(thisX, thisY, w, h)
+    if isMouse then
         love.graphics.setColor(43 / 255, 134 / 255, cs.dualCERP)
         cs.overExit = true
     else 
-        love.graphics.setColor(0,0,0,0.5 * cs.dualCERP)
+        love.graphics.setColor(1,1,1, cs.dualCERP)
         cs.overExit = false
     end
 
     roundRectangle("fill", thisX, thisY, cs.cw, h, 10)
-    love.graphics.setColor(1,1,1, cs.dualCERP)
+    if isMouse then
+        love.graphics.setColor(1,1,1, cs.dualCERP)
+    else love.graphics.setColor(0,0,0, cs.dualCERP)
+    end
+
     love.graphics.printf("ENTER WORLD", thisX + cs.s, thisY + 25 - cs.font:getHeight() * 0.5, cs.cw - cs.s * 2, "center")
 end
 
@@ -175,35 +179,47 @@ function checkCharacterSelectorMousePressed()
         end
         if cs.overExit then
             print("I want to exit")
-            transitionToPhaseGame()
-            me.Color = copy(characters[cs.selectedCharacter].Color)
+            transitionToPhaseGame() 
         end
     end
 
     if cs.selectableI > 0 then
+        cs.isTyping = false
         cs.selectedCharacter = cs.selectableI
-        cs.nameText = characters[cs.selectedCharacter].Name
-        local v = characters[cs.selectedCharacter]
+        local v = {}
         local style = {track = "line", knob = "rectangle", width = 18,}
         local x = 775 + cs.cw * 0.56
         local width = cs.cw - 110
-        for i, slider in ipairs(cs.slider) do
-            cs.slider[i] = newSlider(x, 476 + 5 + 38 * (i - 1), width, v.Color[i], 0.2, 1, function (sv) v.Color[i] = sv end, style)
+
+        if characters[cs.selectedCharacter] and characters[cs.selectedCharacter].Name ~= null then
+            v = characters[cs.selectedCharacter]
+            cs.nameText = v.Name 
+            for i, slider in ipairs(cs.slider) do
+                cs.slider[i] = newSlider(x, 476 + 5 + 38 * (i - 1), width, v.Color[i], 0.2, 1, function (sv) v.Color[i] = sv end, style)
+            end
+        else
+            characters[cs.selectedCharacter] = {}
+            -- v = characters[cs.selectedCharacter]
+            -- TODO: add a way of creating a new character with the api
+            cs.nameText = ""
+            -- v.Color = {}
+            -- for i, slider in ipairs(cs.slider) do
+            --     cs.slider[i] = newSlider(x, 476 + 5 + 38 * (i - 1), width, v.Color[i], 0.2, 1, function (sv) v.Color[i] = sv end, style)
+            -- end
         end
+        
     end
 end
 
 function checkCharacterSelectorKeyPressed(key)
-
     if cs.isTyping == true then
         if key == "backspace" then
             cs.nameText = string.sub(cs.nameText, 1, string.len(cs.nameText) - 1)
         end
-
         if key == "return" then
             cs.isTyping = false
+            -- TODO: add a way of changing the name on the fly with the api
         end
-
     else
         if key == "return" then
             if characters[cs.selectedCharacter] ~= null then

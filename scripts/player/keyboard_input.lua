@@ -5,11 +5,14 @@ function love.keypressed(key)
             launch.outAmount = 1
             launch.outCERP = 1
             loginPhase = "login"
+            -- love.audio.stop(titleMusicFade)
+            -- love.audio.play(titleMusic)
         elseif loginPhase == "login" then
             checkLoginKeyPressedPhaseLogin(key)
         elseif loginPhase == "creation" then
             checkLoginKeyPressedPhaseCreation(key)
         elseif loginPhase == "characters" then
+            checkCharacterSelectorKeyPressed(key)
             checkLoginKeyPressedPhaseCharacters(key)
         end
         if key == "escape" then love.event.quit() end
