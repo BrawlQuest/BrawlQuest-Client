@@ -3,17 +3,14 @@ function initCharacterSelection()
      
     cs = { -- character selection
         colors = {"RED", "GREEN", "BLUE",},
-        colorI = {
-            {1,0,0,},
-            {0,1,0,},
-            {0,0,1,},
-        },
+        colorI = {{1,0,0,}, {0,1,0,}, {0,0,1,},},
         slider = {
             newSlider(400, 300, 300, 0.5, 0, 1, function (v) end),
             newSlider(400, 300, 300, 0.5, 0, 1, function (v) end),
             newSlider(400, 300, 300, 0.5, 0, 1, function (v) end),
         },
         overName = false,
+        overExit = true,
         isTyping = false,
         nameText = "",
         selectableI = 0,
@@ -92,7 +89,6 @@ function drawCharacterCreator()
     roundRectangle("fill", thisX, thisY + 25, cs.cw, cs.font:getHeight() + cs.s * 2, 10)
 
     local text = ""
-
     if cs.isTyping then 
         love.graphics.setColor(0,0,0, cs.dualCERP)
         text = cs.nameText
@@ -132,10 +128,19 @@ function drawCharacterCreator()
         cs.slider[i]:draw()
         thisY = thisY + 38
     end
-    
-    thisX, thisY = x + cs.p, y + cs.h * 0.5 - cs.p - 50
-    love.graphics.setColor(0,0,0,0.5 * cs.dualCERP)
-    roundRectangle("fill", thisX, thisY, cs.cw, 50, 10)
+
+    w, h = cs.cw, 50
+    thisX, thisY = x + cs.p, y + cs.h * 0.5 - cs.p - h
+
+    if isMouseOver(thisX, thisY, w, h) then
+        love.graphics.setColor(43 / 255, 134 / 255, cs.dualCERP)
+        cs.overExit = true
+    else 
+        love.graphics.setColor(0,0,0,0.5 * cs.dualCERP)
+        cs.overExit = false
+    end
+
+    roundRectangle("fill", thisX, thisY, cs.cw, h, 10)
     love.graphics.setColor(1,1,1, cs.dualCERP)
     love.graphics.printf("ENTER WORLD", thisX + cs.s, thisY + 25 - cs.font:getHeight() * 0.5, cs.cw - cs.s * 2, "center")
 end
@@ -156,33 +161,35 @@ function drawCharacterSelector(x, y, i, text)
 
     if characters[i] ~= null then
         drawProfilePic(x + cs.s + 2, y + cs.s + addHeight, 1, "right", characters[i])
-    end    
-    
-    -- if isMouse then love.graphics.setColor(1,1,1)
-    -- else love.graphics.setColor(0,0,0)end
+    end
 
-    
     if i == cs.selectedCharacter then love.graphics.setColor(0,0,0)
     else love.graphics.setColor(1,1,1) end
-
     love.graphics.print(text, x + 64 + cs.s * 2, y + cs.ch * 0.5 - cs.font:getHeight() * 0.5 + addHeight)
 end
 
 function checkCharacterSelectorMousePressed()
+    if cs.selectedCharacter > 0 then
+        if cs.overName then
+            cs.isTyping = true
+        end
+        if cs.overExit then
+            print("I want to exit")
+            transitionToPhaseGame()
+            me.Color = copy(characters[cs.selectedCharacter].Color)
+        end
+    end
+
     if cs.selectableI > 0 then
         cs.selectedCharacter = cs.selectableI
         cs.nameText = characters[cs.selectedCharacter].Name
         local v = characters[cs.selectedCharacter]
         local style = {track = "line", knob = "rectangle", width = 18,}
-        local x = 775 + cs.cw * 0.55
-        local width = cs.cw - 100
+        local x = 775 + cs.cw * 0.56
+        local width = cs.cw - 110
         for i, slider in ipairs(cs.slider) do
             cs.slider[i] = newSlider(x, 476 + 5 + 38 * (i - 1), width, v.Color[i], 0.2, 1, function (sv) v.Color[i] = sv end, style)
         end
-    end
-
-    if cs.overName then
-        cs.isTyping = true
     end
 end
 
