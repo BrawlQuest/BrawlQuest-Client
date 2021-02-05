@@ -110,6 +110,7 @@ function love.load()
 end
 
 function love.draw()
+    inventory.notNPC = true -- I've moved this here so that it defaults to on and is then turned off rather than turned on. This means that we don't have to worry about its position when checking for "Press E" text or similar
     if phase == "login" then
         drawLogin()
     else
@@ -136,6 +137,22 @@ function love.draw()
             if showWorldAnimations then drawLeaves() end
             drawLoot()
             drawFloats()
+
+            if not worldEdit.open then drawWorldMask() end
+            if showClouds then drawClouds() end     
+            for i,v in ipairs(npcs) do
+                if distanceToPoint(player.x,player.y,v.X,v.Y) <= 1 and not showNPCChatBackground  and v.Conversation ~= "" then
+                    drawTextBelowPlayer("Press "..keybinds.INTERACT.." to talk")
+                    
+                    inventory.notNPC = false
+                    openTutorial(4)
+                end
+            end
+        
+            if isNearbyTile("assets/world/objects/Anvil.png") then  drawTextBelowPlayer("Press "..keybinds.INTERACT.." to craft")
+                inventory.notNPC = false
+            end
+
             if showWorldMask then drawWorldMask() end --not worldEdit.open or
             if showClouds then drawClouds() end
 
@@ -143,18 +160,6 @@ function love.draw()
 
             if not worldEdit.open then drawHUD() end
             drawNewWorldEditHud()
-
-            inventory.notNPC = true
-            for i,v in ipairs(npcs) do
-                if distanceToPoint(player.x,player.y,v.X,v.Y) <= 1 and not showNPCChatBackground  and v.Conversation ~= "" then
-                    drawTextBelowPlayer("Press "..keybinds.INTERACT.." to talk")
-                    inventory.notNPC = false
-                    openTutorial(4)
-                end
-            end
-
-            if isNearbyTile("assets/world/objects/Anvil.png") then  drawTextBelowPlayer("Press "..keybinds.INTERACT.." to craft")
-            end
 
         Luven.camera:draw()
 

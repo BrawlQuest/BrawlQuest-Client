@@ -53,7 +53,7 @@ function love.keypressed(key)
         elseif showNPCChatBackground then
             if key == keybinds.INTERACT or key == "escape" then showNPCChatBackground = false end
         elseif crafting.open then
-            if key == keybinds.CRAFTING or key == "escape" then
+            if key == keybinds.INTERACT or key == "escape" then
                 crafting.open = false
             end
         else
@@ -86,16 +86,17 @@ function love.keypressed(key)
 
             if key == keybinds.INTERACT then startConversation() end
 
-            if (key == "i" or key == "q") then
+            if (key == keybinds.INTERACT) and inventory.notNPC then
                 inventory.forceOpen = not inventory.forceOpen
             end
 
-            if key == "e" and inventory.notNPC then
+            if key == "q" and inventory.notNPC then
                 questsPanel.forceOpen = not questsPanel.forceOpen
             end
 
-            if key == keybinds.CRAFTING then
+            if key == keybinds.INTERACT and isNearbyTile("assets/world/objects/Anvil.png") then -- Hello Mr HackerMan! Removing the isNearbyTile will allow you to open the crafting menu from anywhere, but won't allow you to actually craft any items. Sorry! =(
                 crafting.open = true
+                inventory.notNPC = true
             end
 
             checkInventoryKeyPressed(key)
