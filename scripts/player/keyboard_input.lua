@@ -74,7 +74,7 @@ function love.keypressed(key)
                 writeSettings()
             end
 
-            if (key == "'" or key == "r") and (username == "Danjoe" or username == "Pebsie") then 
+            if (key == "'" or key == "r") then -- and (username == "Danjoe" or username == "Pebsie") then 
                 worldEdit.open = not worldEdit.open 
             end
 

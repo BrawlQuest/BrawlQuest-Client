@@ -52,7 +52,7 @@ http = require("socket.http")
 ltn12 = require("ltn12")
 
 version = "Pre-Release" 
-versionType = "dev" -- "dev" for quick login, "release" for not
+versionType = "release" -- "dev" for quick login, "release" for not
 versionNumber = "0.1.15" -- very important for settings
 
 phase = "login"
