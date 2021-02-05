@@ -7,5 +7,10 @@
         "undefined-global",
         "unused-local",
         "unbalanced-assignments"
+    ],
+    "cSpell.words": [
+        "LUVEN",
+        "iheight",
+        "iwidth"
     ]
 }

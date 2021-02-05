@@ -7,7 +7,9 @@ function love.keypressed(key)
             loginPhase = "login"
             -- love.audio.stop(titleMusicFade)
             -- love.audio.play(titleMusic)
+            if key == "escape" then love.event.quit() end
         elseif loginPhase == "login" then
+            if key == "escape" then love.event.quit() end
             checkLoginKeyPressedPhaseLogin(key)
         elseif loginPhase == "creation" then
             checkLoginKeyPressedPhaseCreation(key)

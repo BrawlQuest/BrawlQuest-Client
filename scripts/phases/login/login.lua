@@ -119,7 +119,7 @@ function updateLogin(dt)
             launch.outCERP = cerp(0,1,launch.outAmount)
         end
     elseif loginPhase == "characters" then
-        updateCharaterSelection(dt)
+        updateCharacterSelection(dt)
     end
     updateLoginBackground(dt)
 end

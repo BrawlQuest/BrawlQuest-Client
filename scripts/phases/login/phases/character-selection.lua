@@ -28,12 +28,12 @@ function initCharacterSelection()
     cs.cw = cs.w - cs.p * 2 -- content width
 end
 
-function updateCharaterSelection(dt)
+function updateCharacterSelection(dt)
     -- print(json:encode_pretty(characters))
     if cs.selectedCharacter > 0 then
-        panelMovement(dt, cs, 1, "dualAmount", 2)
+        panelMovement(dt, cs, 1, "dualAmount", 3)
     else
-        panelMovement(dt, cs, -1, "dualAmount", 2)
+        panelMovement(dt, cs, -1, "dualAmount", 3)
     end
     cs.dualCERP = cerp(0, 1, cs.dualAmount)
 
@@ -51,23 +51,24 @@ function drawCharacterSelection()
     love.graphics.setColor(0,0,0,0.7)
     roundRectangle("fill", x - cs.w * 0.5, y - cs.h * 0.5, cs.w * cerp(1, 2, cs.dualAmount), cs.h, 25)
 
-    if cs.selectedCharacter > 0 then
-        drawCharacterCreator()
-    end
-
     love.graphics.setColor(1,1,1)
     local scale = 4.1
     love.graphics.draw(bqLogo, x - (bqLogo:getWidth() * 0.5) * scale, y - cs.h * 0.5 + 20 - (bqLogo:getHeight() * 0.5) * scale, 0, scale)
 
-    local thisX, thisY = x - cs.w * 0.5 + cs.p, y - cs.h * 0.5 + cs.p + 120
+    love.graphics.stencil(drawCharacterSelectionStencil, "replace", 1) -- stencils inventory
+    love.graphics.setStencilTest("greater", 0) -- push
 
-    for i,v in ipairs(characters) do
-        drawCharacterSelector(thisX, thisY, i, v.Name)
-    end
-    if #characters < 3 then drawCharacterSelector(thisX, thisY, math.clamp(1, #characters + 1,3), "NEW CHARACTER") end
+        if cs.selectedCharacter > 0 then
+            drawCharacterCreator()
+        end
+        local thisX, thisY = x - cs.w * 0.5 + cs.p, y - cs.h * 0.5 + cs.p + 120
+        for i,v in ipairs(characters) do
+            drawCharacterSelector(thisX, thisY, i, v.Name)
+        end
+        if #characters < 3 then drawCharacterSelector(thisX, thisY, math.clamp(1, #characters + 1,3), "NEW CHARACTER") end
+
+    love.graphics.setStencilTest() -- pop
 end
-
-
 
 function drawCharacterCreator() 
     love.graphics.setColor(1,1,1, cs.dualCERP)
@@ -124,7 +125,6 @@ function drawCharacterCreator()
 
     thisX, thisY = thisX + cs.s + 4, thisY + cs.s + 4
     for i,color in ipairs(cs.colors) do
-        -- love.graphics.setColor(unpack(cs.colorI[i]))
         love.graphics.print(color, thisX, thisY)
         cs.slider[i]:draw()
         thisY = thisY + 38
@@ -151,9 +151,8 @@ function drawCharacterCreator()
     if characters[cs.selectedCharacter] and characters[cs.selectedCharacter].Name ~= null then
         text = "ENTER WORLD"
     else
-        text = "CREATE CHARACTER AND ENTER WORLD"
+        text = "CREATE CHARACTER"
     end
-
     love.graphics.printf(text, thisX + cs.s, thisY + 25 - cs.font:getHeight() * 0.5, cs.cw - cs.s * 2, "center")
 end
 
@@ -249,7 +248,6 @@ function checkCharacterSelectorKeyPressed(key)
             cs.selectedCharacter = 1
             cs.isTyping = false
         end
-
     else
         
         if key == "up" then
@@ -259,10 +257,32 @@ function checkCharacterSelectorKeyPressed(key)
             cs.selectedCharacter = math.clamp(1, cs.selectedCharacter + 1, 3)
             getSelectedCharacter()
         end
+
+        if key == "escape" then
+            -- loginPhase = "login"
+            -- textfields[1] = ""
+            -- textfields[2] = ""
+            -- textfields[3] = ""
+            -- editingField = 1
+            if cs.selectedCharacter > 0 then
+                cs.selectedCharacter = 0
+            else
+                love.event.quit()          
+            end 
+        end
+
         if key == "return" then
             loginOrCreate()
         end
     end
+end
+
+function drawCharacterSelectionStencil()
+    local x = love.graphics.getWidth() * 0.5 - cerp(0, cs.w * 0.5, cs.dualAmount) - cs.w * 0.5 + cs.p
+    local y = love.graphics.getHeight() * 0.5 + 20 - cs.h * 0.5 + cs.p
+    local w = cs.w * cerp(1, 2, cs.dualAmount) - cs.p * 2
+    local h = cs.h  - cs.p * 2
+    roundRectangle("fill", x, y, w, h, 10)
 end
 
 function checkCharacterSelectorKeyInput(key)

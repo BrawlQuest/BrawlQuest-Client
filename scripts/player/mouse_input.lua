@@ -45,7 +45,7 @@ function love.wheelmoved( dx, dy )
 end
 
 function zoomCamera(dy, table)
-    if not worldScaleSmooting then worldScaleSmooting = true end
+    if not worldScaleSmoothing then worldScaleSmoothing = true end
     previousWorldScale = worldScale
     worldScaleAmount = 0
     if dy > 0 then

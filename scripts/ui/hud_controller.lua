@@ -20,7 +20,7 @@ function initHUD()
     selectedWorldScale = 4
     previousWorldScale = 4
     worldScaleAmount = 1
-    worldScaleSmooting = false
+    worldScaleSmoothing = false
 
     -- fonts
     textFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 24)
@@ -124,11 +124,11 @@ end
 
 function updateHUD( dt )
 
-    if worldScaleSmooting then
+    if worldScaleSmoothing then
         worldScaleAmount = worldScaleAmount + 4 * dt
         if worldScaleAmount > 1 then
             worldScaleAmount = 1
-            worldScaleSmooting = false
+            worldScaleSmoothing = false
         end
     end
 
