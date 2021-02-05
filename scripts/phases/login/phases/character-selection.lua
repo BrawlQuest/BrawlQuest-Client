@@ -2,8 +2,9 @@ function initCharacterSelection()
     bqLogo = love.graphics.newImage("assets/logo.png")
      
     cs = { -- character selection
+        initialCharacter = {Name = "", Color = {love.math.random() ,love.math.random() ,love.math.random() }},
         colors = {"RED", "GREEN", "BLUE",},
-        colorI = {{1,0,0,}, {0,1,0,}, {0,0,1,},},
+        colorI = {{1,0,0,1}, {0,1,0,1}, {0,0,1,1},},
         slider = {
             newSlider(400, 300, 300, 0.5, 0, 1, function (v) end),
             newSlider(400, 300, 300, 0.5, 0, 1, function (v) end),
@@ -63,14 +64,15 @@ function drawCharacterSelection()
     for i,v in ipairs(characters) do
         drawCharacterSelector(thisX, thisY, i, v.Name)
     end
-    if #characters < 3 then drawCharacterSelector(thisX, thisY, math.clamp(1,#characters,3), "NEW CHARACTER") end
+    if #characters < 3 then drawCharacterSelector(thisX, thisY, math.clamp(1, #characters + 1,3), "NEW CHARACTER") end
 end
 
 
 
 function drawCharacterCreator() 
     love.graphics.setColor(1,1,1, cs.dualCERP)
-    local v = characters[cs.selectedCharacter]
+    local v = characters[cs.selectedCharacter] or cs.initialCharacter
+    -- print(json:encode_pretty(v))
     local x, y = math.floor(love.graphics.getWidth() * 0.5), math.floor(love.graphics.getHeight() * 0.5 + 20)
     local thisX, thisY = x + cs.p, y - cs.h * 0.5 + cs.p
     love.graphics.line(x, y - cs.h * 0.5 + 20, x, y + cs.h * 0.5 - 20)
@@ -78,7 +80,7 @@ function drawCharacterCreator()
 
     if cs.isTyping then 
         love.graphics.setColor(1,1,1,cs.dualCERP)
-    elseif isMouseOver(thisX, thisY + 25, cs.cw, cs.font:getHeight() + cs.s * 2) then
+    elseif isMouseOver(thisX, thisY + 25, cs.cw, cs.font:getHeight() + cs.s * 2) and not characters[cs.selectedCharacter].Name then
         love.graphics.setColor(43 / 255, 134 / 255, cs.dualCERP)
         cs.overName = true
     else
@@ -90,10 +92,10 @@ function drawCharacterCreator()
     local text = ""
     if cs.isTyping then 
         love.graphics.setColor(0,0,0, cs.dualCERP)
-        text = cs.nameText
+        text = cs.nameText .. "|"
     else
         love.graphics.setColor(1,1,1, cs.dualCERP)
-        text = v.Name
+        text = cs.nameText
     end
     love.graphics.print(text, thisX + cs.s, thisY + 25 + cs.s + 2)
 
@@ -146,7 +148,13 @@ function drawCharacterCreator()
     else love.graphics.setColor(0,0,0, cs.dualCERP)
     end
 
-    love.graphics.printf("ENTER WORLD", thisX + cs.s, thisY + 25 - cs.font:getHeight() * 0.5, cs.cw - cs.s * 2, "center")
+    if characters[cs.selectedCharacter] and characters[cs.selectedCharacter].Name ~= null then
+        text = "ENTER WORLD"
+    else
+        text = "CREATE CHARACTER AND ENTER WORLD"
+    end
+
+    love.graphics.printf(text, thisX + cs.s, thisY + 25 - cs.font:getHeight() * 0.5, cs.cw - cs.s * 2, "center")
 end
 
 function drawCharacterSelector(x, y, i, text)
@@ -172,42 +180,62 @@ function drawCharacterSelector(x, y, i, text)
     love.graphics.print(text, x + 64 + cs.s * 2, y + cs.ch * 0.5 - cs.font:getHeight() * 0.5 + addHeight)
 end
 
+function getSelectedCharacter()
+    cs.isTyping = false
+    local v = {}
+    local style = {track = "line", knob = "rectangle", width = 18,}
+    local x = 775 + cs.cw * 0.56
+    local width = cs.cw - 110
+
+    if characters[cs.selectedCharacter] and characters[cs.selectedCharacter].Name ~= null then
+        v = characters[cs.selectedCharacter]
+        cs.nameText = v.Name 
+        for i, slider in ipairs(cs.slider) do
+            cs.slider[i] = newSlider(x, 476 + 5 + 38 * (i - 1), width, v.Color[i], 0.2, 1, function (sv) v.Color[i] = sv end, style)
+        end
+    else -- if a character is not in the current position
+        v = cs.initialCharacter
+        cs.isTyping = true
+        -- TODO: add a way of creating a new character with the api
+        cs.nameText = ""
+        for i, slider in ipairs(cs.slider) do
+            cs.slider[i] = newSlider(x, 476 + 5 + 38 * (i - 1), width, v.Color[i], 0.2, 1, function (sv) v.Color[i] = sv end, style)
+        end
+    end
+end
+
 function checkCharacterSelectorMousePressed()
     if cs.selectedCharacter > 0 then
         if cs.overName then
             cs.isTyping = true
         end
         if cs.overExit then
-            print("I want to exit")
-            transitionToPhaseGame() 
+            loginOrCreate()
         end
     end
-
     if cs.selectableI > 0 then
-        cs.isTyping = false
         cs.selectedCharacter = cs.selectableI
-        local v = {}
-        local style = {track = "line", knob = "rectangle", width = 18,}
-        local x = 775 + cs.cw * 0.56
-        local width = cs.cw - 110
+        getSelectedCharacter()
+    end
+end
 
-        if characters[cs.selectedCharacter] and characters[cs.selectedCharacter].Name ~= null then
-            v = characters[cs.selectedCharacter]
-            cs.nameText = v.Name 
-            for i, slider in ipairs(cs.slider) do
-                cs.slider[i] = newSlider(x, 476 + 5 + 38 * (i - 1), width, v.Color[i], 0.2, 1, function (sv) v.Color[i] = sv end, style)
-            end
-        else
+function loginOrCreate()
+    if characters[cs.selectedCharacter] and characters[cs.selectedCharacter].Name then
+        transitionToPhaseGame()
+    else
+        if cs.nameText ~= "" then
             characters[cs.selectedCharacter] = {}
-            -- v = characters[cs.selectedCharacter]
-            -- TODO: add a way of creating a new character with the api
-            cs.nameText = ""
-            -- v.Color = {}
-            -- for i, slider in ipairs(cs.slider) do
-            --     cs.slider[i] = newSlider(x, 476 + 5 + 38 * (i - 1), width, v.Color[i], 0.2, 1, function (sv) v.Color[i] = sv end, style)
-            -- end
+            characters[cs.selectedCharacter].Name = cs.nameText
+            characters[cs.selectedCharacter].Color = copy(cs.initialCharacter.Color)
+            r, h = http.request {
+                url = api.url.."/user/"..UID.."/".. characters[cs.selectedCharacter].Name,
+                method = "POST",
+                headers = {
+                    ['token'] = token
+                },
+            }
+            transitionToPhaseGame()
         end
-        
     end
 end
 
@@ -215,21 +243,61 @@ function checkCharacterSelectorKeyPressed(key)
     if cs.isTyping == true then
         if key == "backspace" then
             cs.nameText = string.sub(cs.nameText, 1, string.len(cs.nameText) - 1)
-        end
-        if key == "return" then
+        elseif key == "return" then
             cs.isTyping = false
-            -- TODO: add a way of changing the name on the fly with the api
+        elseif key == "escape" and cs.selectedCharacter ~= 1 then
+            cs.selectedCharacter = 1
+            cs.isTyping = false
         end
+
     else
+        
+        if key == "up" then
+            cs.selectedCharacter = math.clamp(1, cs.selectedCharacter - 1, 3)
+            getSelectedCharacter()
+        elseif key == "down" then
+            cs.selectedCharacter = math.clamp(1, cs.selectedCharacter + 1, 3)
+            getSelectedCharacter()
+        end
         if key == "return" then
-            if characters[cs.selectedCharacter] ~= null then
-                print("True")
-                transitionToPhaseGame() 
-            end
+            loginOrCreate()
         end
     end
 end
 
 function checkCharacterSelectorKeyInput(key)
-    cs.nameText = cs.nameText .. key
+    if key ~= "return" then
+        cs.nameText = cs.nameText .. key
+    end
 end
+
+function transitionToPhaseGame()
+    -- print(json:encode_pretty(characters[cs.selectedCharacter]))
+    me.Color = copy(characters[cs.selectedCharacter].Color)
+    username = characters[cs.selectedCharacter]["Name"]
+    local b = {}
+    c, h = http.request{url = api.url.."/players/"..username, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
+    local response = json:decode(b[1])
+    player.x = response['Me']['X']
+    player.y = response['Me']['Y']
+    player.dx = player.x*32
+    player.dy = player.y*32
+    player.cx = player.x*32
+    player.cy = player.y*32
+    totalCoverAlpha = 2
+    local b = {}
+    c, h = http.request{url = api.url.."/world", method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
+    world = json:decode(b[1])
+
+    love.audio.play(awakeSfx)
+    love.graphics.setBackgroundColor(0, 0, 0)
+    phase = "game"
+    love.audio.stop( titleMusic )
+
+    createWorld()
+    openTutorial(1)
+    if musicVolume > 0 then
+        checkMusic()
+    end
+end
+

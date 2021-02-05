@@ -63,38 +63,11 @@ function checkClickLoginPhaseCharacter(x,y)
     end
 
     if isMouseOver(loginImageX+32, loginImageY+390, charactersButtonImage:getWidth(), charactersButtonImage:getHeight()) and characterSelected ~= 0 then
-        transitionToPhaseGame()
+        -- transitionToPhaseGame()
     end
 end
 
-function transitionToPhaseGame()
-    me.Color = copy(characters[cs.selectedCharacter].Color)
-    username = characters[cs.selectedCharacter]["Name"]
-    local b = {}
-    c, h = http.request{url = api.url.."/players/"..username, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
-    local response = json:decode(b[1])
-    player.x = response['Me']['X']
-    player.y = response['Me']['Y']
-    player.dx = player.x*32
-    player.dy = player.y*32
-    player.cx = player.x*32
-    player.cy = player.y*32
-    totalCoverAlpha = 2
-    local b = {}
-    c, h = http.request{url = api.url.."/world", method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
-    world = json:decode(b[1])
 
-    love.audio.play(awakeSfx)
-    love.graphics.setBackgroundColor(0, 0, 0)
-    phase = "game"
-    love.audio.stop( titleMusic )
-
-    createWorld()
-    openTutorial(1)
-    if musicVolume > 0 then
-        checkMusic()
-    end
-end
 
 function checkLoginKeyPressedPhaseCharacters(key)
    
@@ -112,7 +85,7 @@ function checkLoginKeyPressedPhaseCharacters(key)
     if characterSelected > 0 then
         if key == "return" then
             if characters[characterSelected] ~= null then
-               transitionToPhaseGame() 
+            --    transitionToPhaseGame() 
             else
                 newCharacterPosition = characterSelected
                 loginPhase = "creation"

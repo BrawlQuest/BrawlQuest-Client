@@ -13,9 +13,9 @@ function love.keypressed(key)
             checkLoginKeyPressedPhaseCreation(key)
         elseif loginPhase == "characters" then
             checkCharacterSelectorKeyPressed(key)
-            checkLoginKeyPressedPhaseCharacters(key)
+            -- checkLoginKeyPressedPhaseCharacters(key)
         end
-        if key == "escape" then love.event.quit() end
+        -- if key == "escape" then love.event.quit() end
     else
         if isWorldEditWindowOpen then
             if key == "backspace" then
