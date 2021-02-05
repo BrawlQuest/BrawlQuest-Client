@@ -53,7 +53,7 @@ ltn12 = require("ltn12")
 
 version = "Pre-Release" 
 versionType = "dev" -- "dev" for quick login, "release" for not
-versionNumber = "0.1.13" -- very important for settings
+versionNumber = "0.1.14" -- very important for settings
 
 phase = "login"
 
@@ -154,8 +154,8 @@ function love.draw()
                 inventory.notNPC = false
             end
 
-            if showWorldMask then drawWorldMask() end --not worldEdit.open or
-            if showClouds then drawClouds() end
+            if showWorldMask and not worldEdit.open then drawWorldMask() end --not worldEdit.open or
+            if showClouds and not worldEdit.open then drawClouds() end
 
             Luven.drawEnd()
 

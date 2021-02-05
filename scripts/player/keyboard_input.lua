@@ -19,18 +19,12 @@ function love.keypressed(key)
         end
         -- if key == "escape" then love.event.quit() end
     else
-        if isWorldEditWindowOpen then
-            if key == "backspace" then
-                textfields[editingField] = string.sub(textfields[editingField], 1, string.len(textfields[editingField]) - 1)
-            elseif key == "tab" or key == "return" then
-                editingField = editingField + 1
-            elseif key == "escape" or key == "'" then isWorldEditWindowOpen = false end
-        elseif worldEdit.open then 
+        if worldEdit.open then 
             checkWorldEditKeyPressed(key)
         elseif worldEdit.isTyping then
         elseif isSettingsWindowOpen then
             checkSettingKeyPressed(key)
-            checkSettingsButtonPressed(key)
+        elseif controls.currentKeybind > 0 then
         elseif tutorialOpen then
             checkTutorialKeyPressed(key)
         elseif isTypingInChat then
@@ -92,6 +86,7 @@ function love.keypressed(key)
 
             if key == "q" and inventory.notNPC then
                 questsPanel.forceOpen = not questsPanel.forceOpen
+                print(questsPanel.forceOpen)
             end
 
             if key == keybinds.INTERACT and isNearbyTile("assets/world/objects/Anvil.png") then -- Hello Mr HackerMan! Removing the isNearbyTile will allow you to open the crafting menu from anywhere, but won't allow you to actually craft any items. Sorry! =(
@@ -133,11 +128,11 @@ function love.keypressed(key)
             --     writeSettings()
             -- end
 
-            if key == "." then
-                -- print(json:encode_pretty(enemies))
-                -- scaleHUD("up")
-                -- writeSettings()
-            end
+            -- if key == "." then
+            --     print(json:encode_pretty(enemies))
+            --     -- scaleHUD("up")
+            --     -- writeSettings()
+            -- end
 
             -- if key == "," then
             --     scaleHUD("down")

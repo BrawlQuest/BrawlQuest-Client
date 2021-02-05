@@ -4,7 +4,7 @@
 
 function drawToolBarInventory(thisX, thisY)
     -- getInventory()
-    love.graphics.setColor(unpack(characterHub.backgroundColor))
+    love.graphics.setColor(characterHub.flashyCERP,0,0,0.7)
     inventory.isMouseOverInventoryItem = false
 
     roundRectangle("fill", thisX, 

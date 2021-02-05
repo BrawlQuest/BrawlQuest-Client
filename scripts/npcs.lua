@@ -4,26 +4,32 @@ npcImg = {}
 
 function drawNPCs() 
     for i,v in pairs(npcsDrawable) do
-        if not worldImg[v.ImgPath] then
-            if love.filesystem.getInfo(v.ImgPath) then
-                worldImg[v.ImgPath] = love.graphics.newImage(v.ImgPath)
-            else
-                worldImg[v.ImgPath] = love.graphics.newImage("assets/error.png")
-                print("AN ERROR OCURRED. "..v.ImgPath.." can't be found.")
+        local distance = distanceToPoint(player.cx, player.cy, v.X, v.Y)
+        local range = worldMask.range * 32
+        if distance <= range then
+            local intensity = 1 - (range / (range + difference(range, distance) * 4) - 0.2)
+            if not worldImg[v.ImgPath] then
+                if love.filesystem.getInfo(v.ImgPath) then
+                    worldImg[v.ImgPath] = love.graphics.newImage(v.ImgPath)
+                else
+                    worldImg[v.ImgPath] = love.graphics.newImage("assets/error.png")
+                    print("AN ERROR OCURRED. "..v.ImgPath.." can't be found.")
+                end
             end
-        end
-       
-        love.graphics.draw(worldImg[v.ImgPath], v.X, v.Y)
-        drawNamePlate(v.X+16, v.Y, v.Name)
+        
+            love.graphics.setColor(1,1,1,intensity)
+            love.graphics.draw(worldImg[v.ImgPath], v.X, v.Y)
+            drawNamePlate(v.X+16, v.Y, v.Name, intensity)
 
-     
-        if v.GivesItem and not v.GivesQuest then
-            love.graphics.draw(itemAlertImg, v.X+9, v.Y-32+v.AlertY)
-        elseif v.GivesQuest and not v.GivesItem then
-            love.graphics.draw(questAlertImg, v.X+9, v.Y-32+v.AlertY)
-        elseif v.GivesItem and v.GivesQuest then
-            love.graphics.draw(itemAlertImg, v.X+5, v.Y-32+v.AlertY)
-            love.graphics.draw(questAlertImg, v.X+13, v.Y-32+v.AlertY)
+        
+            if v.GivesItem and not v.GivesQuest then
+                love.graphics.draw(itemAlertImg, v.X+9, v.Y-32+v.AlertY)
+            elseif v.GivesQuest and not v.GivesItem then
+                love.graphics.draw(questAlertImg, v.X+9, v.Y-32+v.AlertY)
+            elseif v.GivesItem and v.GivesQuest then
+                love.graphics.draw(itemAlertImg, v.X+5, v.Y-32+v.AlertY)
+                love.graphics.draw(questAlertImg, v.X+13, v.Y-32+v.AlertY)
+            end
         end
     end
 end

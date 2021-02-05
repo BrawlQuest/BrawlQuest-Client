@@ -8,10 +8,11 @@ keybinds = {
     ATTACK_LEFT = "left",
     ATTACK_RIGHT = "right",
     SHIELD = "lshift",
-    CRAFTING = "f",
     INTERACT = "e",
     QUESETS = "q",
-    "things",
+    IVENTORY = "e",
+    CRAFTING = "f",
+    HOTBAR = {1,2,3,4,5,6,"space"},
 }
 defaultKeybinds = copy(keybinds)
 
@@ -143,10 +144,12 @@ function setDefualtKeybinds()
         {name = "ATTACK_DOWN", v = keybinds.ATTACK_DOWN, sel = false,},
         {name = "ATTACK_LEFT", v = keybinds.ATTACK_LEFT, sel = false,},
         {name = "ATTACK_RIGHT", v = keybinds.ATTACK_RIGHT, sel = false,},
-        {name = "SHIELD", v = keybinds.SHIELD, sel = false,},
-        {name = "CRAFTING", v = keybinds.CRAFTING, sel = false,},
+        {name = "USE SHIELD", v = keybinds.SHIELD, sel = false,},
         {name = "INTERACT", v = keybinds.INTERACT, sel = false,},
+        {name = "OPEN CRAFTING", v = keybinds.CRAFTING, sel = false,},
+        {name = "OPEN INVENTORY", v = keybinds.IVENTORY, sel = false,},
         {name = "QUESETS", v = keybinds.QUESETS, sel = false,},
+        {name = "HOTKEY 1", v = keybinds.QUESETS, sel = false,},
     }
 end
 
@@ -252,10 +255,6 @@ function getSettingsVersion()
             return true -- We're up to date
         end
     end
-end
-
-function checkSettingsButtonPressed(key)
-
 end
 
 function getDisplay()

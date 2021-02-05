@@ -133,15 +133,16 @@ function drawArrowImage(diffX, diffY, x, y)
     end
 end
 
-function drawNamePlate(x,y,name)
-    love.graphics.setColor(1,1,1,1)
+function drawNamePlate(x,y,name, alpha)
+    alpha = alpha or 1
+    love.graphics.setColor(1,1,1, alpha)
     local thisX, thisY = x , y - 2
     local nameWidth = playerNameFont:getWidth(name)
     local nameHeight = playerNameFont:getHeight(name)
     local padding = 2
-    love.graphics.setColor(0, 0, 0, 0.6)
+    love.graphics.setColor(0, 0, 0, 0.6 * alpha)
     roundRectangle("fill", (thisX) - (nameWidth / 2) - (padding) - 2, thisY - nameHeight - 3, nameWidth + (padding * 2) + 3, nameHeight + (padding * 2), 3)
-    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.setColor(1, 1, 1, alpha)
     love.graphics.print(name, playerNameFont, (thisX) - (nameWidth * 0.5), thisY - nameHeight - 2 + padding)
 end
 
