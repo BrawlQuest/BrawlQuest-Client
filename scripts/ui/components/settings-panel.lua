@@ -32,7 +32,7 @@ function initSettingsPanel()
         {posy = 0, vely = 0, max = -1000, prevmax = -0, prevposy = 0,},
     }
 
-    faderPosition = {276, 342,}
+    faderPosition = {204, 270,}
     settPan.fontHeight = (32 * 0.5) - (settPan.itemFont:getHeight() * 0.45)
 
     questPopUpWidth = 335

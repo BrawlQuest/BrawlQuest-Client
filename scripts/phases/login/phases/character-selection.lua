@@ -183,14 +183,18 @@ function getSelectedCharacter()
     cs.isTyping = false
     local v = {}
     local style = {track = "line", knob = "rectangle", width = 18,}
-    local x = 775 + cs.cw * 0.56
+    -- local x = 775 + cs.cw * 0.56
     local width = cs.cw - 110
+    local w, h = cs.cw, 120
+
+    local x = math.floor(love.graphics.getWidth() * 0.5) + cs.p + cs.s + 4 + cs.cw * 0.56
+    local y = math.floor(love.graphics.getHeight() * 0.5 + 20) + cs.h * 0.5 - cs.p - 50 - cs.s - h + cs.s + 4
 
     if characters[cs.selectedCharacter] and characters[cs.selectedCharacter].Name ~= null then
         v = characters[cs.selectedCharacter]
         cs.nameText = v.Name 
         for i, slider in ipairs(cs.slider) do
-            cs.slider[i] = newSlider(x, 476 + 5 + 38 * (i - 1), width, v.Color[i], 0.2, 1, function (sv) v.Color[i] = sv end, style)
+            cs.slider[i] = newSlider(x, y + 5 + 38 * (i - 1), width, v.Color[i], 0.2, 1, function (sv) v.Color[i] = sv end, style)
         end
     else -- if a character is not in the current position
         v = cs.initialCharacter
@@ -198,7 +202,7 @@ function getSelectedCharacter()
         -- TODO: add a way of creating a new character with the api
         cs.nameText = ""
         for i, slider in ipairs(cs.slider) do
-            cs.slider[i] = newSlider(x, 476 + 5 + 38 * (i - 1), width, v.Color[i], 0.2, 1, function (sv) v.Color[i] = sv end, style)
+            cs.slider[i] = newSlider(x, y + 5 + 38 * (i - 1), width, v.Color[i], 0.2, 1, function (sv) v.Color[i] = sv end, style)
         end
     end
 end
@@ -286,7 +290,7 @@ function drawCharacterSelectionStencil()
 end
 
 function checkCharacterSelectorKeyInput(key)
-    if key ~= "return" then
+    if key ~= "return" and cs.isTyping then
         cs.nameText = cs.nameText .. key
     end
 end

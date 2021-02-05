@@ -25,12 +25,10 @@ function initSettings()
     fullscreen = false
     chatRepeat = false
     display = 1
-    
 
     displayWidth, displayHeight = love.window.getDesktopDimensions(display)
-
-    screenDimentions = {width = 1920, height = 1080,}
-    window = {x = (displayWidth * 0.5) - (screenDimentions.width * 0.5), y = (displayHeight * 0.5) - (screenDimentions.height * 0.5)}
+    screenDimentions = {width = displayWidth, height = displayHeight,}
+    window = {x = 0, y = 0}
     showChat = true
     openUiOnHover = true
     showClouds = false
@@ -90,8 +88,8 @@ function initSettings()
             {name = "Render Quality", v = highdpi, type = "button", "Full", "Fast",},
             {name = "Fullscreen", v = fullscreen, type = "button", "On", "Off",},
             {name = "Clouds", v = showClouds, type = "button", "On", "Off",},
-            {name = "Shadows (Alpha)", v = showShadows, type = "button", "On", "Off",},
-            {name = "World Mask", v = showWorldMask, type = "button", "On", "Off",},
+            -- {name = "Shadows (Alpha)", v = showShadows, type = "button", "On", "Off",},
+            -- {name = "World Mask", v = showWorldMask, type = "button", "On", "Off",},
             {name = "World Animtions", v = showWorldAnimations, type = "button", "On", "Off",},
         },
         {
@@ -174,9 +172,9 @@ function checkSettingsMousePressed(button)
                         showChat = settings[3][4].v
                         chatRepeat = settings[3][5].v
                         showClouds = settings[1][3].v
-                        showShadows = settings[1][4].v
-                        showWorldMask = settings[1][5].v
-                        showWorldAnimations = settings[1][6].v
+                        -- showShadows = settings[1][4].v
+                        -- showWorldMask = settings[1][5].v
+                        showWorldAnimations = settings[1][4].v
                     end
                 end
             end
@@ -209,7 +207,6 @@ function checkSettingsMousePressed(button)
 end
 
 function checkSettingKeyPressed(key)
-    print(controls.currentKeybind)
     if controls.currentKeybind > 0 then
         controls.keybinds.v[controls.currentKeybind].v = key
         keybinds[controls.keybinds.v[controls.currentKeybind].name] = key

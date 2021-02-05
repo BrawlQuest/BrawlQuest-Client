@@ -52,7 +52,7 @@ http = require("socket.http")
 ltn12 = require("ltn12")
 
 version = "Pre-Release" 
-versionNumber = "0.1.12" -- very important for settings
+versionNumber = "0.1.13" -- very important for settings
 
 phase = "login"
 
@@ -126,7 +126,7 @@ function love.draw()
             love.graphics.setColor(1, 1, 1)
             drawNPCs()
             drawEnemies()
-            drawRangedWeaponEffects()
+            -- drawRangedWeaponEffects()
 
             for i, v in ipairs(playersDrawable) do
                 drawPlayer(v, i)
@@ -205,7 +205,7 @@ function love.update(dt)
         updateAuras(dt)
         updateMusic(dt)
         updateLoot(dt)
-        updateRangedWeapons(dt)
+        -- updateRangedWeapons(dt)
         if showNPCChatBackground then updateNPCChat(dt) end
         -- if showClouds then updateClouds(dt) end
         if showWorldAnimations then updateLeaves(dt) end
@@ -310,7 +310,7 @@ function tick()
     tickAuras()
     nextTick = 1
     getInventory()
-    tickRangedWeapons() 
+    -- tickRangedWeapons() 
 end
 
 function love.resize(width, height)
