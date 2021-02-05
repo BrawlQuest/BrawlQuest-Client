@@ -26,9 +26,9 @@ function initQuestHub()
     initQuestsPanel()
     quests = {}
 
-    local randomQuest = {love.math.random(0, 4), love.math.random(1, 5), love.math.random(1, 2),}
+    local randomQuest = {0, love.math.random(1, 5), love.math.random(1, 2),}
     local randomGiver = {
-        {"Mortus", "assets/npc/Mortus.png",},
+        {"Mortus", "assets/npc/Mortus.png d",},
         {"Lumberjack", "assets/npc/Lumberjack.png",},
         {"Drunk Man", "assets/npc/Drunk Man.png",},
         {"Blacksmith", "assets/npc/Blacksmith.png",},
@@ -88,7 +88,7 @@ function updateQuestHub(dt)
         questHub.opacity = cerp(0, 1, questHub.amount) 
     else questHub.open = false end
     
-    if questsPanel.forceOpen and not isTypingInChat and not isMouseDown() then
+    if questsPanel.forceOpen and not isTypingInChat then
         panelMovement(dt, questsPanel, 1)
         if getFullQuestsPanelFieldHeight() * scale > (cerp((uiY/1.25) - 55,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale then
             posYQuest = posYQuest + velYQuest * dt
@@ -118,6 +118,8 @@ function updateQuestHub(dt)
         else
             panelMovement(dt, questsPanel, -1)
         end
+    else
+        panelMovement(dt, questsPanel, -1)
     end
 
     if questsPanel.amount > 0 then questsPanel.open = true else questsPanel.open = false end

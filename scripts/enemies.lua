@@ -153,8 +153,8 @@ function drawEnemies()
         local distance = distanceToPoint(player.cx, player.cy, v.dx, v.dy)
         local range = worldMask.range * 32
         if distance <= range then
-            if v.HP > 0 then --and (distanceToPoint(player.cx, player.cy, v.dx, v.dy) <= worldMask.range)then
-                local intensity = range / (range + difference(range, distance) * 4)
+            if v.HP > 0 then
+                local intensity = 1 - (range / (range + difference(range, distance) * 4) - 0.2)
                 local rotation = 1
                 local offsetX = 0
                 if v and v.previousDirection and v.previousDirection == "left" then
@@ -163,16 +163,17 @@ function drawEnemies()
                 end
 
                 if distance <= range then
-                    love.graphics.setColor(1, 1 - v.red, (1 - v.red), 1 - (intensity - 0.2))
+                    love.graphics.setColor(1, 1 - v.red, (1 - v.red), intensity)
                     love.graphics.draw(enemyImg[v.Enemy.Name], v.dx + offsetX, v.dy, 0, rotation, 1, 0, 0)
                 end
 
-                if distanceToPoint(v.dx, v.dy, player.dx, player.dy) < 256 then
+                -- if distanceToPoint(v.dx, v.dy, player.dx, player.dy) < 256 then 
+                if v.dhp < v.mhp then
                     if v.Enemy.CanMove then
-                        love.graphics.setColor(1, 0, 0, 1 - (distanceToPoint(v.dx, v.dy, player.dx, player.dy)/256))
+                        love.graphics.setColor(1, 0, 0, intensity * 0.5)
                         love.graphics.rectangle("fill", v.dx, v.dy - 6, (v.dhp / v.mhp) * 32, 6)
                     else
-                        love.graphics.setColor(1,0,0)
+                        love.graphics.setColor(1,0,0, intensity * 0.5)
                         love.graphics.rectangle("fill", v.dx, v.dy - 2, (v.dhp / v.mhp) * 32, 2)
                     end
                 end

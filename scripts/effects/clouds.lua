@@ -22,7 +22,7 @@ end
 
 function drawClouds()
     local thisWorldScale = worldScale - ((worldScale * settPan.opacityCERP) * 0.2)
-    local noiseFactor = 0.6 * (cloud.opacity + 0.1)
+    local noiseFactor = 0.5 * (cloud.opacity + 0.1)
     local gridSize = 32 / worldScale
     local gridScale = 32 / gridSize
     local cloudScale = 1 / thisWorldScale
@@ -37,7 +37,7 @@ function drawClouds()
                 (love.math.noise((((x + (movement.x * 2)) * gridSize) * 0.001), (((y + (movement.y * 2)) * gridSize) * 0.001)) * cloud.movement.z) - 
                 (love.math.noise((((x + movement.x) * gridSize) * 0.0001), (((y + movement.y) * gridSize) * 0.0001)))
             ) * noiseFactor)
-            if noise > 0.01 then 
+            if noise > 0.015 then 
                 love.graphics.setColor(1,1,1, noise)
                 love.graphics.rectangle("fill", x * gridSize, y * gridSize, gridSize, gridSize)
             end

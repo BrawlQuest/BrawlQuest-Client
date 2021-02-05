@@ -32,6 +32,8 @@ function initCharacterHub()
         open = false,
         forceOpen = false,
         amount = 0,
+        flashy = 0,
+        flashyCERP = 0,
     }
 end
 
@@ -47,6 +49,17 @@ function updateCharacterHub(dt)
             characterHub.open = false
             panelMovement(dt, characterHub, -1)
         end
+    end
+
+    if player.cp > 0 then
+        local i = 0
+        if inventory.open or inventory.forceOpen then i = 2 end
+        characterHub.flashy = characterHub.flashy + 2 * dt
+        if characterHub.flashy >= 2 then characterHub.flashy = i end
+        characterHub.flashyCERP  = cerp( 0,0.5, characterHub.flashy )
+    else
+        characterHub.flashy = 0
+        characterHub.flashyCERP = 0
     end
 end
 
@@ -66,7 +79,7 @@ function drawCharacterHub(thisX, thisY)
 end
 
 function drawCharacterHubProfile(thisX, thisY)
-    love.graphics.setColor(unpack(characterHub.backgroundColor))
+    love.graphics.setColor(characterHub.flashyCERP,0,0,0.7)
     love.graphics.rectangle("fill", thisX, thisY, 82, 97)
     love.graphics.setColor(1,1,1,1)
     drawProfilePic(thisX + 9, thisY + 8, 1, "right")
@@ -78,7 +91,7 @@ function drawCharacterHubProfile(thisX, thisY)
 end
 
 function drawCharacterHubStats(thisX, thisY)
-    love.graphics.setColor(unpack(characterHub.backgroundColor))
+    love.graphics.setColor(characterHub.flashyCERP,0,0,0.7)
     love.graphics.rectangle("fill", thisX, thisY, cerp(0, 155, characterHub.amount), 97)
     love.graphics.setFont(characterHub.font)
     for i = 0, 2 do
@@ -101,7 +114,7 @@ function drawCharacterHubStats(thisX, thisY)
 end
 
 function drawCharacterHubMeters(thisX, thisY)
-    love.graphics.setColor(unpack(characterHub.backgroundColor))
+    love.graphics.setColor(characterHub.flashyCERP,0,0,0.7)
     roundRectangle("fill", thisX, thisY, 231, 97, cerp(0, 10, characterHub.amount), {false, true, false, false})
     love.graphics.setFont(characterHub.nameFont)
     love.graphics.setColor(1,1,1,1)
