@@ -243,6 +243,7 @@ function setWindowOptions()
         resizable = not fullscreen,
         usedpiscale = false,
         vsync = 0,
+        borderless = false,
     })
     scale = settPan.scaleTypes[settPan.scaleValue]
     uiX, uiY = love.graphics.getWidth()/scale, love.graphics.getHeight()/scale
