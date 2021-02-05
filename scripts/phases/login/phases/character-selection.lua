@@ -111,6 +111,7 @@ function drawCharacterCreator()
 
     love.graphics.setColor(v.Color[1], v.Color[2], v.Color[3], cs.dualCERP)
     roundRectangle("fill", thisX + cs.s, thisY + cs.s, cs.cw - 100 - cs.p * 0.5 - cs.s * 2, 100 - cs.s * 2, 5)
+    love.graphics.setColor(1,1,1,cs.dualCERP)
     love.graphics.draw(playerImg, x + cs.p + 12, thisY + 18, 0, 2)
 
     love.graphics.setColor(1 - v.Color[1], 1 - v.Color[2], 1 - v.Color[3], cs.dualCERP)

@@ -10,7 +10,8 @@ function drawProfilePic(thisX, thisY, thisScale, thisRotation, v)
 
 		r, thisX = getProfileRotation(thisRotation, thisX, i)
 
-		if v.Color ~= null then love.graphics.setColor(unpack(v.Color)) end
+		love.graphics.setColor(1,1,1,1)
+		-- if v.Color ~= null then love.graphics.setColor(unpack(v.Color)) end
 		love.graphics.draw(playerImg, profileImgStencil, thisX, thisY / i, 0, r, 1)
 		love.graphics.setColor(1,1,1,1)
 

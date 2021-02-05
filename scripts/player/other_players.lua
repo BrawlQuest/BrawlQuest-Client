@@ -40,8 +40,7 @@ function drawCharacter(v, x, y, ad)
 
         drawBuddy(v.Name)
 
-        if v.Color ~= null then love.graphics.setColor(unpack(v.Color)) end
-        -- print(json:encode(v.Color))
+        -- if v.Color ~= null then love.graphics.setColor(unpack(v.Color)) end
         love.graphics.draw(playerImg, x + offsetX, y, player.wobble, rotation, 1, 0, 0)
         love.graphics.setColor(1,1,1)
 

@@ -135,7 +135,10 @@ function login()
             end
             loginPhase = "characters"
             for i,v in ipairs(characters) do
+                if characters[i] and characters[i].Color ~= null then
+                else
                 characters[i].Color = {love.math.random(), love.math.random(), love.math.random(),  1}
+                end
             end
         end
         r, h = http.request {
