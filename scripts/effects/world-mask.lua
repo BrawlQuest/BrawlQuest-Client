@@ -4,7 +4,7 @@ function initWorldMask()
     worldMask = {
         opacity = 0.6,
         gridSize = 32,
-        range = 14,
+        range = 11,
         current = {x = 0, y = 0,},
         previous = {x = 0, y = 0,},
         flipFlop = 1,
@@ -70,7 +70,7 @@ function drawWorldMask()
                     end)
 
                     if success then
-                        local intensity = range / (range + (difference(range, distance) * 4))
+                        local intensity = range / (range + difference(range, distance) * 4)
                         if intensity < 0.1 then show = false end
                         love.graphics.setColor(0,0,0, (intensity - 0.2) * (worldMask.opacity + 0.2))
                         -- worldMaskTables[1][#worldMaskTables[1] + 1] = {x = x, y = y, visable = true, intensity = intensity}

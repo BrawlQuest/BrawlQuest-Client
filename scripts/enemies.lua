@@ -150,41 +150,49 @@ end
 
 function drawEnemies()
     for i, v in pairs(enemies) do
-        if v.HP > 0 then
-
-            local rotation = 1
-            local offsetX = 0
-            if v and v.previousDirection and v.previousDirection == "left" then
-                rotation = -1
-                offsetX = 32
-            end
-
-            love.graphics.setColor(1, 1 - v.red, 1 - v.red)
-            love.graphics.draw(enemyImg[v.Enemy.Name], v.dx + offsetX, v.dy, 0, rotation, 1, 0, 0)
-            if distanceToPoint(v.dx, v.dy, player.dx, player.dy) < 256 then
-                if v.Enemy.CanMove then
-                    love.graphics.setColor(1, 0, 0, 1 - (distanceToPoint(v.dx, v.dy, player.dx, player.dy)/256))
-                    love.graphics.rectangle("fill", v.dx, v.dy - 6, (v.dhp / v.mhp) * 32, 6)
-                else
-                    love.graphics.setColor(1,0,0)
-                    love.graphics.rectangle("fill", v.dx, v.dy - 2, (v.dhp / v.mhp) * 32, 2)
+        local distance = distanceToPoint(player.cx, player.cy, v.dx, v.dy)
+        local range = worldMask.range * 32
+        if distance <= range then
+            if v.HP > 0 then --and (distanceToPoint(player.cx, player.cy, v.dx, v.dy) <= worldMask.range)then
+                local intensity = range / (range + difference(range, distance) * 4)
+                local rotation = 1
+                local offsetX = 0
+                if v and v.previousDirection and v.previousDirection == "left" then
+                    rotation = -1
+                    offsetX = 32
                 end
+
+                if distance <= range then
+                    love.graphics.setColor(1, 1 - v.red, (1 - v.red), 1 - (intensity - 0.2))
+                    love.graphics.draw(enemyImg[v.Enemy.Name], v.dx + offsetX, v.dy, 0, rotation, 1, 0, 0)
+                end
+
+                if distanceToPoint(v.dx, v.dy, player.dx, player.dy) < 256 then
+                    if v.Enemy.CanMove then
+                        love.graphics.setColor(1, 0, 0, 1 - (distanceToPoint(v.dx, v.dy, player.dx, player.dy)/256))
+                        love.graphics.rectangle("fill", v.dx, v.dy - 6, (v.dhp / v.mhp) * 32, 6)
+                    else
+                        love.graphics.setColor(1,0,0)
+                        love.graphics.rectangle("fill", v.dx, v.dy - 2, (v.dhp / v.mhp) * 32, 2)
+                    end
+                end
+
+                love.graphics.setColor(1, 1, 1, v.aggroAlpha)
+                love.graphics.draw(alertImg, v.dx + 8, v.dy - 16)
+                love.graphics.setColor(1, 1, 1)
+
+                if distanceToPoint(v.dx,v.dy,player.dx,player.dy) < (v.Enemy.Range + 1) * 32 and v.Target == me.id then
+                    love.graphics.setColor(1, 0, 0)
+                    love.graphics.line(v.dx + 16, v.dy + 16, player.dx + 16, player.dy + 16)
+                    love.graphics.setColor(1, 1, 1, 1)
+                end
+            elseif not v.hasBurst then
+                burstLoot(v.dx + 16, v.dy + 16, math.abs(v.Enemy.HP / 3), "xp")
+
+                love.audio.play(enemySounds[v.Enemy.Name].death[love.math.random(1, #enemySounds[v.Enemy.Name].death)])
+                boneSpurt(v.dx + 16, v.dy + 16, 10, 25, 1, 1, 1)
+                v.hasBurst = true
             end
-            love.graphics.setColor(1, 1, 1, v.aggroAlpha)
-            love.graphics.draw(alertImg, v.dx + 8, v.dy - 16)
-            love.graphics.setColor(1, 1, 1)
-
-         if distanceToPoint(v.dx,v.dy,player.dx,player.dy) < (v.Enemy.Range+1)*32 and v.Target == me.id then
-            love.graphics.setColor(1, 0, 0)
-            love.graphics.line(v.dx + 16, v.dy + 16, player.dx + 16, player.dy + 16)
-            love.graphics.setColor(1, 1, 1, 1)
-         end
-        elseif not v.hasBurst then
-            burstLoot(v.dx + 16, v.dy + 16, math.abs(v.Enemy.HP / 3), "xp")
-
-            love.audio.play(enemySounds[v.Enemy.Name].death[love.math.random(1, #enemySounds[v.Enemy.Name].death)])
-            boneSpurt(v.dx + 16, v.dy + 16, 10, 25, 1, 1, 1)
-            v.hasBurst = true
         end
     end
 end

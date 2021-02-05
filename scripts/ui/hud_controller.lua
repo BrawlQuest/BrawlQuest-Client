@@ -205,8 +205,6 @@ function drawHUD()
                 drawChatPanel(uiX/i, (uiY - cerp(cerp(0, 100, questHub.amount), ((uiY/1.25)-15), questsPanel.amount)) / i)
             end
             -- drawZoneTitle()
-    
-        
         love.graphics.pop()
     end
     drawTutorial()
