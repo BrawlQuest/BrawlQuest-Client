@@ -101,7 +101,7 @@ function drawCharacterCreator()
     love.graphics.print(text, thisX + cs.s, thisY + 25 + cs.s + 2)
 
     love.graphics.setColor(1,1,1,cs.dualCERP)
-    love.graphics.print("CHARACER COLOUR", thisX + 5, thisY + 80)
+    love.graphics.print("CHARACTER COLOUR", thisX + 5, thisY + 80)
     love.graphics.setColor(0,0,0,0.5 * cs.dualCERP)
     local w, h = cs.cw * 0.5, 105  -- cs.p * 0.5
     thisX, thisY =  thisX, thisY + h

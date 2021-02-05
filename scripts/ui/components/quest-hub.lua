@@ -28,7 +28,7 @@ function initQuestHub()
 
     local randomQuest = {0, love.math.random(1, 5), love.math.random(1, 2),}
     local randomGiver = {
-        {"Mortus", "assets/npc/Mortus.png d",},
+        {"Mortus", "assets/npc/Mortus.png",},
         {"Lumberjack", "assets/npc/Lumberjack.png",},
         {"Drunk Man", "assets/npc/Drunk Man.png",},
         {"Blacksmith", "assets/npc/Blacksmith.png",},

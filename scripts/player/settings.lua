@@ -210,10 +210,16 @@ end
 
 function checkSettingKeyPressed(key)
     if controls.currentKeybind > 0 then
-        controls.keybinds.v[controls.currentKeybind].v = key
-        keybinds[controls.keybinds.v[controls.currentKeybind].name] = key
-        controls.currentKeybind = 0
-        writeSettings()
+        if key ~= "escape" then 
+            controls.keybinds.v[controls.currentKeybind].v = key
+            keybinds[controls.keybinds.v[controls.currentKeybind].name] = key
+            controls.currentKeybind = 0
+            controls.previousKeybind = 0
+            writeSettings()
+        else
+            controls.currentKeybind = 0
+            controls.previousKeybind = 0
+        end
     else
         if key == "escape" or key == "w" or key == "a" or key == "s" or key == "d" then
             getDisplay()

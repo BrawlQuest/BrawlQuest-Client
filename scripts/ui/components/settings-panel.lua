@@ -104,7 +104,7 @@ function drawSettingsPanel()
             love.graphics.setColor(1,1,1, settPan.opacityCERP * 1)
             love.graphics.print(v.name, thisX + 10, thisY + settPan.fontHeight) -- prints the name of things
 
-            if controls.currentKeybind == i and not isMouse then 
+            if controls.currentKeybind == i then
                 love.graphics.setColor(0,0,0, settPan.opacityCERP * 1)
             end
             love.graphics.printf("\"" .. v.v .. "\"", nextX, nextY + settPan.fontHeight, settPan.objectValueWidth, "center") -- prints the value of things
