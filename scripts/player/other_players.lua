@@ -5,6 +5,7 @@
 ]]
 function drawCharacter(v, x, y, ad)
     if ad then
+        love.graphics.setColor(1,1,1)
         if not itemImg[v.Weapon.ImgPath] then
             if love.filesystem.getInfo(v.Weapon.ImgPath) then
                 itemImg[v.Weapon.ImgPath] = love.graphics.newImage(v.Weapon.ImgPath)

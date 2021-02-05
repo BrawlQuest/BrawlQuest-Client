@@ -10,9 +10,9 @@ keybinds = {
     SHIELD = "lshift",
     INTERACT = "e",
     QUESETS = "q",
-    IVENTORY = "e",
+    INVENTORY = "e",
     CRAFTING = "f",
-    HOTBAR = {1,2,3,4,5,6,"space"},
+    -- HOTBAR = {1,2,3,4,5,6,"space"},
 }
 defaultKeybinds = copy(keybinds)
 
@@ -110,7 +110,7 @@ function initSettings()
 end
 
 function writeSettings()
-    success,msg = love.filesystem.write("settings.txt", json:encode({
+    success,msg = love.filesystem.write("settings.txt", json:encode_pretty({
         version = version .. " " .. versionNumber,
         keybinds = keybinds,
         musicVolume = musicVolume,
@@ -146,10 +146,9 @@ function setDefualtKeybinds()
         {name = "ATTACK_RIGHT", v = keybinds.ATTACK_RIGHT, sel = false,},
         {name = "USE SHIELD", v = keybinds.SHIELD, sel = false,},
         {name = "INTERACT", v = keybinds.INTERACT, sel = false,},
-        {name = "OPEN CRAFTING", v = keybinds.CRAFTING, sel = false,},
-        {name = "OPEN INVENTORY", v = keybinds.IVENTORY, sel = false,},
+        {name = "CRAFTING", v = keybinds.CRAFTING, sel = false,},
+        {name = "INVENTORY", v = keybinds.INVENTORY, sel = false,},
         {name = "QUESETS", v = keybinds.QUESETS, sel = false,},
-        {name = "HOTKEY 1", v = keybinds.QUESETS, sel = false,},
     }
 end
 

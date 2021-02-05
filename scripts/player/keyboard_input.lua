@@ -80,11 +80,11 @@ function love.keypressed(key)
 
             if key == keybinds.INTERACT then startConversation() end
 
-            if (key == keybinds.INTERACT) and inventory.notNPC then
+            if key == keybinds.INVENTORY and inventory.notNPC then
                 inventory.forceOpen = not inventory.forceOpen
             end
 
-            if key == "q" and inventory.notNPC then
+            if key == keybinds.QUESTS and inventory.notNPC then
                 questsPanel.forceOpen = not questsPanel.forceOpen
                 print(questsPanel.forceOpen)
             end
