@@ -18,11 +18,10 @@ function boneSpurt(x, y, amount, velocity, r, g, b, type)
     
     for i=1,amount do
         local xv, yv
-        local range = 25
+        local range = 15
         local rand = 1 - love.math.random() * 0.3
         local deviance = 30
         
-
         if (distX == 0 or distY == 0) then
             if (distX) == 0 then
                 xv = love.math.random(distX - range, distX + range) + love.math.random(-deviance, deviance)

@@ -168,7 +168,7 @@ function updateHUD( dt )
     updateSFX()
     updateTutorial(dt)
 
-    updateZoneTitle(dt)
+    -- updateZoneTitle(dt)
 
     updateNewWorldEdit(dt)
 
@@ -183,32 +183,33 @@ function updateHUD( dt )
 end
 
 function drawHUD()
-    love.graphics.push()
-        local i = 1
-        love.graphics.scale(scale)
-        if showNPCChatBackground then drawNPCChatBackground((uiX/2)/i - 128, (uiY/2)/i - 128) end
-        if crafting.open then drawCrafting() end
-        drawCharacterHub(0, uiY/i)
-        drawToolBarInventory(0, uiY/i)
-        drawQuestHub(uiX/i, uiY/i)
-        if questsPanel.open then drawQuestsPanel((uiX/i) - 313, (uiY/i) + cerp(-14, 0 - ((uiY/1.25) - 15), questsPanel.amount)) end
-        drawTooltip()
-        drawAuraHeadings()
-      
-    love.graphics.pop()
+    if showHUD then
+        love.graphics.push()
+            local i = 1
+            love.graphics.scale(scale)
+            if showNPCChatBackground then drawNPCChatBackground((uiX/2)/i - 128, (uiY/2)/i - 128) end
+            if crafting.open then drawCrafting() end
+            drawCharacterHub(0, uiY/i)
+            drawToolBarInventory(0, uiY/i)
+            drawQuestHub(uiX/i, uiY/i)
+            if questsPanel.open then drawQuestsPanel((uiX/i) - 313, (uiY/i) + cerp(-14, 0 - ((uiY/1.25) - 15), questsPanel.amount)) end
+            drawTooltip()
+            drawAuraHeadings()
+        
+        love.graphics.pop()
 
-    love.graphics.push() -- chat and quests scaling TODO: Quests
-        local i = 0.5
-        love.graphics.scale(scale*i)
-        if showChat then
-            drawChatPanel(uiX/i, (uiY - cerp(cerp(0, 100, questHub.amount), ((uiY/1.25)-15), questsPanel.amount)) / i)
-        end
-        drawZoneTitle()
-  
-       
-    love.graphics.pop()
-   
-        drawTutorial()
+        love.graphics.push() -- chat and quests scaling TODO: Quests
+            local i = 0.5
+            love.graphics.scale(scale*i)
+            if showChat then
+                drawChatPanel(uiX/i, (uiY - cerp(cerp(0, 100, questHub.amount), ((uiY/1.25)-15), questsPanel.amount)) / i)
+            end
+            -- drawZoneTitle()
+    
+        
+        love.graphics.pop()
+    end
+    drawTutorial()
     
     love.graphics.setColor(1,1,1,1)
 

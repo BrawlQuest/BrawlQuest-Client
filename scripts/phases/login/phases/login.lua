@@ -75,14 +75,16 @@ function checkLoginKeyPressedPhaseLogin(key)
         end
     end
 
-    if key == "home" then 
-        quickLogin("Pebsie", 1)
-    elseif key == "end" then
-        quickLogin("Danjoe", 1)
-    elseif key == "pageup" then
-        quickLogin("Danjoe", 2)
-    elseif key == "pagedown" then
-        quickLogin("Danjoe", 3)
+    if versionType == "dev" then
+        if key == "home" then 
+            quickLogin("Pebsie", 1)
+        elseif key == "end" then
+            quickLogin("Danjoe", 1)
+        elseif key == "pageup" then
+            quickLogin("Danjoe", 2)
+        elseif key == "pagedown" then
+            quickLogin("Danjoe", 3)
+        end
     end
 end
     
@@ -92,13 +94,10 @@ function quickLogin(name, character)
     textfields[3] = "********"
     editingField = 2
     login()
-    -- characterSelected = character
-    -- if characters[characterSelected] ~= null then
-    --     transitionToPhaseGame() 
-    -- else
-    --     newCharacterPosition = characterSelected
-    --     loginPhase = "creation"
-    -- end
+    cs.selectedCharacter = character
+    if characters[cs.selectedCharacter] ~= null then
+        transitionToPhaseGame()
+    end
 end
 
 function checkLoginTextinputPhaseLogin(key)

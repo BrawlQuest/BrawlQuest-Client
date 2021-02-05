@@ -183,7 +183,7 @@ function drawEnemies()
             burstLoot(v.dx + 16, v.dy + 16, math.abs(v.Enemy.HP / 3), "xp")
 
             love.audio.play(enemySounds[v.Enemy.Name].death[love.math.random(1, #enemySounds[v.Enemy.Name].death)])
-            boneSpurt(v.dx + 16, v.dy + 16, 48, 50, 1, 1, 1)
+            boneSpurt(v.dx + 16, v.dy + 16, 10, 25, 1, 1, 1)
             v.hasBurst = true
         end
     end

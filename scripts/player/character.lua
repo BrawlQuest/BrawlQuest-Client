@@ -121,7 +121,7 @@ end
 
 function worldCollison(x, y)
     local output = false
-    if worldEdit.open then return output end
+    if worldEdit.open and (username == "Danjoe" or username == "Pebsie") then return output end
     if worldLookup[x] and worldLookup[x][y] and worldLookup[x][y].Collision == true then
         output = true
     elseif enemyCollisions[x] and enemyCollisions[x][y] == true then
