@@ -114,6 +114,7 @@ function login()
         UID = textfields[1],
         Password = textfields[2]
     }))
+    print("logged in as "..textfields[1])
     
     if c == 200 then
         b = json:decode(tostring(b))
