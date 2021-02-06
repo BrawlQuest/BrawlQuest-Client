@@ -212,10 +212,9 @@ function createNPCChatBackground(x, y)
             if string.find(v.ForegroundTile, "walls", 13) then
             else
                 npcChatBackground[2] = v.ForegroundTile
-                print(npcChatBackground[2])
+                -- print(npcChatBackground[2])
                 break
             end 
-
         end
     end
 
