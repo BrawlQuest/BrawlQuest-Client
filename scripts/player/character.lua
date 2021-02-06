@@ -319,6 +319,7 @@ function updateInventory(response)
             end
             if newItem then
                 table.insert(newInventoryItems, v)
+                openTutorial(6)
             end
         end
     end

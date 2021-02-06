@@ -168,7 +168,7 @@ function updateHUD( dt )
     updateSFX()
     updateTutorial(dt)
 
-    -- updateZoneTitle(dt)
+     updateZoneTitle(dt)
 
     updateNewWorldEdit(dt)
 
@@ -204,7 +204,7 @@ function drawHUD()
             if showChat then
                 drawChatPanel(uiX/i, (uiY - cerp(cerp(0, 100, questHub.amount), ((uiY/1.25)-15), questsPanel.amount)) / i)
             end
-            -- drawZoneTitle()
+             drawZoneTitle()
         love.graphics.pop()
     end
     drawTutorial()
