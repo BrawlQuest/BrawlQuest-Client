@@ -215,7 +215,6 @@ function createNPCChatBackground(x, y)
                 -- print(npcChatBackground[2])
                 break
             end 
-
         end
     end
 

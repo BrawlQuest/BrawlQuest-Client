@@ -111,4 +111,5 @@ function checkMusic()
         currentPlaying = music["PuerLavari"]:play()
     end  
     music[currentTrack]:setVolume(musicVolume)
+    music[currentTrack]:setLooping(true)
 end

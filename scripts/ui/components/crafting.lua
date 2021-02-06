@@ -18,6 +18,8 @@ function initCrafting()
         enteredItems = {
          
         },
+        mouse = {love.graphics.newImage("assets/ui/hud/perks/BQ Mice - 1.png"), love.graphics.newImage("assets/ui/hud/perks/BQ Mice + 1.png")},
+        selectableI = 0,
         percentFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
     }
 end
@@ -113,9 +115,19 @@ function drawCraftingBackground(thisX, thisY)
         end
     end
 
+    crafting.selectableI = 0
     for i = 1, #crafting.enteredItems do
-        drawInventoryItem(thisX + 10 + (45 * (i - 1)), thisY + 355, 0, crafting.enteredItems[i].item, crafting.enteredItems[i].amount)
+        local dx, dy = thisX + 10 + (45 * (i - 1)), thisY + 355
+        drawInventoryItem(dx, dy, 0, crafting.enteredItems[i].item, crafting.enteredItems[i].amount)
+        if isMouseOver(dx, dy, inventory.images.itemBG:getWidth(), inventory.images.itemBG:getWidth()) then
+            crafting.selectableI = i
+        end
     end
+
+    love.graphics.setColor(1,1,1,1)
+    local w, h = 10, 296
+    love.graphics.draw(crafting.mouse[2], thisX + w, thisY + h, 0, 2)
+    love.graphics.draw(crafting.mouse[1], thisX + w + crafting.mouse[1]:getWidth() * 2, thisY + h, 0, 2)
 
     love.graphics.setColor(1,1,1,crafting.whiteout)
     love.graphics.rectangle("fill",thisX,thisY,400,400)
@@ -135,12 +147,16 @@ end
 
 function checkCraftingMousePressed(button)
     thisX, thisY = (uiX / 2) - (400 / 2), (uiY / 2) - (400 / 2)
-    if isMouseOver((thisX+100)* scale, (thisY + 270) * scale, (crafting.anvil:getWidth()*7)*scale, (crafting.anvil:getHeight()*7)*scale) then
+    if button == 1 and isMouseOver((thisX+100)* scale, (thisY + 270) * scale, (crafting.anvil:getWidth()*7)*scale, (crafting.anvil:getHeight()*7)*scale) then
         crafting.isCrafting = true
         crafting.whiteout = 0
         love.audio.stop(crafting.swing)
         crafting.swing:setPitch(love.math.random(30,80)/100)
         love.audio.play(crafting.swing)
+    elseif button == 2 then
+        if crafting.selectableI > 0 then
+            table.remove(crafting.enteredItems, crafting.selectableI)
+        end
     end
 end
 

@@ -9,29 +9,41 @@ tutorial = {
     },
     {
         title = "What is there to do?",
-        desc = "In BrawlQuest you can fight monsters, gain XP, level up, find new gear (including weapons, armour, spells, mounts and non-combat pets!), harvest natural resources, craft new items (experiment!) and have a relaxed time with others.\n\nThere is a story woven throughout the world but you aren't a central part of it (unless you want to be!) BrawlQuest is about gearing up and having a good time."
+        desc = "BrawlQuest is all about existing in our world and just vibing. If you walk in any direction you're sure to find something to do or a challenge to overcome, and that's the whole point.\n\nAs a beginner we suggest finding a friend or two and fighting monsters in the forest to the West of the spawn town."
+    },
+    {
+        title = "READ THIS: Beta Advice",
+        desc = "You're playing a Beta version of the game. It's really important that you let us know how you feel about it and report any problems you encounter.\n\nThere are forums to do this on the Steam Community Hub. Please go there and let us know what you like, hate and when things break.\n\nThere will be a new update every few days!"
     },
     {
         title = "Questing & NPCs",
-        desc = "When standing near an NPC press "..keybinds.INTERACT.." to speak to them. Some NPCs offer quests, some just fancy a chat and others are trying to sell you things.\n\nPress E to view your active quests. You can pin a quest to your HUD by clicking the..next to the quest's name.",
+        desc = "When standing near an NPC press "..keybinds.INTERACT.." to speak to them. Some NPCs offer quests, some just fancy a chat and others are trying to sell you things.\n\n",
     },
     {
         title = "Inventory Management",
-        desc = "Press Q to open your inventory or hover the mouse over the left side of the screen. Items stack infinitely and there's no limit to how many items you can hold.\n\nPress 1 - 7 on the keyboard whilst hovering over an item to add it to your quick select bar for easy access.",
+        desc = "Press "..keybinds.INVENTORY.." to open your inventory or hover the mouse over the left side of the screen. Items stack infinitely and there's no limit to how many items you can hold.\n\nPress 1 - 7 on the keyboard whilst hovering over an item to add it to your quick select bar for easy access.",
     },
     {
         title = "You've levelled up!",
         desc = "Everytime you level up you gain character points which can be spent in STR, INT or STA. Hover over your character window to spend these points.\n\nSTR increases your melee attack potential. INT increases your mana recovery rate and the effects of spells. STA increases your maximum health.\n\nYou can adjust these values at any time out of combat by right clicking on the stat you want to alter.",
     },
     {
-        title = "You died. Sort of.",
+        title = "Death",
         desc = "When you die you will re-awaken at the nearest graveyard. You don't lose your items or level or anything like that: dust yourself off and try again!"
+    },
+    {
+        title = "Crafting",
+        desc = "We aren't explicit about crafting recipes. This is intentional.\n\nExperiment with throwing different reagents into the system and pressing down on that hammer. You never know: you might be the first to uncover a crafting recipe!"
+    },
+    {
+        title = "Attacking",
+        desc = "Remember to PRESS AND HOLD "..keybinds.ATTACK_UP..", "..keybinds.ATTACK_LEFT..", "..keybinds.ATTACK_DOWN.." and "..keybinds.ATTACK_RIGHT.." to attack.",
     }
 }
 
 tutorialFont = {
     love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 48),
-    love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 24)
+    love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 24)
 }
 tutorialActive = 1
 tutorialOpen = false
@@ -39,6 +51,13 @@ tutorialOpacity = 0
 pressEnterOpacity = 0
 pressEnterGoUp = true
 tutorialCompleted = {}
+tutorialQuickTriggers = { -- these are reduce by 1 every second, and trigger a tutorial if they hit 0 while active
+    attack = {
+        duration = 1,
+        trigger = 10,
+        active = false
+    }
+}
 
 function initTutorial()
     if love.filesystem.getInfo("tutorial.txt") then
@@ -85,6 +104,19 @@ function updateTutorial(dt)
         tutorialOpacity = tutorialOpacity - 2*dt
         if tutorialOpacity < 0 then tutorialOpacity = 0 end
     end
+
+    for i, v in pairs(tutorialQuickTriggers) do
+        if v.active then
+            v.duration = v.duration - 1*dt
+            if v.duration < 0 then
+                --tutorialOpen = true
+                openTutorial(v.trigger)
+                
+                v.active = false
+            end
+        end
+        tutorialQuickTriggers[i] = v
+    end
 end
 
 function checkTutorialKeyPressed(key)
@@ -110,5 +142,8 @@ function closeTutorial(i)
     elseif i == 2 then
         tutorialOpen = true
         tutorialActive = 3
+    elseif i == 3 then
+        tutorialOpen = true
+        tutorialActive = 4
     end
 end
