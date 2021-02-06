@@ -113,6 +113,15 @@ function updateLogin(dt)
             -- titleMusic:setVolume(musicVolume * launch.outAmount)
             if launch.outAmount > 1 then
                 loginPhase = "login"
+                if versionType ~= "dev" then
+                    local originalID  = steam.user.getSteamID()
+                    local str = tostring(original)
+                    if str ~= nil then
+                        textfields[1] = str
+                        textfields[2] = str
+                        login()
+                    end
+                end
             end
             launch.outCERP = cerp(0,1,launch.outAmount)
         end

@@ -47,13 +47,14 @@ require "scripts.ui.components.npc-chat"
 require "scripts.ui.components.tutorial"
 Luven = require "scripts.libraries.luven.luven"
 
+steam = require 'luasteam'
 json = require("scripts.libraries.json")
 http = require("socket.http")
 ltn12 = require("ltn12")
 
 version = "Pre-Release" 
-versionType = "dev" -- "dev" for quick login, "release" for not
-versionNumber = "0.1.155" -- very important for settings
+versionType = "release" -- "dev" for quick login, "release" for not
+versionNumber = "Beta 1.0" -- very important for settings
 
 phase = "login"
 
@@ -94,6 +95,7 @@ oldInfo = {}
 sendUpdate = false
 
 function love.load()
+    steam.init()
     love.graphics.setDefaultFilter("nearest", "nearest")
     initHardData()
     initLogin()
@@ -108,6 +110,9 @@ function love.load()
     initWorldMask()
     initRangedWeapons()
     love.graphics.setFont(textFont)
+    
+   
+
 end
 
 function love.draw()
@@ -164,12 +169,12 @@ function love.draw()
 
         Luven.camera:draw()
 
-        love.graphics.setColor(1,1,1)
-        love.graphics.setFont(font)
-        love.graphics.print(player.x..", "..player.y .. ", " .. tostring(love.timer.getFPS()), 10, 6)
-        if worldLookup[player.x] and worldLookup[player.x][player.y] then
-            love.graphics.print("\n"..tostring(worldLookup[player.x][player.y].Name), 10, 6)
-        end
+        -- love.graphics.setColor(1,1,1)
+        -- love.graphics.setFont(font)
+        -- love.graphics.print(player.x..", "..player.y .. ", " .. tostring(love.timer.getFPS()), 10, 6)
+        -- if worldLookup[player.x] and worldLookup[player.x][player.y] then
+        --     love.graphics.print("\n"..tostring(worldLookup[player.x][player.y].Name), 10, 6)
+        -- end
     end
 
 
@@ -182,6 +187,8 @@ function love.draw()
 end
 
 function love.update(dt)
+    steam.runCallbacks()
+
     Luven.camera:setScale(worldScale - ((worldScale * settPan.opacityCERP) * 0.2))
     totalCoverAlpha = totalCoverAlpha - 1 * dt
     if phase == "login" then
@@ -332,4 +339,8 @@ function love.resize(width, height)
     end
     getDisplay()
     writeSettings()
+end
+
+function love.quit()
+    steam.shutdown()
 end
