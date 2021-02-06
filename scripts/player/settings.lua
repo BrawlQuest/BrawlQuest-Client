@@ -27,9 +27,10 @@ function initSettings()
     chatRepeat = false
     display = 1
 
+    local borders = {0.9, 0.1}
     displayWidth, displayHeight = love.window.getDesktopDimensions(display)
-    screenDimentions = {width = displayWidth, height = displayHeight,}
-    window = {x = 0, y = 0}
+    screenDimentions = {width = displayWidth * 0.8, height =  displayHeight * 0.8,}
+    window = {x = displayWidth * 0.1, y = displayHeight * 0.1}
     showChat = true
     openUiOnHover = true
     showClouds = false

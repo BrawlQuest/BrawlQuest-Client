@@ -118,6 +118,7 @@ function login()
         b = json:decode(tostring(b))
         UID = textfields[1]
         token = b['token']
+        characters = {}
         r, h = http.request {
             url = api.url .. "/user/" .. textfields[1],
             headers = {
@@ -125,14 +126,15 @@ function login()
             },
             sink = ltn12.sink.table(characters)
         }
-
-       if c == 200 then
-            if type(characters[1]) == "string" then
+ 
+     --  if c == 200 then -- Why was this here?
+           -- if type(characters[1]) == "string" then
                 characters = json:decode(characters[1])
-            else
-                print("Characters" .. json:encode(characters))
-                characters = characters[1]
-            end
+            print("Loaded characters")
+           -- else
+          --      print("Characters" .. json:encode(characters))
+          --      characters = characters[1]
+          --  end
             loginPhase = "characters"
             for i,v in ipairs(characters) do
                 if characters[i] and characters[i].Color ~= null then
@@ -140,7 +142,7 @@ function login()
                 characters[i].Color = {love.math.random(), love.math.random(), love.math.random(),  1}
                 end
             end
-        end
+       -- end
         r, h = http.request {
             url = api.url .. "/enemies",
           

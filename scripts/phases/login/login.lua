@@ -42,11 +42,10 @@ function initLogin()
         "Luven Interactive LTD 2020",
         "",
         "Created By" ,
-        "Thomas Lock - Director, Backend & Frontend Programming",
-        "Dan Stubbs - Design & Frontend Programming",
-        "JoeyFunWithMusic - Music",
+        "Thomas Lock & Danjoe Stubbs",
+        "Music by JoeyFunWithMusic",
         "",
-        "Graphics by David E. Gervais originally TOME. Used here under a CC license. pousse.rapiere.free.fr/tome/",
+        "Graphics by David E. Gervais,used here under a CC license. pousse.rapiere.free.fr/tome/",
         "",
         "Special thanks to ThinkSometimes for the Minty sprite",
         "",
@@ -136,7 +135,7 @@ function checkClickLogin(x, y)
 end
 
 function checkLoginTextinput(key)
-    if loginPhase == "login" then
+    if loginPhase == "login" and key ~= " " then
         checkLoginTextinputPhaseLogin(key)
     elseif loginPhase == "characters" then
         checkCharacterSelectorKeyInput(key)

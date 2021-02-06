@@ -94,24 +94,25 @@ function love.keypressed(key)
                 inventory.notNPC = true
             end
 
+          
             checkInventoryKeyPressed(key)
 
             if key == "b" and buddies[player.name] ~= null then
-                print(buddies[player.name].img)
-                chatXpos = -64
-                chatOpacity = 0
-                chatWritten = ""
-                npcChat = {
-                    Title = ":)",
-                    ImgPath = buddies[player.name].img,
-                    Options = {
-                        {
-                            "Woohoo!",
-                            "1"
-                        },
-                    }
-                }
-                showNPCChatBackground = true
+                -- print(buddies[player.name].img)
+                -- chatXpos = -64
+                -- chatOpacity = 0
+                -- chatWritten = ""
+                -- npcChat = {
+                --     Title = ":)",
+                --     ImgPath = buddies[player.name].img,
+                --     Options = {
+                --         {
+                --             "Woohoo!",
+                --             "1"
+                --         },
+                --     }
+                -- }
+                -- showNPCChatBackground = true
             end
         end
         
@@ -149,6 +150,9 @@ end
 function love.keyreleased(key)
     if key == keybinds.SHIELD and not isTypingInChat and phase == "game" and not worldEdit.isTyping then
         shieldDownSfx:play()
+    end
+    if phase == "game" and (key == keybinds.ATTACK_UP or key == keybinds.ATTACK_DOWN or key == keybinds.ATTACK_LEFT or key == keybinds.ATTACK_RIGHT) then
+        tutorialQuickTriggers.attack.active = true
     end
 end
 
