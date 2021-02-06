@@ -5,6 +5,16 @@ function love.keypressed(key)
             launch.outAmount = 1
             launch.outCERP = 1
             loginPhase = "login"
+            if versionType ~= "dev" then
+                local originalID  = steam.user.getSteamID()
+                local str = tostring(original)
+                if str ~= nil then
+                    textfields[1] = str
+                    textfields[2] = str
+                    login()
+                end
+            end
+          
             -- love.audio.stop(titleMusicFade)
             -- love.audio.play(titleMusic)
             if key == "escape" then love.event.quit() end
