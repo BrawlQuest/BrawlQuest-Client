@@ -53,7 +53,7 @@ ltn12 = require("ltn12")
 
 version = "Pre-Release" 
 versionType = "release" -- "dev" for quick login, "release" for not
-versionNumber = "0.1.15" -- very important for settings
+versionNumber = "0.1.155" -- very important for settings
 
 phase = "login"
 
