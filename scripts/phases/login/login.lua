@@ -135,7 +135,7 @@ function checkClickLogin(x, y)
 end
 
 function checkLoginTextinput(key)
-    if loginPhase == "login" then
+    if loginPhase == "login" and key ~= " " then
         checkLoginTextinputPhaseLogin(key)
     elseif loginPhase == "characters" then
         checkCharacterSelectorKeyInput(key)
