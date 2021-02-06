@@ -209,8 +209,13 @@ function createNPCChatBackground(x, y)
 
     for i, v in ipairs(pathAhead) do
         if v.Collision and not foundX then
-            npcChatBackground[2] = v.ForegroundTile
-            break
+            if string.find(v.ForegroundTile, "walls", 13) then
+            else
+                npcChatBackground[2] = v.ForegroundTile
+                -- print(npcChatBackground[2])
+                break
+            end 
+
         end
     end
 

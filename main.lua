@@ -52,7 +52,7 @@ http = require("socket.http")
 ltn12 = require("ltn12")
 
 version = "Pre-Release" 
-versionType = "release" -- "dev" for quick login, "release" for not
+versionType = "dev"
 versionNumber = "0.1.155" -- very important for settings
 
 phase = "login"
@@ -164,11 +164,12 @@ function love.draw()
 
         Luven.camera:draw()
 
+        local offset = cerp(10, 205, inventory.amount)
         love.graphics.setColor(1,1,1)
-        love.graphics.setFont(font)
-        love.graphics.print(player.x..", "..player.y .. ", " .. tostring(love.timer.getFPS()), 10, 6)
+        love.graphics.setFont(settPan.itemFont)
+        love.graphics.print("X,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()), offset, 10)
         if worldLookup[player.x] and worldLookup[player.x][player.y] then
-            love.graphics.print("\n"..tostring(worldLookup[player.x][player.y].Name), 10, 6)
+            love.graphics.print(string.upper("\n"..tostring(worldLookup[player.x][player.y].Name)), offset, 13)
         end
     end
 

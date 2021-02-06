@@ -191,7 +191,7 @@ function updateOtherPlayers(dt)
         end
         if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X * 32, v.Y * 32) > 1 then
             local speed = 64
-            if playersDrawable[i].Mount ~= "None" then
+            if playersDrawable[i].Mount ~= "None" or worldEdit.open then
                 speed = 110
             end
             if playersDrawable[i].X - 1 > v.X * 32 then

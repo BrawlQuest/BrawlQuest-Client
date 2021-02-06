@@ -247,11 +247,11 @@ function checkCharacterSelectorKeyPressed(key)
     if cs.isTyping == true then
         if key == "backspace" then
             cs.nameText = string.sub(cs.nameText, 1, string.len(cs.nameText) - 1)
-        elseif key == "return" then
+        elseif key == "return" and cs.nameText ~= "" then
             cs.isTyping = false
-        elseif key == "escape" and cs.selectedCharacter ~= 1 then
-            cs.selectedCharacter = 1
-            cs.isTyping = false
+        -- elseif key == "escape" and cs.selectedCharacter ~= 1 then
+        --     cs.selectedCharacter = 1
+        --     cs.isTyping = false
         end
     else
         

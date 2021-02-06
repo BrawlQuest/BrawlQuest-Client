@@ -26,6 +26,7 @@ function initSettings()
     fullscreen = false
     chatRepeat = false
     display = 1
+    respawn = false
 
     local borders = {0.9, 0.1}
     displayWidth, displayHeight = love.window.getDesktopDimensions(display)
@@ -84,7 +85,11 @@ function initSettings()
         keybinds = {title = "Keybinds", reset = false, v = setDefualtKeybinds(),},
     }
 
-    settings = {    
+    settings = {
+        {
+            title = "Player",
+            {name = "Respawn", v = respawn, type = "button", "Full", "Fast",},
+        },   
         {
             title = "Graphics",
             {name = "Render Quality", v = highdpi, type = "button", "Full", "Fast",},
@@ -159,25 +164,28 @@ function checkSettingsMousePressed(button)
             for ai,av in ipairs(settings) do
                 for bi,bv in ipairs(settings[ai]) do -- loops through every option
                     if settPan.mouseOver == (ai * 10) + bi then -- if the mouse is over the correct button
-                        if settPan.mouseOver == 32 then
+                        if settPan.mouseOver == 42 then
                             scaleHUD("up")
-                        elseif settPan.mouseOver == 11 or settPan.mouseOver == 12 then
+                        elseif settPan.mouseOver == 11 then
+                            settings[1][1].v = false
+                            -- TODO: kill yourself
+                        elseif settPan.mouseOver == 21 or settPan.mouseOver == 22 then
                             bv.v = not bv.v
-                            highdpi = settings[1][1].v
-                            fullscreen = settings[1][2].v
+                            highdpi = settings[2][1].v
+                            fullscreen = settings[2][2].v
                             setWindowOptions()
                             createWorld()
                         else
                             bv.v = not bv.v
                         end
-                        showHUD = settings[3][1].v
-                        openUiOnHover = settings[3][3].v -- sets the values
-                        showChat = settings[3][4].v
-                        chatRepeat = settings[3][5].v
-                        showClouds = settings[1][3].v
-                        -- showShadows = settings[1][4].v
-                        -- showWorldMask = settings[1][5].v
-                        showWorldAnimations = settings[1][4].v
+                        showHUD = settings[4][1].v
+                        openUiOnHover = settings[4][3].v -- sets the values
+                        showChat = settings[4][4].v
+                        chatRepeat = settings[4][5].v
+                        showClouds = settings[2][3].v
+                        -- showShadows = settings[2][4].v
+                        -- showWorldMask = settings[2][5].v
+                        showWorldAnimations = settings[2][4].v
                     end
                 end
             end
@@ -196,7 +204,7 @@ function checkSettingsMousePressed(button)
         end
     end
 
-    if button == 2 and settPan.mouseOver == 32 then
+    if button == 2 and settPan.mouseOver == 42 then
         scaleHUD("down")
     end
 
