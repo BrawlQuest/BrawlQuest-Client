@@ -41,8 +41,10 @@ function setItemTooltip(item)
         valString = "+" .. item.Val .. " Head Armour"
     elseif item.Type == "arm_chest" then
         valString = "+" .. item.Val .. " Chest Armour"
-    elseif item.Type == "arm_leg" then
+    elseif item.Type == "arm_legs" then
         valString = "+" .. item.Val .. " Leg Armour"
+    elseif item.Type == "shield" then
+        valString = "+" .. item.Val .. " Shield"
     elseif item.Type == "spell" then
         valString = "Spell (" .. item.Val .. " Mana)"
     elseif item.Type == "hp_potion" then

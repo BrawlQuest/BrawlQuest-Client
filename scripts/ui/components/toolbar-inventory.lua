@@ -254,18 +254,22 @@ function checkInventoryMousePressed(button)
                 end
             end
 
-        elseif crafting.open then
+        elseif crafting.open and selectedItem.Type == "reagent" then
 
             local hasItem = false
+            local maxItemUsed = false
             for i,v in ipairs(crafting.enteredItems) do
                 if v.item == selectedItem and getItemAmount(selectedItem) > v.amount then
                     v.amount = v.amount + 1
                     hasItem = true
+                elseif v.item == selectedItem and getItemAmount(selectedItem) <= v.amount then
+                    hasItem = false
+                    maxItemUsed = true
                 end
                 crafting.enteredItems[i] = v
             end
 
-            if not hasItem then
+            if not hasItem and maxItemUsed == false then
                 crafting.enteredItems[#crafting.enteredItems+1] = {
                     item = selectedItem,
                     amount = 1,
@@ -282,7 +286,9 @@ function checkInventoryMousePressed(button)
             local b = {}
             body = json:encode(itemsSoFar)
             c, h = http.request{url = api.url.."/craft/"..player.name, method="GET", source=ltn12.source.string(body), headers={["token"]=token,["Content-Length"]=#body}, sink=ltn12.sink.table(b)}
-            crafting.craftableItems = json:decode(b[1])
+            if b[1] ~= nil then
+             crafting.craftableItems = json:decode(b[1])
+            end
         else
             apiGET("/item/" .. player.name .. "/" .. selectedItem.ID)
             usedItemThisTick = true

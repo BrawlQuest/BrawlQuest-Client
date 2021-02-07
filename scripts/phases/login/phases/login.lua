@@ -110,57 +110,59 @@ end
 
 
 function login()
-    b, c, h = http.request(api.url .. "/login", json:encode({
-        UID = textfields[1],
-        Password = textfields[2]
-    }))
-    print("logged in as "..textfields[1])
-    
-    if c == 200 then
-        b = json:decode(tostring(b))
-        UID = textfields[1]
-        token = b['token']
-        characters = {}
-        r, h = http.request {
-            url = api.url .. "/user/" .. textfields[1],
-            headers = {
-                ['token'] = b['token']
-            },
-            sink = ltn12.sink.table(characters)
-        }
- 
-     --  if c == 200 then -- Why was this here?
-           -- if type(characters[1]) == "string" then
-                characters = json:decode(characters[1])
-            print("Loaded characters")
-           -- else
-          --      print("Characters" .. json:encode(characters))
-          --      characters = characters[1]
-          --  end
-            loginPhase = "characters"
-            for i,v in ipairs(characters) do
-                if characters[i] and characters[i].Color ~= null then
-                else
-                characters[i].Color = {love.math.random(), love.math.random(), love.math.random(),  1}
-                end
-            end
-       -- end
-        r, h = http.request {
-            url = api.url .. "/enemies",
-          
-            sink = ltn12.sink.table(availableEnemies)
-        }
+    if textfields[1] ~= "" and textfields[2] ~= "" then
+        b, c, h = http.request(api.url .. "/login", json:encode({
+            UID = textfields[1],
+            Password = textfields[2]
+        }))
+        print("logged in as "..textfields[1])
         
-       if c == 200 then
-            if type(availableEnemies[1]) == "string" then
-                availableEnemies = json:decode(availableEnemies[1])
-                for i,v in ipairs(availableEnemies) do
-                    worldEdit.enemyImages[i] = love.graphics.newImage(v.Image)
+        if c == 200 then
+            b = json:decode(tostring(b))
+            UID = textfields[1]
+            token = b['token']
+            characters = {}
+            r, h = http.request {
+                url = api.url .. "/user/" .. textfields[1],
+                headers = {
+                    ['token'] = b['token']
+                },
+                sink = ltn12.sink.table(characters)
+            }
+    
+        --  if c == 200 then -- Why was this here?
+            -- if type(characters[1]) == "string" then
+                    characters = json:decode(characters[1])
+                print("Loaded characters")
+            -- else
+            --      print("Characters" .. json:encode(characters))
+            --      characters = characters[1]
+            --  end
+                loginPhase = "characters"
+                for i,v in ipairs(characters) do
+                    if characters[i] and characters[i].Color ~= null then
+                    else
+                    characters[i].Color = {love.math.random(), love.math.random(), love.math.random(),  1}
+                    end
+                end
+        -- end
+            r, h = http.request {
+                url = api.url .. "/enemies",
+            
+                sink = ltn12.sink.table(availableEnemies)
+            }
+            
+        if c == 200 then
+                if type(availableEnemies[1]) == "string" then
+                    availableEnemies = json:decode(availableEnemies[1])
+                    for i,v in ipairs(availableEnemies) do
+                        worldEdit.enemyImages[i] = love.graphics.newImage(v.Image)
+                    end
                 end
             end
+        elseif c == 401 then
+            textfields[2] = ""
+            textfields[3] = ""
         end
-    elseif c == 401 then
-        textfields[2] = ""
-        textfields[3] = ""
     end
 end
