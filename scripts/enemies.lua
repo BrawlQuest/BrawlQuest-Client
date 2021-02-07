@@ -81,7 +81,7 @@ function newEnemyData(data) -- called when nearby data is returned
             end
         end
 
-        if enemy.HP ~= v.HP then
+        if enemy.HP > v.HP then
             if (me.AX ~= me.X or me.AY ~= me.Y) and (me.AX == enemy.X and me.AY == enemy.Y) then
                 if player.dx > me.AX * 32 then
                     player.dx = player.dx - 16
@@ -95,7 +95,7 @@ function newEnemyData(data) -- called when nearby data is returned
                 end
                 attackHitAmount = 1
             end
-            addFloat(enemy.X*32,enemy.Y*32,enemy.HP - v.HP,{1,0,0})
+            addFloat(enemy.X*32,enemy.Y*32-18,enemy.HP - v.HP,{1,0,0})
             enemy.HP = v.HP
             enemy.red = 1
 
@@ -168,12 +168,12 @@ function drawEnemies()
                 end
 
                 -- if distanceToPoint(v.dx, v.dy, player.dx, player.dy) < 256 then 
-                if v.dhp < v.mhp then
+                if v.dhp < v.mhp or not v.Enemy.CanMove then
                     if v.Enemy.CanMove then
-                        love.graphics.setColor(1, 0, 0, intensity * 0.5)
+                        love.graphics.setColor(1, 0, 0, intensity)
                         love.graphics.rectangle("fill", v.dx, v.dy - 6, (v.dhp / v.mhp) * 32, 6)
                     else
-                        love.graphics.setColor(1,0,0, intensity * 0.5)
+                        love.graphics.setColor(0.2,0.2,1, intensity)
                         love.graphics.rectangle("fill", v.dx, v.dy - 2, (v.dhp / v.mhp) * 32, 2)
                     end
                 end
@@ -182,7 +182,7 @@ function drawEnemies()
                 love.graphics.draw(alertImg, v.dx + 8, v.dy - 16)
                 love.graphics.setColor(1, 1, 1)
 
-                if distanceToPoint(v.dx,v.dy,player.dx,player.dy) < (v.Enemy.Range + 1) * 32 and v.Target == me.id then
+                if distanceToPoint(v.dx,v.dy,player.dx,player.dy) < (v.Enemy.Range + 1) * 32 and v.Target == me.ID then
                     love.graphics.setColor(1, 0, 0)
                     love.graphics.line(v.dx + 16, v.dy + 16, player.dx + 16, player.dy + 16)
                     love.graphics.setColor(1, 1, 1, 1)
