@@ -386,15 +386,17 @@ function checkNPCChatMousePressed(button)
                 else
                     local b = {}
                     c, h = http.request{url = api.url.."/conversation/"..v[2].."/"..username, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
-                    npcChat = json:decode(b[1])
-                    local optionString = npcChat.Options
-                optionString = string.gsub(optionString, "'s", 's')
-                optionString = string.gsub(optionString, "'t", 't')
-                optionString = string.gsub(optionString, "'ll", 'll')
-                optionString = string.gsub(optionString, "'ve", 've')
-                optionString =  string.gsub(optionString, "'", '"')
-                npcChat.Options = json:decode(optionString)
-                    --npcChat.Options = json:decode(string.gsub(npcChat.Options, "'", '"'))
+                    if b ~= nil then
+                        npcChat = json:decode(b[1])
+                        local optionString = npcChat.Options
+                        optionString = string.gsub(optionString, "'s", 's')
+                        optionString = string.gsub(optionString, "'t", 't')
+                        optionString = string.gsub(optionString, "'ll", 'll')
+                        optionString = string.gsub(optionString, "'ve", 've')
+                        optionString =  string.gsub(optionString, "'", '"')
+                        npcChat.Options = json:decode(optionString)
+                        --npcChat.Options = json:decode(string.gsub(npcChat.Options, "'", '"'))
+                    end
                 end
             end
         end
