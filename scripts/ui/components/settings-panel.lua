@@ -23,7 +23,7 @@ function initSettingsPanel()
         fontHeight = 0,
         mouseOver = 0,
         isMouseOver = false,
-        scaleTypes = {1, 2, 3, 4},
+        scaleTypes = {1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4},
         scaleValue = 1,
     }
 

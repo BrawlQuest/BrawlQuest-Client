@@ -5,6 +5,7 @@ function getImgIfNotExist(v)
             worldImg[v] = love.graphics.newImage(v)
         else
             worldImg[v] = love.graphics.newImage("assets/error.png")
+            print("Can't find "..v)
         end
     end
 

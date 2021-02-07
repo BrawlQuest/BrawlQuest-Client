@@ -72,7 +72,9 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
         drawItemBacking(thisX, thisY)
 
         love.graphics.setColor(1,1,1,1)
-        if item and itemImg[item.ImgPath] then
+     
+        if item  then
+            itemImg[item.ImgPath] = getImgIfNotExist(item.ImgPath)
             if itemImg[item.ImgPath]:getWidth() <= 32 and itemImg[item.ImgPath]:getHeight() <= 32 then
                 love.graphics.draw(itemImg[item.ImgPath],
                     thisX + 18 - (itemImg[item.ImgPath]:getWidth() / (2 - useItemColor[number])),
@@ -96,10 +98,12 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
         drawItemBacking(thisX, thisY)
 
         love.graphics.setColor(1,1,1,1)
-        if item and itemImg[item.ImgPath] then
-
+        if item  then
+            itemImg[item.ImgPath] = getImgIfNotExist(item.ImgPath)
             if string.sub(item.Type, 1, 4) == "arm_" then
+                love.graphics.setColor(1,1,1,0.5)
                 love.graphics.draw(playerImg, thisX + 2, thisY + 2)
+                love.graphics.setColor(1,1,1,1)
             end
           
             if inventory.usedItemThisTick then
