@@ -30,6 +30,8 @@ function initCrafting()
         selectableI = 0,
         percentFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
         font = love.graphics.newFont("assets/ui/fonts/C&C Red Alert [INET].ttf", 13),
+        posY = 0,
+        velY = 0,
     }
 
     b = {}
@@ -38,19 +40,15 @@ function initCrafting()
         crafting.catalogue = json:decode(b[1])
         for i, v in ipairs(crafting.catalogue) do
             if crafting.recipes[v.ItemsString] then
-                print(#crafting.recipes[v.ItemsString] + 1)
                 crafting.recipes[v.ItemsString][#crafting.recipes[v.ItemsString] + 1] = copy(v)
-                
             else
                 crafting.recipes[v.ItemsString] = {copy(v),}
                 crafting.fields[#crafting.fields+1] = v.ItemsString
             end
         end
-        -- print(json:encode_pretty(crafting.recepies))
     else
         crafting.catalogue = {}
     end
-
 end
 
 function updateCrafting(dt)
@@ -96,6 +94,13 @@ function updateCrafting(dt)
             crafting.hammerShake = 0
         end
 
+        crafting.velY = crafting.velY - crafting.velY * math.min( dt * 15, 1 ) 
+        crafting.posY = crafting.posY + crafting.velY * dt
+        if crafting.posY > 0 then
+            crafting.posY = 0 
+        elseif crafting.posY < #crafting.fields * -66 + crafting.h - 60 then
+            crafting.posY = #crafting.fields * -66 + crafting.h - 60
+        end
     end
 end
 
@@ -105,10 +110,10 @@ function drawCrafting()
     love.graphics.setColor(0,0,0,0.8)
     roundRectangle("fill", thisX, thisY, w, h, 10)
     love.graphics.setColor(1,1,1,1)
-    -- love.graphics.stencil(drawCraftingStencil, "replace", 1) -- stencils inventory
-    -- love.graphics.setStencilTest("greater", 0) -- push
+    love.graphics.stencil(drawCraftingStencil, "replace", 1) -- stencils inventory
+    love.graphics.setStencilTest("greater", 0) -- push
         drawCraftingBackground(thisX, thisY)
-    -- love.graphics.setStencilTest() -- pop
+    love.graphics.setStencilTest() -- pop
 end
 
 function drawCraftingBackground(thisX, thisY)
@@ -124,7 +129,7 @@ function drawCraftingBackground(thisX, thisY)
 
     if isMouseOver((thisX+330)* scale, (thisY + 270) * scale, (crafting.anvil:getWidth()*7)*scale, (crafting.anvil:getHeight()*7)*scale) then
         crafting.mouseOverAnvil = true
-        love.graphics.setColor(0.6,0.6,0.6)
+        love.graphics.setColor(1,0.5,0.5)
     else
         crafting.mouseOverAnvil = false
     end
@@ -134,10 +139,11 @@ function drawCraftingBackground(thisX, thisY)
     love.graphics.print("CRAFTING", inventory.headerFont, thisX + 10 , thisY + 14)
 
     
-
-    local x, y = thisX + 10, thisY + 10 + 40
+    love.graphics.print("RECIPES",crafting.font, thisX + 10, thisY + 10 + 40, 0, 2)
+    local x, y = thisX + 10, thisY + 10 + 40 + crafting.posY + 30
     w, h = 194, 56
     crafting.mouseOverField = 0
+    
 
     for i,field in ipairs(crafting.fields) do
         x = thisX + 10
@@ -318,7 +324,6 @@ function checkCraftingMousePressed(button)
                 local amount = required[j].Amount
                 print(v.ItemsItem[j].Name .. " " .. amount)
                 if getItemAmount(v.ItemsItem[j]) >= amount then
-                    print("You have enough!")
                     crafting.enteredItems[j] = {
                         item = v.ItemsItem[j],
                         amount = amount,
@@ -326,7 +331,6 @@ function checkCraftingMousePressed(button)
                     }
                     craft[#craft+1] = true
                 elseif getItemAmount(v.ItemsItem[j]) < 1 then
-                    print("Sorry, not enough")
                     craft[#craft+1] = false
                 else
                     crafting.enteredItems[j] = {
@@ -352,4 +356,3 @@ function checkCraftingMousePressed(button)
         end
     end
 end
-
