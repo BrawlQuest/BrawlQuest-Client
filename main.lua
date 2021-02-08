@@ -54,7 +54,7 @@ ltn12 = require("ltn12")
 
 version = "Pre-Release" 
 versionType = "dev" -- "dev" for quick login, "release" for not
-versionNumber = "Beta 1.0.1" -- very important for settings
+versionNumber = "Beta 1.0.2" -- very important for settings
 
 phase = "login"
 
@@ -75,6 +75,7 @@ timeOfDay = 0
 enemiesInAggro = 0
 username = "Pebsie"
 readyForUpdate = true
+playersOnline = ""
 
 world = {}
 worldImg = {}
@@ -172,10 +173,10 @@ function love.draw()
         local offset = cerp(10, 205, inventory.amount)
         love.graphics.setColor(1,1,1)
         love.graphics.setFont(settPan.itemFont)
-        love.graphics.print("X,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()), offset, 10)
-        if worldLookup[player.x] and worldLookup[player.x][player.y] then
-            love.graphics.print(string.upper("\n"..tostring(worldLookup[player.x][player.y].Name)), offset, 13)
-        end
+        love.graphics.print("X,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()).."\nPlayers: "..playersOnline, offset, 10)
+        -- if worldLookup[player.x] and worldLookup[player.x][player.y] then
+        --     love.graphics.print(string.upper("\n"..tostring(worldLookup[player.x][player.y].Name)), offset, 13)
+        -- end
 
     end
 
@@ -238,7 +239,12 @@ function love.update(dt)
             players = response['Players']
             npcs = response['NPC']
             auras = response['Auras']
-
+            playersOnline = ""
+            if response['OnlinePlayers'] then
+                for i,v in ipairs(response['OnlinePlayers']) do
+                    playersOnline = playersOnline..v.." "
+                end
+            end
             if json:encode(players) ~= json:encode(previousPlayers) then -- Temp [
                 for i,v in ipairs(players) do
                     if v.Color == null then -- New thing for the people
