@@ -172,3 +172,770 @@ function checkCraftingMousePressed(button)
     end
 end
 
+--[[ {
+    "Chance": 100,
+    "ID": 1,
+    "Item": {
+      "Desc": "A short, mostly blunt knife designed for opening small parcels.",
+      "ID": 14,
+      "ImgPath": "assets/player/gear/a1/dagger.png",
+      "Name": "Letter Opener",
+      "Type": "wep",
+      "Val": "3",
+      "Worth": 5
+    },
+    "ItemID": 14,
+    "Items": [ {
+      "Amount": 2,
+      "ID": 0,
+      "ItemID": 5,
+      "PlayerID": 0
+    }, {
+      "Amount": 1,
+      "ID": 0,
+      "ItemID": 6,
+      "PlayerID": 0
+    } ],
+    "ItemsItem": [ {
+      "Desc": "Smooth stone, perfect for crafting.",
+      "ID": 5,
+      "ImgPath": "assets/items/reagent/Stone.png",
+      "Name": "Stone",
+      "Type": "reagent",
+      "Val": "0",
+      "Worth": 3
+    }, {
+      "Desc": "A chipping of wood, perfect for crafting.",
+      "ID": 6,
+      "ImgPath": "assets/items/reagent/Wood.png",
+      "Name": "Wood",
+      "Type": "reagent",
+      "Val": "0",
+      "Worth": 2
+    } ],
+    "ItemsString": "[{\"ItemID\":5,\"Amount\":2},{\"ItemID\":6,\"Amount\":1}]"
+  }, {
+    "Chance": 25,
+    "ID": 2,
+    "Item": {
+      "Desc": "A short but somewhat sharpened knife designed for opening small parcels.",
+      "ID": 20,
+      "ImgPath": "assets/player/gear/a1/dagger.png",
+      "Name": "Sharpened Letter Opener",
+      "Type": "wep",
+      "Val": "5",
+      "Worth": 10
+    },
+    "ItemID": 20,
+    "Items": [ {
+      "Amount": 2,
+      "ID": 0,
+      "ItemID": 5,
+      "PlayerID": 0
+    }, {
+      "Amount": 1,
+      "ID": 0,
+      "ItemID": 6,
+      "PlayerID": 0
+    } ],
+    "ItemsItem": [ {
+      "Desc": "Smooth stone, perfect for crafting.",
+      "ID": 5,
+      "ImgPath": "assets/items/reagent/Stone.png",
+      "Name": "Stone",
+      "Type": "reagent",
+      "Val": "0",
+      "Worth": 3
+    }, {
+      "Desc": "A chipping of wood, perfect for crafting.",
+      "ID": 6,
+      "ImgPath": "assets/items/reagent/Wood.png",
+      "Name": "Wood",
+      "Type": "reagent",
+      "Val": "0",
+      "Worth": 2
+    } ],
+    "ItemsString": "[{\"ItemID\":5,\"Amount\":2},{\"ItemID\":6,\"Amount\":1}]"
+  }, {
+    "Chance": 35,
+    "ID": 3,
+    "Item": {
+      "Desc": "Standard issue King's Guard Sword.",
+      "ID": 25,
+      "ImgPath": "assets/player/gear/a1/sword.png",
+      "Name": "King's e Sword",
+      "Type": "wep",
+      "Val": "5",
+      "Worth": 125
+    },
+    "ItemID": 25,
+    "Items": [ {
+      "Amount": 2,
+      "ID": 0,
+      "ItemID": 7,
+      "PlayerID": 0
+    }, {
+      "Amount": 1,
+      "ID": 0,
+      "ItemID": 6,
+      "PlayerID": 0
+    } ],
+    "ItemsItem": [ {
+      "Desc": "A strong and metallic substance, perfect for crafting.",
+      "ID": 7,
+      "ImgPath": "assets/items/reagent/Metal.png",
+      "Name": "Metal",
+      "Type": "reagent",
+      "Val": "0",
+      "Worth": 2
+    }, {
+      "Desc": "A chipping of wood, perfect for crafting.",
+      "ID": 6,
+      "ImgPath": "assets/items/reagent/Wood.png",
+      "Name": "Wood",
+      "Type": "reagent",
+      "Val": "0",
+      "Worth": 2
+    } ],
+    "ItemsString": "[{\"ItemID\":7,\"Amount\":2},{\"ItemID\":6,\"Amount\":1}]"
+  }, {
+    "Chance": 85,
+    "ID": 4,
+    "Item": {
+      "Desc": "A short dagger with a layer of posion poured over. Owie.",
+      "ID": 28,
+      "ImgPath": "assets/player/gear/a1/poison dagger.png",
+      "Name": "Poison Dagger",
+      "Type": "wep",
+      "Val": "7",
+      "Worth": 100
+    },
+    "ItemID": 28,
+    "Items": [ {
+      "Amount": 2,
+      "ID": 0,
+      "ItemID": 7,
+      "PlayerID": 0
+    }, {
+      "Amount": 1,
+      "ID": 0,
+      "ItemID": 6,
+      "PlayerID": 0
+    }, {
+      "Amount": 1,
+      "ID": 0,
+      "ItemID": 27,
+      "PlayerID": 0
+    } ],
+    "ItemsItem": [ {
+      "Desc": "A strong and metallic substance, perfect for crafting.",
+      "ID": 7,
+      "ImgPath": "assets/items/reagent/Metal.png",
+      "Name": "Metal",
+      "Type": "reagent",
+      "Val": "0",
+      "Worth": 2
+    }, {
+      "Desc": "A chipping of wood, perfect for crafting.",
+      "ID": 6,
+      "ImgPath": "assets/items/reagent/Wood.png",
+      "Name": "Wood",
+      "Type": "reagent",
+      "Val": "0",
+      "Worth": 2
+    }, {
+      "Desc": "Extracted from the fangs of a Cave Spider",
+      "ID": 27,
+      "ImgPath": "assets/items/reagent/Bottle of Poison.png",
+      "Name": "Bottle of Poison",
+      "Type": "reagent",
+      "Val": "0",
+      "Worth": 3
+    } ],
+    "ItemsString": "[{\"ItemID\":7,\"Amount\":2},{\"ItemID\":6,\"Amount\":1},{\"ItemID\":27,\"Amount\":1}]"
+  }, {
+    "Chance": 50,
+    "ID": 5,
+    "Item": {
+      "Desc": "A mostly sturdy shield.",
+      "ID": 29,
+      "ImgPath": "assets/player/gear/a1/shield.png",
+      "Name": "Wooden Shield",
+      "Type": "shield",
+      "Val": "20",
+      "Worth": 250
+    },
+    "ItemID": 29,
+    "Items": [ {
+      "Amount": 10,
+      "ID": 0,
+      "ItemID": 6,
+      "PlayerID": 0
+    }, {
+      "Amount": 4,
+      "ID": 0,
+      "ItemID": 31,
+      "PlayerID": 0
+    } ],
+    "ItemsItem": [ {
+      "Desc": "A chipping of wood, perfect for crafting.",
+      "ID": 6,
+      "ImgPath": "assets/items/reagent/Wood.png",
+      "Name": "Wood",
+      "Type": "reagent",
+      "Val": "0",
+      "Worth": 2
+    }, {
+      "Desc": "A silky piece of string",
+      "ID": 31,
+      "ImgPath": "assets/items/reagent/String.png",
+      "Name": "String",
+      "Type": "reagent",
+      "Val": "0",
+      "Worth": 1
+    } ],
+    "ItemsString": "[{\"ItemID\":6,\"Amount\":10},{\"ItemID\":31,\"Amount\":4}]"
+  }, {
+    "Chance": 35,
+    "ID": 6,
+    "Item": {
+      "Desc": "A mostly tough leather chestplate for protecting against even the most wowie of owie.",
+      "ID": 35,
+      "ImgPath": "assets/player/gear/a1/chest.png",
+      "Name": "Leather Chestplate",
+      "Type": "arm_chest",
+      "Val": "10",
+      "Worth": 100
+    },
+    "ItemID": 35,
+    "Items": [ {
+      "Amount": 4,
+      "ID": 0,
+      "ItemID": 31,
+      "PlayerID": 0
+    }, {
+      "Amount": 10,
+      "ID": 0,
+      "ItemID": 32,
+      "PlayerID": 0
+    } ],
+    "ItemsItem": [ {
+      "Desc": "A silky piece of string",
+      "ID": 31,
+      "ImgPath": "assets/items/reagent/String.png",
+      "Name": "String",
+      "Type": "reagent",
+      "Val": "0",
+      "Worth": 1
+    }, {
+      "Desc": "A surprisingly clean pelt, harvested from an animal",
+      "ID": 32,
+      "ImgPath": "assets/items/reagent/Pelt.png",
+      "Name": "Pelt",
+      "Type": "reagent",
+      "Val": "0",
+      "Worth": 10
+    } ],
+    "ItemsString": "[{\"ItemID\":31,\"Amount\":4},{\"ItemID\":32,\"Amount\":10}]"
+  }, {
+    "Chance": 80,
+    "ID": 7,
+    "Item": {
+      "Desc": "A mostly tough leather helmet.",
+      "ID": 36,
+      "ImgPath": "assets/player/gear/a1/head.png",
+      "Name": "Leather Helmet",
+      "Type": "arm_head",
+      "Val": "8",
+      "Worth": 100
+    },
+    "ItemID": 36,
+    "Items": [ {
+      "Amount": 4,
+      "ID": 0,
+      "ItemID": 31,
+      "PlayerID": 0
+    }, {
+      "Amount": 10,
+      "ID": 0,
+      "ItemID": 32,
+      "PlayerID": 0
+    } ],
+    "ItemsItem": [ {
+      "Desc": "A silky piece of string",
+      "ID": 31,
+      "ImgPath": "assets/items/reagent/String.png",
+      "Name": "String",
+      "Type": "reagent",
+      "Val": "0",
+      "Worth": 1
+    }, {
+      "Desc": "A surprisingly clean pelt, harvested from an animal",
+      "ID": 32,
+      "ImgPath": "assets/items/reagent/Pelt.png",
+      "Name": "Pelt",
+      "Type": "reagent",
+      "Val": "0",
+      "Worth": 10
+    } ],
+    "ItemsString": "[{\"ItemID\":31,\"Amount\":4},{\"ItemID\":32,\"Amount\":10}]"
+  }, {
+    "Chance": 60,
+    "ID": 8,
+    "Item": {
+      "Desc": "A mostly tough leather leggings. Protection where you need it most!",
+      "ID": 37,
+      "ImgPath": "assets/player/gear/a1/legs.png",
+      "Name": "Leather Leggings",
+      "Type": "arm_legs",
+      "Val": "9",
+      "Worth": 100
+    },
+    "ItemID": 37,
+    "Items": [ {
+      "Amount": 4,
+      "ID": 0,
+      "ItemID": 31,
+      "PlayerID": 0
+    }, {
+      "Amount": 10,
+      "ID": 0,
+      "ItemID": 32,
+      "PlayerID": 0
+    } ],
+    "ItemsItem": [ {
+      "Desc": "A silky piece of string",
+      "ID": 31,
+      "ImgPath": "assets/items/reagent/String.png",
+      "Name": "String",
+      "Type": "reagent",
+      "Val": "0",
+      "Worth": 1
+    }, {
+      "Desc": "A surprisingly clean pelt, harvested from an animal",
+      "ID": 32,
+      "ImgPath": "assets/items/reagent/Pelt.png",
+      "Name": "Pelt",
+      "Type": "reagent",
+      "Val": "0",
+      "Worth": 10
+    } ],
+    "ItemsString": "[{\"ItemID\":31,\"Amount\":4},{\"ItemID\":32,\"Amount\":10}]"
+  }, {
+    "Chance": 100,
+    "ID": 9,
+    "Item": {
+      "Desc": "Causes all players around you to gain {INT} health for 3 seconds",
+      "ID": 18,
+      "ImgPath": "assets/items/spells/Scroll of Healing.png",
+      "Name": "Scroll of Healing",
+      "Type": "spell",
+      "Val": "30",
+      "Worth": 50
+    },
+    "ItemID": 18,
+    "Items": [ {
+      "Amount": 10,
+      "ID": 0,
+      "ItemID": 17,
+      "PlayerID": 0
+    } ],
+    "ItemsItem": [ {
+      "Desc": "A magical glowing crystal.",
+      "ID": 17,
+      "ImgPath": "assets/world/objects/Crystal.png",
+      "Name": "Mana Crystal",
+      "Type": "reagent",
+      "Val": "1",
+      "Worth": 50
+    } ],
+    "ItemsString": "[{\"ItemID\":17,\"Amount\":10}]"
+  } 
+  {
+    "[{\"ItemID\":17,\"Amount\":10}]": [ {
+      "Chance": 100,
+      "ID": 9,
+      "Item": {
+        "Desc": "Causes all players around you to gain {INT} health for 3 seconds",
+        "ID": 18,
+        "ImgPath": "assets/items/spells/Scroll of Healing.png",
+        "Name": "Scroll of Healing",
+        "Type": "spell",
+        "Val": "30",
+        "Worth": 50
+      },
+      "ItemID": 18,
+      "Items": [ {
+        "Amount": 10,
+        "ID": 0,
+        "ItemID": 17,
+        "PlayerID": 0
+      } ],
+      "ItemsItem": [ {
+        "Desc": "A magical glowing crystal.",
+        "ID": 17,
+        "ImgPath": "assets/world/objects/Crystal.png",
+        "Name": "Mana Crystal",
+        "Type": "reagent",
+        "Val": "1",
+        "Worth": 50
+      } ],
+      "ItemsString": "[{\"ItemID\":17,\"Amount\":10}]"
+    } ],
+    "[{\"ItemID\":31,\"Amount\":4},{\"ItemID\":32,\"Amount\":10}]": [ {
+      "Chance": 35,
+      "ID": 6,
+      "Item": {
+        "Desc": "A mostly tough leather chestplate for protecting against even the most wowie of owie.",
+        "ID": 35,
+        "ImgPath": "assets/player/gear/a1/chest.png",
+        "Name": "Leather Chestplate",
+        "Type": "arm_chest",
+        "Val": "10",
+        "Worth": 100
+      },
+      "ItemID": 35,
+      "Items": [ {
+        "Amount": 4,
+        "ID": 0,
+        "ItemID": 31,
+        "PlayerID": 0
+      }, {
+        "Amount": 10,
+        "ID": 0,
+        "ItemID": 32,
+        "PlayerID": 0
+      } ],
+      "ItemsItem": [ {
+        "Desc": "A silky piece of string",
+        "ID": 31,
+        "ImgPath": "assets/items/reagent/String.png",
+        "Name": "String",
+        "Type": "reagent",
+        "Val": "0",
+        "Worth": 1
+      }, {
+        "Desc": "A surprisingly clean pelt, harvested from an animal",
+        "ID": 32,
+        "ImgPath": "assets/items/reagent/Pelt.png",
+        "Name": "Pelt",
+        "Type": "reagent",
+        "Val": "0",
+        "Worth": 10
+      } ],
+      "ItemsString": "[{\"ItemID\":31,\"Amount\":4},{\"ItemID\":32,\"Amount\":10}]"
+    }, {
+      "Chance": 80,
+      "ID": 7,
+      "Item": {
+        "Desc": "A mostly tough leather helmet.",
+        "ID": 36,
+        "ImgPath": "assets/player/gear/a1/head.png",
+        "Name": "Leather Helmet",
+        "Type": "arm_head",
+        "Val": "8",
+        "Worth": 100
+      },
+      "ItemID": 36,
+      "Items": [ {
+        "Amount": 4,
+        "ID": 0,
+        "ItemID": 31,
+        "PlayerID": 0
+      }, {
+        "Amount": 10,
+        "ID": 0,
+        "ItemID": 32,
+        "PlayerID": 0
+      } ],
+      "ItemsItem": [ {
+        "Desc": "A silky piece of string",
+        "ID": 31,
+        "ImgPath": "assets/items/reagent/String.png",
+        "Name": "String",
+        "Type": "reagent",
+        "Val": "0",
+        "Worth": 1
+      }, {
+        "Desc": "A surprisingly clean pelt, harvested from an animal",
+        "ID": 32,
+        "ImgPath": "assets/items/reagent/Pelt.png",
+        "Name": "Pelt",
+        "Type": "reagent",
+        "Val": "0",
+        "Worth": 10
+      } ],
+      "ItemsString": "[{\"ItemID\":31,\"Amount\":4},{\"ItemID\":32,\"Amount\":10}]"
+    }, {
+      "Chance": 60,
+      "ID": 8,
+      "Item": {
+        "Desc": "A mostly tough leather leggings. Protection where you need it most!",
+        "ID": 37,
+        "ImgPath": "assets/player/gear/a1/legs.png",
+        "Name": "Leather Leggings",
+        "Type": "arm_legs",
+        "Val": "9",
+        "Worth": 100
+      },
+      "ItemID": 37,
+      "Items": [ {
+        "Amount": 4,
+        "ID": 0,
+        "ItemID": 31,
+        "PlayerID": 0
+      }, {
+        "Amount": 10,
+        "ID": 0,
+        "ItemID": 32,
+        "PlayerID": 0
+      } ],
+      "ItemsItem": [ {
+        "Desc": "A silky piece of string",
+        "ID": 31,
+        "ImgPath": "assets/items/reagent/String.png",
+        "Name": "String",
+        "Type": "reagent",
+        "Val": "0",
+        "Worth": 1
+      }, {
+        "Desc": "A surprisingly clean pelt, harvested from an animal",
+        "ID": 32,
+        "ImgPath": "assets/items/reagent/Pelt.png",
+        "Name": "Pelt",
+        "Type": "reagent",
+        "Val": "0",
+        "Worth": 10
+      } ],
+      "ItemsString": "[{\"ItemID\":31,\"Amount\":4},{\"ItemID\":32,\"Amount\":10}]"
+    } ],
+    "[{\"ItemID\":5,\"Amount\":2},{\"ItemID\":6,\"Amount\":1}]": [ {
+      "Chance": 100,
+      "ID": 1,
+      "Item": {
+        "Desc": "A short, mostly blunt knife designed for opening small parcels.",
+        "ID": 14,
+        "ImgPath": "assets/player/gear/a1/dagger.png",
+        "Name": "Letter Opener",
+        "Type": "wep",
+        "Val": "3",
+        "Worth": 5
+      },
+      "ItemID": 14,
+      "Items": [ {
+        "Amount": 2,
+        "ID": 0,
+        "ItemID": 5,
+        "PlayerID": 0
+      }, {
+        "Amount": 1,
+        "ID": 0,
+        "ItemID": 6,
+        "PlayerID": 0
+      } ],
+      "ItemsItem": [ {
+        "Desc": "Smooth stone, perfect for crafting.",
+        "ID": 5,
+        "ImgPath": "assets/items/reagent/Stone.png",
+        "Name": "Stone",
+        "Type": "reagent",
+        "Val": "0",
+        "Worth": 3
+      }, {
+        "Desc": "A chipping of wood, perfect for crafting.",
+        "ID": 6,
+        "ImgPath": "assets/items/reagent/Wood.png",
+        "Name": "Wood",
+        "Type": "reagent",
+        "Val": "0",
+        "Worth": 2
+      } ],
+      "ItemsString": "[{\"ItemID\":5,\"Amount\":2},{\"ItemID\":6,\"Amount\":1}]"
+    }, {
+      "Chance": 25,
+      "ID": 2,
+      "Item": {
+        "Desc": "A short but somewhat sharpened knife designed for opening small parcels.",
+        "ID": 20,
+        "ImgPath": "assets/player/gear/a1/dagger.png",
+        "Name": "Sharpened Letter Opener",
+        "Type": "wep",
+        "Val": "5",
+        "Worth": 10
+      },
+      "ItemID": 20,
+      "Items": [ {
+        "Amount": 2,
+        "ID": 0,
+        "ItemID": 5,
+        "PlayerID": 0
+      }, {
+        "Amount": 1,
+        "ID": 0,
+        "ItemID": 6,
+        "PlayerID": 0
+      } ],
+      "ItemsItem": [ {
+        "Desc": "Smooth stone, perfect for crafting.",
+        "ID": 5,
+        "ImgPath": "assets/items/reagent/Stone.png",
+        "Name": "Stone",
+        "Type": "reagent",
+        "Val": "0",
+        "Worth": 3
+      }, {
+        "Desc": "A chipping of wood, perfect for crafting.",
+        "ID": 6,
+        "ImgPath": "assets/items/reagent/Wood.png",
+        "Name": "Wood",
+        "Type": "reagent",
+        "Val": "0",
+        "Worth": 2
+      } ],
+      "ItemsString": "[{\"ItemID\":5,\"Amount\":2},{\"ItemID\":6,\"Amount\":1}]"
+    } ],
+    "[{\"ItemID\":6,\"Amount\":10},{\"ItemID\":31,\"Amount\":4}]": [ {
+      "Chance": 50,
+      "ID": 5,
+      "Item": {
+        "Desc": "A mostly sturdy shield.",
+        "ID": 29,
+        "ImgPath": "assets/player/gear/a1/shield.png",
+        "Name": "Wooden Shield",
+        "Type": "shield",
+        "Val": "20",
+        "Worth": 250
+      },
+      "ItemID": 29,
+      "Items": [ {
+        "Amount": 10,
+        "ID": 0,
+        "ItemID": 6,
+        "PlayerID": 0
+      }, {
+        "Amount": 4,
+        "ID": 0,
+        "ItemID": 31,
+        "PlayerID": 0
+      } ],
+      "ItemsItem": [ {
+        "Desc": "A chipping of wood, perfect for crafting.",
+        "ID": 6,
+        "ImgPath": "assets/items/reagent/Wood.png",
+        "Name": "Wood",
+        "Type": "reagent",
+        "Val": "0",
+        "Worth": 2
+      }, {
+        "Desc": "A silky piece of string",
+        "ID": 31,
+        "ImgPath": "assets/items/reagent/String.png",
+        "Name": "String",
+        "Type": "reagent",
+        "Val": "0",
+        "Worth": 1
+      } ],
+      "ItemsString": "[{\"ItemID\":6,\"Amount\":10},{\"ItemID\":31,\"Amount\":4}]"
+    } ],
+    "[{\"ItemID\":7,\"Amount\":2},{\"ItemID\":6,\"Amount\":1},{\"ItemID\":27,\"Amount\":1}]": [ {
+      "Chance": 85,
+      "ID": 4,
+      "Item": {
+        "Desc": "A short dagger with a layer of posion poured over. Owie.",
+        "ID": 28,
+        "ImgPath": "assets/player/gear/a1/poison dagger.png",
+        "Name": "Poison Dagger",
+        "Type": "wep",
+        "Val": "7",
+        "Worth": 100
+      },
+      "ItemID": 28,
+      "Items": [ {
+        "Amount": 2,
+        "ID": 0,
+        "ItemID": 7,
+        "PlayerID": 0
+      }, {
+        "Amount": 1,
+        "ID": 0,
+        "ItemID": 6,
+        "PlayerID": 0
+      }, {
+        "Amount": 1,
+        "ID": 0,
+        "ItemID": 27,
+        "PlayerID": 0
+      } ],
+      "ItemsItem": [ {
+        "Desc": "A strong and metallic substance, perfect for crafting.",
+        "ID": 7,
+        "ImgPath": "assets/items/reagent/Metal.png",
+        "Name": "Metal",
+        "Type": "reagent",
+        "Val": "0",
+        "Worth": 2
+      }, {
+        "Desc": "A chipping of wood, perfect for crafting.",
+        "ID": 6,
+        "ImgPath": "assets/items/reagent/Wood.png",
+        "Name": "Wood",
+        "Type": "reagent",
+        "Val": "0",
+        "Worth": 2
+      }, {
+        "Desc": "Extracted from the fangs of a Cave Spider",
+        "ID": 27,
+        "ImgPath": "assets/items/reagent/Bottle of Poison.png",
+        "Name": "Bottle of Poison",
+        "Type": "reagent",
+        "Val": "0",
+        "Worth": 3
+      } ],
+      "ItemsString": "[{\"ItemID\":7,\"Amount\":2},{\"ItemID\":6,\"Amount\":1},{\"ItemID\":27,\"Amount\":1}]"
+    } ],
+    "[{\"ItemID\":7,\"Amount\":2},{\"ItemID\":6,\"Amount\":1}]": [ {
+      "Chance": 35,
+      "ID": 3,
+      "Item": {
+        "Desc": "Standard issue King's Guard Sword.",
+        "ID": 25,
+        "ImgPath": "assets/player/gear/a1/sword.png",
+        "Name": "King's Guard Sword",
+        "Type": "wep",
+        "Val": "5",
+        "Worth": 125
+      },
+      "ItemID": 25,
+      "Items": [ {
+        "Amount": 2,
+        "ID": 0,
+        "ItemID": 7,
+        "PlayerID": 0
+      }, {
+        "Amount": 1,
+        "ID": 0,
+        "ItemID": 6,
+        "PlayerID": 0
+      } ],
+      "ItemsItem": [ {
+        "Desc": "A strong and metallic substance, perfect for crafting.",
+        "ID": 7,
+        "ImgPath": "assets/items/reagent/Metal.png",
+        "Name": "Metal",
+        "Type": "reagent",
+        "Val": "0",
+        "Worth": 2
+      }, {
+        "Desc": "A chipping of wood, perfect for crafting.",
+        "ID": 6,
+        "ImgPath": "assets/items/reagent/Wood.png",
+        "Name": "Wood",
+        "Type": "reagent",
+        "Val": "0",
+        "Worth": 2
+      } ],
+      "ItemsString": "[{\"ItemID\":7,\"Amount\":2},{\"ItemID\":6,\"Amount\":1}]"
+    } ]
+  }
+
+  ]]
