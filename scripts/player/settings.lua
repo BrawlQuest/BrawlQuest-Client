@@ -50,7 +50,7 @@ function initSettings()
     info = love.filesystem.getInfo("settings.txt")
     getSettingsVersion()
 
-    if info ~= null and getSettingsVersion() then
+    if info ~= null then --and getSettingsVersion() then
         -- print ("Initiating Saved Settings")
         display = contents["display"]
         window = contents["window"]
