@@ -194,7 +194,7 @@ function movePlayer(dt)
     else -- movement smoothing
         local speed = 64
 
-        if me.Mount ~= "None" or worldEdit.open then
+        if me.Mount ~= "None" then
             speed = 110 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
         end
         if difference(player.x * 32, player.dx) > 1 then

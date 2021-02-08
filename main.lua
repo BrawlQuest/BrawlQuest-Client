@@ -47,7 +47,7 @@ require "scripts.ui.components.npc-chat"
 require "scripts.ui.components.tutorial"
 Luven = require "scripts.libraries.luven.luven"
 
--- steam = require 'luasteam'
+steam = require 'luasteam'
 json = require("scripts.libraries.json")
 http = require("socket.http")
 ltn12 = require("ltn12")
@@ -95,7 +95,7 @@ oldInfo = {}
 sendUpdate = false
 
 function love.load()
-    -- steam.init()
+    steam.init()
     love.graphics.setDefaultFilter("nearest", "nearest")
     initHardData()
     initLogin()
@@ -189,7 +189,7 @@ function love.draw()
 end
 
 function love.update(dt)
-    -- steam.runCallbacks()
+    steam.runCallbacks()
 
     Luven.camera:setScale(worldScale - ((worldScale * settPan.opacityCERP) * 0.2))
     totalCoverAlpha = totalCoverAlpha - 1 * dt
@@ -346,5 +346,5 @@ function love.resize(width, height)
 end
 
 function love.quit()
-    -- steam.shutdown()
+    steam.shutdown()
 end
