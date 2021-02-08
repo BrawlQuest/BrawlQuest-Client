@@ -148,15 +148,15 @@ function drawInventoryItemField(thisX, thisY, field)
         if i <= 7 then
             drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 0), field, v.Item, v.Inventory.Amount)
         elseif i > 7 and i <= 14 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 1), field, v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 8)), thisY + (inventory.itemSpacing * 1), field, v.Item, v.Inventory.Amount)
         elseif i > 14 and i <= 21 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 2), field, v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 15)), thisY + (inventory.itemSpacing * 2), field, v.Item, v.Inventory.Amount)
         elseif i > 21 and i <= 28 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 3), field, v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 22)), thisY + (inventory.itemSpacing * 3), field, v.Item, v.Inventory.Amount)
         elseif i > 28 and i <= 35 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 4), field, v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 29)), thisY + (inventory.itemSpacing * 4), field, v.Item, v.Inventory.Amount)
         else
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 5), field, v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 36)), thisY + (inventory.itemSpacing * 5), field, v.Item, v.Inventory.Amount)
         end
     end
 end
