@@ -77,7 +77,7 @@ function initToolBarInventory()
 end
 
 function updateToolBarInventory(dt)
-    if inventory.forceOpen then
+    if inventory.forceOpen or crafting.open then
         inventory.open = true
         inventory.amount = inventory.amount + 4 * dt
         if inventory.amount > 1 then inventory.amount = 1 end
@@ -95,8 +95,6 @@ function updateToolBarInventory(dt)
         end
     end
 
-
-    
         if useItemColorChanged then
             local colorCount = 0
             for i, v in ipairs(useItemColor) do

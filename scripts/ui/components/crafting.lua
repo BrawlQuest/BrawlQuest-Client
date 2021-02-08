@@ -28,7 +28,7 @@ function updateCrafting(dt)
     if crafting.open then
         if crafting.isCrafting then
             if crafting.hammerDown < 0 then
-                crafting.whiteout = crafting.whiteout + 20*dt
+                crafting.whiteout = crafting.whiteout + 20 * dt
                 crafting.sfx:setPitch(love.math.random(50,100)/100)
                 love.audio.play(crafting.sfx)
                 if crafting.whiteout > 1 then
@@ -56,15 +56,17 @@ function updateCrafting(dt)
                  
                 end
             else
-                crafting.hammerDown = crafting.hammerDown - 2* dt
+                crafting.hammerDown = crafting.hammerDown - 2 * dt
             end
         else
-            crafting.whiteout = crafting.whiteout - 1*dt
+            crafting.whiteout = crafting.whiteout - 1 * dt
             crafting.hammerShake = crafting.hammerShake + 1 * dt
         end
-            if crafting.hammerShake > 2 then
-                crafting.hammerShake = 0
-            end
+
+        if crafting.hammerShake > 2 then
+            crafting.hammerShake = 0
+        end
+
     end
 end
 
