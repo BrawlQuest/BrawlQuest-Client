@@ -74,7 +74,23 @@ function drawCharacterHub(thisX, thisY)
         end  
         thisX = thisX + cerp(0, hubImages.statsBG:getWidth(), characterHub.amount)
         drawCharacterHubMeters(thisX, thisY)
-        if me.Weapon ~= null then drawBattlebarItem(thisX + 231 + 10, thisY + 97 - 10 - battlebarItemBg:getHeight(), itemImg[me.Weapon.ImgPath], "+"..me.Weapon.Val) end
+        if me.Weapon ~= null then drawBattlebarItem(thisX + 231 + 10, thisY + 97 - 10 - 60, itemImg[me.Weapon.ImgPath], "+"..me.Weapon.Val) end
+
+        local defence = 0
+        if me ~= null then
+            if v.LegArmourID ~= 0 and me.LegArmour.Val ~= "Error" then
+                defence = defence + me.LegArmour.Val
+            end
+
+            if v.ChestArmourID ~= 0 and me.ChestArmour.Val ~= "Error" then
+                defence = defence + me.ChestArmour.Val
+            end
+
+            if v.HeadArmourID ~= 0 and me.HeadArmour.Val ~= "Error" then
+                defence = defence + me.HeadArmour.Val
+            end
+        end
+        drawBattlebarItem(thisX + 231 + 20 + 40, thisY + 97 - 10 - 60, "me", "+"..defence )
     end
 end
 
@@ -161,9 +177,31 @@ end
 
 function drawBattlebarItem(thisX, thisY, item, stats)
     love.graphics.setColor(0,0,0,0.7)
-    roundRectangle("fill", thisX, thisY, battlebarItemBg:getWidth(), battlebarItemBg:getHeight(), 5)
+    roundRectangle("fill", thisX, thisY, 40, 60, 5)
     love.graphics.setColor(1,1,1)
-    love.graphics.draw(item, thisX+1, thisY+1)
-    love.graphics.print(stats, characterHub.nameFont, thisX+(battlebarItemBg:getWidth()/2)-(characterHub.nameFont:getWidth(stats)/2), thisY + 34)
+    if item == "me" then
+        v = me
+        love.graphics.setColor(1,1,1,1)
+		-- if v.Color ~= null then love.graphics.setColor(unpack(v.Color)) end
+		love.graphics.draw(playerImg, thisX + 4, thisY + 4)
+		love.graphics.setColor(1,1,1,1)
+		if v and v.HeadArmour then
+			if v.HeadArmourID ~= 0 then
+				drawItemIfExists(v.HeadArmour.ImgPath, thisX + 4, thisY + 4)
+			end
+
+			if v.ChestArmourID ~= 0 then
+				drawItemIfExists(v.ChestArmour.ImgPath, thisX + 4, thisY + 4)
+			end
+
+			if v.LegArmourID ~= 0 then
+				drawItemIfExists(v.LegArmour.ImgPath, thisX + 4, thisY + 4)
+			end
+		end
+    else
+        love.graphics.draw(item, thisX + 4, thisY + 4) 
+    end
+
+    love.graphics.print(stats, characterHub.nameFont, thisX+(40 / 2)-(characterHub.nameFont:getWidth(stats)/2), thisY + 42)
     love.graphics.setFont(headerFont)
 end

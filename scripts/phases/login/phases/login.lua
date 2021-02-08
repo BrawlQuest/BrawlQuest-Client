@@ -156,7 +156,7 @@ function login()
                 if type(availableEnemies[1]) == "string" then
                     availableEnemies = json:decode(availableEnemies[1])
                     for i,v in ipairs(availableEnemies) do
-                        worldEdit.enemyImages[i] = love.graphics.newImage(v.Image)
+                        worldEdit.enemyImages[i] = getImgIfNotExist(v.Image)
                     end
                 end
             end
