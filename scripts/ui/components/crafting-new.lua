@@ -98,8 +98,8 @@ function updateCrafting(dt)
         crafting.posY = crafting.posY + crafting.velY * dt
         if crafting.posY > 0 then
             crafting.posY = 0 
-        elseif crafting.posY < #crafting.fields * -66 + crafting.h - 60 then
-            crafting.posY = #crafting.fields * -66 + crafting.h - 60
+        elseif crafting.posY < #crafting.fields * -66 + crafting.h - 60 - 20 then
+            crafting.posY = #crafting.fields * -66 + crafting.h - 60 - 20
         end
     end
 end
