@@ -27,6 +27,7 @@ function initCrafting()
         mouse = {love.graphics.newImage("assets/ui/hud/perks/BQ Mice - 1.png"), love.graphics.newImage("assets/ui/hud/perks/BQ Mice + 1.png")},
         selectableI = 0,
         percentFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
+        font = love.graphics.newFont("assets/ui/fonts/C&C Red Alert [INET].ttf", 13),
     }
 
     b = {}
@@ -108,7 +109,7 @@ function drawCrafting()
     local w, h = crafting.w, crafting.h
     thisX, thisY = (uiX / 2) - (w / 2), (uiY / 2) - (h / 2)
     love.graphics.setColor(0,0,0,0.7)
-    roundRectangle("fill", thisX, thisY, w, h, 8)
+    roundRectangle("fill", thisX, thisY, w, h, 10)
     love.graphics.setColor(1,1,1,1)
     -- love.graphics.stencil(drawCraftingStencil, "replace", 1) -- stencils inventory
     -- love.graphics.setStencilTest("greater", 0) -- push
@@ -118,7 +119,7 @@ end
 
 function drawCraftingBackground(thisX, thisY)
     local c = crafting
-    local w,h = crafting.w, crafting.h
+    -- local w,h = crafting.w, crafting.h
     if crafting.result then
        -- drawInventoryItem(thisX + 200, thisY+200, 0, crafting.result,1)
        if isMouseOver((thisX+160) * scale,(thisY+160)*scale,128*scale,128*scale) then
@@ -140,14 +141,21 @@ function drawCraftingBackground(thisX, thisY)
 
     
 
-    local x, y = thisX + 10, thisY + 10 + 30
+    local x, y = thisX + 10, thisY + 10 + 40
+    w, h = 194, 56
+    c.mouseOverFeild = 0
 
     for i,field in ipairs(crafting.fields) do
         x = thisX + 10
-        love.graphics.setColor(0,0,0,0.7)
-        roundRectangle("fill", x, y, 194, 56, 10)
+        if isMouseOver(x * scale,y * scale,w * scale,h * scale) then
+            c.mouseOverFeild = i
+            love.graphics.setColor(1,0,0,1)
+        else
+            love.graphics.setColor(0,0,0,0.7)
+        end
 
-        local v = crafting.recepies[field][1]
+        roundRectangle("fill", x, y, w, h, 10)
+        local v = c.recepies[field][1]
         local values = json:decode(v.ItemsString)
         for j = 1, 4 do
             if v.ItemsItem[j] ~= null then
@@ -158,7 +166,7 @@ function drawCraftingBackground(thisX, thisY)
                     end
                 end
                 love.graphics.setColor(1,1,1,1)
-                drawInventoryItem(x + 10, y + 10, 0, v.ItemsItem[j], amount)
+                drawCraftingItem(x + 10, y + 10, 0, v.ItemsItem[j], amount)
             else
                 love.graphics.setColor(0,0,0,0.7)
                 drawItemBacking(x + 10, y + 10)
@@ -169,21 +177,43 @@ function drawCraftingBackground(thisX, thisY)
     end
 
 
-    -- for i = 1, 4 do
-    --     drawItemBacking(thisX + 10, thisY + 50 + (45 * (i - 1)))
-    -- end
-    -- for i = 1, 9 do
-    --     drawItemBacking(thisX + 10 + (45 * (i - 1)), thisY + 355)
-    -- end
 
-    -- love.graphics.setColor(1,1,1)
-    -- for i,v in ipairs(crafting.craftableItems) do
-    --     drawInventoryItem(thisX + 10, thisY + 50 + (45 * (i - 1)), 0, v.Item, 1)
-    --     love.graphics.setFont(inventory.font)
-    --     if v.Chance then
-    --         love.graphics.print(v.Chance.. "%", thisX + 50 ,  thisY + 60 + (45 * (i - 1)))
-    --     end
-    -- end
+    x, y = thisX + 10 + w + 10, thisY + 10 + 20
+
+    love.graphics.setColor(1,1,1)
+    love.graphics.setFont(c.font)
+    love.graphics.print("ENTERED ITEMS", x + 5, y, 0 ,2 )
+
+    y = thisY + 10 + 40
+
+    -- if you have enough stuff then okay! No if not. Probably a table in get inventory
+
+    love.graphics.setColor(0,0,0,0.7)
+    roundRectangle("fill", x, y, w, h, 10)
+    for i = 1, 4 do
+        if crafting.enteredItems[i] and crafting.enteredItems[i].item then
+            love.graphics.setColor(1,1,1,1)
+            drawCraftingItem(x + 10, y + 10, 0, crafting.enteredItems[i].item, crafting.enteredItems[i].amount)
+        else
+            love.graphics.setColor(0,0,0,0.7)
+            drawItemBacking(x + 10, y + 10)
+        end
+        x = x + 46
+    end
+
+    x, y = thisX + 10 + w + 10, y + h + 10
+    love.graphics.setColor(1,1,1)
+    love.graphics.print("CRAFTING CHANCES", x + 5, y, 0 , 2)
+
+    for i,v in ipairs(crafting.craftableItems) do
+        love.graphics.setColor(0,0,0,0.7)
+        roundRectangle("fill", x, y, w, h, 10)
+        love.graphics.setColor(1,1,1)
+        drawCraftingItem(x + 10, y + 10, 0, v.Item, 1)
+        love.graphics.print(v.Item.Name, x + 54, y + 12)
+        love.graphics.print(v.Chance.. "%", x + 54, y + 25, 0, 2)
+        y = y + 66
+    end
 
     -- crafting.selectableI = 0
     -- for i = 1, #crafting.enteredItems do
@@ -194,13 +224,62 @@ function drawCraftingBackground(thisX, thisY)
     --     end
     -- end
 
-    -- love.graphics.setColor(1,1,1,1)
-    -- local w, h = 10, 296
-    -- love.graphics.draw(crafting.mouse[2], thisX + w, thisY + h, 0, 2)
-    -- love.graphics.draw(crafting.mouse[1], thisX + w + crafting.mouse[1]:getWidth() * 2, thisY + h, 0, 2)
-
     love.graphics.setColor(1,1,1,crafting.whiteout)
-    love.graphics.rectangle("fill",thisX,thisY,w,h)
+    roundRectangle("fill",thisX,thisY,c.w,c.h, 10)
+end
+
+function drawCraftingItem(thisX, thisY, field, item, amount)
+    love.graphics.setFont(inventory.itemFont)
+
+    -- if isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale) and item then
+    --     setItemTooltip(item)
+    --     selectedItem = item
+    --     inventory.isMouseOverInventoryItem = true
+    --     love.graphics.setColor(1,0,0,1)
+    --     thisY = thisY - 2
+    -- end
+    drawItemBacking(thisX, thisY)
+
+    love.graphics.setColor(1,1,1,1)
+    if item then
+        itemImg[item.ImgPath] = getImgIfNotExist(item.ImgPath)
+        if string.sub(item.Type, 1, 4) == "arm_" then
+            love.graphics.setColor(1,1,1,0.5)
+            love.graphics.draw(playerImg, thisX + 2, thisY + 2)
+            love.graphics.setColor(1,1,1,1)
+        end
+        
+        if inventory.usedItemThisTick then
+            love.graphics.setColor(1,1,1,0.4)
+        end
+
+        if itemImg[item.ImgPath]:getWidth() <= 32 and itemImg[item.ImgPath]:getHeight() <= 32 then
+            love.graphics.draw(itemImg[item.ImgPath],
+                thisX + 18 - (itemImg[item.ImgPath]:getWidth() / 2),
+                thisY + 18 - (itemImg[item.ImgPath]:getHeight() / 2))
+        else
+            love.graphics.draw(itemImg[item.ImgPath], thisX + 2, thisY + 2) -- Item
+        end
+    end
+
+    if amount and amount > 1 then
+        if amount <= 9 then
+            inventory.imageNumber = 1
+        elseif amount > 9 and amount <= 99 then
+            inventory.imageNumber = 2
+        elseif amount > 99 and amount <= 999 then
+            inventory.imageNumber = 3
+        else
+            inventory.imageNumber = 4
+        end
+        thisX, thisY = thisX + 39 - inventory.images.numberBg[inventory.imageNumber]:getWidth(),
+            thisY + 39 - inventory.images.numberBg[inventory.imageNumber]:getHeight()
+        love.graphics.draw(inventory.images.numberBg[inventory.imageNumber], thisX, thisY)
+        love.graphics.setColor(0, 0, 0)
+        love.graphics.print(amount, thisX + 5, thisY + 4)
+    end
+    love.graphics.setColor(1,1,1)
+    love.graphics.setFont(crafting.font)
 end
 
 function drawCraftingButton(thisX, thisY, title)
@@ -223,6 +302,8 @@ function checkCraftingMousePressed(button)
         love.audio.stop(crafting.swing)
         crafting.swing:setPitch(love.math.random(30,80)/100)
         love.audio.play(crafting.swing)
+    elseif button == 1 and crafting.mouseOverFeild > 0 then
+        print("I need to enter items!")
     elseif button == 2 then
         if crafting.selectableI > 0 then
             table.remove(crafting.enteredItems, crafting.selectableI)
