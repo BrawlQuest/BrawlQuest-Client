@@ -44,16 +44,17 @@ function drawCharacter(v, x, y, ad)
         love.graphics.draw(playerImg, x + offsetX, y, player.wobble, rotation, 1, 0, 0)
         love.graphics.setColor(1,1,1)
 
-        if v.HeadArmourID ~= 0 then
-            drawItemIfExists(v.HeadArmour.ImgPath, x, y, ad.previousDirection)
+       
+      
+        if v.LegArmourID ~= 0 then
+            drawItemIfExists(v.LegArmour.ImgPath, x, y, ad.previousDirection)
         end
         if v.ChestArmourID ~= 0 then
             drawItemIfExists(v.ChestArmour.ImgPath, x, y, ad.previousDirection)
         end
-        if v.LegArmourID ~= 0 then
-            drawItemIfExists(v.LegArmour.ImgPath, x, y, ad.previousDirection)
+        if v.HeadArmourID ~= 0 then
+            drawItemIfExists(v.HeadArmour.ImgPath, x, y, ad.previousDirection)
         end
-
         if v.Mount ~= "None" then
             love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..v.Mount.."/fore.png"), x + 6 + mountOffsetX, y + 9, 0, rotation, 1, 0, 0)
         end

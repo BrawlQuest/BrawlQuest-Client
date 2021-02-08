@@ -18,10 +18,22 @@ function initCrafting()
         enteredItems = {
          
         },
+        catalogue = {
+
+        },
         mouse = {love.graphics.newImage("assets/ui/hud/perks/BQ Mice - 1.png"), love.graphics.newImage("assets/ui/hud/perks/BQ Mice + 1.png")},
         selectableI = 0,
         percentFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
     }
+
+    b = {}
+    c, h = http.request{url = api.url.."/crafts", method="GET", source=ltn12.source.string(body), sink=ltn12.sink.table(b)}
+    if b[1] ~= null then
+        crafting.catalogue = json:decode(b[1])
+    else
+        crafting.catalogue = {}
+    end
+
 end
 
 function updateCrafting(dt)
