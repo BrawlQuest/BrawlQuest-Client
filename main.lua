@@ -18,7 +18,8 @@ require "scripts.effects.world-mask"
 require "scripts.ui.hud_controller"
 
 require "scripts.ui.components.character-hub"
-require "scripts.ui.components.crafting"
+-- require "scripts.ui.components.crafting"
+require "scripts.ui.components.crafting-new"
 require "scripts.ui.components.toolbar-inventory"
 require "scripts.ui.components.draw-inventory"
 require "scripts.ui.components.quest-hub"
@@ -111,9 +112,6 @@ function love.load()
     initWorldMask()
     initRangedWeapons()
     love.graphics.setFont(textFont)
-    
-   
-
 end
 
 function love.draw()

@@ -24,10 +24,10 @@ function setTooltip(title, desc)
         local e2 = explode(e[2],"}")
         local eq = e2[1]
         eq = eq:gsub("INT", me["INT"])
-        print(eq)
+        -- print(eq)
         func = assert(loadstring("return " .. eq))
         y = func()
-        print(y)
+        -- print(y)
         tooltip.desc = e[1]..tostring(y)..e2[2]
     end
 end
