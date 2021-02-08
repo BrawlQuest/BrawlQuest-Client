@@ -296,11 +296,10 @@ function checkInventoryMousePressed(button)
 end
 
 function getItemAmount(item)
-    local amount = null
+    local amount = 0
     if item ~= null then
         for i, v in ipairs(inventoryAlpha) do
-            -- print(json:encode(v.Item) .. "    " .. json:encode(item))
-            if v.Item == item then
+            if json:encode(v.Item) == json:encode(item) then
                 amount = v.Inventory.Amount
             end
         end

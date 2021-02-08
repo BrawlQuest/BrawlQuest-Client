@@ -10,11 +10,13 @@ function initCrafting()
         hammerDown = 1,
         hammerY = 0,
         isCrafting = false,
+        craftable = false,
         sfx = love.audio.newSource("assets/sfx/player/actions/anvil.ogg", "static"),
         swing = love.audio.newSource("assets/sfx/player/actions/swing.wav", "static"),
         whiteout = 0,
-        recepies = {},
+        recipes = {},
         fields = {},
+        selectedField = 1,
         craftableItems = {
           
         },
@@ -34,25 +36,17 @@ function initCrafting()
     c, h = http.request{url = api.url.."/crafts", method="GET", source=ltn12.source.string(body), sink=ltn12.sink.table(b)}
     if b[1] ~= null then
         crafting.catalogue = json:decode(b[1])
-        -- print(json:encode_pretty(crafting.ItemsString))
-        -- for i, v in ipairs(crafting.catalogue) do
-        --     if not arrayContains(crafting.recepies, v.ItemsString) then
-        --         crafting.recepies[#crafting.recepies + 1] = v.ItemsString
-        --     end
-        -- end
-        -- print(json:encode_pretty(crafting.recepies))
-
         for i, v in ipairs(crafting.catalogue) do
-            if crafting.recepies[v.ItemsString] then
-                print(#crafting.recepies[v.ItemsString] + 1)
-                crafting.recepies[v.ItemsString][#crafting.recepies[v.ItemsString] + 1] = copy(v)
+            if crafting.recipes[v.ItemsString] then
+                print(#crafting.recipes[v.ItemsString] + 1)
+                crafting.recipes[v.ItemsString][#crafting.recipes[v.ItemsString] + 1] = copy(v)
                 
             else
-                crafting.recepies[v.ItemsString] = {copy(v),}
+                crafting.recipes[v.ItemsString] = {copy(v),}
                 crafting.fields[#crafting.fields+1] = v.ItemsString
             end
         end
-        print(json:encode_pretty(crafting.recepies))
+        -- print(json:encode_pretty(crafting.recepies))
     else
         crafting.catalogue = {}
     end
@@ -108,7 +102,7 @@ end
 function drawCrafting()
     local w, h = crafting.w, crafting.h
     thisX, thisY = (uiX / 2) - (w / 2), (uiY / 2) - (h / 2)
-    love.graphics.setColor(0,0,0,0.7)
+    love.graphics.setColor(0,0,0,0.8)
     roundRectangle("fill", thisX, thisY, w, h, 10)
     love.graphics.setColor(1,1,1,1)
     -- love.graphics.stencil(drawCraftingStencil, "replace", 1) -- stencils inventory
@@ -129,33 +123,35 @@ function drawCraftingBackground(thisX, thisY)
     end
 
     if isMouseOver((thisX+330)* scale, (thisY + 270) * scale, (crafting.anvil:getWidth()*7)*scale, (crafting.anvil:getHeight()*7)*scale) then
-        c.mouseOverAnvil = true
+        crafting.mouseOverAnvil = true
         love.graphics.setColor(0.6,0.6,0.6)
     else
-        c.mouseOverAnvil = false
+        crafting.mouseOverAnvil = false
     end
     love.graphics.draw(crafting.anvil, thisX + 330, thisY + 270, 0, 7)
     love.graphics.setColor(1,1,1)
     love.graphics.draw(crafting.hammer, thisX + 720, thisY + 300 - crafting.hammerY, cerp(-0.01, 0.01, crafting.hammerShake) + cerp(-0.6,0.01, crafting.hammerDown), -10)
-    love.graphics.print("CRAFTING", inventory.headerFont, thisX + 10 , thisY + 10)
+    love.graphics.print("CRAFTING", inventory.headerFont, thisX + 10 , thisY + 14)
 
     
 
     local x, y = thisX + 10, thisY + 10 + 40
     w, h = 194, 56
-    c.mouseOverFeild = 0
+    crafting.mouseOverField = 0
 
     for i,field in ipairs(crafting.fields) do
         x = thisX + 10
         if isMouseOver(x * scale,y * scale,w * scale,h * scale) then
-            c.mouseOverFeild = i
+            crafting.mouseOverField = i
             love.graphics.setColor(1,0,0,1)
+        elseif crafting.selectedField == i then
+            love.graphics.setColor(43 / 255, 134 / 255, 0)
         else
             love.graphics.setColor(0,0,0,0.7)
         end
 
         roundRectangle("fill", x, y, w, h, 10)
-        local v = c.recepies[field][1]
+        local v = crafting.recipes[field][1]
         local values = json:decode(v.ItemsString)
         for j = 1, 4 do
             if v.ItemsItem[j] ~= null then
@@ -178,21 +174,26 @@ function drawCraftingBackground(thisX, thisY)
 
 
 
-    x, y = thisX + 10 + w + 10, thisY + 10 + 20
+    x, y = thisX + 10 + w + 10, thisY + 10 + 10
 
     love.graphics.setColor(1,1,1)
-    love.graphics.setFont(c.font)
+    love.graphics.setFont(crafting.font)
     love.graphics.print("ENTERED ITEMS", x + 5, y, 0 ,2 )
 
     y = thisY + 10 + 40
-
-    -- if you have enough stuff then okay! No if not. Probably a table in get inventory
-
-    love.graphics.setColor(0,0,0,0.7)
+    if crafting.craftable then
+        love.graphics.setColor(0.1,1,0.1,0.7)
+    else
+        love.graphics.setColor(1,0,0,0.7)
+    end
     roundRectangle("fill", x, y, w, h, 10)
     for i = 1, 4 do
         if crafting.enteredItems[i] and crafting.enteredItems[i].item then
-            love.graphics.setColor(1,1,1,1)
+            if crafting.craftable then
+                love.graphics.setColor(1,1,1,1)
+            else
+                love.graphics.setColor(0,0,0,0.7)
+            end
             drawCraftingItem(x + 10, y + 10, 0, crafting.enteredItems[i].item, crafting.enteredItems[i].amount)
         else
             love.graphics.setColor(0,0,0,0.7)
@@ -201,11 +202,12 @@ function drawCraftingBackground(thisX, thisY)
         x = x + 46
     end
 
-    x, y = thisX + 10 + w + 10, y + h + 10
+    x, y = thisX + 10 + w + 10, y + h + 8
     love.graphics.setColor(1,1,1)
-    love.graphics.print("CRAFTING CHANCES", x + 5, y, 0 , 2)
+    love.graphics.print("CRAFTING CHANCES", x + 5, y + 10, 0 , 2)
+    y = y + 40
 
-    for i,v in ipairs(crafting.craftableItems) do
+    for i,v in ipairs(crafting.recipes[crafting.fields[crafting.selectedField]]) do
         love.graphics.setColor(0,0,0,0.7)
         roundRectangle("fill", x, y, w, h, 10)
         love.graphics.setColor(1,1,1)
@@ -225,7 +227,7 @@ function drawCraftingBackground(thisX, thisY)
     -- end
 
     love.graphics.setColor(1,1,1,crafting.whiteout)
-    roundRectangle("fill",thisX,thisY,c.w,c.h, 10)
+    roundRectangle("fill",thisX,thisY,crafting.w,crafting.h, 10)
 end
 
 function drawCraftingItem(thisX, thisY, field, item, amount)
@@ -295,6 +297,7 @@ function drawCraftingStencil()
 end
 
 function checkCraftingMousePressed(button)
+    local c = crafting
     thisX, thisY = (uiX / 2) - (400 / 2), (uiY / 2) - (400 / 2)
     if button == 1 and crafting.mouseOverAnvil == true then
         crafting.isCrafting = true
@@ -302,8 +305,47 @@ function checkCraftingMousePressed(button)
         love.audio.stop(crafting.swing)
         crafting.swing:setPitch(love.math.random(30,80)/100)
         love.audio.play(crafting.swing)
-    elseif button == 1 and crafting.mouseOverFeild > 0 then
+    elseif button == 1 and crafting.mouseOverField > 0 then
         print("I need to enter items!")
+        local craft = {}
+        crafting.selectedField = crafting.mouseOverField
+        for i,v in ipairs(crafting.recipes[crafting.fields[crafting.selectedField]]) do
+
+            local required = json:decode(v.ItemsString)
+            crafting.enteredItems = {}
+            
+            for j = 1, #v.ItemsItem do
+                local amount = required[j].Amount
+                print(v.ItemsItem[j].Name .. " " .. amount)
+                if getItemAmount(v.ItemsItem[j]) >= amount then
+                    print("You have enough!")
+                    crafting.enteredItems[j] = {
+                        item = v.ItemsItem[j],
+                        amount = amount,
+                        random = {X = math.random()*100, Y = math.random()*100},
+                    }
+                    craft[#craft+1] = true
+                elseif getItemAmount(v.ItemsItem[j]) < 1 then
+                    print("Sorry, not enough")
+                    craft[#craft+1] = false
+                else
+                    crafting.enteredItems[j] = {
+                        item = v.ItemsItem[j],
+                        amount = getItemAmount(v.ItemsItem[j]),
+                        random = {X = math.random()*100, Y = math.random()*100},
+                    }
+                    craft[#craft+1] = false
+                end
+            end
+
+            crafting.craftable = true
+            for int, crafty in ipairs(craft) do
+                if crafty == false then
+                    crafting.craftable = false
+                end
+            end
+        end
+        
     elseif button == 2 then
         if crafting.selectableI > 0 then
             table.remove(crafting.enteredItems, crafting.selectableI)
