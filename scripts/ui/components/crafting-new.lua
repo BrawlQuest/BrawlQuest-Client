@@ -77,8 +77,10 @@ function updateCrafting(dt)
                     else
                         crafting.result = null
                     end
+                  
                     crafting.enteredItems = {}
                     crafting.craftableItems = {}
+                 
                 end
             else
                 crafting.hammerDown = crafting.hammerDown - 2 * dt
@@ -122,7 +124,7 @@ function drawCraftingBackground(thisX, thisY)
        if isMouseOver((thisX+160) * scale,(thisY+160)*scale,128*scale,128*scale) then
             setItemTooltip(crafting.result)
        end
-        love.graphics.draw(getImgIfNotExist(crafting.result.ImgPath), thisX + 330, thisY + 270, 0, 4, 4)
+        love.graphics.draw(getImgIfNotExist(crafting.result.ImgPath),thisX+160,thisY+160,0,4,4)
     end
 
     if isMouseOver((thisX+330)* scale, (thisY + 270) * scale, (crafting.anvil:getWidth()*7)*scale, (crafting.anvil:getHeight()*7)*scale) then

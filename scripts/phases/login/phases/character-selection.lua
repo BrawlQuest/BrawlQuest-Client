@@ -254,7 +254,6 @@ function checkCharacterSelectorKeyPressed(key)
         --     cs.isTyping = false
         end
     else
-        
         if key == "up" then
             cs.selectedCharacter = math.clamp(1, cs.selectedCharacter - 1, 3)
             getSelectedCharacter()

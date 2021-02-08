@@ -48,7 +48,7 @@ function newEnemyData(data) -- called when nearby data is returned
             end
 
             if enemyImg[enemy.Enemy.Name] == null then
-                enemyImg[enemy.Enemy.Name] = love.graphics.newImage(enemy.Enemy.Image)
+                enemyImg[enemy.Enemy.Name] = getImgIfNotExist(enemy.Enemy.Image)
             end
 
             -- load enemy sounds

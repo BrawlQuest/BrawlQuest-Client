@@ -37,6 +37,8 @@ function love.wheelmoved( dx, dy )
             npcChatArg.posY = npcChatArg.posY + (dy * (npcChatArg.font:getHeight() * 0.5))
         elseif worldEdit.open then
             zoomCamera(dy, worldEditScales)
+        elseif crafting.open then
+            crafting.velY = crafting.velY + dy * 512
         else 
             if isTypingInChat then velyChat = velyChat + dy * 512 end
             zoomCamera(dy, worldScales)
