@@ -130,9 +130,9 @@ function love.keypressed(key)
             --     writeSettings()
             -- end
 
-            if key == "." then
-                print(json:encode_pretty(crafting.catalogue))
-            end
+            -- if key == "." then
+            --     print(json:encode_pretty(crafting.catalogue))
+            -- end
 
             -- if key == "," then
             --     scaleHUD("down")
