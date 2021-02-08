@@ -62,7 +62,7 @@ blockMap = {}
 treeMap = {}
 players = {} -- other players
 playersDrawable = {}
-sblockMap = {}
+blockMap = {}
 lootTest = {}
 inventoryAlpha = {}
 itemImg = {}
@@ -111,9 +111,6 @@ function love.load()
     initWorldMask()
     initRangedWeapons()
     love.graphics.setFont(textFont)
-    
-   
-
 end
 
 function love.draw()

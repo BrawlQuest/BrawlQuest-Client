@@ -77,7 +77,7 @@ function initToolBarInventory()
 end
 
 function updateToolBarInventory(dt)
-    if inventory.forceOpen then
+    if inventory.forceOpen or crafting.open then
         inventory.open = true
         inventory.amount = inventory.amount + 4 * dt
         if inventory.amount > 1 then inventory.amount = 1 end
@@ -95,8 +95,6 @@ function updateToolBarInventory(dt)
         end
     end
 
-
-    
         if useItemColorChanged then
             local colorCount = 0
             for i, v in ipairs(useItemColor) do
@@ -211,7 +209,7 @@ function checkInventoryKeyPressed(key)
         if love.keyboard.isDown(i) or (i == 7 and love.keyboard.isDown("space")) then
             if inventory.isMouseOverInventoryItem then
                 v.item = selectedItem
-                print(getItemAmount(v.item))
+                -- print(getItemAmount(v.item))
             else
                 if v.item ~= nil and v.item.ID ~= nil then
                     useItemColor[i] = 1
@@ -253,42 +251,7 @@ function checkInventoryMousePressed(button)
                     v.item = selectedItem
                 end
             end
-
-        elseif crafting.open and selectedItem.Type == "reagent" then
-
-            local hasItem = false
-            local maxItemUsed = false
-            for i,v in ipairs(crafting.enteredItems) do
-                if v.item == selectedItem and getItemAmount(selectedItem) > v.amount then
-                    v.amount = v.amount + 1
-                    hasItem = true
-                elseif v.item == selectedItem and getItemAmount(selectedItem) <= v.amount then
-                    hasItem = false
-                    maxItemUsed = true
-                end
-                crafting.enteredItems[i] = v
-            end
-
-            if not hasItem and maxItemUsed == false then
-                crafting.enteredItems[#crafting.enteredItems+1] = {
-                    item = selectedItem,
-                    amount = 1,
-                    random = {X = math.random()*100, Y = math.random()*100},
-                }
-            end
-            local itemsSoFar = {}
-            for i,v in ipairs(crafting.enteredItems) do
-                itemsSoFar[#itemsSoFar+1] = {
-                    ItemID = v.item.ID,
-                    Amount = v.amount
-                }
-            end
-            local b = {}
-            body = json:encode(itemsSoFar)
-            c, h = http.request{url = api.url.."/craft/"..player.name, method="GET", source=ltn12.source.string(body), headers={["token"]=token,["Content-Length"]=#body}, sink=ltn12.sink.table(b)}
-            if b[1] ~= nil then
-             crafting.craftableItems = json:decode(b[1])
-            end
+            
         else
             apiGET("/item/" .. player.name .. "/" .. selectedItem.ID)
             usedItemThisTick = true
@@ -298,11 +261,10 @@ function checkInventoryMousePressed(button)
 end
 
 function getItemAmount(item)
-    local amount = null
+    local amount = 0
     if item ~= null then
         for i, v in ipairs(inventoryAlpha) do
-            -- print(json:encode(v.Item) .. "    " .. json:encode(item))
-            if v.Item == item then
+            if json:encode(v.Item) == json:encode(item) then
                 amount = v.Inventory.Amount
             end
         end

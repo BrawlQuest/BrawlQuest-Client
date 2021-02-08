@@ -145,18 +145,6 @@ function updateHUD( dt )
 
     if showHUD then
         if inventory.open or inventory.forceOpen then velyInventory = velyInventory - velyInventory * math.min( dt * 15, 1 ) end
-        if showChat and messages and #messages > 0 then velyChat = velyChat - velyChat * math.min( dt * 15, 1 ) end
-
-        if showChat then
-            if (getFullChatHeight() + cerp(10, 115, questHub.amount)) * scale > uiY then -- take into account spacing from the bottom
-                posYChat = posYChat + velyChat * dt
-                if posYChat < 0 then
-                    posYChat = 0
-                end
-            else posYChat = 0
-            end
-        end
-
         updateTooltip(dt)
         updateToolBarInventory(dt)
         updateCharacterHub(dt)
