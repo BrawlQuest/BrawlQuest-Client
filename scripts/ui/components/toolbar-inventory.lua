@@ -216,8 +216,6 @@ function checkInventoryKeyPressed(key)
                     useItemColorChanged = true
                     apiGET("/item/" .. player.name .. "/" .. v.item.ID)
                     usedItemThisTick = true
-                else
-                    hotbar[i] = {item = null,}
                 end
             end
         end

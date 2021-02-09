@@ -99,18 +99,25 @@ function newEnemyData(data) -- called when nearby data is returned
             enemy.HP = v.HP
             enemy.red = 1
 
-            enemyHitSfx:setPitch(love.math.random(50, 100) / 100)
-            love.audio.play(enemyHitSfx)
+            if sfxVolume > 0 then
+                enemyHitSfx:setPitch(love.math.random(50, 100) / 100)
+                enemyHitSfx:setVolume(1 * sfxVolume)
+                love.audio.play(enemyHitSfx)
+            end
+
             boneSpurt(enemy.dx + 16, enemy.dy + 16, 4, 20, 1, 1, 1)
         end
 
         if enemy.IsAggro == false and v.IsAggro then
             enemy.aggroAlpha = 2
             enemy.IsAggro = true
-            local aggroSfx = enemySounds[v.Enemy.Name].aggro[love.math.random(1, #enemySounds[v.Enemy.Name].aggro)]
-            aggroSfx:setPitch(love.math.random(80, 150) / 100)
-            --   aggroSfx:setPosition(v.x-player.x,v.y-player.y)
-            love.audio.play(aggroSfx)
+            if sfxVolume > 0 then
+                local aggroSfx = enemySounds[v.Enemy.Name].aggro[love.math.random(1, #enemySounds[v.Enemy.Name].aggro)]
+                aggroSfx:setPitch(love.math.random(80, 150) / 100)
+                aggroSfx:setVolume(1 * sfxVolume)
+                --   aggroSfx:setPosition(v.x-player.x,v.y-player.y)
+                love.audio.play(aggroSfx)
+            end
         end
 
         enemy.Target = v.Target
@@ -189,8 +196,9 @@ function drawEnemies()
                 end
             elseif not v.hasBurst then
                 burstLoot(v.dx + 16, v.dy + 16, math.abs(v.Enemy.HP / 3), "xp")
-
-                love.audio.play(enemySounds[v.Enemy.Name].death[love.math.random(1, #enemySounds[v.Enemy.Name].death)])
+                local deathSound = enemySounds[v.Enemy.Name].death[love.math.random(1, #enemySounds[v.Enemy.Name].death)]
+                love.audio.play(deathSound)
+                deathSound:setVolume(1 * sfxVolume)
                 boneSpurt(v.dx + 16, v.dy + 16, 10, 25, 1, 1, 1)
                 v.hasBurst = true
             end
