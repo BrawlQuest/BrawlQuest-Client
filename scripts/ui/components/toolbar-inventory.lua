@@ -210,7 +210,7 @@ function checkInventoryKeyPressed(key)
             if inventory.isMouseOverInventoryItem then
                 v.item = selectedItem
             else
-                if v.item ~= nil and v.item.ID ~= nil then
+                if v.item ~= nil and v.item.ID ~= nil and not usedItemThisTick  then
                     useItemColor[i] = 1
                     useItemColorChanged = true
                     apiGET("/item/" .. player.name .. "/" .. v.item.ID)
@@ -225,7 +225,7 @@ function checkInventoryMousePressed(button)
 
     if inventory.mouseOverButtonsAmount > 0 then
         for i,v in ipairs(hotbar) do
-            if i == inventory.mouseOverButtonsAmount and v.item ~= nil and v.item.ID ~= nil then
+            if i == inventory.mouseOverButtonsAmount and v.item ~= nil and v.item.ID ~= nil and  not usedItemThisTick  then
                 if button == 1  then
                     useItemColor[i] = 1
                     useItemColorChanged = true
@@ -249,7 +249,7 @@ function checkInventoryMousePressed(button)
                 end
             end
             
-        else
+        elseif  not usedItemThisTick then
             apiGET("/item/" .. player.name .. "/" .. selectedItem.ID)
             usedItemThisTick = true
         end

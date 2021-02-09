@@ -271,7 +271,7 @@ function love.update(dt)
 
             timeOfDay = cerp(0.1, 1, ((math.abs(response['CurrentHour']) * 60) + 0) / 720)
             timeOfDay = timeOfDay + 0.2
-            
+            usedItemThisTick = false
 
             if not worldEdit.open then
                 Luven.setAmbientLightColor({timeOfDay, timeOfDay, timeOfDay+  0.1})

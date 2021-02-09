@@ -76,7 +76,7 @@ function drawPlayer(v, i)
     -- TODO: we need to extract player armour somewhere here, but as we aren't loading in assets yet this hasn't been done
     local thisPlayer
     if i == -1 then -- this player is me
-        thisPlayer = me
+        thisPlayer = copy(me)
         v.X = player.dx
         v.Y = player.dy
         v.Name = player.name
@@ -86,6 +86,8 @@ function drawPlayer(v, i)
         thisPlayer.IsShield = love.keyboard.isDown(keybinds.SHIELD)
         thisPlayer.Name = player.name
         thisPlayer.Buddy = player.buddy
+        thisPlayer.HP = player.hp
+        thisPlayer.Mana = me.Mana
     else
         thisPlayer = players[i]
     end
@@ -108,7 +110,7 @@ function drawPlayer(v, i)
             boi = 16 + 3
         end
 
-        drawNamePlate(v.X + boi, v.Y, v.Name)
+        drawNamePlate(v.X + boi, v.Y, v.Name, 1, thisPlayer.LVL) -- thisPlayer.LVL
         
         if thisPlayer ~= nil and thisPlayer.AX then
             local diffX
@@ -122,6 +124,21 @@ function drawPlayer(v, i)
             end
 
             drawArrowImage(diffX, diffY, v.X, v.Y)
+        end
+        local underCharacterBarY = v.Y+34
+        if thisPlayer.HP < (100+thisPlayer.STA*15) then
+            love.graphics.setColor(0.4,0,0)
+            love.graphics.rectangle("fill", v.X, underCharacterBarY,32,4)
+            love.graphics.setColor(0,1,0)
+            love.graphics.rectangle("fill", v.X, underCharacterBarY, (thisPlayer.HP/(100+thisPlayer.STA*15))*32, 4)
+            underCharacterBarY = underCharacterBarY + 5
+        end
+        if thisPlayer.Mana < 100 then
+            love.graphics.setColor(0,0,0.4)
+            love.graphics.rectangle("fill", v.X, underCharacterBarY,32,4)
+            love.graphics.setColor(0,0,1)
+            love.graphics.rectangle("fill", v.X, underCharacterBarY, (thisPlayer.Mana/100) * 32, 4)
+            underCharacterBarY = underCharacterBarY + 10
         end
         love.graphics.setColor(1, 1, 1)
     end
@@ -140,7 +157,8 @@ function drawArrowImage(diffX, diffY, x, y)
     end
 end
 
-function drawNamePlate(x,y,name, alpha)
+function drawNamePlate(x,y,name, alpha, level)
+    level = level or null
     alpha = alpha or 1
     love.graphics.setColor(1,1,1, alpha)
     local thisX, thisY = x , y - 2
@@ -151,6 +169,18 @@ function drawNamePlate(x,y,name, alpha)
     roundRectangle("fill", (thisX) - (nameWidth / 2) - (padding) - 2, thisY - nameHeight - 3, nameWidth + (padding * 2) + 3, nameHeight + (padding * 2), 3)
     love.graphics.setColor(1, 1, 1, alpha)
     love.graphics.print(name, playerNameFont, (thisX) - (nameWidth * 0.5), thisY - nameHeight - 2 + padding)
+
+    thisX, thisY = (thisX) + (nameWidth / 2) + (padding) + 2 - 1, thisY - nameHeight - 3 - 4
+    if level then
+        local padding = {x = 4, y = 3}
+        local levelWidth = playerNameFont:getWidth(level)
+        local levelHeight = playerNameFont:getHeight(level)
+        local w, h = levelWidth + padding.x * 2 - 1, levelHeight + padding.y * 2 - 2
+        love.graphics.setColor(1,0,0,0.8 * alpha)
+        roundRectangle("fill", thisX - padding.x, thisY - padding.y, w, h, 4)
+        love.graphics.setColor(1,1,1,alpha)
+        love.graphics.print(level, thisX, thisY)
+    end
 end
 
 attackHitAmount = 0

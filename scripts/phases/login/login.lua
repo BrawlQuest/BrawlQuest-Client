@@ -147,12 +147,12 @@ end
 
 function loginViaSteam()
     if versionType ~= "dev" then
-        local originalID  = steam.user.getSteamID()
-        local str = tostring(original)
-        if str ~= "nil" then
-            textfields[1] = str
-            textfields[2] = str
-            login()
-        end
+        -- local originalID  = steam.user.getSteamID()
+        -- local str = tostring(original)
+        -- if str ~= "nil" then
+        --     textfields[1] = str
+        --     textfields[2] = str
+        --     login()
+        -- end
     end
 end
