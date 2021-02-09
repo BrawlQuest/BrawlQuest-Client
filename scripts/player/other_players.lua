@@ -176,6 +176,7 @@ function updateOtherPlayers(dt)
         playersDrawable[i].Mount = v.Mount
 
         if playersDrawable[i].HP > v.HP then
+            print("player Hit")
             playersDrawable[i].HP = v.HP
             playersDrawable[i].RedAlpha = 1
             love.audio.play(playerHitSfx)

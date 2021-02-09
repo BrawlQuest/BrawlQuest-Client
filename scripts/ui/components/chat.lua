@@ -30,8 +30,6 @@ function updateChat(dt)
 				chat.deleteText = true
 			end
 		end
-		print(chat.deleteDelay)
-
 		if chat.deleteText == true then
 			chat.deleteTick = chat.deleteTick + chat.deleteSpeed * dt
 			if chat.deleteTick > 1 then
