@@ -34,18 +34,19 @@ function drawCharacter(v, x, y, ad)
                 y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), player.wobble, rotation, 1, 0, 0)
         end
 
-         if v.Mount ~= "None" then
+        if v.Mount ~= "None" then
             love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..v.Mount.."/back.png"), x + 6 + mountOffsetX, y + 9, 0, rotation, 1, 0, 0)
         end
 
         drawBuddy(v.Name)
-
+        if v.RedAlpha ~= null then
+            love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha)
+        end
+        -- print(v.RedAlpha)
         -- if v.Color ~= null then love.graphics.setColor(unpack(v.Color)) end
         love.graphics.draw(playerImg, x + offsetX, y, player.wobble, rotation, 1, 0, 0)
         love.graphics.setColor(1,1,1)
 
-       
-      
         if v.LegArmourID ~= 0 then
             drawItemIfExists(v.LegArmour.ImgPath, x, y, ad.previousDirection)
         end
@@ -63,6 +64,11 @@ function drawCharacter(v, x, y, ad)
             drawItemIfExists(v.Shield.ImgPath, x, y, ad.previousDirection)
         end
 
+        -- local w, h = 64, 46
+        -- love.graphics.setColor(0,0,0,0.8)
+        -- roundRectangle("fill", x + 42, y - 16 - h, w, h, 5, {true, true, false, false})
+        -- love.graphics.setColor(1,1,1)
+        -- love.graphics.line(x + 32, y, x + 42, y - 16, x + 42 + w, y - 16)
     end
 end
 
@@ -203,6 +209,7 @@ function updateOtherPlayers(dt)
         playersDrawable[i].Mount = v.Mount
 
         if playersDrawable[i].HP > v.HP then
+            print("player Hit")
             playersDrawable[i].HP = v.HP
             playersDrawable[i].RedAlpha = 1
             love.audio.play(playerHitSfx)

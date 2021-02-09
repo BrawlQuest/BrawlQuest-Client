@@ -14,6 +14,33 @@ function initChat()
 	messages = {}
 	enteredChatText = ""
 	previousUsername = ""
+	chat = {
+		deleteText = false,
+		deleteTick = 0,
+		deleteSpeed = 30,
+		deleteDelay = 0,
+	}
+end
+
+function updateChat(dt)
+	if isTypingInChat and love.keyboard.isDown("backspace") then
+		if chat.deleteDelay < 1 then
+			chat.deleteDelay = chat.deleteDelay + 4 * dt 
+			if chat.deleteDelay >= 1 then
+				chat.deleteText = true
+			end
+		end
+		if chat.deleteText == true then
+			chat.deleteTick = chat.deleteTick + chat.deleteSpeed * dt
+			if chat.deleteTick > 1 then
+				chat.deleteTick = 0
+				enteredChatText = string.sub( enteredChatText, 1, string.len( enteredChatText) - 1)
+			end
+		end
+	else
+		chat.deleteDelay = 0
+		chat.deleteText = false
+	end
 end
 
 function checkChatTextinput(key)

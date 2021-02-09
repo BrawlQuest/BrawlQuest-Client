@@ -32,6 +32,7 @@ function initSettings()
     displayWidth, displayHeight = love.window.getDesktopDimensions(display)
     screenDimentions = {width = displayWidth * 0.8, height =  displayHeight * 0.8,}
     window = {x = displayWidth * 0.1, y = displayHeight * 0.1}
+    vsync = false
     showChat = true
     openUiOnHover = true
     showClouds = false
@@ -50,9 +51,10 @@ function initSettings()
     info = love.filesystem.getInfo("settings.txt")
     getSettingsVersion()
 
-    if info ~= null then --and getSettingsVersion() then
+    if info ~= null and getSettingsVersion() then
         -- print ("Initiating Saved Settings")
         display = contents["display"]
+        vsync = contents["vsync"]
         window = contents["window"]
         screenDimentions = contents["screenDimentions"]
         keybinds = contents["keybinds"]
@@ -97,7 +99,8 @@ function initSettings()
             {name = "Clouds", v = showClouds, type = "button", "On", "Off",},
             -- {name = "Shadows (Alpha)", v = showShadows, type = "button", "On", "Off",},
             -- {name = "World Mask", v = showWorldMask, type = "button", "On", "Off",},
-            {name = "World Animtions", v = showWorldAnimations, type = "button", "On", "Off",},
+            {name = "World Animations", v = showWorldAnimations, type = "button", "On", "Off",},
+            {name = "VSync", v = vsync, type = "button", "On", "Off",},
         },
         {
             title = "Sound",
@@ -137,6 +140,7 @@ function writeSettings()
         showWorldAnimations = showWorldAnimations,
         openUiOnHover = openUiOnHover,
         hotbar = hotbar,
+        vsync = vsync,
     }))
 end
 
@@ -169,10 +173,11 @@ function checkSettingsMousePressed(button)
                         elseif settPan.mouseOver == 11 then
                             settings[1][1].v = false
                             -- TODO: kill yourself
-                        elseif settPan.mouseOver == 21 or settPan.mouseOver == 22 then
+                        elseif settPan.mouseOver == 21 or settPan.mouseOver == 22 or settPan.mouseOver == 25 then
                             bv.v = not bv.v
                             highdpi = settings[2][1].v
                             fullscreen = settings[2][2].v
+                            vsync = settings[2][5].v
                             setWindowOptions()
                             createWorld()
                         else
@@ -251,7 +256,7 @@ function setWindowOptions()
         fullscreen = fullscreen,
         resizable = not fullscreen,
         usedpiscale = false,
-        vsync = 1,
+        vsync = boolToInt(vsync),
         borderless = false,
     })
     scale = settPan.scaleTypes[settPan.scaleValue]

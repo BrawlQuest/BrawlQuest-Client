@@ -40,6 +40,7 @@ function newEnemyData(data) -- called when nearby data is returned
             enemy.red = 0
             enemy.atkAlpha = 0
             enemy.aggroAlpha = 0
+            enemy.linesDrawable = false
 
             if enemy.HP <= 0 then
                 enemy.hasBurst = true
@@ -99,18 +100,25 @@ function newEnemyData(data) -- called when nearby data is returned
             enemy.HP = v.HP
             enemy.red = 1
 
-            enemyHitSfx:setPitch(love.math.random(50, 100) / 100)
-            love.audio.play(enemyHitSfx)
+            if sfxVolume > 0 then
+                enemyHitSfx:setPitch(love.math.random(50, 100) / 100)
+                enemyHitSfx:setVolume(1 * sfxVolume)
+                love.audio.play(enemyHitSfx)
+            end
+
             boneSpurt(enemy.dx + 16, enemy.dy + 16, 4, 20, 1, 1, 1)
         end
 
         if enemy.IsAggro == false and v.IsAggro then
             enemy.aggroAlpha = 2
             enemy.IsAggro = true
-            local aggroSfx = enemySounds[v.Enemy.Name].aggro[love.math.random(1, #enemySounds[v.Enemy.Name].aggro)]
-            aggroSfx:setPitch(love.math.random(80, 150) / 100)
-            --   aggroSfx:setPosition(v.x-player.x,v.y-player.y)
-            love.audio.play(aggroSfx)
+            if sfxVolume > 0 then
+                local aggroSfx = enemySounds[v.Enemy.Name].aggro[love.math.random(1, #enemySounds[v.Enemy.Name].aggro)]
+                aggroSfx:setPitch(love.math.random(80, 150) / 100)
+                aggroSfx:setVolume(1 * sfxVolume)
+                --   aggroSfx:setPosition(v.x-player.x,v.y-player.y)
+                love.audio.play(aggroSfx)
+            end
         end
 
         enemy.Target = v.Target
@@ -182,15 +190,27 @@ function drawEnemies()
                 love.graphics.draw(alertImg, v.dx + 8, v.dy - 16)
                 love.graphics.setColor(1, 1, 1)
 
-                if distanceToPoint(v.dx,v.dy,player.dx,player.dy) < (v.Enemy.Range + 1) * 32 and v.Target == me.ID then
-                    love.graphics.setColor(1, 0, 0)
-                    love.graphics.line(v.dx + 16, v.dy + 16, player.dx + 16, player.dy + 16)
-                    love.graphics.setColor(1, 1, 1, 1)
+                if versionType == "dev" then love.graphics.print(v.TargetName, v.dx, v.dy - 10) end
+                -- print( "\"" .. v.TargetName .. "\" \"" .. me.Name .. "\"")
+                if distanceToPoint(v.dx,v.dy,player.dx,player.dy) < (v.Enemy.Range + 1) * 32 then
+                    if nextTick >= 1 then
+                        enemies[i].linesDrawable = true
+                    end
+                    if enemies[i].linesDrawable == true and v.TargetName == me.Name then
+                        love.graphics.setColor(1, 0, 0, nextTick)
+                        love.graphics.line(v.dx + 16, v.dy + 16, player.dx + 16, player.dy + 16)
+                        love.graphics.setColor(1, 1, 1, 1)
+                        if nextTick >= 1 then boneSpurt(player.dx + 16, player.dy + 16, 2, 40, 1,1,1, "me") end
+                    end
+                else
+                    enemies[i].linesDrawable = false
                 end
+
             elseif not v.hasBurst then
                 burstLoot(v.dx + 16, v.dy + 16, math.abs(v.Enemy.HP / 3), "xp")
-
-                love.audio.play(enemySounds[v.Enemy.Name].death[love.math.random(1, #enemySounds[v.Enemy.Name].death)])
+                local deathSound = enemySounds[v.Enemy.Name].death[love.math.random(1, #enemySounds[v.Enemy.Name].death)]
+                love.audio.play(deathSound)
+                deathSound:setVolume(1 * sfxVolume)
                 boneSpurt(v.dx + 16, v.dy + 16, 10, 25, 1, 1, 1)
                 v.hasBurst = true
             end
