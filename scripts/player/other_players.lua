@@ -47,8 +47,6 @@ function drawCharacter(v, x, y, ad)
         love.graphics.draw(playerImg, x + offsetX, y, player.wobble, rotation, 1, 0, 0)
         love.graphics.setColor(1,1,1)
 
-       
-      
         if v.LegArmourID ~= 0 then
             drawItemIfExists(v.LegArmour.ImgPath, x, y, ad.previousDirection)
         end
@@ -66,6 +64,11 @@ function drawCharacter(v, x, y, ad)
             drawItemIfExists(v.Shield.ImgPath, x, y, ad.previousDirection)
         end
 
+        -- local w, h = 64, 46
+        -- love.graphics.setColor(0,0,0,0.8)
+        -- roundRectangle("fill", x + 42, y - 16 - h, w, h, 5, {true, true, false, false})
+        -- love.graphics.setColor(1,1,1)
+        -- love.graphics.line(x + 32, y, x + 42, y - 16, x + 42 + w, y - 16)
     end
 end
 

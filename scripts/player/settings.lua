@@ -32,7 +32,7 @@ function initSettings()
     displayWidth, displayHeight = love.window.getDesktopDimensions(display)
     screenDimentions = {width = displayWidth * 0.8, height =  displayHeight * 0.8,}
     window = {x = displayWidth * 0.1, y = displayHeight * 0.1}
-    vsync = 0
+    vsync = false
     showChat = true
     openUiOnHover = true
     showClouds = false
@@ -173,10 +173,11 @@ function checkSettingsMousePressed(button)
                         elseif settPan.mouseOver == 11 then
                             settings[1][1].v = false
                             -- TODO: kill yourself
-                        elseif settPan.mouseOver == 21 or settPan.mouseOver == 22 then
+                        elseif settPan.mouseOver == 21 or settPan.mouseOver == 22 or settPan.mouseOver == 25 then
                             bv.v = not bv.v
                             highdpi = settings[2][1].v
                             fullscreen = settings[2][2].v
+                            vsync = settings[2][5].v
                             setWindowOptions()
                             createWorld()
                         else
@@ -190,7 +191,6 @@ function checkSettingsMousePressed(button)
                         -- showShadows = settings[2][4].v
                         -- showWorldMask = settings[2][5].v
                         showWorldAnimations = settings[2][4].v
-                        vsync = settings[2][5].v
                     end
                 end
             end
@@ -256,7 +256,7 @@ function setWindowOptions()
         fullscreen = fullscreen,
         resizable = not fullscreen,
         usedpiscale = false,
-        vsync = vsync,
+        vsync = boolToInt(vsync),
         borderless = false,
     })
     scale = settPan.scaleTypes[settPan.scaleValue]

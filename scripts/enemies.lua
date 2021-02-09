@@ -190,7 +190,7 @@ function drawEnemies()
                 love.graphics.draw(alertImg, v.dx + 8, v.dy - 16)
                 love.graphics.setColor(1, 1, 1)
 
-                love.graphics.print(v.TargetName, v.dx, v.dy - 10)
+                if versionType == "dev" then love.graphics.print(v.TargetName, v.dx, v.dy - 10) end
                 -- print( "\"" .. v.TargetName .. "\" \"" .. me.Name .. "\"")
                 if distanceToPoint(v.dx,v.dy,player.dx,player.dy) < (v.Enemy.Range + 1) * 32 then
                     if nextTick >= 1 then
@@ -198,9 +198,7 @@ function drawEnemies()
                     end
                     if enemies[i].linesDrawable == true and v.TargetName == me.Name then
                         love.graphics.setColor(1, 0, 0, nextTick)
-                        local dx = lerp(v.dx + 16, player.dx + 16, nextTick)
-                        local dy = lerp(v.dy + 16, player.dy + 16, nextTick)
-                        love.graphics.line(v.dx + 16, v.dy + 16, dx, dy)
+                        love.graphics.line(v.dx + 16, v.dy + 16, player.dx + 16, player.dy + 16)
                         love.graphics.setColor(1, 1, 1, 1)
                         if nextTick >= 1 then boneSpurt(player.dx + 16, player.dy + 16, 2, 40, 1,1,1, "me") end
                     end
