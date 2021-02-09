@@ -34,12 +34,15 @@ function drawCharacter(v, x, y, ad)
                 y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), player.wobble, rotation, 1, 0, 0)
         end
 
-         if v.Mount ~= "None" then
+        if v.Mount ~= "None" then
             love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..v.Mount.."/back.png"), x + 6 + mountOffsetX, y + 9, 0, rotation, 1, 0, 0)
         end
 
         drawBuddy(v.Name)
-
+        if v.RedAlpha ~= null then
+            love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha)
+        end
+        -- print(v.RedAlpha)
         -- if v.Color ~= null then love.graphics.setColor(unpack(v.Color)) end
         love.graphics.draw(playerImg, x + offsetX, y, player.wobble, rotation, 1, 0, 0)
         love.graphics.setColor(1,1,1)

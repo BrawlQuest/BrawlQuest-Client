@@ -31,7 +31,6 @@ function love.keypressed(key)
             checkTutorialKeyPressed(key)
         elseif isTypingInChat then
             if key == "backspace" then
-
                 enteredChatText = string.sub( enteredChatText, 1, string.len( enteredChatText) - 1)
             elseif key == "return" and enteredChatText ~= "" then
                 posYChat = 0
