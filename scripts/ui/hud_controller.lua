@@ -150,6 +150,7 @@ function updateHUD( dt )
         updateCharacterHub(dt)
         -- updateQuestHub(dt)
         updateCrafting(dt) -- fine
+        if showChat then updateChat(dt) end
     end
 
     updateFloats(dt)
