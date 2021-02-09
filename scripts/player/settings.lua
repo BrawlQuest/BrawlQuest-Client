@@ -251,7 +251,7 @@ function setWindowOptions()
         fullscreen = fullscreen,
         resizable = not fullscreen,
         usedpiscale = false,
-        vsync = 0,
+        vsync = 1,
         borderless = false,
     })
     scale = settPan.scaleTypes[settPan.scaleValue]

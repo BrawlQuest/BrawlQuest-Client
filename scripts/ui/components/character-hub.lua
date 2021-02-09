@@ -103,7 +103,7 @@ function drawCharacterHubProfile(thisX, thisY)
     if player.cp > 0 then love.graphics.setColor(1,0,0,1) end
     love.graphics.draw(hubImages.profileFG, thisX, thisY)
     if player.cp > 0 then love.graphics.setColor(1,1,1,1) else love.graphics.setColor(0,0,0,1) end
-    love.graphics.print(me.LVL, thisX + 56 - math.floor(characterHub.font:getWidth(me.LVL)/2), thisY + 85 - (characterHub.font:getHeight(me.LVL)/2))
+    love.graphics.print(tostring(me.LVL), thisX + 56 - math.floor(characterHub.font:getWidth(tostring(me.LVL))/2), thisY + 85 - (characterHub.font:getHeight(tostring(me.LVL))/2))
 end
 
 function drawCharacterHubStats(thisX, thisY)
@@ -172,7 +172,11 @@ function checkStatsMousePressed(button)
 end
 
 function getSTA(i)
-    if i == 0 then return 15 * me.STA else return 0 end
+    if me.STA then
+        if i == 0 then return 15 * me.STA else return 0 end
+    else
+        return 0
+    end
 end
 
 function drawBattlebarItem(thisX, thisY, item, stats)

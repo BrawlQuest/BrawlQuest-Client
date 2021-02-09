@@ -70,7 +70,7 @@ function drawPlayer(v, i)
     -- TODO: we need to extract player armour somewhere here, but as we aren't loading in assets yet this hasn't been done
     local thisPlayer
     if i == -1 then -- this player is me
-        thisPlayer = me
+        thisPlayer = copy(me)
         v.X = player.dx
         v.Y = player.dy
         v.Name = player.name
@@ -80,6 +80,8 @@ function drawPlayer(v, i)
         thisPlayer.IsShield = love.keyboard.isDown(keybinds.SHIELD)
         thisPlayer.Name = player.name
         thisPlayer.Buddy = player.buddy
+        thisPlayer.HP = player.hp
+        thisPlayer.Mana = me.Mana
     else
         thisPlayer = players[i]
     end
@@ -102,7 +104,7 @@ function drawPlayer(v, i)
             boi = 16 + 3
         end
 
-        drawNamePlate(v.X + boi, v.Y, v.Name)
+        drawNamePlate(v.X + boi, v.Y, "Lv"..thisPlayer.LVL .. " " .. v.Name)
         
         if thisPlayer ~= nil and thisPlayer.AX then
             local diffX
@@ -116,6 +118,21 @@ function drawPlayer(v, i)
             end
 
             drawArrowImage(diffX, diffY, v.X, v.Y)
+        end
+        local underCharacterBarY = v.Y+34
+        if thisPlayer.HP < (100+thisPlayer.STA*15) then
+            love.graphics.setColor(0.4,0,0)
+            love.graphics.rectangle("fill", v.X, underCharacterBarY,32,4)
+            love.graphics.setColor(0,1,0)
+            love.graphics.rectangle("fill", v.X, underCharacterBarY, (thisPlayer.HP/(100+thisPlayer.STA*15))*32, 4)
+            underCharacterBarY = underCharacterBarY + 5
+        end
+        if thisPlayer.Mana < 100 then
+            love.graphics.setColor(0,0,0.4)
+            love.graphics.rectangle("fill", v.X, underCharacterBarY,32,4)
+            love.graphics.setColor(0,0,1)
+            love.graphics.rectangle("fill", v.X, underCharacterBarY, (thisPlayer.Mana/100)*32, 4)
+            underCharacterBarY = underCharacterBarY + 10
         end
         love.graphics.setColor(1, 1, 1)
     end
