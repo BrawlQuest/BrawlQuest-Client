@@ -115,7 +115,7 @@ function updateQuestHub(dt)
                 end
             else posYQuest = 0
             end
-        else
+        elseif not questsPanel.forceOpen then
             panelMovement(dt, questsPanel, -1)
         end
     else

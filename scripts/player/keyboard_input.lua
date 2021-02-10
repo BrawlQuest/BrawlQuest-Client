@@ -87,8 +87,9 @@ function love.keypressed(key)
                 inventory.forceOpen = not inventory.forceOpen
             end
 
-            if key == keybinds.QUESTS and inventory.notNPC then
+            if key == keybinds.QUESETS then
                 questsPanel.forceOpen = not questsPanel.forceOpen
+                print("TRUEEE")
             end
 
             if key == keybinds.INTERACT and isNearbyTile("assets/world/objects/Anvil.png") then -- Hello Mr HackerMan! Removing the isNearbyTile will allow you to open the crafting menu from anywhere, but won't allow you to actually craft any items. Sorry! =(
