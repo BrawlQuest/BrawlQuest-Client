@@ -77,7 +77,6 @@ function updateCrafting(dt)
                         crafting.result.alpha = 2
                     else
                         crafting.result = null
-                        crafting.result.alpha = 0
                     end
                     crafting.enteredItems = {}
                     crafting.craftableItems = {}
@@ -116,10 +115,10 @@ function drawCrafting()
     love.graphics.setColor(0,0,0,0.8)
     roundRectangle("fill", thisX, thisY, w, h, 10)
     love.graphics.setColor(1,1,1,1)
-    love.graphics.stencil(drawCraftingStencil, "replace", 1) -- stencils inventory
-    love.graphics.setStencilTest("greater", 0) -- push
+    -- love.graphics.stencil(drawCraftingStencil, "replace", 1) -- stencils inventory
+    -- love.graphics.setStencilTest("greater", 0) -- push
         drawCraftingBackground(thisX, thisY)
-    love.graphics.setStencilTest() -- pop
+    -- love.graphics.setStencilTest() -- pop
 end
 
 function drawCraftingBackground(thisX, thisY)
@@ -142,41 +141,58 @@ function drawCraftingBackground(thisX, thisY)
     love.graphics.print("CRAFTING", inventory.headerFont, thisX + 10 , thisY + 14)    
     love.graphics.print("RECIPES",crafting.font, thisX + 10, thisY + 10 + 40, 0, 2)
     x, y = thisX + 10, thisY + 10 + 40 + crafting.posY + 30
-    w, h = 194, 56
+    w, h = 194 + 18, 56
     crafting.mouseOverField = 0
     
-    for i,field in ipairs(crafting.fields) do
-        x = thisX + 10
-        if isMouseOver(x * scale,y * scale,w * scale,h * scale) then
-            crafting.mouseOverField = i
-            love.graphics.setColor(1,0,0,1)
-        elseif crafting.selectedField == i then
-            love.graphics.setColor(43 / 255, 134 / 255, 0)
-        else
-            love.graphics.setColor(0,0,0,0.7)
-        end
 
-        roundRectangle("fill", x, y, w, h, 10)
-        local v = crafting.recipes[field][1]
-        local values = json:decode(v.ItemsString)
-        for j = 1, 4 do
-            if v.ItemsItem[j] ~= null then
-                local amount = 0
-                for l,m in ipairs(values) do
-                    if m.ItemID == v.ItemsItem[j].ID then
-                        amount = m.Amount
-                    end
-                end
-                love.graphics.setColor(1,1,1,1)
-                drawCraftingItem(x + 10, y + 10, 0, v.ItemsItem[j], amount)
+    love.graphics.stencil(drawRecipesStencil, "replace", 1) -- stencils inventory
+    love.graphics.setStencilTest("greater", 0) -- push
+
+        for i,field in ipairs(crafting.fields) do
+            x = thisX + 10
+            if isMouseOver(x * scale,y * scale,w * scale,h * scale) then
+                crafting.mouseOverField = i
+                love.graphics.setColor(1,0,0,1)
+            elseif crafting.selectedField == i then
+                love.graphics.setColor(43 / 255, 134 / 255, 0)
             else
                 love.graphics.setColor(0,0,0,0.7)
-                drawItemBacking(x + 10, y + 10)
             end
-            x = x + 46
+
+            roundRectangle("fill", x, y, w, h, 10)
+            local v = crafting.recipes[field][1]
+            local values = json:decode(v.ItemsString)
+            for j = 1, 4 do
+                if j == 1 then
+                    if v.Item ~= null then
+                        love.graphics.setColor(1,1,1,1)
+                        drawCraftingItem(x + 10, y + 10, 0, v.Item)
+                    end
+                    love.graphics.printf("=", x + 51, y + 8, 8, "center", 0, 3)
+                    x = x + 10 + 8
+                else
+                    j = j - 1
+                    if v.ItemsItem[j] ~= null then
+                        local amount = 0
+                        for l,m in ipairs(values) do
+                            if m.ItemID == v.ItemsItem[j].ID then
+                                amount = m.Amount
+                            end
+                        end
+                        love.graphics.setColor(1,1,1,1)
+                        drawCraftingItem(x + 10, y + 10, 0, v.ItemsItem[j], amount)
+                    else
+                        love.graphics.setColor(0,0,0,0.7)
+                        drawItemBacking(x + 10, y + 10)
+                    end
+                end
+                x = x + 46
+            end
+            y = y + 66
         end
-        y = y + 66
-    end
+
+    love.graphics.setStencilTest() -- pop
+
 
     x, y = thisX + 10 + w + 10, thisY + 10 + 10
 
@@ -190,7 +206,7 @@ function drawCraftingBackground(thisX, thisY)
     else
         love.graphics.setColor(1,0,0,0.7)
     end
-    roundRectangle("fill", x, y, w, h, 10)
+    roundRectangle("fill", x, y, w - 18, h, 10)
     for i = 1, 4 do
         if crafting.enteredItems[i] and crafting.enteredItems[i].item then
             if crafting.craftable then
@@ -213,7 +229,7 @@ function drawCraftingBackground(thisX, thisY)
 
     for i,v in ipairs(crafting.recipes[crafting.fields[crafting.selectedField]]) do
         love.graphics.setColor(0,0,0,0.7)
-        roundRectangle("fill", x, y, w, h, 10)
+        roundRectangle("fill", x, y, w - 18, h, 10)
         love.graphics.setColor(1,1,1)
         drawCraftingItem(x + 10, y + 10, 0, v.Item, 1)
         love.graphics.print(v.Item.Name, x + 54, y + 12)
@@ -221,17 +237,15 @@ function drawCraftingBackground(thisX, thisY)
         y = y + 66
     end
 
-
-
     if crafting.result then    
-        local size = 6 * crafting.result.alphaCERP
+        local size = 4 * crafting.result.alphaCERP
         x, y = uiX * 0.5 - (34 * size) / 2, uiY * 0.5 - (34 * size) / 2
         w, h = (34 * size), (34 * size)
         if isMouseOver(x * scale, y * scale, (34 * size) *  scale, (34 * size) * scale) then
             setItemTooltip(crafting.result)
         end
-        love.graphics.setColor(1, cerp(165 / 255, 1, crafting.result.alpha), cerp(32 / 255, 1, crafting.result.alpha), crafting.result.alphaCERP)
-        roundRectangle("fill", x,y,w,h, 10 )
+        love.graphics.setColor(1, cerp(165 / 255, 1, crafting.result.alpha), cerp(32 / 255, 1, crafting.result.alpha), 0.8 * crafting.result.alphaCERP)
+        roundRectangle("fill", x,y,w,h, 5 )
         love.graphics.setColor(1,1,1, crafting.result.alphaCERP)
         love.graphics.draw(getImgIfNotExist(crafting.result.ImgPath), x + size * 2, y + size * 2, 0, size)
     end
@@ -303,7 +317,11 @@ function drawCraftingButton(thisX, thisY, title)
 end
 
 function drawCraftingStencil()
-    roundRectangle("fill", (uiX / 2) - (crafting.w / 2), (uiY / 2) - (crafting.h / 2), crafting.w, crafting.h, 10)
+    roundRectangle("fill", ((uiX / 2) - (crafting.w / 2)) * scale, ((uiY / 2) - (crafting.h / 2)) * scale, crafting.w * scale, crafting.h * scale, 10 * scale)
+end
+
+function drawRecipesStencil()
+    roundRectangle("fill", (((uiX / 2) - (crafting.w / 2)) + 10) * scale, (((uiY / 2) - (crafting.h / 2)) + 10 + 40 + 30) * scale, (194 + 18) * scale, (crafting.h - 90) * scale, 10 * scale)
 end
 
 function checkCraftingMousePressed(button)

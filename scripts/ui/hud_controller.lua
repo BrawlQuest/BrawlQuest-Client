@@ -195,6 +195,11 @@ function drawHUD()
             end
              drawZoneTitle()
         love.graphics.pop()
+
+        -- love.graphics.setColor(1,1,1)
+        -- drawCraftingStencil()
+        -- love.graphics.setColor(1,0,0)
+        -- drawRecipesStencil()
     end
     drawTutorial()
     
