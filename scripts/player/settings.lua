@@ -48,9 +48,9 @@ function initSettings()
         useItemColor[#useItemColor + 1] = 0 
     end
     
-    local contents, info = love.filesystem.getInfo("settings.txt")
-    
-    -- getSettingsVersion()
+    info = love.filesystem.getInfo("settings.txt")
+    contents, size = love.filesystem.read("string", "settings.txt")
+    contents = json:decode(contents)
 
     if info ~= null then
         print("TRUEUUUUUUEEEE")
@@ -73,9 +73,7 @@ function initSettings()
         showWorldAnimations = contents["showWorldAnimations"] or showWorldAnimations
         showHUD = contents["showHUD"] or showHUD
         openUiOnHover = contents["openUiOnHover"] or openUiOnHover
-        print(1 ..  ", " .. json:encode_pretty(contents["hotbar"]))
-        hotbar = contents["hotbar"]-- or hotbar
-        print(2 ..  ", " .. json:encode_pretty(hotbar))
+        hotbar = contents["hotbar"] or hotbar
         api.url = servers[selectedServer].url
     else
         writeSettings()
