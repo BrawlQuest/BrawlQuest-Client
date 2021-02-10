@@ -54,7 +54,7 @@ http = require("socket.http")
 ltn12 = require("ltn12")
 
 version = "Pre-Release" 
-versionType = "dev" -- "dev" for quick login, "release" for not
+versionType = "release" -- "dev" for quick login, "release" for not
 versionNumber = "Beta 1.0.4" -- very important for settings
 
 phase = "login"
@@ -162,11 +162,11 @@ function love.draw()
             if showWorldMask and not worldEdit.open then drawWorldMask() end --not worldEdit.open or
             if showClouds and not worldEdit.open then drawClouds() end
 
-            if player.target.active then
-                love.graphics.setColor(1,0,0,0.5 * nextTick)
-                love.graphics.rectangle("fill", player.target.x * 32, player.target.y * 32, 32, 32)
-                love.graphics.setColor(1,1,1)
-            end
+            -- if player.target.active then
+            --     love.graphics.setColor(1,0,0,0.5 * nextTick)
+            --     love.graphics.rectangle("fill", player.target.x * 32, player.target.y * 32, 32, 32)
+            --     love.graphics.setColor(1,1,1)
+            -- end
             Luven.drawEnd()
 
             if not worldEdit.open then drawHUD() end
