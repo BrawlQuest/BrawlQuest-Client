@@ -166,8 +166,8 @@ end
 
 function drawNamePlate(x,y,name, alpha, level)
     level = level or null
+    love.graphics.setFont(playerNameFont)  
     alpha = alpha or 1
-
     if level then
         local thisX, thisY = x , y - 2
         local nameWidth, levelWidth = playerNameFont:getWidth(name) + 1, playerNameFont:getWidth(level)
@@ -176,17 +176,16 @@ function drawNamePlate(x,y,name, alpha, level)
         local textSpace = 3
         local fullWidth = levelWidth + nameWidth + textSpace
 
-        love.graphics.setFont(playerNameFont)
-
         local dx = (thisX) - (fullWidth * 0.5) - padding - 1
         local dy = thisY - nameHeight - padding - 1
         local dw = levelWidth + padding + (textSpace)
         local dh = nameHeight + (padding * 2)
-
-        love.graphics.setColor(1,0,0,alpha)
-        roundRectangle("fill", dx, dy, dw + 1, dh, 3, {true, false, false, true})
+        
         love.graphics.setColor(0, 0, 0, 0.6 * alpha)
         roundRectangle("fill", dx + dw, dy, nameWidth + padding + (textSpace * 2), dh, 3, {false, true, true, false})
+        love.graphics.setColor(1,0,0,alpha)
+        roundRectangle("fill", dx, dy, dw + 1, dh, 3, {true, false, false, true})
+
 
         love.graphics.setColor(1, 1, 1, alpha)
         love.graphics.print(level, (thisX) - (fullWidth * 0.5), thisY - nameHeight - 2 + padding)
@@ -201,7 +200,7 @@ function drawNamePlate(x,y,name, alpha, level)
         love.graphics.setColor(0, 0, 0, 0.6 * alpha)
         roundRectangle("fill", (thisX) - (nameWidth / 2) - (padding) - 2, thisY - nameHeight - 3, nameWidth + (padding * 2) + 3, nameHeight + (padding * 2), 3)
         love.graphics.setColor(1, 1, 1, alpha)
-        love.graphics.print(name, playerNameFont, (thisX) - (nameWidth * 0.5), thisY - nameHeight - 2 + padding)
+        love.graphics.print(name, (thisX) - (nameWidth * 0.5), thisY - nameHeight - 2 + padding)
     end
 end
 
