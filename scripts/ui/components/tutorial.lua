@@ -61,7 +61,7 @@ tutorialQuickTriggers = { -- these are reduce by 1 every second, and trigger a t
 
 function initTutorial()
     if love.filesystem.getInfo("tutorial.txt") then
-        contents, size = love.filesystem.read("string", "tutorial.txt")
+        local contents, size = love.filesystem.read("string", "tutorial.txt")
         contents = json:decode(contents)
         tutorialCompleted = contents["tutorial"]
     else

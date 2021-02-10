@@ -30,7 +30,7 @@ function initSettings()
 
     local borders = {0.9, 0.1}
     displayWidth, displayHeight = love.window.getDesktopDimensions(display)
-    screenDimentions = {width = displayWidth * 0.8, height =  displayHeight * 0.8,}
+    screenDimensions = {width = displayWidth * 0.8, height =  displayHeight * 0.8,}
     window = {x = displayWidth * 0.1, y = displayHeight * 0.1}
     vsync = false
     showChat = true
@@ -48,35 +48,39 @@ function initSettings()
         useItemColor[#useItemColor + 1] = 0 
     end
     
-    info = love.filesystem.getInfo("settings.txt")
-    getSettingsVersion()
+    local contents, info = love.filesystem.getInfo("settings.txt")
+    
+    -- getSettingsVersion()
 
-    if info ~= null and getSettingsVersion() then
-        -- print ("Initiating Saved Settings")
-        display = contents["display"]
-        vsync = contents["vsync"]
-        window = contents["window"]
-        screenDimentions = contents["screenDimentions"]
-        keybinds = contents["keybinds"]
-        musicVolume = contents["musicVolume"]
-        sfxVolume = contents["sfxVolume"]
-        selectedServer = contents["selectedServer"]
-        highdpi = contents["highdpi"]
-        fullscreen = contents["fullscreen"]
-        chatRepeat = contents["chatRepeat"]
-        settPan.scaleValue = contents["scaleValue"]
-        showChat = contents["showChat"]
-        showClouds = contents["showClouds"]
-        showShadows = contents["showShadows"]
-        showWorldMask = contents["showWorldMask"]
-        showWorldAnimations = contents["showWorldAnimations"]
-        showHUD = contents["showHUD"]
-        openUiOnHover = contents["openUiOnHover"]
-        hotbar = contents["hotbar"]
+    if info ~= null then
+        print("TRUEUUUUUUEEEE")
+        display = contents["display"] or display
+        vsync = contents["vsync"] or vsync
+        window = contents["window"] or window
+        screenDimensions = contents["screenDimensions"] or screenDimensions
+        keybinds = contents["keybinds"] or keybinds
+        musicVolume = contents["musicVolume"] or musicVolume
+        sfxVolume = contents["sfxVolume"] or sfxVolume
+        selectedServer = contents["selectedServer"] or selectedServer
+        highdpi = contents["highdpi"] or highdpi
+        fullscreen = contents["fullscreen"] or fullscreen
+        chatRepeat = contents["chatRepeat"] or chatRepeat
+        settPan.scaleValue = contents["scaleValue"] or settPan.scaleValue
+        showChat = contents["showChat"] or showChat
+        showClouds = contents["showClouds"] or showClouds
+        showShadows = contents["showShadows"] or showShadows
+        showWorldMask = contents["showWorldMask"] or showWorldMask
+        showWorldAnimations = contents["showWorldAnimations"] or showWorldAnimations
+        showHUD = contents["showHUD"] or showHUD
+        openUiOnHover = contents["openUiOnHover"] or openUiOnHover
+        print(1 ..  ", " .. json:encode_pretty(contents["hotbar"]))
+        hotbar = contents["hotbar"]-- or hotbar
+        print(2 ..  ", " .. json:encode_pretty(hotbar))
         api.url = servers[selectedServer].url
     else
         writeSettings()
-    end  
+    end
+
     setWindowOptions()
 
     controls = {
@@ -130,7 +134,7 @@ function writeSettings()
         window = window,
         chatRepeat = chatRepeat,
         scaleValue = settPan.scaleValue,
-        screenDimentions = screenDimentions,
+        screenDimensions = screenDimensions,
         display = display,
         showChat = showChat,
         showClouds = showClouds,
@@ -247,7 +251,7 @@ function checkSettingKeyPressed(key)
 end
 
 function setWindowOptions()
-    love.window.setMode(screenDimentions.width, screenDimentions.height, {
+    love.window.setMode(screenDimensions.width, screenDimensions.height, {
         display = display,
         centered = false,
         x = window.x,
@@ -265,23 +269,11 @@ function setWindowOptions()
     initLogin()
 end
 
-function getSettingsVersion()
-    if info ~= null then
-        contents, size = love.filesystem.read("string", "settings.txt")
-        contents = json:decode(contents)
-        if  contents["version"] ~= version .. " " .. versionNumber then
-            return false -- I didn't get the correct version
-        else
-            return true -- We're up to date
-        end
-    end
-end
-
 function getDisplay()
     local x, y, thisdisplay = love.window.getPosition( )
     display = thisdisplay
     if not fullscreen then
         window = {x = x, y = y}
-        screenDimentions = {width = love.graphics.getWidth(), height = love.graphics.getHeight(),}
+        screenDimensions = {width = love.graphics.getWidth(), height = love.graphics.getHeight(),}
     end
 end

@@ -208,7 +208,7 @@ function checkInventoryKeyPressed(key)
     for i,v in ipairs(hotbar) do
         if love.keyboard.isDown(i) or (i == 7 and love.keyboard.isDown("space")) then
             if inventory.isMouseOverInventoryItem then
-                v.item = selectedItem
+                hotbar[i].item = selectedItem
             else
                 if v.item ~= nil and v.item.ID ~= nil and not usedItemThisTick  then
                     useItemColor[i] = 1
