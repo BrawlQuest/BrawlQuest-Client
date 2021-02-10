@@ -38,22 +38,59 @@ function initQuestHub()
 
     for i = 1, 3 do
         quests[i] = {}
-        for j = 1, randomQuest[i] do
-            local rand = love.math.random(1, 6)
-            local max = love.math.random(1, 20)
-            local min = love.math.random(0, max - 1)
-            if i == 3 then min = max end
-            quests[i][j] = {
-                title = generateRandomTitle(),
-                comment = "The long path is unclear at best",
-                giver = randomGiver[rand][1],
-                profilePic = randomGiver[rand][2],
-                task = "Get " .. max .. " Apples",
-                requiredAmount = max,
-                currentAmount = min,
-            }
-        end
+        -- for j = 1, randomQuest[i] do
+        --     local rand = love.math.random(1, 6)
+        --     local max = love.math.random(1, 20)
+        --     local min = love.math.random(0, max - 1)
+        --     if i == 3 then min = max end
+        --     quests[i][j] = {
+        --         title = generateRandomTitle(),
+        --         comment = "The long path is unclear at best",
+        --         giver = randomGiver[rand][1],
+        --         profilePic = randomGiver[rand][2],
+        --         task = "Get " .. max .. " Apples",
+        --         requiredAmount = max,
+        --         currentAmount = min,
+        --     }
+        -- end
     end
+
+    quests[1][1] = {
+        title = "Welcome to BrawlQuest",
+        comment = "Questing isn't in yet, but press Q to see some nifty goals to get you started.",
+        giver =   "Drunk Man",
+        profilePic = "assets/npc/Drunk Man.png",
+        task = "Hover over this text",
+        requiredAmount = 1,
+        currentAmount = 1,
+    }
+    quests[2][1] = {
+        title = "Start Fightin'",
+        comment = "Head West from Squall's End to fight some monsters and try to get to Level 3!",
+        giver =   "Drunk Man",
+        profilePic = "assets/npc/Drunk Man.png",
+        task = "Reach Level 3",
+        requiredAmount = 3,
+        currentAmount = 1,
+    }
+    quests[2][2] = {
+        title = "Gear Up!",
+        comment = "Speak to the Blacksmith in Squall's End and craft some Leather gear. Spiders drop string and Wolves drop Pelts.",
+        giver =   "Drunk Man",
+        profilePic = "assets/npc/Drunk Man.png",
+        task = "Craft Leather Armour",
+        requiredAmount = 1,
+        currentAmount = 0,
+    }
+    quests[2][3] = {
+        title = "A Noble Steed",
+        comment = "Head deep into the forest to the West and find Carus who will tell you how to earn your first Mount. You might need to recruit others to help you with this one!",
+        giver =   "Drunk Man",
+        profilePic = "assets/npc/Drunk Man.png",
+        task = "Get a Horse",
+        requiredAmount = 1,
+        currentAmount = 0,
+    }
 end
 
 function generateRandomTitle()

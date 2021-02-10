@@ -4,7 +4,8 @@ auraAuras = {} -- don't ask
 auraColors = {
     HP = {1,0,0},
     INT = {0,0,1},
-    LUCK = {1,1,0}
+    LUCK = {1,1,0},
+    ATK = {0.96, 0.52, 0.26}
 }
 
 
@@ -16,6 +17,8 @@ function drawAuras()
             love.graphics.setColor(0,0,1,0.2*v.alpha)
         elseif v.Stat == "LUCK" then
             love.graphics.setColor(1,1,0,0.2*v.alpha)
+        elseif v.Stat == "ATK" then
+            love.graphics.setColor(0.96, 0.52, 0.26, 0.2*v.alpha)
         end
         local x,y = v.X*32, v.Y*32
         x = x +16

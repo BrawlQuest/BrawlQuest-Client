@@ -87,7 +87,7 @@ function love.keypressed(key)
                 inventory.forceOpen = not inventory.forceOpen
             end
 
-            if key == keybinds.QUESETS then
+            if key == keybinds.QUESTS then
                 questsPanel.forceOpen = not questsPanel.forceOpen
                 print("TRUEEE")
             end
