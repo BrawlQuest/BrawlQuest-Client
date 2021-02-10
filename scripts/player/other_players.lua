@@ -116,16 +116,13 @@ function drawPlayer(v, i)
             local diffX
             local diffY
             if i == -1 and player.target.active then
-                if targetKeys[1].v then diffY = -1
-                elseif targetKeys[2].v then diffY = 1
-                else diffY = 0 end
-                if targetKeys[3].v then diffX = -1
-                elseif targetKeys[4].v then diffX = 1
-                else diffX = 0 end
+                diffX = player.target.x - player.x
+                diffY = player.target.y - player.y
             else
                 diffX = thisPlayer.AX - thisPlayer.X
                 diffY = thisPlayer.AY - thisPlayer.Y
             end
+
             drawArrowImage(diffX, diffY, v.X, v.Y)
         end
         local underCharacterBarY = v.Y+34

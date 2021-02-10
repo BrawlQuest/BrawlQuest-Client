@@ -1,83 +1,99 @@
 function initTargeting()
-    keys = {keybinds.ATTACK_UP, keybinds.ATTACK_DOWN, keybinds.ATTACK_LEFT, keybinds.ATTACK_RIGHT}
-    targetKeys = {
-        {v = false, key = keys[1]},
-        {v = false, key = keys[2]},
-        {v = false, key = keys[3]},
-        {v = false, key = keys[4]},
+    attackKeys = {keybinds.ATTACK_UP, keybinds.ATTACK_DOWN, keybinds.ATTACK_LEFT, keybinds.ATTACK_RIGHT}
+    targetActive = {
+        up = false,
+        down = false,
+        left = false,
+        right = false
     }
 end
 
 local targetHeld = false
 
 function checkTargetingPress(key)
-    for i,v in ipairs(keys) do
-        if key == v then
-            targetKeys[i].v = true
-        end
-    end
-
-    if not targetHeld and key == "lshift" then
-        targetKeys = {
-            {v = false, key = keys[1]},
-            {v = false, key = keys[2]},
-            {v = false, key = keys[3]},
-            {v = false, key = keys[4]},
-        }
-    end
-
-    -- print(json:encode(targetKeys))
-    -- checkTargeting()
+    -- if key == keybinds.ATTACK_UP then
+    --     player.target.active = true
+    --     if player.target.y == player.y - 1 then
+    --         player.target.y = player.y
+    --         targetActive.up = false
+    --     else
+    --         player.target.y = player.y - 1
+    --         player.target.x = player.x
+    --         targetActive.left = false
+    --         targetActive.right = false
+    --         targetActive.up = true
+    --         targetActive.down = false
+    --     end
+    -- elseif key == keybinds.ATTACK_DOWN then
+    --     player.target.active = true
+    --     if player.target.y == player.y + 1 then
+    --         player.target.y = player.y
+    --         targetActive.down = false
+    --     else
+    --         player.target.y = player.y + 1
+    --         player.target.x = player.x
+    --         targetActive.left = false
+    --         targetActive.right = false
+    --         targetActive.up = false
+    --         targetActive.down = true
+    --     end
+    -- end
+    -- if key == keybinds.ATTACK_LEFT then
+    --     player.target.active = true
+    --     if player.target.x == player.x - 1 then
+    --         player.target.x = player.x
+    --         targetActive.left = false
+    --     else
+    --         player.target.x = player.x - 1
+    --         player.target.y = player.y
+    --         targetActive.left = true
+    --         targetActive.right = false
+    --         targetActive.up = false
+    --         targetActive.down = false
+    --     end
+    -- elseif key == keybinds.ATTACK_RIGHT then
+    --     player.target.active = true
+    --     if player.target.x == player.x + 1 then
+    --         player.target.x = player.x
+    --         targetActive.right = false
+    --     else
+    --         player.target.x = player.x + 1
+    --         player.target.y = player.y
+    --         targetActive.left = false
+    --         targetActive.right = true
+    --         targetActive.up = false
+    --         targetActive.down = false
+    --     end
+    -- end
 end
 
 function checkTargetingRelease(key)
-    if not love.keyboard.isDown("lshift") then
-        targetHeld = true
-        for i,v in ipairs(keys) do
-            if key == v then
-                targetKeys[i].v = false
-            end
-        end
-    else
-        if key == "lshift" then
-            targetKeys = {
-                {v = false, key = keys[1]},
-                {v = false, key = keys[2]},
-                {v = false, key = keys[3]},
-                {v = false, key = keys[4]},
-            }
-        end
-    end
-    -- print(json:encode(targetKeys))
-    -- checkTargeting()
+  
 end
 
 function checkTargeting() -- Check which keys are down and place the player target accordingly
     local wasActive = player.target.active
     player.target = {x = player.x, y = player.y, active = false}
 
-    -- if isMouseDown() then
-    --     checkMouseTargeting()
-    -- else
-        player.target.active = false
-        for i, v in ipairs(targetKeys) do
-            if v.v == true then
-                player.target.active = true
-            end
-        end
-
-        if targetKeys[1].v then
+    if isMouseDown() then
+        checkMouseTargeting()
+    else
+        if love.keyboard.isDown(keybinds.ATTACK_UP) then
+            player.target.active = true
             player.target.y = player.y - 1
-        elseif targetKeys[2].v then
+        elseif love.keyboard.isDown(keybinds.ATTACK_DOWN) then
+            player.target.active = true
             player.target.y = player.y + 1
         end
 
-        if targetKeys[3].v then
+        if love.keyboard.isDown(keybinds.ATTACK_LEFT) then
+            player.target.active = true
             player.target.x = player.x - 1
-        elseif targetKeys[4].v then
+        elseif love.keyboard.isDown(keybinds.ATTACK_RIGHT) then
+            player.target.active = true
             player.target.x = player.x + 1
         end
-    -- end
+    end
 
     if not wasActive and player.target.active then
         -- newly active, trigger a send to make things feel a tad more responsive
