@@ -74,8 +74,10 @@ function updateCrafting(dt)
                     c, h = http.request{url = api.url.."/craft/"..player.name, method="POST", source=ltn12.source.string(body), headers={["token"]=token,["Content-Length"]=#body}, sink=ltn12.sink.table(b)}
                     if json:decode(b[1])["success"] == null then
                         crafting.result = json:decode(b[1])
+                        crafting.result.alpha = 2
                     else
                         crafting.result = null
+                        crafting.result.alpha = 0
                     end
                     crafting.enteredItems = {}
                     crafting.craftableItems = {}
@@ -90,6 +92,12 @@ function updateCrafting(dt)
 
         if crafting.hammerShake > 2 then
             crafting.hammerShake = 0
+        end
+
+        if crafting.result and crafting.result.alpha > 0 then
+            crafting.result.alpha = crafting.result.alpha - 0.5 * dt
+            if crafting.result.alpha <= 0 then crafting.result.alpha = 0 end
+            crafting.result.alphaCERP = cerp(0, 1, math.clamp(0, crafting.result.alpha, 1))
         end
 
         crafting.velY = crafting.velY - crafting.velY * math.min( dt * 15, 1 ) 
@@ -116,33 +124,27 @@ end
 
 function drawCraftingBackground(thisX, thisY)
     local c = crafting
-    -- local w,h = crafting.w, crafting.h
-    if crafting.result then
-       -- drawInventoryItem(thisX + 200, thisY+200, 0, crafting.result,1)
-       if isMouseOver((thisX+160) * scale,(thisY+160)*scale,128*scale,128*scale) then
-            setItemTooltip(crafting.result)
-       end
-        love.graphics.draw(getImgIfNotExist(crafting.result.ImgPath), thisX + 330, thisY + 270, 0, 4, 4)
-    end
+    local w,h = crafting.w, crafting.h
+    local x, y = 0, 0
 
-    if isMouseOver((thisX+330)* scale, (thisY + 270) * scale, (crafting.anvil:getWidth()*7)*scale, (crafting.anvil:getHeight()*7)*scale) then
+    x, y = thisX + 330, thisY + 270
+    if isMouseOver(x * scale, y * scale, (crafting.anvil:getWidth()*7) * scale, (crafting.anvil:getHeight() * 7) * scale) then
         crafting.mouseOverAnvil = true
         love.graphics.setColor(1,0.5,0.5)
     else
         crafting.mouseOverAnvil = false
     end
+
     love.graphics.draw(crafting.anvil, thisX + 330, thisY + 270, 0, 7)
     love.graphics.setColor(1,1,1)
     love.graphics.draw(crafting.hammer, thisX + 720, thisY + 300 - crafting.hammerY, cerp(-0.01, 0.01, crafting.hammerShake) + cerp(-0.6,0.01, crafting.hammerDown), -10)
-    love.graphics.print("CRAFTING", inventory.headerFont, thisX + 10 , thisY + 14)
 
-    
+    love.graphics.print("CRAFTING", inventory.headerFont, thisX + 10 , thisY + 14)    
     love.graphics.print("RECIPES",crafting.font, thisX + 10, thisY + 10 + 40, 0, 2)
-    local x, y = thisX + 10, thisY + 10 + 40 + crafting.posY + 30
+    x, y = thisX + 10, thisY + 10 + 40 + crafting.posY + 30
     w, h = 194, 56
     crafting.mouseOverField = 0
     
-
     for i,field in ipairs(crafting.fields) do
         x = thisX + 10
         if isMouseOver(x * scale,y * scale,w * scale,h * scale) then
@@ -175,8 +177,6 @@ function drawCraftingBackground(thisX, thisY)
         end
         y = y + 66
     end
-
-
 
     x, y = thisX + 10 + w + 10, thisY + 10 + 10
 
@@ -221,14 +221,20 @@ function drawCraftingBackground(thisX, thisY)
         y = y + 66
     end
 
-    -- crafting.selectableI = 0
-    -- for i = 1, #crafting.enteredItems do
-    --     local dx, dy = thisX + 10 + (45 * (i - 1)), thisY + 355
-    --     drawInventoryItem(dx, dy, 0, crafting.enteredItems[i].item, crafting.enteredItems[i].amount)
-    --     if isMouseOver(dx, dy, inventory.images.itemBG:getWidth(), inventory.images.itemBG:getWidth()) then
-    --         crafting.selectableI = i
-    --     end
-    -- end
+
+
+    if crafting.result then    
+        local size = 6 * crafting.result.alphaCERP
+        x, y = uiX * 0.5 - (34 * size) / 2, uiY * 0.5 - (34 * size) / 2
+        w, h = (34 * size), (34 * size)
+        if isMouseOver(x * scale, y * scale, (34 * size) *  scale, (34 * size) * scale) then
+            setItemTooltip(crafting.result)
+        end
+        love.graphics.setColor(1, cerp(165 / 255, 1, crafting.result.alpha), cerp(32 / 255, 1, crafting.result.alpha), crafting.result.alphaCERP)
+        roundRectangle("fill", x,y,w,h, 10 )
+        love.graphics.setColor(1,1,1, crafting.result.alphaCERP)
+        love.graphics.draw(getImgIfNotExist(crafting.result.ImgPath), x + size * 2, y + size * 2, 0, size)
+    end
 
     love.graphics.setColor(1,1,1,crafting.whiteout)
     roundRectangle("fill",thisX,thisY,crafting.w,crafting.h, 10)

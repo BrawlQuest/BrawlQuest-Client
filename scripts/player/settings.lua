@@ -53,7 +53,6 @@ function initSettings()
     contents = json:decode(contents)
 
     if info ~= null then
-        print("TRUEUUUUUUEEEE")
         display = contents["display"] or display
         vsync = contents["vsync"] or vsync
         window = contents["window"] or window
