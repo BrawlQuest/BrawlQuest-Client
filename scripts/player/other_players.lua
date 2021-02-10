@@ -157,29 +157,47 @@ function drawArrowImage(diffX, diffY, x, y)
     end
 end
 
+function drawNamePlateOld(x,y,name, alpha, level)
+
+end
+
 function drawNamePlate(x,y,name, alpha, level)
     level = level or null
+    love.graphics.setFont(playerNameFont)  
     alpha = alpha or 1
-    love.graphics.setColor(1,1,1, alpha)
-    local thisX, thisY = x , y - 2
-    local nameWidth = playerNameFont:getWidth(name)
-    local nameHeight = playerNameFont:getHeight(name)
-    local padding = 2
-    love.graphics.setColor(0, 0, 0, 0.6 * alpha)
-    roundRectangle("fill", (thisX) - (nameWidth / 2) - (padding) - 2, thisY - nameHeight - 3, nameWidth + (padding * 2) + 3, nameHeight + (padding * 2), 3)
-    love.graphics.setColor(1, 1, 1, alpha)
-    love.graphics.print(name, playerNameFont, (thisX) - (nameWidth * 0.5), thisY - nameHeight - 2 + padding)
-
-    thisX, thisY = (thisX) - (nameWidth / 2) - (padding) + 2 - 1, thisY - nameHeight - 3 - 4
     if level then
-        local padding = {x = 4, y = 3}
-        local levelWidth = playerNameFont:getWidth(level)
-        local levelHeight = playerNameFont:getHeight(level)
-        local w, h = levelWidth + padding.x * 2 - 1, levelHeight + padding.y * 2 - 2
-        love.graphics.setColor(1,0,0,0.8 * alpha)
-        roundRectangle("fill", thisX - padding.x, thisY - padding.y, w, h, 4)
-        love.graphics.setColor(1,1,1,alpha)
-        love.graphics.print(level, thisX, thisY)
+        local thisX, thisY = x , y - 2
+        local nameWidth, levelWidth = playerNameFont:getWidth(name) + 1, playerNameFont:getWidth(level)
+        local nameHeight = playerNameFont:getHeight(name)
+        local padding = 2
+        local textSpace = 3
+        local fullWidth = levelWidth + nameWidth + textSpace
+
+        local dx = (thisX) - (fullWidth * 0.5) - padding - 1
+        local dy = thisY - nameHeight - padding - 1
+        local dw = levelWidth + padding + (textSpace)
+        local dh = nameHeight + (padding * 2)
+        
+        love.graphics.setColor(0, 0, 0, 0.6 * alpha)
+        roundRectangle("fill", dx + dw, dy, nameWidth + padding + (textSpace * 2), dh, 3, {false, true, true, false})
+        love.graphics.setColor(1,0,0,alpha)
+        roundRectangle("fill", dx, dy, dw + 1, dh, 3, {true, false, false, true})
+
+
+        love.graphics.setColor(1, 1, 1, alpha)
+        love.graphics.print(level, (thisX) - (fullWidth * 0.5), thisY - nameHeight - 2 + padding)
+        love.graphics.print(name, (thisX) - (fullWidth * 0.5) + (textSpace * 2) + levelWidth, thisY - nameHeight - 2 + padding)
+    else
+        level = level or null
+        alpha = alpha or 1
+        local thisX, thisY = x , y - 2
+        local nameWidth = playerNameFont:getWidth(name)
+        local nameHeight = playerNameFont:getHeight(name)
+        local padding = 2
+        love.graphics.setColor(0, 0, 0, 0.6 * alpha)
+        roundRectangle("fill", (thisX) - (nameWidth / 2) - (padding) - 2, thisY - nameHeight - 3, nameWidth + (padding * 2) + 3, nameHeight + (padding * 2), 3)
+        love.graphics.setColor(1, 1, 1, alpha)
+        love.graphics.print(name, (thisX) - (nameWidth * 0.5), thisY - nameHeight - 2 + padding)
     end
 end
 
