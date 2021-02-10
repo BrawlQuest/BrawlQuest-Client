@@ -26,7 +26,7 @@ function checkTargetingPress(key)
         }
     end
 
-    print(json:encode(targetKeys))
+    -- print(json:encode(targetKeys))
     -- checkTargeting()
 end
 
@@ -48,7 +48,7 @@ function checkTargetingRelease(key)
             }
         end
     end
-    print(json:encode(targetKeys))
+    -- print(json:encode(targetKeys))
     -- checkTargeting()
 end
 

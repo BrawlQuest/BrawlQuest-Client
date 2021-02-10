@@ -148,7 +148,7 @@ function updateHUD( dt )
         updateTooltip(dt)
         updateToolBarInventory(dt)
         updateCharacterHub(dt)
-        -- updateQuestHub(dt)
+        updateQuestHub(dt)
         updateCrafting(dt) -- fine
         if showChat then updateChat(dt) end
     end
@@ -195,11 +195,6 @@ function drawHUD()
             end
              drawZoneTitle()
         love.graphics.pop()
-
-        -- love.graphics.setColor(1,1,1)
-        -- drawCraftingStencil()
-        -- love.graphics.setColor(1,0,0)
-        -- drawRecipesStencil()
     end
     drawTutorial()
     
