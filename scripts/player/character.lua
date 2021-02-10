@@ -94,8 +94,6 @@ function updateCharacter(dt)
     if player.isMounting then
         player.mount.stepSndPlay = player.mount.stepSndPlay - 1 * dt
         if player.mount.stepSndPlay < 0 then
-       
-        
             player.mount.stepSndPlay = 0.2
         end
 
@@ -241,41 +239,6 @@ function movePlayer(dt)
         --     player.cx = player.x * 32
         --     player.cy = player.y * 32
         -- end
-    end
-
-end
-
-function checkTargeting() -- Check which keys are down and place the player target accordingly
-    local wasActive = player.target.active
-    player.target = {x = player.x, y = player.y, active = false}
-
-    if isMouseDown() then
-        checkMouseTargeting()
-    else
-        if love.keyboard.isDown(keybinds.ATTACK_UP) then
-            player.target.active = true
-            player.target.y = player.y - 1
-        elseif love.keyboard.isDown(keybinds.ATTACK_DOWN) then
-            player.target.active = true
-            player.target.y = player.y + 1
-        end
-
-        if love.keyboard.isDown(keybinds.ATTACK_LEFT) then
-            player.target.active = true
-            player.target.x = player.x - 1
-        elseif love.keyboard.isDown(keybinds.ATTACK_RIGHT) then
-            player.target.active = true
-            player.target.x = player.x + 1
-        end
-    end
-
-    if not wasActive and player.target.active then
-        -- newly active, trigger a send to make things feel a tad more responsive
-        nextUpdate = 0
-    end
-
-    if player.target.active and player.isMounted then
-        beginMounting()
     end
 end
 

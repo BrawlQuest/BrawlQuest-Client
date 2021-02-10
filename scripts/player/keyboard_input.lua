@@ -54,7 +54,8 @@ function love.keypressed(key)
             end
         else
             -- if key == "m" then beginMounting() end
-            checkTargeting()
+            -- checkTargeting()
+            checkTargetingPress(key)
 
             if key == "/" then
                 table.remove(quests[1], 1)
@@ -130,14 +131,15 @@ function love.keypressed(key)
             --     writeSettings()
             -- end
 
-            -- if key == "." then
-            --     print(json:encode_pretty(crafting.catalogue))
-            -- end
+            if key == "." then
+                scaleHUD("up")
+                writeSettings()
+            end
 
-            -- if key == "," then
-            --     scaleHUD("down")
-            --     writeSettings()
-            -- end
+            if key == "," then
+                scaleHUD("down")
+                writeSettings()
+            end
         end
     end
 
@@ -152,6 +154,7 @@ function love.keyreleased(key)
     end
     if phase == "game" and (key == keybinds.ATTACK_UP or key == keybinds.ATTACK_DOWN or key == keybinds.ATTACK_LEFT or key == keybinds.ATTACK_RIGHT) then
         tutorialQuickTriggers.attack.active = true
+        checkTargetingRelease(key)
     end
 end
 

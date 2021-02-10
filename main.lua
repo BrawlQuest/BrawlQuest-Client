@@ -35,6 +35,7 @@ require "scripts.libraries.simple-slider"
 require "scripts.phases.login.login"
 require "scripts.player.other_players"
 require "scripts.player.ranged-weapons"
+require "scripts.player.targeting"
 require "scripts.enemies"
 require "scripts.npcs"
 require "scripts.world"
@@ -110,6 +111,7 @@ function love.load()
     initClouds()
     initWorldMask()
     initRangedWeapons()
+    initTargeting()
     love.graphics.setFont(textFont)
 end
 
@@ -160,6 +162,11 @@ function love.draw()
             if showWorldMask and not worldEdit.open then drawWorldMask() end --not worldEdit.open or
             if showClouds and not worldEdit.open then drawClouds() end
 
+            if player.target.active then
+                love.graphics.setColor(1,0,0,0.5 * nextTick)
+                love.graphics.rectangle("fill", player.target.x * 32, player.target.y * 32, 32, 32)
+                love.graphics.setColor(1,1,1)
+            end
             Luven.drawEnd()
 
             if not worldEdit.open then drawHUD() end
@@ -182,8 +189,8 @@ function love.draw()
     love.graphics.setColor(1,1,1)
     love.graphics.draw(mouseImg, mx, my)
 
-    love.graphics.setColor(1, 1, 1, totalCoverAlpha)
-    if totalCoverAlpha > 0 then love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight()) end
+    -- love.graphics.setColor(1, 1, 1, totalCoverAlpha)
+    -- if totalCoverAlpha > 0 then love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight()) end
 end
 
 function love.update(dt)
@@ -328,6 +335,7 @@ function tick()
     tickOtherPlayers()
     tickEnemies()
     tickAuras()
+    checkTargeting()
     nextTick = 1
     getInventory()
     -- tickRangedWeapons() 

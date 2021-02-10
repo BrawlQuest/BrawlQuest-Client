@@ -148,7 +148,7 @@ function updateHUD( dt )
         updateTooltip(dt)
         updateToolBarInventory(dt)
         updateCharacterHub(dt)
-        -- updateQuestHub(dt)
+        updateQuestHub(dt)
         updateCrafting(dt) -- fine
         if showChat then updateChat(dt) end
     end

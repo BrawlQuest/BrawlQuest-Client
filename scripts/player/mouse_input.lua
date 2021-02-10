@@ -60,6 +60,7 @@ function zoomCamera(dy, table)
 end
 
 function checkMouseTargeting()
+    -- perhaps just target whatever tile mouse is over.
     local mx, my = love.mouse.getPosition()
     mx = player.cx - (player.cx - (mx - love.graphics.getWidth() * 0.5))
     my = player.cy - (player.cy - (my - love.graphics.getHeight() * 0.5))
@@ -81,4 +82,8 @@ function checkMouseTargeting()
         player.target.active = true
         player.target.x = player.x + 1
     end
+end
+
+function checkForceTargeting()
+    
 end
