@@ -4,13 +4,13 @@ function initTargeting()
     keys = {keybinds.ATTACK_UP, keybinds.ATTACK_DOWN, keybinds.ATTACK_LEFT, keybinds.ATTACK_RIGHT}
     heldKeys = {false, false, false, false,}
     targetKeys = {false, false, false, false,}
-    holdAttack = false
+    holdAttack = true
 end
 
 function checkTargetingPress(key)
     if key == "h" then
         if holdAttack then
-            holdAttack = false
+      --      holdAttack = false
             heldKeys = {false, false, false, false,}
             targetKeys = {false, false, false, false,}
             targetHeld = false
@@ -62,6 +62,12 @@ end
 function checkTargeting() -- Check which keys are down and place the player target accordingly
     local wasActive = player.target.active
     player.target = {x = player.x, y = player.y, active = false}
+
+    if (love.keyboard.isDown(keybinds.UP) or love.keyboard.isDown(keybinds.DOWN) or love.keyboard.isDown(keybinds.LEFT) or love.keyboard.isDown(keybinds.RIGHT)) and not (love.keyboard.isDown(keybinds.ATTACK_DOWN) or love.keyboard.isDown(keybinds.ATTACK_LEFT) or love.keyboard.isDown(keybinds.ATTACK_RIGHT) or love.keyboard.isDown(keybinds.ATTACK_UP)) then
+        heldKeys = {false, false, false, false,}
+        targetKeys = {false, false, false, false,}
+        targetHeld = false
+    end
 
     if isMouseDown() then
         checkMouseTargeting()

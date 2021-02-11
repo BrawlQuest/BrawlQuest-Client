@@ -226,7 +226,7 @@ function drawCraftingBackground(thisX, thisY)
 
     x, y = thisX + 10 + w + 10, y + h + 8
     love.graphics.setColor(1,1,1)
-    love.graphics.print("CRAFTING CHANCES", x + 5, y + 10, 0 , 2)
+    love.graphics.print("CREATES", x + 5, y + 10, 0 , 2)
     y = y + 40
 
     for i,v in ipairs(crafting.recipes[crafting.fields[crafting.selectedField]]) do
@@ -234,8 +234,8 @@ function drawCraftingBackground(thisX, thisY)
         roundRectangle("fill", x, y, w - 18, h, 10)
         love.graphics.setColor(1,1,1)
         drawCraftingItem(x + 10, y + 10, 0, v.Item, 1)
-        love.graphics.print(v.Item.Name, x + 54, y + 12)
-        love.graphics.print(v.Chance.. "%", x + 54, y + 25, 0, 2)
+        love.graphics.print(v.Item.Name, x + 54, y + 22)
+      --  love.graphics.print(v.Chance.. "%", x + 54, y + 25, 0, 2)
         y = y + 66
     end
 
