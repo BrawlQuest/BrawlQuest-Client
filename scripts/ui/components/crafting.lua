@@ -26,6 +26,7 @@ function initCrafting()
         catalogue = {
 
         },
+        selectedItem = {},
         mouse = {love.graphics.newImage("assets/ui/hud/perks/BQ Mice - 1.png"), love.graphics.newImage("assets/ui/hud/perks/BQ Mice + 1.png")},
         selectableI = 0,
         percentFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
@@ -71,7 +72,8 @@ function updateCrafting(dt)
                     end
                     local b = {}
                     body = json:encode(itemsSoFar)
-                    c, h = http.request{url = api.url.."/craft/"..player.name, method="POST", source=ltn12.source.string(body), headers={["token"]=token,["Content-Length"]=#body}, sink=ltn12.sink.table(b)}
+                    print(api.url.."/craft/"..player.name.."/"..crafting.selectedItem.ItemID)
+                    c, h = http.request{url = api.url.."/craft/"..player.name.."/"..crafting.selectedItem.ItemID, method="POST", source=ltn12.source.string(body), headers={["token"]=token,["Content-Length"]=#body}, sink=ltn12.sink.table(b)}
                     if json:decode(b[1])["success"] == null then
                         crafting.result = json:decode(b[1])
                         crafting.result.alpha = 2
@@ -338,7 +340,8 @@ function checkCraftingMousePressed(button)
         local craft = {}
         crafting.selectedField = crafting.mouseOverField
         for i,v in ipairs(crafting.recipes[crafting.fields[crafting.selectedField]]) do
-
+            print(json:encode(v))
+            crafting.selectedItem = v
             local required = json:decode(v.ItemsString)
             crafting.enteredItems = {}
             
