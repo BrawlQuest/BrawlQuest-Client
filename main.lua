@@ -313,6 +313,7 @@ function love.update(dt)
             player.name = me.Name
             player.buddy = me.Buddy
             player.hp = me.HP
+            player.owedxp = me.XP - player.xp
             player.xp = me.XP
             if player.lvl ~= me.LVL then
                 if player.lvl ~= 0 then

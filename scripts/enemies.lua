@@ -190,7 +190,7 @@ function drawEnemies()
                 love.graphics.draw(alertImg, v.dx + 8, v.dy - 16)
                 love.graphics.setColor(1, 1, 1)
 
-                if versionType == "dev" then love.graphics.print(v.TargetName, v.dx, v.dy - 10) end
+                if versionType == "dev" then love.graphics.print(v.TargetName.." - "..tostring(v.IsAggro), v.dx, v.dy - 10) end
                 -- print( "\"" .. v.TargetName .. "\" \"" .. me.Name .. "\"")
                 if distanceToPoint(v.dx,v.dy,player.dx,player.dy) < (v.Enemy.Range + 1) * 32 then
                     if nextTick >= 1 then
@@ -207,7 +207,7 @@ function drawEnemies()
                 end
 
             elseif not v.hasBurst then
-                burstLoot(v.dx + 16, v.dy + 16, math.abs(v.Enemy.HP / 3), "xp")
+                burstLoot(v.dx + 16, v.dy + 16, player.owedxp, "xp")
                 local deathSound = enemySounds[v.Enemy.Name].death[love.math.random(1, #enemySounds[v.Enemy.Name].death)]
                 love.audio.play(deathSound)
                 deathSound:setVolume(1 * sfxVolume)
