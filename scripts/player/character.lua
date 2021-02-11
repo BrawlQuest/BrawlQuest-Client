@@ -132,44 +132,43 @@ end
 function movePlayer(dt)
     if player.x * 32 == player.dx and player.y * 32 == player.dy and not isTypingInChat and not worldEdit.isTyping then -- movement smoothing has finished
         local prev = {x = player.x, y = player.y}
-
-        if love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.LEFT) then
+        if love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.LEFT) and not (worldCollison(prev.x - 1, prev.y - 1) or worldCollison(prev.x - 1, prev.y) or worldCollison(prev.x, prev.y - 1)) then
             prev.y = prev.y - 1
             prev.x = prev.x - 1
             player.previousDirection = "left"
-        elseif love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.RIGHT) then
+        elseif love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.RIGHT) and not (worldCollison(prev.x + 1, prev.y - 1) or worldCollison(prev.x + 1, prev.y) or worldCollison(prev.x, prev.y - 1)) then
             prev.y = prev.y - 1
             prev.x = prev.x + 1
             player.previousDirection = "right"
-        elseif love.keyboard.isDown(keybinds.DOWN) and love.keyboard.isDown(keybinds.RIGHT) then
+        elseif love.keyboard.isDown(keybinds.DOWN) and love.keyboard.isDown(keybinds.RIGHT) and not (worldCollison(prev.x + 1, prev.y + 1) or worldCollison(prev.x + 1, prev.y) or worldCollison(prev.x, prev.y + 1)) then
             prev.y = prev.y + 1
             prev.x = prev.x + 1
             player.previousDirection = "right"
-        elseif love.keyboard.isDown(keybinds.DOWN) and love.keyboard.isDown(keybinds.LEFT) then
+        elseif love.keyboard.isDown(keybinds.DOWN) and love.keyboard.isDown(keybinds.LEFT) and not (worldCollison(prev.x - 1, prev.y + 1) or worldCollison(prev.x - 1, prev.y) or worldCollison(prev.x, prev.y + 1)) then
             prev.y = prev.y + 1
             prev.x = prev.x - 1
             player.previousDirection = "left"
         else
-            if love.keyboard.isDown(keybinds.LEFT) then
+            if love.keyboard.isDown(keybinds.LEFT) and not worldCollison(prev.x - 1, prev.y) then
                 prev.x = prev.x - 1
                 player.previousDirection = "left"
-            elseif love.keyboard.isDown(keybinds.RIGHT) then
+            elseif love.keyboard.isDown(keybinds.RIGHT) and not worldCollison(prev.x + 1, prev.y) then
                 prev.x = prev.x + 1
                 player.previousDirection = "right"
             else
                 player.speed.x = 0
             end 
             
-            if love.keyboard.isDown(keybinds.UP) then
+            if love.keyboard.isDown(keybinds.UP) and not worldCollison(prev.x, prev.y - 1) then
                 prev.y = prev.y - 1
-            elseif love.keyboard.isDown(keybinds.DOWN) then
+            elseif love.keyboard.isDown(keybinds.DOWN) and not worldCollison(prev.x, prev.y + 1) then
                 prev.y = prev.y + 1
             else
                 player.speed.y = 0
             end
         end
 
-        if (prev.x ~= player.x or prev.y ~= player.y) and ((worldLookup[prev.x] and worldLookup[prev.x][prev.y] and not worldLookup[prev.x][prev.y].Collision) or worldEdit.open) then
+        if (prev.x ~= player.x or prev.y ~= player.y) or worldEdit.open then
             player.x = prev.x
             player.y = prev.y
             if worldLookup[player.x]then

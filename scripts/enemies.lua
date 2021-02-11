@@ -196,11 +196,11 @@ function drawEnemies()
                     if nextTick >= 1 then
                         enemies[i].linesDrawable = true
                     end
-                    if enemies[i].linesDrawable == true and v.TargetName == me.Name then
+                    if enemies[i].linesDrawable == true and v.IsAggro then
                         love.graphics.setColor(1, 0, 0, nextTick)
                         love.graphics.line(v.dx + 16, v.dy + 16, player.dx + 16, player.dy + 16)
                         love.graphics.setColor(1, 1, 1, 1)
-                        if nextTick >= 1 then boneSpurt(player.dx + 16, player.dy + 16, 2, 40, 1,1,1, "me") end
+                        if nextTick >= 1 and not love.keyboard.isDown(keybinds.SHIELD) then boneSpurt(player.dx + 16, player.dy + 16, 2, 40, 1,1,1, "me") end
                     end
                 else
                     enemies[i].linesDrawable = false

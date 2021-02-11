@@ -137,7 +137,7 @@ function updateQuestHub(dt)
             end
         else posYQuest = 0
         end
-    elseif not isTypingInChat and openUiOnHover then
+    elseif not isTypingInChat and openUiOnHover and not crafting.open then
         if isMouseOver(((uiX/1) - 313) * scale, 
         ((uiY) + 55 - (uiY/1.25)) * scale,
         (313) * scale,

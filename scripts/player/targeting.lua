@@ -1,74 +1,62 @@
 function initTargeting()
     attackKeys = {keybinds.ATTACK_UP, keybinds.ATTACK_DOWN, keybinds.ATTACK_LEFT, keybinds.ATTACK_RIGHT}
-    targetActive = {
-        up = false,
-        down = false,
-        left = false,
-        right = false
-    }
+    targetHeld = false
+    keys = {keybinds.ATTACK_UP, keybinds.ATTACK_DOWN, keybinds.ATTACK_LEFT, keybinds.ATTACK_RIGHT}
+    heldKeys = {false, false, false, false,}
+    targetKeys = {false, false, false, false,}
+    holdAttack = false
 end
 
-local targetHeld = false
-
 function checkTargetingPress(key)
-    -- if key == keybinds.ATTACK_UP then
-    --     player.target.active = true
-    --     if player.target.y == player.y - 1 then
-    --         player.target.y = player.y
-    --         targetActive.up = false
-    --     else
-    --         player.target.y = player.y - 1
-    --         player.target.x = player.x
-    --         targetActive.left = false
-    --         targetActive.right = false
-    --         targetActive.up = true
-    --         targetActive.down = false
-    --     end
-    -- elseif key == keybinds.ATTACK_DOWN then
-    --     player.target.active = true
-    --     if player.target.y == player.y + 1 then
-    --         player.target.y = player.y
-    --         targetActive.down = false
-    --     else
-    --         player.target.y = player.y + 1
-    --         player.target.x = player.x
-    --         targetActive.left = false
-    --         targetActive.right = false
-    --         targetActive.up = false
-    --         targetActive.down = true
-    --     end
-    -- end
-    -- if key == keybinds.ATTACK_LEFT then
-    --     player.target.active = true
-    --     if player.target.x == player.x - 1 then
-    --         player.target.x = player.x
-    --         targetActive.left = false
-    --     else
-    --         player.target.x = player.x - 1
-    --         player.target.y = player.y
-    --         targetActive.left = true
-    --         targetActive.right = false
-    --         targetActive.up = false
-    --         targetActive.down = false
-    --     end
-    -- elseif key == keybinds.ATTACK_RIGHT then
-    --     player.target.active = true
-    --     if player.target.x == player.x + 1 then
-    --         player.target.x = player.x
-    --         targetActive.right = false
-    --     else
-    --         player.target.x = player.x + 1
-    --         player.target.y = player.y
-    --         targetActive.left = false
-    --         targetActive.right = true
-    --         targetActive.up = false
-    --         targetActive.down = false
-    --     end
-    -- end
+    if key == "h" then
+        if holdAttack then
+            holdAttack = false
+            heldKeys = {false, false, false, false,}
+            targetKeys = {false, false, false, false,}
+            targetHeld = false
+        else
+            holdAttack = true
+        end
+    end
+
+    if targetHeld then
+        for i,v in ipairs(keys) do
+            if key == v then 
+                if heldKeys[i] == false then -- if the key pressed isn't the original
+                    heldKeys = {false, false, false, false,}
+                    targetKeys = {false, false, false, false,}
+                    targetHeld = false
+                    break
+                end
+            end
+        end
+    end
+
+    for i,v in ipairs(keys) do
+        if key == v then -- if the key pressed == a direction, set the targetKeys direction to true
+            targetKeys[i] = true
+            break
+        end
+    end
 end
 
 function checkTargetingRelease(key)
-  
+    if (love.keyboard.isDown("lshift") or love.keyboard.isDown("h")) or holdAttack then
+        targetHeld = true
+        for i,v in ipairs(keys) do
+            if key == v then -- if shift is down, don't send a key-up notice, but store this held key to memory
+                heldKeys[i] = false
+                break
+            end
+        end
+    else
+        for i,v in ipairs(keys) do
+            if key == v then -- if shift isn't down, act normally
+                targetKeys[i] = false
+                break
+            end
+        end
+    end
 end
 
 function checkTargeting() -- Check which keys are down and place the player target accordingly
@@ -78,18 +66,18 @@ function checkTargeting() -- Check which keys are down and place the player targ
     if isMouseDown() then
         checkMouseTargeting()
     else
-        if love.keyboard.isDown(keybinds.ATTACK_UP) then
+        if targetKeys[1] then
             player.target.active = true
             player.target.y = player.y - 1
-        elseif love.keyboard.isDown(keybinds.ATTACK_DOWN) then
+        elseif targetKeys[2] then
             player.target.active = true
             player.target.y = player.y + 1
         end
 
-        if love.keyboard.isDown(keybinds.ATTACK_LEFT) then
+        if targetKeys[3] then
             player.target.active = true
             player.target.x = player.x - 1
-        elseif love.keyboard.isDown(keybinds.ATTACK_RIGHT) then
+        elseif targetKeys[4] then
             player.target.active = true
             player.target.x = player.x + 1
         end
