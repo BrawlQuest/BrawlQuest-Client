@@ -18,7 +18,7 @@ function drawToolBarInventory(thisX, thisY)
 
     inventory.mouseOverButtonsAmount = 0
     for i,v in ipairs(hotbar) do
-        drawInventoryItem(thisX + 9 + (43 * (i - 1)), thisY - 42, 0, v.item, getItemAmount(v.item), i)
+        drawInventoryItem(thisX + 9 + (43 * (i - 1)), thisY - 42, 0, v.item, 0, i)
     end
 
     if inventory.open then
@@ -46,7 +46,6 @@ end
 function drawInventoryItem(thisX, thisY, field, item, amount, number)
     love.graphics.setFont(inventory.itemFont)
     if number then
-
         local height = 19
         amount = inventory.amount
         if isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale) then
@@ -64,7 +63,6 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
                 cerp(useItemColor[number], 1 - useItemColor[number], amount),
                 cerp(useItemColor[number] + (0.7 * (1 - useItemColor[number])), 1, amount))
         end
-
         if inventory.amount < 0.02 then 
             roundRectangle("fill", thisX, thisY, inventory.images.itemBG:getWidth(), height, 4, {true, true, false, false})
         end
@@ -86,7 +84,6 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
 
         love.graphics.setColor(1,1,1,1)
         love.graphics.draw(inventory.images.numbers[number], thisX - 3, thisY + 26)
-
     else
         if isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale) and item then
             setItemTooltip(item)
@@ -163,28 +160,6 @@ end
 
 function drawItemBacking(thisX, thisY)
     roundRectangle("fill", thisX, thisY, inventory.images.itemBG:getWidth(), inventory.images.itemBG:getHeight(), 4)
-end
-
-function drawInventoryItemBackings(thisX, thisY, field)
-    love.graphics.setColor(1,1,1,0.2)    
-    for i,v in ipairs(userInventory) do
-        inventroyItemBackings(thisX, thisY + (inventory.itemSpacing * 0), #v, 0, 7)
-        inventroyItemBackings(thisX, thisY + (inventory.itemSpacing * 1), #v, 7, 14)
-        inventroyItemBackings(thisX, thisY + (inventory.itemSpacing * 2), #v, 14, 21)
-        inventroyItemBackings(thisX, thisY + (inventory.itemSpacing * 3), #v, 21, 28)
-        inventroyItemBackings(thisX, thisY + (inventory.itemSpacing * 4), #v, 28, 35)
-        inventroyItemBackings(thisX, thisY + (inventory.itemSpacing * 5), #v, 35, 42)
-    end
-    love.graphics.setColor(1,1,1,1)    
-end
-
-function inventroyItemBackings(thisX, thisY, value, min, max)
-    if value > min and value <= max then
-        for i = 1, 7 do 
-            -- love.graphics.draw(inventory.images.itemBG, thisX + (43 * (i - 1)), thisY)
-            drawItemBacking(thisX + (43 * (i - 1)), thisY)
-        end
-    end
 end
 
 function drawInventoryStencil()
