@@ -84,32 +84,28 @@ function updateToolBarInventory(dt)
     else
         if isMouseOver(0, 0, 313 * scale, (uiY - 97) * scale) and openUiOnHover and not crafting.open then
             inventory.open = true
-            inventory.amount = inventory.amount + 4 * dt
-            if inventory.amount > 1 then inventory.amount = 1 end
+            panelMovement(dt, inventory, 1)
         else
             inventory.open = false
-            inventory.amount = inventory.amount - 4 * dt
-            if inventory.amount < 0 then
-                inventory.amount = 0
-            end
+            panelMovement(dt, inventory, -1)
         end
     end
 
-        if useItemColorChanged then
-            local colorCount = 0
-            for i, v in ipairs(useItemColor) do
-                if v > 0 then
-                    useItemColor[i] = v - 2 * dt
-                else
-                    useItemColor[i] = 0
-                end
-                colorCount = colorCount + v
+    if useItemColorChanged then
+        local colorCount = 0
+        for i, v in ipairs(useItemColor) do
+            if v > 0 then
+                useItemColor[i] = v - 2 * dt
+            else
+                useItemColor[i] = 0
             end
-
-            if colorCount == 0 then 
-                useItemColorChanged = false
-            end
+            colorCount = colorCount + v
         end
+
+        if colorCount == 0 then 
+            useItemColorChanged = false
+        end
+    end
         
     if inventory.open then 
         if getFullUserInventoryFieldHeight() * scale > (uiY - 97 - 50 - 50) * scale then
