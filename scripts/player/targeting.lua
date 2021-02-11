@@ -11,7 +11,7 @@ end
 function checkTargetingPress(key)
     if key == "h" then
         if holdAttack then
-      --      holdAttack = false
+            holdAttack = false
             heldKeys = {false, false, false, false,}
             targetKeys = {false, false, false, false,}
             targetHeld = false
@@ -80,7 +80,7 @@ function checkTargeting() -- Check which keys are down and place the player targ
         end
     end
 
-    if (moving and not holding) or not holdAttack then
+    if not holdAttack and (moving and not holding) then
         heldKeys = {false, false, false, false,}
         targetKeys = {false, false, false, false,}
         targetHeld = false

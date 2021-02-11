@@ -40,16 +40,18 @@ function initCrafting()
     if b[1] ~= null then
         crafting.catalogue = json:decode(b[1])
         for i, v in ipairs(crafting.catalogue) do
-            if crafting.recipes[v.ItemsString] then
-                crafting.recipes[v.ItemsString][#crafting.recipes[v.ItemsString] + 1] = copy(v)
+            if crafting.recipes[v.Item.Type] then
+                crafting.recipes[v.Item.Type][#crafting.recipes[v.Item.Type] + 1] = copy(v)
             else
-                crafting.recipes[v.ItemsString] = {copy(v),}
-                crafting.fields[#crafting.fields+1] = v.ItemsString
+                crafting.recipes[v.Item.Type] = {copy(v),}
+                crafting.fields[#crafting.fields+1] = v.Item.Type
             end
         end
     else
         crafting.catalogue = {}
     end
+
+    print(json:encode_pretty(crafting.fields))
 end
 
 function updateCrafting(dt)
