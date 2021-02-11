@@ -93,7 +93,7 @@ function love.keypressed(key)
 
             if key == keybinds.INTERACT and isNearbyTile("assets/world/objects/Anvil.png") then -- Hello Mr HackerMan! Removing the isNearbyTile will allow you to open the crafting menu from anywhere, but won't allow you to actually craft any items. Sorry! =(
                 crafting.open = true
-                inventory.notNPC = true
+                -- inventory.notNPC = true
             end
 
           
