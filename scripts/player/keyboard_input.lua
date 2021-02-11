@@ -51,6 +51,8 @@ function love.keypressed(key)
         elseif crafting.open then
             if key == keybinds.INTERACT or key == "escape" then
                 crafting.open = false
+
+
             end
         else
             -- if key == "m" then beginMounting() end
