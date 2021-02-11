@@ -54,6 +54,7 @@ function love.keypressed(key)
                 crafting.enteredItems = {}
                 crafting.craftableItems = {}
                 crafting.craftable = false
+                crafting.selectedField = 0
             end
         else
             -- if key == "m" then beginMounting() end

@@ -16,7 +16,7 @@ function initCrafting()
         whiteout = 0,
         recipes = {},
         fields = {},
-        selectedField = 1,
+        selectedField = 0,
         craftableItems = {
           
         },
@@ -224,19 +224,19 @@ function drawCraftingBackground(thisX, thisY)
         x = x + 46
     end
 
-    x, y = thisX + 10 + w + 10, y + h + 8
-    love.graphics.setColor(1,1,1)
-    love.graphics.print("CREATES", x + 5, y + 10, 0 , 2)
-    y = y + 40
-
-    for i,v in ipairs(crafting.recipes[crafting.fields[crafting.selectedField]]) do
-        love.graphics.setColor(0,0,0,0.7)
-        roundRectangle("fill", x, y, w - 18, h, 10)
+    if crafting.selectedField > 0 then
+        x, y = thisX + 10 + w + 10, y + h + 8
         love.graphics.setColor(1,1,1)
-        drawCraftingItem(x + 10, y + 10, 0, v.Item, 1)
-        love.graphics.print(v.Item.Name, x + 54, y + 22)
-      --  love.graphics.print(v.Chance.. "%", x + 54, y + 25, 0, 2)
-        y = y + 66
+        love.graphics.print("CREATES", x + 5, y + 10, 0 , 2)
+        y = y + 40
+        for i,v in ipairs(crafting.recipes[crafting.fields[crafting.selectedField]]) do
+            love.graphics.setColor(0,0,0,0.7)
+            roundRectangle("fill", x, y, w - 18, h, 10)
+            love.graphics.setColor(1,1,1)
+            drawCraftingItem(x + 10, y + 10, 0, v.Item, 1)
+            love.graphics.print(v.Item.Name, x + 54, y + 22)
+            y = y + 66
+        end
     end
 
     if crafting.result then    
