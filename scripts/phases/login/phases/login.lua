@@ -154,9 +154,13 @@ function login()
             
         if c == 200 then
                 if type(availableEnemies[1]) == "string" then
-                    availableEnemies = json:decode(availableEnemies[1])
-                    for i,v in ipairs(availableEnemies) do
-                        worldEdit.enemyImages[i] = getImgIfNotExist(v.Image)
+                    local c = json:decode(availableEnemies[1])
+                    availableEnemies = {}
+                    for i,v in ipairs(c) do
+                        if i > 10 then
+                            availableEnemies[#availableEnemies+1] = v
+                            worldEdit.enemyImages[#availableEnemies] = getImgIfNotExist(v.Image)
+                        end
                     end
                 end
             end

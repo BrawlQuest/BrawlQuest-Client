@@ -21,6 +21,7 @@ player = {
     },
     lvl = 0,
     xp = 0,
+    owedxp = 0,
     isMounted = false,
     name = "",
     isMounting = false,
