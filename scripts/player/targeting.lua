@@ -1,61 +1,71 @@
 function initTargeting()
     attackKeys = {keybinds.ATTACK_UP, keybinds.ATTACK_DOWN, keybinds.ATTACK_LEFT, keybinds.ATTACK_RIGHT}
-    targetActive = {
-        up = false,
-        down = false,
-        left = false,
-        right = false
-    }
-
     targetHeld = false
     keys = {keybinds.ATTACK_UP, keybinds.ATTACK_DOWN, keybinds.ATTACK_LEFT, keybinds.ATTACK_RIGHT}
     heldKeys = {false, false, false, false,}
     targetKeys = {false, false, false, false,}
+    holdAttack = false
 end
 
 function checkTargetingPress(key)
+    if key == "h" then
+        if holdAttack then
+            holdAttack = false
+            heldKeys = {false, false, false, false,}
+            targetKeys = {false, false, false, false,}
+            targetHeld = false
+        else
+            holdAttack = true
+        end
+    end
 
     if targetHeld then
         for i,v in ipairs(keys) do
-            if key == v then
-                if heldKeys[i] == false then
+            if key == v then 
+                if heldKeys[i] == false then -- if the key pressed isn't the original
                     heldKeys = {false, false, false, false,}
                     targetKeys = {false, false, false, false,}
+                    targetHeld = false
+                    break
                 end
             end
         end
     end
+
     for i,v in ipairs(keys) do
-        if key == v then
-            targetKeys[i] = true
+        if key == v then -- if the key pressed == a direction, set the targetKeys direction to true
+            targetKeys[i] = true 
+            break
         end
     end
-    print("Press " .. json:encode(targetKeys))
 end
 
 function checkTargetingRelease(key)
-    if not love.keyboard.isDown("lshift") then
+    if (love.keyboard.isDown("lshift") or love.keyboard.isDown("h")) or holdAttack then
         targetHeld = true
         for i,v in ipairs(keys) do
-            if key == v then
-                targetKeys[i] = false
+            if key == v then -- if shift is down, don't send a key-up notice, but store this held key to memory
+                heldKeys[i] = false
+                break
             end
         end
     else
-        targetHeld = true
-        heldKeys = copy(targetKeys)
+        for i,v in ipairs(keys) do
+            if key == v then -- if shift isn't down, act normally
+                targetKeys[i] = false
+                break
+            end
+        end
     end
-    print("Release " .. json:encode(targetKeys))
-    -- checkTargeting()
 end
 
 function checkTargeting() -- Check which keys are down and place the player target accordingly
     local wasActive = player.target.active
     player.target = {x = player.x, y = player.y, active = false}
 
-    -- if isMouseDown() then
-    --     checkMouseTargeting()
-    -- else
+    if isMouseDown() then
+        checkMouseTargeting()
+    else
         if targetKeys[1] then
             player.target.active = true
             player.target.y = player.y - 1
@@ -71,7 +81,7 @@ function checkTargeting() -- Check which keys are down and place the player targ
             player.target.active = true
             player.target.x = player.x + 1
         end
-    -- end
+    end
 
     if not wasActive and player.target.active then
         -- newly active, trigger a send to make things feel a tad more responsive

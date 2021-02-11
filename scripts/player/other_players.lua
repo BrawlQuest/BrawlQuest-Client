@@ -116,8 +116,12 @@ function drawPlayer(v, i)
             local diffX
             local diffY
             if i == -1 and player.target.active then
-                diffX = player.target.x - player.x
-                diffY = player.target.y - player.y
+                if targetKeys[1] then diffY = -1
+                elseif targetKeys[2] then diffY = 1
+                else diffY = 0 end
+                if targetKeys[3] then diffX = -1
+                elseif targetKeys[4] then diffX = 1
+                else diffX = 0 end
             else
                 diffX = thisPlayer.AX - thisPlayer.X
                 diffY = thisPlayer.AY - thisPlayer.Y
