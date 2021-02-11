@@ -323,7 +323,7 @@ function drawCraftingStencil()
 end
 
 function drawRecipesStencil()
-    roundRectangle("fill", (((uiX / 2) - (crafting.w / 2)) + 10) * scale, (((uiY / 2) - (crafting.h / 2)) + 10 + 40 + 30) * scale, (194 + 18) * scale, (crafting.h - 90) * scale, 10 * scale)
+    roundRectangle("fill", (((uiX / 2) - (crafting.w / 2)) + 10), (((uiY / 2) - (crafting.h / 2)) + 10 + 40 + 30), (194 + 18), (crafting.h - 90), 10)
 end
 
 function checkCraftingMousePressed(button)
