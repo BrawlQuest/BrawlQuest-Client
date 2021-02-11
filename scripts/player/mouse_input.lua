@@ -29,6 +29,8 @@ function love.wheelmoved( dx, dy )
     if phase == "game" then
         if isSettingsWindowOpen then
             scrollSettings(dx, dy)
+        elseif crafting.open then
+            crafting.velY = crafting.velY + dy * 512            
         elseif isMouseOver(0, 0, 313 * scale, (uiY - 97) * scale) then
             velyInventory = velyInventory + dy * 512
         elseif isMouseOver(((uiX) - 313) * scale, ((uiY) - ((uiY/1.25) - 15)) * scale, (313) * scale, ((uiY/1.25) - 106 - 14) * scale) then
@@ -37,8 +39,6 @@ function love.wheelmoved( dx, dy )
             npcChatArg.posY = npcChatArg.posY + (dy * (npcChatArg.font:getHeight() * 0.5))
         elseif worldEdit.open then
             zoomCamera(dy, worldEditScales)
-        elseif crafting.open then
-            crafting.velY = crafting.velY + dy * 512
         else 
             if isTypingInChat then velyChat = velyChat + dy * 512 end
             zoomCamera(dy, worldScales)
