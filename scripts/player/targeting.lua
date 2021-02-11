@@ -34,7 +34,7 @@ function checkTargetingPress(key)
 
     for i,v in ipairs(keys) do
         if key == v then -- if the key pressed == a direction, set the targetKeys direction to true
-            targetKeys[i] = true 
+            targetKeys[i] = true
             break
         end
     end

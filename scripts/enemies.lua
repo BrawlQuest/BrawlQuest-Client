@@ -196,7 +196,7 @@ function drawEnemies()
                     if nextTick >= 1 then
                         enemies[i].linesDrawable = true
                     end
-                    if enemies[i].linesDrawable == true and v.TargetName == me.Name then
+                    if enemies[i].linesDrawable == true and v.IsAggro then
                         love.graphics.setColor(1, 0, 0, nextTick)
                         love.graphics.line(v.dx + 16, v.dy + 16, player.dx + 16, player.dy + 16)
                         love.graphics.setColor(1, 1, 1, 1)
