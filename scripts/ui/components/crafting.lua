@@ -205,7 +205,6 @@ function drawCraftingBackground(thisX, thisY)
                 y = y + 66
             end
         end
-
     love.graphics.setStencilTest() -- pop
 
 
@@ -242,14 +241,12 @@ function drawCraftingBackground(thisX, thisY)
         love.graphics.setColor(1,1,1)
         love.graphics.print("CREATES", x + 5, y + 10, 0 , 2)
         y = y + 40
-        for i,v in ipairs(crafting.recipes[crafting.fields[crafting.selectedField.i]]) do
-            love.graphics.setColor(0,0,0,0.7)
-            roundRectangle("fill", x, y, w - 18, h, 10)
-            love.graphics.setColor(1,1,1)
-            drawCraftingItem(x + 10, y + 10, 0, v.Item, 1)
-            love.graphics.print(v.Item.Name, x + 54, y + 22)
-            y = y + 66
-        end
+        local v = crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j]
+        love.graphics.setColor(0,0,0,0.7)
+        roundRectangle("fill", x, y, w - 18, h, 10)
+        love.graphics.setColor(1,1,1)
+        drawCraftingItem(x + 10, y + 10, 0, v.Item, 1)
+        love.graphics.print(v.Item.Name, x + 54, y + 22)
     end
 
     if crafting.result then    
@@ -352,45 +349,43 @@ function checkCraftingMousePressed(button)
         print("I need to enter items!")
         local craft = {}
         crafting.selectedField = copy(crafting.mouseOverField)
-        for i,v in ipairs(crafting.recipes[crafting.fields[crafting.selectedField.i]]) do
-            print(json:encode(v))
-            crafting.selectedItem = v
-            local required = json:decode(v.ItemsString)
-            crafting.enteredItems = {}
-            
-            for j = 1, #v.ItemsItem do
-                local amount = required[j].Amount
-                print(v.ItemsItem[j].Name .. " " .. amount)
-                if getItemAmount(v.ItemsItem[j]) >= amount then
-                    crafting.enteredItems[j] = {
-                        item = v.ItemsItem[j],
-                        amount = amount,
-                        random = {X = math.random()*100, Y = math.random()*100},
-                    }
-                    craft[#craft+1] = true
-                elseif getItemAmount(v.ItemsItem[j]) < 1 then
-                    craft[#craft+1] = false
-                else
-                    crafting.enteredItems[j] = {
-                        item = v.ItemsItem[j],
-                        amount = getItemAmount(v.ItemsItem[j]),
-                        random = {X = math.random()*100, Y = math.random()*100},
-                    }
-                    craft[#craft+1] = false
-                end
-            end
 
-            crafting.craftable = true
-            for int, crafty in ipairs(craft) do
-                if crafty == false then
-                    crafting.craftable = false
-                end
+        local v = crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j]
+            
+        print(json:encode(crafting.selectedField))
+        print("Selected ITEM: " .. json:encode_pretty(v))
+
+        crafting.selectedItem = v
+        local required = json:decode(v.ItemsString)
+        crafting.enteredItems = {}
+        
+        for j = 1, #v.ItemsItem do
+            local amount = required[j].Amount
+            print(v.ItemsItem[j].Name .. " " .. amount)
+            if getItemAmount(v.ItemsItem[j]) >= amount then
+                crafting.enteredItems[j] = {
+                    item = v.ItemsItem[j],
+                    amount = amount,
+                    random = {X = math.random()*100, Y = math.random()*100},
+                }
+                craft[#craft+1] = true
+            elseif getItemAmount(v.ItemsItem[j]) < 1 then
+                craft[#craft+1] = false
+            else
+                crafting.enteredItems[j] = {
+                    item = v.ItemsItem[j],
+                    amount = getItemAmount(v.ItemsItem[j]),
+                    random = {X = math.random()*100, Y = math.random()*100},
+                }
+                craft[#craft+1] = false
             end
         end
-        
-    elseif button == 2 then
-        if crafting.selectableI > 0 then
-            table.remove(crafting.enteredItems, crafting.selectableI)
+
+        crafting.craftable = true
+        for int, crafty in ipairs(craft) do
+            if crafty == false then
+                crafting.craftable = false
+            end
         end
     end
 end
