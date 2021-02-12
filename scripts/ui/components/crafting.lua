@@ -196,9 +196,10 @@ function drawCraftingBackground(thisX, thisY)
                         l = l - 1
                         if v.ItemsItem[l] ~= null then
                             local amount = 0
-                            for l,m in ipairs(values) do
+                            for n,m in ipairs(values) do
                                 if m.ItemID == v.ItemsItem[l].ID then
                                     amount = m.Amount
+                                    break
                                 end
                             end
                             love.graphics.setColor(1,1,1,1)
