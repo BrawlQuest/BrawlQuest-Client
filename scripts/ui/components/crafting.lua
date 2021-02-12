@@ -34,6 +34,15 @@ function initCrafting()
         posY = 0,
         velY = 0,
         itemCount = 0,
+        recipesHeight = 0,
+        fieldNames = {
+            ["wep"] = "Weapons", 
+            ["shield"] = "Sheilds", 
+            ["arm_head"] = "Head Armour", 
+            ["arm_legs"] = "Leg Armour", 
+            ["arm_chest"] = "Chest Armour", 
+            ["spell"] = "Spells",
+        },
     }
 
     b = {}
@@ -53,14 +62,11 @@ function initCrafting()
         crafting.catalogue = {}
     end
 
-    -- print(json:encode_pretty(crafting.recipes))
-    -- success,msg = love.filesystem.write("recipes.txt", json:encode_pretty(crafting.recipes))
+    crafting.selectedItem = crafting.recipes[crafting.fields[1]][1]
+    crafting.recipesHeight = (crafting.itemCount * -66) + ((crafting.font:getHeight() * 2) * -#crafting.fields) + crafting.h - 60 - 20
 
-    for i,field in ipairs(crafting.fields) do
-        for j, item in ipairs(crafting.recipes[field]) do
-            print(item.Item.Name)
-        end
-    end
+    -- print(json:encode_pretty(crafting.fields))
+    -- success,msg = love.filesystem.write("recipes.txt", json:encode_pretty(crafting.recipes))
 end
 
 function updateCrafting(dt)
@@ -70,7 +76,7 @@ function updateCrafting(dt)
                 crafting.whiteout = crafting.whiteout + 20 * dt
                 crafting.sfx:setPitch(love.math.random(50,100)/100)
                 love.audio.play(crafting.sfx)
-                if crafting.whiteout > 1 then
+                if crafting.whiteout > 1 and crafting.selectedItem ~= null then
                     crafting.hammerDown = 1
                     crafting.isCrafting = false
                     crafting.whiteout = 1.25
@@ -116,8 +122,8 @@ function updateCrafting(dt)
         crafting.posY = crafting.posY + crafting.velY * dt
         if crafting.posY > 0 then
             crafting.posY = 0 
-        elseif crafting.posY < crafting.itemCount * -66 + crafting.h - 60 - 20 then
-            crafting.posY = crafting.itemCount * -66 + crafting.h - 60 - 20
+        elseif crafting.posY < crafting.recipesHeight then
+            crafting.posY = crafting.recipesHeight
         end
     end
 end
@@ -162,8 +168,10 @@ function drawCraftingBackground(thisX, thisY)
     love.graphics.setStencilTest("greater", 0) -- push
 
         for i,field in ipairs(crafting.fields) do
+            love.graphics.setColor(1,1,1)
+            love.graphics.print(string.upper(crafting.fieldNames[field] or field), inventory.font, x + 8, y + 4, 0, 1)
+            y = y + (crafting.font:getHeight() * 2)
             for j, v in ipairs(crafting.recipes[field]) do
-                x = thisX + 10
                 if isMouseOver(x * scale,y * scale,w * scale,h * scale) then
                     crafting.mouseOverField = {i = i, j = j}
                     love.graphics.setColor(1,0,0,1)
@@ -202,6 +210,7 @@ function drawCraftingBackground(thisX, thisY)
                     end
                     x = x + 46
                 end
+                x = thisX + 10
                 y = y + 66
             end
         end
@@ -339,7 +348,7 @@ end
 function checkCraftingMousePressed(button)
     local c = crafting
     thisX, thisY = (uiX / 2) - (400 / 2), (uiY / 2) - (400 / 2)
-    if button == 1 and crafting.mouseOverAnvil == true then
+    if button == 1 and crafting.mouseOverAnvil == true and crafting.craftable then
         crafting.isCrafting = true
         crafting.whiteout = 0
         love.audio.stop(crafting.swing)
@@ -352,8 +361,8 @@ function checkCraftingMousePressed(button)
 
         local v = crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j]
             
-        print(json:encode(crafting.selectedField))
-        print("Selected ITEM: " .. json:encode_pretty(v))
+        -- print(json:encode(crafting.selectedField))
+        -- print("Selected ITEM: " .. json:encode_pretty(v))
 
         crafting.selectedItem = v
         local required = json:decode(v.ItemsString)
