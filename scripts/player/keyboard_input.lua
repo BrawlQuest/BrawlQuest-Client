@@ -57,13 +57,8 @@ function love.keypressed(key)
                 crafting.selectedField = {i = 0, j = 0}
             end
         else
-            -- if key == "m" then beginMounting() end
-            -- checkTargeting()
+            checkInventoryKeyPressed(key)
             checkTargetingPress(key)
-
-            if key == "/" then
-                table.remove(quests[1], 1)
-            end
 
             if key == "return" and not isSettingsWindowOpen then isTypingInChat = true end
 
@@ -81,7 +76,7 @@ function love.keypressed(key)
                 writeSettings()
             end
 
-            if (key == "'" or key == "r") and versionType == "dev" then
+            if key == "'" and versionType == "dev" then
                 worldEdit.open = not worldEdit.open
             end
 
@@ -91,50 +86,19 @@ function love.keypressed(key)
                 inventory.forceOpen = not inventory.forceOpen
             end
 
-            if key == keybinds.QUESETS then
+            local nearbyAnvil = isNearbyTile("assets/world/objects/Anvil.png")
+
+            if key == keybinds.QUESETS and not nearbyAnvil then
                 questsPanel.forceOpen = not questsPanel.forceOpen
             end
 
-            if key == keybinds.INTERACT and isNearbyTile("assets/world/objects/Anvil.png") then -- Hello Mr HackerMan! Removing the isNearbyTile will allow you to open the crafting menu from anywhere, but won't allow you to actually craft any items. Sorry! =(
+            if key == keybinds.INTERACT and nearbyAnvil then -- Hello Mr HackerMan! Removing the isNearbyTile will allow you to open the crafting menu from anywhere, but won't allow you to actually craft any items. Sorry! =(
                 crafting.open = true
                 -- inventory.notNPC = true
-            end
-
-          
-            checkInventoryKeyPressed(key)
-
-            if key == "b" and buddies[player.name] ~= null then
-                -- print(buddies[player.name].img)
-                -- chatXpos = -64
-                -- chatOpacity = 0
-                -- chatWritten = ""
-                -- npcChat = {
-                --     Title = ":)",
-                --     ImgPath = buddies[player.name].img,
-                --     Options = {
-                --         {
-                --             "Woohoo!",
-                --             "1"
-                --         },
-                --     }
-                -- }
-                -- showNPCChatBackground = true
             end
         end
         
         if not isTypingInChat and not worldEdit.isTyping then
-            -- if key == "l" then
-            --     worldScale = worldScale * 0.5
-            --     print(worldScale)
-            --     writeSettings()
-            -- end
-            
-            -- if key == ";" then
-            --     worldScale = worldScale * 2
-            --     print(worldScale)
-            --     writeSettings()
-            -- end
-
             if key == "." then
                 scaleHUD("up")
                 writeSettings()
@@ -147,9 +111,9 @@ function love.keypressed(key)
         end
     end
 
-    -- if key == "p" and love.keyboard.isDown("lgui") then
-    --     love.event.quit()
-    -- end
+    if key == "p" and love.keyboard.isDown("lgui") and versionType == "dev" then
+        love.event.quit()
+    end
 end
 
 function love.keyreleased(key)

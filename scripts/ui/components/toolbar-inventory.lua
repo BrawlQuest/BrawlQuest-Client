@@ -202,15 +202,17 @@ end
 
 function checkInventoryKeyPressed(key)
     for i,v in ipairs(hotbar) do
-        if love.keyboard.isDown(i) or (i == 7 and love.keyboard.isDown("space")) then
-            if inventory.isMouseOverInventoryItem then
+        if key == tostring(i) or (i == 7 and key == "space") then
+            if inventory.isMouseOverInventoryItem == true then
                 hotbar[i].item = selectedItem
+                break
             else
-                if v.item ~= nil and v.item.ID ~= nil and not usedItemThisTick  then
+                if v.item ~= nil and v.item.ID ~= nil and not usedItemThisTick then
                     useItemColor[i] = 1
                     useItemColorChanged = true
                     apiGET("/item/" .. player.name .. "/" .. v.item.ID)
                     usedItemThisTick = true
+                    break
                 end
             end
         end
@@ -227,29 +229,13 @@ function checkInventoryMousePressed(button)
                     useItemColorChanged = true
                     apiGET("/item/" .. player.name .. "/" .. v.item.ID)
                     usedItemThisTick = true
+                    break
                 elseif button == 2 then
                     hotbar[i] = {item = null,}
+                    break
                 end
             end
         end
-    end
-
-    if selectedItem ~= nil and selectedItem.ID ~= nil and
-        isMouseOver((0) * scale, (0 + 50) * scale, 313 * scale, (uiY - 97 - 50 - 50) * scale) then
-
-        if love.keyboard.isDown("lshift") then
-
-            for i,v in ipairs(hotbar) do
-                if love.keyboard.isDown("lshift") and love.keyboard.isDown(i) then
-                    v.item = selectedItem
-                end
-            end
-            
-        elseif  not usedItemThisTick then
-            apiGET("/item/" .. player.name .. "/" .. selectedItem.ID)
-            usedItemThisTick = true
-        end
-       
     end
 end
 
