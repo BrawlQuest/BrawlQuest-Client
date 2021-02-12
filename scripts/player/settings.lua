@@ -40,6 +40,7 @@ function initSettings()
     showWorldMask = true
     showWorldAnimations = true
     showHUD = true
+    oldTargeting = false
 
     useItemColor = {}
     hotbar = {}
@@ -72,6 +73,7 @@ function initSettings()
         showWorldAnimations = contents["showWorldAnimations"] or showWorldAnimations
         showHUD = contents["showHUD"] or showHUD
         openUiOnHover = contents["openUiOnHover"] or openUiOnHover
+        oldTargeting = contents["oldTargeting"] or oldTargeting
         hotbar = contents["hotbar"] or hotbar
         api.url = servers[selectedServer].url
     else
@@ -92,6 +94,7 @@ function initSettings()
         {
             title = "Player",
             {name = "Respawn", v = respawn, type = "button", "Full", "Fast",},
+            {name = "Use Old Targeting", v = oldTargeting, type = "button", "Full", "Fast",},
         },   
         {
             title = "Graphics",
@@ -141,6 +144,7 @@ function writeSettings()
         showWorldAnimations = showWorldAnimations,
         openUiOnHover = openUiOnHover,
         hotbar = hotbar,
+        oldTargeting = oldTargeting,
         vsync = vsync,
     }))
 end
@@ -184,6 +188,8 @@ function checkSettingsMousePressed(button)
                         else
                             bv.v = not bv.v
                         end
+                        oldTargeting = settings[1][2].v
+                        holdAttack = not oldTargeting
                         showHUD = settings[4][1].v
                         openUiOnHover = settings[4][3].v -- sets the values
                         showChat = settings[4][4].v
