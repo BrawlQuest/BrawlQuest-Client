@@ -96,7 +96,7 @@ function newEnemyData(data) -- called when nearby data is returned
                 end
                 attackHitAmount = 1
             end
-            addFloat(enemy.X*32,enemy.Y*32-18,enemy.HP - v.HP,{1,0,0})
+            addFloat(enemy.X*32,enemy.Y*32-18,(enemy.HP - v.HP) * -1,{1,0,0})
             enemy.HP = v.HP
             enemy.red = 1
 
