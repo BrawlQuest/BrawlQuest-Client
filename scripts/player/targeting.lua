@@ -9,7 +9,7 @@ function initTargeting()
 end
 
 function checkTargetingPress(key)
-    if key == "h" then
+    if key == "h" and oldTargeting then
         if holdAttack then
             holdAttack = false
             heldKeys = {false, false, false, false,}
