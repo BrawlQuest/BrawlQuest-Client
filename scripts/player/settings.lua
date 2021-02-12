@@ -198,6 +198,7 @@ function checkSettingsMousePressed(button)
                         -- showShadows = settings[2][4].v
                         -- showWorldMask = settings[2][5].v
                         showWorldAnimations = settings[2][4].v
+                        break
                     end
                 end
             end
