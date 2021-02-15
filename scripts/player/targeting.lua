@@ -80,7 +80,7 @@ function checkTargeting() -- Check which keys are down and place the player targ
         end
     end
 
-    if not oldTargeting and (moving and not holding) then
+    if not oldTargeting and ((moving and not isTypingInChat) and not holding) then
         heldKeys = {false, false, false, false,}
         targetKeys = {false, false, false, false,}
         targetHeld = false
