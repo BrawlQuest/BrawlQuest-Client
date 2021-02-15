@@ -82,7 +82,7 @@ function updateToolBarInventory(dt)
         inventory.amount = inventory.amount + 4 * dt
         if inventory.amount > 1 then inventory.amount = 1 end
     else
-        if isMouseOver(0, 0, 313 * scale, (uiY - 97) * scale) and openUiOnHover and not crafting.open then
+        if isMouseOver(0, 0, 313 * scale, (uiY - 97) * scale) and openUiOnHover and openInventoryOnHover and not crafting.open then
             inventory.open = true
             panelMovement(dt, inventory, 1)
         else
