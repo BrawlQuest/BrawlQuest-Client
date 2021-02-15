@@ -98,8 +98,8 @@ function initSettings()
         {
             title = "Player",
             {name = "Respawn", v = respawn, type = "button", "Full", "Fast",},
-            {name = "Use Old Targeting", v = oldTargeting, type = "button", "Full", "Fast",},
-        },   
+            {name = "Hold to Attack", v = oldTargeting, type = "button", "Full", "Fast",},
+        },
         {
             title = "Graphics",
             {name = "Render Quality", v = highdpi, type = "button", "Full", "Fast",},

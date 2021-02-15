@@ -43,6 +43,8 @@ function initCrafting()
             ["arm_chest"] = "Chest Armour", 
             ["spell"] = "Spells",
         },
+        openField = {true, false, false, false, false, false, },
+        overOpenField = 0
     }
 
     b = {}
@@ -167,56 +169,76 @@ function drawCraftingBackground(thisX, thisY)
     love.graphics.stencil(drawRecipesStencil, "replace", 1) -- stencils inventory
     love.graphics.setStencilTest("greater", 0) -- push
 
-        for i,field in ipairs(crafting.fields) do
-            love.graphics.setColor(1,1,1)
-            love.graphics.print(string.upper(crafting.fieldNames[field] or field), inventory.font, x + 8, y + 4, 0, 1)
-            y = y + (crafting.font:getHeight() * 2)
-            for j, v in ipairs(crafting.recipes[field]) do
-                if isMouseOver(x * scale,y * scale,w * scale,h * scale) then
-                    crafting.mouseOverField = {i = i, j = j}
-                    love.graphics.setColor(1,0,0,1)
-                elseif json:encode(crafting.selectedField) == json:encode({i = i, j = j}) then
-                    love.graphics.setColor(43 / 255, 134 / 255, 0)
-                else
-                    love.graphics.setColor(0,0,0,0.7)
-                end
+        crafting.overOpenField = 0
 
-                roundRectangle("fill", x, y, w, h, 10)
-                -- local v = crafting.recipes[field][1]
-                local values = json:decode(v.ItemsString)
-                for l = 1, 4 do
-                    if l == 1 then
-                        if v.Item ~= null then
-                            love.graphics.setColor(1,1,1,1)
-                            drawCraftingItem(x + 10, y + 10, 0, v.Item)
-                        end
-                        love.graphics.printf("=", x + 51, y + 8, 8, "center", 0, 3)
-                        x = x + 10 + 8
+        for i,field in ipairs(crafting.fields) do
+
+            local isMouse = isMouseOver(x * scale,y * scale,w * scale,36 * scale)
+            if isMouse then
+                love.graphics.setColor(1,0,0)
+                crafting.overOpenField = i
+            elseif crafting.openField[i] == true then
+                love.graphics.setColor(1,1,1)
+            else
+                love.graphics.setColor(0,0,0,0.7)
+            end
+
+            roundRectangle("fill", x, y, w, 36, 10)
+            if crafting.openField[i] == true and not isMouse then
+                love.graphics.setColor(0,0,0)
+            else
+                love.graphics.setColor(1,1,1)
+            end
+
+            love.graphics.print(string.upper(crafting.fieldNames[field] or field), inventory.font, x + 10, y + 11, 0, 1)
+            y = y + 46
+            if crafting.openField[i] then
+                for j, v in ipairs(crafting.recipes[field]) do
+                    if isMouseOver(x * scale,y * scale,w * scale,h * scale) then
+                        crafting.mouseOverField = {i = i, j = j}
+                        love.graphics.setColor(1,0,0,1)
+                    elseif json:encode(crafting.selectedField) == json:encode({i = i, j = j}) then
+                        love.graphics.setColor(43 / 255, 134 / 255, 0)
                     else
-                        l = l - 1
-                        if v.ItemsItem[l] ~= null then
-                            local amount = 0
-                            for n,m in ipairs(values) do
-                                if m.ItemID == v.ItemsItem[l].ID then
-                                    amount = m.Amount
-                                    break
-                                end
-                            end
-                            love.graphics.setColor(1,1,1,1)
-                            drawCraftingItem(x + 10, y + 10, 0, v.ItemsItem[l], amount)
-                        else
-                            love.graphics.setColor(0,0,0,0.7)
-                            drawItemBacking(x + 10, y + 10)
-                        end
+                        love.graphics.setColor(0,0,0,0.7)
                     end
-                    x = x + 46
+
+                    roundRectangle("fill", x, y, w, h, 10)
+                    local values = json:decode(v.ItemsString)
+                    for l = 1, 4 do
+                        if l == 1 then
+                            if v.Item ~= null then
+                                love.graphics.setColor(1,1,1,1)
+                                drawCraftingItem(x + 10, y + 10, 0, v.Item)
+                            end
+                            love.graphics.printf("=", x + 51, y + 8, 8, "center", 0, 3)
+                            x = x + 10 + 8
+                        else
+                            l = l - 1
+                            if v.ItemsItem[l] ~= null then
+                                local amount = 0
+                                for n,m in ipairs(values) do
+                                    if m.ItemID == v.ItemsItem[l].ID then
+                                        amount = m.Amount
+                                        break
+                                    end
+                                end
+                                love.graphics.setColor(1,1,1,1)
+                                drawCraftingItem(x + 10, y + 10, 0, v.ItemsItem[l], amount)
+                            else
+                                love.graphics.setColor(0,0,0,0.7)
+                                drawItemBacking(x + 10, y + 10)
+                            end
+                        end
+                        x = x + 46
+                    end
+                    x = thisX + 10
+                    y = y + 66
                 end
-                x = thisX + 10
-                y = y + 66
             end
         end
+        -- crafting.recipesHeight = y
     love.graphics.setStencilTest() -- pop
-
 
     x, y = thisX + 10 + w + 10, thisY + 10 + 10
 
@@ -355,6 +377,15 @@ function checkCraftingMousePressed(button)
         love.audio.stop(crafting.swing)
         crafting.swing:setPitch(love.math.random(30,80)/100)
         love.audio.play(crafting.swing)
+    elseif button == 1 and crafting.overOpenField > 0 then
+        crafting.openField[crafting.overOpenField] = not crafting.openField[crafting.overOpenField]
+        local height = 0
+        for i,v in ipairs(crafting.openField) do
+            if v then
+                height = height + #crafting.recipes[crafting.fields[i]]
+            end
+        end
+        crafting.recipesHeight = (height * -66) + (46 * -#crafting.fields) + crafting.h - 60 - 20
     elseif button == 1 and crafting.mouseOverField.i > 0 then
         print("I need to enter items!")
         local craft = {}
