@@ -77,39 +77,35 @@ function initToolBarInventory()
 end
 
 function updateToolBarInventory(dt)
-    if inventory.forceOpen then
+    if inventory.forceOpen or crafting.open then
         inventory.open = true
         inventory.amount = inventory.amount + 4 * dt
         if inventory.amount > 1 then inventory.amount = 1 end
     else
-        if isMouseOver(0, 0, 313 * scale, (uiY - 97) * scale) and openUiOnHover and not crafting.open then
+        if isMouseOver(0, 0, 313 * scale, (uiY - 97) * scale) and openInventoryOnHover and not crafting.open then
             inventory.open = true
-            inventory.amount = inventory.amount + 4 * dt
-            if inventory.amount > 1 then inventory.amount = 1 end
+            panelMovement(dt, inventory, 1)
         else
             inventory.open = false
-            inventory.amount = inventory.amount - 4 * dt
-            if inventory.amount < 0 then
-                inventory.amount = 0
-            end
+            panelMovement(dt, inventory, -1)
         end
     end
 
-        if useItemColorChanged then
-            local colorCount = 0
-            for i, v in ipairs(useItemColor) do
-                if v > 0 then
-                    useItemColor[i] = v - 2 * dt
-                else
-                    useItemColor[i] = 0
-                end
-                colorCount = colorCount + v
+    if useItemColorChanged then
+        local colorCount = 0
+        for i, v in ipairs(useItemColor) do
+            if v > 0 then
+                useItemColor[i] = v - 2 * dt
+            else
+                useItemColor[i] = 0
             end
-
-            if colorCount == 0 then 
-                useItemColorChanged = false
-            end
+            colorCount = colorCount + v
         end
+
+        if colorCount == 0 then 
+            useItemColorChanged = false
+        end
+    end
         
     if inventory.open then 
         if getFullUserInventoryFieldHeight() * scale > (uiY - 97 - 50 - 50) * scale then
@@ -206,15 +202,17 @@ end
 
 function checkInventoryKeyPressed(key)
     for i,v in ipairs(hotbar) do
-        if love.keyboard.isDown(i) or (i == 7 and love.keyboard.isDown("space")) then
-            if inventory.isMouseOverInventoryItem then
+        if key == tostring(i) or (i == 7 and key == "space") then
+            if inventory.isMouseOverInventoryItem == true then
                 hotbar[i].item = selectedItem
+                break
             else
-                if v.item ~= nil and v.item.ID ~= nil and not usedItemThisTick  then
+                if v.item ~= nil and v.item.ID ~= nil and not usedItemThisTick then
                     useItemColor[i] = 1
                     useItemColorChanged = true
                     apiGET("/item/" .. player.name .. "/" .. v.item.ID)
                     usedItemThisTick = true
+                    break
                 end
             end
         end
@@ -222,6 +220,14 @@ function checkInventoryKeyPressed(key)
 end
 
 function checkInventoryMousePressed(button)
+
+    if selectedItem ~= nil and selectedItem.ID ~= nil and
+        isMouseOver((0) * scale, (0 + 50) * scale, 313 * scale, (uiY - 97 - 50 - 50) * scale) then
+        if  not usedItemThisTick then
+            apiGET("/item/" .. player.name .. "/" .. selectedItem.ID)
+            usedItemThisTick = true
+        end
+    end
 
     if inventory.mouseOverButtonsAmount > 0 then
         for i,v in ipairs(hotbar) do
@@ -231,29 +237,13 @@ function checkInventoryMousePressed(button)
                     useItemColorChanged = true
                     apiGET("/item/" .. player.name .. "/" .. v.item.ID)
                     usedItemThisTick = true
+                    break
                 elseif button == 2 then
                     hotbar[i] = {item = null,}
+                    break
                 end
             end
         end
-    end
-
-    if selectedItem ~= nil and selectedItem.ID ~= nil and
-        isMouseOver((0) * scale, (0 + 50) * scale, 313 * scale, (uiY - 97 - 50 - 50) * scale) then
-
-        if love.keyboard.isDown("lshift") then
-
-            for i,v in ipairs(hotbar) do
-                if love.keyboard.isDown("lshift") and love.keyboard.isDown(i) then
-                    v.item = selectedItem
-                end
-            end
-            
-        elseif  not usedItemThisTick then
-            apiGET("/item/" .. player.name .. "/" .. selectedItem.ID)
-            usedItemThisTick = true
-        end
-       
     end
 end
 

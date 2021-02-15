@@ -74,7 +74,8 @@ function drawCharacterHub(thisX, thisY)
         end  
         thisX = thisX + cerp(0, hubImages.statsBG:getWidth(), characterHub.amount)
         drawCharacterHubMeters(thisX, thisY)
-        if me.Weapon ~= null then drawBattlebarItem(thisX + 231 + 10, thisY + 97 - 10 - 60, itemImg[me.Weapon.ImgPath], "+"..me.Weapon.Val) end
+        thisX, thisY = thisX + 231 + 10, thisY + 97 - 10 - 60
+        if me.Weapon ~= null then drawBattlebarItem(thisX, thisY, itemImg[me.Weapon.ImgPath], "+"..me.Weapon.Val) end
 
         local defence = 0
         if me ~= null then
@@ -90,7 +91,12 @@ function drawCharacterHub(thisX, thisY)
                 defence = defence + me.HeadArmour.Val
             end
         end
-        drawBattlebarItem(thisX + 231 + 20 + 40, thisY + 97 - 10 - 60, "me", "+"..defence )
+        thisX = thisX + 50
+        drawBattlebarItem(thisX, thisY, "me", "+"..defence )
+        if oldTargeting then
+            thisX = thisX + 50
+            drawBattlebarItem(thisX, thisY, "hold", "HOLD")
+        end
     end
 end
 
@@ -181,7 +187,13 @@ end
 
 function drawBattlebarItem(thisX, thisY, item, stats)
     love.graphics.setColor(0,0,0,0.7)
-    roundRectangle("fill", thisX, thisY, 40, 60, 5)
+    local w = 40
+    if item == "hold" then 
+        w = 60
+        if holdAttack then love.graphics.setColor(1,0,0,1) end
+    end
+
+    roundRectangle("fill", thisX, thisY, w, 60, 5)
     love.graphics.setColor(1,1,1)
     if item == "me" then
         v = me
@@ -202,10 +214,12 @@ function drawBattlebarItem(thisX, thisY, item, stats)
 				drawItemIfExists(v.LegArmour.ImgPath, thisX + 4, thisY + 4)
 			end
 		end
+    elseif item == "hold" then
+        love.graphics.print(boolToString(holdAttack), characterHub.nameFont, thisX+(w / 2)-(characterHub.nameFont:getWidth(stats)/2), thisY + 16)
     else
         love.graphics.draw(item, thisX + 4, thisY + 4) 
     end
 
-    love.graphics.print(stats, characterHub.nameFont, thisX+(40 / 2)-(characterHub.nameFont:getWidth(stats)/2), thisY + 42)
+    love.graphics.print(stats, characterHub.nameFont, thisX+(w / 2)-(characterHub.nameFont:getWidth(stats)/2), thisY + 42)
     love.graphics.setFont(headerFont)
 end

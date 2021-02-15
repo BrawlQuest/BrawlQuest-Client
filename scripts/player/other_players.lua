@@ -161,16 +161,12 @@ function drawArrowImage(diffX, diffY, x, y)
     end
 end
 
-function drawNamePlateOld(x,y,name, alpha, level)
-
-end
-
 function drawNamePlate(x,y,name, alpha, level)
     level = level or null
     love.graphics.setFont(playerNameFont)  
     alpha = alpha or 1
     if level then
-        local thisX, thisY = x , y - 2
+        local thisX, thisY = x , y - 4
         local nameWidth, levelWidth = playerNameFont:getWidth(name) + 1, playerNameFont:getWidth(level)
         local nameHeight = playerNameFont:getHeight(name)
         local padding = 2
@@ -194,7 +190,7 @@ function drawNamePlate(x,y,name, alpha, level)
     else
         level = level or null
         alpha = alpha or 1
-        local thisX, thisY = x , y - 2
+        local thisX, thisY = x , y - 4
         local nameWidth = playerNameFont:getWidth(name)
         local nameHeight = playerNameFont:getHeight(name)
         local padding = 2

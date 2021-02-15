@@ -1,16 +1,17 @@
 function initTargeting()
     attackKeys = {keybinds.ATTACK_UP, keybinds.ATTACK_DOWN, keybinds.ATTACK_LEFT, keybinds.ATTACK_RIGHT}
+    moveKeys = {keybinds.UP, keybinds.DOWN, keybinds.LEFT, keybinds.RIGHT}
     targetHeld = false
     keys = {keybinds.ATTACK_UP, keybinds.ATTACK_DOWN, keybinds.ATTACK_LEFT, keybinds.ATTACK_RIGHT}
     heldKeys = {false, false, false, false,}
     targetKeys = {false, false, false, false,}
-    holdAttack = true
+    holdAttack = not oldTargeting
 end
 
 function checkTargetingPress(key)
-    if key == "h" then
+    if key == "h" and oldTargeting then
         if holdAttack then
-      --      holdAttack = false
+            holdAttack = false
             heldKeys = {false, false, false, false,}
             targetKeys = {false, false, false, false,}
             targetHeld = false
@@ -63,7 +64,23 @@ function checkTargeting() -- Check which keys are down and place the player targ
     local wasActive = player.target.active
     player.target = {x = player.x, y = player.y, active = false}
 
-    if (love.keyboard.isDown(keybinds.UP) or love.keyboard.isDown(keybinds.DOWN) or love.keyboard.isDown(keybinds.LEFT) or love.keyboard.isDown(keybinds.RIGHT)) and not (love.keyboard.isDown(keybinds.ATTACK_DOWN) or love.keyboard.isDown(keybinds.ATTACK_LEFT) or love.keyboard.isDown(keybinds.ATTACK_RIGHT) or love.keyboard.isDown(keybinds.ATTACK_UP)) then
+    local holding = false
+    for i,v in ipairs(keys) do
+        if love.keyboard.isDown(v) then
+            holding = true
+            break
+        end
+    end
+
+    local moving = false
+    for i,v in ipairs(moveKeys) do
+        if love.keyboard.isDown(v) then
+            moving = true
+            break
+        end
+    end
+
+    if not oldTargeting and (moving and not holding) then
         heldKeys = {false, false, false, false,}
         targetKeys = {false, false, false, false,}
         targetHeld = false

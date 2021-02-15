@@ -16,7 +16,7 @@ function initCrafting()
         whiteout = 0,
         recipes = {},
         fields = {},
-        selectedField = 1,
+        selectedField = {i = 0, j = 0},
         craftableItems = {
           
         },
@@ -33,6 +33,16 @@ function initCrafting()
         font = love.graphics.newFont("assets/ui/fonts/C&C Red Alert [INET].ttf", 13),
         posY = 0,
         velY = 0,
+        itemCount = 0,
+        recipesHeight = 0,
+        fieldNames = {
+            ["wep"] = "Weapons", 
+            ["shield"] = "Sheilds", 
+            ["arm_head"] = "Head Armour", 
+            ["arm_legs"] = "Leg Armour", 
+            ["arm_chest"] = "Chest Armour", 
+            ["spell"] = "Spells",
+        },
     }
 
     b = {}
@@ -40,16 +50,23 @@ function initCrafting()
     if b[1] ~= null then
         crafting.catalogue = json:decode(b[1])
         for i, v in ipairs(crafting.catalogue) do
-            if crafting.recipes[v.ItemsString] then
-                crafting.recipes[v.ItemsString][#crafting.recipes[v.ItemsString] + 1] = copy(v)
+            crafting.itemCount = crafting.itemCount + 1
+            if crafting.recipes[v.Item.Type] then
+                crafting.recipes[v.Item.Type][#crafting.recipes[v.Item.Type] + 1] = copy(v)
             else
-                crafting.recipes[v.ItemsString] = {copy(v),}
-                crafting.fields[#crafting.fields+1] = v.ItemsString
+                crafting.recipes[v.Item.Type] = {copy(v),}
+                crafting.fields[#crafting.fields+1] = v.Item.Type
             end
         end
     else
         crafting.catalogue = {}
     end
+
+    crafting.selectedItem = crafting.recipes[crafting.fields[1]][1]
+    crafting.recipesHeight = (crafting.itemCount * -66) + ((crafting.font:getHeight() * 2) * -#crafting.fields) + crafting.h - 60 - 20
+
+    -- print(json:encode_pretty(crafting.fields))
+    -- success,msg = love.filesystem.write("recipes.txt", json:encode_pretty(crafting.recipes))
 end
 
 function updateCrafting(dt)
@@ -59,7 +76,7 @@ function updateCrafting(dt)
                 crafting.whiteout = crafting.whiteout + 20 * dt
                 crafting.sfx:setPitch(love.math.random(50,100)/100)
                 love.audio.play(crafting.sfx)
-                if crafting.whiteout > 1 then
+                if crafting.whiteout > 1 and crafting.selectedItem ~= null then
                     crafting.hammerDown = 1
                     crafting.isCrafting = false
                     crafting.whiteout = 1.25
@@ -105,8 +122,8 @@ function updateCrafting(dt)
         crafting.posY = crafting.posY + crafting.velY * dt
         if crafting.posY > 0 then
             crafting.posY = 0 
-        elseif crafting.posY < #crafting.fields * -66 + crafting.h - 60 - 20 then
-            crafting.posY = #crafting.fields * -66 + crafting.h - 60 - 20
+        elseif crafting.posY < crafting.recipesHeight then
+            crafting.posY = crafting.recipesHeight
         end
     end
 end
@@ -144,55 +161,60 @@ function drawCraftingBackground(thisX, thisY)
     love.graphics.print("RECIPES",crafting.font, thisX + 10, thisY + 10 + 40, 0, 2)
     x, y = thisX + 10, thisY + 10 + 40 + crafting.posY + 30
     w, h = 194 + 18, 56
-    crafting.mouseOverField = 0
+    crafting.mouseOverField = {i = 0, j = 0}
     
 
     love.graphics.stencil(drawRecipesStencil, "replace", 1) -- stencils inventory
     love.graphics.setStencilTest("greater", 0) -- push
 
         for i,field in ipairs(crafting.fields) do
-            x = thisX + 10
-            if isMouseOver(x * scale,y * scale,w * scale,h * scale) then
-                crafting.mouseOverField = i
-                love.graphics.setColor(1,0,0,1)
-            elseif crafting.selectedField == i then
-                love.graphics.setColor(43 / 255, 134 / 255, 0)
-            else
-                love.graphics.setColor(0,0,0,0.7)
-            end
-
-            roundRectangle("fill", x, y, w, h, 10)
-            local v = crafting.recipes[field][1]
-            local values = json:decode(v.ItemsString)
-            for j = 1, 4 do
-                if j == 1 then
-                    if v.Item ~= null then
-                        love.graphics.setColor(1,1,1,1)
-                        drawCraftingItem(x + 10, y + 10, 0, v.Item)
-                    end
-                    love.graphics.printf("=", x + 51, y + 8, 8, "center", 0, 3)
-                    x = x + 10 + 8
+            love.graphics.setColor(1,1,1)
+            love.graphics.print(string.upper(crafting.fieldNames[field] or field), inventory.font, x + 8, y + 4, 0, 1)
+            y = y + (crafting.font:getHeight() * 2)
+            for j, v in ipairs(crafting.recipes[field]) do
+                if isMouseOver(x * scale,y * scale,w * scale,h * scale) then
+                    crafting.mouseOverField = {i = i, j = j}
+                    love.graphics.setColor(1,0,0,1)
+                elseif json:encode(crafting.selectedField) == json:encode({i = i, j = j}) then
+                    love.graphics.setColor(43 / 255, 134 / 255, 0)
                 else
-                    j = j - 1
-                    if v.ItemsItem[j] ~= null then
-                        local amount = 0
-                        for l,m in ipairs(values) do
-                            if m.ItemID == v.ItemsItem[j].ID then
-                                amount = m.Amount
-                            end
-                        end
-                        love.graphics.setColor(1,1,1,1)
-                        drawCraftingItem(x + 10, y + 10, 0, v.ItemsItem[j], amount)
-                    else
-                        love.graphics.setColor(0,0,0,0.7)
-                        drawItemBacking(x + 10, y + 10)
-                    end
+                    love.graphics.setColor(0,0,0,0.7)
                 end
-                x = x + 46
-            end
-            y = y + 66
-        end
 
+                roundRectangle("fill", x, y, w, h, 10)
+                -- local v = crafting.recipes[field][1]
+                local values = json:decode(v.ItemsString)
+                for l = 1, 4 do
+                    if l == 1 then
+                        if v.Item ~= null then
+                            love.graphics.setColor(1,1,1,1)
+                            drawCraftingItem(x + 10, y + 10, 0, v.Item)
+                        end
+                        love.graphics.printf("=", x + 51, y + 8, 8, "center", 0, 3)
+                        x = x + 10 + 8
+                    else
+                        l = l - 1
+                        if v.ItemsItem[l] ~= null then
+                            local amount = 0
+                            for n,m in ipairs(values) do
+                                if m.ItemID == v.ItemsItem[l].ID then
+                                    amount = m.Amount
+                                    break
+                                end
+                            end
+                            love.graphics.setColor(1,1,1,1)
+                            drawCraftingItem(x + 10, y + 10, 0, v.ItemsItem[l], amount)
+                        else
+                            love.graphics.setColor(0,0,0,0.7)
+                            drawItemBacking(x + 10, y + 10)
+                        end
+                    end
+                    x = x + 46
+                end
+                x = thisX + 10
+                y = y + 66
+            end
+        end
     love.graphics.setStencilTest() -- pop
 
 
@@ -224,19 +246,17 @@ function drawCraftingBackground(thisX, thisY)
         x = x + 46
     end
 
-    x, y = thisX + 10 + w + 10, y + h + 8
-    love.graphics.setColor(1,1,1)
-    love.graphics.print("CREATES", x + 5, y + 10, 0 , 2)
-    y = y + 40
-
-    for i,v in ipairs(crafting.recipes[crafting.fields[crafting.selectedField]]) do
+    if crafting.selectedField.i > 0 then
+        x, y = thisX + 10 + w + 10, y + h + 8
+        love.graphics.setColor(1,1,1)
+        love.graphics.print("CREATES", x + 5, y + 10, 0 , 2)
+        y = y + 40
+        local v = crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j]
         love.graphics.setColor(0,0,0,0.7)
         roundRectangle("fill", x, y, w - 18, h, 10)
         love.graphics.setColor(1,1,1)
         drawCraftingItem(x + 10, y + 10, 0, v.Item, 1)
         love.graphics.print(v.Item.Name, x + 54, y + 22)
-      --  love.graphics.print(v.Chance.. "%", x + 54, y + 25, 0, 2)
-        y = y + 66
     end
 
     if crafting.result then    
@@ -323,61 +343,59 @@ function drawCraftingStencil()
 end
 
 function drawRecipesStencil()
-    roundRectangle("fill", (((uiX / 2) - (crafting.w / 2)) + 10) * scale, (((uiY / 2) - (crafting.h / 2)) + 10 + 40 + 30) * scale, (194 + 18) * scale, (crafting.h - 90) * scale, 10 * scale)
+    roundRectangle("fill", (((uiX / 2) - (crafting.w / 2)) + 10), (((uiY / 2) - (crafting.h / 2)) + 10 + 40 + 30), (194 + 18), (crafting.h - 90), 10)
 end
 
 function checkCraftingMousePressed(button)
     local c = crafting
     thisX, thisY = (uiX / 2) - (400 / 2), (uiY / 2) - (400 / 2)
-    if button == 1 and crafting.mouseOverAnvil == true then
+    if button == 1 and crafting.mouseOverAnvil == true and crafting.craftable then
         crafting.isCrafting = true
         crafting.whiteout = 0
         love.audio.stop(crafting.swing)
         crafting.swing:setPitch(love.math.random(30,80)/100)
         love.audio.play(crafting.swing)
-    elseif button == 1 and crafting.mouseOverField > 0 then
+    elseif button == 1 and crafting.mouseOverField.i > 0 then
         print("I need to enter items!")
         local craft = {}
-        crafting.selectedField = crafting.mouseOverField
-        for i,v in ipairs(crafting.recipes[crafting.fields[crafting.selectedField]]) do
-            print(json:encode(v))
-            crafting.selectedItem = v
-            local required = json:decode(v.ItemsString)
-            crafting.enteredItems = {}
-            
-            for j = 1, #v.ItemsItem do
-                local amount = required[j].Amount
-                print(v.ItemsItem[j].Name .. " " .. amount)
-                if getItemAmount(v.ItemsItem[j]) >= amount then
-                    crafting.enteredItems[j] = {
-                        item = v.ItemsItem[j],
-                        amount = amount,
-                        random = {X = math.random()*100, Y = math.random()*100},
-                    }
-                    craft[#craft+1] = true
-                elseif getItemAmount(v.ItemsItem[j]) < 1 then
-                    craft[#craft+1] = false
-                else
-                    crafting.enteredItems[j] = {
-                        item = v.ItemsItem[j],
-                        amount = getItemAmount(v.ItemsItem[j]),
-                        random = {X = math.random()*100, Y = math.random()*100},
-                    }
-                    craft[#craft+1] = false
-                end
-            end
+        crafting.selectedField = copy(crafting.mouseOverField)
 
-            crafting.craftable = true
-            for int, crafty in ipairs(craft) do
-                if crafty == false then
-                    crafting.craftable = false
-                end
+        local v = crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j]
+            
+        -- print(json:encode(crafting.selectedField))
+        -- print("Selected ITEM: " .. json:encode_pretty(v))
+
+        crafting.selectedItem = v
+        local required = json:decode(v.ItemsString)
+        crafting.enteredItems = {}
+        
+        for j = 1, #v.ItemsItem do
+            local amount = required[j].Amount
+            print(v.ItemsItem[j].Name .. " " .. amount)
+            if getItemAmount(v.ItemsItem[j]) >= amount then
+                crafting.enteredItems[j] = {
+                    item = v.ItemsItem[j],
+                    amount = amount,
+                    random = {X = math.random()*100, Y = math.random()*100},
+                }
+                craft[#craft+1] = true
+            elseif getItemAmount(v.ItemsItem[j]) < 1 then
+                craft[#craft+1] = false
+            else
+                crafting.enteredItems[j] = {
+                    item = v.ItemsItem[j],
+                    amount = getItemAmount(v.ItemsItem[j]),
+                    random = {X = math.random()*100, Y = math.random()*100},
+                }
+                craft[#craft+1] = false
             end
         end
-        
-    elseif button == 2 then
-        if crafting.selectableI > 0 then
-            table.remove(crafting.enteredItems, crafting.selectableI)
+
+        crafting.craftable = true
+        for int, crafty in ipairs(craft) do
+            if crafty == false then
+                crafting.craftable = false
+            end
         end
     end
 end

@@ -35,11 +35,14 @@ function initSettings()
     vsync = false
     showChat = true
     openUiOnHover = true
+    openInventoryOnHover = true
+    openQuestsOnHover = true
     showClouds = false
     showShadows = false
     showWorldMask = true
     showWorldAnimations = true
     showHUD = true
+    oldTargeting = false
 
     useItemColor = {}
     hotbar = {}
@@ -49,10 +52,10 @@ function initSettings()
     end
     
     info = love.filesystem.getInfo("settings.txt")
-    contents, size = love.filesystem.read("string", "settings.txt")
-    contents = json:decode(contents)
 
     if info ~= null then
+        contents, size = love.filesystem.read("string", "settings.txt")
+        contents = json:decode(contents)
         display = contents["display"] or display
         vsync = contents["vsync"] or vsync
         window = contents["window"] or window
@@ -71,8 +74,11 @@ function initSettings()
         showWorldMask = contents["showWorldMask"] or showWorldMask
         showWorldAnimations = contents["showWorldAnimations"] or showWorldAnimations
         showHUD = contents["showHUD"] or showHUD
-        openUiOnHover = contents["openUiOnHover"] or openUiOnHover
+        -- openUiOnHover = contents["openUiOnHover"] or openUiOnHover
+        oldTargeting = contents["oldTargeting"] or oldTargeting
         hotbar = contents["hotbar"] or hotbar
+        openInventoryOnHover = contents["openInventoryOnHover"] or openInventoryOnHover
+        openQuestsOnHover = contents["openQuestsOnHover"] or openQuestsOnHover
         api.url = servers[selectedServer].url
     else
         writeSettings()
@@ -92,6 +98,7 @@ function initSettings()
         {
             title = "Player",
             {name = "Respawn", v = respawn, type = "button", "Full", "Fast",},
+            {name = "Use Old Targeting", v = oldTargeting, type = "button", "Full", "Fast",},
         },   
         {
             title = "Graphics",
@@ -112,9 +119,10 @@ function initSettings()
             title = "HUD",
             {name = "Show HUD", v = showHUD, type = "button",},
             {name = "GUI Scale", v = settPan.scaleTypes[settPan.scaleValue], type = "button",},
-            {name = "Open on Mouse Over", v = openUiOnHover, type = "button",},
             {name = "Show Chat", v = showChat, type = "button",},
             {name = "Chat Remain On Enter", v = chatRepeat, type = "button",},
+            {name = "Open Inventory on Hover", v = openInventoryOnHover, type = "button",},
+            {name = "Open Quests on Hover", v = openQuestsOnHover, type = "button",},
         },
     }
 end
@@ -139,8 +147,11 @@ function writeSettings()
         showWorldMask = showWorldMask,
         showHUD = showHUD,
         showWorldAnimations = showWorldAnimations,
-        openUiOnHover = openUiOnHover,
+        -- openUiOnHover = openUiOnHover,
+        openInventoryOnHover = openInventoryOnHover,
+        openQuestsOnHover = openQuestsOnHover,
         hotbar = hotbar,
+        oldTargeting = oldTargeting,
         vsync = vsync,
     }))
 end
@@ -184,14 +195,19 @@ function checkSettingsMousePressed(button)
                         else
                             bv.v = not bv.v
                         end
+                        oldTargeting = settings[1][2].v
+                        holdAttack = not oldTargeting
                         showHUD = settings[4][1].v
-                        openUiOnHover = settings[4][3].v -- sets the values
-                        showChat = settings[4][4].v
-                        chatRepeat = settings[4][5].v
+                        -- openUiOnHover = settings[4][3].v -- sets the values
+                        showChat = settings[4][3].v
+                        chatRepeat = settings[4][4].v
                         showClouds = settings[2][3].v
                         -- showShadows = settings[2][4].v
                         -- showWorldMask = settings[2][5].v
                         showWorldAnimations = settings[2][4].v
+                        openInventoryOnHover = settings[4][5].v
+                        openQuestsOnHover = settings[4][6].v
+                        break
                     end
                 end
             end

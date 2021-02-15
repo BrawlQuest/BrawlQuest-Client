@@ -96,7 +96,7 @@ function newEnemyData(data) -- called when nearby data is returned
                 end
                 attackHitAmount = 1
             end
-            addFloat(enemy.X*32,enemy.Y*32-18,enemy.HP - v.HP,{1,0,0})
+            addFloat(enemy.X*32,enemy.Y*32-18,(enemy.HP - v.HP) * -1,{1,0,0})
             enemy.HP = v.HP
             enemy.red = 1
 
@@ -190,7 +190,7 @@ function drawEnemies()
                 love.graphics.draw(alertImg, v.dx + 8, v.dy - 16)
                 love.graphics.setColor(1, 1, 1)
 
-                if versionType == "dev" then love.graphics.print(v.TargetName.." - "..tostring(v.IsAggro), v.dx, v.dy - 10) end
+                if versionType == "dev" then love.graphics.print(v.TargetName.." - "..tostring(v.IsAggro), npcNameFont, v.dx, v.dy - 10) end
                 -- print( "\"" .. v.TargetName .. "\" \"" .. me.Name .. "\"")
                 if distanceToPoint(v.dx,v.dy,player.dx,player.dy) < (v.Enemy.Range + 1) * 32 then
                     if nextTick >= 1 then

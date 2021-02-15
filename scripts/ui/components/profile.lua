@@ -16,14 +16,11 @@ function drawProfilePic(thisX, thisY, thisScale, thisRotation, v)
 		love.graphics.setColor(1,1,1,1)
 
 		if v and v.HeadArmour then
-			if v.HeadArmourID ~= 0 then
-				drawItemIfExists(v.HeadArmour.ImgPath, thisX, thisY / i, "", r, profileImgStencil, 16)
-			end
 			if v.ChestArmourID ~= 0 then
 				drawItemIfExists(v.ChestArmour.ImgPath, thisX, thisY / i, "", r, profileImgStencil, 16)
-			end
-			if v.LegArmourID ~= 0 then
-				drawItemIfExists(v.LegArmour.ImgPath, thisX, thisY / i, "", r, profileImgStencil, 16)
+			end	
+			if v.HeadArmourID ~= 0 then
+				drawItemIfExists(v.HeadArmour.ImgPath, thisX, thisY / i, "", r, profileImgStencil, 16)
 			end
 		end
 	love.graphics.pop()
