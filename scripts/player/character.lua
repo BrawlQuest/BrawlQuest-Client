@@ -121,8 +121,15 @@ end
 function worldCollison(x, y)
     local output = false
     if worldEdit.open and (username == "Danjoe" or username == "Pebsie") then return output end
-    if worldLookup[x] and worldLookup[x][y] and worldLookup[x][y].Collision == true then
-        output = true
+    if worldLookup[x] and worldLookup[x][y] then
+        if worldLookup[x][y].Collision == true then
+            output = true
+        end
+        if string.find(me.Mount, "boat") and isTileType(worldLookup[x][y].ForegroundTile, "Water") then
+            output = false
+        elseif string.find(me.Mount, "boat") and not worldLookup[x][y].Collision then
+            output = true
+        end
     elseif enemyCollisions[x] and enemyCollisions[x][y] == true then
         output = true
     end
@@ -194,6 +201,9 @@ function movePlayer(dt)
 
         if me.Mount ~= "None" or worldEdit.open then
             speed = 110 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
+        end
+        if string.find(me.Mount, "boat") then
+            speed = 32
         end
         if difference(player.x * 32, player.dx) > 1 then
             if player.dx > player.x * 32 then

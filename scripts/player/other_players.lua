@@ -14,7 +14,7 @@ function drawCharacter(v, x, y, ad)
             end
         end
 
-        if v.ShieldID ~= 0 then
+        if v.ShieldID ~= 0 and not string.find(v.Mount, "boat") then -- we don't want to draw the player if they're in a boat
             drawItemIfExists(v.Shield.ImgPath, x, y, ad.previousDirection)
         end
 
@@ -27,41 +27,51 @@ function drawCharacter(v, x, y, ad)
             if v.Mount ~= "None" then
                 mountOffsetX = getImgIfNotExist("assets/player/mounts/"..v.Mount.."/back.png"):getWidth()-8
             end
-            love.graphics.draw(itemImg[v.Weapon.ImgPath], x + (itemImg[v.Weapon.ImgPath]:getWidth() - 32) + 32,
-                y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), player.wobble, rotation, 1, 0, 0)
+            if not string.find(v.Mount, "boat") then
+                love.graphics.draw(itemImg[v.Weapon.ImgPath], x + (itemImg[v.Weapon.ImgPath]:getWidth() - 32) + 32,
+                    y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), player.wobble, rotation, 1, 0, 0)
+            end
         elseif ad and ad.previousDirection and ad.previousDirection == "right" then
+            if not string.find(v.Mount, "boat") then
             love.graphics.draw(itemImg[v.Weapon.ImgPath], x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32),
                 y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), player.wobble, rotation, 1, 0, 0)
+            end
         end
 
         if v.Mount ~= "None" then
-            love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..v.Mount.."/back.png"), x + 6 + mountOffsetX, y + 9, 0, rotation, 1, 0, 0)
+            if  string.find(v.Mount, "boat") then -- there is no offset for boats as the player isn't drawn
+                love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..v.Mount.."/back.png"), x  + mountOffsetX, y, 0, rotation, 1, 0, 0)
+            else
+                love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..v.Mount.."/back.png"), x + 6 + mountOffsetX, y + 9, 0, rotation, 1, 0, 0)
+            end
         end
+        
+        if not string.find(v.Mount, "boat") then
+            drawBuddy(v.Name)
+            if v.RedAlpha ~= null then
+                love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha)
+            end
+            -- print(v.RedAlpha)
+            -- if v.Color ~= null then love.graphics.setColor(unpack(v.Color)) end
+            love.graphics.draw(playerImg, x + offsetX, y, player.wobble, rotation, 1, 0, 0)
+            love.graphics.setColor(1,1,1)
 
-        drawBuddy(v.Name)
-        if v.RedAlpha ~= null then
-            love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha)
-        end
-        -- print(v.RedAlpha)
-        -- if v.Color ~= null then love.graphics.setColor(unpack(v.Color)) end
-        love.graphics.draw(playerImg, x + offsetX, y, player.wobble, rotation, 1, 0, 0)
-        love.graphics.setColor(1,1,1)
+            if v.LegArmourID ~= 0 then
+                drawItemIfExists(v.LegArmour.ImgPath, x, y, ad.previousDirection)
+            end
+            if v.ChestArmourID ~= 0 then
+                drawItemIfExists(v.ChestArmour.ImgPath, x, y, ad.previousDirection)
+            end
+            if v.HeadArmourID ~= 0 then
+                drawItemIfExists(v.HeadArmour.ImgPath, x, y, ad.previousDirection)
+            end
+            if v.Mount ~= "None" then
+                love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..v.Mount.."/fore.png"), x + 6 + mountOffsetX, y + 9, 0, rotation, 1, 0, 0)
+            end
 
-        if v.LegArmourID ~= 0 then
-            drawItemIfExists(v.LegArmour.ImgPath, x, y, ad.previousDirection)
-        end
-        if v.ChestArmourID ~= 0 then
-            drawItemIfExists(v.ChestArmour.ImgPath, x, y, ad.previousDirection)
-        end
-        if v.HeadArmourID ~= 0 then
-            drawItemIfExists(v.HeadArmour.ImgPath, x, y, ad.previousDirection)
-        end
-        if v.Mount ~= "None" then
-            love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..v.Mount.."/fore.png"), x + 6 + mountOffsetX, y + 9, 0, rotation, 1, 0, 0)
-        end
-
-        if v.IsShield and v.ShieldID ~= 0 then
-            drawItemIfExists(v.Shield.ImgPath, x, y, ad.previousDirection)
+            if v.IsShield and v.ShieldID ~= 0 then
+                drawItemIfExists(v.Shield.ImgPath, x, y, ad.previousDirection)
+            end
         end
 
         -- local w, h = 64, 46
