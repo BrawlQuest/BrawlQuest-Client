@@ -19,6 +19,8 @@ function drawAuras()
             love.graphics.setColor(1,1,0,0.2*v.alpha)
         elseif v.Stat == "ATK" then
             love.graphics.setColor(0.96, 0.52, 0.26, 0.2*v.alpha)
+        elseif v.Stat == "STA" then
+            love.graphics.setColor(0.4, 0.4, 0.4, 0.2*v.alpha)
         end
         local x,y = v.X*32, v.Y*32
         x = x +16
