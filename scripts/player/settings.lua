@@ -51,10 +51,9 @@ function initSettings()
     
     info = love.filesystem.getInfo("settings.txt")
 
-
     if info ~= null then
-        print(json:encode(info))
         contents, size = love.filesystem.read("string", "settings.txt")
+        contents = json:decode(contents)
         display = contents["display"] or display
         vsync = contents["vsync"] or vsync
         window = contents["window"] or window
