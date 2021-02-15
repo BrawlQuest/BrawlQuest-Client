@@ -79,6 +79,7 @@ function initSettings()
         hotbar = contents["hotbar"] or hotbar
         openInventoryOnHover = contents["openInventoryOnHover"] or openInventoryOnHover
         openQuestsOnHover = contents["openQuestsOnHover"] or openQuestsOnHover
+        crafting.openField = contents["craftingFields"] or crafting.openField
         api.url = servers[selectedServer].url
     else
         writeSettings()
@@ -152,6 +153,7 @@ function writeSettings()
         openQuestsOnHover = openQuestsOnHover,
         hotbar = hotbar,
         oldTargeting = oldTargeting,
+        craftingFields = crafting.openField,
         vsync = vsync,
     }))
 end

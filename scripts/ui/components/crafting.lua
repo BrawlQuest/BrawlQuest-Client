@@ -43,7 +43,7 @@ function initCrafting()
             ["arm_chest"] = "Chest Armour", 
             ["spell"] = "Spells",
         },
-        openField = {true, false, false, false, false, false, },
+        openField = {false, false, false, false, false, false, },
         overOpenField = 0
     }
 
@@ -160,7 +160,7 @@ function drawCraftingBackground(thisX, thisY)
     love.graphics.draw(crafting.hammer, thisX + 720, thisY + 300 - crafting.hammerY, cerp(-0.01, 0.01, crafting.hammerShake) + cerp(-0.6,0.01, crafting.hammerDown), -10)
 
     love.graphics.print("CRAFTING", inventory.headerFont, thisX + 10 , thisY + 14)    
-    love.graphics.print("RECIPES",crafting.font, thisX + 10, thisY + 10 + 40, 0, 2)
+    love.graphics.print("RECIPES",crafting.font, thisX + 20, thisY + 10 + 40, 0, 2)
     x, y = thisX + 10, thisY + 10 + 40 + crafting.posY + 30
     w, h = 194 + 18, 56
     crafting.mouseOverField = {i = 0, j = 0}
@@ -191,6 +191,17 @@ function drawCraftingBackground(thisX, thisY)
             end
 
             love.graphics.print(string.upper(crafting.fieldNames[field] or field), inventory.font, x + 10, y + 11, 0, 1)
+            local ground
+            local point
+            if crafting.openField[i] then
+                ground = 18 - 4
+                point = 10
+            else
+                ground = 18 + 4
+                point = -10
+            end
+            love.graphics.polygon("fill", x + w - 30, y + ground, x + w - 20, y + ground, x + w - 25, y + ground + point)
+
             y = y + 46
             if crafting.openField[i] then
                 for j, v in ipairs(crafting.recipes[field]) do
@@ -386,16 +397,12 @@ function checkCraftingMousePressed(button)
             end
         end
         crafting.recipesHeight = (height * -66) + (46 * -#crafting.fields) + crafting.h - 60 - 20
+        writeSettings()
     elseif button == 1 and crafting.mouseOverField.i > 0 then
         print("I need to enter items!")
         local craft = {}
         crafting.selectedField = copy(crafting.mouseOverField)
-
         local v = crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j]
-            
-        -- print(json:encode(crafting.selectedField))
-        -- print("Selected ITEM: " .. json:encode_pretty(v))
-
         crafting.selectedItem = v
         local required = json:decode(v.ItemsString)
         crafting.enteredItems = {}
