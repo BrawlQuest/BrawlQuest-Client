@@ -189,6 +189,7 @@ function initNPCChat()
         hover = false,
         velY = 0,
         posY = 0,
+        selectedResponse = 1,
     }
 end
 
@@ -267,8 +268,9 @@ function drawNPCChatBackground(x, y)
 
        
         local ty = y + 100
+
         for i, v in pairs(npcChat.Options) do
-            drawDialogueOption(x + 20 , ty + 0, v[1], i)
+            drawDialogueOption(x + 20 , ty + 0, v[1], i, i == npcChatArg.selectedResponse)
             ty = ty + getDialogueBoxHeight(v[1]) + 10
         end
 
@@ -351,17 +353,23 @@ function updateNPCChat(dt)
     end
 end
 
-function drawDialogueOption(x, y, text, i)
+function drawDialogueOption(x, y, text, i, selected)
     local rHeight = getDialogueBoxHeight(text)
     if isMouseOver(x*scale, y*scale, 133*scale, rHeight*scale) then
         love.graphics.setColor(0.2, 0.2, 0.2, chatOpacity)
         npcChatArg.selectedOption = i
         npcChatArg.hover = true
+    elseif selected then 
+        love.graphics.setColor(1,1,1, chatOpacity)
     else
         love.graphics.setColor(0, 0, 0, chatOpacity)
     end
     love.graphics.rectangle("fill", x, y, 133, rHeight + 5)
-    love.graphics.setColor(1, 1, 1, chatOpacity)
+    if selected then
+        love.graphics.setColor(0, 0, 0, chatOpacity)
+    else
+        love.graphics.setColor(1, 1, 1, chatOpacity)
+    end
     love.graphics.printf(text, x + 5, y + 5, 128, "left")
 end
 
@@ -401,6 +409,10 @@ function checkNPCChatMousePressed(button)
             end
         end
     end
+end
+
+function checkNPCChatKeyPressed()
+    
 end
 
 function drawNPCChatIndicator()
