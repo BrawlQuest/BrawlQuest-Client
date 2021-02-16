@@ -43,7 +43,7 @@ function initCrafting()
             ["arm_chest"] = "Chest Armour", 
             ["spell"] = "Spells",
         },
-        openField = {false, false, false, false, false, false, },
+        openField = {false, false, false, false, false, false, false, false, false, },
         overOpenField = 0
     }
 
