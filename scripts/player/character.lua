@@ -75,7 +75,7 @@ function updateCharacter(dt)
             X = player.dx,
             Y = player.dy,
             Buddy = player.buddy,
-            Name = player.name
+            Name = me.Name
         }
         updateBuddy(dt, pl)
     end
