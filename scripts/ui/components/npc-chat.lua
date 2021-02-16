@@ -189,6 +189,7 @@ function initNPCChat()
         hover = false,
         velY = 0,
         posY = 0,
+        selectedResponse = 1,
     }
 end
 
@@ -267,8 +268,9 @@ function drawNPCChatBackground(x, y)
 
        
         local ty = y + 100
+
         for i, v in pairs(npcChat.Options) do
-            drawDialogueOption(x + 20 , ty + 0, v[1], i)
+            drawDialogueOption(x + 20 , ty + 0, v[1], i, i == npcChatArg.selectedResponse)
             ty = ty + getDialogueBoxHeight(v[1]) + 10
         end
 
@@ -351,17 +353,24 @@ function updateNPCChat(dt)
     end
 end
 
-function drawDialogueOption(x, y, text, i)
+function drawDialogueOption(x, y, text, i, selected)
     local rHeight = getDialogueBoxHeight(text)
-    if isMouseOver(x*scale, y*scale, 133*scale, rHeight*scale) then
+    local isMouse = isMouseOver(x*scale, y*scale, 133*scale, rHeight*scale)
+    if isMouse then
         love.graphics.setColor(0.2, 0.2, 0.2, chatOpacity)
         npcChatArg.selectedOption = i
         npcChatArg.hover = true
+    elseif selected then 
+        love.graphics.setColor(1,1,1, chatOpacity)
     else
         love.graphics.setColor(0, 0, 0, chatOpacity)
     end
     love.graphics.rectangle("fill", x, y, 133, rHeight + 5)
-    love.graphics.setColor(1, 1, 1, chatOpacity)
+    if selected and not isMouse then
+        love.graphics.setColor(0, 0, 0, chatOpacity)
+    else
+        love.graphics.setColor(1, 1, 1, chatOpacity)
+    end
     love.graphics.printf(text, x + 5, y + 5, 128, "left")
 end
 
@@ -376,30 +385,46 @@ end
 
 function checkNPCChatMousePressed(button)
     if button == 1 and npcChatArg.hover then
-        for i, v in pairs(npcChat.Options) do
-            if npcChatArg.selectedOption == i then
-                currentConversationStage = v[2]
-                chatWritten = ""
-                if v[2] == "1" then
-                    showNPCChatBackground = false
-                    npcChat.Title = ""
-                else
-                    local b = {}
-                    c, h = http.request{url = api.url.."/conversation/"..v[2].."/"..username, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
-                    if b ~= nil then
-                        npcChat = json:decode(b[1])
-                        local optionString = npcChat.Options
-                        optionString = string.gsub(optionString, "'s", 's')
-                        optionString = string.gsub(optionString, "'t", 't')
-                        optionString = string.gsub(optionString, "'ll", 'll')
-                        optionString = string.gsub(optionString, "'ve", 've')
-                        optionString =  string.gsub(optionString, "'", '"')
-                        npcChat.Options = json:decode(optionString)
-                        --npcChat.Options = json:decode(string.gsub(npcChat.Options, "'", '"'))
-                    end
+        continueConversation()
+    end
+end
+
+function continueConversation()
+    for i, v in pairs(npcChat.Options) do
+        if npcChatArg.selectedOption == i then
+            currentConversationStage = v[2]
+            chatWritten = ""
+            if v[2] == "1" then
+                showNPCChatBackground = false
+                npcChat.Title = ""
+            else
+                local b = {}
+                c, h = http.request{url = api.url.."/conversation/"..v[2].."/"..username, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
+                if b ~= nil then
+                    npcChat = json:decode(b[1])
+                    local optionString = npcChat.Options
+                    optionString = string.gsub(optionString, "'s", 's')
+                    optionString = string.gsub(optionString, "'t", 't')
+                    optionString = string.gsub(optionString, "'ll", 'll')
+                    optionString = string.gsub(optionString, "'ve", 've')
+                    optionString =  string.gsub(optionString, "'", '"')
+                    npcChat.Options = json:decode(optionString)
+                    --npcChat.Options = json:decode(string.gsub(npcChat.Options, "'", '"'))
                 end
             end
+            break
         end
+    end
+end
+
+function checkNPCChatKeyPressed(key)
+    if key == "up" then
+        npcChatArg.selectedResponse = math.clamp(1, npcChatArg.selectedResponse - 1, #npcChat.Options)
+    elseif key == "down" then
+        npcChatArg.selectedResponse = math.clamp(1, npcChatArg.selectedResponse + 1, #npcChat.Options)
+    elseif key == "return" then
+        npcChatArg.selectedOption = npcChatArg.selectedResponse
+        continueConversation()
     end
 end
 

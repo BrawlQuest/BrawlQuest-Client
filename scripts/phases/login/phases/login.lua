@@ -14,7 +14,7 @@ function drawLoginPhase(countCerp)
     love.graphics.setColor(1,1,1, countCerp)
     love.graphics.draw(loginEntryImage, loginImageX, loginImageY)
 
-    love.graphics.draw(bqLogo, (love.graphics.getWidth() / 2) - ((bqLogo:getWidth() * logoScale) * 0.5), loginImageY - 70, 0, logoScale)
+    love.graphics.draw(bqLogo, (love.graphics.getWidth() / 2) - ((bqLogo:getWidth() * logoScale) * 0.5), loginImageY - 90, 0, logoScale)
 
     love.graphics.setColor(0, 0, 0, countCerp)
     love.graphics.setFont(textFont)

@@ -63,12 +63,7 @@ function initCrafting()
     else
         crafting.catalogue = {}
     end
-
-    -- crafting.selectedItem = crafting.recipes[crafting.fields[1]][1]
-    crafting.recipesHeight = (crafting.itemCount * -66) + ((crafting.font:getHeight() * 2) * -#crafting.fields) + crafting.h - 60 - 20
-
-    -- print(json:encode_pretty(crafting.fields))
-    -- success,msg = love.filesystem.write("recipes.txt", json:encode_pretty(crafting.recipes))
+    getRecipesHeight()
 end
 
 function updateCrafting(dt)
@@ -99,8 +94,7 @@ function updateCrafting(dt)
                     else
                         crafting.result = null
                     end
-                    crafting.enteredItems = {}
-                    crafting.craftableItems = {}
+                    enterCraftingItems(crafting.selectedItem)
                 end
             else
                 crafting.hammerDown = crafting.hammerDown - 2 * dt
@@ -390,50 +384,57 @@ function checkCraftingMousePressed(button)
         love.audio.play(crafting.swing)
     elseif button == 1 and crafting.overOpenField > 0 then
         crafting.openField[crafting.overOpenField] = not crafting.openField[crafting.overOpenField]
-        local height = 0
-        for i,v in ipairs(crafting.openField) do
-            if v then
-                height = height + #crafting.recipes[crafting.fields[i]]
-            end
-        end
-        crafting.recipesHeight = (height * -66) + (46 * -#crafting.fields) + crafting.h - 60 - 20
+        getRecipesHeight()
         writeSettings()
     elseif button == 1 and crafting.mouseOverField.i > 0 then
         print("I need to enter items!")
-        local craft = {}
         crafting.selectedField = copy(crafting.mouseOverField)
         local v = crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j]
         crafting.selectedItem = v
-        local required = json:decode(v.ItemsString)
-        crafting.enteredItems = {}
-        
-        for j = 1, #v.ItemsItem do
-            local amount = required[j].Amount
-            print(v.ItemsItem[j].Name .. " " .. amount)
-            if getItemAmount(v.ItemsItem[j]) >= amount then
-                crafting.enteredItems[j] = {
-                    item = v.ItemsItem[j],
-                    amount = amount,
-                    random = {X = math.random()*100, Y = math.random()*100},
-                }
-                craft[#craft+1] = true
-            elseif getItemAmount(v.ItemsItem[j]) < 1 then
-                craft[#craft+1] = false
-            else
-                crafting.enteredItems[j] = {
-                    item = v.ItemsItem[j],
-                    amount = getItemAmount(v.ItemsItem[j]),
-                    random = {X = math.random()*100, Y = math.random()*100},
-                }
-                craft[#craft+1] = false
-            end
-        end
+        enterCraftingItems(v)
+    end
+end
 
-        crafting.craftable = true
-        for int, crafty in ipairs(craft) do
-            if crafty == false then
-                crafting.craftable = false
-            end
+function enterCraftingItems(v)
+    local craft = {}
+    crafting.enteredItems = {}
+    local required = json:decode(v.ItemsString)
+    for j = 1, #v.ItemsItem do
+        local amount = required[j].Amount
+        print(v.ItemsItem[j].Name .. " " .. amount)
+        if getItemAmount(v.ItemsItem[j]) >= amount then
+            crafting.enteredItems[j] = {
+                item = v.ItemsItem[j],
+                amount = amount,
+                random = {X = math.random()*100, Y = math.random()*100},
+            }
+            craft[#craft+1] = true
+        elseif getItemAmount(v.ItemsItem[j]) < 1 then
+            craft[#craft+1] = false
+        else
+            crafting.enteredItems[j] = {
+                item = v.ItemsItem[j],
+                amount = getItemAmount(v.ItemsItem[j]),
+                random = {X = math.random()*100, Y = math.random()*100},
+            }
+            craft[#craft+1] = false
         end
     end
+
+    crafting.craftable = true
+    for int, crafty in ipairs(craft) do
+        if crafty == false then
+            crafting.craftable = false
+        end
+    end
+end
+
+function getRecipesHeight()
+    local height = 0
+    for i,v in ipairs(crafting.openField) do
+        if v then
+            height = height + #crafting.recipes[crafting.fields[i]]
+        end
+    end
+    crafting.recipesHeight = (height * -66) + (46 * -#crafting.fields) + crafting.h - 60 - 20
 end

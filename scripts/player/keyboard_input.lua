@@ -47,7 +47,10 @@ function love.keypressed(key)
                 isTypingInChat = false
             end
         elseif showNPCChatBackground then
-            if key == keybinds.INTERACT or key == "escape" then showNPCChatBackground = false end
+            checkNPCChatKeyPressed(key)
+            if key == keybinds.INTERACT or key == "escape" then 
+                showNPCChatBackground = false 
+            end
         elseif crafting.open then
             if key == keybinds.INTERACT or key == "escape" then
                 crafting.open = false
@@ -93,6 +96,7 @@ function love.keypressed(key)
             end
 
             if key == keybinds.INTERACT and nearbyAnvil then -- Hello Mr HackerMan! Removing the isNearbyTile will allow you to open the crafting menu from anywhere, but won't allow you to actually craft any items. Sorry! =(
+                getRecipesHeight()
                 crafting.open = true
                 -- inventory.notNPC = true
             end
