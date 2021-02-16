@@ -47,7 +47,10 @@ function love.keypressed(key)
                 isTypingInChat = false
             end
         elseif showNPCChatBackground then
-            if key == keybinds.INTERACT or key == "escape" then showNPCChatBackground = false end
+            checkNPCChatKeyPressed(key)
+            if key == keybinds.INTERACT or key == "escape" then 
+                showNPCChatBackground = false 
+            end
         elseif crafting.open then
             if key == keybinds.INTERACT or key == "escape" then
                 crafting.open = false
