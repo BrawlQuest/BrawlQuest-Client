@@ -274,7 +274,6 @@ function updateOtherPlayers(dt)
                 playersDrawable[i].Y = playersDrawable[i].Y + speed * dt
             end
         end
-
         updateBuddy(dt, playersDrawable[i])
     end
 end

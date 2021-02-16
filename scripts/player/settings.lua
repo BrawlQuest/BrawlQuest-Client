@@ -79,6 +79,7 @@ function initSettings()
         hotbar = contents["hotbar"] or hotbar
         openInventoryOnHover = contents["openInventoryOnHover"] or openInventoryOnHover
         openQuestsOnHover = contents["openQuestsOnHover"] or openQuestsOnHover
+        crafting.openField = contents["craftingFields"] or crafting.openField
         api.url = servers[selectedServer].url
     else
         writeSettings()
@@ -98,8 +99,8 @@ function initSettings()
         {
             title = "Player",
             {name = "Respawn", v = respawn, type = "button", "Full", "Fast",},
-            {name = "Use Old Targeting", v = oldTargeting, type = "button", "Full", "Fast",},
-        },   
+            {name = "Hold to Attack", v = oldTargeting, type = "button", "Full", "Fast",},
+        },
         {
             title = "Graphics",
             {name = "Render Quality", v = highdpi, type = "button", "Full", "Fast",},
@@ -152,6 +153,7 @@ function writeSettings()
         openQuestsOnHover = openQuestsOnHover,
         hotbar = hotbar,
         oldTargeting = oldTargeting,
+        craftingFields = crafting.openField,
         vsync = vsync,
     }))
 end

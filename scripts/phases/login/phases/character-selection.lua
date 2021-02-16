@@ -52,8 +52,8 @@ function drawCharacterSelection()
     roundRectangle("fill", x - cs.w * 0.5, y - cs.h * 0.5, cs.w * cerp(1, 2, cs.dualAmount), cs.h, 25)
 
     love.graphics.setColor(1,1,1)
-    local scale = 4.1
-    love.graphics.draw(bqLogo, x - (bqLogo:getWidth() * 0.5) * scale, y - cs.h * 0.5 + 20 - (bqLogo:getHeight() * 0.5) * scale, 0, scale)
+    local scale = 3
+    love.graphics.draw(bqLogo, x - (bqLogo:getWidth() * 0.5) * scale, y - cs.h * 0.5 + 50 - (bqLogo:getHeight() * 0.5) * scale, 0, scale)
 
     love.graphics.stencil(drawCharacterSelectionStencil, "replace", 1) -- stencils inventory
     love.graphics.setStencilTest("greater", 0) -- push
