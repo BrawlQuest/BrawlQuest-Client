@@ -93,6 +93,7 @@ function love.keypressed(key)
             end
 
             if key == keybinds.INTERACT and nearbyAnvil then -- Hello Mr HackerMan! Removing the isNearbyTile will allow you to open the crafting menu from anywhere, but won't allow you to actually craft any items. Sorry! =(
+                getRecipesHeight()
                 crafting.open = true
                 -- inventory.notNPC = true
             end
