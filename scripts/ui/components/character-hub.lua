@@ -179,7 +179,7 @@ end
 
 function getSTA(i)
     if me.STA then
-        if i == 0 then return 15 * me.STA else return 0 end
+        if i == 0 then return 15 * (me.STA) + 10 else return 0 end
     else
         return 0
     end

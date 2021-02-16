@@ -177,7 +177,10 @@ function newEnemyData(data) -- called when nearby data is returned
 
 end
 
+-- print(me.HP / (100 + (15 * me.STA)))
+
 function drawEnemies()
+    -- if me.STA then print(me.HP) end
     for i, v in pairs(enemies) do
         local distance = distanceToPoint(player.cx, player.cy, v.dx, v.dy)
         local range = worldMask.range * 32
@@ -211,8 +214,12 @@ function drawEnemies()
                 love.graphics.draw(alertImg, v.dx + 8, v.dy - 16)
                 love.graphics.setColor(1, 1, 1)
 
-                if versionType == "dev" then
-                    love.graphics.print(v.TargetName .. " - " .. tostring(v.IsAggro), npcNameFont, v.dx, v.dy - 10)
+                if versionType == "dev" and me.HP and v.Enemy.ATK then
+                    love.graphics.print(tostring(me.HP / v.Enemy.ATK < v.Enemy.HP / me.Weapon.Val), npcNameFont, v.dx, v.dy - 10)
+                end
+
+                if me.HP and me.HP * 0.1 < v.Enemy.ATK then
+                    love.graphics.draw(skull, v.dx - 32, v.dy - 32, 0, 2)
                 end
                 -- print( "\"" .. v.TargetName .. "\" \"" .. me.Name .. "\"")
                 if distanceToPoint(v.dx, v.dy, player.dx, player.dy) < (v.Enemy.Range + 1) * 32 then

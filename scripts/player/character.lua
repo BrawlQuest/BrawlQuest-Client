@@ -117,7 +117,7 @@ function worldCollison(x, y)
         end
         if me.Mount and string.find(me.Mount, "boat") and isTileType(worldLookup[x][y].ForegroundTile, "Water") then
             output = false
-        elseif string.find(me.Mount, "boat") and not worldLookup[x][y].Collision then
+        elseif me.Mount and string.find(me.Mount, "boat") and not worldLookup[x][y].Collision then
             output = true
         end
     end
@@ -193,7 +193,7 @@ function movePlayer(dt)
         if me.Mount ~= "None" or worldEdit.open then
             speed = 110 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
         end
-        if string.find(me.Mount, "boat") then
+        if me.Mount and string.find(me.Mount, "boat") then
             speed = 32
         end
         if difference(player.x * 32, player.dx) > 1 then
