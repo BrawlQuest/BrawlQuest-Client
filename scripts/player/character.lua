@@ -125,7 +125,7 @@ function worldCollison(x, y)
         if worldLookup[x][y].Collision == true then
             output = true
         end
-        if string.find(me.Mount, "boat") and isTileType(worldLookup[x][y].ForegroundTile, "Water") then
+        if me.Mount and string.find(me.Mount, "boat") and isTileType(worldLookup[x][y].ForegroundTile, "Water") then
             output = false
         elseif string.find(me.Mount, "boat") and not worldLookup[x][y].Collision then
             output = true

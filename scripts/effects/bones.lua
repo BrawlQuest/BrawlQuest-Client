@@ -10,12 +10,14 @@ function initBones()
             love.graphics.newImage("assets/world/objects/Bone.png")
         },
     }
+    
 end
 
-function boneSpurt(x, y, amount, velocity, r, g, b, type) 
+function boneSpurt(x, y, amount, velocity, r, g, b, type, mobType) 
     local distX = (player.x - player.target.x) * -velocity
     local distY = (player.y - player.target.y) * -velocity
     type = type or "mob"
+    mobType = mobType or "image"
     
     for i=1,amount do
         local xv, yv
@@ -37,6 +39,7 @@ function boneSpurt(x, y, amount, velocity, r, g, b, type)
                 yv = love.math.random(distY - (range * (player.x - player.target.x)), distY + (range * (player.x - player.target.x))) + love.math.random(-deviance, deviance)
             end
         else
+            mobType = "image" -- this is "me" or another player, so it should be set to the default
             xv = love.math.random(-velocity, velocity)
             yv = love.math.random(-velocity, velocity)
         end
@@ -54,6 +57,7 @@ function boneSpurt(x, y, amount, velocity, r, g, b, type)
             image = love.math.random(1, 2),
             scale =  1 - love.math.random() * 0.5,
             rota = math.rad(love.math.random(0, 360)),
+            mobType = mobType
         }
     end
 end
@@ -102,7 +106,7 @@ function drawBones()
         local r = 0
         if v.image == 3 then r = v.rota end
         -- if v.type == "mob" then
-            love.graphics.draw(bone.image[v.image], v.x - (16 * v.scale), v.y - (16 * v.scale), r, v.scale)
+            love.graphics.draw(bone[v.mobType][v.image], v.x - (16 * v.scale), v.y - (16 * v.scale), r, v.scale)
         -- else
         --     love.graphics.rectangle("fill",v.x,v.y,2, 2)
         -- end

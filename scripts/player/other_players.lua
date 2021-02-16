@@ -258,7 +258,11 @@ function updateOtherPlayers(dt)
         if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X * 32, v.Y * 32) > 1 then
             local speed = 64
             if playersDrawable[i].Mount ~= "None" or worldEdit.open then
-                speed = 110
+                if string.find(playersDrawable[i].Mount, "boat") then
+                    speed = 32
+                else
+                    speed = 110
+                end
             end
             if playersDrawable[i].X - 1 > v.X * 32 then
                 playersDrawable[i].X = playersDrawable[i].X - speed * dt
