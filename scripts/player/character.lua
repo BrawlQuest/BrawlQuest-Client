@@ -120,7 +120,8 @@ function worldCollison(x, y)
         elseif string.find(me.Mount, "boat") and not worldLookup[x][y].Collision then
             output = true
         end
-    elseif enemyCollisions[x] and enemyCollisions[x][y] == true then
+    end
+     if enemyCollisions[x] and enemyCollisions[x][y] == true then
         output = true
     end
     return output
