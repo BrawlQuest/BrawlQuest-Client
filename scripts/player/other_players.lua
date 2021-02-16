@@ -47,7 +47,7 @@ function drawCharacter(v, x, y, ad)
         end
         
         if not string.find(v.Mount, "boat") then
-            drawBuddy(v.Name)
+            drawBuddy(v)
             if v.RedAlpha ~= null then
                 love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha)
             end
@@ -232,10 +232,11 @@ function updateOtherPlayers(dt)
                 ['RedAlpha'] = 0,
                 ['Mount'] = v.Mount,
                 ['Color'] = v.Color,
+                ['Buddy'] = v.Buddy
             }
         end
         playersDrawable[i].Mount = v.Mount
-
+        updateBuddy(dt, playersDrawable)
         if playersDrawable[i].HP > v.HP then
             print("player Hit")
             playersDrawable[i].HP = v.HP
