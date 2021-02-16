@@ -64,7 +64,7 @@ function initCrafting()
         crafting.catalogue = {}
     end
 
-    crafting.selectedItem = crafting.recipes[crafting.fields[1]][1]
+    -- crafting.selectedItem = crafting.recipes[crafting.fields[1]][1]
     crafting.recipesHeight = (crafting.itemCount * -66) + ((crafting.font:getHeight() * 2) * -#crafting.fields) + crafting.h - 60 - 20
 
     -- print(json:encode_pretty(crafting.fields))

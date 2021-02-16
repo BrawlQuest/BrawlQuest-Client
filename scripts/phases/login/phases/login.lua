@@ -2,10 +2,19 @@
     The "login" phase of login is for entering a UID and password
 ]]
 
+logoScale = 5
+
 function drawLoginPhase(countCerp)
     loginImageX, loginImageY = math.floor(love.graphics.getWidth() / 2 - (loginEntryImage:getWidth() / 2)),
     math.floor(love.graphics.getHeight() / 2 - (loginEntryImage:getHeight() / 2))
+
+    love.graphics.setColor(0,0,0,0.7 * countCerp)
+    roundRectangle("fill", loginImageX, loginImageY + 220, loginEntryImage:getWidth(), loginEntryImage:getHeight() - 220, 20)
+
+    love.graphics.setColor(1,1,1, countCerp)
     love.graphics.draw(loginEntryImage, loginImageX, loginImageY)
+
+    love.graphics.draw(bqLogo, (love.graphics.getWidth() / 2) - ((bqLogo:getWidth() * logoScale) * 0.5), loginImageY - 70, 0, logoScale)
 
     love.graphics.setColor(0, 0, 0, countCerp)
     love.graphics.setFont(textFont)
