@@ -34,6 +34,7 @@ function initCharacterHub()
         amount = 0,
         flashy = 0,
         flashyCERP = 0,
+        flash = false
     }
 end
 
@@ -53,10 +54,13 @@ function updateCharacterHub(dt)
 
     if player.cp > 0 then
         local i = 0
-        if inventory.open or inventory.forceOpen then i = 2 end
-        characterHub.flashy = characterHub.flashy + 2 * dt
-        if characterHub.flashy >= 2 then characterHub.flashy = i end
-        characterHub.flashyCERP  = cerp( 0,0.5, characterHub.flashy )
+        -- if inventory.open or inventory.forceOpen then i = 2 end
+        characterHub.flashy = characterHub.flashy + 8 * dt
+        if characterHub.flashy >= 2 then 
+            characterHub.flashy = i 
+            characterHub.flash = not characterHub.flash
+        end
+        characterHub.flashyCERP  = 0
     else
         characterHub.flashy = 0
         characterHub.flashyCERP = 0
@@ -67,6 +71,7 @@ function drawCharacterHub(thisX, thisY)
     if me ~= null and me.HP ~= null or me.XP ~= null then
         love.graphics.setFont(characterHub.font)
         thisX, thisY = thisX, thisY - hubImages.profileBG:getHeight()
+
         drawCharacterHubProfile(thisX, thisY)
         thisX = thisX + hubImages.profileBG:getWidth()
         if characterHub.amount ~= 0 then
@@ -75,6 +80,12 @@ function drawCharacterHub(thisX, thisY)
         thisX = thisX + cerp(0, hubImages.statsBG:getWidth(), characterHub.amount)
         drawCharacterHubMeters(thisX, thisY)
         thisX, thisY = thisX + 231 + 10, thisY + 97 - 10 - 60
+
+        if player.cp > 0 then
+            drawAvailablePointsPopup(thisX, thisY)
+            thisY = thisY - 70
+        end
+
         if me.Weapon ~= null then drawBattlebarItem(thisX, thisY, itemImg[me.Weapon.ImgPath], "+"..me.Weapon.Val) end
 
         local defence = 0
@@ -97,7 +108,21 @@ function drawCharacterHub(thisX, thisY)
             thisX = thisX + 50
             drawBattlebarItem(thisX, thisY, "hold", "HOLD")
         end
+        
     end
+end
+
+function drawAvailablePointsPopup(thisX, thisY)
+    if characterHub.flash then
+        love.graphics.setColor(1,0,0,1)
+    else
+        love.graphics.setColor(0,0,0,0.7)
+    end
+    roundRectangle("fill", thisX, thisY, 90, 60, 5)
+    love.graphics.setColor(1,1,1)
+    local text
+    if player.cp > 1 then text = " Points Available" else text = " Point Available" end
+    love.graphics.printf(player.cp .. text, thisX, thisY + 15, 90 / 2, "center", 0, 2)
 end
 
 function drawCharacterHubProfile(thisX, thisY)
@@ -217,7 +242,7 @@ function drawBattlebarItem(thisX, thisY, item, stats)
     elseif item == "hold" then
         love.graphics.print(boolToString(holdAttack), characterHub.nameFont, thisX+(w / 2)-(characterHub.nameFont:getWidth(stats)/2), thisY + 16)
     else
-        love.graphics.draw(item, thisX + 4, thisY + 4) 
+        love.graphics.draw(item, thisX + 4, thisY + 4)
     end
 
     love.graphics.print(stats, characterHub.nameFont, thisX+(w / 2)-(characterHub.nameFont:getWidth(stats)/2), thisY + 42)

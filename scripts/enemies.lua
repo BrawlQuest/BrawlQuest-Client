@@ -206,7 +206,8 @@ function drawEnemies()
 
                 if me.HP and v.Enemy.ATK and enemyHealth < playerHealth then
                     love.graphics.setColor(1, cerp(0, 0.5, nextTick * 2), 0, intensity)
-                    love.graphics.draw(skull, v.dx - 6 - cerp(0, 2, nextTick * 2), v.dy - 8 - cerp(0, 2, nextTick * 2), 0, cerp(1, 1.2, nextTick * 2))
+                    love.graphics.draw(skull, v.dx - 6, v.dy - 8, 0, 1)
+                    -- love.graphics.draw(skull, v.dx - 6 - cerp(0, 2, nextTick * 2), v.dy - 8 - cerp(0, 2, nextTick * 2), 0, cerp(1, 1.2, nextTick * 2))
                 end
 
                 -- if distanceToPoint(v.dx, v.dy, player.dx, player.dy) < 256 then 
