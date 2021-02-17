@@ -17,10 +17,10 @@ function drawProfilePic(thisX, thisY, thisScale, thisRotation, v)
 
 		if v and v.HeadArmour then
 			if v.ChestArmourID ~= 0 then
-				drawItemIfExists(v.ChestArmour.ImgPath, thisX, thisY / i, "", r, profileImgStencil, 16)
+				drawItemIfExists(v.ChestArmour.ImgPath, thisX, thisY / i, "", r, 1, profileImgStencil)
 			end	
 			if v.HeadArmourID ~= 0 then
-				drawItemIfExists(v.HeadArmour.ImgPath, thisX, thisY / i, "", r, profileImgStencil, 16)
+				drawItemIfExists(v.HeadArmour.ImgPath, thisX, thisY / i, "", r, 1, profileImgStencil)
 			end
 		end
 	love.graphics.pop()

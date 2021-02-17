@@ -29,25 +29,25 @@ function initCharacterHub()
         barColors = {{1,0,0,1}, {0,0.5,1,1}, {1,0.5,0,1}, },
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
         nameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
-        open = false,
         forceOpen = false,
         amount = 0,
         flashy = 0,
         flashyCERP = 0,
         flash = false
     }
+
+    armourHub = {
+        titles = {"HeadArmour", "ChestArmour", "LegArmour", },
+    }
 end
 
 function updateCharacterHub(dt)
     if characterHub.forceOpen then
-        characterHub.open = true
         panelMovement(dt, characterHub, 1)
     else
         if isMouseOver(0 * scale, (uiY - 97) * scale, 468 * scale, 97 * scale) then
-            characterHub.open = true
             panelMovement(dt, characterHub, 1)
         else
-            characterHub.open = false
             panelMovement(dt, characterHub, -1)
         end
     end
@@ -71,6 +71,8 @@ function drawCharacterHub(thisX, thisY)
     if me ~= null and me.HP ~= null or me.XP ~= null then
         love.graphics.setFont(characterHub.font)
         thisX, thisY = thisX, thisY - hubImages.profileBG:getHeight()
+
+        if characterHub.amount > 0 then drawArmourHub(thisX + 20, thisY - 60) end
 
         drawCharacterHubProfile(thisX, thisY)
         thisX = thisX + hubImages.profileBG:getWidth()
@@ -211,7 +213,7 @@ function getSTA(i)
 end
 
 function drawBattlebarItem(thisX, thisY, item, stats)
-    love.graphics.setColor(0,0,0,0.7)
+    love.graphics.setColor(0,0,0,0.8)
     local w = 40
     if item == "hold" then 
         w = 60
@@ -247,4 +249,51 @@ function drawBattlebarItem(thisX, thisY, item, stats)
 
     love.graphics.print(stats, characterHub.nameFont, thisX+(w / 2)-(characterHub.nameFont:getWidth(stats)/2), thisY + 42)
     love.graphics.setFont(headerFont)
+end
+
+function drawArmourHub(thisX, thisY)
+    local w, h = 450, 250
+    local imageScale = 6
+    local alpha = cerp(0,1,characterHub.amount)
+    thisX, thisY = thisX, thisY - h
+
+    love.graphics.setColor(0,0,0,0.8 * alpha)
+    roundRectangle("fill", thisX, thisY, w, h, 10)
+
+    local x, y = thisX - 20, thisY + 20
+
+    v = me
+    love.graphics.setColor(1,1,1,alpha)
+    -- if v.Color ~= null then love.graphics.setColor(unpack(v.Color)) end
+    love.graphics.draw(playerImg, x, y, 0, imageScale)
+    love.graphics.setColor(1,1,1,alpha)
+    if v and v.HeadArmour then
+        if v.HeadArmourID ~= 0 then
+            drawItemIfExists(v.HeadArmour.ImgPath, x, y, "left", 1, imageScale)
+        end
+
+        if v.ChestArmourID ~= 0 then
+            drawItemIfExists(v.ChestArmour.ImgPath, x, y, "left", 1, imageScale)
+        end
+
+        if v.LegArmourID ~= 0 then
+            drawItemIfExists(v.LegArmour.ImgPath, x, y, "left", 1, imageScale)
+        end
+    end
+
+    x, y = thisX + (32 * imageScale) - 10, thisY + 10
+
+    love.graphics.print("Armour Stats", x + 10, y + 15, 0, 3)
+    y = y + 50
+    local bw, bh = w - (32 * imageScale) - 10, 70
+
+    for i = 1, 3 do
+        love.graphics.setColor(0,0,0,0.8 * alpha)
+        roundRectangle("fill", x, y, bw, bh, 5)
+        love.graphics.setColor(1,1,1, alpha)
+        love.graphics.print(armourHub.titles[i] .. ":", x + 10, y + 12, 0, 2)
+        love.graphics.printf("+" .. v[armourHub.titles[i]].Val, x + bw - 50, y + 12, 40 / 3, "right", 0, 2)
+        love.graphics.print(v[armourHub.titles[i]].Name, x + 10, y + 12 + 30, 0, 2)
+        y = y + bh + 10
+    end
 end
