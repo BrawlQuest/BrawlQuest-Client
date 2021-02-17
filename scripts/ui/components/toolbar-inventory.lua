@@ -203,11 +203,13 @@ end
 function checkInventoryKeyPressed(key)
     for i,v in ipairs(hotbar) do
         if key == tostring(i) or (i == 7 and key == "space") then
+            
             if inventory.isMouseOverInventoryItem == true then
                 hotbar[i].item = selectedItem
                 break
             else
-                if v.item ~= nil and v.item.ID ~= nil and not usedItemThisTick then
+                if v.item ~= nil and v.item.ID ~= nil and not isItemUnusable(v.item) and not usedItemThisTick then
+                    print(json:encode_pretty(v.item))
                     useItemColor[i] = 1
                     useItemColorChanged = true
                     apiGET("/item/" .. player.name .. "/" .. v.item.ID)
@@ -221,8 +223,7 @@ end
 
 function checkInventoryMousePressed(button)
 
-    if selectedItem ~= nil and selectedItem.ID ~= nil and
-        isMouseOver((0) * scale, (0 + 50) * scale, 313 * scale, (uiY - 97 - 50 - 50) * scale) then
+    if selectedItem ~= nil and selectedItem.ID ~= nil and inventory.isMouseOverInventoryItem then
         if  not usedItemThisTick then
             apiGET("/item/" .. player.name .. "/" .. selectedItem.ID)
             usedItemThisTick = true
@@ -258,4 +259,12 @@ function getItemAmount(item)
     end
 
     return amount
+end
+
+function isItemUnusable(item)
+    if item and me.LVL then
+        return item.Worth * 1 > me.LVL
+    else
+        return false
+    end
 end

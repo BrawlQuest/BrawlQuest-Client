@@ -313,8 +313,6 @@ function drawCraftingItem(thisX, thisY, field, item, amount)
 
     if isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale) and item then
         setItemTooltip(item)
-        selectedItem = item
-        inventory.isMouseOverInventoryItem = true
         love.graphics.setColor(1,0,0,1)
         thisY = thisY - 2
     end
