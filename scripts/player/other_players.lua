@@ -14,7 +14,7 @@ function drawCharacter(v, x, y, ad)
             end
         end
 
-        if v.ShieldID ~= 0 and not string.find(v.Mount, "boat") then -- we don't want to draw the player if they're in a boat
+        if v.ShieldID ~= 0 and not string.find(v.Mount.Name, "boat") then -- we don't want to draw the player if they're in a boat
             drawItemIfExists(v.Shield.ImgPath, x, y, ad.previousDirection)
         end
 
@@ -24,29 +24,29 @@ function drawCharacter(v, x, y, ad)
         if ad and ad.previousDirection and ad.previousDirection == "left" then
             rotation = -1
             offsetX = 32
-            if v.Mount ~= "None" then
-                mountOffsetX = getImgIfNotExist("assets/player/mounts/"..v.Mount.."/back.png"):getWidth()-8
+            if v.Mount.Name ~= "" then
+                mountOffsetX = getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"):getWidth()-8
             end
-            if not string.find(v.Mount, "boat") then
+            if not string.find(v.Mount.Name, "boat") then
                 love.graphics.draw(itemImg[v.Weapon.ImgPath], x + (itemImg[v.Weapon.ImgPath]:getWidth() - 32) + 32,
                     y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), player.wobble, rotation, 1, 0, 0)
             end
         elseif ad and ad.previousDirection and ad.previousDirection == "right" then
-            if not string.find(v.Mount, "boat") then
+            if not string.find(v.Mount.Name, "boat") then
             love.graphics.draw(itemImg[v.Weapon.ImgPath], x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32),
                 y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), player.wobble, rotation, 1, 0, 0)
             end
         end
 
-        if v.Mount ~= "None" then
-            if  string.find(v.Mount, "boat") then -- there is no offset for boats as the player isn't drawn
-                love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..v.Mount.."/back.png"), x  + mountOffsetX, y, 0, rotation, 1, 0, 0)
+        if v.Mount.Name ~= "" then
+            if  string.find(v.Mount.Name, "boat") then -- there is no offset for boats as the player isn't drawn
+                love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"), x  + mountOffsetX, y, 0, rotation, 1, 0, 0)
             else
-                love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..v.Mount.."/back.png"), x + 6 + mountOffsetX, y + 9, 0, rotation, 1, 0, 0)
+                love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"), x + 6 + mountOffsetX, y + 9, 0, rotation, 1, 0, 0)
             end
         end
         
-        if not string.find(v.Mount, "boat") then
+        if not string.find(v.Mount.Name, "boat") then
             drawBuddy(v)
             if v.RedAlpha ~= null then
                 love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha)
@@ -65,8 +65,8 @@ function drawCharacter(v, x, y, ad)
             if v.HeadArmourID ~= 0 then
                 drawItemIfExists(v.HeadArmour.ImgPath, x, y, ad.previousDirection)
             end
-            if v.Mount ~= "None" then
-                love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..v.Mount.."/fore.png"), x + 6 + mountOffsetX, y + 9, 0, rotation, 1, 0, 0)
+            if v.Mount.Name ~= "" then
+                love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/fore.png"), x + 6 + mountOffsetX, y + 9, 0, rotation, 1, 0, 0)
             end
 
             if v.IsShield and v.ShieldID ~= 0 then
@@ -258,8 +258,8 @@ function updateOtherPlayers(dt)
         end
         if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X * 32, v.Y * 32) > 1 then
             local speed = 64
-            if playersDrawable[i].Mount ~= "None" or worldEdit.open then
-                if string.find(playersDrawable[i].Mount, "boat") then
+            if playersDrawable[i].Mount.Name ~= "None" or worldEdit.open then
+                if string.find(playersDrawable[i].Mount.Name, "boat") then
                     speed = 32
                 else
                     speed = 110
