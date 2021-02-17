@@ -48,7 +48,10 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
     if number then
         local height = 19
         amount = inventory.amount
-        if isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale) then
+
+        if isItemUnusable(item) then
+            love.graphics.setColor(0.2, 0.2, 0.2)
+        elseif isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale) then
             love.graphics.setColor(1,
             cerp(0, 1, useItemColor[number]),
             cerp(0, 1, useItemColor[number]),
@@ -85,7 +88,12 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
         love.graphics.setColor(1,1,1,1)
         love.graphics.draw(inventory.images.numbers[number], thisX - 3, thisY + 26)
     else
-        if isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale) and item then
+
+        if isItemUnusable(item) then
+            love.graphics.setColor(0.2, 0.2, 0.2)
+            -- setItemTooltip(item)
+            -- inventory.isMouseOverInventoryItem = false
+        elseif isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale) and item then
             setItemTooltip(item)
             selectedItem = item
             inventory.isMouseOverInventoryItem = true
@@ -95,7 +103,7 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
         drawItemBacking(thisX, thisY)
 
         love.graphics.setColor(1,1,1,1)
-        if item  then
+        if item then
             itemImg[item.ImgPath] = getImgIfNotExist(item.ImgPath)
             if string.sub(item.Type, 1, 4) == "arm_" then
                 love.graphics.setColor(1,1,1,0.5)

@@ -118,6 +118,7 @@ function worldCollison(x, y)
         if me.Mount and string.find(me.Mount.Name, "boat") and isTileType(worldLookup[x][y].ForegroundTile, "Water") then
             output = false
         elseif string.find(me.Mount.Name, "boat") and not worldLookup[x][y].Collision then
+
             output = true
         end
     end
@@ -189,7 +190,6 @@ function movePlayer(dt)
 
     else -- movement smoothing
         local speed = 64
-
         if me.Mount.Name ~= "" or worldEdit.open then
             speed = tonumber(v.Mount.Val) or 256 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
         end

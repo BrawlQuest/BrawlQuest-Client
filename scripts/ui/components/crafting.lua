@@ -43,7 +43,7 @@ function initCrafting()
             ["arm_chest"] = "Chest Armour", 
             ["spell"] = "Spells",
         },
-        openField = {false, false, false, false, false, false, },
+        openField = {},
         overOpenField = 0
     }
 
@@ -63,6 +63,11 @@ function initCrafting()
     else
         crafting.catalogue = {}
     end
+
+    for i, v in ipairs(crafting.fields) do
+        crafting.openField[i] = false
+    end
+
     getRecipesHeight()
 end
 
@@ -308,8 +313,6 @@ function drawCraftingItem(thisX, thisY, field, item, amount)
 
     if isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale) and item then
         setItemTooltip(item)
-        selectedItem = item
-        inventory.isMouseOverInventoryItem = true
         love.graphics.setColor(1,0,0,1)
         thisY = thisY - 2
     end

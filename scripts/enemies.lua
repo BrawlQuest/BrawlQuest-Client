@@ -177,7 +177,10 @@ function newEnemyData(data) -- called when nearby data is returned
 
 end
 
+-- print(me.HP / (100 + (15 * me.STA)))
+
 function drawEnemies()
+    -- if me.STA then print(me.HP) end
     for i, v in pairs(enemies) do
         local distance = distanceToPoint(player.cx, player.cy, v.dx, v.dy)
         local range = worldMask.range * 32
@@ -196,6 +199,16 @@ function drawEnemies()
                     love.graphics.draw(enemyImg[v.Enemy.Name], v.dx + offsetX, v.dy, 0, rotation, 1, 0, 0)
                 end
 
+
+                local enemyHealth = me.HP / v.Enemy.ATK
+                local playerHealth = v.Enemy.HP / (me.Weapon.Val + (me.STR - 1) * 0.5)
+                if versionType == "dev" then love.graphics.print("      " .. math.round(enemyHealth, 2) .. " < " .. math.round(playerHealth, 2), npcNameFont, v.dx, v.dy - 10) end
+
+                if me.HP and v.Enemy.ATK and enemyHealth < playerHealth then
+                    love.graphics.setColor(1, cerp(0, 0.5, nextTick * 2), 0, intensity)
+                    love.graphics.draw(skull, v.dx - 6 - cerp(0, 2, nextTick * 2), v.dy - 8 - cerp(0, 2, nextTick * 2), 0, cerp(1, 1.2, nextTick * 2))
+                end
+
                 -- if distanceToPoint(v.dx, v.dy, player.dx, player.dy) < 256 then 
                 if v.dhp < v.mhp or not v.Enemy.CanMove then
                     if v.Enemy.CanMove then
@@ -207,22 +220,19 @@ function drawEnemies()
                     end
                 end
 
-                love.graphics.setColor(1, 1, 1, v.aggroAlpha)
+                love.graphics.setColor(1, 1, 1, v.aggroAlpha * intensity)
                 love.graphics.draw(alertImg, v.dx + 8, v.dy - 16)
-                love.graphics.setColor(1, 1, 1)
+                love.graphics.setColor(1, 1, 1, intensity)
 
-                if versionType == "dev" then
-                    love.graphics.print(v.TargetName .. " - " .. tostring(v.IsAggro), npcNameFont, v.dx, v.dy - 10)
-                end
                 -- print( "\"" .. v.TargetName .. "\" \"" .. me.Name .. "\"")
                 if distanceToPoint(v.dx, v.dy, player.dx, player.dy) < (v.Enemy.Range + 1) * 32 then
                     if nextTick >= 1 then
                         enemies[i].linesDrawable = true
                     end
                     if enemies[i].linesDrawable == true and v.IsAggro then
-                        love.graphics.setColor(1, 0, 0, nextTick)
+                        love.graphics.setColor(1, 0, 0, nextTick * intensity)
                         love.graphics.line(v.dx + 16, v.dy + 16, player.dx + 16, player.dy + 16)
-                        love.graphics.setColor(1, 1, 1, 1)
+                        love.graphics.setColor(1, 1, 1, intensity)
                         if nextTick >= 1 and not love.keyboard.isDown(keybinds.SHIELD) then
                             boneSpurt(player.dx + 16, player.dy + 16, 2, 40, 1, 1, 1, "me")
                         end

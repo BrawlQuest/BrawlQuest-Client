@@ -22,6 +22,8 @@ function initHUD()
     worldScaleAmount = 1
     worldScaleSmoothing = false
 
+    skull = love.graphics.newImage("assets/monsters/effects/skull.png")
+
     -- fonts
     textFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 24)
 

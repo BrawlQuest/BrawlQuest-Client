@@ -112,6 +112,10 @@ function love.keypressed(key)
                 scaleHUD("down")
                 writeSettings()
             end
+
+            if key == "/" then
+                success,msg = love.filesystem.write("availableEnemies.txt", json:encode_pretty(enemies))
+            end
         end
     end
 

@@ -56,7 +56,6 @@ ltn12 = require("ltn12")
 version = "Pre-Release" 
 versionType = "dev" -- "dev" for quick login, "release" for not
 versionNumber = "Beta 1.1" -- very important for settings
-
 phase = "login"
 
 blockMap = {}
