@@ -60,7 +60,7 @@ function love.keypressed(key)
                 crafting.selectedField = {i = 0, j = 0}
             end
         else
-            checkInventoryKeyPressed(key)
+            checkHotbarKeyPressed(key)
             checkTargetingPress(key)
 
             if key == "return" and not isSettingsWindowOpen then isTypingInChat = true end

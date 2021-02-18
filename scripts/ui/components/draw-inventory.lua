@@ -17,9 +17,7 @@ function drawToolBarInventory(thisX, thisY)
     love.graphics.setColor(1, 1, 1, 1)
 
     inventory.mouseOverButtonsAmount = 0
-    for i,v in ipairs(hotbar) do
-        drawInventoryItem(thisX + 9 + (43 * (i - 1)), thisY - 42, 0, v.item, 0, i)
-    end
+    drawHotbar(thisX, thisY)
 
     if inventory.open then
         -- getInventory()
@@ -74,7 +72,7 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
 
         love.graphics.setColor(1,1,1,1)
      
-        if item  then
+        if item then
             itemImg[item.ImgPath] = getImgIfNotExist(item.ImgPath)
             if itemImg[item.ImgPath]:getWidth() <= 32 and itemImg[item.ImgPath]:getHeight() <= 32 then
                 love.graphics.draw(itemImg[item.ImgPath],

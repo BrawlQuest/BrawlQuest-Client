@@ -45,11 +45,7 @@ function initSettings()
     oldTargeting = false
 
     useItemColor = {}
-    hotbar = {}
-    for i = 1, 7 do
-        hotbar[#hotbar + 1] = {item = null,}
-        useItemColor[#useItemColor + 1] = 0 
-    end
+    initHotbar()
     
     info = love.filesystem.getInfo("settings.txt")
 
@@ -77,6 +73,7 @@ function initSettings()
         -- openUiOnHover = contents["openUiOnHover"] or openUiOnHover
         oldTargeting = contents["oldTargeting"] or oldTargeting
         hotbar = contents["hotbar"] or hotbar
+        checkHotbarChange()
         openInventoryOnHover = contents["openInventoryOnHover"] or openInventoryOnHover
         openQuestsOnHover = contents["openQuestsOnHover"] or openQuestsOnHover
         crafting.openField = contents["craftingFields"] or crafting.openField

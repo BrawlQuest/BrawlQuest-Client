@@ -149,6 +149,7 @@ function updateHUD( dt )
         if inventory.open or inventory.forceOpen then velyInventory = velyInventory - velyInventory * math.min( dt * 15, 1 ) end
         updateTooltip(dt)
         updateToolBarInventory(dt)
+        updateHotbar(dt)
         updateCharacterHub(dt)
         updateQuestHub(dt)
         updateCrafting(dt) -- fine

@@ -7,6 +7,7 @@ function love.mousepressed(x, y, button)
     elseif phase == "game" then
         checkQuestPanelMousePressed(button)
         checkInventoryMousePressed(button)
+        checkHotbarMousePressed(button)
         if isSettingsWindowOpen then checkSettingsMousePressed(button) end
         checkStatsMousePressed(button)
         if crafting.open then checkCraftingMousePressed(button) end
