@@ -187,7 +187,7 @@ function drawHUD()
             if crafting.open then drawCrafting() end
             drawTooltip()
             drawAuraHeadings()
-        
+            if showEvents then drawEvents() end
         love.graphics.pop()
 
         love.graphics.push() -- chat and quests scaling TODO: Quests
@@ -196,7 +196,7 @@ function drawHUD()
             if showChat then
                 drawChatPanel(uiX/i, (uiY - cerp(cerp(0, 100, questHub.amount), ((uiY/1.25)-15), questsPanel.amount)) / i)
             end
-             drawZoneTitle()
+            drawZoneTitle()
         love.graphics.pop()
     end
     drawTutorial()

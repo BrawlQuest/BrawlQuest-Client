@@ -16,7 +16,6 @@ require "scripts.effects.camera"
 require "scripts.effects.clouds"
 require "scripts.effects.world-mask"
 require "scripts.ui.hud_controller"
-
 require "scripts.ui.components.character-hub"
 require "scripts.ui.components.crafting"
 require "scripts.ui.components.toolbar-inventory"
@@ -29,6 +28,7 @@ require "scripts.ui.components.toolbar"
 require "scripts.ui.components.zone-titles"
 require "scripts.ui.components.profile"
 require "scripts.ui.components.hotbar"
+require "scripts.ui.components.events"
 require "scripts.libraries.api"
 require "scripts.libraries.utils"
 require "scripts.libraries.colorize"
@@ -113,6 +113,7 @@ function love.load()
     initWorldMask()
     initRangedWeapons()
     initTargeting()
+    initEvents()
     love.graphics.setFont(textFont)
 end
 
@@ -226,6 +227,7 @@ function love.update(dt)
         updateAuras(dt)
         updateMusic(dt)
         updateLoot(dt)
+        updateEvents(dt)
         -- updateRangedWeapons(dt)
         if showNPCChatBackground then updateNPCChat(dt) end
         -- if showClouds then updateClouds(dt) end

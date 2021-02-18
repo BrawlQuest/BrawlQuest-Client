@@ -49,12 +49,6 @@ function checkHotbarKeyPressed(key)
             end
         end
     end
-
-    if key == "[" then
-        -- success,msg = love.filesystem.write("userInventory.txt", json:encode_pretty(userInventory))
-        -- print(json:encode_pretty(hotbar))
-        debugItems = not debugItems
-    end
 end
 
 debugItems = false

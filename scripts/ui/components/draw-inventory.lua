@@ -45,11 +45,16 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
     love.graphics.setFont(inventory.itemFont)
     if number then
         local height = 19
+        local isMouse = isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale)
         amount = inventory.amount
 
-        if isItemUnusable(item) then
+        if item and isItemUnusable(item) then
             love.graphics.setColor(0.2, 0.2, 0.2)
-        elseif isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale) then
+            if isMouse and item then
+                setItemTooltip(item)
+            end
+        elseif item and isMouse then
+            setItemTooltip(item)
             love.graphics.setColor(1,
             cerp(0, 1, useItemColor[number]),
             cerp(0, 1, useItemColor[number]),

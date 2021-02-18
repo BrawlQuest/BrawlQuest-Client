@@ -273,10 +273,10 @@ function updateInventory(response)
             v = copy(v)
             for o, k in ipairs(inventoryAlpha) do
                 if k.Item.Name == v.Item.Name then -- and v.Inventory.Amount == k.Inventory.Amount then
-                    print("You have " .. k.Inventory.Amount .. " of this item, and the server says you now have " ..
-                              v.Inventory.Amount)
+                    -- print("You have " .. k.Inventory.Amount .. " of this item, and the server says you now have " ..
+                    --           v.Inventory.Amount)
                     v.Inventory.Amount = v.Inventory.Amount - k.Inventory.Amount
-                    print("That's a change of " .. v.Inventory.Amount .. " of it.")
+                    -- print("That's a change of " .. v.Inventory.Amount .. " of it.")
                     if v.Inventory.Amount <= 0 then
                         newItem = false
                     end
@@ -290,7 +290,7 @@ function updateInventory(response)
     end
 
     for i,k in ipairs(newInventoryItems) do
-        print(k.Item.Name)
+        -- print(k.Item.Name)
         love.audio.play(enemyHitSfx)
         burstLoot((player.x*32)-16, (player.y*32)-16, k.Inventory.Amount, k.Item.ImgPath)
         newInventoryItems = {}
