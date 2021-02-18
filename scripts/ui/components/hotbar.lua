@@ -80,7 +80,7 @@ function useHotbarItem(i,v)
     useItemColorChanged = true
     apiGET("/item/" .. player.name .. "/" .. v.item.ID)
     usedItemThisTick = true
-    -- checkHotbarChange()
+    checkHotbarChange()
 end
 
 function checkHotbarChange()
@@ -89,22 +89,14 @@ function checkHotbarChange()
             local found = false
             for field = 1, #inventory.fields do
                 for i,v in ipairs(userInventory[field]) do
-                    -- print(json:encode_pretty(v))
                     if v.Item.ID and k.item.ID == v.Item.ID then
-                        print("BEFORE: " .. json:encode_pretty(hotbar[j].item))
-                        print("I DID AN UPDATE")
                         hotbar[j].item = v.Item
-                        print("AFTER: " .. json:encode_pretty(hotbar[j].item))
                         found = true
-                        if found then break end
+                        break
                     end
                 end
                 if found then break end
             end
         end
     end
-
-    -- for i,v in ipairs(hotbar) do
-    --     print(json:encode_pretty(v.item))
-    -- end
 end

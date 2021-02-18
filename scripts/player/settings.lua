@@ -73,7 +73,6 @@ function initSettings()
         -- openUiOnHover = contents["openUiOnHover"] or openUiOnHover
         oldTargeting = contents["oldTargeting"] or oldTargeting
         hotbar = contents["hotbar"] or hotbar
-        checkHotbarChange()
         openInventoryOnHover = contents["openInventoryOnHover"] or openInventoryOnHover
         openQuestsOnHover = contents["openQuestsOnHover"] or openQuestsOnHover
         crafting.openField = contents["craftingFields"] or crafting.openField
@@ -83,6 +82,7 @@ function initSettings()
     end
 
     setWindowOptions()
+    checkHotbarChange()
 
     controls = {
         title = "Controls",
