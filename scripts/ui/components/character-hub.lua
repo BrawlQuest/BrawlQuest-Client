@@ -37,7 +37,11 @@ function initCharacterHub()
     }
 
     armourHub = {
-        titles = {"HeadArmour", "ChestArmour", "LegArmour", },
+        titles = {
+            {name = "Head Armour", v = "HeadArmour"},
+            {name = "Chest Armour", v = "ChestArmour"},
+            {name = "Leg Armour", v = "LegArmour"},
+        },
     }
 end
 
@@ -72,7 +76,7 @@ function drawCharacterHub(thisX, thisY)
         love.graphics.setFont(characterHub.font)
         thisX, thisY = thisX, thisY - hubImages.profileBG:getHeight()
 
-        if characterHub.amount > 0 then drawArmourHub(thisX + 20, thisY - 60) end
+        if characterHub.amount > 0 then drawArmourHub(thisX + 10, thisY - 50) end
 
         drawCharacterHubProfile(thisX, thisY)
         thisX = thisX + hubImages.profileBG:getWidth()
@@ -252,15 +256,15 @@ function drawBattlebarItem(thisX, thisY, item, stats)
 end
 
 function drawArmourHub(thisX, thisY)
-    local w, h = 450, 250
+    local w, h = 500, 250
     local imageScale = 6
     local alpha = cerp(0,1,characterHub.amount)
-    thisX, thisY = thisX, thisY - h
+    thisX, thisY = thisX - cerp(w + 20, 0, characterHub.amount), thisY - h
 
     love.graphics.setColor(0,0,0,0.8 * alpha)
-    roundRectangle("fill", thisX, thisY, w, h, 10)
+    roundRectangle("fill", thisX, thisY, w, h, 5)
 
-    local x, y = thisX - 20, thisY + 20
+    local x, y = thisX - 10, thisY + 30
 
     v = me
     love.graphics.setColor(1,1,1,alpha)
@@ -281,19 +285,18 @@ function drawArmourHub(thisX, thisY)
         end
     end
 
-    x, y = thisX + (32 * imageScale) - 10, thisY + 10
+    x, y = thisX + (32 * imageScale) + 10, thisY + 10
 
-    love.graphics.print("Armour Stats", x + 10, y + 15, 0, 3)
-    y = y + 50
-    local bw, bh = w - (32 * imageScale) - 10, 70
-
-    for i = 1, 3 do
+    love.graphics.print("Armour Stats", x + 10, y + 4, 0, 3)
+    y = y + 35
+    local bw, bh = w - (32 * imageScale) - 20, 60
+    for i, vb in ipairs(armourHub.titles) do
         love.graphics.setColor(0,0,0,0.8 * alpha)
         roundRectangle("fill", x, y, bw, bh, 5)
         love.graphics.setColor(1,1,1, alpha)
-        love.graphics.print(armourHub.titles[i] .. ":", x + 10, y + 12, 0, 2)
-        love.graphics.printf("+" .. v[armourHub.titles[i]].Val, x + bw - 50, y + 12, 40 / 3, "right", 0, 2)
-        love.graphics.print(v[armourHub.titles[i]].Name, x + 10, y + 12 + 30, 0, 2)
-        y = y + bh + 10
+        love.graphics.print(vb.name .. ":", x + 10, y + 12, 0, 2)
+        love.graphics.printf("+" .. v[vb.v].Val, x + bw - 50, y + 12, 40 / 2, "right", 0, 2)
+        love.graphics.print(v[vb.v].Name, x + 10, y + 12 + 24, 0, 2)
+        y = y + bh + 8
     end
 end
