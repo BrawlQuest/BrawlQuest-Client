@@ -52,6 +52,7 @@ steam = require 'luasteam'
 json = require("scripts.libraries.json")
 http = require("socket.http")
 ltn12 = require("ltn12")
+newOutliner = require 'scripts.libraries.outliner'
 
 version = "Pre-Release" 
 versionType = "dev" -- "dev" for quick login, "release" for not
@@ -96,6 +97,8 @@ oldInfo = {}
 sendUpdate = false
 
 function love.load()
+    outlinerOnly = newOutliner(true)
+    outlinerOnly:outline(0.8,0,0) -- this is used to draw enemy outlines
     steam.init()
     love.graphics.setDefaultFilter("nearest", "nearest")
     initHardData()
@@ -167,7 +170,7 @@ function love.draw()
             --     love.graphics.setColor(1,1,1)
             -- end
             Luven.drawEnd()
-
+     
             if not worldEdit.open then drawHUD() end
             drawNewWorldEditHud()
 
@@ -237,6 +240,7 @@ function love.update(dt)
         local info = love.thread.getChannel('players'):pop()
         if info then
             local response = json:decode(info)
+
 
             local previousPlayers = copy(players) -- Temp
             players = response['Players']
@@ -311,6 +315,9 @@ function love.update(dt)
             -- update player
             player.name = me.Name
             player.buddy = me.Buddy
+            if player.hp > me.HP then
+                player.damageHUDAlphaUp = true
+            end
             player.hp = me.HP
             player.owedxp = me.XP - player.xp
             player.xp = me.XP
@@ -329,6 +336,8 @@ function love.update(dt)
             end
         end
     end
+
+    
 end
 
 function tick()

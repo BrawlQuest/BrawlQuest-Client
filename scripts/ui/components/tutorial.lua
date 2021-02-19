@@ -5,7 +5,7 @@ tutorial = {
     },
     {
         title = "Moving & Attacking",
-        desc = "Press "..keybinds.UP..", "..keybinds.LEFT..", "..keybinds.DOWN.." and "..keybinds.RIGHT.." to move, and hold "..keybinds.ATTACK_UP..", "..keybinds.ATTACK_LEFT..", "..keybinds.ATTACK_DOWN.." and "..keybinds.ATTACK_RIGHT.." to attack.",
+        desc = "Press "..keybinds.UP..", "..keybinds.LEFT..", "..keybinds.DOWN.." and "..keybinds.RIGHT.." to move, and "..keybinds.ATTACK_UP..", "..keybinds.ATTACK_LEFT..", "..keybinds.ATTACK_DOWN.." and "..keybinds.ATTACK_RIGHT.." to attack.",
     },
     {
         title = "What is there to do?",
@@ -29,7 +29,7 @@ tutorial = {
     },
     {
         title = "Death",
-        desc = "When you die you will re-awaken at the nearest graveyard. You don't lose your items or level or anything like that: dust yourself off and try again!"
+        desc = "When you die you will re-awaken at the nearest graveyard. At Level 10 you will lose a level everytime you die so BE CAREFUL!"
     },
     {
         title = "Crafting",
@@ -37,7 +37,7 @@ tutorial = {
     },
     {
         title = "Attacking",
-        desc = "Remember to PRESS AND HOLD "..keybinds.ATTACK_UP..", "..keybinds.ATTACK_LEFT..", "..keybinds.ATTACK_DOWN.." and "..keybinds.ATTACK_RIGHT.." to attack.",
+        desc = "Remember to press "..keybinds.ATTACK_UP..", "..keybinds.ATTACK_LEFT..", "..keybinds.ATTACK_DOWN.." and "..keybinds.ATTACK_RIGHT.." to attack.",
     }
 }
 
@@ -52,11 +52,7 @@ pressEnterOpacity = 0
 pressEnterGoUp = true
 tutorialCompleted = {}
 tutorialQuickTriggers = { -- these are reduce by 1 every second, and trigger a tutorial if they hit 0 while active
-    attack = {
-        duration = 1,
-        trigger = 10,
-        active = false
-    }
+ 
 }
 
 function initTutorial()

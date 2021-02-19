@@ -5,6 +5,7 @@ enemyCollisionsPrevious = {
     [0] = {},
     [1] = {}
 }
+enemyQuads = {}
 enemyCollisionsI = 0
 enemySounds = {}
 
@@ -70,8 +71,11 @@ function newEnemyData(data) -- called when nearby data is returned
                         local files = recursiveEnumerate("assets/sfx/monsters/" .. enemy.Enemy.Name .. "/" .. i, {})
                         for k, file in ipairs(files) do
                             --     print("Found "..file)
-                            enemySounds[enemy.Enemy.Name][i][#enemySounds[enemy.Enemy.Name][i] + 1] =
-                                love.audio.newSource(file, "static")
+                            if explode(file, ".")[2] == "ogg" or explode(file, ".")[2] == "mp3" or explode(file, ".")[2] ==
+                                "wav" then
+                                enemySounds[enemy.Enemy.Name][i][#enemySounds[enemy.Enemy.Name][i] + 1] =
+                                    love.audio.newSource(file, "static")
+                            end
                         end
                     end
                 else
@@ -94,7 +98,15 @@ function newEnemyData(data) -- called when nearby data is returned
                     end
                 else
                     bone[enemy.Enemy.Name] = bone.image -- set to default
+                   
                 end
+            end
+
+            if enemyQuads[enemy.Enemy.Name] == null then -- enemy quad for drawing target outlines
+
+                enemyQuads[enemy.Enemy.Name] = love.graphics.newQuad(0, 0, 32, 32,
+                                                   enemyImg[enemy.Enemy.Name]:getDimensions())
+
             end
 
         end
@@ -139,6 +151,7 @@ function newEnemyData(data) -- called when nearby data is returned
         end
 
         enemy.Target = v.Target
+        enemy.TargetName = v.TargetName
         enemy.X = v.X
         enemy.Y = v.Y
 
@@ -199,13 +212,16 @@ function drawEnemies()
                     love.graphics.draw(enemyImg[v.Enemy.Name], v.dx + offsetX, v.dy, 0, rotation, 1, 0, 0)
                 end
 
-
                 local enemyHealth = me.HP / v.Enemy.ATK
                 local playerHealth = v.Enemy.HP / (me.Weapon.Val + (me.STR - 1) * 0.5)
-                if versionType == "dev" then love.graphics.print("      " .. math.round(enemyHealth, 2) .. " < " .. math.round(playerHealth, 2), npcNameFont, v.dx, v.dy - 10) end
+                if versionType == "dev" then
+                    love.graphics.print("      " .. math.round(enemyHealth, 2) .. " < " .. math.round(playerHealth, 2),
+                        npcNameFont, v.dx, v.dy - 10)
+                end
 
                 if me.HP and v.Enemy.ATK and enemyHealth < playerHealth then
-                    love.graphics.setColor(1, cerp(0, 0.5, nextTick * 2), 0, intensity)
+                    local distanceIntensity = 1 - (distance / 128)
+                    love.graphics.setColor(1, cerp(0, 0.5, nextTick * 2), 0, intensity * distanceIntensity)
                     love.graphics.draw(skull, v.dx - 6, v.dy - 8, 0, 1)
                     -- love.graphics.draw(skull, v.dx - 6 - cerp(0, 2, nextTick * 2), v.dy - 8 - cerp(0, 2, nextTick * 2), 0, cerp(1, 1.2, nextTick * 2))
                 end
@@ -226,7 +242,7 @@ function drawEnemies()
                 love.graphics.setColor(1, 1, 1, intensity)
 
                 -- print( "\"" .. v.TargetName .. "\" \"" .. me.Name .. "\"")
-                if distanceToPoint(v.dx, v.dy, player.dx, player.dy) < (v.Enemy.Range + 1) * 32 then
+                if v.TargetName == player.name then
                     if nextTick >= 1 then
                         enemies[i].linesDrawable = true
                     end
@@ -237,6 +253,7 @@ function drawEnemies()
                         if nextTick >= 1 and not love.keyboard.isDown(keybinds.SHIELD) then
                             boneSpurt(player.dx + 16, player.dy + 16, 2, 40, 1, 1, 1, "me")
                         end
+                        outlinerOnly:draw(2, enemyImg[v.Enemy.Name], enemyQuads[v.Enemy.Name], v.dx + offsetX, v.dy, 0, rotation, 1, 0, 0)
                     end
                 else
                     enemies[i].linesDrawable = false
