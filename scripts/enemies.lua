@@ -71,7 +71,7 @@ function newEnemyData(data) -- called when nearby data is returned
                         local files = recursiveEnumerate("assets/sfx/monsters/" .. enemy.Enemy.Name .. "/" .. i, {})
                         for k, file in ipairs(files) do
                             --     print("Found "..file)
-                            if explode(file, ".")[2] == "ogg" or explode(file, ".")[2] == "mp3" or explode(file, ".")[2] ==
+                            if explode(file, ".")[#explode(file, ".")] == "ogg" or explode(file, ".")[#explode(file, ".")] == "mp3" or explode(file, ".")[#explode(file, ".")] ==
                                 "wav" then
                                 enemySounds[enemy.Enemy.Name][i][#enemySounds[enemy.Enemy.Name][i] + 1] =
                                     love.audio.newSource(file, "static")
