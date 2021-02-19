@@ -14,13 +14,16 @@ end
 
 function loadEventsBackground(text, amount)
     for i = 1, amount do
+        local rand = love.math.random(0, 1)
+        local sUp
+        if rand == 1 then sUp = true else sUp = false end
         eventRectangles[#eventRectangles+1] = {
             dx = love.math.random(0, uiX),
             dy = love.math.random(0, uiY),
             x = uiX * 0.5,
             y = uiY * 0.5,
             s = love.math.random(),
-            sUp = true,
+            sUp = sUp,
             r = love.math.random(),
             g = love.math.random(),
             b = love.math.random(),
@@ -65,7 +68,7 @@ function drawEvents()
     for i,v in ipairs(eventRectangles) do
         love.graphics.setColor(v.r,v.g,v.b,0.4)
         local boxScale = cerp (10, 100, v.s)
-        love.graphics.rectangle("fill", v.x - boxScale / 2, v.y - boxScale / 2, boxScale, boxScale)
+        love.graphics.rectangle("fill", v.x - boxScale / 2 + boxScale * -1, v.y - boxScale / 2, boxScale, boxScale)
     end
 
 
