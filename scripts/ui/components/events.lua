@@ -1,5 +1,5 @@
 function initEvents()
-    showEvents = true
+    showEvents = false
     event = {
         amount = 1,
         hold = 1,
@@ -12,10 +12,12 @@ function initEvents()
 end
 
 function pushEvent(text, amount)
-    showEvents = true
-    event.finalText = text
-    event.text = ""
-    event.amount = 0
+    if not showEvents then
+        showEvents = true
+        event.finalText = text
+        event.text = ""
+        event.amount = 0
+    end
 end
 
 function updateEvents(dt)
@@ -26,20 +28,20 @@ function updateEvents(dt)
     end
 
     if event.amount < 1 then
-        event.amount = event.amount + 0.6 * dt
+        event.amount = event.amount + 0.7 * dt
         if event.amount >= 1 then
             event.amount = 1
             event.hold = 0
         end
         event.alpha = cerp(0,1,event.amount)
     elseif event.hold < 1 then
-        event.hold = event.hold + 1 * dt
+        event.hold = event.hold + 3 * dt
         if event.hold >= 1 then
             event.hold = 1
             event.release = 0
         end
     elseif event.release < 1 then
-        event.release = event.release + 0.6 * dt
+        event.release = event.release + 0.8 * dt
         if event.release >= 1 then
             event.release = 1
             showEvents = false
@@ -49,7 +51,7 @@ function updateEvents(dt)
 end
 
 function drawEvents()
-    love.graphics.setColor(0,0,0, 0.2 * event.alpha)
+    love.graphics.setColor(0,0,0, 0.1 * event.alpha)
     love.graphics.rectangle("fill", 0, 0, uiX, uiY)
 
     love.graphics.setColor(1,1,1,event.alpha)
