@@ -129,7 +129,6 @@ function love.keyreleased(key)
         shieldDownSfx:play()
     end
     if phase == "game" and (key == keybinds.ATTACK_UP or key == keybinds.ATTACK_DOWN or key == keybinds.ATTACK_LEFT or key == keybinds.ATTACK_RIGHT) then
-        tutorialQuickTriggers.attack.active = true
         checkTargetingRelease(key)
     end
 end
