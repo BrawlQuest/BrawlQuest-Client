@@ -11,7 +11,7 @@ function initEvents()
     }
 end
 
-function pushEvent(text, amount)
+function zoneChange(text, amount)
     if not showEvents then
         showEvents = true
         event.finalText = text

@@ -19,7 +19,7 @@ function updateZoneTitle(dt)
         zoneTitle.title = worldLookup[player.x][player.y].Name 
         -- zoneTitle.alphaUp = true
         -- zoneTitle.alpha = 0
-        pushEvent(worldLookup[player.x][player.y].Name, 0)
+        zoneChange(worldLookup[player.x][player.y].Name, 0)
     end
 
     if zoneTitle.alphaUp then
