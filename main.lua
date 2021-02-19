@@ -111,12 +111,12 @@ function love.load()
     loadMusic()
     initEditWorld()
     initSFX()
-    initCamera()
-    initClouds()
-    initWorldMask()
-    initRangedWeapons()
     initTargeting()
     initEvents()
+    initCamera()
+    initRangedWeapons()
+    initClouds()
+    initWorldMask()
     love.graphics.setFont(textFont)
 end
 
@@ -201,7 +201,6 @@ end
 function love.update(dt)
     steam.runCallbacks()
 
-    Luven.camera:setScale(worldScale - ((worldScale * settPan.opacityCERP) * 0.2))
     totalCoverAlpha = totalCoverAlpha - 1 * dt
     if phase == "login" then
         updateLogin(dt)

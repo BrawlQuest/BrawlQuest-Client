@@ -115,7 +115,8 @@ function love.keypressed(key)
 
             if key == "/" then
                 -- success,msg = love.filesystem.write("availableEnemies.txt", json:encode_pretty(enemies))
-                showEvents = not showEvents
+                -- showEvents = not showEvents
+                loadEventsBackground("I Really want to party with  the boys", 0)
             end
         end
     end

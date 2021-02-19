@@ -36,13 +36,11 @@ function checkIfCollision(x,y)
 end
 
 function drawWorldMask()
-    -- worldMaskTables = {{},{},}
-    local thisWorldScale = worldScale - ((worldScale * settPan.opacityCERP) * 0.2)
     local gridSize = worldMask.gridSize
     local gridScale = 32 / gridSize
-    local cloudScale = 1 / thisWorldScale
-    local width  = math.floor(((love.graphics.getWidth()  * cloudScale)/2) / gridSize) + 2 + (thisWorldScale)
-    local height = math.floor(((love.graphics.getHeight() * cloudScale)/2) / gridSize) + 2 + (thisWorldScale)
+    local cloudScale = 1 / cameraScale
+    local width  = math.floor(((love.graphics.getWidth()  * cloudScale)/2) / gridSize) + 2 + cameraScale
+    local height = math.floor(((love.graphics.getHeight() * cloudScale)/2) / gridSize) + 2 + cameraScale
     local range = worldMask.range * gridSize
 
     for x = ((player.x) * gridScale) - worldMask.range, (player.x * gridScale) + worldMask.range do
