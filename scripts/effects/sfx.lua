@@ -37,7 +37,8 @@ function initSFX()
         ["assets/world/doors/Library.png"] = love.audio.newSource("assets/sfx/player/step/door.mp3", "static"),
         ["assets/world/doors/Potion.png"] = love.audio.newSource("assets/sfx/player/step/door.mp3", "static"),
         ["assets/world/doors/Residential.png"] = love.audio.newSource("assets/sfx/player/step/door.mp3", "static"),
-        ["assets/world/grounds/Water.png"] = love.audio.newSource("assets/sfx/step/water.ogg", "static")
+        ["assets/world/grounds/Water.png"] = love.audio.newSource("assets/sfx/step/water.ogg", "static"),
+        ["assets/world/grounds/Path.png"] = love.audio.newSource("assets/sfx/player/step/path.ogg", "static")
     }
 
     npcSounds = {

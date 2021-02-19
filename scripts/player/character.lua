@@ -13,6 +13,7 @@ player = {
     dhp = 100,
     mhp = 100,
     mana = 100,
+    damageHUDAlpha = 0,
     atk = 1,
     target = {
         x = 0,
@@ -70,6 +71,14 @@ function drawItemIfExists(path, x, y, previousDirection, rotation, imageScale, s
 end
 
 function updateCharacter(dt)
+    if player.damageHUDAlphaUp then
+        player.damageHUDAlpha = player.damageHUDAlpha + 3*dt
+        if player.damageHUDAlpha > 1 then
+            player.damageHUDAlpha = 1
+            player.damageHUDAlphaUp = false
+        end
+    end
+    player.damageHUDAlpha = player.damageHUDAlpha - 0.35*dt
     checkTargeting()
     if me and player.dx and player.dy and player.buddy then
         local pl = {
@@ -194,7 +203,10 @@ function movePlayer(dt)
         if me.Mount.Name ~= "" or worldEdit.open then
             speed = tonumber(v.Mount.Val) or 256 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
         end
-
+        if worldLookup[player.x] and worldLookup[player.x][player.y] and isTileType(worldLookup[player.x][player.y].ForegroundTile, "Path") then
+            speed = speed * 1.4
+        end
+     
         if difference(player.x * 32, player.dx) > 1 then
             if player.dx > player.x * 32 then
                 player.dx = player.dx - speed * dt

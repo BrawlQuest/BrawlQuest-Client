@@ -82,7 +82,7 @@ function drawWorldMask()
                 else -- if not drawing shadows
                     local intensity = range / (range + (difference(range, distance) * 4))
                     if intensity > 0.1 then
-                        love.graphics.setColor(0,0,0, (intensity - 0.2) * (worldMask.opacity + 0.2))
+                        love.graphics.setColor(0.4*player.damageHUDAlpha,0,0, (intensity - 0.2) * (worldMask.opacity + 0.2))
                         love.graphics.rectangle("fill", math.round(x) * gridSize, math.round(y) * gridSize, gridSize, gridSize)
                     end
                     -- worldMaskTables[1][#worldMaskTables[1] + 1] = {x = x, y = y, visable = true, intensity = intensity}
@@ -91,14 +91,14 @@ function drawWorldMask()
                 -- drawRangedWeaponsGrid(x,y)
 
             else -- outside of the circle
-                love.graphics.setColor(0,0,0,worldMask.opacity)
+                love.graphics.setColor(0.4*player.damageHUDAlpha,0,0,worldMask.opacity)
                 -- worldMaskTables[2][#worldMaskTables[2] + 1] = {x = x, y = y,}
                 love.graphics.rectangle("fill", math.round(x) * gridSize, math.round(y) * gridSize, gridSize, gridSize)
             end
         end
     end
 
-    love.graphics.setColor(0,0,0,worldMask.opacity)
+    love.graphics.setColor(0.4*player.damageHUDAlpha,0,0,worldMask.opacity)
 
     width, height = ((love.graphics.getWidth() * cloudScale) * 0.5), ((love.graphics.getHeight() * cloudScale) * 0.5)
     local fourCorners = {
