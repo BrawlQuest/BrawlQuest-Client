@@ -201,7 +201,7 @@ function movePlayer(dt)
         local speed = 64
 
         if me.Mount.Name ~= "" or worldEdit.open then
-            speed = tonumber(v.Mount.Val) or 256 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
+            speed = tonumber(me.Mount.Val) or 256 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
         end
         if worldLookup[player.x] and worldLookup[player.x][player.y] and isTileType(worldLookup[player.x][player.y].ForegroundTile, "Path") then
             speed = speed * 1.4

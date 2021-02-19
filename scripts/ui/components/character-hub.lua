@@ -124,11 +124,11 @@ function drawAvailablePointsPopup(thisX, thisY)
     else
         love.graphics.setColor(0,0,0,0.7)
     end
-    roundRectangle("fill", thisX, thisY, 90, 60, 5)
+    love.graphics.rectangle("fill", thisX, thisY, 150, 60, 5)
     love.graphics.setColor(1,1,1)
     local text
     if player.cp > 1 then text = " Points Available" else text = " Point Available" end
-    love.graphics.printf(player.cp .. text, thisX, thisY + 15, 90, "center", 0, 1)
+    love.graphics.printf(player.cp .. text, thisX, thisY + 4, 150 / 2, "center", 0, 2)
 end
 
 function drawCharacterHubProfile(thisX, thisY)
@@ -160,9 +160,9 @@ function drawCharacterHubStats(thisX, thisY)
     love.graphics.draw(hubImages.statsFG, thisX, thisY)
     
     love.graphics.setColor(0,0,0, cerp(0, 1, characterHub.amount))
-    love.graphics.print(player.cp, thisX + 77 - (characterHub.font:getWidth(player.cp)/2), thisY + 28 - (characterHub.font:getHeight(player.cp)/2))
+    love.graphics.print(player.cp, thisX + 77 - (characterHub.font:getWidth(player.cp)/2), thisY + 27 - (characterHub.font:getHeight(player.cp)/2))
     for i = 0, 2 do
-        love.graphics.print(me[perkTitles[i+1]], thisX + (49 * i) + 3 + 32 - (characterHub.font:getWidth(me[perkTitles[i+1]])/2), thisY + 43 + 42 - (characterHub.font:getHeight(me[perkTitles[i+1]])/2))
+        love.graphics.print(me[perkTitles[i+1]], thisX + (49 * i) + 2 + 32 - (characterHub.font:getWidth(me[perkTitles[i+1]])/2), thisY + 42 + 42 - (characterHub.font:getHeight(me[perkTitles[i+1]])/2))
     end
 end
 
@@ -224,27 +224,18 @@ function drawBattlebarItem(thisX, thisY, item, stats)
         if holdAttack then love.graphics.setColor(1,0,0,1) end
     end
 
-    roundRectangle("fill", thisX, thisY, w, 60, 5)
+    love.graphics.rectangle("fill", thisX, thisY, w, 60, 5)
     love.graphics.setColor(1,1,1)
     if item == "me" then
-        v = me
         love.graphics.setColor(1,1,1,1)
-		-- if v.Color ~= null then love.graphics.setColor(unpack(v.Color)) end
+		-- if v.Color ~= null then love.graphics.setColor(unpack(me.Color)) end
 		love.graphics.draw(playerImg, thisX + 4, thisY + 4)
 		love.graphics.setColor(1,1,1,1)
-		if v and v.HeadArmour then
-			if v.HeadArmourID ~= 0 then
-				drawItemIfExists(v.HeadArmour.ImgPath, thisX + 4, thisY + 4)
-			end
-
-			if v.ChestArmourID ~= 0 then
-				drawItemIfExists(v.ChestArmour.ImgPath, thisX + 4, thisY + 4)
-			end
-
-			if v.LegArmourID ~= 0 then
-				drawItemIfExists(v.LegArmour.ImgPath, thisX + 4, thisY + 4)
-			end
-		end
+        for i, vb in ipairs(armourHub.titles) do
+            if me and me[vb.v] then
+                drawItemIfExists(me[vb.v].ImgPath, thisX + 4, thisY + 4)
+            end
+        end
     elseif item == "hold" then
         love.graphics.print(boolToString(holdAttack), characterHub.nameFont, thisX+(w / 2)-(characterHub.nameFont:getWidth(stats)/2), thisY + 16)
     else
@@ -256,47 +247,36 @@ function drawBattlebarItem(thisX, thisY, item, stats)
 end
 
 function drawArmourHub(thisX, thisY)
-    local w, h = 500, 250
+    local w, h = 300, 180
     local imageScale = 6
     local alpha = cerp(0,1,characterHub.amount)
     thisX, thisY = thisX - cerp(w + 20, 0, characterHub.amount), thisY - h
 
     love.graphics.setColor(0,0,0,0.8 * alpha)
-    roundRectangle("fill", thisX, thisY, w, h, 5)
+    love.graphics.rectangle("fill", thisX, thisY, w, h, 5)
 
     local x, y = thisX - 10, thisY + 30
 
-    v = me
-    love.graphics.setColor(1,1,1,alpha)
-    -- if v.Color ~= null then love.graphics.setColor(unpack(v.Color)) end
-    love.graphics.draw(playerImg, x, y, 0, imageScale)
-    love.graphics.setColor(1,1,1,alpha)
-    if v and v.HeadArmour then
-        if v.HeadArmourID ~= 0 then
-            drawItemIfExists(v.HeadArmour.ImgPath, x, y, "left", 1, imageScale)
-        end
+    x, y = thisX + 10, thisY + 10
+    love.graphics.setColor(1,1,1, alpha)
+    love.graphics.print("Armour Stats", x, y, 0, 2)
+    y = y + 30
+    local bw, bh = w - 20, 36
 
-        if v.ChestArmourID ~= 0 then
-            drawItemIfExists(v.ChestArmour.ImgPath, x, y, "left", 1, imageScale)
-        end
-
-        if v.LegArmourID ~= 0 then
-            drawItemIfExists(v.LegArmour.ImgPath, x, y, "left", 1, imageScale)
-        end
-    end
-
-    x, y = thisX + (32 * imageScale) + 10, thisY + 10
-
-    love.graphics.print("Armour Stats", x + 10, y + 4, 0, 3)
-    y = y + 35
-    local bw, bh = w - (32 * imageScale) - 20, 60
     for i, vb in ipairs(armourHub.titles) do
+        love.graphics.rectangle("fill", x, y, bh, bh, 5)
+        if me and me[vb.v] then -- draw armour pieces
+            drawItemIfExists(me[vb.v].ImgPath, x + 2, y + 2, "left", 1, 1)
+        end
         love.graphics.setColor(0,0,0,0.8 * alpha)
-        roundRectangle("fill", x, y, bw, bh, 5)
+        local xb = x + bh + 10
+        local wb = bw - bh - 10
+        love.graphics.rectangle("fill", xb, y, wb, bh, 5)
         love.graphics.setColor(1,1,1, alpha)
-        love.graphics.print(vb.name .. ":", x + 10, y + 12, 0, 2)
-        love.graphics.printf("+" .. v[vb.v].Val, x + bw - 50, y + 12, 40 / 2, "right", 0, 2)
-        love.graphics.print(v[vb.v].Name, x + 10, y + 12 + 24, 0, 2)
+        
+        love.graphics.print(vb.name .. ":", xb + 10, y + 3, 0, 1)
+        love.graphics.printf("+" .. me[vb.v].Val, xb + wb - 50, y + 3, 40, "right", 0, 1)
+        love.graphics.print(me[vb.v].Name, xb + 10, y + 3 + 12, 0, 1)
         y = y + bh + 8
     end
 end
