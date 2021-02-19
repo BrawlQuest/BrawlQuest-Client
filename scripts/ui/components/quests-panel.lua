@@ -4,9 +4,8 @@ function initQuestsPanel()
         forceOpen = false,
         amount = 0,
         opacity = 0,
-        questGiver = "MORTUS THE WISE",
-        titleFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 10),
-        commentFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
+        titleFont = love.graphics.newFont("assets/ui/fonts/C&C Red Alert [INET].ttf", 13),
+        commentFont = love.graphics.newFont("assets/ui/fonts/C&C Red Alert [INET].ttf", 13),
         titles = {"TRACKING", "BACKLOG", "COMPLETED",},
         spacing = 40,
         titleSpacing = 16,
@@ -158,9 +157,9 @@ function drawQuestsPanelMeter(thisX, thisY, i, j)
     end
 
     love.graphics.setColor(1,1,1,1)    
-    love.graphics.print(quests[i][j].task, questsPanel.commentFont, thisX + 7, thisY + 6)
+    love.graphics.print(quests[i][j].task, questsPanel.commentFont, thisX + 7, thisY + 3)
     local text = quests[i][j].currentAmount .. "/" .. quests[i][j].requiredAmount
-    love.graphics.print(text, questsPanel.commentFont, thisX + width - questsPanel.commentFont:getWidth(text) - 7, thisY + 6)
+    love.graphics.print(text, questsPanel.commentFont, thisX + width - questsPanel.commentFont:getWidth(text) - 7, thisY + 3)
 end
 
 function drawQuestAddButton(thisX, thisY)

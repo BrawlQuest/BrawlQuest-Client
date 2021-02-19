@@ -1,17 +1,18 @@
 function initEvents()
     showEvents = true
     event = {
-        amount = 0,
+        amount = 1,
         hold = 1,
         release = 1,
-        finalText = "NEW EVENT TITLE",
+        finalText = "",
         text = "",
         textAmount = 0,
         alpha = 0,
     }
 end
 
-function loadEventsBackground(text, amount)
+function pushEvent(text, amount)
+    showEvents = true
     event.finalText = text
     event.text = ""
     event.amount = 0
@@ -41,6 +42,7 @@ function updateEvents(dt)
         event.release = event.release + 0.6 * dt
         if event.release >= 1 then
             event.release = 1
+            showEvents = false
         end
         event.alpha = cerp(1,0,event.release)
     end

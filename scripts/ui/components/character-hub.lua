@@ -27,8 +27,8 @@ function initCharacterHub()
     characterHub = {
         backgroundColor = {0,0,0,0.7},
         barColors = {{1,0,0,1}, {0,0.5,1,1}, {1,0.5,0,1}, },
-        font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8),
-        nameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
+        font = love.graphics.newFont("assets/ui/fonts/C&C Red Alert [INET].ttf", 13),
+        nameFont = love.graphics.newFont("assets/ui/fonts/C&C Red Alert [INET].ttf", 13),
         forceOpen = false,
         amount = 0,
         flashy = 0,
@@ -128,7 +128,7 @@ function drawAvailablePointsPopup(thisX, thisY)
     love.graphics.setColor(1,1,1)
     local text
     if player.cp > 1 then text = " Points Available" else text = " Point Available" end
-    love.graphics.printf(player.cp .. text, thisX, thisY + 15, 90 / 2, "center", 0, 2)
+    love.graphics.printf(player.cp .. text, thisX, thisY + 15, 90, "center", 0, 1)
 end
 
 function drawCharacterHubProfile(thisX, thisY)
@@ -140,7 +140,7 @@ function drawCharacterHubProfile(thisX, thisY)
     if player.cp > 0 then love.graphics.setColor(1,0,0,1) end
     love.graphics.draw(hubImages.profileFG, thisX, thisY)
     if player.cp > 0 then love.graphics.setColor(1,1,1,1) else love.graphics.setColor(0,0,0,1) end
-    love.graphics.print(tostring(me.LVL), thisX + 56 - math.floor(characterHub.font:getWidth(tostring(me.LVL))/2), thisY + 85 - (characterHub.font:getHeight(tostring(me.LVL))/2))
+    love.graphics.print(tostring(me.LVL), thisX + 56 - math.floor(characterHub.font:getWidth(tostring(me.LVL))/2), thisY + 84 - (characterHub.font:getHeight(tostring(me.LVL))/2))
 end
 
 function drawCharacterHubStats(thisX, thisY)
@@ -187,7 +187,7 @@ function drawCharacterHubMeters(thisX, thisY)
         love.graphics.setColor(1,1,1,1)
         love.graphics.draw(hubImages.meterIcons[i+1], thisX, thisY + spacing)
         love.graphics.draw(hubImages.meterNames[i+1], thisX, thisY + spacing)
-        love.graphics.print(math.floor(meterLevels[i+1]), thisX + 198 - (characterHub.font:getWidth(math.floor(meterLevels[i+1]))/2), thisY + spacing + 6)
+        love.graphics.print(math.floor(meterLevels[i+1]), thisX + 198 - (characterHub.font:getWidth(math.floor(meterLevels[i+1]))/2), thisY + spacing + 3)
     end
 end
 

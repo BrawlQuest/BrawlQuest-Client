@@ -230,9 +230,9 @@ function drawQuestHubMetersBar(thisX, thisY, i)
             roundRectangle("fill", thisX, thisY, width / quests[1][i].requiredAmount * quests[1][i].currentAmount, 19, 4, table)
         end
         love.graphics.setColor(1,1,1,1)    
-        love.graphics.print(quests[1][i].task, questsPanel.commentFont, thisX + 7, thisY + 6)
+        love.graphics.print(quests[1][i].task, questsPanel.commentFont, thisX + 7, thisY + 3)
         local text = quests[1][i].currentAmount .. "/" .. quests[1][i].requiredAmount
-        love.graphics.print(text, questsPanel.commentFont, thisX + width - questsPanel.commentFont:getWidth(text) - 7, thisY + 6)
+        love.graphics.print(text, questsPanel.commentFont, thisX + width - questsPanel.commentFont:getWidth(text) - 7, thisY + 3)
     end
     if questHub.selectedQuest == i then
         love.graphics.draw(questHub.images.arrow, thisX - 18, thisY - 1)

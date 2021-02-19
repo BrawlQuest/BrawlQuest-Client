@@ -55,36 +55,40 @@ end
 
 function roundRectangle(type, x, y, width, height, radius, table)
     radius = radius or 0
-    table = table or {true, true, true, true}
-	--RECTANGLES
-	love.graphics.rectangle(type, x + radius, y + radius, width - (radius * 2), height - radius * 2)
-	love.graphics.rectangle(type, x + radius, y, width - (radius * 2), radius)
-	love.graphics.rectangle(type, x + radius, y + height - radius, width - (radius * 2), radius)
-	love.graphics.rectangle(type, x, y + radius, radius, height - (radius * 2))
-	love.graphics.rectangle(type, x + (width - radius), y + radius, radius, height - (radius * 2))
-	
-    --ARCS
-    if table[1] then
-        love.graphics.arc(type, x + radius, y + radius, radius, math.rad(-180), math.rad(-90))
-    else
-        love.graphics.rectangle(type, x, y, radius, radius)
-    end
+    if table then
+        table = table or {true, true, true, true}
+        --RECTANGLES
+        love.graphics.rectangle(type, x + radius, y + radius, width - (radius * 2), height - radius * 2)
+        love.graphics.rectangle(type, x + radius, y, width - (radius * 2), radius)
+        love.graphics.rectangle(type, x + radius, y + height - radius, width - (radius * 2), radius)
+        love.graphics.rectangle(type, x, y + radius, radius, height - (radius * 2))
+        love.graphics.rectangle(type, x + (width - radius), y + radius, radius, height - (radius * 2))
+        
+        --ARCS
+        if table[1] then
+            love.graphics.arc(type, x + radius, y + radius, radius, math.rad(-180), math.rad(-90))
+        else
+            love.graphics.rectangle(type, x, y, radius, radius)
+        end
 
-    if table[2] then
-        love.graphics.arc(type, x + width - radius, y + radius, radius, math.rad(-90), math.rad(0))
-    else
-        love.graphics.rectangle(type, x + width - radius, y, radius, radius)
-    end
+        if table[2] then
+            love.graphics.arc(type, x + width - radius, y + radius, radius, math.rad(-90), math.rad(0))
+        else
+            love.graphics.rectangle(type, x + width - radius, y, radius, radius)
+        end
 
-    if table[4] then
-        love.graphics.arc(type, x + radius, y + height - radius, radius, math.rad(-180), math.rad(-270))
-    else
-        love.graphics.rectangle(type, x, y + height - radius, radius, radius)
-    end
+        if table[4] then
+            love.graphics.arc(type, x + radius, y + height - radius, radius, math.rad(-180), math.rad(-270))
+        else
+            love.graphics.rectangle(type, x, y + height - radius, radius, radius)
+        end
 
-    if table[3] then
-        love.graphics.arc(type, x + width - radius , y + height - radius, radius, math.rad(0), math.rad(90))
+        if table[3] then
+            love.graphics.arc(type, x + width - radius , y + height - radius, radius, math.rad(0), math.rad(90))
+        else
+            love.graphics.rectangle(type, x + width - radius , y + height - radius, radius, radius)
+        end
     else
-        love.graphics.rectangle(type, x + width - radius , y + height - radius, radius, radius)
+        love.graphics.rectangle(type, x, y, width, height, radius)
     end
 end
