@@ -81,7 +81,7 @@ function drawCharacterCreator()
 
     if cs.isTyping then 
         love.graphics.setColor(1,1,1,cs.dualCERP)
-    elseif isMouseOver(thisX, thisY + 25, cs.cw, cs.font:getHeight() + cs.s * 2) and not characters[cs.selectedCharacter].Name then
+    elseif characters[cs.selectedCharacter] and isMouseOver(thisX, thisY + 25, cs.cw, cs.font:getHeight() + cs.s * 2) and not characters[cs.selectedCharacter].Name then
         love.graphics.setColor(43 / 255, 134 / 255, cs.dualCERP)
         cs.overName = true
     else
