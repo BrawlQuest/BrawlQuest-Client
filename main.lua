@@ -16,7 +16,6 @@ require "scripts.effects.camera"
 require "scripts.effects.clouds"
 require "scripts.effects.world-mask"
 require "scripts.ui.hud_controller"
-
 require "scripts.ui.components.character-hub"
 require "scripts.ui.components.crafting"
 require "scripts.ui.components.toolbar-inventory"
@@ -28,6 +27,8 @@ require "scripts.ui.components.chat"
 require "scripts.ui.components.toolbar"
 require "scripts.ui.components.zone-titles"
 require "scripts.ui.components.profile"
+require "scripts.ui.components.hotbar"
+require "scripts.ui.components.events"
 require "scripts.libraries.api"
 require "scripts.libraries.utils"
 require "scripts.libraries.colorize"
@@ -56,7 +57,8 @@ newOutliner = require 'scripts.libraries.outliner'
 
 version = "Pre-Release" 
 versionType = "dev" -- "dev" for quick login, "release" for not
-versionNumber = "Beta 1.1" -- very important for settings
+versionNumber = "Beta 1.0.6" -- very important for settings
+
 phase = "login"
 
 blockMap = {}
@@ -109,11 +111,12 @@ function love.load()
     loadMusic()
     initEditWorld()
     initSFX()
+    initTargeting()
+    initEvents()
     initCamera()
+    initRangedWeapons()
     initClouds()
     initWorldMask()
-    initRangedWeapons()
-    initTargeting()
     love.graphics.setFont(textFont)
 end
 
@@ -198,7 +201,6 @@ end
 function love.update(dt)
     steam.runCallbacks()
 
-    Luven.camera:setScale(worldScale - ((worldScale * settPan.opacityCERP) * 0.2))
     totalCoverAlpha = totalCoverAlpha - 1 * dt
     if phase == "login" then
         updateLogin(dt)
@@ -227,6 +229,7 @@ function love.update(dt)
         updateAuras(dt)
         updateMusic(dt)
         updateLoot(dt)
+        updateEvents(dt)
         -- updateRangedWeapons(dt)
         if showNPCChatBackground then updateNPCChat(dt) end
         -- if showClouds then updateClouds(dt) end

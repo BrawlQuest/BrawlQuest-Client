@@ -45,11 +45,7 @@ function initSettings()
     oldTargeting = false
 
     useItemColor = {}
-    hotbar = {}
-    for i = 1, 7 do
-        hotbar[#hotbar + 1] = {item = null,}
-        useItemColor[#useItemColor + 1] = 0 
-    end
+    initHotbar()
     
     info = love.filesystem.getInfo("settings.txt")
 
@@ -86,6 +82,7 @@ function initSettings()
     end
 
     setWindowOptions()
+    checkHotbarChange()
 
     controls = {
         title = "Controls",

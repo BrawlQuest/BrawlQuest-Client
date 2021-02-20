@@ -21,11 +21,10 @@ function updateClouds(dt)
 end
 
 function drawClouds()
-    local thisWorldScale = worldScale - ((worldScale * settPan.opacityCERP) * 0.2)
     local noiseFactor = 0.5 * (cloud.opacity + 0.1)
     local gridSize = 32 / worldScale
     local gridScale = 32 / gridSize
-    local cloudScale = 1 / thisWorldScale
+    local cloudScale = 1 / cameraScale
     local width  = math.floor(((love.graphics.getWidth()  * cloudScale)/2) / gridSize) + 2 + (worldScale)
     local height = math.floor(((love.graphics.getHeight() * cloudScale)/2) / gridSize) + 2 + (worldScale)
     local movement = {x = cloud.movement.x * gridScale, y = cloud.movement.y * gridScale}

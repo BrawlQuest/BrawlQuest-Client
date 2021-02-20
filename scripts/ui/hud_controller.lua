@@ -149,6 +149,7 @@ function updateHUD( dt )
         if inventory.open or inventory.forceOpen then velyInventory = velyInventory - velyInventory * math.min( dt * 15, 1 ) end
         updateTooltip(dt)
         updateToolBarInventory(dt)
+        updateHotbar(dt)
         updateCharacterHub(dt)
         updateQuestHub(dt)
         updateCrafting(dt) -- fine
@@ -179,15 +180,14 @@ function drawHUD()
             local i = 1
             love.graphics.scale(scale)
             if showNPCChatBackground then drawNPCChatBackground((uiX/2)/i - 128, (uiY/2)/i - 128) end
-            
+            drawToolBarInventory(0, uiY/i) 
             drawCharacterHub(0, uiY/i)
-            drawToolBarInventory(0, uiY/i)
             drawQuestHub(uiX/i, uiY/i)
             if questsPanel.open then drawQuestsPanel((uiX/i) - 313, (uiY/i) + cerp(-14, 0 - ((uiY/1.25) - 15), questsPanel.amount)) end
             if crafting.open then drawCrafting() end
             drawTooltip()
             drawAuraHeadings()
-        
+            if showEvents then drawEvents() end
         love.graphics.pop()
 
         love.graphics.push() -- chat and quests scaling TODO: Quests
@@ -196,7 +196,7 @@ function drawHUD()
             if showChat then
                 drawChatPanel(uiX/i, (uiY - cerp(cerp(0, 100, questHub.amount), ((uiY/1.25)-15), questsPanel.amount)) / i)
             end
-             drawZoneTitle()
+            drawZoneTitle()
         love.graphics.pop()
     end
     drawTutorial()

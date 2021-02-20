@@ -15,10 +15,11 @@ function drawZoneTitle()
 end
 
 function updateZoneTitle(dt)
-    if worldLookup[player.x] and worldLookup[player.x][player.y] and worldLookup[player.x][player.y].Name ~= zoneTitle.title then
+    if worldLookup[player.x] and worldLookup[player.x][player.y] and worldLookup[player.x][player.y].Name ~= zoneTitle.title and worldLookup[player.x][player.y].Name  ~= "Spooky Forest" and worldLookup[player.x][player.y].Name ~= "" then
         zoneTitle.title = worldLookup[player.x][player.y].Name 
-        zoneTitle.alphaUp = true
+        -- zoneTitle.alphaUp = true
         -- zoneTitle.alpha = 0
+        zoneChange(worldLookup[player.x][player.y].Name, 0)
     end
 
     if zoneTitle.alphaUp then

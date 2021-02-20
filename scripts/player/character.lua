@@ -44,10 +44,11 @@ player = {
 newInventoryItems = {}
 me = {}
 
-function drawItemIfExists(path, x, y, previousDirection, rotation, stencil, width)
+function drawItemIfExists(path, x, y, previousDirection, rotation, imageScale, stencil)
+    imageScale = imageScale or 1
     local offsetX = 0
     if not rotation then
-        rotaiton = 1
+        rotation = 1
         if previousDirection and previousDirection == "left" then
             rotation = -1
             offsetX = 32
@@ -63,9 +64,9 @@ function drawItemIfExists(path, x, y, previousDirection, rotation, stencil, widt
     end
 
     if stencil then
-        love.graphics.draw(itemImg[path], stencil, x + offsetX, y, player.wobble, rotation, 1, 0, 0)
+        love.graphics.draw(itemImg[path], stencil, x + offsetX, y, 0, rotation * imageScale, imageScale)
     else
-        love.graphics.draw(itemImg[path], x + offsetX, y, player.wobble, rotation, 1, 0, 0)
+        love.graphics.draw(itemImg[path], x + offsetX, y, 0, rotation * imageScale, imageScale)
     end
 end
 
@@ -127,7 +128,6 @@ function worldCollison(x, y)
         if me.Mount and string.find(me.Mount.Name, "boat") and isTileType(worldLookup[x][y].ForegroundTile, "Water") then
             output = false
         elseif string.find(me.Mount.Name, "boat") and not worldLookup[x][y].Collision then
-
             output = true
         end
     end
@@ -199,8 +199,9 @@ function movePlayer(dt)
 
     else -- movement smoothing
         local speed = 64
+
         if me.Mount.Name ~= "" or worldEdit.open then
-            speed = tonumber(v.Mount.Val) or 256 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
+            speed = tonumber(me.Mount.Val) or 256 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
         end
         if worldLookup[player.x] and worldLookup[player.x][player.y] and isTileType(worldLookup[player.x][player.y].ForegroundTile, "Path") then
             speed = speed * 1.4
@@ -282,10 +283,10 @@ function updateInventory(response)
             v = copy(v)
             for o, k in ipairs(inventoryAlpha) do
                 if k.Item.Name == v.Item.Name then -- and v.Inventory.Amount == k.Inventory.Amount then
-                    print("You have " .. k.Inventory.Amount .. " of this item, and the server says you now have " ..
-                              v.Inventory.Amount)
+                    -- print("You have " .. k.Inventory.Amount .. " of this item, and the server says you now have " ..
+                    --           v.Inventory.Amount)
                     v.Inventory.Amount = v.Inventory.Amount - k.Inventory.Amount
-                    print("That's a change of " .. v.Inventory.Amount .. " of it.")
+                    -- print("That's a change of " .. v.Inventory.Amount .. " of it.")
                     if v.Inventory.Amount <= 0 then
                         newItem = false
                     end
@@ -299,7 +300,7 @@ function updateInventory(response)
     end
 
     for i,k in ipairs(newInventoryItems) do
-        print(k.Item.Name)
+        -- print(k.Item.Name)
         love.audio.play(enemyHitSfx)
         burstLoot((player.x*32)-16, (player.y*32)-16, k.Inventory.Amount, k.Item.ImgPath)
         newInventoryItems = {}

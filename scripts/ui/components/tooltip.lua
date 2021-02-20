@@ -57,8 +57,7 @@ function setItemTooltip(item)
     elseif item.Type == "buddy" then
         valString = "Buddy"
     end
-
-    setTooltip(item.Name, valString .. "\n" .. item.Desc)
+    setTooltip(item.Name,  valString .. "  Lvl: " .. item.Worth .. "+ \n" .. item.Desc )
 end
 
 function drawTooltip(thisX, thisY)
@@ -69,7 +68,7 @@ function drawTooltip(thisX, thisY)
     love.graphics.rectangle("fill", tooltip.x - tooltip.padding,tooltip.y - tooltip.padding, 150 + (tooltip.padding*2), getToolTipTitleHeight(tooltip.title) + getToolTipDescHeight(tooltip.desc) + (tooltip.padding*2) + tooltip.spacing)
     love.graphics.setColor(1,1,1,tooltip.alpha)
     love.graphics.printf(tooltip.title, npcChatFont, tooltip.x,tooltip.y,150,"left")
-    love.graphics.printf(tooltip.desc, playerNameFont, tooltip.x,tooltip.y+getToolTipTitleHeight(tooltip.title)+tooltip.spacing,150,"left")
+    love.graphics.printf(tooltip.desc, characterHub.font, tooltip.x, tooltip.y + getToolTipTitleHeight(tooltip.title) + tooltip.spacing, 150, "left")
     love.graphics.setColor(1,1,1,1)
 end
 
@@ -79,8 +78,8 @@ function getToolTipTitleHeight(title)
 end
 
 function getToolTipDescHeight(title)
-    local width, lines = playerNameFont:getWrap( title, 150 )
-    return ((#lines)*(playerNameFont:getHeight()))
+    local width, lines = characterHub.font:getWrap( title, 150 )
+    return ((#lines)*(characterHub.font:getHeight()))
 end
 
 function updateTooltip(dt)

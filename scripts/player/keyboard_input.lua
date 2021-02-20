@@ -60,7 +60,7 @@ function love.keypressed(key)
                 crafting.selectedField = {i = 0, j = 0}
             end
         else
-            checkInventoryKeyPressed(key)
+            checkHotbarKeyPressed(key)
             checkTargetingPress(key)
 
             if key == "return" and not isSettingsWindowOpen then isTypingInChat = true end
@@ -114,7 +114,9 @@ function love.keypressed(key)
             end
 
             if key == "/" then
-                success,msg = love.filesystem.write("availableEnemies.txt", json:encode_pretty(enemies))
+                -- success,msg = love.filesystem.write("availableEnemies.txt", json:encode_pretty(enemies))
+                -- showEvents = not showEvents
+                zoneChange("I Really want to party with  the boys", 0)
             end
         end
     end

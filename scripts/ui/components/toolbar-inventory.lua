@@ -90,22 +90,6 @@ function updateToolBarInventory(dt)
             panelMovement(dt, inventory, -1)
         end
     end
-
-    if useItemColorChanged then
-        local colorCount = 0
-        for i, v in ipairs(useItemColor) do
-            if v > 0 then
-                useItemColor[i] = v - 2 * dt
-            else
-                useItemColor[i] = 0
-            end
-            colorCount = colorCount + v
-        end
-
-        if colorCount == 0 then 
-            useItemColorChanged = false
-        end
-    end
         
     if inventory.open then 
         if getFullUserInventoryFieldHeight() * scale > (uiY - 97 - 50 - 50) * scale then
@@ -145,18 +129,8 @@ function getItemType(v)
 end
 
 function getInventory()
-
-    userInventory = {}
-    userInventory[1] = {}
-    userInventory[2] = {}
-    userInventory[3] = {}
-    userInventory[4] = {}
-    userInventory[5] = {}
-    userInventory[6] = {}
-    userInventory[7] = {}
-    userInventory[8] = {}
+    userInventory = {{}, {}, {}, {}, {}, {}, {}, {}, }
     inventoryFieldLength = {0, 0, 0, 0, 0, 0, 0, 0,}
-
 
     for i, v in ipairs(inventoryAlpha) do
         local t = getItemType(v)
@@ -200,50 +174,11 @@ function getFullUserInventoryFieldHeight()
     return j
 end
 
-function checkInventoryKeyPressed(key)
-    for i,v in ipairs(hotbar) do
-        if key == tostring(i) or (i == 7 and key == "space") then
-            
-            if inventory.isMouseOverInventoryItem == true then
-                hotbar[i].item = selectedItem
-                break
-            else
-                if v.item ~= nil and v.item.ID ~= nil and not isItemUnusable(v.item) and not usedItemThisTick then
-                    print(json:encode_pretty(v.item))
-                    useItemColor[i] = 1
-                    useItemColorChanged = true
-                    apiGET("/item/" .. player.name .. "/" .. v.item.ID)
-                    usedItemThisTick = true
-                    break
-                end
-            end
-        end
-    end
-end
-
 function checkInventoryMousePressed(button)
-
     if selectedItem ~= nil and selectedItem.ID ~= nil and inventory.isMouseOverInventoryItem then
         if  not usedItemThisTick then
             apiGET("/item/" .. player.name .. "/" .. selectedItem.ID)
             usedItemThisTick = true
-        end
-    end
-
-    if inventory.mouseOverButtonsAmount > 0 then
-        for i,v in ipairs(hotbar) do
-            if i == inventory.mouseOverButtonsAmount and v.item ~= nil and v.item.ID ~= nil and  not usedItemThisTick  then
-                if button == 1  then
-                    useItemColor[i] = 1
-                    useItemColorChanged = true
-                    apiGET("/item/" .. player.name .. "/" .. v.item.ID)
-                    usedItemThisTick = true
-                    break
-                elseif button == 2 then
-                    hotbar[i] = {item = null,}
-                    break
-                end
-            end
         end
     end
 end
@@ -257,12 +192,11 @@ function getItemAmount(item)
             end
         end
     end
-
     return amount
 end
 
 function isItemUnusable(item)
-    if item and me.LVL then
+    if item and me.LVL and not debugItems then
         return item.Worth * 1 > me.LVL
     else
         return false
