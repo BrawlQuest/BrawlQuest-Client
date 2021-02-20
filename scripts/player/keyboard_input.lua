@@ -74,6 +74,7 @@ function love.keypressed(key)
             end
 
             if key == "tab" then
+                zoneChange("UI Hidden. Press TAB to turn UI back on.", 2)
                 showHUD = not showHUD
                 settings[3][1].v = showHUD
                 writeSettings()
@@ -113,11 +114,7 @@ function love.keypressed(key)
                 writeSettings()
             end
 
-            if key == "/" then
-                -- success,msg = love.filesystem.write("availableEnemies.txt", json:encode_pretty(enemies))
-                -- showEvents = not showEvents
-                zoneChange("I Really want to party with  the boys", 0)
-            end
+
         end
     end
 

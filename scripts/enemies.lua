@@ -242,17 +242,17 @@ function drawEnemies()
                 love.graphics.setColor(1, 1, 1, intensity)
 
                 -- print( "\"" .. v.TargetName .. "\" \"" .. me.Name .. "\"")
-                if v.TargetName == player.name then
+                if v.TargetName == player.name and v.Enemy.CanMove then
                     if nextTick >= 1 then
                         enemies[i].linesDrawable = true
                     end
                     if enemies[i].linesDrawable == true and v.IsAggro then
-                        love.graphics.setColor(1, 0, 0, nextTick * intensity)
-                        love.graphics.line(v.dx + 16, v.dy + 16, player.dx + 16, player.dy + 16)
-                        love.graphics.setColor(1, 1, 1, intensity)
-                        if nextTick >= 1 and not love.keyboard.isDown(keybinds.SHIELD) then
-                            boneSpurt(player.dx + 16, player.dy + 16, 2, 40, 1, 1, 1, "me")
+                        if (v.Enemy.Range+1)*32 >= distanceToPoint(v.dx,v.dy,player.dx,player.dy) then
+                            love.graphics.setColor(1, 0, 0, nextTick * intensity)
+                            love.graphics.line(v.dx + 16, v.dy + 16, player.dx + 16, player.dy + 16)
+                            love.graphics.setColor(1, 1, 1, intensity)
                         end
+                   
                         outlinerOnly:draw(2, enemyImg[v.Enemy.Name], enemyQuads[v.Enemy.Name], v.dx + offsetX, v.dy, 0, rotation, 1, 0, 0)
                     end
                 else

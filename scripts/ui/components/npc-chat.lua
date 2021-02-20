@@ -1,184 +1,16 @@
 npcChatBackground = {"Grass", "Tree"}
 
 showNPCChatBackground = false
-
---[[    bartenderNPCChat = {
-        name = "Bartender Fred",
-        img = "assets/npc/Bartender.png",
-        reputation = 1.0,
-        conversation = {{
-            title = "So you're the fella the King's Guard sent then, aye? About time...",
-            options = {{"What's the issue?", 2}, {"Cut the attitude. I'm here to help.", 3, -0.2}}
-        }, {
-            title = "My patrons have been complaining about a foul smell in the corner of my beer garden.",
-            options = {{"How long has this been going on for?", 4}, {"Are you sure that isn't just other patrons?", 5, 0.2}}
-        }, {
-            title = "I've been serving this town for 23 years. I'll take whatever attitude I want towards you lazy peons.",
-            options = {{"You won't be getting any help from me, then.", 1}, {"Okay, okay, I'm sorry. What's the issue?", 2}}
-        }, {
-            title = "A few days now. Our garden backs off onto a forest and we'd investigate it ourselves but the spiders there are getting real viscious looking.",
-            options = {{"Spiders?", 6}, {"I'm on the case", 1}}
-        }, {
-            title = "Hah! It could well be.",
-            options = {{"I'm on the case", 1}, {"How long ago did people notice the smell?", 4}}
-        }, {
-            title = "Spiders. Big ones, too.",
-            options = {{"Does the King's Guard know?", 7}, {"How big can a spider really be?", 8},
-                    {"Big man like yourself... I'm surprised you haven't just gone and squished em'.", 9, -0.2}}
-        }, {
-            title = "Er, well, no. News like that isn't great for business and as you know every monster report is made public knowledge.",
-            options = {{"With good reason! You're endagering the entire town!", 10, -0.1},
-                    {"Right... so these spiders. How big are they?", 8}}
-        }, {
-            title = "THEY'RE BIG! We aren't talking about no cup and paper throw away insects here.",
-            options = {{"Technically spiders are arachnids, not insects.", 11, -0.2},
-                    {"I see. I guess I'll grab a sword and take a look, then.", 1}}
-        }, {
-            title = "BIG MAN? How dare you. My wife cooks delicious pies, what am I meant to do? 'Big man'. Good grief.",
-            options = {{"He said, belly jiggling.", 11, -0.3},
-                    {"I'm sure she does. So these spiders are pretty big then?", 8}}
-        }, {
-            title = "A TOWN THAT I HELPED BUILD! You younguns can barely even hope to understand the history of this place.",
-            options = {{"Fair comment, really. So these spiders are rather large then?", 8, 0.1},
-                    {"Oh, please. You contribute nothing but booze. I bet you couldn't even begin to explain how to build a house.",
-                        11, -0.3}}
-        }, {
-            title = "And now you insult my intelligence. Great. You know what: nevermind, I'll deal with it myself.",
-            options = {{"Righto.", 1}}
-        }, {
-            title = "The King's Guard really are letting anyone be an adventurer now, aren't they? Manners notwithstanding.",
-            {
-                options = {{"Listen, fatty, just tell me how big those spiders are.", 8}}
-            }
-        }}}
-
-    mortusNPCChat = {
-        img = "assets/npc/Mortus.png",
-        reputation = 10.0,
-        conversation = {{
-            title = "Hey rookie. How can I help?",
-            options = {{"Heard any rumours?", 2}, {"Why do the targets yell at me?", 3}}
-        }, {
-            title = "Rumours? How cliché. Bartender Fred has been asking after someone from the King's Guard for a few days now. You could check that out?",
-            options = {{"King's Guard? But I'm not King's Guard.", 4}, {"Alright. Anything to tell about him?", 5}}
-        }, {
-            title = "They say that the souls of those who could've been saved if only they spent more time practicing their swordsmanship haunt those wooden structures.",
-            options = {{"Er... do you believe that?", 6}}
-        }, {
-            title = "Yeah, but he won't know that. The King's Guard are focused on the bandit raids right now. We can't be dealing with some boozy publican.",
-            options = {{"Boozey, is he?", 5}}
-        }, {
-            title = "Sort of. He has a fairly nasty temper and is especially sensitive about his weight.",
-            options = {{"Don't mention the beer gut. Got it.", 1}}
-        }, {
-            title = "Nah. The truth is that we cast some spells on them to make them yell like a real monster would. Strikes fear into the hearts of gullible rookies.",
-            options = {{"Who are you calling gullible?", 7}, {"Oh, haha, er, yeah, of course...", 1}},
-        }, {
-            title = "Chill out, rookie. You can't say it didn't make you jump the first time you heard it.",
-            options = {{"As a matter of fact it didn't!", 8, -0.1}, {"Alright, fair enough, you got me.", 1, 0.1},
-                    {"Meh.", 1}}
-        }, {
-            title = "Listen. If you want to get ahead here you've got to at least try and get on with me.",
-            options = {{"Well maybe I don't want to get along with you.", 9, -100},
-                    {"My apologies. I WAS scared the first time. I'm just trying to be tough.", 1, 0.1}}
-        },
-    {
-        title = "I guess not everyone can be succesful. Stay out of my way, kid.",
-        options = {}
-    }}
-    }
-
-
-    blacksmithChat = {
-        img = "assets/npc/Blacksmith.png",
-        reputation = 1.0,
-        conversation = {
-            {
-                title = "King's Guard making you craft your own tools now, are they? Or are you here to pay my last invoice?",
-                options = {
-                    {
-                        "I'm not King's Guard.",
-                        2,
-                    },
-                    {
-                        "King's Guard owe you money?",
-                        3,
-                    },
-                },
-            },
-            {
-                title = "Ah, well that's a shame. How can I help you, then?",
-                    options = {
-                        {
-                            "I'm interested in learning about blacksmithing.",
-                            4,
-                        },
-                        {
-                            "Bartender Fred is worried about some nasty smells.",
-                            5,
-                        }
-                    }
-            },
-            {
-                title = "When do they not? I bless them for their protection against the horrors outside of our wall but they sure aren't great at paying for the things they order.",
-                    options = {
-                        {"How much are you down?",
-                        6,},
-                        {
-                            "Well, sorry to say that I'm no Kings Guard.",
-                            2,
-                        }
-                    }
-            },
-            {
-                title = "Well then! That's great to hear. Well, given my fiscal situation with the King's Guard you're going to need to gather your own supplies. Bring me some stone and wood and I'll teach you to craft.",
-                options = {
-                {  "Stone and wood? Got it.",1}
-                }
-            },
-            {
-                title = "Smells? Hah! He isn't complaining about my ovens, that's for sure. Fred loves them. I should know: I was his best man. Sorry pal, but you're in the wrong place if you're investigating the stench of his beer garden.",
-                options = {
-                { "Ah. Sorry.",1}
-                }
-            },
-            {
-                title = "Years of work, now. Years.",
-                options = {
-                    {"Sorry to hear it. Is there any way I can help?",7},
-                    {"Sad to hear it, pal.",7}
-                }
-            },
-            {
-                title = "It wouldn't be quite so hard if I had more apprentices to teach up. It'd lessen the burden significantly, that's for sure.",
-                options = {
-                    {
-                        "Apprentices? I'd be open to learning about blacksmithing!",4
-                    },
-                    {
-                        "That makes sense. Sad to say I don't know anyone interested in weapon forging.",8,
-                    }
-                }
-            },
-            {
-                title = "Aye, no worries pal. If you ever do... you know who to come to.",
-                    options = {
-                        {
-                            "Got it.",1
-                        }
-                    }
-            }
-        }
-    }
-]]
 npcChat = blacksmithChat
 currentConversationStage = 1
 currentConversationTitle = {}
 currentConversationOptions = {}
+activeConversations = {}
 chatXpos = -64
 chatOpacity = 0
 nextChar = 0.1
 chatWritten = ""
+currentNPC = 0
 
 npcChatSFX = {}
 
@@ -399,7 +231,7 @@ function continueConversation()
                 npcChat.Title = ""
             else
                 local b = {}
-                c, h = http.request{url = api.url.."/conversation/"..v[2].."/"..username, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
+                c, h = http.request{url = api.url.."/conversation/"..v[2].."/"..username.."/"..currentNPC, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
                 if b ~= nil then
                     npcChat = json:decode(b[1])
                     local optionString = npcChat.Options

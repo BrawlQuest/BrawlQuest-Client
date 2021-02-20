@@ -57,7 +57,7 @@ newOutliner = require 'scripts.libraries.outliner'
 
 version = "Pre-Release" 
 versionType = "dev" -- "dev" for quick login, "release" for not
-versionNumber = "Beta 1.0.6" -- very important for settings
+versionNumber = "Beta 1.1" -- very important for settings
 
 phase = "login"
 
@@ -153,8 +153,20 @@ function love.draw()
             if showClouds then drawClouds() end     
             for i,v in ipairs(npcs) do
                 if distanceToPoint(player.x,player.y,v.X,v.Y) <= 1 and not showNPCChatBackground  and v.Conversation ~= "" then
-                    drawTextBelowPlayer("Press "..keybinds.INTERACT.." to talk")
+                    local isQuestCompleter = false
+                    for k,q in ipairs(quests[1]) do
                     
+                            if q.rawData.Quest.ReturnNPCID == v.ID and q.currentAmount == q.requiredAmount then
+                                drawTextBelowPlayer("Press "..keybinds.INTERACT.." to complete quest")
+                                isQuestCompleter = true
+                            end
+                       
+                    end
+
+                    if not isQuestCompleter then
+                        drawTextBelowPlayer("Press "..keybinds.INTERACT.." to talk")
+                    end
+                        
                     inventory.notNPC = false
                     openTutorial(4)
                 end
@@ -320,6 +332,7 @@ function love.update(dt)
             player.buddy = me.Buddy
             if player.hp > me.HP then
                 player.damageHUDAlphaUp = true
+                boneSpurt(player.dx + 16, player.dy + 16, player.hp - me.HP, 40, 1, 1, 1, "me")
             end
             player.hp = me.HP
             player.owedxp = me.XP - player.xp
@@ -333,6 +346,34 @@ function love.update(dt)
             end
             player.name = me.Name
             newEnemyData(response['Enemies'])
+            quests = {
+                {},
+                {},
+                {}
+            }
+            for i,v in ipairs(response['MyQuests']) do
+                local trackedVar = 2
+                if v.Tracked == 1 then
+                    trackedVar = 1
+                end
+                quests[v.Tracked][#quests[v.Tracked]+1] = {
+                    title = v.Quest.Title,
+                    comment = v.Quest.Desc,
+                    profilePic = v.Quest.ImgPath,
+                    giver = "",
+                    requiredAmount = v.Quest.ValueRequired,
+                    currentAmount = v.Progress,
+                    rawData = v
+                }
+                if v.Quest.Type == "kill" then
+                    quests[v.Tracked][#quests[v.Tracked]].task = "Kill "..v.Quest.ValueRequired.."x "..v.Quest.Value
+                elseif v.Quest.Type == "gather" then
+                 
+                        quests[v.Tracked][#quests[v.Tracked]].task = "Gather "..v.Quest.ValueRequired.."x "..v.Quest.Value
+                end
+            end
+
+            activeConversations = response['ActiveConversations']
             if response['Tick'] ~= previousTick then
                 tick()
                 previousTick = response['Tick']

@@ -57,7 +57,7 @@ function setItemTooltip(item)
     elseif item.Type == "buddy" then
         valString = "Buddy"
     end
-    setTooltip(item.Name,  valString .. "  Lvl: " .. item.Worth .. "+ \n" .. item.Desc )
+    setTooltip(item.Name,  valString .. "\nRequires Level " .. item.Worth .. "+ \n\n" .. item.Desc )
 end
 
 function drawTooltip(thisX, thisY)
