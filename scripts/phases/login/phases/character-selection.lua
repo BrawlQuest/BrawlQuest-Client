@@ -238,7 +238,7 @@ function loginOrCreate()
                     ['token'] = token
                 },
             }
-            transitionToPhaseGame()
+            -- transitionToPhaseGame()
         end
     end
 end
