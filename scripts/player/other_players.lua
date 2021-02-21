@@ -260,11 +260,12 @@ function updateOtherPlayers(dt)
                 speed = 32
          
             if playersDrawable[i].Mount.Name ~= "None" or worldEdit.open then
-                speed = tonumber(playersDrawable[i].Mount.Value)
+                speed = tonumber(playersDrawable[i].Mount.Value) or 32
                 if worldLookup[playersDrawable[i].X] and worldLookup[playersDrawable[i].X][playersDrawable[i].Y] and isTileType(worldLookup[playersDrawable[i].X][playersDrawable[i].Y].ForegroundTile, "Path") then
                     speed = speed * 1.4
                 end
             end
+            
             if playersDrawable[i].X - 1 > v.X * 32 then
                 playersDrawable[i].X = playersDrawable[i].X - speed * dt
                 playersDrawable[i].previousDirection = "left"
