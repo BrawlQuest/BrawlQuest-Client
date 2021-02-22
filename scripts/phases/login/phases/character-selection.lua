@@ -238,7 +238,22 @@ function loginOrCreate()
                     ['token'] = token
                 },
             }
-            -- transitionToPhaseGame()
+            characters = {}
+            r, h = http.request {
+                url = api.url .. "/user/" .. textfields[1],
+                headers = {
+                    ['token'] = b['token']
+                },
+                sink = ltn12.sink.table(characters)
+            }
+            characters = json:decode(characters[1])
+            for i,v in ipairs(characters) do
+                if characters[i] and characters[i].Color ~= null then
+                else
+                characters[i].Color = {love.math.random(), love.math.random(), love.math.random(),  1}
+                end
+            end
+          --  transitionToPhaseGame()
         end
     end
 end
