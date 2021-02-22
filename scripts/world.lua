@@ -169,7 +169,7 @@ function getWorldAsset(v,x,y,notFindWall)
 end
 
 function isTileType(tileName, typeName)
-    return  string.find(tileName, typeName, 1)
+    return  string.find(string.lower(tileName), string.lower(typeName), 1)
 end
 
 function isTileWall(tileName)

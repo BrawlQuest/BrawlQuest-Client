@@ -257,13 +257,13 @@ function updateOtherPlayers(dt)
             playersDrawable[i].Y = v.Y * 32
         end
         if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X * 32, v.Y * 32) > 1 then
-                speed = 32
+                speed = 64
          
             if playersDrawable[i].Mount.Name ~= "None" or worldEdit.open then
-                speed = tonumber(playersDrawable[i].Mount.Value) or 32
-                if worldLookup[playersDrawable[i].X] and worldLookup[playersDrawable[i].X][playersDrawable[i].Y] and isTileType(worldLookup[playersDrawable[i].X][playersDrawable[i].Y].ForegroundTile, "Path") then
-                    speed = speed * 1.4
-                end
+                speed = tonumber(playersDrawable[i].Mount.Val) or 64
+            end
+            if worldLookup[playersDrawable[i].X] and worldLookup[playersDrawable[i].X][playersDrawable[i].Y] and isTileType(worldLookup[playersDrawable[i].X][playersDrawable[i].Y].ForegroundTile, "Path") then
+                speed = speed * 1.4
             end
             
             if playersDrawable[i].X - 1 > v.X * 32 then
