@@ -78,7 +78,11 @@ function updateCharacter(dt)
             player.damageHUDAlphaUp = false
         end
     end
-    player.damageHUDAlpha = player.damageHUDAlpha - 0.35*dt
+    if player.damageHUDAlpha > 0 then
+        player.damageHUDAlpha = player.damageHUDAlpha - 0.35*dt
+        if player.damageHUDAlpha < 0 then player.damageHUDAlpha = 0 end
+    end
+    
     checkTargeting()
     if me and player.dx and player.dy and player.buddy then
         local pl = {

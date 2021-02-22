@@ -39,6 +39,7 @@ function checkHotbarKeyPressed(key)
         if key == tostring(i) or (i == 7 and key == "space") then
             if inventory.isMouseOverInventoryItem == true then
                 hotbar[i].item = selectedItem
+                writeSettings()
                 break
             else
                 if v.item ~= nil and v.item.ID ~= nil and not isItemUnusable(v.item) and not usedItemThisTick then
@@ -62,6 +63,7 @@ function checkHotbarMousePressed(button)
                     break
                 elseif button == 2 then
                     hotbar[i] = {item = null,}
+                    writeSettings()
                     break
                 end
             end
