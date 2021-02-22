@@ -308,7 +308,7 @@ function love.update(dt)
             me = response['Me']
 
             if perks.stats[1] == 0 then
-                perks.stats = {me.STR, me.INT, me.STA}
+                perks.stats = {me.STR, me.INT, me.STA, player.cp}
             end
 
             if json:encode(me) ~= json:encode(previousMe) then -- Temp [

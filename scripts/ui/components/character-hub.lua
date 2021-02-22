@@ -38,7 +38,7 @@ function initCharacterHub()
     }
 
     perks = {
-        stats = {0,0,0},
+        stats = {0,0,0,0},
         delay = 0,
         change = false,
         tick = 0,
@@ -82,7 +82,7 @@ function updateCharacterHub(dt)
         local dir
         if love.mouse.isDown(1) then dir = 1 else dir = -1 end
         if perks.delay < 1 then
-            perks.delay = perks.delay + 50 * dt
+            perks.delay = perks.delay + 4 * dt
             if perks.delay >= 1 then
                 perks.change = true
             end
@@ -94,12 +94,10 @@ function updateCharacterHub(dt)
                 if dir == 1 then
                     if player.cp - perks.changeAmount > 0 then
                         perks.changeAmount = perks.changeAmount + dir
-                        print(perks.changeAmount)
                     end
                 else
                     if me[perkTitles[characterHub.selectedPerk+1]] + perks.changeAmount > 1 then
                         perks.changeAmount = perks.changeAmount + dir
-                        print(perks.changeAmount)
                     end
                 end
             end
@@ -203,13 +201,14 @@ function drawCharacterHubStats(thisX, thisY)
     love.graphics.draw(hubImages.statsFG, thisX, thisY)
     
     love.graphics.setColor(0,0,0, cerp(0, 1, characterHub.amount))
-    love.graphics.print(player.cp, thisX + 77 - (characterHub.font:getWidth(player.cp)/2), thisY + 27 - (characterHub.font:getHeight(player.cp)/2))
+    love.graphics.print(perks.stats[4], thisX + 77 - (characterHub.font:getWidth(perks.stats[4])/2), thisY + 27 - (characterHub.font:getHeight(perks.stats[4])/2))
     
     for i = 0, 2 do
         local change = 0
         if characterHub.selectedPerk == i and isMouseDown() then
             change = perks.changeAmount
             perks.stats[i+1] = me[perkTitles[i+1]] + change
+            perks.stats[4] = player.cp - change
         end
         love.graphics.print(perks.stats[i+1], thisX + (49 * i) + 2 + 32 - (characterHub.font:getWidth(perks.stats[i+1])/2), thisY + 42 + 42 - (characterHub.font:getHeight(me[perkTitles[i+1]])/2))
     end
@@ -242,19 +241,11 @@ end
 
 
 function checkStatsMousePressed(button)
-    for i = 0, 2 do
-        if isMouseOver((0 + hubImages.profileBG:getWidth() + (49 * i) + 3) * scale, (uiY - hubImages.profileBG:getHeight() + 43) * scale, hubImages.statCardBg:getWidth() * scale, hubImages.statCardBg:getHeight() * scale) then
-            if player.cp > 0 and button == 1 then
-                apiGET("/stat/"..player.name.."/"..perkTitles[i+1])
-                --apiGET("/stat/"..player.name.."/"..perkTitles[i+1].."/"..amount)
-                player.cp = player.cp - 1
-                me[perkTitles[i+1]] = me[perkTitles[i+1]] + 1
-            elseif button == 2 and me[perkTitles[i+1]] > 1 then
-                c, h = http.request{url = api.url.."/stat/"..player.name.."/"..perkTitles[i+1], method="DELETE", headers={["token"]=token}}
-                -- c, h = http.request{url = api.url.."/stat/"..player.name.."/"..perkTitles[i+1].."/"..amount, method="DELETE", headers={["token"]=token}}
-                player.cp = player.cp + 1
-                me[perkTitles[i+1]] = me[perkTitles[i+1]] - 1
-            end
+    if characterHub.selectedPerk > -1 then
+        if button == 1 and player.cp > 0 then
+            perks.changeAmount = perks.changeAmount + 1
+        elseif button == 2 and me[perkTitles[characterHub.selectedPerk + 1]] > 1 then
+            perks.changeAmount = perks.changeAmount - 1
         end
     end
 end
