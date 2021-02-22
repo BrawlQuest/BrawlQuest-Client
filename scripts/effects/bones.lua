@@ -7,10 +7,11 @@ function initBones()
         image = {
             love.graphics.newImage("assets/world/objects/Blood.png"),
             love.graphics.newImage("assets/world/objects/Blood2.png"),
-            love.graphics.newImage("assets/world/objects/Bone.png")
-        },
+            love.graphics.newImage("assets/world/objects/Bone.png"),
+        },    
     }
     
+    levelImg = love.graphics.newImage("assets/player/effects/+1.png")
 end
 
 function boneSpurt(x, y, amount, velocity, r, g, b, type, mobType) 
@@ -19,7 +20,7 @@ function boneSpurt(x, y, amount, velocity, r, g, b, type, mobType)
     type = type or "mob"
     mobType = mobType or "image"
     
-    for i=1,amount do
+    for i = 1, amount do
         local xv, yv
         local range = 15
         local rand = 1 - love.math.random() * 0.3
@@ -38,6 +39,10 @@ function boneSpurt(x, y, amount, velocity, r, g, b, type, mobType)
                 xv = love.math.random(distX - (range * (player.y - player.target.y)), distX + (range * (player.y - player.target.y))) + love.math.random(-deviance, deviance)
                 yv = love.math.random(distY - (range * (player.x - player.target.x)), distY + (range * (player.x - player.target.x))) + love.math.random(-deviance, deviance)
             end
+
+        elseif type == "level" then
+            xv = love.math.random(-velocity, velocity)
+            yv = love.math.random(-velocity * 2, velocity)
         else
             mobType = "image" -- this is "me" or another player, so it should be set to the default
             xv = love.math.random(-velocity, velocity)
@@ -105,10 +110,10 @@ function drawBones()
         love.graphics.setColor(v.r,v.g,v.b,v.alpha)
         local r = 0
         if v.image == 3 then r = v.rota end
-        -- if v.type == "mob" then
+        if v.type == "level" then
+            love.graphics.draw(levelImg, v.x - (16 * v.scale), v.y - (16 * v.scale), r, v.scale)
+        else
             love.graphics.draw(bone[v.mobType][v.image], v.x - (16 * v.scale), v.y - (16 * v.scale), r, v.scale)
-        -- else
-        --     love.graphics.rectangle("fill",v.x,v.y,2, 2)
-        -- end
+        end
     end
 end

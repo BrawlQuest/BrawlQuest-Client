@@ -114,6 +114,9 @@ function love.keypressed(key)
                 writeSettings()
             end
 
+            if key == "kp0" then
+                addFloat("level", player.dx + 16, player.dy + 16, null, {1,0,0}, 5)
+            end
 
         end
     end

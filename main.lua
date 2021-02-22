@@ -134,7 +134,7 @@ function love.draw()
             end
             
             drawAuras()
-            drawBones() 
+            drawBones()
             love.graphics.setColor(1, 1, 1)
             drawNPCs()
             drawEnemies()
@@ -143,11 +143,11 @@ function love.draw()
             for i, v in ipairs(playersDrawable) do
                 drawPlayer(v, i)
             end
-
+            drawFloats()
             drawPlayer(me, -1)
             if showWorldAnimations then drawLeaves() end
             drawLoot()
-            drawFloats()
+            
 
             if not worldEdit.open then drawWorldMask() end
             if showClouds then drawClouds() end     
