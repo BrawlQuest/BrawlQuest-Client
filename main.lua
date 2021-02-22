@@ -56,7 +56,7 @@ ltn12 = require("ltn12")
 newOutliner = require 'scripts.libraries.outliner'
 
 version = "Pre-Release" 
-versionType = "release" -- "dev" for quick login, "release" for not
+versionType = "dev" -- "dev" for quick login, "release" for not
 versionNumber = "Beta 1.1.1" -- very important for settings
 
 phase = "login"
@@ -306,6 +306,10 @@ function love.update(dt)
 
             local previousMe = copy(me) -- Temp
             me = response['Me']
+
+            if perks.stats[1] == 0 then
+                perks.stats = {me.STR, me.INT, me.STA}
+            end
 
             if json:encode(me) ~= json:encode(previousMe) then -- Temp [
                 if me.Color == null then -- New thing for the people

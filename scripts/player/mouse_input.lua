@@ -22,6 +22,14 @@ function love.mousereleased(x, y, button)
 
     if worldEdit.open and worldEdit.drawmode == "rectangle" then
        checkWorldEditRectMouseUp(button)
+    elseif characterHub.amount > 0 then
+        if characterHub.selectedPerk > -1 then
+            if perks.changeAmount > 0 then
+                apiGET("/stat/"..player.name.."/"..perkTitles[characterHub.selectedPerk+1].."/"..perks.changeAmount)
+            else
+                c, h = http.request{url = api.url.."/stat/"..player.name.."/"..perkTitles[characterHub.selectedPerk+1].."/"..math.abs(perks.changeAmount), method="DELETE", headers={["token"]=token}}
+            end
+        end
     end
     
 end
