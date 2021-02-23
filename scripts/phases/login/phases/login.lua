@@ -3,8 +3,10 @@
 ]]
 
 logoScale = 5
+loginPhaseAlpha = 0
 
 function drawLoginPhase(countCerp)
+
     loginImageX, loginImageY = math.floor(love.graphics.getWidth() / 2 - (loginEntryImage:getWidth() / 2)),
     math.floor(love.graphics.getHeight() / 2 - (loginEntryImage:getHeight() / 2))
 

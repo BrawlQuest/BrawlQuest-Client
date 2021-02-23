@@ -71,8 +71,10 @@ function drawLogin()
         local iwidth, iheight = launch.logo:getWidth() * imageScale, launch.logo:getHeight() * imageScale
         love.graphics.setColor(1,1,1,1)
         drawLoginBackground()
-        drawLoginPhase(launch.outCERP)
-        love.graphics.setColor(launch.inCERP, launch.inCERP, launch.inCERP, 1 - launch.outCERP)
+        love.graphics.setColor(1,1,1,launch.outCERP)
+       
+    love.graphics.draw(bqLogo, (love.graphics.getWidth() / 2) - ((bqLogo:getWidth() * logoScale) * 0.5), (love.graphics.getHeight() / 2) - ((bqLogo:getHeight() * logoScale) * 0.5), 0, logoScale)
+    love.graphics.setColor(launch.inCERP, launch.inCERP, launch.inCERP, 1 - launch.outCERP)
         love.graphics.rectangle("fill", 0, 0, width, height)
         love.graphics.setColor(1 - launch.inCERP, 1 - launch.inCERP, 1 - launch.inCERP, launch.inCERP - launch.outCERP)
         love.graphics.draw(launch.logo, width * 0.5 - iwidth * 0.5, height * 0.5 - iheight * 0.5 - 200 * imageScale, 0, imageScale)
@@ -82,7 +84,11 @@ function drawLogin()
         if loginPhase == "login" then
             drawLoginPhase(launch.outCERP)
             drawAreaName()
-        elseif loginPhase == "characters" then
+        elseif loginPhase == "loading" then
+            love.graphics.setColor(1,1,1,launch.outCERP)
+          
+    love.graphics.draw(bqLogo, (love.graphics.getWidth() / 2) - ((bqLogo:getWidth() * logoScale) * 0.5), (love.graphics.getHeight() / 2) - ((bqLogo:getHeight() * logoScale) * 0.5), 0, logoScale)
+elseif loginPhase == "characters" then
             drawCharacterSelection()
         elseif loginPhase == "creation" then
             drawCreationPhase()
@@ -112,7 +118,7 @@ function updateLogin(dt)
             launch.outAmount = launch.outAmount + 0.8 * dt
             -- titleMusic:setVolume(musicVolume * launch.outAmount)
             if launch.outAmount > 1 then
-                loginPhase = "login"
+                loginPhase = "loading"
                 loginViaSteam()
             end
             launch.outCERP = cerp(0,1,launch.outAmount)
@@ -148,12 +154,16 @@ end
 
 function loginViaSteam()
     if versionType ~= "dev" then
-        -- local originalID  = steam.user.getSteamID()
-        -- local str = tostring(original)
-        -- if str ~= "nil" then
-        --     textfields[1] = str
-        --     textfields[2] = str
-        --     login()
-        -- end
+        local originalID  = steam.user.getSteamID()
+        local str = tostring(originalID)
+     
+        if str ~= "nil" then
+            textfields[1] = str
+            textfields[2] = str
+            textfields[3] = str
+            login()
+        else
+            loginPhase = "login"
+        end
     end
 end

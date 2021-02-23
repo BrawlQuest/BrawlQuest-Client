@@ -68,6 +68,7 @@ function drawCharacterSelection()
         if #characters < 3 then drawCharacterSelector(thisX, thisY, math.clamp(1, #characters + 1,3), "NEW CHARACTER") end
 
     love.graphics.setStencilTest() -- pop
+    
 end
 
 function drawCharacterCreator() 

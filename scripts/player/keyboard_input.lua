@@ -1,5 +1,9 @@
 function love.keypressed(key) 
     if phase == "login" then
+        if key == "s" then
+            loginViaSteam()
+            print(steam.user.getSteamID())
+        end
         if loginPhase == "prelaunch" then
             launch.inAmount = 1
             launch.outAmount = 1
