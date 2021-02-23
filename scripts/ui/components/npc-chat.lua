@@ -257,6 +257,8 @@ function checkNPCChatKeyPressed(key)
     elseif key == "return" then
         npcChatArg.selectedOption = npcChatArg.selectedResponse
         continueConversation()
+    elseif key == "space" then
+        chatWritten = npcChat.Title
     end
 end
 
