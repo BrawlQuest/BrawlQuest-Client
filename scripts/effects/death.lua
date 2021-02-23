@@ -2,7 +2,7 @@ function initDeath()
     death = {
         open = false,
         amount = 0,
-        previousPosition = {x = 0, y = 0}
+        previousPosition = {x = 0, y = 0, hp = 125}
     }
 end
 

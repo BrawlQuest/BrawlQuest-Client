@@ -10,9 +10,9 @@ function love.keypressed(key)
             -- love.audio.play(titleMusic)
             if key == "escape" then love.event.quit() end
         elseif loginPhase == "login" then
-            -- if key == "kpenter" then
-            --     zoneChange("You did not login")
-            -- end
+            if key == "kpenter" then
+                zoneChange("You did not login")
+            end
             if key == "escape" then love.event.quit() end
             checkLoginKeyPressedPhaseLogin(key)
         elseif loginPhase == "creation" then
@@ -114,6 +114,10 @@ function love.keypressed(key)
             if key == "," then
                 scaleHUD("down")
                 writeSettings()
+            end
+
+            if key == "kp0" then
+                addFloat("level", player.dx + 16, player.dy + 16, null, {1,0,0}, 10)
             end
         end
     end
