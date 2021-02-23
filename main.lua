@@ -15,6 +15,7 @@ require "scripts.effects.leaves"
 require "scripts.effects.camera"
 require "scripts.effects.clouds"
 require "scripts.effects.world-mask"
+require "scripts.effects.death"
 require "scripts.ui.hud_controller"
 require "scripts.ui.components.character-hub"
 require "scripts.ui.components.crafting"
@@ -79,6 +80,7 @@ enemiesInAggro = 0
 username = "Pebsie"
 readyForUpdate = true
 playersOnline = ""
+firstLaunch = true
 
 world = {}
 worldImg = {}
@@ -117,6 +119,7 @@ function love.load()
     initRangedWeapons()
     initClouds()
     initWorldMask()
+    initDeath()
     love.graphics.setFont(textFont)
 end
 
@@ -134,7 +137,7 @@ function love.draw()
             end
             
             drawAuras()
-            drawBones() 
+            drawBones()
             love.graphics.setColor(1, 1, 1)
             drawNPCs()
             drawEnemies()
@@ -143,11 +146,12 @@ function love.draw()
             for i, v in ipairs(playersDrawable) do
                 drawPlayer(v, i)
             end
-
+            drawFloats()
+            
             drawPlayer(me, -1)
             if showWorldAnimations then drawLeaves() end
             drawLoot()
-            drawFloats()
+            
 
             if not worldEdit.open then drawWorldMask() end
             if showClouds then drawClouds() end     
@@ -185,7 +189,8 @@ function love.draw()
             --     love.graphics.setColor(1,1,1)
             -- end
             Luven.drawEnd()
-     
+
+            if death.open then drawDeath() end
             if not worldEdit.open then drawHUD() end
             drawNewWorldEditHud()
 
@@ -242,6 +247,7 @@ function love.update(dt)
         updateMusic(dt)
         updateLoot(dt)
         updateEvents(dt)
+        if death.open then updateDeath(dt) end
         -- updateRangedWeapons(dt)
         if showNPCChatBackground then updateNPCChat(dt) end
         -- if showClouds then updateClouds(dt) end
@@ -255,8 +261,6 @@ function love.update(dt)
         local info = love.thread.getChannel('players'):pop()
         if info then
             local response = json:decode(info)
-
-
             local previousPlayers = copy(players) -- Temp
             players = response['Players']
             npcs = response['NPC']
@@ -307,6 +311,10 @@ function love.update(dt)
             local previousMe = copy(me) -- Temp
             me = response['Me']
 
+            if perks.stats[1] == 0 then
+                perks.stats = {me.STR, me.INT, me.STA, player.cp}
+            end
+
             if json:encode(me) ~= json:encode(previousMe) then -- Temp [
                 if me.Color == null then -- New thing for the people
                     if previousMe and previousMe.Color then
@@ -320,13 +328,11 @@ function love.update(dt)
             if distanceToPoint(me.X, me.Y, player.x, player.y) > 4 then
                 player.x = me.X
                 player.y = me.Y
-                player.dx = me.X*32
-                player.dy = me.Y*32
-                player.cx = me.X*32
-                player.cy = me.Y*32
+                death.open = true
                 totalCoverAlpha = 2
                 love.audio.play(awakeSfx)
             end
+            if not death.open then death.previousPosition = {x = player.x, y = player.y} end
             -- update player
             player.name = me.Name
             player.buddy = me.Buddy
@@ -337,12 +343,17 @@ function love.update(dt)
             player.hp = me.HP
             player.owedxp = me.XP - player.xp
             player.xp = me.XP
-            if player.lvl ~= me.LVL then
-                if player.lvl ~= 0 then
-                    openTutorial(6)
+            if me and me.LVL and player.lvl ~= me.LVL then
+                if not firstLaunch then
+                    if player.lvl ~= 0 then
+                        openTutorial(6)
+                    end
+                    love.audio.play(lvlSfx)
+                    addFloat("level", player.dx + 16, player.dy + 16, null, {1,0,0}, 5)
+                    
                 end
-                love.audio.play(lvlSfx)
                 player.lvl = me.LVL
+                firstLaunch = false
             end
             player.name = me.Name
             newEnemyData(response['Enemies'])

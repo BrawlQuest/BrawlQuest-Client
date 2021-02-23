@@ -33,7 +33,16 @@ function initCharacterHub()
         amount = 0,
         flashy = 0,
         flashyCERP = 0,
-        flash = false
+        flash = false,
+        selectedPerk = 0,
+    }
+
+    perks = {
+        stats = {0,0,0,0},
+        delay = 0,
+        change = false,
+        tick = 0,
+        changeAmount = 0,
     }
 
     armourHub = {
@@ -55,7 +64,6 @@ function updateCharacterHub(dt)
             panelMovement(dt, characterHub, -1)
         end
     end
-
     if player.cp > 0 then
         local i = 0
         -- if inventory.open or inventory.forceOpen then i = 2 end
@@ -68,6 +76,37 @@ function updateCharacterHub(dt)
     else
         characterHub.flashy = 0
         characterHub.flashyCERP = 0
+    end
+
+    if love.mouse.isDown(1) or love.mouse.isDown(2) and characterHub.selectedPerk > -1 then
+        local dir
+        if love.mouse.isDown(1) then dir = 1 else dir = -1 end
+        if perks.delay < 1 then
+            perks.delay = perks.delay + 4 * dt
+            if perks.delay >= 1 then
+                perks.change = true
+            end
+        end
+        if perks.change == true then
+            perks.tick = perks.tick + 20 * dt
+            if perks.tick > 1 then
+                perks.tick = 0
+                if dir == 1 then
+                    if player.cp - perks.changeAmount > 0 then
+                        perks.changeAmount = perks.changeAmount + dir
+                    end
+                else
+                    if me[perkTitles[characterHub.selectedPerk+1]] + perks.changeAmount > 1 then
+                        perks.changeAmount = perks.changeAmount + dir
+                    end
+                end
+            end
+        end
+    else
+        perks.tick = 0
+        perks.changeAmount = 0
+        perks.delay = 0
+        perks.change = false
     end
 end
 
@@ -147,9 +186,11 @@ function drawCharacterHubStats(thisX, thisY)
     love.graphics.setColor(characterHub.flashyCERP,0,0,0.7)
     love.graphics.rectangle("fill", thisX, thisY, cerp(0, 155, characterHub.amount), 97)
     love.graphics.setFont(characterHub.font)
+    characterHub.selectedPerk = -1
     for i = 0, 2 do
         if isMouseOver((thisX + (49 * i) + 3) * scale, (thisY + 43) * scale, hubImages.statCardBg:getWidth() * scale, hubImages.statCardBg:getHeight() * scale) then
             love.graphics.setColor(1,0,0, cerp(0, 1, characterHub.amount))
+            characterHub.selectedPerk = i
         else
             love.graphics.setColor(1,1,1,cerp(0, 0.7, characterHub.amount))
         end
@@ -160,9 +201,16 @@ function drawCharacterHubStats(thisX, thisY)
     love.graphics.draw(hubImages.statsFG, thisX, thisY)
     
     love.graphics.setColor(0,0,0, cerp(0, 1, characterHub.amount))
-    love.graphics.print(player.cp, thisX + 77 - (characterHub.font:getWidth(player.cp)/2), thisY + 27 - (characterHub.font:getHeight(player.cp)/2))
+    love.graphics.print(perks.stats[4], thisX + 77 - (characterHub.font:getWidth(perks.stats[4])/2), thisY + 27 - (characterHub.font:getHeight(perks.stats[4])/2))
+    
     for i = 0, 2 do
-        love.graphics.print(me[perkTitles[i+1]], thisX + (49 * i) + 2 + 32 - (characterHub.font:getWidth(me[perkTitles[i+1]])/2), thisY + 42 + 42 - (characterHub.font:getHeight(me[perkTitles[i+1]])/2))
+        local change = 0
+        if characterHub.selectedPerk == i and isMouseDown() then
+            change = perks.changeAmount
+            perks.stats[i+1] = me[perkTitles[i+1]] + change
+            perks.stats[4] = player.cp - change
+        end
+        love.graphics.print(perks.stats[i+1], thisX + (49 * i) + 2 + 32 - (characterHub.font:getWidth(perks.stats[i+1])/2), thisY + 42 + 42 - (characterHub.font:getHeight(me[perkTitles[i+1]])/2))
     end
 end
 
@@ -183,7 +231,7 @@ function drawCharacterHubMeters(thisX, thisY)
         love.graphics.setColor(unpack(characterHub.barColors[i+1]))
         love.graphics.draw(hubImages.meterSide, thisX, thisY + spacing)
         love.graphics.draw(hubImages.meterSide, thisX + 212, thisY + 19 + spacing, math.rad(180))
-        love.graphics.rectangle("fill", thisX + 31, thisY + spacing, meterLevels[i+1] / ((100 + getSTA(i)) / 151), 19)
+        love.graphics.rectangle("fill", thisX + 31, thisY + spacing, math.clamp(0, meterLevels[i+1] / ((100 + getSTA(i)) / 151), 151), 19)
         love.graphics.setColor(1,1,1,1)
         love.graphics.draw(hubImages.meterIcons[i+1], thisX, thisY + spacing)
         love.graphics.draw(hubImages.meterNames[i+1], thisX, thisY + spacing)
@@ -193,17 +241,11 @@ end
 
 
 function checkStatsMousePressed(button)
-    for i = 0, 2 do
-        if isMouseOver((0 + hubImages.profileBG:getWidth() + (49 * i) + 3) * scale, (uiY - hubImages.profileBG:getHeight() + 43) * scale, hubImages.statCardBg:getWidth() * scale, hubImages.statCardBg:getHeight() * scale) then
-            if player.cp > 0 and button == 1 then
-                apiGET("/stat/"..player.name.."/"..perkTitles[i+1])
-                player.cp = player.cp - 1
-                me[perkTitles[i+1]] = me[perkTitles[i+1]] + 1
-            elseif button == 2 then 
-                c, h = http.request{url = api.url.."/stat/"..player.name.."/"..perkTitles[i+1], method="DELETE", headers={["token"]=token}}
-                player.cp = player.cp + 1
-                me[perkTitles[i+1]] = me[perkTitles[i+1]] - 1
-            end
+    if characterHub.selectedPerk > -1 then
+        if button == 1 and player.cp > 0 then
+            perks.changeAmount = perks.changeAmount + 1
+        elseif button == 2 and me[perkTitles[characterHub.selectedPerk + 1]] > 1 then
+            perks.changeAmount = perks.changeAmount - 1
         end
     end
 end

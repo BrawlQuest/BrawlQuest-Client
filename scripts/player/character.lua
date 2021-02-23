@@ -78,7 +78,11 @@ function updateCharacter(dt)
             player.damageHUDAlphaUp = false
         end
     end
-    player.damageHUDAlpha = player.damageHUDAlpha - 0.35*dt
+    if player.damageHUDAlpha > 0 then
+        player.damageHUDAlpha = player.damageHUDAlpha - 0.35*dt
+        if player.damageHUDAlpha < 0 then player.damageHUDAlpha = 0 end
+    end
+    
     checkTargeting()
     if me and player.dx and player.dy and player.buddy then
         local pl = {
@@ -127,7 +131,7 @@ function worldCollison(x, y)
         end
         if me.Mount and string.find(me.Mount.Name, "boat") and isTileType(worldLookup[x][y].ForegroundTile, "Water") then
             output = false
-        elseif string.find(me.Mount.Name, "boat") and not worldLookup[x][y].Collision then
+        elseif me.Mount and string.find(me.Mount.Name, "boat") and not worldLookup[x][y].Collision then
             output = true
         end
     end
@@ -136,6 +140,8 @@ function worldCollison(x, y)
     end
     return output
 end
+
+isMoving = false
 
 function movePlayer(dt)
     if player.x * 32 == player.dx and player.y * 32 == player.dy and not isTypingInChat and not worldEdit.isTyping then -- movement smoothing has finished
@@ -165,8 +171,8 @@ function movePlayer(dt)
                 player.previousDirection = "right"
             else
                 player.speed.x = 0
-            end 
-            
+            end
+
             if love.keyboard.isDown(keybinds.UP) and not worldCollison(prev.x, prev.y - 1) then
                 prev.y = prev.y - 1
             elseif love.keyboard.isDown(keybinds.DOWN) and not worldCollison(prev.x, prev.y + 1) then
@@ -182,25 +188,11 @@ function movePlayer(dt)
             if worldLookup[player.x]then
                 playFootstepSound(worldLookup[player.x][player.y])
             end
+            isMoving = true
         end
-
-        -- if (prev.x ~= player.x) or (prev.y ~= player.y) then
-        --     if (worldLookup[prev.x] and worldLookup[prev.x][prev.y] and not worldLookup[prev.x][prev.y].Collision) then
-        --         player.x = prev.x
-        --         if worldLookup[player.x]then
-        --             playFootstepSound(worldLookup[player.x][player.y])
-        --         end
-        --     end
-        --     if (worldLookup[prev.x] and worldLookup[prev.x][prev.y] and not worldLookup[prev.x][prev.y].Collision) then
-        --         player.y = prev.y
-
-        --     end
-        -- end
-
     else -- movement smoothing
         local speed = 64
-
-        if me.Mount.Name ~= "None" or worldEdit.open then
+        if me and me.Mount and me.Mount.Name ~= "None" or worldEdit.open then
             speed = tonumber(me.Mount.Val) or 64 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
             if worldEdit.open then
                 speed = 256
@@ -209,51 +201,41 @@ function movePlayer(dt)
         if worldLookup[player.x] and worldLookup[player.x][player.y] and isTileType(worldLookup[player.x][player.y].ForegroundTile, "Path") then
             speed = speed * 1.4
         end
-     
-        if difference(player.x * 32, player.dx) > 1 then
-            if player.dx > player.x * 32 then
+
+        if not death.open then
+            local x,y = player.x * 32, player.y * 32
+            if player.dx > x then
                 player.dx = player.dx - speed * dt
-            else
+                if player.dx <= x then player.dx = x end
+            elseif player.dx < x then
                 player.dx = player.dx + speed * dt
+                if player.dx >= x then player.dx = x end
             end
-        else
-            player.dx = player.x * 32
-        end
 
-        if difference(player.x * 32, player.cx) > 1 then
-            if player.cx > player.x * 32 then
+            if player.cx > x then
                 player.cx = player.cx - speed * dt
-            else
+                if player.cx <= x then player.cx = x end
+            elseif player.cx < x then
                 player.cx = player.cx + speed * dt
+                if player.cx >= x then player.dx = x end
             end
-        else
-            player.cx = player.x * 32
-        end
 
-        if difference(player.y * 32, player.dy) > 1 then
-            if player.dy > player.y * 32 then
+            if player.dy > y then
                 player.dy = player.dy - speed * dt
-            else
+                if player.dy <= y then player.dy = y end
+            elseif player.dy < y then
                 player.dy = player.dy + speed * dt
+                if player.dy >= y then player.dy = y end
             end
-        else
-            player.dy = player.y * 32
-        end
 
-        if difference(player.y * 32, player.cy) > 1 then
-            if player.cy > player.y * 32 then
+            if player.cy > y then
                 player.cy = player.cy - speed * dt
-            else
+                if player.cy <= y then player.cy = y end
+            elseif player.cy < y then
                 player.cy = player.cy + speed * dt
+                if player.cy >= y then player.dy = y end
             end
-        else
-            player.cy = player.y * 32
         end
-
-        -- if distanceToPoint(player.x * 32, player.y * 32, player.cx, player.cy) > 4 * 32 then -- snap to final position
-        --     player.cx = player.x * 32
-        --     player.cy = player.y * 32
-        -- end
     end
 end
 

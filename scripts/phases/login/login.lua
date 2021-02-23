@@ -81,9 +81,9 @@ function drawLogin()
         drawLoginBackground()
         if loginPhase == "login" then
             drawLoginPhase(launch.outCERP)
+            drawAreaName()
         elseif loginPhase == "characters" then
             drawCharacterSelection()
-            -- drawCharactersPhase()
         elseif loginPhase == "creation" then
             drawCreationPhase()
         elseif loginPhase == "server" then
@@ -121,6 +121,7 @@ function updateLogin(dt)
         updateCharacterSelection(dt)
     end
     updateLoginBackground(dt)
+    updateEvents(dt)
 end
 
 function checkClickLogin(x, y)

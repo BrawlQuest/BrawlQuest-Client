@@ -311,8 +311,18 @@ end
 function drawCraftingItem(thisX, thisY, field, item, amount)
     love.graphics.setFont(inventory.itemFont)
 
-    if isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale) and item then
+    local isMouse = isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale)
+
+    if isItemUnusable(item) then
+        if isMouse and item then
+            selectedItem = item
+            setItemTooltip(item)
+        end
+        love.graphics.setColor(0.2, 0.2, 0.2)
+    elseif isMouse and item then
         setItemTooltip(item)
+        selectedItem = item
+        inventory.isMouseOverInventoryItem = true
         love.graphics.setColor(1,0,0,1)
         thisY = thisY - 2
     end

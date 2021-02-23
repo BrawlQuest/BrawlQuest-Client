@@ -74,21 +74,12 @@ function initHUD()
     mouseUp = love.graphics.newImage("assets/ui/hud/perks/BQ Mice + 1.png")
     perksReserve = love.graphics.newImage("assets/ui/hud/perks/cp-backing.png")
 
-    selectedPerk = 0
-
     perkImages = {
         love.graphics.newImage("assets/ui/hud/perks/perkType3.png"),
         love.graphics.newImage("assets/ui/hud/perks/perkType2.png"),
         love.graphics.newImage("assets/ui/hud/perks/perkType1.png")
     }
 
-    perks = {
-        total = 10,
-        reserve = 10,
-        0,
-        0,
-        0,
-    }
     perkTitles = {
         "STR", "INT", "STA",
     }
@@ -187,7 +178,7 @@ function drawHUD()
             if crafting.open then drawCrafting() end
             drawTooltip()
             drawAuraHeadings()
-            if showEvents then drawEvents() end
+            if showEvents then drawAreaName() end
         love.graphics.pop()
 
         love.graphics.push() -- chat and quests scaling TODO: Quests

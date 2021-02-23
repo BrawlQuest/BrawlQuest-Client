@@ -17,7 +17,6 @@ function initChat()
 	chat = {
 		deleteText = false,
 		deleteTick = 0,
-		deleteSpeed = 30,
 		deleteDelay = 0,
 	}
 end
@@ -31,7 +30,7 @@ function updateChat(dt)
 			end
 		end
 		if chat.deleteText == true then
-			chat.deleteTick = chat.deleteTick + chat.deleteSpeed * dt
+			chat.deleteTick = chat.deleteTick + 30 * dt
 			if chat.deleteTick > 1 then
 				chat.deleteTick = 0
 				enteredChatText = string.sub( enteredChatText, 1, string.len( enteredChatText) - 1)
