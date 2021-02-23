@@ -61,7 +61,7 @@ function drawFloats()
             love.graphics.setColor(0,0,0,bgAlpha)
             love.graphics.rectangle("fill",v.x,v.y,32,12, 2)
             love.graphics.setColor(v.color[1],v.color[2],v.color[3],v.alpha)
-            love.graphics.printf(v.text, v.x, v.y + 3, 32, "center")
+            love.graphics.printf(v.text, npcNameFont, v.x, v.y + 3, 32, "center")
         elseif v.type == "level" then
             love.graphics.setColor(v.color[1],v.color[2],v.color[3],v.alpha)
             love.graphics.draw(levelImg, v.x - levelImg:getWidth() * 0.5, v.y - levelImg:getHeight() * 0.5)

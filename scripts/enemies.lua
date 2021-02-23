@@ -112,7 +112,7 @@ function newEnemyData(data) -- called when nearby data is returned
         end
 
         if enemy.HP ~= v.HP then
-            if (me.AX ~= me.X or me.AY ~= me.Y) and (me.AX == enemy.X and me.AY == enemy.Y) then
+            if (me.AX ~= me.X or me.AY ~= me.Y) and (me.AX == enemy.X and me.AY == enemy.Y) and not death.open then
                 if player.dx > me.AX * 32 then
                     player.dx = player.dx - 16
                 elseif player.dx < me.AX * 32 then

@@ -131,7 +131,7 @@ function worldCollison(x, y)
         end
         if me.Mount and string.find(me.Mount.Name, "boat") and isTileType(worldLookup[x][y].ForegroundTile, "Water") then
             output = false
-        elseif string.find(me.Mount.Name, "boat") and not worldLookup[x][y].Collision then
+        elseif me.Mount and string.find(me.Mount.Name, "boat") and not worldLookup[x][y].Collision then
             output = true
         end
     end
@@ -202,38 +202,39 @@ function movePlayer(dt)
             speed = speed * 1.4
         end
 
-        local x,y = player.x * 32, player.y * 32
+        if not death.open then
+            local x,y = player.x * 32, player.y * 32
+            if player.dx > x then
+                player.dx = player.dx - speed * dt
+                if player.dx <= x then player.dx = x end
+            elseif player.dx < x then
+                player.dx = player.dx + speed * dt
+                if player.dx >= x then player.dx = x end
+            end
 
-        if player.dx > x then
-            player.dx = player.dx - speed * dt
-            if player.dx <= x then player.dx = x end
-        elseif player.dx < x then
-            player.dx = player.dx + speed * dt
-            if player.dx >= x then player.dx = x end
-        end
+            if player.cx > x then
+                player.cx = player.cx - speed * dt
+                if player.cx <= x then player.cx = x end
+            elseif player.cx < x then
+                player.cx = player.cx + speed * dt
+                if player.cx >= x then player.dx = x end
+            end
 
-        if player.cx > x then
-            player.cx = player.cx - speed * dt
-            if player.cx <= x then player.cx = x end
-        elseif player.cx < x then
-            player.cx = player.cx + speed * dt
-            if player.cx >= x then player.dx = x end
-        end
+            if player.dy > y then
+                player.dy = player.dy - speed * dt
+                if player.dy <= y then player.dy = y end
+            elseif player.dy < y then
+                player.dy = player.dy + speed * dt
+                if player.dy >= y then player.dy = y end
+            end
 
-        if player.dy > y then
-            player.dy = player.dy - speed * dt
-            if player.dy <= y then player.dy = y end
-        elseif player.dy < y then
-            player.dy = player.dy + speed * dt
-            if player.dy >= y then player.dy = y end
-        end
-
-        if player.cy > y then
-            player.cy = player.cy - speed * dt
-            if player.cy <= y then player.cy = y end
-        elseif player.cy < y then
-            player.cy = player.cy + speed * dt
-            if player.cy >= y then player.dy = y end
+            if player.cy > y then
+                player.cy = player.cy - speed * dt
+                if player.cy <= y then player.cy = y end
+            elseif player.cy < y then
+                player.cy = player.cy + speed * dt
+                if player.cy >= y then player.dy = y end
+            end
         end
     end
 end

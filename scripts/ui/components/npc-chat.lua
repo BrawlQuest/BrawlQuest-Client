@@ -259,6 +259,9 @@ function checkNPCChatKeyPressed(key)
         continueConversation()
     elseif key == "space" then
         chatWritten = npcChat.Title
+        speakSound:setPitch(love.math.random(60,100)/100)
+        speakSound:setVolume(0.1 * sfxVolume)
+        speakSound:play()
     end
 end
 
