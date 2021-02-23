@@ -6,11 +6,13 @@ function love.keypressed(key)
             launch.outCERP = 1
             loginPhase = "login"
             loginViaSteam()
-          
             -- love.audio.stop(titleMusicFade)
             -- love.audio.play(titleMusic)
             if key == "escape" then love.event.quit() end
         elseif loginPhase == "login" then
+            if key == "kpenter" then
+                zoneChange("You did not login")
+            end
             if key == "escape" then love.event.quit() end
             checkLoginKeyPressedPhaseLogin(key)
         elseif loginPhase == "creation" then

@@ -79,6 +79,7 @@ enemiesInAggro = 0
 username = "Pebsie"
 readyForUpdate = true
 playersOnline = ""
+firstLaunch = true
 
 world = {}
 worldImg = {}
@@ -341,12 +342,17 @@ function love.update(dt)
             player.hp = me.HP
             player.owedxp = me.XP - player.xp
             player.xp = me.XP
-            if player.lvl ~= me.LVL then
-                if player.lvl ~= 0 then
-                    openTutorial(6)
+            if me and me.LVL and player.lvl ~= me.LVL then
+                if not firstLaunch then
+                    if player.lvl ~= 0 then
+                        openTutorial(6)
+                    end
+                    love.audio.play(lvlSfx)
+                    addFloat("level", player.dx + 16, player.dy + 16, null, {1,0,0}, 5)
+                    
                 end
-                love.audio.play(lvlSfx)
                 player.lvl = me.LVL
+                firstLaunch = false
             end
             player.name = me.Name
             newEnemyData(response['Enemies'])

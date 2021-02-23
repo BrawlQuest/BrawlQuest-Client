@@ -11,7 +11,7 @@ function initEvents()
     }
 end
 
-function zoneChange(text, amount)
+function zoneChange(text)
     if not showEvents then
         showEvents = true
         event.finalText = text
@@ -51,7 +51,9 @@ function updateEvents(dt)
 end
 
 function drawAreaName()
-    love.graphics.setColor(0,0,0, 0.1 * event.alpha)
+    local alpha = 0.1
+    if phase == "login" then alpha = 0.4 end
+    love.graphics.setColor(0,0,0, alpha * event.alpha)
     love.graphics.rectangle("fill", 0, 0, uiX, uiY)
 
     love.graphics.setColor(1,1,1,event.alpha)
@@ -62,5 +64,4 @@ end
 
 function drawEvents()
     local x, y = player.dx + 16, player.dy + 16
-    
 end
