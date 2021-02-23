@@ -555,7 +555,7 @@ function saveWorldChanges()
     local count = 0
     for x = worldEdit.worldSize * -1, worldEdit.worldSize do
         for y = worldEdit.worldSize * -1, worldEdit.worldSize do
-            if worldEdit.draw[x][y][1] ~= "" then
+            if worldEdit.draw[x] and worldEdit.draw[y] and worldEdit.draw[x][y][1] ~= "" then
                 count = count + 1
                 pendingWorldChanges[#pendingWorldChanges+1] = {
                     GroundTile = worldEdit.draw[x][y][1],
