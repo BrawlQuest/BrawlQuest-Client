@@ -10,9 +10,9 @@ function love.keypressed(key)
             -- love.audio.play(titleMusic)
             if key == "escape" then love.event.quit() end
         elseif loginPhase == "login" then
-            if key == "kpenter" then
-                zoneChange("You did not login")
-            end
+            -- if key == "kpenter" then
+            --     zoneChange("You did not login")
+            -- end
             if key == "escape" then love.event.quit() end
             checkLoginKeyPressedPhaseLogin(key)
         elseif loginPhase == "creation" then
@@ -105,7 +105,7 @@ function love.keypressed(key)
             end
         end
         
-        if not isTypingInChat and not worldEdit.isTyping then
+        if not isTypingInChat and not worldEdit.isTyping and versionType == "dev" then
             if key == "." then
                 scaleHUD("up")
                 writeSettings()
@@ -115,11 +115,6 @@ function love.keypressed(key)
                 scaleHUD("down")
                 writeSettings()
             end
-
-            if key == "kp0" then
-                addFloat("level", player.dx + 16, player.dy + 16, null, {1,0,0}, 5)
-            end
-
         end
     end
 
