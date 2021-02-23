@@ -141,6 +141,8 @@ function worldCollison(x, y)
     return output
 end
 
+isMoving = false
+
 function movePlayer(dt)
     if player.x * 32 == player.dx and player.y * 32 == player.dy and not isTypingInChat and not worldEdit.isTyping then -- movement smoothing has finished
         local prev = {x = player.x, y = player.y}
@@ -186,6 +188,7 @@ function movePlayer(dt)
             if worldLookup[player.x]then
                 playFootstepSound(worldLookup[player.x][player.y])
             end
+            isMoving = true
         end
 
         -- if (prev.x ~= player.x) or (prev.y ~= player.y) then
@@ -204,7 +207,7 @@ function movePlayer(dt)
     else -- movement smoothing
         local speed = 64
 
-        if me.Mount.Name ~= "None" or worldEdit.open then
+        if me and me.Mount and me.Mount.Name ~= "None" or worldEdit.open then
             speed = tonumber(me.Mount.Val) or 64 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
             if worldEdit.open then
                 speed = 256
@@ -213,50 +216,44 @@ function movePlayer(dt)
         if worldLookup[player.x] and worldLookup[player.x][player.y] and isTileType(worldLookup[player.x][player.y].ForegroundTile, "Path") then
             speed = speed * 1.4
         end
-     
-        if difference(player.x * 32, player.dx) > 1 then
-            if player.dx > player.x * 32 then
-                player.dx = player.dx - speed * dt
-            else
-                player.dx = player.dx + speed * dt
-            end
-        else
-            player.dx = player.x * 32
+
+        local x,y = player.x * 32, player.y * 32
+
+        if player.dx > x then
+            player.dx = player.dx - speed * dt
+            if player.dx < x then player.dx = x end
+        elseif player.dx < x then
+            player.dx = player.dx + speed * dt
+            if player.dx > x then player.dx = x end
         end
 
-        if difference(player.x * 32, player.cx) > 1 then
-            if player.cx > player.x * 32 then
-                player.cx = player.cx - speed * dt
-            else
-                player.cx = player.cx + speed * dt
-            end
-        else
-            player.cx = player.x * 32
+        if player.cx > x then
+            player.cx = player.cx - speed * dt
+            if player.cx < x then player.cx = x end
+        elseif player.cx < x then
+            player.cx = player.cx + speed * dt
+            if player.cx > x then player.dx = x end
         end
 
-        if difference(player.y * 32, player.dy) > 1 then
-            if player.dy > player.y * 32 then
-                player.dy = player.dy - speed * dt
-            else
-                player.dy = player.dy + speed * dt
-            end
-        else
-            player.dy = player.y * 32
+        if player.dy > y then
+            player.dy = player.dy - speed * dt
+            if player.dy < y then player.dy = y end
+        elseif player.dy < y then
+            player.dy = player.dy + speed * dt
+            if player.dy > y then player.dy = y end
         end
 
-        if difference(player.y * 32, player.cy) > 1 then
-            if player.cy > player.y * 32 then
-                player.cy = player.cy - speed * dt
-            else
-                player.cy = player.cy + speed * dt
-            end
-        else
-            player.cy = player.y * 32
+        if player.cy > y then
+            player.cy = player.cy - speed * dt
+            if player.cy < y then player.cy = y end
+        elseif player.cy < y then
+            player.cy = player.cy + speed * dt
+            if player.cy > y then player.dy = y end
         end
 
-        -- if distanceToPoint(player.x * 32, player.y * 32, player.cx, player.cy) > 4 * 32 then -- snap to final position
-        --     player.cx = player.x * 32
-        --     player.cy = player.y * 32
+        -- if distanceToPoint(x, y, player.cx, player.cy) > 4 * 32 then -- snap to final position
+        --     player.cx = x
+        --     player.cy = y
         -- end
     end
 end

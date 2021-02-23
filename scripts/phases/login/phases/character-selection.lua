@@ -253,7 +253,6 @@ function loginOrCreate()
                 characters[i].Color = {love.math.random(), love.math.random(), love.math.random(),  1}
                 end
             end
-          --  transitionToPhaseGame()
         end
     end
 end
@@ -286,7 +285,7 @@ function checkCharacterSelectorKeyPressed(key)
             if cs.selectedCharacter > 0 then
                 cs.selectedCharacter = 0
             else
-                love.event.quit()          
+                love.event.quit()
             end 
         end
 
