@@ -109,7 +109,7 @@ function love.keypressed(key)
             end
         end
         
-        if not isTypingInChat and not worldEdit.isTyping then
+        if not isTypingInChat and not worldEdit.isTyping and versionType == "dev" then
             if key == "." then
                 scaleHUD("up")
                 writeSettings()
@@ -121,9 +121,8 @@ function love.keypressed(key)
             end
 
             if key == "kp0" then
-                addFloat("level", player.dx + 16, player.dy + 16, null, {1,0,0}, 5)
+                addFloat("level", player.dx + 16, player.dy + 16, null, {1,0,0}, 10)
             end
-
         end
     end
 
