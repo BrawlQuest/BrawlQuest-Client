@@ -171,8 +171,8 @@ function movePlayer(dt)
                 player.previousDirection = "right"
             else
                 player.speed.x = 0
-            end 
-            
+            end
+
             if love.keyboard.isDown(keybinds.UP) and not worldCollison(prev.x, prev.y - 1) then
                 prev.y = prev.y - 1
             elseif love.keyboard.isDown(keybinds.DOWN) and not worldCollison(prev.x, prev.y + 1) then
@@ -190,23 +190,8 @@ function movePlayer(dt)
             end
             isMoving = true
         end
-
-        -- if (prev.x ~= player.x) or (prev.y ~= player.y) then
-        --     if (worldLookup[prev.x] and worldLookup[prev.x][prev.y] and not worldLookup[prev.x][prev.y].Collision) then
-        --         player.x = prev.x
-        --         if worldLookup[player.x]then
-        --             playFootstepSound(worldLookup[player.x][player.y])
-        --         end
-        --     end
-        --     if (worldLookup[prev.x] and worldLookup[prev.x][prev.y] and not worldLookup[prev.x][prev.y].Collision) then
-        --         player.y = prev.y
-
-        --     end
-        -- end
-
     else -- movement smoothing
         local speed = 64
-
         if me and me.Mount and me.Mount.Name ~= "None" or worldEdit.open then
             speed = tonumber(me.Mount.Val) or 64 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
             if worldEdit.open then
@@ -221,40 +206,35 @@ function movePlayer(dt)
 
         if player.dx > x then
             player.dx = player.dx - speed * dt
-            if player.dx < x then player.dx = x end
+            if player.dx <= x then player.dx = x end
         elseif player.dx < x then
             player.dx = player.dx + speed * dt
-            if player.dx > x then player.dx = x end
+            if player.dx >= x then player.dx = x end
         end
 
         if player.cx > x then
             player.cx = player.cx - speed * dt
-            if player.cx < x then player.cx = x end
+            if player.cx <= x then player.cx = x end
         elseif player.cx < x then
             player.cx = player.cx + speed * dt
-            if player.cx > x then player.dx = x end
+            if player.cx >= x then player.dx = x end
         end
 
         if player.dy > y then
             player.dy = player.dy - speed * dt
-            if player.dy < y then player.dy = y end
+            if player.dy <= y then player.dy = y end
         elseif player.dy < y then
             player.dy = player.dy + speed * dt
-            if player.dy > y then player.dy = y end
+            if player.dy >= y then player.dy = y end
         end
 
         if player.cy > y then
             player.cy = player.cy - speed * dt
-            if player.cy < y then player.cy = y end
+            if player.cy <= y then player.cy = y end
         elseif player.cy < y then
             player.cy = player.cy + speed * dt
-            if player.cy > y then player.dy = y end
+            if player.cy >= y then player.dy = y end
         end
-
-        -- if distanceToPoint(x, y, player.cx, player.cy) > 4 * 32 then -- snap to final position
-        --     player.cx = x
-        --     player.cy = y
-        -- end
     end
 end
 
