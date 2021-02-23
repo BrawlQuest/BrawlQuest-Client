@@ -43,7 +43,7 @@ function initLogin()
         "",
         "Created By" ,
         "Thomas Lock & Danjoe Stubbs",
-        "Music by JoeyFunWithMusic",
+        "Original music by JoeyFunWithMusic\nAdditional music by Eric Matyas (Some Dreamy Place, Ocean Game Title, Left Behind, Dreamlands)",
         "",
         "Graphics by David E. Gervais,used here under a CC license. pousse.rapiere.free.fr/tome/",
         "",

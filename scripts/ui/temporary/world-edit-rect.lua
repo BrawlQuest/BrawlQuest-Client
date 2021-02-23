@@ -2,12 +2,12 @@ function checkWorldEditRectMouseUp(button)
     if (button == 1 or button == 2) and worldEdit.isDrawingRect then
         local ax, ay, bx, by = worldEdit.drawableRect.ax, worldEdit.drawableRect.ay, worldEdit.drawableRect.bx, worldEdit.drawableRect.by
         if ax < bx then
-            while ax < bx do
+            while ax < bx-1 do
                 getYValue(ax, ay, bx, by, button)
                 ax = ax + 1 
             end
         elseif ax > bx then
-            while ax > bx do
+            while ax-1 > bx do
                 ax = ax - 1 
                 getYValue(ax, ay, bx, by, button)
             end
@@ -20,12 +20,12 @@ end
 
 function getYValue(ax, ay, bx, by, button)
     if ay < by then
-        while ay < by do
+        while ay < by-1 do
             drawWorldEditTileFromRect(ax, ay, button)
             ay = ay + 1 
         end
     elseif ay > by then
-        while ay > by do
+        while ay-1 > by do
             ay = ay - 1 
             drawWorldEditTileFromRect(ax, ay, button)
         end

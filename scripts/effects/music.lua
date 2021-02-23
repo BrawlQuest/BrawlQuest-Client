@@ -21,9 +21,10 @@ function loadMusic()
         Heat = love.audio.newSource("assets/music/album1/HEAT 2.0.mp3", "stream"),
         HIJINKS = love.audio.newSource("assets/music/album1/HIJINKS 2.0.mp3", "stream"),
         Longing = love.audio.newSource("assets/music/album1/Longing.mp3", "stream"),
+        Permafrost = love.audio.newSource("assets/music/temp/Some-Dreamy-Place.mp3", "stream")
     }
 
-    worldMusic = {"PuerLavari", "Mining", "Sax", "ToFindTheOne", "Heat", "Longing", }
+    worldMusic = {"PuerLavari", "Mining", "Sax", "ToFindTheOne", "Heat", "Longing", "Permafrost"}
     battleMusic = {"Titans", "Skirmish", "Skirmish2", "CaperOfCruelty", "HIJINKS", }
 
     musicSwitchAmount = 0
