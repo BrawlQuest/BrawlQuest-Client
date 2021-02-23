@@ -314,11 +314,13 @@ function drawArmourHub(thisX, thisY)
         local xb = x + bh + 10
         local wb = bw - bh - 10
         love.graphics.rectangle("fill", xb, y, wb, bh, 5)
-        love.graphics.setColor(1,1,1, alpha)
+        love.graphics.setColor(1, 1, 1, alpha)
         
         love.graphics.print(vb.name .. ":", xb + 10, y + 3, 0, 1)
-        love.graphics.printf("+" .. me[vb.v].Val, xb + wb - 50, y + 3, 40, "right", 0, 1)
-        love.graphics.print(me[vb.v].Name, xb + 10, y + 3 + 12, 0, 1)
+        if me[vb.v].Val ~= "Error" then
+            love.graphics.printf("+" .. me[vb.v].Val, xb + wb - 50, y + 3, 40, "right", 0, 1)
+            love.graphics.print(me[vb.v].Name, xb + 10, y + 3 + 12, 0, 1)
+        end
         y = y + bh + 8
     end
 end

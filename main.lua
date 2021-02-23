@@ -50,7 +50,7 @@ require "scripts.ui.components.npc-chat"
 require "scripts.ui.components.tutorial"
 Luven = require "scripts.libraries.luven.luven"
 
-steam = require 'luasteam'
+-- steam = require 'luasteam'
 json = require("scripts.libraries.json")
 http = require("socket.http")
 ltn12 = require("ltn12")
@@ -103,7 +103,7 @@ sendUpdate = false
 function love.load()
     outlinerOnly = newOutliner(true)
     outlinerOnly:outline(0.8,0,0) -- this is used to draw enemy outlines
-    steam.init()
+    -- steam.init()
     love.graphics.setDefaultFilter("nearest", "nearest")
     initHardData()
     initLogin()
@@ -216,7 +216,7 @@ function love.draw()
 end
 
 function love.update(dt)
-    steam.runCallbacks()
+    -- steam.runCallbacks()
 
     totalCoverAlpha = totalCoverAlpha - 1 * dt
     if phase == "login" then
@@ -271,17 +271,17 @@ function love.update(dt)
                     playersOnline = playersOnline..v.." "
                 end
             end
-            if json:encode(players) ~= json:encode(previousPlayers) then -- Temp [
-                for i,v in ipairs(players) do
-                    if v.Color == null then -- New thing for the people
-                        if previousPlayers[i] and previousPlayers[i].Color then
-                            players[i].Color = previousPlayers[i].Color
-                        else
-                            players[i].Color = {love.math.random(), love.math.random(), love.math.random(),  1}
-                        end
-                    end
-                end
-            end -- Temp ]
+            -- if json:encode(players) ~= json:encode(previousPlayers) then -- Temp [
+            --     for i,v in ipairs(players) do
+            --         if v.Color == null then -- New thing for the people
+            --             if previousPlayers[i] and previousPlayers[i].Color then
+            --                 players[i].Color = previousPlayers[i].Color
+            --             else
+            --                 players[i].Color = {love.math.random(), love.math.random(), love.math.random(),  1}
+            --             end
+            --         end
+            --     end
+            -- end -- Temp ]
 
             if json:encode(inventoryAlpha) ~= json:encode(response['Inventory']) then
                 updateInventory(response)
@@ -325,14 +325,21 @@ function love.update(dt)
                 end
             end -- Temp ]
 
-            if distanceToPoint(me.X, me.Y, player.x, player.y) > 4 then
+            if distanceToPoint(me.X, me.Y, player.x, player.y) > 5 then
                 player.x = me.X
                 player.y = me.Y
-                death.open = true
-                totalCoverAlpha = 2
-                love.audio.play(awakeSfx)
+                if death.previousPosition.hp < (100 + getSTA(0)) * 0.1 then
+                    death.open = true
+                    totalCoverAlpha = 2
+                    love.audio.play(awakeSfx)
+                else
+                    -- player.dx = me.X * 32
+                    -- player.dy = me.Y * 32
+                    -- player.cx = me.X * 32
+                    -- player.cy = me.Y * 32
+                end
             end
-            if not death.open then death.previousPosition = {x = player.x, y = player.y} end
+            if not death.open then death.previousPosition = {x = player.x, y = player.y, hp = player.hp} end
             -- update player
             player.name = me.Name
             player.buddy = me.Buddy
@@ -349,7 +356,7 @@ function love.update(dt)
                         openTutorial(6)
                     end
                     love.audio.play(lvlSfx)
-                    addFloat("level", player.dx + 16, player.dy + 16, null, {1,0,0}, 5)
+                    addFloat("level", player.dx + 16, player.dy + 16, null, {1,0,0}, 10)
                     
                 end
                 player.lvl = me.LVL
@@ -423,5 +430,5 @@ function love.resize(width, height)
 end
 
 function love.quit()
-    steam.shutdown()
+    -- steam.shutdown()
 end
