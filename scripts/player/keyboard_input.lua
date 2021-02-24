@@ -120,7 +120,7 @@ function love.keypressed(key)
             end
 
             if key == "kp0" then
-                addFloat("level", player.dx + 16, player.dy + 16, null, {1,0,0}, 10)
+                -- randLevel = love.math.random(1, 1000)
             end
         end
     end
