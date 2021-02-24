@@ -93,7 +93,7 @@ function drawLogin()
         drawLoginBackground()
         if loginPhase == "login" then
             drawLoginPhase(launch.outCERP)
-            drawAreaName()
+            -- drawAreaName()
         elseif loginPhase == "loading" then
             love.graphics.setColor(1,1,1,launch.outCERP)
             love.graphics.draw(bqLogo, (love.graphics.getWidth() / 2) - ((bqLogo:getWidth() * logoScale) * 0.5), (love.graphics.getHeight() / 2) - ((bqLogo:getHeight() * logoScale) * 0.5) - 100, 0, logoScale)
@@ -110,6 +110,7 @@ function drawLogin()
         for i, v in ipairs(loginText) do
             love.graphics.print(v, playerNameFont, 10, 10 + ((playerNameFont:getHeight() + 2) * (i-1)), 0, 1)
         end
+        drawAreaName()
     end
 end
 

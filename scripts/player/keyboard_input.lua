@@ -8,11 +8,9 @@ function love.keypressed(key)
             launch.inAmount = 1
             launch.outAmount = 1
             launch.outCERP = 1
-            loginPhase = "login"
+            loginPhase = "loading"
             loginViaSteam()
-            -- love.audio.stop(titleMusicFade)
-            -- love.audio.play(titleMusic)
-            if key == "escape" then love.event.quit() end
+            if key == "escape" and versionType == "dev" then love.event.quit() end
         elseif loginPhase == "login" or loginPhase == "loading" then
             if key == "kpenter" then
                 zoneChange("You did not login")
@@ -23,9 +21,10 @@ function love.keypressed(key)
             checkLoginKeyPressedPhaseCreation(key)
         elseif loginPhase == "characters" then
             checkCharacterSelectorKeyPressed(key)
-            -- checkLoginKeyPressedPhaseCharacters(key)
         end
-        -- if key == "escape" then love.event.quit() end
+        if key == "kpenter" then
+            zoneChange("You did not login")
+        end
     else
         if worldEdit.open then 
             checkWorldEditKeyPressed(key)
@@ -80,8 +79,8 @@ function love.keypressed(key)
             end
 
             if key == "tab" then
-                zoneChange("UI Hidden. Press TAB to turn UI back on.", 2)
                 showHUD = not showHUD
+                if not showHUD then zoneChange("UI Hidden. Press TAB to turn UI back on.", 2) end
                 settings[3][1].v = showHUD
                 writeSettings()
             end
