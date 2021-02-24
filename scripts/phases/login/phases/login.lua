@@ -169,10 +169,8 @@ function login()
                     local c = json:decode(availableEnemies[1])
                     availableEnemies = {}
                     for i,v in ipairs(c) do
-                        if i > 15 then
-                            availableEnemies[#availableEnemies+1] = v
-                            worldEdit.enemyImages[#availableEnemies] = getImgIfNotExist(v.Image)
-                        end
+                        availableEnemies[#availableEnemies+1] = v
+                        worldEdit.enemyImages[#availableEnemies] = getImgIfNotExist(v.Image)
                     end
                 end
             end

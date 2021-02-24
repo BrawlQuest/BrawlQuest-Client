@@ -156,10 +156,15 @@ function drawNewWorldEditHud()
         love.graphics.setColor(1,1,1,1)
 
         thisX, thisY = love.graphics.getWidth(), love.graphics.getHeight()
+        local x, y = thisX, thisY
         for i, v in ipairs(availableEnemies) do
-            drawEnemyButton(thisX, thisY - (52 * (i - 1)), 42, 42, 10, v.Name, worldEdit.enemyInputType == i, i, v.Image)
+            drawEnemyButton(x, y, 42, 42, 10, v.Name, worldEdit.enemyInputType == i, i, v.Image)
+            y = y - 52
+            if y <= 52 then
+                y = thisY
+                x = x - 52
+            end
         end
-
         drawTilePicker()
         drawEditorButtons()
         drawAreaDrawButtons()
