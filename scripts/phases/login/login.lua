@@ -182,7 +182,7 @@ end
 
 function loginViaSteam()
     -- if versionType ~= "dev" then
-        local originalID  = steam.user.getSteamID()
+        local originalID = steam.user.getSteamID()
         local str = tostring(originalID)
      
         if str ~= "nil" then

@@ -21,6 +21,8 @@ function initQuestHub()
             barUnComplete = love.graphics.newImage("assets/ui/hud/quest-hub/0.png"),
             arrow = love.graphics.newImage("assets/ui/hud/quest-hub/arrow.png")
         },
+        velY = 0,
+        posY = 0,
     }
 
     initQuestsPanel()
@@ -93,26 +95,25 @@ function initQuestHub()
     }
 end
 
-function generateRandomTitle()
-    local randText = {desc = {"Great", "Ominous", "Dark", "Evil", "Hungry"}, thing = {"Woods", "Night", "Day", "Road", "Nightmare",}}
-    -- local rand = 
-    local text = ""
-    for i = 1, love.math.random(1, 5) do
-        text = text .. randText.desc[love.math.random(1, #randText.desc)] .. " "
-    end
-    return "The " .. text .. randText.thing[love.math.random(1, #randText.thing)]
-end
-
 function updateQuestHub(dt)
     if isMouseOver((uiX - 468) * scale, (uiY - 102) * scale, 468 * scale, 102 * scale) and #quests[1] > 0 then -- Opens Comment
         panelMovement(dt, questHub,  1, "commentAmount")
+
     else
         panelMovement(dt, questHub, -1, "commentAmount")
     end
 
     if questHub.commentAmount > 0 then 
+        local textHeight = getTextHeight(quests[1][questHub.selectedQuest].comment, 127, questHub.font) - questHub.images.npcTalkBG:getHeight()
         questHub.commentOpen = true 
         questHub.commentOpacity = cerp(0, 1, questHub.commentAmount)
+        questHub.velY = questHub.velY - questHub.velY * math.min( dt * 15, 1 ) 
+        questHub.posY = questHub.posY + questHub.velY * dt
+        if questHub.posY > 0 then
+            questHub.posY = 0
+        elseif questHub.posY < textHeight then
+            questHub.posY = textHeight
+        end
     else questHub.commentOpen = false end
 
     if #quests[1] > 0 then
@@ -180,7 +181,6 @@ function drawQuestHub(thisX, thisY)
     if #quests[1] > 0 then 
         drawQuestHubProifle(thisX, thisY)
         if questHub.commentOpen then
-            -- thisX, thisY = thisX - 150, thisY
             drawQuestHubNPCTalk(thisX - 150, thisY)
         end
     end
@@ -198,8 +198,16 @@ function drawQuestHubNPCTalk(thisX, thisY)
         love.graphics.setColor(0,0,0, questHub.commentOpacity * 0.7 )
         love.graphics.draw(questHub.images.npcTalkBG, thisX, thisY)
         love.graphics.setColor(1,1,1,questHub.commentOpacity)
-        love.graphics.printf(quests[1][questHub.selectedQuest].comment, questHub.font, thisX + 8, thisY + 7, 127)
+        -- drawQuestHubNPCTalkStencil()
+        love.graphics.stencil(drawQuestHubNPCTalkStencil, "replace", 1) -- stencils inventory
+        love.graphics.setStencilTest("greater", 0) -- push
+            love.graphics.printf(quests[1][questHub.selectedQuest].comment, questHub.font, thisX + 8, thisY + 7 + questHub.posY, 127)
+        love.graphics.setStencilTest() -- pop
     end
+end
+
+function drawQuestHubNPCTalkStencil()
+    love.graphics.rectangle("fill", uiX - 150 - 73, uiY - cerp(0, 100, questHub.amount), questHub.images.npcTalkBG:getWidth(), questHub.images.npcTalkBG:getHeight(), 5)
 end
 
 function drawQuestHubMeters(thisX, thisY)

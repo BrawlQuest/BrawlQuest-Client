@@ -355,8 +355,8 @@ function love.update(dt)
                         openTutorial(6)
                     end
                     love.audio.play(lvlSfx)
+                    perks.stats[4] = player.cp
                     addFloat("level", player.dx + 16, player.dy + 16, null, {1,0,0}, 10)
-                    
                 end
                 player.lvl = me.LVL
                 firstLaunch = false

@@ -134,8 +134,9 @@ function drawChatboxProfilePic(thisX, thisY, username, text, player, i)
 		drawChatboxBackground(i, thisY, username, text, "left")
 		drawChatboxText(i, thisY, text, "left")
 		love.graphics.setColor(1,1,1,1)
-		love.graphics.printf(username, i+4, thisY + getChatTextHeight(text)+(chatCorner:getHeight()*2)+10, chatWidth+(chatCorner:getWidth()*2), "left")
-		-- drawChatboxUsernameText(i, thisY + getProfilePicY(thisY, text), username)
+		local coords = ""
+		if versionType == "dev" then coords = " X,Y: " .. player.X .. ", " .. player.Y end
+		love.graphics.print(player.LVL .. " " .. username .. coords, i+4, thisY + getChatTextHeight(text)+(chatCorner:getHeight()*2)+10)
 	end
 end
 

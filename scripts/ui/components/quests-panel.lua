@@ -172,16 +172,17 @@ function drawQuestsPanelStencil()
 end
 
 function checkQuestPanelMousePressed(button)
-    -- if button == 1 and questsPanel.hover then
-    --     if questsPanel.selectedQuest[1] == 1 then
-    --         questHub.selectedQuest = 1
-    --         table.insert(quests[2], questsPanel.selectedQuest[3])
-    --         table.remove(quests[questsPanel.selectedQuest[1]], questsPanel.selectedQuest[2])
-    --     elseif questsPanel.selectedQuest[1] == 2 and #quests[1] < 4 then
-    --         table.insert(quests[1], questsPanel.selectedQuest[3])
-    --         table.remove(quests[questsPanel.selectedQuest[1]], questsPanel.selectedQuest[2])
-    --     end
-    -- elseif button == 1 and questHub.hover then
-    --     questHub.selectedQuest = questHub.hoveredQuest
-    -- end
+    if button == 1 and questsPanel.hover then
+        -- if questsPanel.selectedQuest[1] == 1 then
+        --     questHub.selectedQuest = 1
+        --     table.insert(quests[2], questsPanel.selectedQuest[3])
+        --     table.remove(quests[questsPanel.selectedQuest[1]], questsPanel.selectedQuest[2])
+        -- elseif questsPanel.selectedQuest[1] == 2 and #quests[1] < 4 then
+        --     table.insert(quests[1], questsPanel.selectedQuest[3])
+        --     table.remove(quests[questsPanel.selectedQuest[1]], questsPanel.selectedQuest[2])
+        -- end
+    elseif button == 1 and questHub.hover then
+        questHub.selectedQuest = questHub.hoveredQuest
+        questHub.posY = 0
+    end
 end
