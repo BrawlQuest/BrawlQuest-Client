@@ -190,7 +190,7 @@ end
 function drawQuestHubProifle(thisX, thisY)
     drawNPCProfilePic(thisX, thisY, 1, "left", quests[1][questHub.selectedQuest].profilePic)
     love.graphics.setFont(questHub.nameFont)
-    love.graphics.printf(quests[1][questHub.selectedQuest].giver, thisX, thisY + 64 + 6, 64, "center") 
+    love.graphics.printf(quests[1][questHub.selectedQuest].giver, thisX, thisY + 64 + 6, 64, "center")
 end
 
 function drawQuestHubNPCTalk(thisX, thisY)

@@ -89,6 +89,11 @@ function drawLogin()
         love.graphics.setColor(1 - launch.inCERP, 1 - launch.inCERP, 1 - launch.inCERP, launch.inCERP - launch.outCERP)
         love.graphics.draw(launch.logo, width * 0.5 - iwidth * 0.5, height * 0.5 - iheight * 0.5 - 200 * imageScale, 0, imageScale)
         love.graphics.print("LUVEN INTERACTIVE", launch.font, width * 0.5 - (launch.font:getWidth("LUVEN INTERACTIVE") * imageScale) * 0.5, height * 0.5 + 300 * imageScale, 0, imageScale)
+    elseif loginPhase == "dev" then
+        love.graphics.setColor(1,1,1,1)
+        drawLoginBackground()
+        love.graphics.draw(bqLogo, (love.graphics.getWidth() / 2) - ((bqLogo:getWidth() * logoScale) * 0.5), (love.graphics.getHeight() / 2) - ((bqLogo:getHeight() * logoScale) * 0.5) - 100, 0, logoScale)
+        love.graphics.printf("Welcome to Dev Mode!\nPress LEFT or \"A\" to Login with Steam ID\nPress RIGHT or \"D\" to Login with anything else\nOtherwise you can quick login like before\n" .. loadingDots, chatFont, 0, love.graphics.getHeight() * 0.5 + 70, love.graphics.getWidth() / 1, "center", 0, 1)
     else
         drawLoginBackground()
         if loginPhase == "login" then
@@ -181,7 +186,7 @@ function checkLoginTextinput(key)
 end
 
 function loginViaSteam()
-    -- if versionType ~= "dev" then
+    if versionType ~= "dev" then
         local originalID = steam.user.getSteamID()
         local str = tostring(originalID)
      
@@ -194,5 +199,7 @@ function loginViaSteam()
             print("Can't connect to server")
             loginPhase = "login"
         end
-    -- end
+    else
+        loginPhase = "dev"
+    end
 end

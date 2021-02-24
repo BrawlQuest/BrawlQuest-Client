@@ -1,9 +1,5 @@
 function love.keypressed(key) 
     if phase == "login" then
-        if key == "s" then
-            loginViaSteam()
-            print(steam.user.getSteamID())
-        end
         if loginPhase == "prelaunch" then
             launch.inAmount = 1
             launch.outAmount = 1
@@ -12,11 +8,33 @@ function love.keypressed(key)
             loginViaSteam()
             if key == "escape" and versionType == "dev" then love.event.quit() end
         elseif loginPhase == "login" or loginPhase == "loading" then
-            if key == "kpenter" then
-                zoneChange("You did not login")
-            end
             if key == "escape" and versionType == "dev" then love.event.quit() end
             checkLoginKeyPressedPhaseLogin(key)
+        elseif loginPhase == "dev" then
+            if versionType == "dev" then
+                if key == "home" then 
+                    quickLogin("Pebsie", 1)
+                elseif key == "end" then
+                    quickLogin("76561198330157157", 1, "76561198330157157")
+                elseif key == "pageup" then
+                    quickLogin("Danjoe", 1)
+                elseif key == "pagedown" then
+                    quickLogin("Danjoe", 2)
+                end
+            end
+            if key == "left" or key == "a" then
+                local originalID = steam.user.getSteamID()
+                local str = tostring(originalID)
+                if str ~= "nil" then
+                    textfields[1] = str
+                    textfields[2] = str
+                    textfields[3] = str
+                    login()
+                end
+            elseif key == "right" or key == "d" then
+                loginPhase = "login"
+            end
+            if key == "escape" and versionType == "dev" then love.event.quit() end
         elseif loginPhase == "creation" then
             checkLoginKeyPressedPhaseCreation(key)
         elseif loginPhase == "characters" then
