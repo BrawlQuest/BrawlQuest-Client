@@ -83,8 +83,6 @@ end
 function getQuestsPanelBoxHeight(i, j)
     local height = getTextHeight(
         quests[i][j].title, questsPanel.boxTextWidth, questsPanel.titleFont
-    ) + 8 + getTextHeight(
-        "- " .. quests[i][j].task, questsPanel.boxTextWidth, questsPanel.commentFont
     ) + 20 + 16 + (10 * 2)
 
     local profileHeight = (profilePic:getHeight() * 0.5) + 20 + 10
@@ -137,8 +135,8 @@ function drawQuestsPanelQuestBox(thisX, thisY, i, j)
     thisX, thisY = thisX + profilePic:getWidth() * 0.5 + 10 * 2, thisY + 10 + 10
     love.graphics.printf(quests[i][j].title, questsPanel.titleFont, thisX, thisY, questsPanel.boxTextWidth, "left")
     thisY = thisY + getTextHeight(quests[i][j].title, questsPanel.boxTextWidth, questsPanel.titleFont) + 8
-    love.graphics.printf("- " .. quests[i][j].task, questsPanel.commentFont, thisX, thisY, questsPanel.boxTextWidth, "left")
-    thisY = thisY + getTextHeight("- " .. quests[i][j].task, questsPanel.boxTextWidth, questsPanel.commentFont) + 8
+    -- love.graphics.printf("- " .. quests[i][j].task, questsPanel.commentFont, thisX, thisY, questsPanel.boxTextWidth, "left")
+    -- thisY = thisY + getTextHeight("- " .. quests[i][j].task, questsPanel.boxTextWidth, questsPanel.commentFont) + 8
     drawQuestsPanelMeter(thisX, thisY, i, j)
 end
 
@@ -182,16 +180,16 @@ function drawQuestsPanelStencil()
 end
 
 function checkQuestPanelMousePressed(button)
-    if button == 1 and questsPanel.hover then
-        if questsPanel.selectedQuest[1] == 1 then
-            questHub.selectedQuest = 1
-            table.insert(quests[2], questsPanel.selectedQuest[3])
-            table.remove(quests[questsPanel.selectedQuest[1]], questsPanel.selectedQuest[2])
-        elseif questsPanel.selectedQuest[1] == 2 and #quests[1] < 4 then
-            table.insert(quests[1], questsPanel.selectedQuest[3])
-            table.remove(quests[questsPanel.selectedQuest[1]], questsPanel.selectedQuest[2])
-        end
-    elseif button == 1 and questHub.hover then
-        questHub.selectedQuest = questHub.hoveredQuest
-    end
+    -- if button == 1 and questsPanel.hover then
+    --     if questsPanel.selectedQuest[1] == 1 then
+    --         questHub.selectedQuest = 1
+    --         table.insert(quests[2], questsPanel.selectedQuest[3])
+    --         table.remove(quests[questsPanel.selectedQuest[1]], questsPanel.selectedQuest[2])
+    --     elseif questsPanel.selectedQuest[1] == 2 and #quests[1] < 4 then
+    --         table.insert(quests[1], questsPanel.selectedQuest[3])
+    --         table.remove(quests[questsPanel.selectedQuest[1]], questsPanel.selectedQuest[2])
+    --     end
+    -- elseif button == 1 and questHub.hover then
+    --     questHub.selectedQuest = questHub.hoveredQuest
+    -- end
 end
