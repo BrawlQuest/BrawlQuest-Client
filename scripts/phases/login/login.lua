@@ -62,8 +62,13 @@ function initLogin()
     lightningSfx = love.audio.newSource("assets/sfx/weather/lightning_b.wav", "static")
     lightningSfx:setVolume(0.5)
     initLoginBackground()
-    
     loadingAmount = 0
+    loadingText = "Connecting to Servers "
+    loginAttempts = 1
+    circleAmount = 0
+    loadingDots = "\n"
+    dotTick = 0
+    dotAmount = 0
 end
 
 function drawLogin()
@@ -75,7 +80,7 @@ function drawLogin()
         drawLoginBackground()
         love.graphics.setColor(1,1,1,launch.outCERP)
         love.graphics.draw(bqLogo, (love.graphics.getWidth() / 2) - ((bqLogo:getWidth() * logoScale) * 0.5), (love.graphics.getHeight() / 2) - ((bqLogo:getHeight() * logoScale) * 0.5) - 100, 0, logoScale)
-        love.graphics.printf("Connecting to Servers", chatFont, 0, love.graphics.getHeight() * 0.5 + 70, love.graphics.getWidth() / 1, "center", 0, 1)
+        love.graphics.printf(loadingText .. loadingDots, chatFont, 0, love.graphics.getHeight() * 0.5 + 70, love.graphics.getWidth() / 1, "center", 0, 1)
         for i, v in ipairs(loginText) do
             love.graphics.print(v, playerNameFont, 10, 10 + ((playerNameFont:getHeight() + 2) * (i-1)), 0, 1)
         end
@@ -92,7 +97,7 @@ function drawLogin()
         elseif loginPhase == "loading" then
             love.graphics.setColor(1,1,1,launch.outCERP)
             love.graphics.draw(bqLogo, (love.graphics.getWidth() / 2) - ((bqLogo:getWidth() * logoScale) * 0.5), (love.graphics.getHeight() / 2) - ((bqLogo:getHeight() * logoScale) * 0.5) - 100, 0, logoScale)
-            love.graphics.printf("Connecting to Servers", chatFont, 0, love.graphics.getHeight() * 0.5 + 70, love.graphics.getWidth() / 1, "center", 0, 1)
+            love.graphics.printf(loadingText .. loadingDots, chatFont, 0, love.graphics.getHeight() * 0.5 + 70, love.graphics.getWidth() / 1, "center", 0, 1)
         elseif loginPhase == "characters" then
             drawCharacterSelection()
         elseif loginPhase == "creation" then
@@ -129,7 +134,8 @@ function updateLogin(dt)
     elseif loginPhase == "loading" then
         loadingAmount = loadingAmount + 0.5 * dt
         if loadingAmount >= 1 then
-            print("Connection Failed")
+            loginAttempts = loginAttempts + 1
+            loadingText = "Login Failed: Attempt: " .. loginAttempts .. "\n Check Your Internet Connection\n Reattempting Login "
             loginViaSteam()
             loadingAmount = 0
         end
@@ -138,6 +144,17 @@ function updateLogin(dt)
     end
     updateLoginBackground(dt)
     updateEvents(dt)
+
+    dotTick = dotTick + 2.5 * dt
+    if dotTick >= 1 then
+        dotTick = 0
+        dotAmount = dotAmount + 1
+        loadingDots = loadingDots .. "."
+        if dotAmount > 3 then
+            dotAmount = 0
+            loadingDots = "\n"
+        end
+    end
 end
 
 function checkClickLogin(x, y)

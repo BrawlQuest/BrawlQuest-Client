@@ -102,7 +102,7 @@ sendUpdate = false
 function love.load()
     outlinerOnly = newOutliner(true)
     outlinerOnly:outline(0.8,0,0) -- this is used to draw enemy outlines
-     steam.init()
+    steam.init()
     love.graphics.setDefaultFilter("nearest", "nearest")
     initHardData()
     initLogin()
