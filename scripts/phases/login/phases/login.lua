@@ -90,18 +90,19 @@ function checkLoginKeyPressedPhaseLogin(key)
         if key == "home" then 
             quickLogin("Pebsie", 1)
         elseif key == "end" then
-            quickLogin("Danjoe", 1)
+            quickLogin("76561198330157157", 1, "76561198330157157")
         elseif key == "pageup" then
-            quickLogin("Danjoe", 2)
+            quickLogin("Danjoe", 1)
         elseif key == "pagedown" then
-            quickLogin("Danjoe", 3)
+            quickLogin("Danjoe", 2)
         end
     end
 end
     
-function quickLogin(name, character)
+function quickLogin(name, character, password)
+    password = password or "password"
     textfields[1] = name
-    textfields[2] = "password"
+    textfields[2] = password
     textfields[3] = "********"
     editingField = 2
     login()
@@ -126,7 +127,7 @@ function login()
             UID = textfields[1],
             Password = textfields[2]
         }))
-        print("logged in as "..textfields[1])
+        -- print("logged in as "..textfields[1])
         
         if c == 200 then
             b = json:decode(tostring(b))
@@ -144,7 +145,7 @@ function login()
         --  if c == 200 then -- Why was this here?
             -- if type(characters[1]) == "string" then
                     characters = json:decode(characters[1])
-                print("Loaded characters")
+                -- print("Loaded characters")
             -- else
             --      print("Characters" .. json:encode(characters))
             --      characters = characters[1]
@@ -163,7 +164,7 @@ function login()
                 sink = ltn12.sink.table(availableEnemies)
             }
             
-        if c == 200 then
+            if c == 200 then
                 if type(availableEnemies[1]) == "string" then
                     local c = json:decode(availableEnemies[1])
                     availableEnemies = {}
@@ -178,6 +179,7 @@ function login()
         elseif c == 401 then
             textfields[2] = ""
             textfields[3] = ""
+            print("Login Failed")
         end
     end
 end

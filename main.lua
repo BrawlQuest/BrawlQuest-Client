@@ -57,11 +57,10 @@ ltn12 = require("ltn12")
 newOutliner = require 'scripts.libraries.outliner'
 
 version = "Pre-Release" 
-versionType = "release" -- "dev" for quick login, "release" for not
+versionType = "dev" -- "dev" for quick login, "release" for not
 versionNumber = "Beta 1.1.2" -- very important for settings
 
 phase = "login"
-
 blockMap = {}
 treeMap = {}
 players = {} -- other players

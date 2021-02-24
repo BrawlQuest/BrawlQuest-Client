@@ -13,11 +13,11 @@ function love.keypressed(key)
             -- love.audio.stop(titleMusicFade)
             -- love.audio.play(titleMusic)
             if key == "escape" then love.event.quit() end
-        elseif loginPhase == "login" then
+        elseif loginPhase == "login" or loginPhase == "loading" then
             if key == "kpenter" then
                 zoneChange("You did not login")
             end
-            if key == "escape" then love.event.quit() end
+            if key == "escape" and versionType == "dev" then love.event.quit() end
             checkLoginKeyPressedPhaseLogin(key)
         elseif loginPhase == "creation" then
             checkLoginKeyPressedPhaseCreation(key)
