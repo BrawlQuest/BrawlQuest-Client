@@ -144,7 +144,11 @@ function drawPlayer(v, i)
             love.graphics.setColor(0.4,0,0)
             love.graphics.rectangle("fill", v.X, underCharacterBarY, 32, 4)
             love.graphics.setColor(0,1,0)
-            love.graphics.rectangle("fill", v.X, underCharacterBarY, math.clamp(0, thisPlayer.HP/(100 + getSTA()), 1) * 32, 4)
+            if i == -1 then
+                love.graphics.rectangle("fill", v.X, underCharacterBarY, math.clamp(0, thisPlayer.HP/(100 + getSTA()), 1) * 32, 4)
+            else
+                love.graphics.rectangle("fill", v.X, underCharacterBarY, (thisPlayer.HP/(100+thisPlayer.STA*15))*32, 4)
+            end
             underCharacterBarY = underCharacterBarY + 5
         end
         if thisPlayer.Mana < 100 then
