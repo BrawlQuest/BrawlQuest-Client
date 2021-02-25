@@ -80,6 +80,7 @@ username = "Pebsie"
 readyForUpdate = true
 playersOnline = ""
 firstLaunch = true
+playerCount = 0
 
 world = {}
 worldImg = {}
@@ -197,10 +198,10 @@ function love.draw()
 
         Luven.camera:draw()
 
-        local offset = cerp(10, 205, inventory.amount)
+        local offset = cerp(10, 324, inventory.amount)
         love.graphics.setColor(1,1,1)
         love.graphics.setFont(settPan.itemFont)
-        love.graphics.print("X,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()).."\nPlayers: "..playersOnline, offset, 10)
+        love.graphics.print("X,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount .."\n"..playersOnline, offset, 10)
         -- if worldLookup[player.x] and worldLookup[player.x][player.y] then
         --     love.graphics.print(string.upper("\n"..tostring(worldLookup[player.x][player.y].Name)), offset, 13)
         -- end
@@ -267,9 +268,11 @@ function love.update(dt)
             npcs = response['NPC']
             auras = response['Auras']
             playersOnline = ""
+            playerCount = 0
             if response['OnlinePlayers'] then
                 for i,v in ipairs(response['OnlinePlayers']) do
-                    playersOnline = playersOnline..v.." "
+                    playersOnline = playersOnline .. v .. "\n"
+                    playerCount = playerCount + 1
                 end
             end
             -- if json:encode(players) ~= json:encode(previousPlayers) then -- Temp [
