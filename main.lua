@@ -151,7 +151,6 @@ function love.draw()
             if showWorldAnimations then drawLeaves() end
             drawLoot()
             
-           
             if not worldEdit.open then drawWorldMask() end
             if showClouds then drawClouds() end     
 
@@ -181,7 +180,7 @@ function love.draw()
                     openTutorial(4)
                 end
             end
-            
+
             if showWorldMask and not worldEdit.open then drawWorldMask() end --not worldEdit.open or
             if showClouds and not worldEdit.open then drawClouds() end
 
