@@ -247,7 +247,6 @@ function drawCraftingBackground(thisX, thisY)
                 end
             end
         end
-        -- crafting.recipesHeight = y
     love.graphics.setStencilTest() -- pop
 
     x, y = thisX + 10 + w + 10, thisY + 10 + 10
@@ -397,6 +396,13 @@ function checkCraftingMousePressed(button)
         love.audio.play(crafting.swing)
     elseif button == 1 and crafting.overOpenField > 0 then
         crafting.openField[crafting.overOpenField] = not crafting.openField[crafting.overOpenField]
+        if crafting.openField[crafting.overOpenField] == true then
+            crafting.selectedField.i = crafting.overOpenField
+            crafting.selectedField.j = 1
+            v = crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j]
+            crafting.selectedItem = v
+            enterCraftingItems(v)
+        end
         getRecipesHeight()
         writeSettings()
     elseif button == 1 and crafting.mouseOverField.i > 0 then
@@ -405,6 +411,82 @@ function checkCraftingMousePressed(button)
         local v = crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j]
         crafting.selectedItem = v
         enterCraftingItems(v)
+    end
+end
+
+function checkCraftingKeyPressed(key)
+    local v = null
+    if crafting.fields[crafting.selectedField.i] and crafting.recipes[crafting.fields[crafting.selectedField.i]] then
+        v = crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j]
+        print(json:encode_pretty(crafting.selectedField.i))
+    end
+
+    if crafting.selectedField.i == 0 and (key == "up" or key == "down") then
+
+        crafting.selectedField = {i = 1, j = 1}
+        v = crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j]
+        crafting.selectedItem = v
+        enterCraftingItems(v)
+        for i, v in ipairs(crafting.fields) do
+            crafting.openField[i] = true
+        end
+        getRecipesHeight()
+    elseif key == "up" and v then
+        crafting.selectedField.j = crafting.selectedField.j - 1
+        if crafting.selectedField.j < 1 then
+            -- crafting.openField[crafting.selectedField.i] = false
+            crafting.selectedField.i = crafting.selectedField.i - 1
+            if crafting.selectedField.i < 1 then
+                crafting.selectedField.i = #crafting.fields
+                crafting.posY = 0
+            end
+            crafting.selectedField.j = #crafting.recipes[crafting.fields[crafting.selectedField.i]]
+                     
+            -- crafting.posY = 46 * -crafting.selectedField.i
+
+            if crafting.selectedField.i == #crafting.fields then
+                crafting.posY = crafting.recipesHeight - 66
+            end
+            crafting.openField[crafting.selectedField.i] = true
+            crafting.posY = crafting.posY + 46   
+            getRecipesHeight()
+        end
+        v = crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j]
+        crafting.selectedItem = v
+        enterCraftingItems(v)
+        crafting.posY = crafting.posY + 66
+        
+    elseif key == "down" and v then
+        crafting.selectedField.j = crafting.selectedField.j + 1
+        if crafting.selectedField.j > #crafting.recipes[crafting.fields[crafting.selectedField.i]] then
+            -- crafting.openField[crafting.selectedField.i] = false
+
+            crafting.selectedField.i = crafting.selectedField.i + 1
+            if crafting.selectedField.i > #crafting.fields then
+                crafting.selectedField.i = 1
+                
+            end
+            crafting.selectedField.j = 1
+            crafting.posY = crafting.posY - 46            
+            -- crafting.posY = 46 * -crafting.selectedField.i
+
+            if crafting.selectedField.i == 1 then
+                crafting.posY = 66
+            end
+            crafting.openField[crafting.selectedField.i] = true
+            getRecipesHeight()
+        end
+        v = crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j]
+        crafting.selectedItem = v
+        enterCraftingItems(v)
+        crafting.posY = crafting.posY - 66
+        
+    elseif key == keybinds.INTERACT or checkMoveOrAttack(key, "move") then
+        crafting.open = false
+        crafting.enteredItems = {}
+        crafting.craftableItems = {}
+        crafting.craftable = false
+        crafting.selectedField = {i = 0, j = 0}
     end
 end
 

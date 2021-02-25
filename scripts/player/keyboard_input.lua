@@ -75,13 +75,7 @@ function love.keypressed(key)
                 showNPCChatBackground = false
             end
         elseif crafting.open then
-            if key == keybinds.INTERACT or checkMoveOrAttack(key, "move") then
-                crafting.open = false
-                crafting.enteredItems = {}
-                crafting.craftableItems = {}
-                crafting.craftable = false
-                crafting.selectedField = {i = 0, j = 0}
-            end
+            checkCraftingKeyPressed(key)
         else
             checkHotbarKeyPressed(key)
             checkTargetingPress(key)
