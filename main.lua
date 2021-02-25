@@ -324,10 +324,10 @@ function love.update(dt)
                 end
             end -- Temp ]
 
-            if distanceToPoint(me.X, me.Y, player.x, player.y) > 5 then
+            if distanceToPoint(me.X, me.Y, player.x, player.y) > 3 then
                 player.x = me.X
                 player.y = me.Y
-                if death.previousPosition.hp < (100 + getSTA(0)) * 0.1 then
+                if death.previousPosition.hp < (100 + getSTA(0)) * 0.9 then
                     death.open = true
                     totalCoverAlpha = 2
                     love.audio.play(awakeSfx)

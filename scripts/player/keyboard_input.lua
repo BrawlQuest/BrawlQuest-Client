@@ -15,11 +15,11 @@ function love.keypressed(key)
                 if key == "home" then 
                     quickLogin("Pebsie", 1)
                 elseif key == "end" then
-                    quickLogin("76561198330157157", 1, "76561198330157157")
-                elseif key == "pageup" then
                     quickLogin("Danjoe", 1)
-                elseif key == "pagedown" then
+                elseif key == "pageup" then
                     quickLogin("Danjoe", 2)
+                elseif key == "pagedown" then
+                    quickLogin("Danjoe", 3)
                 end
             end
             if key == "left" or key == "a" then
