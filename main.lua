@@ -201,13 +201,11 @@ function love.draw()
         local offset = cerp(10, 324, inventory.amount)
         love.graphics.setColor(1,1,1)
         love.graphics.setFont(settPan.itemFont)
-        love.graphics.print("X,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount .."\n"..playersOnline, offset, 10)
-        -- if worldLookup[player.x] and worldLookup[player.x][player.y] then
-        --     love.graphics.print(string.upper("\n"..tostring(worldLookup[player.x][player.y].Name)), offset, 13)
-        -- end
-
+        local text
+        if versionType == "dev" then text = "X,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount .."\n"..playersOnline
+        else text = "X,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount end
+        love.graphics.print(text, offset, 10)
     end
-
 
     mx, my = love.mouse.getPosition()
     love.graphics.setColor(1,1,1)

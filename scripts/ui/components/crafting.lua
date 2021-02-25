@@ -480,7 +480,12 @@ function checkCraftingKeyPressed(key)
         crafting.selectedItem = v
         enterCraftingItems(v)
         crafting.posY = crafting.posY - 66
-        
+    elseif key == "return" and crafting.craftable then
+        crafting.isCrafting = true
+        crafting.whiteout = 0
+        love.audio.stop(crafting.swing)
+        crafting.swing:setPitch(love.math.random(30,80)/100)
+        love.audio.play(crafting.swing)
     elseif key == keybinds.INTERACT or checkMoveOrAttack(key, "move") then
         crafting.open = false
         crafting.enteredItems = {}
