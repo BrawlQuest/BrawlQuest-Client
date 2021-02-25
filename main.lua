@@ -151,34 +151,37 @@ function love.draw()
             if showWorldAnimations then drawLeaves() end
             drawLoot()
             
-
+           
             if not worldEdit.open then drawWorldMask() end
             if showClouds then drawClouds() end     
+
+            local drawingText = false
+            if isNearbyTile("assets/world/objects/Anvil.png") and not drawingText then
+                drawTextBelowPlayer("Press "..keybinds.INTERACT.." to craft")
+                inventory.notNPC = false
+                drawingText = true
+            end
+
             for i,v in ipairs(npcs) do
                 if distanceToPoint(player.x,player.y,v.X,v.Y) <= 1 and not showNPCChatBackground  and v.Conversation ~= "" then
                     local isQuestCompleter = false
                     for k,q in ipairs(quests[1]) do
-                    
-                            if q.rawData.Quest.ReturnNPCID == v.ID and q.currentAmount == q.requiredAmount then
-                                drawTextBelowPlayer("Press "..keybinds.INTERACT.." to complete quest")
-                                isQuestCompleter = true
-                            end
-                       
+                        if q.rawData.Quest.ReturnNPCID == v.ID and q.currentAmount == q.requiredAmount then
+                            drawTextBelowPlayer("Press "..keybinds.INTERACT.." to complete quest")
+                            isQuestCompleter = true
+                        end
                     end
 
-                    if not isQuestCompleter then
+                    if not isQuestCompleter and not drawingText then
                         drawTextBelowPlayer("Press "..keybinds.INTERACT.." to talk")
+                        drawingText = true
                     end
                         
                     inventory.notNPC = false
                     openTutorial(4)
                 end
             end
-        
-            if isNearbyTile("assets/world/objects/Anvil.png") then  drawTextBelowPlayer("Press "..keybinds.INTERACT.." to craft")
-                inventory.notNPC = false
-            end
-
+            
             if showWorldMask and not worldEdit.open then drawWorldMask() end --not worldEdit.open or
             if showClouds and not worldEdit.open then drawClouds() end
 

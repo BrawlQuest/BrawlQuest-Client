@@ -71,11 +71,11 @@ function love.keypressed(key)
             end
         elseif showNPCChatBackground then
             checkNPCChatKeyPressed(key)
-            if key == keybinds.INTERACT or key == "escape" then 
-                showNPCChatBackground = false 
+            if key == keybinds.INTERACT or key == "escape" or checkMoveOrAttack(key, "move") then 
+                showNPCChatBackground = false
             end
         elseif crafting.open then
-            if key == keybinds.INTERACT or key == "escape" then
+            if key == keybinds.INTERACT or checkMoveOrAttack(key, "move") then
                 crafting.open = false
                 crafting.enteredItems = {}
                 crafting.craftableItems = {}
@@ -107,8 +107,6 @@ function love.keypressed(key)
                 worldEdit.open = not worldEdit.open
             end
 
-            if key == keybinds.INTERACT then startConversation() end
-
             if key == keybinds.INVENTORY and inventory.notNPC then
                 inventory.forceOpen = not inventory.forceOpen
             end
@@ -119,10 +117,14 @@ function love.keypressed(key)
                 questsPanel.forceOpen = not questsPanel.forceOpen
             end
 
-            if key == keybinds.INTERACT and nearbyAnvil then -- Hello Mr HackerMan! Removing the isNearbyTile will allow you to open the crafting menu from anywhere, but won't allow you to actually craft any items. Sorry! =(
-                getRecipesHeight()
-                crafting.open = true
-                -- inventory.notNPC = true
+            if key == keybinds.INTERACT then -- Hello Mr HackerMan! Removing the isNearbyTile will allow you to open the crafting menu from anywhere, but won't allow you to actually craft any items. Sorry! =(
+                if nearbyAnvil then
+                    getRecipesHeight()
+                    crafting.open = true
+                    -- inventory.notNPC = true
+                else
+                    startConversation()
+                end
             end
         end
         
@@ -167,4 +169,25 @@ function love.textinput(key)
     elseif worldEdit.isTyping then
         checkWorldEditTextinput(key)
     end
+end
+
+local keys = {"UP", "DOWN", "LEFT", "RIGHT", "ATTACK_UP", "ATTACK_DOWN", "ATTACK_LEFT", "ATTACK_RIGHT",}
+function checkMoveOrAttack(key, type)
+    local push, pop = 1, 8
+    if type then
+        if type == "move" then
+            push, pop = 1, 4
+        elseif type == "attack" then
+            push, pop = 4, 8
+        end
+    end
+    local output = false
+    if key == "escape" then return true end
+    for i = push, pop do
+        if key == keybinds[keys[i]] then
+            output = true
+            break
+        end
+    end
+    return output
 end
