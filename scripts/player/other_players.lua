@@ -140,11 +140,11 @@ function drawPlayer(v, i)
             drawArrowImage(diffX, diffY, v.X, v.Y)
         end
         local underCharacterBarY = v.Y+34
-        if thisPlayer.HP < (100+thisPlayer.STA*15) then
+        if thisPlayer.HP < 100 + getSTA() then
             love.graphics.setColor(0.4,0,0)
-            love.graphics.rectangle("fill", v.X, underCharacterBarY,32,4)
+            love.graphics.rectangle("fill", v.X, underCharacterBarY, 32, 4)
             love.graphics.setColor(0,1,0)
-            love.graphics.rectangle("fill", v.X, underCharacterBarY, (thisPlayer.HP/(100+thisPlayer.STA*15))*32, 4)
+            love.graphics.rectangle("fill", v.X, underCharacterBarY, math.clamp(0, thisPlayer.HP/(100 + getSTA()), 1) * 32, 4)
             underCharacterBarY = underCharacterBarY + 5
         end
         if thisPlayer.Mana < 100 then
