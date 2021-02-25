@@ -243,7 +243,8 @@ function updateOtherPlayers(dt)
             print("player Hit")
             playersDrawable[i].HP = v.HP
             playersDrawable[i].RedAlpha = 1
-            love.audio.play(playerHitSfx)
+            love.audio.play(playerHitSfx) 
+            boneSpurt(playersDrawable[i].X + 16, playersDrawable[i].Y + 16, 10, 25, 1, 1, 1)
         end
 
         if playersDrawable[i].RedAlpha then
@@ -259,12 +260,11 @@ function updateOtherPlayers(dt)
             playersDrawable[i].Y = v.Y * 32
         end
         if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X * 32, v.Y * 32) > 1 then
-                speed = 64
-         
+            local speed
             if playersDrawable[i].Mount.Name ~= "None" or worldEdit.open then
                 speed = tonumber(playersDrawable[i].Mount.Val) or 64
             end
-            if worldLookup[playersDrawable[i].X] and worldLookup[playersDrawable[i].X][playersDrawable[i].Y] and isTileType(worldLookup[playersDrawable[i].X][playersDrawable[i].Y].ForegroundTile, "Path") then
+            if worldLookup[v.X] and worldLookup[v.X][v.Y] and isTileType(worldLookup[v.X][v.Y].ForegroundTile, "Path") then
                 speed = speed * 1.4
             end
             
