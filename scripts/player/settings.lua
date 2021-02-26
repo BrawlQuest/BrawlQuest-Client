@@ -36,7 +36,7 @@ function initSettings()
     showChat = true
     openUiOnHover = true
     openInventoryOnHover = true
-    openQuestsOnHover = true
+    openQuestsOnHover = false
     showClouds = false
     showShadows = false
     showWorldMask = true
