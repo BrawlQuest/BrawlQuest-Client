@@ -1,31 +1,48 @@
 function love.keypressed(key) 
     if phase == "login" then
-        if key == "s" then
-            loginViaSteam()
-            print(steam.user.getSteamID())
-        end
         if loginPhase == "prelaunch" then
             launch.inAmount = 1
             launch.outAmount = 1
             launch.outCERP = 1
-            loginPhase = "login"
+            loginPhase = "loading"
             loginViaSteam()
-            -- love.audio.stop(titleMusicFade)
-            -- love.audio.play(titleMusic)
-            if key == "escape" then love.event.quit() end
-        elseif loginPhase == "login" then
-            if key == "kpenter" then
-                zoneChange("You did not login")
-            end
-            if key == "escape" then love.event.quit() end
+            if key == "escape" and versionType == "dev" then love.event.quit() end
+        elseif loginPhase == "login" or loginPhase == "loading" then
+            if key == "escape" and versionType == "dev" then love.event.quit() end
             checkLoginKeyPressedPhaseLogin(key)
+        elseif loginPhase == "dev" then
+            if versionType == "dev" then
+                if key == "home" then 
+                    quickLogin("Pebsie", 1)
+                elseif key == "end" then
+                    quickLogin("Danjoe", 1)
+                elseif key == "pageup" then
+                    quickLogin("Danjoe", 2)
+                elseif key == "pagedown" then
+                    quickLogin("Danjoe", 3)
+                end
+            end
+            if key == "left" or key == "a" then
+                local originalID = steam.user.getSteamID()
+                local str = tostring(originalID)
+                if str ~= "nil" then
+                    textfields[1] = str
+                    textfields[2] = str
+                    textfields[3] = str
+                    login()
+                end
+            elseif key == "right" or key == "d" then
+                loginPhase = "login"
+            end
+            if key == "escape" and versionType == "dev" then love.event.quit() end
         elseif loginPhase == "creation" then
             checkLoginKeyPressedPhaseCreation(key)
         elseif loginPhase == "characters" then
             checkCharacterSelectorKeyPressed(key)
-            -- checkLoginKeyPressedPhaseCharacters(key)
         end
-        -- if key == "escape" then love.event.quit() end
+        if key == "kpenter" then
+            zoneChange("You did not login")
+        end
     else
         if worldEdit.open then 
             checkWorldEditKeyPressed(key)
@@ -54,17 +71,11 @@ function love.keypressed(key)
             end
         elseif showNPCChatBackground then
             checkNPCChatKeyPressed(key)
-            if key == keybinds.INTERACT or key == "escape" then 
-                showNPCChatBackground = false 
+            if key == keybinds.INTERACT or key == "escape" or checkMoveOrAttack(key, "move") then 
+                showNPCChatBackground = false
             end
         elseif crafting.open then
-            if key == keybinds.INTERACT or key == "escape" then
-                crafting.open = false
-                crafting.enteredItems = {}
-                crafting.craftableItems = {}
-                crafting.craftable = false
-                crafting.selectedField = {i = 0, j = 0}
-            end
+            checkCraftingKeyPressed(key)
         else
             checkHotbarKeyPressed(key)
             checkTargetingPress(key)
@@ -80,8 +91,8 @@ function love.keypressed(key)
             end
 
             if key == "tab" then
-                zoneChange("UI Hidden. Press TAB to turn UI back on.", 2)
                 showHUD = not showHUD
+                if not showHUD then zoneChange("UI Hidden. Press TAB to turn UI back on.", 2) end
                 settings[3][1].v = showHUD
                 writeSettings()
             end
@@ -89,8 +100,6 @@ function love.keypressed(key)
             if key == "'" and versionType == "dev" then
                 worldEdit.open = not worldEdit.open
             end
-
-            if key == keybinds.INTERACT then startConversation() end
 
             if key == keybinds.INVENTORY and inventory.notNPC then
                 inventory.forceOpen = not inventory.forceOpen
@@ -102,10 +111,14 @@ function love.keypressed(key)
                 questsPanel.forceOpen = not questsPanel.forceOpen
             end
 
-            if key == keybinds.INTERACT and nearbyAnvil then -- Hello Mr HackerMan! Removing the isNearbyTile will allow you to open the crafting menu from anywhere, but won't allow you to actually craft any items. Sorry! =(
-                getRecipesHeight()
-                crafting.open = true
-                -- inventory.notNPC = true
+            if key == keybinds.INTERACT then -- Hello Mr HackerMan! Removing the isNearbyTile will allow you to open the crafting menu from anywhere, but won't allow you to actually craft any items. Sorry! =(
+                if nearbyAnvil then
+                    getRecipesHeight()
+                    crafting.open = true
+                    -- inventory.notNPC = true
+                else
+                    startConversation()
+                end
             end
         end
         
@@ -121,7 +134,7 @@ function love.keypressed(key)
             end
 
             if key == "kp0" then
-                addFloat("level", player.dx + 16, player.dy + 16, null, {1,0,0}, 10)
+                -- randLevel = love.math.random(1, 1000)
             end
         end
     end
@@ -150,4 +163,25 @@ function love.textinput(key)
     elseif worldEdit.isTyping then
         checkWorldEditTextinput(key)
     end
+end
+
+local keys = {"UP", "DOWN", "LEFT", "RIGHT", "ATTACK_UP", "ATTACK_DOWN", "ATTACK_LEFT", "ATTACK_RIGHT",}
+function checkMoveOrAttack(key, type)
+    local push, pop = 1, 8
+    if type then
+        if type == "move" then
+            push, pop = 1, 4
+        elseif type == "attack" then
+            push, pop = 4, 8
+        end
+    end
+    local output = false
+    if key == "escape" then return true end
+    for i = push, pop do
+        if key == keybinds[keys[i]] then
+            output = true
+            break
+        end
+    end
+    return output
 end

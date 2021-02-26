@@ -140,11 +140,17 @@ function drawPlayer(v, i)
             drawArrowImage(diffX, diffY, v.X, v.Y)
         end
         local underCharacterBarY = v.Y+34
-        if thisPlayer.HP < (100+thisPlayer.STA*15) then
+        local thisHealth
+        if i == -1 then thisHealth = getMaxHealth() else thisHealth = 100 + thisPlayer.STA * 15 end
+        if thisPlayer.HP < thisHealth then
             love.graphics.setColor(0.4,0,0)
-            love.graphics.rectangle("fill", v.X, underCharacterBarY,32,4)
+            love.graphics.rectangle("fill", v.X, underCharacterBarY, 32, 4)
             love.graphics.setColor(0,1,0)
-            love.graphics.rectangle("fill", v.X, underCharacterBarY, (thisPlayer.HP/(100+thisPlayer.STA*15))*32, 4)
+            if i == -1 then
+                love.graphics.rectangle("fill", v.X, underCharacterBarY, math.clamp(0, thisPlayer.HP / thisHealth, 1) * 32, 4)
+            else
+                love.graphics.rectangle("fill", v.X, underCharacterBarY, (thisPlayer.HP / thisHealth) * 32, 4)
+            end
             underCharacterBarY = underCharacterBarY + 5
         end
         if thisPlayer.Mana < 100 then
@@ -179,24 +185,20 @@ function drawNamePlate(x,y,name, alpha, level)
         local thisX, thisY = x , y - 4
         local nameWidth, levelWidth = playerNameFont:getWidth(name) + 1, playerNameFont:getWidth(level)
         local nameHeight = playerNameFont:getHeight(name)
-        local padding = 2
-        local textSpace = 3
-        local fullWidth = levelWidth + nameWidth + textSpace
-
-        local dx = (thisX) - (fullWidth * 0.5) - padding - 1
-        local dy = thisY - nameHeight - padding - 1
-        local dw = levelWidth + padding + (textSpace)
-        local dh = nameHeight + (padding * 2)
+        local padding = {x = 3, y = 2}
+        local fullWidth = levelWidth + nameWidth + padding.x * 4
+        local dx = thisX - (fullWidth * 0.5)
+        local dy = thisY - nameHeight - padding.y - 1
+        local dh = nameHeight + (padding.y * 2)
         
         love.graphics.setColor(0, 0, 0, 0.6 * alpha)
-        roundRectangle("fill", dx + dw, dy, nameWidth + padding + (textSpace * 2), dh, 3, {false, true, true, false})
+        roundRectangle("fill", dx, dy, fullWidth, dh, 3)
         love.graphics.setColor(1,0,0,alpha)
-        roundRectangle("fill", dx, dy, dw + 1, dh, 3, {true, false, false, true})
-
+        roundRectangle("fill", dx, dy, levelWidth + padding.x * 2, dh, 3, {true, false, false, true})
 
         love.graphics.setColor(1, 1, 1, alpha)
-        love.graphics.print(level, (thisX) - (fullWidth * 0.5), thisY - nameHeight - 2 + padding)
-        love.graphics.print(name, (thisX) - (fullWidth * 0.5) + (textSpace * 2) + levelWidth, thisY - nameHeight - 2 + padding)
+        love.graphics.print(level, dx + padding.x + 0.5, thisY - nameHeight - 2 + padding.y)
+        love.graphics.print(name, dx + padding.x * 3 + levelWidth, thisY - nameHeight - 2 + padding.y)
     else
         level = level or null
         alpha = alpha or 1
@@ -241,7 +243,8 @@ function updateOtherPlayers(dt)
             print("player Hit")
             playersDrawable[i].HP = v.HP
             playersDrawable[i].RedAlpha = 1
-            love.audio.play(playerHitSfx)
+            love.audio.play(playerHitSfx) 
+            boneSpurt(playersDrawable[i].X + 16, playersDrawable[i].Y + 16, 10, 25, 1, 1, 1)
         end
 
         if playersDrawable[i].RedAlpha then
@@ -256,13 +259,13 @@ function updateOtherPlayers(dt)
             playersDrawable[i].X = v.X * 32
             playersDrawable[i].Y = v.Y * 32
         end
+        
         if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X * 32, v.Y * 32) > 1 then
-                speed = 64
-         
+            local speed = 64
             if playersDrawable[i].Mount.Name ~= "None" or worldEdit.open then
                 speed = tonumber(playersDrawable[i].Mount.Val) or 64
             end
-            if worldLookup[playersDrawable[i].X] and worldLookup[playersDrawable[i].X][playersDrawable[i].Y] and isTileType(worldLookup[playersDrawable[i].X][playersDrawable[i].Y].ForegroundTile, "Path") then
+            if worldLookup[v.X] and worldLookup[v.X][v.Y] and isTileType(worldLookup[v.X][v.Y].ForegroundTile, "Path") then
                 speed = speed * 1.4
             end
             

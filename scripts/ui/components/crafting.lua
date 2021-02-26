@@ -91,7 +91,7 @@ function updateCrafting(dt)
                     end
                     local b = {}
                     body = json:encode(itemsSoFar)
-                    print(api.url.."/craft/"..player.name.."/"..crafting.selectedItem.ItemID)
+                    -- print(api.url.."/craft/"..player.name.."/"..crafting.selectedItem.ItemID)
                     c, h = http.request{url = api.url.."/craft/"..player.name.."/"..crafting.selectedItem.ItemID, method="POST", source=ltn12.source.string(body), headers={["token"]=token,["Content-Length"]=#body}, sink=ltn12.sink.table(b)}
                     if json:decode(b[1])["success"] == null then
                         crafting.result = json:decode(b[1])
@@ -247,7 +247,6 @@ function drawCraftingBackground(thisX, thisY)
                 end
             end
         end
-        -- crafting.recipesHeight = y
     love.graphics.setStencilTest() -- pop
 
     x, y = thisX + 10 + w + 10, thisY + 10 + 10
@@ -397,14 +396,96 @@ function checkCraftingMousePressed(button)
         love.audio.play(crafting.swing)
     elseif button == 1 and crafting.overOpenField > 0 then
         crafting.openField[crafting.overOpenField] = not crafting.openField[crafting.overOpenField]
+        if crafting.openField[crafting.overOpenField] == true then
+            crafting.selectedField.i = crafting.overOpenField
+            crafting.selectedField.j = 1
+            v = crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j]
+            crafting.selectedItem = v
+            enterCraftingItems(v)
+        end
         getRecipesHeight()
         writeSettings()
     elseif button == 1 and crafting.mouseOverField.i > 0 then
-        print("I need to enter items!")
+        -- print("I need to enter items!")
         crafting.selectedField = copy(crafting.mouseOverField)
         local v = crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j]
         crafting.selectedItem = v
         enterCraftingItems(v)
+    end
+end
+
+local keyCount = 0
+
+function checkCraftingKeyPressed(key)
+    local v = null
+    if crafting.fields[crafting.selectedField.i] and crafting.recipes[crafting.fields[crafting.selectedField.i]] then
+        v = crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j]
+    end
+
+    if keyCount == 0 and (key == "up" or key == "down") then
+        keyCount = 1
+        if crafting.selectedField.i == 0 then
+            crafting.selectedField = {i = 1, j = 1}
+            v = crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j]
+            crafting.selectedItem = v
+            enterCraftingItems(v)
+        end
+        for i, v in ipairs(crafting.fields) do
+            crafting.openField[i] = true
+        end
+        getRecipesHeight()
+    elseif key == "up" and v then
+        crafting.selectedField.j = crafting.selectedField.j - 1
+        if crafting.selectedField.j < 1 then
+            crafting.selectedField.i = crafting.selectedField.i - 1
+            if crafting.selectedField.i < 1 then
+                crafting.selectedField.i = #crafting.fields
+                crafting.posY = 0
+            end
+            crafting.selectedField.j = #crafting.recipes[crafting.fields[crafting.selectedField.i]]
+            crafting.posY = crafting.posY + 46
+            if crafting.selectedField.i == #crafting.fields then
+                crafting.posY = crafting.recipesHeight - 66
+            end
+            crafting.openField[crafting.selectedField.i] = true
+            getRecipesHeight()
+        end
+        v = crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j]
+        crafting.selectedItem = v
+        enterCraftingItems(v)
+        crafting.posY = crafting.posY + 66
+    elseif key == "down" and v then
+        crafting.selectedField.j = crafting.selectedField.j + 1
+        if crafting.selectedField.j > #crafting.recipes[crafting.fields[crafting.selectedField.i]] then
+            crafting.selectedField.i = crafting.selectedField.i + 1
+            if crafting.selectedField.i > #crafting.fields then
+                crafting.selectedField.i = 1
+                
+            end
+            crafting.selectedField.j = 1
+            crafting.posY = crafting.posY - 46
+            if crafting.selectedField.i == 1 then
+                crafting.posY = 66
+            end
+            crafting.openField[crafting.selectedField.i] = true
+            getRecipesHeight()
+        end
+        v = crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j]
+        crafting.selectedItem = v
+        enterCraftingItems(v)
+        crafting.posY = crafting.posY - 66
+    elseif key == "return" and crafting.craftable then
+        crafting.isCrafting = true
+        crafting.whiteout = 0
+        love.audio.stop(crafting.swing)
+        crafting.swing:setPitch(love.math.random(30,80)/100)
+        love.audio.play(crafting.swing)
+    elseif key == keybinds.INTERACT or checkMoveOrAttack(key, "move") then
+        crafting.open = false
+        -- crafting.enteredItems = {}
+        -- crafting.craftableItems = {}
+        -- crafting.craftable = false
+        -- crafting.selectedField = {i = 0, j = 0}
     end
 end
 
@@ -414,7 +495,7 @@ function enterCraftingItems(v)
     local required = json:decode(v.ItemsString)
     for j = 1, #v.ItemsItem do
         local amount = required[j].Amount
-        print(v.ItemsItem[j].Name .. " " .. amount)
+        -- print(v.ItemsItem[j].Name .. " " .. amount)
         if getItemAmount(v.ItemsItem[j]) >= amount then
             crafting.enteredItems[j] = {
                 item = v.ItemsItem[j],

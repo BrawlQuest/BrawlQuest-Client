@@ -189,6 +189,8 @@ function drawHUD()
             end
             drawZoneTitle()
         love.graphics.pop()
+    else
+        if showEvents then drawAreaName() end
     end
     drawTutorial()
     

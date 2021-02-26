@@ -97,16 +97,13 @@ function drawNPCChatBackground(x, y)
 
         love.graphics.setColor(1,1,1,chatOpacity)
         love.graphics.setFont(npcChatArg.font)
-
-       
-        local ty = y + 100
-
-        for i, v in pairs(npcChat.Options) do
-            drawDialogueOption(x + 20 , ty + 0, v[1], i, i == npcChatArg.selectedResponse)
-            ty = ty + getDialogueBoxHeight(v[1]) + 10
-        end
-
     love.graphics.setStencilTest() -- pop
+    local ty = y + 100
+    for i, v in pairs(npcChat.Options) do
+        drawDialogueOption(x + 20 , ty + 0, v[1], i, i == npcChatArg.selectedResponse)
+        ty = ty + getDialogueBoxHeight(v[1]) + 10
+    end
+    
     love.graphics.setColor(1, 1, 1)
 
     -- Scrolling the Text

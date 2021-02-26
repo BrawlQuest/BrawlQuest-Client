@@ -62,6 +62,13 @@ function initLogin()
     lightningSfx = love.audio.newSource("assets/sfx/weather/lightning_b.wav", "static")
     lightningSfx:setVolume(0.5)
     initLoginBackground()
+    loadingAmount = 0
+    loadingText = "Connecting to Servers "
+    loginAttempts = 1
+    circleAmount = 0
+    loadingDots = "\n"
+    dotTick = 0
+    dotAmount = 0
 end
 
 function drawLogin()
@@ -72,23 +79,31 @@ function drawLogin()
         love.graphics.setColor(1,1,1,1)
         drawLoginBackground()
         love.graphics.setColor(1,1,1,launch.outCERP)
-       
-    love.graphics.draw(bqLogo, (love.graphics.getWidth() / 2) - ((bqLogo:getWidth() * logoScale) * 0.5), (love.graphics.getHeight() / 2) - ((bqLogo:getHeight() * logoScale) * 0.5), 0, logoScale)
-    love.graphics.setColor(launch.inCERP, launch.inCERP, launch.inCERP, 1 - launch.outCERP)
+        love.graphics.draw(bqLogo, (love.graphics.getWidth() / 2) - ((bqLogo:getWidth() * logoScale) * 0.5), (love.graphics.getHeight() / 2) - ((bqLogo:getHeight() * logoScale) * 0.5) - 100, 0, logoScale)
+        love.graphics.printf(loadingText .. loadingDots, chatFont, 0, love.graphics.getHeight() * 0.5 + 70, love.graphics.getWidth() / 1, "center", 0, 1)
+        for i, v in ipairs(loginText) do
+            love.graphics.print(v, playerNameFont, 10, 10 + ((playerNameFont:getHeight() + 2) * (i-1)), 0, 1)
+        end
+        love.graphics.setColor(launch.inCERP, launch.inCERP, launch.inCERP, 1 - launch.outCERP)
         love.graphics.rectangle("fill", 0, 0, width, height)
         love.graphics.setColor(1 - launch.inCERP, 1 - launch.inCERP, 1 - launch.inCERP, launch.inCERP - launch.outCERP)
         love.graphics.draw(launch.logo, width * 0.5 - iwidth * 0.5, height * 0.5 - iheight * 0.5 - 200 * imageScale, 0, imageScale)
         love.graphics.print("LUVEN INTERACTIVE", launch.font, width * 0.5 - (launch.font:getWidth("LUVEN INTERACTIVE") * imageScale) * 0.5, height * 0.5 + 300 * imageScale, 0, imageScale)
+    elseif loginPhase == "dev" then
+        love.graphics.setColor(1,1,1,1)
+        drawLoginBackground()
+        love.graphics.draw(bqLogo, (love.graphics.getWidth() / 2) - ((bqLogo:getWidth() * logoScale) * 0.5), (love.graphics.getHeight() / 2) - ((bqLogo:getHeight() * logoScale) * 0.5) - 100, 0, logoScale)
+        love.graphics.printf("Welcome to Dev Mode!\nPress LEFT or \"A\" to Login with Steam ID\nPress RIGHT or \"D\" to Login with anything else\nOtherwise you can quick login like before\n" .. loadingDots, chatFont, 0, love.graphics.getHeight() * 0.5 + 70, love.graphics.getWidth() / 1, "center", 0, 1)
     else
         drawLoginBackground()
         if loginPhase == "login" then
             drawLoginPhase(launch.outCERP)
-            drawAreaName()
+            -- drawAreaName()
         elseif loginPhase == "loading" then
             love.graphics.setColor(1,1,1,launch.outCERP)
-          
-    love.graphics.draw(bqLogo, (love.graphics.getWidth() / 2) - ((bqLogo:getWidth() * logoScale) * 0.5), (love.graphics.getHeight() / 2) - ((bqLogo:getHeight() * logoScale) * 0.5), 0, logoScale)
-elseif loginPhase == "characters" then
+            love.graphics.draw(bqLogo, (love.graphics.getWidth() / 2) - ((bqLogo:getWidth() * logoScale) * 0.5), (love.graphics.getHeight() / 2) - ((bqLogo:getHeight() * logoScale) * 0.5) - 100, 0, logoScale)
+            love.graphics.printf(loadingText .. loadingDots, chatFont, 0, love.graphics.getHeight() * 0.5 + 70, love.graphics.getWidth() / 1, "center", 0, 1)
+        elseif loginPhase == "characters" then
             drawCharacterSelection()
         elseif loginPhase == "creation" then
             drawCreationPhase()
@@ -100,6 +115,7 @@ elseif loginPhase == "characters" then
         for i, v in ipairs(loginText) do
             love.graphics.print(v, playerNameFont, 10, 10 + ((playerNameFont:getHeight() + 2) * (i-1)), 0, 1)
         end
+        drawAreaName()
     end
 end
 
@@ -110,24 +126,41 @@ function updateLogin(dt)
             if launch.inAmount > 1 then
                 birds:setLooping(true)
                 love.audio.play(birds)
-                -- love.audio.play(titleMusic)
                 launch.inAmount = 1
             end
             launch.inCERP = cerp(0, 1, launch.inAmount)
         elseif launch.outAmount < 1 then
             launch.outAmount = launch.outAmount + 0.8 * dt
-            -- titleMusic:setVolume(musicVolume * launch.outAmount)
             if launch.outAmount > 1 then
                 loginPhase = "loading"
                 loginViaSteam()
             end
             launch.outCERP = cerp(0,1,launch.outAmount)
         end
+    elseif loginPhase == "loading" then
+        loadingAmount = loadingAmount + 0.5 * dt
+        if loadingAmount >= 1 then
+            loginAttempts = loginAttempts + 1
+            loadingText = "Login Failed: Attempt: " .. loginAttempts .. "\n Check Your Internet Connection\n Reattempting Login "
+            loginViaSteam()
+            loadingAmount = 0
+        end
     elseif loginPhase == "characters" then
         updateCharacterSelection(dt)
     end
     updateLoginBackground(dt)
     updateEvents(dt)
+
+    dotTick = dotTick + 2.5 * dt
+    if dotTick >= 1 then
+        dotTick = 0
+        dotAmount = dotAmount + 1
+        loadingDots = loadingDots .. "."
+        if dotAmount > 3 then
+            dotAmount = 0
+            loadingDots = "\n"
+        end
+    end
 end
 
 function checkClickLogin(x, y)
@@ -154,7 +187,7 @@ end
 
 function loginViaSteam()
     if versionType ~= "dev" then
-        local originalID  = steam.user.getSteamID()
+        local originalID = steam.user.getSteamID()
         local str = tostring(originalID)
      
         if str ~= "nil" then
@@ -163,7 +196,10 @@ function loginViaSteam()
             textfields[3] = str
             login()
         else
+            print("Can't connect to server")
             loginPhase = "login"
         end
+    else
+        loginPhase = "dev"
     end
 end

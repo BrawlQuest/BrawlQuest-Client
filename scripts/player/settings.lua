@@ -251,7 +251,7 @@ function checkSettingKeyPressed(key)
             controls.previousKeybind = 0
         end
     else
-        if key == "escape" or key == "w" or key == "a" or key == "s" or key == "d" then
+        if checkMoveOrAttack(key) then
             getDisplay()
             writeSettings()
             isSettingsWindowOpen = false

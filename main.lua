@@ -61,7 +61,6 @@ versionType = "dev" -- "dev" for quick login, "release" for not
 versionNumber = "Beta 1.1.2" -- very important for settings
 
 phase = "login"
-
 blockMap = {}
 treeMap = {}
 players = {} -- other players
@@ -81,6 +80,7 @@ username = "Pebsie"
 readyForUpdate = true
 playersOnline = ""
 firstLaunch = true
+playerCount = 0
 
 world = {}
 worldImg = {}
@@ -103,7 +103,7 @@ sendUpdate = false
 function love.load()
     outlinerOnly = newOutliner(true)
     outlinerOnly:outline(0.8,0,0) -- this is used to draw enemy outlines
-     steam.init()
+    steam.init()
     love.graphics.setDefaultFilter("nearest", "nearest")
     initHardData()
     initLogin()
@@ -152,32 +152,34 @@ function love.draw()
             if showWorldAnimations then drawLeaves() end
             drawLoot()
             
-
             if not worldEdit.open then drawWorldMask() end
             if showClouds then drawClouds() end     
+
+            local drawingText = false
+            if isNearbyTile("assets/world/objects/Anvil.png") and not drawingText then
+                drawTextBelowPlayer("Press "..keybinds.INTERACT.." to craft")
+                inventory.notNPC = false
+                drawingText = true
+            end
+
             for i,v in ipairs(npcs) do
                 if distanceToPoint(player.x,player.y,v.X,v.Y) <= 1 and not showNPCChatBackground  and v.Conversation ~= "" then
                     local isQuestCompleter = false
                     for k,q in ipairs(quests[1]) do
-                    
-                            if q.rawData.Quest.ReturnNPCID == v.ID and q.currentAmount == q.requiredAmount then
-                                drawTextBelowPlayer("Press "..keybinds.INTERACT.." to complete quest")
-                                isQuestCompleter = true
-                            end
-                       
+                        if q.rawData.Quest.ReturnNPCID == v.ID and q.currentAmount == q.requiredAmount then
+                            drawTextBelowPlayer("Press "..keybinds.INTERACT.." to complete quest")
+                            isQuestCompleter = true
+                        end
                     end
 
-                    if not isQuestCompleter then
+                    if not isQuestCompleter and not drawingText then
                         drawTextBelowPlayer("Press "..keybinds.INTERACT.." to talk")
+                        drawingText = true
                     end
                         
                     inventory.notNPC = false
                     openTutorial(4)
                 end
-            end
-        
-            if isNearbyTile("assets/world/objects/Anvil.png") then  drawTextBelowPlayer("Press "..keybinds.INTERACT.." to craft")
-                inventory.notNPC = false
             end
 
             if showWorldMask and not worldEdit.open then drawWorldMask() end --not worldEdit.open or
@@ -196,16 +198,14 @@ function love.draw()
 
         Luven.camera:draw()
 
-        local offset = cerp(10, 205, inventory.amount)
+        local offset = cerp(10, 324 * scale, inventory.amount)
         love.graphics.setColor(1,1,1)
         love.graphics.setFont(settPan.itemFont)
-        love.graphics.print("X,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()).."\nPlayers: "..playersOnline, offset, 10)
-        -- if worldLookup[player.x] and worldLookup[player.x][player.y] then
-        --     love.graphics.print(string.upper("\n"..tostring(worldLookup[player.x][player.y].Name)), offset, 13)
-        -- end
-
+        local text
+        if versionType == "dev" then text = "X,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount .."\n"..playersOnline
+        else text = "X,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount end
+        love.graphics.print(text, offset, 10)
     end
-
 
     mx, my = love.mouse.getPosition()
     love.graphics.setColor(1,1,1)
@@ -266,9 +266,11 @@ function love.update(dt)
             npcs = response['NPC']
             auras = response['Auras']
             playersOnline = ""
+            playerCount = 0
             if response['OnlinePlayers'] then
                 for i,v in ipairs(response['OnlinePlayers']) do
-                    playersOnline = playersOnline..v.." "
+                    playersOnline = playersOnline .. v .. "\n"
+                    playerCount = playerCount + 1
                 end
             end
             -- if json:encode(players) ~= json:encode(previousPlayers) then -- Temp [
@@ -325,10 +327,10 @@ function love.update(dt)
                 end
             end -- Temp ]
 
-            if distanceToPoint(me.X, me.Y, player.x, player.y) > 5 then
+            if distanceToPoint(me.X, me.Y, player.x, player.y) > 3 then
                 player.x = me.X
                 player.y = me.Y
-                if death.previousPosition.hp < (100 + getSTA(0)) * 0.1 then
+                if death.previousPosition.hp < getMaxHealth() * 0.9 then
                     death.open = true
                     totalCoverAlpha = 2
                     love.audio.play(awakeSfx)
@@ -343,7 +345,7 @@ function love.update(dt)
             -- update player
             player.name = me.Name
             player.buddy = me.Buddy
-            if player.hp > me.HP then
+            if player.hp > me.HP and me.HP < getMaxHealth() then
                 player.damageHUDAlphaUp = true
                 boneSpurt(player.dx + 16, player.dy + 16, player.hp - me.HP, 40, 1, 1, 1, "me")
             end
@@ -356,8 +358,8 @@ function love.update(dt)
                         openTutorial(6)
                     end
                     love.audio.play(lvlSfx)
+                    perks.stats[4] = player.cp
                     addFloat("level", player.dx + 16, player.dy + 16, null, {1,0,0}, 10)
-                    
                 end
                 player.lvl = me.LVL
                 firstLaunch = false

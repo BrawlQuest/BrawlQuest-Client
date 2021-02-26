@@ -20,11 +20,11 @@ function setTooltip(title, desc)
     tooltip.desc = desc
 
     local e = explode(desc,"{")
-    if #e > 1 then
+    if me and me.STA and #e > 1 then
         local e2 = explode(e[2],"}")
         local eq = e2[1]
         eq = eq:gsub("INT", me["INT"])
-    eq = eq:gsub("STA", me["STA"])
+        eq = eq:gsub("STA", me["STA"])
         -- print(eq)
         func = assert(loadstring("return " .. eq))
         y = func()
