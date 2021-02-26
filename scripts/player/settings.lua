@@ -169,7 +169,7 @@ function setDefualtKeybinds()
         {name = "INTERACT", v = keybinds.INTERACT, sel = false,},
         {name = "CRAFTING", v = keybinds.CRAFTING, sel = false,},
         {name = "INVENTORY", v = keybinds.INVENTORY, sel = false,},
-        {name = "QUESETS", v = keybinds.QUESETS, sel = false,},
+        {name = "QUESTS", v = keybinds.QUESETS, sel = false,},
     }
 end
 
@@ -232,7 +232,12 @@ function checkSettingsMousePressed(button)
     local x,y = love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5
     local width, height = (settPan.width * 0.5) - (settPan.padding * 2), 40
     local thisX, thisY = x + settPan.padding, y + (settPan.height * 0.5) - settPan.padding - height
+    
     if isMouseOver(thisX, thisY, width, height) and button == 1 then
+        getDisplay()
+        writeSettings()
+        isSettingsWindowOpen = false
+    elseif settPan.mouseOverCloseGame then
         writeSettings()
         checkIfReadyToQuit()
     end
@@ -255,7 +260,7 @@ function checkSettingKeyPressed(key)
             getDisplay()
             writeSettings()
             isSettingsWindowOpen = false
-        elseif key == "return" then
+        elseif versionType == "dev" and key == "return" then
             writeSettings()
             checkIfReadyToQuit()
         end

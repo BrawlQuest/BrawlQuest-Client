@@ -25,6 +25,7 @@ function initSettingsPanel()
         isMouseOver = false,
         scaleTypes = {1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4},
         scaleValue = 1,
+        mouseOverCloseGame = false,
     }
 
     settSrl = {
@@ -176,10 +177,31 @@ function drawSettingsPanel()
     local width, height = (settPan.width * 0.5) - (settPan.padding * 2), 40
     local thisX, thisY = x + settPan.padding, y + (settPan.height * 0.5) - settPan.padding - height
 
-    love.graphics.setColor(1, 0, 0, settPan.opacityCERP * 1)
+    love.graphics.setColor(0, 0.7, 0, settPan.opacityCERP * 1)
     roundRectangle("fill", thisX, thisY, width, height, 6)
     love.graphics.setColor(1,1,1, settPan.opacityCERP * 1)
-    love.graphics.printf("CLOSE GAME", thisX, thisY + 20 - (settPan.itemFont:getHeight() * 0.5), width, "center") -- prints the name of things
+    love.graphics.printf("Save Settings (escape)", thisX, thisY + 20 - (settPan.itemFont:getHeight() * 0.5), width, "center") -- prints the name of things
+
+    x,y = love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5
+    thisX, thisY = x + (settPan.width * 0.5) - 33, y - (settPan.height * 0.5) - 43
+
+    local isMouse = isMouseOver(thisX, thisY, 75, 75)
+    if isMouse then
+        love.graphics.setColor(1, 1, 1, settPan.opacityCERP * 1)
+        settPan.mouseOverCloseGame = true
+    else
+        settPan.mouseOverCloseGame = false
+        love.graphics.setColor(1, 0, 0, settPan.opacityCERP * 0.9)
+    end
+
+    roundRectangle("fill", thisX, thisY, 75, 75, 10, {true, true, true, false, })
+
+    if isMouse then
+        love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 1)
+    else
+        love.graphics.setColor(1, 1, 1, settPan.opacityCERP * 1)
+    end
+    love.graphics.printf("Quit Game", thisX, thisY + 24, 75, "center", 0, 1)
 end
 
 function drawSettingsButton(thisX, thisY, width, height, ai, av, bi, bv)

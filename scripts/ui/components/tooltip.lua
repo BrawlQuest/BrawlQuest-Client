@@ -5,7 +5,12 @@ tooltip = {
     desc = "Tooltip",
     alpha = 0,
     padding = 4,
-    spacing = 2
+    spacing = 2,
+    perks = {
+        {title = "Strength", desc = "Increases the amount of damage you deal to your enemies. You deal 1 extra damage per point.",},
+        {title = "Intelligence", desc = "Increases the potency of your spells. Check your spells to see what effect intelligence has on them.",},
+        {title = "Stamina", desc = "Increases your character's health. You gain an extra 15 health per point.",},
+    },
 }
 
 function setTooltip(title, desc)
@@ -31,6 +36,11 @@ function setTooltip(title, desc)
         -- print(y)
         tooltip.desc = e[1]..tostring(y)..e2[2]
     end
+end
+
+function setPerkTooltip(i)
+    local v = tooltip.perks[i]
+    setTooltip(v.title, v.desc)
 end
 
 function setItemTooltip(item)
@@ -65,7 +75,12 @@ function drawTooltip(thisX, thisY)
     if (tooltip.x - tooltip.padding) + (150 + (tooltip.padding*2)) > uiX then
         tooltip.x = uiX - (150 + (tooltip.padding*2))
     end
-    love.graphics.rectangle("fill", tooltip.x - tooltip.padding,tooltip.y - tooltip.padding, 150 + (tooltip.padding*2), getToolTipTitleHeight(tooltip.title) + getToolTipDescHeight(tooltip.desc) + (tooltip.padding*2) + tooltip.spacing)
+    local height = getToolTipTitleHeight(tooltip.title) + getToolTipDescHeight(tooltip.desc) + (tooltip.padding*2) + tooltip.spacing
+    if tooltip.y + height > uiY then
+        tooltip.y = uiY - height
+        tooltip.x = tooltip.x + 6
+    end
+    love.graphics.rectangle("fill", tooltip.x - tooltip.padding,tooltip.y - tooltip.padding, 150 + (tooltip.padding*2), height)
     love.graphics.setColor(1,1,1,tooltip.alpha)
     love.graphics.printf(tooltip.title, npcChatFont, tooltip.x,tooltip.y,150,"left")
     love.graphics.printf(tooltip.desc, characterHub.font, tooltip.x, tooltip.y + getToolTipTitleHeight(tooltip.title) + tooltip.spacing, 150, "left")

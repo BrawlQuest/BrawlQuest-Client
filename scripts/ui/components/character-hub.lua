@@ -178,6 +178,9 @@ function drawCharacterHubProfile(thisX, thisY)
     
     if player.cp > 0 then love.graphics.setColor(1,0,0,1) end
     love.graphics.draw(hubImages.profileFG, thisX, thisY)
+    if isMouseOver(thisX, thisY, 82, 97) then
+        setTooltip("Character Level", "Your level increases when you kill mobs or complete quests. Level up your player to access more items and to increase your character points.")
+    end
     if player.cp > 0 then love.graphics.setColor(1,1,1,1) else love.graphics.setColor(0,0,0,1) end
     love.graphics.print(tostring(me.LVL), thisX + 56 - math.floor(characterHub.font:getWidth(tostring(me.LVL))/2), thisY + 84 - (characterHub.font:getHeight(tostring(me.LVL))/2))
 end
@@ -191,6 +194,7 @@ function drawCharacterHubStats(thisX, thisY)
         if isMouseOver((thisX + (49 * i) + 3) * scale, (thisY + 43) * scale, hubImages.statCardBg:getWidth() * scale, hubImages.statCardBg:getHeight() * scale) then
             love.graphics.setColor(1,0,0, cerp(0, 1, characterHub.amount))
             characterHub.selectedPerk = i
+            setPerkTooltip(i + 1)
         else
             love.graphics.setColor(1,1,1,cerp(0, 0.7, characterHub.amount))
         end
