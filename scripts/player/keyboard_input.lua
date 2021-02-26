@@ -40,7 +40,7 @@ function love.keypressed(key)
         elseif loginPhase == "characters" then
             checkCharacterSelectorKeyPressed(key)
         end
-        if key == "kpenter" then
+        if versionType == "dev" and key == "kpenter" then
             zoneChange("You did not login")
         end
     else
@@ -122,7 +122,7 @@ function love.keypressed(key)
             end
         end
         
-        if not isTypingInChat and not worldEdit.isTyping and versionType == "dev" then
+        if not worldEdit.isTyping and versionType == "dev" then
             if key == "." then
                 scaleHUD("up")
                 writeSettings()
@@ -131,10 +131,6 @@ function love.keypressed(key)
             if key == "," then
                 scaleHUD("down")
                 writeSettings()
-            end
-
-            if key == "kp0" then
-                -- randLevel = love.math.random(1, 1000)
             end
         end
     end

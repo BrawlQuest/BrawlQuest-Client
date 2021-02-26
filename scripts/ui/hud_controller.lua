@@ -176,7 +176,7 @@ function drawHUD()
             drawQuestHub(uiX/i, uiY/i)
             if questsPanel.open then drawQuestsPanel((uiX/i) - 313, (uiY/i) + cerp(-14, 0 - ((uiY/1.25) - 15), questsPanel.amount)) end
             if crafting.open then drawCrafting() end
-            drawTooltip()
+
             drawAuraHeadings()
             if showEvents then drawAreaName() end
         love.graphics.pop()
@@ -192,12 +192,16 @@ function drawHUD()
     else
         if showEvents then drawAreaName() end
     end
-    drawTutorial()
-    
-    love.graphics.setColor(1,1,1,1)
 
+    drawTutorial()
+    love.graphics.setColor(1,1,1,1)
     -- drawSettingsPanel(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
     if settPan.opacity > 0 then drawSettingsPanel() end
+
+    love.graphics.push()
+        love.graphics.scale(scale)
+        drawTooltip()
+    love.graphics.pop()
 end
 
 function drawTextBelowPlayer(text)
