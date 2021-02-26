@@ -95,32 +95,30 @@ function initSettings()
     settings = {
         {
             title = "Player",
-            {name = "Respawn", v = respawn, type = "button", "Full", "Fast",},
-            {name = "Hold to Attack", v = oldTargeting, type = "button", "Full", "Fast",},
+            {name = "Respawn", v = respawn, type = "button", desc = "This currently doesn't work. Someday it'll let you re-spawn", },
+            {name = "\"H\" to Hold", v = oldTargeting, type = "button", desc = "This lets you use the older combat system, but when you press \"H\" you can hold your attack.", },
         },
         {
             title = "Graphics",
-            {name = "Render Quality", v = highdpi, type = "button", "Full", "Fast",},
-            {name = "Fullscreen", v = fullscreen, type = "button", "On", "Off",},
-            {name = "Clouds", v = showClouds, type = "button", "On", "Off",},
-            -- {name = "Shadows (Alpha)", v = showShadows, type = "button", "On", "Off",},
-            -- {name = "World Mask", v = showWorldMask, type = "button", "On", "Off",},
-            {name = "World Animations", v = showWorldAnimations, type = "button", "On", "Off",},
-            {name = "VSync", v = vsync, type = "button", "On", "Off",},
+            {name = "High DPI", v = highdpi, type = "button", desc = "This is mainly for Mac users, if you have a high resolution display, setting this to true will scale the game.", },
+            {name = "Fullscreen", v = fullscreen, type = "button", desc = "Sets your window to fullscreen", },
+            {name = "Clouds", v = showClouds, type = "button", desc = "Creates a very nice cloud effect to the game: very atmospheric. Only recommended for computers with decent graphics.", },
+            {name = "World Animations", v = showWorldAnimations, type = "button", desc = "This toggles leaves and smoke from fire, turn off if you need a higher framerate.", },
+            {name = "VSync", v = vsync, type = "button", desc = "This is for high end computers with high refresh rates. Try it out if you are having framerate issues", },
         },
         {
             title = "Sound",
-            {name = "Music Volume", type = "fader",},
-            {name = "SFX Volume", type = "fader",},       
+            {name = "Music Volume", type = "fader", desc = "", },
+            {name = "SFX Volume", type = "fader", desc = "",  },       
         },
         {
             title = "HUD",
-            {name = "Show HUD", v = showHUD, type = "button",},
-            {name = "GUI Scale", v = settPan.scaleTypes[settPan.scaleValue], type = "button",},
-            {name = "Show Chat", v = showChat, type = "button",},
-            {name = "Chat Remain On Enter", v = chatRepeat, type = "button",},
-            {name = "Open Inventory on Hover", v = openInventoryOnHover, type = "button",},
-            {name = "Open Quests on Hover", v = openQuestsOnHover, type = "button",},
+            {name = "Show HUD", v = showHUD, type = "button", desc = "This shows or hides the Heads Up Display", },
+            {name = "GUI Scale", v = settPan.scaleTypes[settPan.scaleValue], type = "button", desc = "This scales the HUD to make it more readable for high resolution displays.", },
+            {name = "Show Chat", v = showChat, type = "button", desc = "This allows you to hide chat. Don't worry about chat though, we use a content filter.", },
+            {name = "Chat Remain On Enter", v = chatRepeat, type = "button", desc = "This allows you to send messages in a row without having to re-press \"Return\"", },
+            {name = "Hover Inventory", v = openInventoryOnHover, type = "button", desc = "Allows you to toggle whether the Inventory opens on mouse over.", },
+            {name = "Hover Quests", v = openQuestsOnHover, type = "button", desc = "Allows you to toggle whether the Quests opens on mouse over.", },
         },
     }
 end
@@ -232,7 +230,7 @@ function checkSettingsMousePressed(button)
     local x,y = love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5
     local width, height = (settPan.width * 0.5) - (settPan.padding * 2), 40
     local thisX, thisY = x + settPan.padding, y + (settPan.height * 0.5) - settPan.padding - height
-    
+
     if isMouseOver(thisX, thisY, width, height) and button == 1 then
         getDisplay()
         writeSettings()

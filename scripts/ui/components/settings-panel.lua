@@ -213,6 +213,7 @@ function drawSettingsButton(thisX, thisY, width, height, ai, av, bi, bv)
         settPan.mouseOver = (ai * 10) + bi
         settPan.isMouseOver = true
         love.graphics.setColor(1, 0, 0, settPan.opacityCERP)
+        setTooltip(bv.name, bv.desc)
     elseif bv.v == true then
         love.graphics.setColor(1,1,1, settPan.opacityCERP)
     end
