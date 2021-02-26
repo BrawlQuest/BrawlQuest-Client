@@ -198,7 +198,7 @@ function love.draw()
 
         Luven.camera:draw()
 
-        local offset = cerp(10, 324, inventory.amount)
+        local offset = cerp(10, 324 * scale, inventory.amount)
         love.graphics.setColor(1,1,1)
         love.graphics.setFont(settPan.itemFont)
         local text
@@ -330,7 +330,7 @@ function love.update(dt)
             if distanceToPoint(me.X, me.Y, player.x, player.y) > 3 then
                 player.x = me.X
                 player.y = me.Y
-                if death.previousPosition.hp < (100 + getSTA(0)) * 0.9 then
+                if death.previousPosition.hp < getMaxHealth() * 0.9 then
                     death.open = true
                     totalCoverAlpha = 2
                     love.audio.play(awakeSfx)
@@ -345,7 +345,7 @@ function love.update(dt)
             -- update player
             player.name = me.Name
             player.buddy = me.Buddy
-            if player.hp > me.HP then
+            if player.hp > me.HP and me.HP < getMaxHealth() then
                 player.damageHUDAlphaUp = true
                 boneSpurt(player.dx + 16, player.dy + 16, player.hp - me.HP, 40, 1, 1, 1, "me")
             end

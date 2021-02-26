@@ -140,16 +140,16 @@ function drawPlayer(v, i)
             drawArrowImage(diffX, diffY, v.X, v.Y)
         end
         local underCharacterBarY = v.Y+34
-        local stamina
-        if i == -1 then stamina = 100 + getSTA() else stamina = 100 + thisPlayer.STA * 15 end
-        if thisPlayer.HP < stamina then
+        local thisHealth
+        if i == -1 then thisHealth = getMaxHealth() else thisHealth = 100 + thisPlayer.STA * 15 end
+        if thisPlayer.HP < thisHealth then
             love.graphics.setColor(0.4,0,0)
             love.graphics.rectangle("fill", v.X, underCharacterBarY, 32, 4)
             love.graphics.setColor(0,1,0)
             if i == -1 then
-                love.graphics.rectangle("fill", v.X, underCharacterBarY, math.clamp(0, thisPlayer.HP / stamina, 1) * 32, 4)
+                love.graphics.rectangle("fill", v.X, underCharacterBarY, math.clamp(0, thisPlayer.HP / thisHealth, 1) * 32, 4)
             else
-                love.graphics.rectangle("fill", v.X, underCharacterBarY, (thisPlayer.HP / stamina) * 32, 4)
+                love.graphics.rectangle("fill", v.X, underCharacterBarY, (thisPlayer.HP / thisHealth) * 32, 4)
             end
             underCharacterBarY = underCharacterBarY + 5
         end
@@ -259,6 +259,7 @@ function updateOtherPlayers(dt)
             playersDrawable[i].X = v.X * 32
             playersDrawable[i].Y = v.Y * 32
         end
+        
         if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X * 32, v.Y * 32) > 1 then
             local speed = 64
             if playersDrawable[i].Mount.Name ~= "None" or worldEdit.open then
