@@ -214,10 +214,10 @@ function drawEnemies()
 
                 local enemyHealth = me.HP / v.Enemy.ATK
                 local playerHealth = v.Enemy.HP / (me.Weapon.Val + (me.STR - 1) * 0.5)
-                if versionType == "dev" then
-                    love.graphics.print("      " .. math.round(enemyHealth, 2) .. " < " .. math.round(playerHealth, 2),
-                        npcNameFont, v.dx, v.dy - 10)
-                end
+                -- if versionType == "dev" then
+                --     love.graphics.print("      " .. math.round(enemyHealth, 2) .. " < " .. math.round(playerHealth, 2),
+                --         npcNameFont, v.dx, v.dy - 10)
+                -- end
 
                 if me.HP and v.Enemy.ATK and enemyHealth < playerHealth then
                     local distanceIntensity = 1 - (distance / 128)

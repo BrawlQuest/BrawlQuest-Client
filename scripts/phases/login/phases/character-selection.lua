@@ -327,17 +327,19 @@ function transitionToPhaseGame()
         totalCoverAlpha = 2
         local b = {}
         c, h = http.request{url = api.url.."/world", method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
-        world = json:decode(b[1])
+        if b[1] then
+            world = json:decode(b[1])
 
-        love.audio.play(awakeSfx)
-        love.graphics.setBackgroundColor(0, 0, 0)
-        phase = "game"
-        love.audio.stop( titleMusic )
+            love.audio.play(awakeSfx)
+            love.graphics.setBackgroundColor(0, 0, 0)
+            phase = "game"
+            love.audio.stop( titleMusic )
 
-        createWorld()
-        openTutorial(1)
-        if musicVolume > 0 then
-            checkMusic()
+            createWorld()
+            openTutorial(1)
+            if musicVolume > 0 then
+                checkMusic()
+            end
         end
     end
 end
