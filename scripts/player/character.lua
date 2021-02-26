@@ -144,7 +144,7 @@ end
 isMoving = false
 
 function movePlayer(dt)
-    if player.x * 32 == player.dx and player.y * 32 == player.dy and not isTypingInChat and not worldEdit.isTyping then -- movement smoothing has finished
+    if player.x * 32 == player.dx and player.y * 32 == player.dy and not isTypingInChat and not worldEdit.isTyping and not tutorialOpen then -- movement smoothing has finished
         local prev = {x = player.x, y = player.y}
         if love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.LEFT) and not (worldCollison(prev.x - 1, prev.y - 1) or worldCollison(prev.x - 1, prev.y) or worldCollison(prev.x, prev.y - 1)) then
             prev.y = prev.y - 1
