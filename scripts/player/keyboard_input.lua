@@ -40,7 +40,7 @@ function love.keypressed(key)
         elseif loginPhase == "characters" then
             checkCharacterSelectorKeyPressed(key)
         end
-        if key == "kpenter" then
+        if versionType == "dev" and key == "kpenter" then
             zoneChange("You did not login")
         end
     else
