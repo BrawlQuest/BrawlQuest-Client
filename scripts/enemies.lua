@@ -112,6 +112,16 @@ function newEnemyData(data) -- called when nearby data is returned
         end
 
         if enemy.HP ~= v.HP then
+            if enemy.HP > v.HP then
+                boneSpurt(enemy.dx + 16, enemy.dy + 16, 4, 20, 1, 1, 1, "mob", v.Enemy.Name)
+                if sfxVolume > 0 then
+                    enemyHitSfx:setPitch(love.math.random(50, 100) / 100)
+                    enemyHitSfx:setVolume(1 * sfxVolume)
+                    love.audio.play(enemyHitSfx)
+                    enemy.red = 1
+                end
+            end
+
             if (me.AX ~= me.X or me.AY ~= me.Y) and (me.AX == enemy.X and me.AY == enemy.Y) and not death.open then
                 if player.dx > me.AX * 32 then
                     player.dx = player.dx - 16
@@ -127,15 +137,6 @@ function newEnemyData(data) -- called when nearby data is returned
             end
             addFloat("text", enemy.X * 32, enemy.Y * 32 - 18, (enemy.HP - v.HP) * -1, {1, 0, 0})
             enemy.HP = v.HP
-            enemy.red = 1
-
-            if sfxVolume > 0 then
-                enemyHitSfx:setPitch(love.math.random(50, 100) / 100)
-                enemyHitSfx:setVolume(1 * sfxVolume)
-                love.audio.play(enemyHitSfx)
-            end
-
-            boneSpurt(enemy.dx + 16, enemy.dy + 16, 4, 20, 1, 1, 1, "mob", v.Enemy.Name)
         end
 
         if enemy.IsAggro == false and v.IsAggro then

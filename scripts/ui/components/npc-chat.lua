@@ -98,11 +98,7 @@ function drawNPCChatBackground(x, y)
         love.graphics.setColor(1,1,1,chatOpacity)
         love.graphics.setFont(npcChatArg.font)
     love.graphics.setStencilTest() -- pop
-    local ty = y + 100
-    for i, v in pairs(npcChat.Options) do
-        drawDialogueOption(x + 20 , ty + 0, v[1], i, i == npcChatArg.selectedResponse)
-        ty = ty + getDialogueBoxHeight(v[1]) + 10
-    end
+
     
     love.graphics.setColor(1, 1, 1)
 
@@ -117,6 +113,12 @@ function drawNPCChatBackground(x, y)
     
     love.graphics.setStencilTest() -- pop
     love.graphics.rectangle("line", x, y, 256, 256)
+    
+    local ty = y + 100
+    for i, v in pairs(npcChat.Options) do
+        drawDialogueOption(x + 20 , ty + 0, v[1], i, i == npcChatArg.selectedResponse)
+        ty = ty + getDialogueBoxHeight(v[1]) + 10
+    end
 end
 
 function scrollNPCChatText(text)
