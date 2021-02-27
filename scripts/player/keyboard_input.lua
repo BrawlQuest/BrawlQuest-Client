@@ -122,7 +122,7 @@ function love.keypressed(key)
             end
         end
         
-        if not worldEdit.isTyping and versionType == "dev" then
+        if not worldEdit.isTyping and not isTypingInChat and versionType == "dev" then
             if key == "." then
                 scaleHUD("up")
                 writeSettings()

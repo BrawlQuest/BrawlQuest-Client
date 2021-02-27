@@ -57,7 +57,7 @@ ltn12 = require("ltn12")
 newOutliner = require 'scripts.libraries.outliner'
 
 version = "Early Access" 
-versionType = "release" -- "dev" for quick login, "release" for not
+versionType = "dev" -- "dev" for quick login, "release" for not
 versionNumber = "1.1.3" -- very important for settings
 
 phase = "login"
