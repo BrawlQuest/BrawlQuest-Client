@@ -203,17 +203,13 @@ function love.draw()
         love.graphics.setColor(1,1,1)
         love.graphics.setFont(settPan.itemFont)
         local text
-        if versionType == "dev" then text = "X,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount .."\n"..playersOnline
+        if true then text = "X,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount .."\n"..playersOnline
         else text = "X,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount end
         love.graphics.print(text, offset, 10)
     end
-
     mx, my = love.mouse.getPosition()
     love.graphics.setColor(1,1,1)
     love.graphics.draw(mouseImg, mx, my)
-
-    -- love.graphics.setColor(1, 1, 1, totalCoverAlpha)
-    -- if totalCoverAlpha > 0 then love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight()) end
 end
 
 function love.update(dt)
@@ -226,7 +222,6 @@ function love.update(dt)
         nextUpdate = nextUpdate - 1 * dt
         nextTick = nextTick - 1 * dt
         if nextUpdate < 0 then
-
             getPlayerData('/players/' .. username, json:encode(
                 {
                     ["X"] = player.x,
@@ -238,7 +233,6 @@ function love.update(dt)
 
             nextUpdate = 0.5
         end
-
         updateHUD(dt)
         updateEnemies(dt)
         updateNPCs(dt)
@@ -258,7 +252,6 @@ function love.update(dt)
         if showWorldMask then updateWorldMask(dt) end
         updateCamera(dt)
         updateOtherPlayers(dt)
-
         local info = love.thread.getChannel('players'):pop()
         if info then
             local response = json:decode(info)
@@ -274,18 +267,6 @@ function love.update(dt)
                     playerCount = playerCount + 1
                 end
             end
-            -- if json:encode(players) ~= json:encode(previousPlayers) then -- Temp [
-            --     for i,v in ipairs(players) do
-            --         if v.Color == null then -- New thing for the people
-            --             if previousPlayers[i] and previousPlayers[i].Color then
-            --                 players[i].Color = previousPlayers[i].Color
-            --             else
-            --                 players[i].Color = {love.math.random(), love.math.random(), love.math.random(),  1}
-            --             end
-            --         end
-            --     end
-            -- end -- Temp ]
-
             if json:encode(inventoryAlpha) ~= json:encode(response['Inventory']) then
                 updateInventory(response)
                 inventoryAlpha = response['Inventory']
@@ -300,11 +281,9 @@ function love.update(dt)
                     player = v["Sender"]
                 }
             end
-
             timeOfDay = cerp(0.1, 1, ((math.abs(response['CurrentHour']) * 60) + 0) / 720)
             timeOfDay = timeOfDay + 0.2
             usedItemThisTick = false
-
             if not worldEdit.open then
                 Luven.setAmbientLightColor({timeOfDay, timeOfDay, timeOfDay+  0.1})
             else
@@ -313,21 +292,10 @@ function love.update(dt)
 
             local previousMe = copy(me) -- Temp
             me = response['Me']
-
             if perks.stats[1] == 0 then
                 perks.stats = {me.STR, me.INT, me.STA, player.cp}
             end
-
-            if json:encode(me) ~= json:encode(previousMe) then -- Temp [
-                if me.Color == null then -- New thing for the people
-                    if previousMe and previousMe.Color then
-                        me.Color = previousMe.Color
-                    else
-                        me.Color = {love.math.random(), love.math.random(), love.math.random(),  1}
-                    end
-                end
-            end -- Temp ]
-
+            
             if distanceToPoint(me.X, me.Y, player.x, player.y) > 3 then
                 player.x = me.X
                 player.y = me.Y
@@ -343,7 +311,6 @@ function love.update(dt)
                 end
             end
             if not death.open then death.previousPosition = {x = player.x, y = player.y, hp = player.hp} end
-            -- update player
             player.name = me.Name
             player.buddy = me.Buddy
             if player.hp > me.HP and me.HP < getMaxHealth() then
@@ -370,7 +337,7 @@ function love.update(dt)
             quests = {
                 {},
                 {},
-                {}
+                {},
             }
             for i,v in ipairs(response['MyQuests']) do
                 local trackedVar = 2
@@ -389,7 +356,6 @@ function love.update(dt)
                 if v.Quest.Type == "kill" then
                     quests[v.Tracked][#quests[v.Tracked]].task = "Kill "..v.Quest.ValueRequired.."x "..v.Quest.Value
                 elseif v.Quest.Type == "gather" then
-                 
                         quests[v.Tracked][#quests[v.Tracked]].task = "Gather "..v.Quest.ValueRequired.."x "..v.Quest.Value
                 elseif v.Quest.Type == "go" then
                     quests[v.Tracked][#quests[v.Tracked]].task = "Go to "..(worldLookup[v.Quest.X][v.Quest.Y].Name or v.Quest.X..", "..v.Quest.Y)
@@ -403,8 +369,6 @@ function love.update(dt)
             end
         end
     end
-
-    
 end
 
 function tick()
@@ -414,7 +378,7 @@ function tick()
     checkTargeting()
     nextTick = 1
     getInventory()
-    -- tickRangedWeapons() 
+    -- tickRangedWeapons()
 end
 
 function love.resize(width, height)
