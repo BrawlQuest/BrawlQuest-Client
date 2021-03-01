@@ -92,13 +92,14 @@ function checkHotbarChange()
                         hotbar[j].item = v.Item
                         local amount = getItemAmount(v.Item)
                         hotbar[j].amount = amount
-                        if amount < 1 then hotbar[j] = {item = null, amount = 0} end
+                        -- if amount < 1 then hotbar[j] = {item = null, amount = 0} end
                         found = true
                         break
                     end
                 end
                 if found then break end
             end
+            if me.LVL and not found then hotbar[j] = {item = null, amount = 0} end
         end
     end
     writeSettings()
