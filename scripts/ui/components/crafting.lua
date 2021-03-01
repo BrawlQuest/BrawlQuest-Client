@@ -158,7 +158,7 @@ function drawCraftingBackground(thisX, thisY)
     love.graphics.setColor(1,1,1)
     love.graphics.draw(crafting.hammer, thisX + 720, thisY + 300 - crafting.hammerY, cerp(-0.01, 0.01, crafting.hammerShake) + cerp(-0.6,0.01, crafting.hammerDown), -10)
 
-    love.graphics.print("CRAFTING", inventory.headerFont, thisX + 10 , thisY + 14)    
+    love.graphics.print("CRAFTING", inventory.headerFont, thisX + 10 , thisY + 14)
     love.graphics.print("RECIPES",crafting.font, thisX + 20, thisY + 10 + 40, 0, 2)
     x, y = thisX + 10, thisY + 10 + 40 + crafting.posY + 30
     w, h = 194 + 18, 56
@@ -480,6 +480,7 @@ function checkCraftingKeyPressed(key)
         love.audio.stop(crafting.swing)
         crafting.swing:setPitch(love.math.random(30,80)/100)
         love.audio.play(crafting.swing)
+        enterCraftingItems(v)
     elseif key == keybinds.INTERACT or checkMoveOrAttack(key, "move") then
         crafting.open = false
         -- crafting.enteredItems = {}
