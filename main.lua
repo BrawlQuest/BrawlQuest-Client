@@ -58,8 +58,7 @@ newOutliner = require 'scripts.libraries.outliner'
 
 version = "Early Access" 
 versionType = "dev" -- "dev" for quick login, "release" for not
-versionNumber = "1.1.3" -- very important for settings
-if versionType == "dev" then require "dev" end
+versionNumber = "1.1.4" -- very important for settings
 
 phase = "login"
 blockMap = {}
@@ -104,6 +103,8 @@ sendUpdate = false
 function love.load()
     outlinerOnly = newOutliner(true)
     outlinerOnly:outline(0.8,0,0) -- this is used to draw enemy outlines
+    grayOutlinerOnly = newOutliner(true)
+    grayOutlinerOnly:outline(0.8,0.8,0.8)
     steam.init()
     love.graphics.setDefaultFilter("nearest", "nearest")
     initHardData()

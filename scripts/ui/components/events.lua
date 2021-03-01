@@ -56,7 +56,8 @@ function drawAreaName()
     love.graphics.setColor(0,0,0, alpha * event.alpha)
     love.graphics.rectangle("fill", 0, 0, uiX, uiY)
 
-    love.graphics.setColor(1,1,1,event.alpha)
+  love.graphics.setColor(1,1,1,event.alpha)
+ -- love.graphics.setColor(1,1,1,1)
     local textScale = 8
     love.graphics.printf(event.text, npcNameFont, 0, 100, uiX / textScale, "center", 0, textScale)
 end
