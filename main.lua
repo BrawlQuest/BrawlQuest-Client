@@ -58,6 +58,7 @@ newOutliner = require 'scripts.libraries.outliner'
 
 version = "Early Access" 
 versionType = "dev" -- "dev" for quick login, "release" for not
+if versionType == "dev" then require 'dev' end
 versionNumber = "1.1.4" -- very important for settings
 
 phase = "login"
@@ -300,6 +301,14 @@ function love.update(dt)
             if distanceToPoint(me.X, me.Y, player.x, player.y) > 3 then
                 player.x = me.X
                 player.y = me.Y
+                c, h = http.request {
+                    url = api.url .. "/revive/" .. username,
+                    method = "GET",
+                    headers = {
+                        ["token"] = token
+                    },
+        
+                }
                 if death.previousPosition.hp < getMaxHealth() * 0.9 then
                     death.open = true
                     totalCoverAlpha = 2

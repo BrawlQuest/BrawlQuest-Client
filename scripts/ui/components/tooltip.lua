@@ -7,9 +7,9 @@ tooltip = {
     padding = 4,
     spacing = 2,
     perks = {
-        {title = "Strength", desc = "Increases the amount of damage you deal to your enemies. You deal 1 extra damage per point.",},
-        {title = "Intelligence", desc = "Increases the potency of your spells. Check your spells to see what effect intelligence has on them.",},
-        {title = "Stamina", desc = "Increases your character's health. You gain an extra 15 health per point.",},
+        {title = "Strength", desc = "Increases maximum potential bonus damage output by 1 for each point (damage is wep value plus 1 to STR)",},
+        {title = "Intelligence", desc = "Increases the potency of your spells. Each point increases the impact of spells (check spell tooltips to see updated values)",},
+        {title = "Stamina", desc = "Increases your character's HP. You gain an extra 15 HP per point.",},
     },
 }
 
