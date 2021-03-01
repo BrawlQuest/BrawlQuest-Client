@@ -40,21 +40,6 @@ function initQuestHub()
 
     for i = 1, 3 do
         quests[i] = {}
-        -- for j = 1, randomQuest[i] do
-        --     local rand = love.math.random(1, 6)
-        --     local max = love.math.random(1, 20)
-        --     local min = love.math.random(0, max - 1)
-        --     if i == 3 then min = max end
-        --     quests[i][j] = {
-        --         title = generateRandomTitle(),
-        --         comment = "The long path is unclear at best",
-        --         giver = randomGiver[rand][1],
-        --         profilePic = randomGiver[rand][2],
-        --         task = "Get " .. max .. " Apples",
-        --         requiredAmount = max,
-        --         currentAmount = min,
-        --     }
-        -- end
     end
 
     quests[1][1] = {
@@ -183,7 +168,7 @@ function drawQuestHub(thisX, thisY)
 
     love.graphics.setColor(1,1,1,1 * questHub.opacity)
     thisX, thisY = thisX - 73, thisY - cerp(0, 100, questHub.amount)
-    if #quests[1] > 0 then 
+    if #quests[1] > 0 then
         drawQuestHubProifle(thisX, thisY)
         if questHub.commentOpen then
             drawQuestHubNPCTalk(thisX - 150, thisY)

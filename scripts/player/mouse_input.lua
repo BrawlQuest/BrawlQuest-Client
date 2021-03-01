@@ -15,6 +15,9 @@ function love.mousepressed(x, y, button)
         checkNPCChatMousePressed(button)
         end
         checkWorldEditMouseDown(button)
+        if mouseOverChat then
+            isTypingInChat = not isTypingInChat
+        end
     end
 end
 

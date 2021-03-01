@@ -19,6 +19,7 @@ function initChat()
 		deleteTick = 0,
 		deleteDelay = 0,
 	}
+	mouseOverChat = false
 end
 
 function updateChat(dt)
@@ -186,13 +187,17 @@ end
 
 function drawEnterChatBox(thisX, thisY, text)
 	local enterChatWidth = chatWidth + 90
-
-	if isTypingInChat then
+	local thisScale = scale * 0.5
+	local isMouse = isMouseOver(thisX * thisScale, thisY * thisScale, enterChatWidth * thisScale, (getChatTextHeight(text) + 28) * thisScale)
+	
+	mouseOverChat = false
+	if isMouse then
+		love.graphics.setColor(1,0,0,1)
+		mouseOverChat = true
+	elseif isTypingInChat then
 		text = text .. "|"
 		love.graphics.setColor(1,1,1,1)
 	else
-		love.graphics.setColor(1,1,1,1)
-
 		love.graphics.setColor(0,0,0,0.7)
 	end
 
@@ -203,7 +208,7 @@ function drawEnterChatBox(thisX, thisY, text)
 	end
 	love.graphics.rectangle("fill", thisX, thisY+chatCorner:getHeight(), enterChatWidth+(chatCorner:getWidth()*2), getChatTextHeight(text)) -- background rectangle
 
-	if isTypingInChat then love.graphics.setColor(0,0,0,1) else love.graphics.setColor(1,1,1,1) end
+	if isTypingInChat and not isMouse then love.graphics.setColor(0,0,0,1) else love.graphics.setColor(1,1,1,1) end
 
 	love.graphics.printf(text, thisX+chatCorner:getHeight(), thisY+chatCorner:getHeight(), enterChatWidth, "left")
 	love.graphics.setColor(1,1,1,1)

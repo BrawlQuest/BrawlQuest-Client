@@ -99,7 +99,7 @@ function checkHotbarChange()
                 end
                 if found then break end
             end
-            if me.LVL and not found then hotbar[j] = {item = null, amount = 0} end
+            -- if me.LVL and not found then hotbar[j] = {item = null, amount = 0} end
         end
     end
     writeSettings()
