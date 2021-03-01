@@ -232,7 +232,7 @@ function continueConversation()
                 local b = {}
                 c, h = http.request{url = api.url.."/conversation/"..v[2].."/"..username.."/"..currentNPC, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
                 if b ~= nil then
-                    npcChat = json:decode(b[1])
+                    npcChat = json:decode(table.concat(b))
                     local optionString = npcChat.Options
                     optionString = string.gsub(optionString, "'s", 's')
                     optionString = string.gsub(optionString, "'t", 't')

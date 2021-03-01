@@ -137,6 +137,7 @@ function login()
                     end
                 end
         -- end
+        if versionType == "dev" then
             r, h = http.request {
                 url = api.url .. "/enemies",
             
@@ -153,6 +154,7 @@ function login()
                     end
                 end
             end
+        end
         elseif c == 401 then
             textfields[2] = ""
             textfields[3] = ""

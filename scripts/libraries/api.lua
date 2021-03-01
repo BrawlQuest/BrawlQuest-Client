@@ -51,7 +51,7 @@ function getPlayerData(request, body)
    -- print("Calling http://167.172.62.97:8080"..action.." with "..body)
     local b = {}
     c, h = http.request{url = "]]..api.url..[["..action, method="POST", source=ltn12.source.string(body), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(body),["token"]="]]..token..[["}, sink=ltn12.sink.table(b)}
-    love.thread.getChannel( 'players' ):push( b[1] )
+    love.thread.getChannel( 'players' ):push( table.concat(b) )
   ]] )
 
   thread:start(request,body)

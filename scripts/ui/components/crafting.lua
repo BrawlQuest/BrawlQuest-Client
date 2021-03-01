@@ -52,7 +52,7 @@ function initCrafting()
     b = {}
     c, h = http.request{url = api.url.."/crafts", method="GET", source=ltn12.source.string(body), sink=ltn12.sink.table(b)}
     if b[1] ~= null then
-        crafting.catalogue = json:decode(b[1])
+        crafting.catalogue = json:decode(table.concat(b))
         for i, v in ipairs(crafting.catalogue) do
             crafting.itemCount = crafting.itemCount + 1
             if crafting.recipes[v.Item.Type] then
@@ -95,8 +95,8 @@ function updateCrafting(dt)
                     body = json:encode(itemsSoFar)
                     -- print(api.url.."/craft/"..player.name.."/"..crafting.selectedItem.ItemID)
                     c, h = http.request{url = api.url.."/craft/"..player.name.."/"..crafting.selectedItem.ItemID, method="POST", source=ltn12.source.string(body), headers={["token"]=token,["Content-Length"]=#body}, sink=ltn12.sink.table(b)}
-                    if json:decode(b[1])["success"] == null then
-                        crafting.result = json:decode(b[1])
+                    if json:decode(table.concat(b))["success"] == null then
+                        crafting.result = json:decode(table.concat(b))
                         crafting.result.alpha = 2
                     else
                         crafting.result = null

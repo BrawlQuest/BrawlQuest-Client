@@ -101,7 +101,7 @@ function startConversation()
                 sink = ltn12.sink.table(b)
             }
             if b ~= nil and b[1] ~= nil then
-                npcChat = json:decode(b[1])
+                npcChat = json:decode(table.concat(b))
                 chatXpos = -64
                 chatOpacity = 0
                 chatWritten = ""

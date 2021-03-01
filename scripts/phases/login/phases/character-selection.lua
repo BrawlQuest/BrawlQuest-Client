@@ -321,7 +321,7 @@ function transitionToPhaseGame()
     local b = {}
     c, h = http.request{url = api.url.."/players/"..username, method="GET", headers={["token"]=token}, sink=ltn12.sink.table(b)}
     if b[1] then
-        local response = json:decode(b[1])
+        local response = json:decode(table.concat(b))
         player.x = response['Me']['X']
         player.y = response['Me']['Y']
         player.dx = player.x*32
@@ -332,7 +332,7 @@ function transitionToPhaseGame()
         local b = {}
        c, h = http.request{url = api.url.."/world", method="GET", sink=ltn12.sink.table(b)}
         if b[1] then
-            world = json:decode(b[1])
+            world = json:decode(table.concat(b))
 
             love.audio.play(awakeSfx)
             love.graphics.setBackgroundColor(0, 0, 0)
