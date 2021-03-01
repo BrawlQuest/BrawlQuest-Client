@@ -387,6 +387,15 @@ function tick()
             hotbarChanged = false
         end
     end
+    if crafting.changed then
+        crafting.changeCount = crafting.changeCount + 1
+        if crafting.changeCount > 0 then
+            enterCraftingItems(crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j])
+            checkHotbarChange()
+            crafting.changeCount = 0
+            crafting.changed = false
+        end
+    end
 end
 
 function love.resize(width, height)
