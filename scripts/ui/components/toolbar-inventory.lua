@@ -124,17 +124,14 @@ function getItemType(v)
     elseif v.Item.Type == "buddy" then
         t = 7
     end
-
     return t
 end
 
 function getInventory()
     userInventory = {{}, {}, {}, {}, {}, {}, {}, {}, }
     inventoryFieldLength = {0, 0, 0, 0, 0, 0, 0, 0,}
-
     for i, v in ipairs(inventoryAlpha) do
         local t = getItemType(v)
-
         inventoryFieldLength[t] = inventoryFieldLength[t] + 1
         if not itemImg[v.Item.ImgPath] then
             if love.filesystem.getInfo(v.Item.ImgPath) then
@@ -198,7 +195,5 @@ end
 function isItemUnusable(item)
     if item and me.LVL and not debugItems then
         return item.Worth * 1 > me.LVL
-    else
-        return false
-    end
+    else return false end
 end

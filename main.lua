@@ -379,6 +379,14 @@ function tick()
     nextTick = 1
     getInventory()
     -- tickRangedWeapons()
+    if hotbarChanged then
+        hotbarChangeCount = hotbarChangeCount + 1
+        if hotbarChangeCount > 0 then
+            checkHotbarChange()
+            hotbarChangeCount = 0
+            hotbarChanged = false
+        end
+    end
 end
 
 function love.resize(width, height)
