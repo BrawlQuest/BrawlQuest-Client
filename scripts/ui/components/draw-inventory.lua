@@ -46,7 +46,7 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
     if number then
         local height = 19
         local isMouse = isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale)
-        amount = inventory.amount
+        -- amount = inventory.amount
 
         if item and isItemUnusable(item) then
             love.graphics.setColor(0.2, 0.2, 0.2)
@@ -64,12 +64,12 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
             thisY = thisY - 2
         else
             love.graphics.setColor(
-                cerp(useItemColor[number], 1, amount),
-                cerp(useItemColor[number], 1 - useItemColor[number], amount),
-                cerp(useItemColor[number], 1 - useItemColor[number], amount),
-                cerp(useItemColor[number] + (0.7 * (1 - useItemColor[number])), 1, amount))
+                cerp(useItemColor[number], 1, inventory.amount),
+                cerp(useItemColor[number], 1 - useItemColor[number], inventory.amount),
+                cerp(useItemColor[number], 1 - useItemColor[number], inventory.amount),
+                cerp(useItemColor[number] + (0.7 * (1 - useItemColor[number])), 1, inventory.amount))
         end
-        if inventory.amount < 0.02 then 
+        if inventory.amount < 0.02 then
             roundRectangle("fill", thisX, thisY, inventory.images.itemBG:getWidth(), height, 4, {true, true, false, false})
         end
 
@@ -90,6 +90,24 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
 
         love.graphics.setColor(1,1,1,1)
         love.graphics.draw(inventory.images.numbers[number], thisX - 3, thisY + 26)
+
+        if amount and amount > 1 then
+            if amount <= 9 then
+                inventory.imageNumber = 1
+            elseif amount > 9 and amount <= 99 then
+                inventory.imageNumber = 2
+            elseif amount > 99 and amount <= 999 then
+                inventory.imageNumber = 3
+            else
+                inventory.imageNumber = 4
+            end
+            thisX, thisY = thisX + 39 - inventory.images.numberBg[inventory.imageNumber]:getWidth(),
+                thisY + 39 - inventory.images.numberBg[inventory.imageNumber]:getHeight()
+            love.graphics.draw(inventory.images.numberBg[inventory.imageNumber], thisX, thisY)
+            love.graphics.setColor(0, 0, 0)
+            love.graphics.print(amount, thisX + 5, thisY + 4)
+        end
+
     else
 
         local isMouse = isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale)
@@ -97,12 +115,14 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
         if isItemUnusable(item) then
             if isMouse and item then
                 selectedItem = item
+                selectedItemAmount = amount
                 setItemTooltip(item)
             end
             love.graphics.setColor(0.2, 0.2, 0.2)
         elseif isMouse and item then
             setItemTooltip(item)
             selectedItem = item
+            selectedItemAmount = amount
             inventory.isMouseOverInventoryItem = true
             love.graphics.setColor(1,0,0,1)
             thisY = thisY - 2

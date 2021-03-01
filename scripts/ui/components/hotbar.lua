@@ -1,11 +1,11 @@
 function initHotbar()
     hotbar = {}
     for i = 1, 7 do
-        hotbar[#hotbar + 1] = {item = null,}
+        hotbar[#hotbar + 1] = {item = null, amount = 0}
         useItemColor[#useItemColor + 1] = 0
     end
-
-    -- print(#hotbar)
+    hotbarChanged = false
+    hotbarChangeCount = 0
 end
 
 function updateHotbar(dt)
@@ -19,7 +19,6 @@ function updateHotbar(dt)
             end
             colorCount = colorCount + v
         end
-
         if colorCount == 0 then
             useItemColorChanged = false
         end
@@ -29,8 +28,7 @@ end
 function drawHotbar(thisX, thisY)
     love.graphics.setColor(1,1,1)
     for i,v in ipairs(hotbar) do
-        -- print(i)
-        drawInventoryItem(thisX + 9 + (43 * (i - 1)), thisY - 42, 0, v.item, 0, i)
+        drawInventoryItem(thisX + 9 + (43 * (i - 1)), thisY - 42, 0, v.item, v.amount, i)
     end
 end
 
@@ -39,12 +37,14 @@ function checkHotbarKeyPressed(key)
         if key == tostring(i) or (i == 7 and key == "space") then
             if inventory.isMouseOverInventoryItem == true then
                 hotbar[i].item = selectedItem
+                hotbar[i].amount = selectedItemAmount
                 writeSettings()
+                hotbarChanged = true
                 break
             else
                 if v.item ~= nil and v.item.ID ~= nil and not isItemUnusable(v.item) and not usedItemThisTick then
-                    -- print(json:encode_pretty(v.item))
                     useHotbarItem(i,v)
+                    hotbarChanged = true
                     break
                 end
             end
@@ -60,12 +60,15 @@ function checkHotbarMousePressed(button)
             if i == inventory.mouseOverButtonsAmount and v.item ~= nil and v.item.ID ~= nil and  not usedItemThisTick  then
                 if button == 1  then
                     useHotbarItem(i,v)
+                    hotbarChanged = true
                     break
                 elseif button == 2 then
-                    hotbar[i] = {item = null,}
+                    hotbar[i] = {item = null, amount = 0}
+                    hotbarChanged = true
                     writeSettings()
                     break
                 end
+                hotbarChanged = true
             end
         end
     end
@@ -76,7 +79,7 @@ function useHotbarItem(i,v)
     useItemColorChanged = true
     apiGET("/item/" .. player.name .. "/" .. v.item.ID)
     usedItemThisTick = true
-    checkHotbarChange()
+    writeSettings()
 end
 
 function checkHotbarChange()
@@ -87,12 +90,17 @@ function checkHotbarChange()
                 for i,v in ipairs(userInventory[field]) do
                     if v.Item.ID and k.item.ID == v.Item.ID then
                         hotbar[j].item = v.Item
+                        local amount = getItemAmount(v.Item)
+                        hotbar[j].amount = amount
+                        -- if amount < 1 then hotbar[j] = {item = null, amount = 0} end
                         found = true
                         break
                     end
                 end
                 if found then break end
             end
+            -- if me.LVL and not found then hotbar[j] = {item = null, amount = 0} end
         end
     end
+    writeSettings()
 end

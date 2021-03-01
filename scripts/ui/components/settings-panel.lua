@@ -177,7 +177,7 @@ function drawSettingsPanel()
     local width, height = (settPan.width * 0.5) - (settPan.padding * 2), 40
     local thisX, thisY = x + settPan.padding, y + (settPan.height * 0.5) - settPan.padding - height
 
-    love.graphics.setColor(0, 0.7, 0, settPan.opacityCERP * 1)
+    love.graphics.setColor(1, 0, 0, settPan.opacityCERP * 1)
     roundRectangle("fill", thisX, thisY, width, height, 6)
     love.graphics.setColor(1,1,1, settPan.opacityCERP * 1)
     love.graphics.printf("Save Settings (escape)", thisX, thisY + 20 - (settPan.itemFont:getHeight() * 0.5), width, "center") -- prints the name of things
@@ -191,16 +191,13 @@ function drawSettingsPanel()
         settPan.mouseOverCloseGame = true
     else
         settPan.mouseOverCloseGame = false
-        love.graphics.setColor(1, 0, 0, settPan.opacityCERP * 0.9)
+        love.graphics.setColor(1, 0, 0, settPan.opacityCERP * 1)
     end
 
-    roundRectangle("fill", thisX, thisY, 75, 75, 10, {true, true, true, false, })
+    love.graphics.rectangle("fill", thisX, thisY, 75, 75, 10)
 
-    if isMouse then
-        love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 1)
-    else
-        love.graphics.setColor(1, 1, 1, settPan.opacityCERP * 1)
-    end
+    if isMouse then love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 1)
+    else love.graphics.setColor(1, 1, 1, settPan.opacityCERP * 1) end
     love.graphics.printf("Quit Game", thisX, thisY + 24, 75, "center", 0, 1)
 end
 

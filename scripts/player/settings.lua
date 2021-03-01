@@ -258,7 +258,7 @@ function checkSettingKeyPressed(key)
             getDisplay()
             writeSettings()
             isSettingsWindowOpen = false
-        elseif versionType == "dev" and key == "return" then
+        elseif key == "return" then
             writeSettings()
             checkIfReadyToQuit()
         end

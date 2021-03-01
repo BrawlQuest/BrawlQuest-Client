@@ -44,7 +44,9 @@ function initCrafting()
             ["spell"] = "Spells",
         },
         openField = {},
-        overOpenField = 0
+        overOpenField = 0,
+        changed = false,
+        changeCount = 0,
     }
 
     b = {}
@@ -158,7 +160,7 @@ function drawCraftingBackground(thisX, thisY)
     love.graphics.setColor(1,1,1)
     love.graphics.draw(crafting.hammer, thisX + 720, thisY + 300 - crafting.hammerY, cerp(-0.01, 0.01, crafting.hammerShake) + cerp(-0.6,0.01, crafting.hammerDown), -10)
 
-    love.graphics.print("CRAFTING", inventory.headerFont, thisX + 10 , thisY + 14)    
+    love.graphics.print("CRAFTING", inventory.headerFont, thisX + 10 , thisY + 14)
     love.graphics.print("RECIPES",crafting.font, thisX + 20, thisY + 10 + 40, 0, 2)
     x, y = thisX + 10, thisY + 10 + 40 + crafting.posY + 30
     w, h = 194 + 18, 56
@@ -388,12 +390,13 @@ end
 function checkCraftingMousePressed(button)
     local c = crafting
     thisX, thisY = (uiX / 2) - (400 / 2), (uiY / 2) - (400 / 2)
-    if button == 1 and crafting.mouseOverAnvil == true and crafting.craftable then
+    if button == 1 and crafting.mouseOverAnvil == true and crafting.craftable and not crafting.changed then
         crafting.isCrafting = true
         crafting.whiteout = 0
         love.audio.stop(crafting.swing)
         crafting.swing:setPitch(love.math.random(30,80)/100)
         love.audio.play(crafting.swing)
+        checkHotbarChange()
     elseif button == 1 and crafting.overOpenField > 0 then
         crafting.openField[crafting.overOpenField] = not crafting.openField[crafting.overOpenField]
         if crafting.openField[crafting.overOpenField] == true then
@@ -476,12 +479,15 @@ function checkCraftingKeyPressed(key)
         crafting.selectedItem = v
         enterCraftingItems(v)
         crafting.posY = crafting.posY - 66
-    elseif key == "return" and crafting.craftable then
+    elseif key == "return" and crafting.craftable and not crafting.changed then
         crafting.isCrafting = true
         crafting.whiteout = 0
         love.audio.stop(crafting.swing)
         crafting.swing:setPitch(love.math.random(30,80)/100)
         love.audio.play(crafting.swing)
+        crafting.changed = true
+        enterCraftingItems(crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j])
+        checkHotbarChange()
     elseif key == keybinds.INTERACT or checkMoveOrAttack(key, "move") then
         crafting.open = false
         -- crafting.enteredItems = {}

@@ -12,15 +12,7 @@ function love.keypressed(key)
             checkLoginKeyPressedPhaseLogin(key)
         elseif loginPhase == "dev" then
             if versionType == "dev" then
-                if key == "home" then 
-                    quickLogin("Pebsie", 1)
-                elseif key == "end" then
-                    quickLogin("Danjoe", 1)
-                elseif key == "pageup" then
-                    quickLogin("Danjoe", 2)
-                elseif key == "pagedown" then
-                    quickLogin("Danjoe", 3)
-                end
+                devLogin(key)
             end
             if key == "left" or key == "a" then
                 local originalID = steam.user.getSteamID()
@@ -122,7 +114,7 @@ function love.keypressed(key)
             end
         end
         
-        if not worldEdit.isTyping and versionType == "dev" then
+        if not worldEdit.isTyping and not isTypingInChat and versionType == "dev" then
             if key == "." then
                 scaleHUD("up")
                 writeSettings()
