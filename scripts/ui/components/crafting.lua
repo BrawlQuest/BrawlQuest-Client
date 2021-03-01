@@ -426,9 +426,11 @@ function checkCraftingKeyPressed(key)
         keyCount = 1
         if crafting.selectedField.i == 0 then
             crafting.selectedField = {i = 1, j = 1}
-            v = crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j]
-            crafting.selectedItem = v
-            enterCraftingItems(v)
+                if crafting.recipes[crafting.fields[crafting.selectedField.i]] then
+                v = crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j]
+                crafting.selectedItem = v
+                enterCraftingItems(v)
+                end
         end
         for i, v in ipairs(crafting.fields) do
             crafting.openField[i] = true

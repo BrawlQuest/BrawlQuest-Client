@@ -232,7 +232,7 @@ function loginOrCreate()
             characters[cs.selectedCharacter] = {}
             characters[cs.selectedCharacter].Name = cs.nameText
             characters[cs.selectedCharacter].Color = copy(cs.initialCharacter.Color)
-            r, h = http.request {
+            r, c, h = http.request {
                 url = api.url.."/user/"..UID.."/".. characters[cs.selectedCharacter].Name,
                 method = "POST",
                 headers = {
@@ -240,13 +240,17 @@ function loginOrCreate()
                 },
             }
             characters = {}
-            r, h = http.request {
+            r, c, h = http.request {
                 url = api.url .. "/user/" .. textfields[1],
                 headers = {
                     ['token'] = b['token']
                 },
                 sink = ltn12.sink.table(characters)
             }
+
+            if c ~= 200 then
+                zoneChange("Error code "..tostring(c))
+            end
             characters = json:decode(characters[1])
             for i,v in ipairs(characters) do
                 if characters[i] and characters[i].Color ~= null then
@@ -315,7 +319,7 @@ function transitionToPhaseGame()
     me.Color = copy(characters[cs.selectedCharacter].Color)
     username = characters[cs.selectedCharacter]["Name"]
     local b = {}
-    c, h = http.request{url = api.url.."/players/"..username, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
+    c, h = http.request{url = api.url.."/players/"..username, method="GET", headers={["token"]=token}, sink=ltn12.sink.table(b)}
     if b[1] then
         local response = json:decode(b[1])
         player.x = response['Me']['X']
@@ -326,7 +330,7 @@ function transitionToPhaseGame()
         player.cy = player.y*32
         totalCoverAlpha = 2
         local b = {}
-        c, h = http.request{url = api.url.."/world", method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
+       c, h = http.request{url = api.url.."/world", method="GET", sink=ltn12.sink.table(b)}
         if b[1] then
             world = json:decode(b[1])
 
@@ -340,7 +344,12 @@ function transitionToPhaseGame()
             if musicVolume > 0 then
                 checkMusic()
             end
+        else
+            zoneChange(json:encode(b).."\n"..tostring(c).."\n"..tostring(h))
         end
+
+    else
+        zoneChange("Error code "..tostring(c))
     end
 end
 

@@ -15,7 +15,7 @@ selectedServer = 1
 servers = {
   {
     name="Swordbreak (UK)",
-    url= "http://167.172.62.97:8080",
+    url= "https://swordbreak.brawlquest.com",
   },
   {
     name="Local",
