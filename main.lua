@@ -55,7 +55,6 @@ json = require("scripts.libraries.json")
 http = require("socket.http")
 ltn12 = require("ltn12")
 newOutliner = require 'scripts.libraries.outliner'
-moonshine = require 'scripts.libraries.moonshine-master'
 
 version = "Early Access" 
 versionType = "dev" -- "dev" for quick login, "release" for not
