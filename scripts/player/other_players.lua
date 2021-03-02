@@ -62,9 +62,7 @@ function drawCharacter(v, x, y, ad)
         
         if not string.find(v.Mount.Name, "boat") then
             drawBuddy(v)
-            if v.RedAlpha ~= null then
-                love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha)
-            end
+            if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) end
             -- print(v.RedAlpha)
             -- if v.Color ~= null then love.graphics.setColor(unpack(v.Color)) end
             love.graphics.draw(playerImg, x + offsetX, y, player.wobble, rotation, 1, 0, 0)
@@ -82,18 +80,12 @@ function drawCharacter(v, x, y, ad)
                 drawItemIfExists(v.Shield.ImgPath, x, y, ad.previousDirection)
             end
         end
-
-        -- local w, h = 64, 46
-        -- love.graphics.setColor(0,0,0,0.8)
-        -- roundRectangle("fill", x + 42, y - 16 - h, w, h, 5, {true, true, false, false})
-        -- love.graphics.setColor(1,1,1)
-        -- love.graphics.line(x + 32, y, x + 42, y - 16, x + 42 + w, y - 16)
     end
 end
 
 function drawArmourImage(x,y,v,ad,type)
     if v[type.."ID"] ~= 0 then
-        love.graphics.setColor(1,1,1)
+        if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) else love.graphics.setColor(1, 1, 1) end
         drawItemIfExists(v[type].ImgPath, x, y, ad.previousDirection)
         love.graphics.push()
             love.graphics.stencil(function() 
@@ -102,9 +94,11 @@ function drawArmourImage(x,y,v,ad,type)
                 love.graphics.setShader()
             end)
             love.graphics.setStencilTest("equal", 1)
-            love.graphics.setColor(1,0,1,0.5)
+            love.graphics.setColor(0.8,0,1,0.3)
             love.graphics.setBlendMode("add")
-            love.graphics.draw(enchantment, x + nextTick * 10, y)
+            love.graphics.draw(enchantment, x + enchantmentPos, y)
+            love.graphics.draw(enchantment, x + enchantmentPos, y, 0, -1, 1)
+            love.graphics.draw(enchantment, x + enchantmentPos - 64, y)
             love.graphics.setStencilTest("always", 0)
             love.graphics.setBlendMode("alpha")
         love.graphics.pop()
@@ -127,6 +121,7 @@ function drawPlayer(v, i)
         thisPlayer.Buddy = player.buddy
         thisPlayer.HP = player.hp
         thisPlayer.Mana = me.Mana
+        v.RedAlpha = 0
     else
         thisPlayer = players[i]
     end
@@ -134,9 +129,8 @@ function drawPlayer(v, i)
         if not v.previousDirection then
             v.previousDirection = "right"
         end
-        if v.RedAlpha ~= null then
-            love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha)
-        end
+        -- print(v.RedAlpha)
+        if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) end
         drawCharacter(thisPlayer, v.X, v.Y, v)
 
         love.graphics.setColor(1,1,1)
@@ -246,8 +240,9 @@ attackHitAmount = 0
 
 function updateOtherPlayers(dt)
 
-    enchantmentPos = enchantmentPos + 10 * dt
-    if enchantmentPos > 16 then enchantmentPos = 0 end
+    enchantmentPos = enchantmentPos + 15 * dt
+    if enchantmentPos > 64 then enchantmentPos = 0 end
+
     if attackHitAmount > 0 then
         attackHitAmount = attackHitAmount - 2 * dt
     end
@@ -279,9 +274,11 @@ function updateOtherPlayers(dt)
         end
 
         if playersDrawable[i].RedAlpha then
-            playersDrawable[i].RedAlpha = playersDrawable[i].RedAlpha - 1*dt
-            if playersDrawable[i].RedAlpha < 0 then
-                playersDrawable[i].RedAlpha = 0
+            if playersDrawable[i].RedAlpha > 0 then
+                playersDrawable[i].RedAlpha = playersDrawable[i].RedAlpha - 1 * dt
+                if playersDrawable[i].RedAlpha < 0 then
+                    playersDrawable[i].RedAlpha = 0
+                end
             end
         end
         
