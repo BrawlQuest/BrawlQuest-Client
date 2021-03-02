@@ -3,6 +3,20 @@
     This script is for managing other player's actions.
     It could probably be named better. Any ideas, Matt?
 ]]
+function initPlayers()
+    enchantment = love.graphics.newImage("assets/player/gen/enchantment.png")
+    enchantmentPos = 0
+end
+
+local shader = love.graphics.newShader[[
+    vec4 effect(vec4 colour, Image texture, vec2 texpos, vec2 scrpos)
+    {
+      vec4 pixel = Texel(texture, texpos) * colour;
+      if (pixel.a < 0.5) discard;
+      return pixel;
+    }
+  ]]
+
 function drawCharacter(v, x, y, ad)
     if ad then
         love.graphics.setColor(1,1,1)
@@ -54,17 +68,12 @@ function drawCharacter(v, x, y, ad)
             -- print(v.RedAlpha)
             -- if v.Color ~= null then love.graphics.setColor(unpack(v.Color)) end
             love.graphics.draw(playerImg, x + offsetX, y, player.wobble, rotation, 1, 0, 0)
+            drawArmourImage(x,y,v,ad,"LegArmour")
+            drawArmourImage(x,y,v,ad,"ChestArmour")
+            drawArmourImage(x,y,v,ad,"HeadArmour")
+
             love.graphics.setColor(1,1,1)
 
-            if v.LegArmourID ~= 0 then
-                drawItemIfExists(v.LegArmour.ImgPath, x, y, ad.previousDirection)
-            end
-            if v.ChestArmourID ~= 0 then
-                drawItemIfExists(v.ChestArmour.ImgPath, x, y, ad.previousDirection)
-            end
-            if v.HeadArmourID ~= 0 then
-                drawItemIfExists(v.HeadArmour.ImgPath, x, y, ad.previousDirection)
-            end
             if v.Mount.Name ~= "" then
                 love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/fore.png"), x + 6 + mountOffsetX, y + 9, 0, rotation, 1, 0, 0)
             end
@@ -79,6 +88,26 @@ function drawCharacter(v, x, y, ad)
         -- roundRectangle("fill", x + 42, y - 16 - h, w, h, 5, {true, true, false, false})
         -- love.graphics.setColor(1,1,1)
         -- love.graphics.line(x + 32, y, x + 42, y - 16, x + 42 + w, y - 16)
+    end
+end
+
+function drawArmourImage(x,y,v,ad,type)
+    if v[type.."ID"] ~= 0 then
+        love.graphics.setColor(1,1,1)
+        drawItemIfExists(v[type].ImgPath, x, y, ad.previousDirection)
+        love.graphics.push()
+            love.graphics.stencil(function() 
+                love.graphics.setShader(shader)
+                drawItemIfExists(v[type].ImgPath, x, y, ad.previousDirection)
+                love.graphics.setShader()
+            end)
+            love.graphics.setStencilTest("equal", 1)
+            love.graphics.setColor(1,0,1,0.5)
+            love.graphics.setBlendMode("add")
+            love.graphics.draw(enchantment, x + nextTick * 10, y)
+            love.graphics.setStencilTest("always", 0)
+            love.graphics.setBlendMode("alpha")
+        love.graphics.pop()
     end
 end
 
@@ -217,6 +246,8 @@ attackHitAmount = 0
 
 function updateOtherPlayers(dt)
 
+    enchantmentPos = enchantmentPos + 10 * dt
+    if enchantmentPos > 16 then enchantmentPos = 0 end
     if attackHitAmount > 0 then
         attackHitAmount = attackHitAmount - 2 * dt
     end
@@ -240,7 +271,7 @@ function updateOtherPlayers(dt)
         playersDrawable[i].Mount = v.Mount
         updateBuddy(dt, playersDrawable)
         if playersDrawable[i].HP > v.HP then
-            print("player Hit")
+            -- print("player Hit")
             playersDrawable[i].HP = v.HP
             playersDrawable[i].RedAlpha = 1
             love.audio.play(playerHitSfx) 
