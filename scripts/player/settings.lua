@@ -75,7 +75,7 @@ function initSettings()
         hotbar = contents["hotbar"] or hotbar
         openInventoryOnHover = contents["openInventoryOnHover"] or openInventoryOnHover
         openQuestsOnHover = contents["openQuestsOnHover"] or openQuestsOnHover
-        crafting.openField = contents["craftingFields"] or crafting.openField
+        if #contents["craftingFields"] == #crafting.openField then crafting.openField = contents["craftingFields"] end
         api.url = servers[selectedServer].url
     else
         writeSettings()
