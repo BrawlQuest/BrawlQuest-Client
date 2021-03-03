@@ -102,6 +102,8 @@ oldInfo = {}
 sendUpdate = false
 
 function love.load()
+    limits = love.graphics.getSystemLimits( )
+    print(limits.multicanvas)
     outlinerOnly = newOutliner(true)
     outlinerOnly:outline(0.8,0,0) -- this is used to draw enemy outlines
     grayOutlinerOnly = newOutliner(true)
@@ -284,8 +286,8 @@ function love.update(dt)
                     player = v["Sender"]
                 }
             end
-            timeOfDay = cerp(0.1, 1, ((math.abs(response['CurrentHour']) * 60) + 0) / 720)
-            timeOfDay = timeOfDay + 0.2
+            timeOfDay = cerp(0.1, 0.1, ((math.abs(response['CurrentHour']) * 60) + 0) / 720)
+            -- timeOfDay = timeOfDay + 0.2
             usedItemThisTick = false
             if not worldEdit.open then
                 Luven.setAmbientLightColor({timeOfDay, timeOfDay, timeOfDay+  0.1})

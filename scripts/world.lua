@@ -1,4 +1,3 @@
-worldCanvas = love.graphics.newCanvas(32*101,32*101)
 isWorldCreated = false
 worldLookup = {}
 lightSource = {}
@@ -51,11 +50,35 @@ function createWorld()
             -- addLeaf(v.X*32 + 16, v.Y*32 + 16, "sand")
         end
     end
-    worldCanvas = love.graphics.newCanvas(32*(highestX+math.abs(lowestX)+2), 32*(highestY+math.abs(lowestY)+2))
+
     reinitLighting(32*(highestX+math.abs(lowestX)+2), 32*(highestY+math.abs(lowestY)+2))
     -- worldCanvas = love.graphics.newCanvas(32*((worldEdit.worldSize * 2)), 32*((worldEdit.worldSize * 2)))
     -- reinitLighting(32*((worldEdit.worldSize)), 32*((worldEdit.worldSize)))
-    love.graphics.setCanvas(worldCanvas)
+
+
+    local dim = {32 * (128), 32 * (128)}
+    worldCanvas = {} 
+    
+    for i = 1, 1 do
+        worldCanvas[i] = love.graphics.newCanvas(unpack(dim))
+        love.graphics.setCanvas(worldCanvas[i])
+            love.graphics.clear()
+            love.graphics.setColor(1, 1, 1)
+            
+            for x = worldEdit.worldSize * -1, worldEdit.worldSize do
+                for y = worldEdit.worldSize * -1, worldEdit.worldSize do
+                    drawSimplexNoise(x, y)  -- sets background noise
+                    love.graphics.draw(groundImg, x * 32, y * 32)
+                end
+            end
+            
+            for i, v in ipairs(world) do
+                drawTile(v)
+            end
+        love.graphics.setCanvas()
+    end
+
+    love.graphics.setCanvas(worldCanvas[i])
         love.graphics.clear()
         love.graphics.setColor(1, 1, 1)
         
@@ -136,7 +159,11 @@ function drawWorld()
     -- end
     love.graphics.setColor(1,1,1,1)
     love.graphics.setBlendMode("alpha", "premultiplied")
-    love.graphics.draw(worldCanvas, lowestX*32, lowestY*32)
+
+    for i = 1, 1 do
+        love.graphics.draw(worldCanvas[i], lowestX*32, lowestY*32)
+    end
+
     love.graphics.setBlendMode("alpha")
     
     love.graphics.setColor(1,1,1)
