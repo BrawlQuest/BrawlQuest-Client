@@ -160,7 +160,7 @@ function drawCraftingBackground(thisX, thisY)
     love.graphics.setColor(1,1,1)
     love.graphics.draw(crafting.hammer, thisX + 720, thisY + 300 - crafting.hammerY, cerp(-0.01, 0.01, crafting.hammerShake) + cerp(-0.6,0.01, crafting.hammerDown), -10)
 
-    love.graphics.print("CRAFTING", inventory.headerFont, thisX + 10 , thisY + 14)
+    love.graphics.print("CRAFTING", inventory.headerFont, thisX + 16 , thisY + 14)
     love.graphics.print("RECIPES",crafting.font, thisX + 20, thisY + 10 + 40, 0, 2)
     x, y = thisX + 10, thisY + 10 + 40 + crafting.posY + 30
     w, h = 194 + 18, 56
@@ -252,12 +252,15 @@ function drawCraftingBackground(thisX, thisY)
     love.graphics.setStencilTest() -- pop
 
     x, y = thisX + 10 + w + 10, thisY + 10 + 10
+    love.graphics.setColor(1,1,1)
+    love.graphics.print("LVL:", inventory.headerFont, x, y)    
+    y = y + 52
 
     love.graphics.setColor(1,1,1)
     love.graphics.setFont(crafting.font)
     love.graphics.print("ENTERED ITEMS", x + 5, y, 0 ,2 )
 
-    y = thisY + 10 + 40
+    y = thisY + 10 + 40 + 52
     if crafting.craftable then
         love.graphics.setColor(0.1,1,0.1,0.7)
     else

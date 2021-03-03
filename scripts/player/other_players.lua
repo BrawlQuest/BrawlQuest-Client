@@ -63,8 +63,6 @@ function drawCharacter(v, x, y, ad)
         if not string.find(v.Mount.Name, "boat") then
             drawBuddy(v)
             if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) end
-            -- print(v.RedAlpha)
-            -- if v.Color ~= null then love.graphics.setColor(unpack(v.Color)) end
             love.graphics.draw(playerImg, x + offsetX, y, player.wobble, rotation, 1, 0, 0)
             drawArmourImage(x,y,v,ad,"LegArmour")
             drawArmourImage(x,y,v,ad,"ChestArmour")
@@ -87,19 +85,21 @@ function drawArmourImage(x,y,v,ad,type)
     if v[type.."ID"] ~= 0 then
         if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) else love.graphics.setColor(1, 1, 1) end
         drawItemIfExists(v[type].ImgPath, x, y, ad.previousDirection)
-        love.graphics.push()
-            love.graphics.stencil(function() 
-                love.graphics.setShader(shader)
-                drawItemIfExists(v[type].ImgPath, x, y, ad.previousDirection)
-                love.graphics.setShader()
-            end)
-            love.graphics.setStencilTest("equal", 1)
-            love.graphics.setColor(0.8,0,1,0.4)
-            love.graphics.setBlendMode("add")
-            love.graphics.draw(enchantment, x + enchantmentPos - 64, y)
-            love.graphics.setStencilTest("always", 0)
-            love.graphics.setBlendMode("alpha")
-        love.graphics.pop()
+        if v.Enchantment then
+            love.graphics.push()
+                love.graphics.stencil(function() 
+                    love.graphics.setShader(shader)
+                    drawItemIfExists(v[type].ImgPath, x, y, ad.previousDirection)
+                    love.graphics.setShader()
+                end)
+                love.graphics.setStencilTest("equal", 1)
+                love.graphics.setColor(0.8,0,1,0.4)
+                love.graphics.setBlendMode("add")
+                love.graphics.draw(enchantment, x + enchantmentPos - 64, y)
+                love.graphics.setStencilTest("always", 0)
+                love.graphics.setBlendMode("alpha")
+            love.graphics.pop()
+        end
     end
 end
 
