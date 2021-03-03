@@ -58,41 +58,31 @@ function createWorld()
 
     local dim = {32 * (128), 32 * (128)}
     worldCanvas = {} 
-    
-    for i = 1, 1 do
-        worldCanvas[i] = love.graphics.newCanvas(unpack(dim))
-        love.graphics.setCanvas(worldCanvas[i])
-            love.graphics.clear()
-            love.graphics.setColor(1, 1, 1)
-            
-            for x = worldEdit.worldSize * -1, worldEdit.worldSize do
-                for y = worldEdit.worldSize * -1, worldEdit.worldSize do
-                    drawSimplexNoise(x, y)  -- sets background noise
-                    love.graphics.draw(groundImg, x * 32, y * 32)
+    for cx = 0, 0 do
+        if not worldCanvas[cx] then worldCanvas[cx] = {} end
+        for cy = 0, 0 do
+            worldCanvas[cx][cy] = {}
+            worldCanvas[cx][cy] = love.graphics.newCanvas(unpack(dim))
+            love.graphics.setCanvas(worldCanvas[cx][cy])
+                love.graphics.clear()
+                love.graphics.setColor(1, 1, 1)
+                
+                -- for x = worldEdit.worldSize * -1, worldEdit.worldSize do
+                --     for y = worldEdit.worldSize * -1, worldEdit.worldSize do
+                --         drawSimplexNoise(x, y)  -- sets background noise
+                --         love.graphics.draw(groundImg, x * 32, y * 32)
+                --     end
+                -- end
+                
+                for i, v in ipairs(world) do
+                    -- if v.X > cx * 128 and v.X < (cx + 1) * 128 and v.Y > cy * 128 and v.Y < (cy + 1) * 128 then
+                        drawTile(v, cx, cy)
+                    -- end
                 end
-            end
-            
-            for i, v in ipairs(world) do
-                drawTile(v)
-            end
-        love.graphics.setCanvas()
+            love.graphics.setCanvas()
+        end
     end
 
-    love.graphics.setCanvas(worldCanvas[i])
-        love.graphics.clear()
-        love.graphics.setColor(1, 1, 1)
-        
-        for x = worldEdit.worldSize * -1, worldEdit.worldSize do
-            for y = worldEdit.worldSize * -1, worldEdit.worldSize do
-                drawSimplexNoise(x, y)  -- sets background noise
-                love.graphics.draw(groundImg, x * 32, y * 32)
-            end
-        end
-        
-        for i, v in ipairs(world) do
-            drawTile(v)
-        end
-    love.graphics.setCanvas()
     if player.x and player.y then
         createNPCChatBackground(player.x,player.y)
     else
@@ -100,42 +90,44 @@ function createWorld()
     end
 end
 
-function drawTile(v)
+function drawTile(v, cx, cy)
 
-    local backgroundAsset = getWorldAsset(v.GroundTile, v.X, v.Y)
-    local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y)
+    local x, y = v.X + cx * 128, v.Y + cy * 128
 
-    if lightGivers[foregroundAsset] and not lightSource[v.X .. "," .. v.Y] then
-        lightSource[v.X .. "," .. v.Y] = true
-        Luven.addNormalLight(16 + v.X * 32, 16 + v.Y * 32, {1, 0.5, 0}, lightGivers[foregroundAsset])
+    local backgroundAsset = getWorldAsset(v.GroundTile, x, y)
+    local foregroundAsset = getWorldAsset(v.ForegroundTile, x, y)
+
+    if lightGivers[foregroundAsset] and not lightSource[x .. "," .. y] then
+        lightSource[x .. "," .. y] = true
+        Luven.addNormalLight(16 + x * 32, 16 + y * 32, {1, 0.5, 0}, lightGivers[foregroundAsset])
     end
 
-    if v.Collision then
-        if foregroundAsset == "assets/world/objects/Mountain.png" then
-            treeMap[v.X .. "," .. v.Y] = true
-        end
-        blockMap[v.X .. "," .. v.Y] = true
-    end
+    -- if v.Collision then
+    --     if foregroundAsset == "assets/world/objects/Mountain.png" then
+    --         treeMap[x .. "," .. y] = true
+    --     end
+    --     blockMap[x .. "," .. y] = true
+    -- end
 
-    drawSimplexNoise(v.X+math.abs(lowestX), v.Y+math.abs(lowestY)) -- sets background noise
+    -- drawSimplexNoise(v.X+math.abs(lowestX), v.Y+math.abs(lowestY)) -- sets background noise
 
     if worldImg[backgroundAsset] then
-        love.graphics.draw(worldImg[backgroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32)  
+        love.graphics.draw(worldImg[backgroundAsset], (x) * 32, (y) * 32)  
     end 
     
     love.graphics.setColor(1,1,1) 
 
-    if worldLookup[v.X][v.Y-1] and (isTileWall(worldLookup[v.X][v.Y-1].ForegroundTile) or isTileWall(worldLookup[v.X][v.Y-1].GroundTile)) and not isTileWall(v.ForegroundTile) then
-        love.graphics.setColor(0,0,0,0.5)
-        love.graphics.rectangle("fill", (v.X+math.abs(lowestX)) * 32 , (v.Y+math.abs(lowestY)) * 32, 32,16)
-        love.graphics.setColor(1,1,1,1)
-    elseif (isTileWall(v.GroundTile) or isTileWall(v.ForegroundTile)) and not worldLookup[v.X][v.Y+1] then -- no tile below us but we stil need to cast a shadow
-        love.graphics.setColor(0,0,0,0.5)
-        love.graphics.rectangle("fill", (v.X+math.abs(lowestX)) * 32 , (v.Y+1+math.abs(lowestY)) * 32, 32, 16)
-        love.graphics.setColor(1,1,1,1)
-    end 
+    -- if worldLookup[v.X][v.Y-1] and (isTileWall(worldLookup[v.X][v.Y-1].ForegroundTile) or isTileWall(worldLookup[v.X][v.Y-1].GroundTile)) and not isTileWall(v.ForegroundTile) then
+    --     love.graphics.setColor(0,0,0,0.5)
+    --     love.graphics.rectangle("fill", (v.X+math.abs(lowestX)) * 32 , (v.Y+math.abs(lowestY)) * 32, 32,16)
+    --     love.graphics.setColor(1,1,1,1)
+    -- elseif (isTileWall(v.GroundTile) or isTileWall(v.ForegroundTile)) and not worldLookup[v.X][v.Y+1] then -- no tile below us but we stil need to cast a shadow
+    --     love.graphics.setColor(0,0,0,0.5)
+    --     love.graphics.rectangle("fill", (v.X+math.abs(lowestX)) * 32 , (v.Y+1+math.abs(lowestY)) * 32, 32, 16)
+    --     love.graphics.setColor(1,1,1,1)
+    -- end 
 
-    if foregroundAsset ~= backgroundAsset and worldImg[foregroundAsset] then love.graphics.draw(worldImg[foregroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32) end
+    if foregroundAsset ~= backgroundAsset and worldImg[foregroundAsset] then love.graphics.draw(worldImg[foregroundAsset], (x) * 32, (y) * 32) end
 
 end
 
@@ -160,8 +152,10 @@ function drawWorld()
     love.graphics.setColor(1,1,1,1)
     love.graphics.setBlendMode("alpha", "premultiplied")
 
-    for i = 1, 1 do
-        love.graphics.draw(worldCanvas[i], lowestX*32, lowestY*32)
+    for cx = 0, 0 do
+        for cy = 0, 0 do
+            love.graphics.draw(worldCanvas[cx][cy], cx * 128, cy * 128)
+        end
     end
 
     love.graphics.setBlendMode("alpha")
