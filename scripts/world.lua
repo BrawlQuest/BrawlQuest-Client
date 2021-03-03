@@ -57,27 +57,26 @@ function createWorld()
 
 
     local dim = {32 * (128), 32 * (128)}
-    worldCanvas = {} 
-    for cx = 0, 0 do
-        if not worldCanvas[cx] then worldCanvas[cx] = {} end
-        for cy = 0, 0 do
-            worldCanvas[cx][cy] = {}
-            worldCanvas[cx][cy] = love.graphics.newCanvas(unpack(dim))
-            love.graphics.setCanvas(worldCanvas[cx][cy])
+    worldCanvas = {}
+
+    for cx = -1, 1 do
+        for cy = -1, 0 do
+            worldCanvas[cx .. "," .. cy] = {cx = cx, cy = cy, map = love.graphics.newCanvas(unpack(dim))}
+            love.graphics.setCanvas(worldCanvas[cx .. "," .. cy].map)
                 love.graphics.clear()
                 love.graphics.setColor(1, 1, 1)
                 
-                -- for x = worldEdit.worldSize * -1, worldEdit.worldSize do
-                --     for y = worldEdit.worldSize * -1, worldEdit.worldSize do
-                --         drawSimplexNoise(x, y)  -- sets background noise
-                --         love.graphics.draw(groundImg, x * 32, y * 32)
-                --     end
-                -- end
+                for x = 0, 128 do
+                    for y = 0, 128 do
+                        drawSimplexNoise(x + cx * 128, y + cy * 128)  -- sets background noise
+                        love.graphics.draw(groundImg, x * 32, y * 32)
+                    end
+                end
                 
                 for i, v in ipairs(world) do
-                    -- if v.X > cx * 128 and v.X < (cx + 1) * 128 and v.Y > cy * 128 and v.Y < (cy + 1) * 128 then
+                    if v.X >= cx * 128 and v.X < (cx + 1) * 128 and v.Y >= cy * 128 and v.Y < (cy + 1) * 128 then
                         drawTile(v, cx, cy)
-                    -- end
+                    end
                 end
             love.graphics.setCanvas()
         end
@@ -92,10 +91,9 @@ end
 
 function drawTile(v, cx, cy)
 
-    local x, y = v.X + cx * 128, v.Y + cy * 128
-
-    local backgroundAsset = getWorldAsset(v.GroundTile, x, y)
-    local foregroundAsset = getWorldAsset(v.ForegroundTile, x, y)
+    local x, y = v.X - cx * 128, v.Y - cy * 128
+    local backgroundAsset = getWorldAsset(v.GroundTile, v.X, v.Y)
+    local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y)
 
     if lightGivers[foregroundAsset] and not lightSource[x .. "," .. y] then
         lightSource[x .. "," .. y] = true
@@ -110,6 +108,7 @@ function drawTile(v, cx, cy)
     -- end
 
     -- drawSimplexNoise(v.X+math.abs(lowestX), v.Y+math.abs(lowestY)) -- sets background noise
+    drawSimplexNoise(v.X + cx * 128, v.Y + cy * 128)
 
     if worldImg[backgroundAsset] then
         love.graphics.draw(worldImg[backgroundAsset], (x) * 32, (y) * 32)  
@@ -132,34 +131,12 @@ function drawTile(v, cx, cy)
 end
 
 function drawWorld()
-    -- for x = player.x - (love.graphics.getWidth()/2)/32, player.x + (love.graphics.getWidth()/2)/32 do
-    --     for y = player.y - (love.graphics.getHeight()/2)/32, player.y + (love.graphics.getHeight()/2)/32 do
-    --         -- if isTileLit(x, y) then
-    --         --     if not wasTileLit(x, y) then
-    --         --         love.graphics.setColor(1 - oldLightAlpha, 1 - oldLightAlpha, 1 - oldLightAlpha) -- light up a tile
-    --         --     else
-    --         --         love.graphics.setColor(1, 1, 1)
-    --         --     end
-    --         -- elseif wasTileLit(x, y) and oldLightAlpha > 0.2 then
-    --         --     love.graphics.setColor(oldLightAlpha, oldLightAlpha, oldLightAlpha)
-    --         -- else
-    --         --     love.graphics.setColor(0, 0, 0, 0)
-    --         -- end
-    --         love.graphics.setColor(1,1,1,1)
-    --         love.graphics.draw(groundImg, x * 32, y * 32)
-    --     end
-    -- end
     love.graphics.setColor(1,1,1,1)
     love.graphics.setBlendMode("alpha", "premultiplied")
-
-    for cx = 0, 0 do
-        for cy = 0, 0 do
-            love.graphics.draw(worldCanvas[cx][cy], cx * 128, cy * 128)
-        end
+    for i, canvas in next, worldCanvas do
+        love.graphics.draw(canvas.map, canvas.cx * (32 * 128), canvas.cy * (32 * 128))
     end
-
     love.graphics.setBlendMode("alpha")
-    
     love.graphics.setColor(1,1,1)
 end
 
@@ -176,11 +153,11 @@ function getWorldAsset(v,x,y,notFindWall)
     local foregroundAsset = v['ForegroundTile']
     local backgroundAsset = v['GroundTile']
 
-    if not notFindWall then
+    -- if not notFindWall then
         if isTileWall(v) then
             v = getDrawableWall(v, x,y)
         end
-    end
+    -- end
 
     if isTileWater(v) then
         v = getDrawableWater(v, x, y)
