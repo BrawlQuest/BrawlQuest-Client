@@ -53,14 +53,13 @@ function createWorld()
     end
 
     reinitLighting()
-    -- worldCanvas = love.graphics.newCanvas(32*((worldEdit.worldSize * 2)), 32*((worldEdit.worldSize * 2)))
-    -- reinitLighting(32*((worldEdit.worldSize)), 32*((worldEdit.worldSize)))
-
-
     local dim = {32 * (chunkSize), 32 * (chunkSize)}
     worldCanvas = {}
-    for cx = -2, 1 do
-        for cy = -2, 0 do
+    print((player.x / chunkSize) .. ",   " .. (player.y / chunkSize))
+    local lowX, lowY = math.floor(player.x / chunkSize), math.floor(player.y / chunkSize)
+    -- if (player.x / chunkSize) then
+    for cx = lowX, lowX + 1 do
+        for cy = lowY, lowY + 1 do
             worldCanvas[cx..","..cy] = {cx = cx, cy = cy, map = love.graphics.newCanvas(unpack(dim))}
             love.graphics.setCanvas(worldCanvas[cx .. "," .. cy].map)
                 love.graphics.clear()
@@ -101,11 +100,11 @@ function drawTile(v, cx, cy)
     if worldImg[backgroundAsset] then
         love.graphics.draw(worldImg[backgroundAsset], (x) * 32, (y) * 32)  
     end 
-    love.graphics.setColor(0,0,0,0.5)
 
+    love.graphics.setColor(0,0,0,0.5)
     if worldLookup[v.X][v.Y-1] and (isTileWall(worldLookup[v.X][v.Y-1].ForegroundTile) or isTileWall(worldLookup[v.X][v.Y-1].GroundTile)) and not isTileWall(v.ForegroundTile) then
         love.graphics.rectangle("fill", (x) * 32, (y) * 32, 32, 16)
-    elseif (isTileWall(v.GroundTile) or isTileWall(v.ForegroundTile)) and not worldLookup[v.X][v.Y+1] then -- no tile below us but we stil need to cast a shadow
+    elseif (isTileWall(v.GroundTile) or isTileWall(v.ForegroundTile)) and not worldLookup[v.X][v.Y+1] then -- no tile below us but we still need to cast a shadow
         love.graphics.rectangle("fill", (x) * 32, (y) * 32, 32, 16)
     end 
 
@@ -117,10 +116,28 @@ function drawWorld()
     love.graphics.setColor(1,1,1,1)
     love.graphics.setBlendMode("alpha", "premultiplied")
     for i, canvas in next, worldCanvas do
-        love.graphics.draw(canvas.map, canvas.cx * (32 * chunkSize), canvas.cy * (32 * chunkSize))
+        local lowX,lowY = canvas.cx * (32 * chunkSize), canvas.cy * (32 * chunkSize)
+        local highX, highY = (canvas.cx + 1) * (32 * chunkSize), (canvas.cy + 1) * (32 * chunkSize)
+        if player.dx >= lowX and player.dx < highX and player.dy >= lowY and player.dy < highY then
+            local midX, midY = (canvas.cx + 0.5) * (32 * chunkSize), (canvas.cy + 0.5) * (32 * chunkSize)
+            if player.dx < midX and player.dy < midY then drawCanvases(-1, -1, canvas, lowX, lowY, highX, highY)
+            elseif player.dx < midX and player.dy > midY then drawCanvases(-1, 1, canvas, lowX, lowY, highX, highY)
+            elseif player.dx > midX and player.dy < midY then drawCanvases(1, -1, canvas, lowX, lowY, highX, highY)
+            elseif player.dx > midX and player.dy > midY then drawCanvases(1, 1, canvas, lowX, lowY, highX, highY) end
+            break
+        end
     end
     love.graphics.setBlendMode("alpha")
     love.graphics.setColor(1,1,1)
+end
+
+function drawCanvases(x, y, canvas, lowX, lowY, highX, highY)
+    love.graphics.draw(canvas.map, lowX, lowY)
+    local modes = {{x,0}, {0,y}, {x,y},}
+    for i,v in ipairs(modes) do
+        local key = canvas.cx + v[1] .. "," .. canvas.cy + v[2]
+        if worldCanvas[key] then love.graphics.draw(worldCanvas[key].map, (canvas.cx + v[1]) * (32 * chunkSize), (canvas.cy + v[2]) * (32 * chunkSize)) end
+    end
 end
 
 function getWorldAsset(v,x,y,notFindWall)
