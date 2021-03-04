@@ -253,14 +253,14 @@ function drawCraftingBackground(thisX, thisY)
 
     x, y = thisX + 10 + w + 10, thisY + 10 + 10
     love.graphics.setColor(1,1,1)
-    love.graphics.print("LVL:", inventory.headerFont, x, y)    
-    y = y + 52
+    -- love.graphics.print("LVL:", inventory.headerFont, x, y)    
+    -- y = y + 52
 
     love.graphics.setColor(1,1,1)
     love.graphics.setFont(crafting.font)
     love.graphics.print("ENTERED ITEMS", x + 5, y, 0 ,2 )
 
-    y = thisY + 10 + 40 + 52
+    y = thisY + 10 + 40 --+ 52
     if crafting.craftable then
         love.graphics.setColor(0.1,1,0.1,0.7)
     else
@@ -493,10 +493,10 @@ function checkCraftingKeyPressed(key)
         checkHotbarChange()
     elseif key == keybinds.INTERACT or checkMoveOrAttack(key, "move") then
         crafting.open = false
-        -- crafting.enteredItems = {}
-        -- crafting.craftableItems = {}
-        -- crafting.craftable = false
-        -- crafting.selectedField = {i = 0, j = 0}
+        crafting.enteredItems = {}
+        crafting.craftableItems = {}
+        crafting.craftable = false
+        crafting.selectedField = {i = 0, j = 0}
     end
 end
 
