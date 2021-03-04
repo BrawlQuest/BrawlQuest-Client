@@ -3,6 +3,7 @@ worldLookup = {}
 lightSource = {}
 lowestX = 0
 lowestY = 0
+chunkSize = 128
 
 
 function drawSimplexNoise(x, y)
@@ -51,30 +52,29 @@ function createWorld()
         end
     end
 
-    reinitLighting(32*(highestX+math.abs(lowestX)+2), 32*(highestY+math.abs(lowestY)+2))
+    reinitLighting()
     -- worldCanvas = love.graphics.newCanvas(32*((worldEdit.worldSize * 2)), 32*((worldEdit.worldSize * 2)))
     -- reinitLighting(32*((worldEdit.worldSize)), 32*((worldEdit.worldSize)))
 
 
-    local dim = {32 * (128), 32 * (128)}
+    local dim = {32 * (chunkSize), 32 * (chunkSize)}
     worldCanvas = {}
-
-    for cx = -1, 1 do
-        for cy = -1, 0 do
-            worldCanvas[cx .. "," .. cy] = {cx = cx, cy = cy, map = love.graphics.newCanvas(unpack(dim))}
+    for cx = -2, 1 do
+        for cy = -2, 0 do
+            worldCanvas[cx..","..cy] = {cx = cx, cy = cy, map = love.graphics.newCanvas(unpack(dim))}
             love.graphics.setCanvas(worldCanvas[cx .. "," .. cy].map)
                 love.graphics.clear()
                 love.graphics.setColor(1, 1, 1)
                 
-                for x = 0, 128 do
-                    for y = 0, 128 do
-                        drawSimplexNoise(x + cx * 128, y + cy * 128)  -- sets background noise
+                for x = 0, chunkSize do
+                    for y = 0, chunkSize do
+                        drawSimplexNoise(x + cx * chunkSize, y + cy * chunkSize)  -- sets background noise
                         love.graphics.draw(groundImg, x * 32, y * 32)
                     end
                 end
                 
                 for i, v in ipairs(world) do
-                    if v.X >= cx * 128 and v.X < (cx + 1) * 128 and v.Y >= cy * 128 and v.Y < (cy + 1) * 128 then
+                    if v.X >= cx * chunkSize and v.X < (cx + 1) * chunkSize and v.Y >= cy * chunkSize and v.Y < (cy + 1) * chunkSize then
                         drawTile(v, cx, cy)
                     end
                 end
@@ -91,24 +91,24 @@ end
 
 function drawTile(v, cx, cy)
 
-    local x, y = v.X - cx * 128, v.Y - cy * 128
+    local x, y = v.X - cx * chunkSize, v.Y - cy * chunkSize -- draw
     local backgroundAsset = getWorldAsset(v.GroundTile, v.X, v.Y)
     local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y)
 
-    if lightGivers[foregroundAsset] and not lightSource[x .. "," .. y] then
-        lightSource[x .. "," .. y] = true
-        Luven.addNormalLight(16 + x * 32, 16 + y * 32, {1, 0.5, 0}, lightGivers[foregroundAsset])
+    if lightGivers[foregroundAsset] and not lightSource[v.X .. "," .. v.Y] then
+        lightSource[v.X .. "," .. v.Y] = true
+        Luven.addNormalLight(16 + v.X * 32, 16 + v.Y * 32, {1, 0.5, 0}, lightGivers[foregroundAsset])
     end
 
-    -- if v.Collision then
-    --     if foregroundAsset == "assets/world/objects/Mountain.png" then
-    --         treeMap[x .. "," .. y] = true
-    --     end
-    --     blockMap[x .. "," .. y] = true
-    -- end
+    if v.Collision then
+        if foregroundAsset == "assets/world/objects/Mountain.png" then
+            treeMap[v.X .. "," .. v.Y] = true
+        end
+        blockMap[v.X .. "," .. v.Y] = true
+    end
 
     -- drawSimplexNoise(v.X+math.abs(lowestX), v.Y+math.abs(lowestY)) -- sets background noise
-    drawSimplexNoise(v.X + cx * 128, v.Y + cy * 128)
+    drawSimplexNoise(v.X, v.Y)
 
     if worldImg[backgroundAsset] then
         love.graphics.draw(worldImg[backgroundAsset], (x) * 32, (y) * 32)  
@@ -128,13 +128,15 @@ function drawTile(v, cx, cy)
 
     if foregroundAsset ~= backgroundAsset and worldImg[foregroundAsset] then love.graphics.draw(worldImg[foregroundAsset], (x) * 32, (y) * 32) end
 
+    -- love.graphics.print(v.X .. "," .. v.Y, v.X * 32, v.Y * 32, 0, 0.5)
+
 end
 
 function drawWorld()
     love.graphics.setColor(1,1,1,1)
     love.graphics.setBlendMode("alpha", "premultiplied")
     for i, canvas in next, worldCanvas do
-        love.graphics.draw(canvas.map, canvas.cx * (32 * 128), canvas.cy * (32 * 128))
+        love.graphics.draw(canvas.map, canvas.cx * (32 * chunkSize), canvas.cy * (32 * chunkSize))
     end
     love.graphics.setBlendMode("alpha")
     love.graphics.setColor(1,1,1)
