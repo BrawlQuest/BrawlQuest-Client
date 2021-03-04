@@ -160,11 +160,12 @@ function drawQuestHub(thisX, thisY)
     roundRectangle("fill", thisX - 313, thisY - 106 - 14 - cerp(0, ((uiY/1.25) - 102), questsPanel.amount), 313, 14 + cerp(0, ((uiY/1.25) - 102), questsPanel.amount), 5 , {true, false, false, false}) -- Quests Panel Background
     roundRectangle("fill", thisX - cerp(313, 462, questHub.commentAmount), thisY - 106, cerp(313, 462, questHub.commentAmount), 106, cerp(0, 10, questHub.commentAmount), {true, false, false, false}) -- Quests Hub Background
     local x,y = thisX - 313 + 6, thisY - 106 - 14 - 15 - cerp(0, ((uiY/1.25) - 102), questsPanel.amount)
-    love.graphics.setColor(0,0,0,0.7 * (1 - questsPanel.opacity))
-    love.graphics.draw(chatCorner, x, y, 0, 0.5)
-    love.graphics.draw(chatCorner, x + 301, y, 0, -0.5, 0.5)
-    love.graphics.rectangle("fill",x + 7, y, 301 - 14, 7)
-    love.graphics.rectangle("fill",x, y + 7, 301, 8)
+    if questHub.amount > 0 then
+        love.graphics.draw(chatCorner, x, y, 0, 0.5)
+        love.graphics.draw(chatCorner, x + 301, y, 0, -0.5, 0.5)
+        love.graphics.rectangle("fill",x + 7, y, 301 - 14, 7)
+        love.graphics.rectangle("fill",x, y + 7, 301, 8)
+    end
 
     love.graphics.setColor(1,1,1,1 * questHub.opacity)
     thisX, thisY = thisX - 73, thisY - cerp(0, 100, questHub.amount)
