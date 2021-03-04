@@ -90,46 +90,27 @@ function createWorld()
 end
 
 function drawTile(v, cx, cy)
-
     local x, y = v.X - cx * chunkSize, v.Y - cy * chunkSize -- draw
     local backgroundAsset = getWorldAsset(v.GroundTile, v.X, v.Y)
     local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y)
-
     if lightGivers[foregroundAsset] and not lightSource[v.X .. "," .. v.Y] then
         lightSource[v.X .. "," .. v.Y] = true
         Luven.addNormalLight(16 + v.X * 32, 16 + v.Y * 32, {1, 0.5, 0}, lightGivers[foregroundAsset])
     end
-
-    if v.Collision then
-        if foregroundAsset == "assets/world/objects/Mountain.png" then
-            treeMap[v.X .. "," .. v.Y] = true
-        end
-        blockMap[v.X .. "," .. v.Y] = true
-    end
-
-    -- drawSimplexNoise(v.X+math.abs(lowestX), v.Y+math.abs(lowestY)) -- sets background noise
     drawSimplexNoise(v.X, v.Y)
-
     if worldImg[backgroundAsset] then
         love.graphics.draw(worldImg[backgroundAsset], (x) * 32, (y) * 32)  
     end 
-    
-    love.graphics.setColor(1,1,1) 
+    love.graphics.setColor(0,0,0,0.5)
 
-    -- if worldLookup[v.X][v.Y-1] and (isTileWall(worldLookup[v.X][v.Y-1].ForegroundTile) or isTileWall(worldLookup[v.X][v.Y-1].GroundTile)) and not isTileWall(v.ForegroundTile) then
-    --     love.graphics.setColor(0,0,0,0.5)
-    --     love.graphics.rectangle("fill", (v.X+math.abs(lowestX)) * 32 , (v.Y+math.abs(lowestY)) * 32, 32,16)
-    --     love.graphics.setColor(1,1,1,1)
-    -- elseif (isTileWall(v.GroundTile) or isTileWall(v.ForegroundTile)) and not worldLookup[v.X][v.Y+1] then -- no tile below us but we stil need to cast a shadow
-    --     love.graphics.setColor(0,0,0,0.5)
-    --     love.graphics.rectangle("fill", (v.X+math.abs(lowestX)) * 32 , (v.Y+1+math.abs(lowestY)) * 32, 32, 16)
-    --     love.graphics.setColor(1,1,1,1)
-    -- end 
+    if worldLookup[v.X][v.Y-1] and (isTileWall(worldLookup[v.X][v.Y-1].ForegroundTile) or isTileWall(worldLookup[v.X][v.Y-1].GroundTile)) and not isTileWall(v.ForegroundTile) then
+        love.graphics.rectangle("fill", (x) * 32, (y) * 32, 32, 16)
+    elseif (isTileWall(v.GroundTile) or isTileWall(v.ForegroundTile)) and not worldLookup[v.X][v.Y+1] then -- no tile below us but we stil need to cast a shadow
+        love.graphics.rectangle("fill", (x) * 32, (y) * 32, 32, 16)
+    end 
 
+    love.graphics.setColor(1,1,1,1)
     if foregroundAsset ~= backgroundAsset and worldImg[foregroundAsset] then love.graphics.draw(worldImg[foregroundAsset], (x) * 32, (y) * 32) end
-
-    -- love.graphics.print(v.X .. "," .. v.Y, v.X * 32, v.Y * 32, 0, 0.5)
-
 end
 
 function drawWorld()
@@ -143,15 +124,6 @@ function drawWorld()
 end
 
 function getWorldAsset(v,x,y,notFindWall)
-  
-    -- if not worldImg[v] then
-    --     if love.filesystem.getInfo(v) then
-    --         worldImg[v] = love.graphics.newImage(v)
-    --     else
-    --         worldImg[v] = love.graphics.newImage("assets/error.png")
-    --     end
-    -- end
-
     local foregroundAsset = v['ForegroundTile']
     local backgroundAsset = v['GroundTile']
 
