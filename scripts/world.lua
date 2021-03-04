@@ -119,16 +119,16 @@ function drawWorld()
     love.graphics.setBlendMode("alpha", "premultiplied")
     for i, canvas in next, worldCanvas do
         local lowX,lowY = canvas.cx * (32 * chunkSize), canvas.cy * (32 * chunkSize)
-        -- local highX, highY = (canvas.cx + 1) * (32 * chunkSize), (canvas.cy + 1) * (32 * chunkSize)
-        -- if player.dx >= lowX and player.dx < highX and player.dy >= lowY and player.dy < highY then
-        --     local midX, midY = (canvas.cx + 0.5) * (32 * chunkSize), (canvas.cy + 0.5) * (32 * chunkSize)
-        --     if player.dx < midX and player.dy < midY then drawCanvases(-1, -1, canvas, lowX, lowY, highX, highY)
-        --     elseif player.dx < midX and player.dy > midY then drawCanvases(-1, 1, canvas, lowX, lowY, highX, highY)
-        --     elseif player.dx > midX and player.dy < midY then drawCanvases(1, -1, canvas, lowX, lowY, highX, highY)
-        --     elseif player.dx > midX and player.dy > midY then drawCanvases(1, 1, canvas, lowX, lowY, highX, highY) end
-        --     break
-        -- end
-        love.graphics.draw(canvas.map, lowX, lowY)
+        local highX, highY = (canvas.cx + 1) * (32 * chunkSize), (canvas.cy + 1) * (32 * chunkSize)
+        if player.dx >= lowX and player.dx < highX and player.dy >= lowY and player.dy < highY then
+            local midX, midY = (canvas.cx + 0.5) * (32 * chunkSize), (canvas.cy + 0.5) * (32 * chunkSize)
+            if player.dx < midX and player.dy < midY then drawCanvases(-1, -1, canvas, lowX, lowY, highX, highY)
+            elseif player.dx < midX and player.dy > midY then drawCanvases(-1, 1, canvas, lowX, lowY, highX, highY)
+            elseif player.dx > midX and player.dy < midY then drawCanvases(1, -1, canvas, lowX, lowY, highX, highY)
+            elseif player.dx > midX and player.dy > midY then drawCanvases(1, 1, canvas, lowX, lowY, highX, highY) end
+            break
+        end
+        -- love.graphics.draw(canvas.map, lowX, lowY)
     end
     love.graphics.setBlendMode("alpha")
     love.graphics.setColor(1,1,1)
