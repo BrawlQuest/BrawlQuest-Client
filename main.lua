@@ -57,7 +57,7 @@ ltn12 = require("ltn12")
 newOutliner = require 'scripts.libraries.outliner'
 
 version = "Early Access" 
-versionType = "release" -- "dev" for quick login, "release" for not
+versionType = "dev" -- "dev" for quick login, "release" for not
 if versionType == "dev" then require 'dev' end
 versionNumber = "1.1.4" -- very important for settings
 
@@ -102,6 +102,8 @@ oldInfo = {}
 sendUpdate = false
 
 function love.load()
+    limits = love.graphics.getSystemLimits( )
+    print(limits.multicanvas)
     outlinerOnly = newOutliner(true)
     outlinerOnly:outline(0.8,0,0) -- this is used to draw enemy outlines
     grayOutlinerOnly = newOutliner(true)
@@ -123,6 +125,7 @@ function love.load()
     initClouds()
     initWorldMask()
     initDeath()
+    initPlayers()
     love.graphics.setFont(textFont)
 end
 
@@ -284,7 +287,7 @@ function love.update(dt)
                 }
             end
             timeOfDay = cerp(0.1, 1, ((math.abs(response['CurrentHour']) * 60) + 0) / 720)
-            timeOfDay = timeOfDay + 0.2
+            timeOfDay = timeOfDay + 0.1
             usedItemThisTick = false
             if not worldEdit.open then
                 Luven.setAmbientLightColor({timeOfDay, timeOfDay, timeOfDay+  0.1})
@@ -298,7 +301,7 @@ function love.update(dt)
                 perks.stats = {me.STR, me.INT, me.STA, player.cp}
             end
             
-            if distanceToPoint(me.X, me.Y, player.x, player.y) > 3 then
+            if distanceToPoint(me.X, me.Y, player.x, player.y) > 4 then
                 player.x = me.X
                 player.y = me.Y
                 c, h = http.request {
@@ -314,10 +317,10 @@ function love.update(dt)
                     totalCoverAlpha = 2
                     love.audio.play(awakeSfx)
                 else
-                    -- player.dx = me.X * 32
-                    -- player.dy = me.Y * 32
-                    -- player.cx = me.X * 32
-                    -- player.cy = me.Y * 32
+                    player.dx = me.X * 32
+                    player.dy = me.Y * 32
+                    player.cx = me.X * 32
+                    player.cy = me.Y * 32
                 end
             end
             if not death.open then death.previousPosition = {x = player.x, y = player.y, hp = player.hp} end

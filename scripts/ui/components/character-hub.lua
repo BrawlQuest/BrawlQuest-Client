@@ -135,15 +135,15 @@ function drawCharacterHub(thisX, thisY)
 
         local defence = 0
         if me ~= null then
-            if v.LegArmourID ~= 0 and me.LegArmour.Val ~= "Error" then
+            if me.LegArmourID ~= 0 and me.LegArmour.Val ~= "Error" then
                 defence = defence + me.LegArmour.Val
             end
 
-            if v.ChestArmourID ~= 0 and me.ChestArmour.Val ~= "Error" then
+            if me.ChestArmourID ~= 0 and me.ChestArmour.Val ~= "Error" then
                 defence = defence + me.ChestArmour.Val
             end
 
-            if v.HeadArmourID ~= 0 and me.HeadArmour.Val ~= "Error" then
+            if me.HeadArmourID ~= 0 and me.HeadArmour.Val ~= "Error" then
                 defence = defence + me.HeadArmour.Val
             end
         end

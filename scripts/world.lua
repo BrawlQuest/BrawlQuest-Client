@@ -1,9 +1,9 @@
-worldCanvas = love.graphics.newCanvas(32*101,32*101)
 isWorldCreated = false
 worldLookup = {}
 lightSource = {}
 lowestX = 0
 lowestY = 0
+chunkSize = 128
 
 
 function drawSimplexNoise(x, y)
@@ -51,25 +51,38 @@ function createWorld()
             -- addLeaf(v.X*32 + 16, v.Y*32 + 16, "sand")
         end
     end
-    worldCanvas = love.graphics.newCanvas(32*(highestX+math.abs(lowestX)+2), 32*(highestY+math.abs(lowestY)+2))
-    reinitLighting(32*(highestX+math.abs(lowestX)+2), 32*(highestY+math.abs(lowestY)+2))
-    -- worldCanvas = love.graphics.newCanvas(32*((worldEdit.worldSize * 2)), 32*((worldEdit.worldSize * 2)))
-    -- reinitLighting(32*((worldEdit.worldSize)), 32*((worldEdit.worldSize)))
-    love.graphics.setCanvas(worldCanvas)
-        love.graphics.clear()
-        love.graphics.setColor(1, 1, 1)
-        
-        for x = worldEdit.worldSize * -1, worldEdit.worldSize do
-            for y = worldEdit.worldSize * -1, worldEdit.worldSize do
-                drawSimplexNoise(x, y)  -- sets background noise
-                love.graphics.draw(groundImg, x * 32, y * 32)
-            end
+
+    reinitLighting()
+    local dim = {32 * (chunkSize), 32 * (chunkSize)}
+    worldCanvas = {}
+    print((player.x / chunkSize) .. ",   " .. (player.y / chunkSize))
+    local lowX, lowY = math.floor(player.x / chunkSize), math.floor(player.y / chunkSize)
+    -- if (player.x / chunkSize) then
+    -- for cx = lowX, lowX + 1 do
+    --     for cy = lowY, lowY + 1 do
+    for cx = -2, 1 do
+        for cy = -2, 0 do
+            worldCanvas[cx..","..cy] = {cx = cx, cy = cy, map = love.graphics.newCanvas(unpack(dim))}
+            love.graphics.setCanvas(worldCanvas[cx .. "," .. cy].map)
+                love.graphics.clear()
+                love.graphics.setColor(1, 1, 1)
+                
+                for x = 0, chunkSize do
+                    for y = 0, chunkSize do
+                        drawSimplexNoise(x + cx * chunkSize, y + cy * chunkSize)  -- sets background noise
+                        love.graphics.draw(groundImg, x * 32, y * 32)
+                    end
+                end
+                
+                for i, v in ipairs(world) do
+                    if v.X >= cx * chunkSize and v.X < (cx + 1) * chunkSize and v.Y >= cy * chunkSize and v.Y < (cy + 1) * chunkSize then
+                        drawTile(v, cx, cy)
+                    end
+                end
+            love.graphics.setCanvas()
         end
-        
-        for i, v in ipairs(world) do
-            drawTile(v)
-        end
-    love.graphics.setCanvas()
+    end
+
     if player.x and player.y then
         createNPCChatBackground(player.x,player.y)
     else
@@ -77,89 +90,68 @@ function createWorld()
     end
 end
 
-function drawTile(v)
-
+function drawTile(v, cx, cy)
+    local x, y = v.X - cx * chunkSize, v.Y - cy * chunkSize -- draw
     local backgroundAsset = getWorldAsset(v.GroundTile, v.X, v.Y)
     local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y)
-
     if lightGivers[foregroundAsset] and not lightSource[v.X .. "," .. v.Y] then
         lightSource[v.X .. "," .. v.Y] = true
         Luven.addNormalLight(16 + v.X * 32, 16 + v.Y * 32, {1, 0.5, 0}, lightGivers[foregroundAsset])
     end
-
-    if v.Collision then
-        if foregroundAsset == "assets/world/objects/Mountain.png" then
-            treeMap[v.X .. "," .. v.Y] = true
-        end
-        blockMap[v.X .. "," .. v.Y] = true
-    end
-
-    drawSimplexNoise(v.X+math.abs(lowestX), v.Y+math.abs(lowestY)) -- sets background noise
-
+    drawSimplexNoise(v.X, v.Y)
     if worldImg[backgroundAsset] then
-        love.graphics.draw(worldImg[backgroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32)  
+        love.graphics.draw(worldImg[backgroundAsset], (x) * 32, (y) * 32)  
     end 
-    
-    love.graphics.setColor(1,1,1) 
 
+    love.graphics.setColor(0,0,0,0.5)
     if worldLookup[v.X][v.Y-1] and (isTileWall(worldLookup[v.X][v.Y-1].ForegroundTile) or isTileWall(worldLookup[v.X][v.Y-1].GroundTile)) and not isTileWall(v.ForegroundTile) then
-        love.graphics.setColor(0,0,0,0.5)
-        love.graphics.rectangle("fill", (v.X+math.abs(lowestX)) * 32 , (v.Y+math.abs(lowestY)) * 32, 32,16)
-        love.graphics.setColor(1,1,1,1)
-    elseif (isTileWall(v.GroundTile) or isTileWall(v.ForegroundTile)) and not worldLookup[v.X][v.Y+1] then -- no tile below us but we stil need to cast a shadow
-        love.graphics.setColor(0,0,0,0.5)
-        love.graphics.rectangle("fill", (v.X+math.abs(lowestX)) * 32 , (v.Y+1+math.abs(lowestY)) * 32, 32, 16)
-        love.graphics.setColor(1,1,1,1)
+        love.graphics.rectangle("fill", (x) * 32, (y) * 32, 32, 16)
+    elseif (isTileWall(v.GroundTile) or isTileWall(v.ForegroundTile)) and not worldLookup[v.X][v.Y+1] then -- no tile below us but we still need to cast a shadow
+        love.graphics.rectangle("fill", (x) * 32, (y) * 32, 32, 16)
     end 
 
-    if foregroundAsset ~= backgroundAsset and worldImg[foregroundAsset] then love.graphics.draw(worldImg[foregroundAsset], (v.X+math.abs(lowestX)) * 32, (v.Y+math.abs(lowestY)) * 32) end
-
+    love.graphics.setColor(1,1,1,1)
+    if foregroundAsset ~= backgroundAsset and worldImg[foregroundAsset] then love.graphics.draw(worldImg[foregroundAsset], (x) * 32, (y) * 32) end
 end
 
 function drawWorld()
-    -- for x = player.x - (love.graphics.getWidth()/2)/32, player.x + (love.graphics.getWidth()/2)/32 do
-    --     for y = player.y - (love.graphics.getHeight()/2)/32, player.y + (love.graphics.getHeight()/2)/32 do
-    --         -- if isTileLit(x, y) then
-    --         --     if not wasTileLit(x, y) then
-    --         --         love.graphics.setColor(1 - oldLightAlpha, 1 - oldLightAlpha, 1 - oldLightAlpha) -- light up a tile
-    --         --     else
-    --         --         love.graphics.setColor(1, 1, 1)
-    --         --     end
-    --         -- elseif wasTileLit(x, y) and oldLightAlpha > 0.2 then
-    --         --     love.graphics.setColor(oldLightAlpha, oldLightAlpha, oldLightAlpha)
-    --         -- else
-    --         --     love.graphics.setColor(0, 0, 0, 0)
-    --         -- end
-    --         love.graphics.setColor(1,1,1,1)
-    --         love.graphics.draw(groundImg, x * 32, y * 32)
-    --     end
-    -- end
     love.graphics.setColor(1,1,1,1)
     love.graphics.setBlendMode("alpha", "premultiplied")
-    love.graphics.draw(worldCanvas, lowestX*32, lowestY*32)
+    for i, canvas in next, worldCanvas do
+        local lowX,lowY = canvas.cx * (32 * chunkSize), canvas.cy * (32 * chunkSize)
+        local highX, highY = (canvas.cx + 1) * (32 * chunkSize), (canvas.cy + 1) * (32 * chunkSize)
+        if player.dx >= lowX and player.dx < highX and player.dy >= lowY and player.dy < highY then
+            local midX, midY = (canvas.cx + 0.5) * (32 * chunkSize), (canvas.cy + 0.5) * (32 * chunkSize)
+            if player.dx < midX and player.dy < midY then drawCanvases(-1, -1, canvas, lowX, lowY, highX, highY)
+            elseif player.dx < midX and player.dy > midY then drawCanvases(-1, 1, canvas, lowX, lowY, highX, highY)
+            elseif player.dx > midX and player.dy < midY then drawCanvases(1, -1, canvas, lowX, lowY, highX, highY)
+            elseif player.dx > midX and player.dy > midY then drawCanvases(1, 1, canvas, lowX, lowY, highX, highY) end
+            break
+        end
+        -- love.graphics.draw(canvas.map, lowX, lowY)
+    end
     love.graphics.setBlendMode("alpha")
-    
     love.graphics.setColor(1,1,1)
 end
 
-function getWorldAsset(v,x,y,notFindWall)
-  
-    -- if not worldImg[v] then
-    --     if love.filesystem.getInfo(v) then
-    --         worldImg[v] = love.graphics.newImage(v)
-    --     else
-    --         worldImg[v] = love.graphics.newImage("assets/error.png")
-    --     end
-    -- end
+function drawCanvases(x, y, canvas, lowX, lowY, highX, highY)
+    love.graphics.draw(canvas.map, lowX, lowY)
+    local modes = {{x,0}, {0,y}, {x,y},}
+    for i,v in ipairs(modes) do
+        local key = canvas.cx + v[1] .. "," .. canvas.cy + v[2]
+        if worldCanvas[key] then love.graphics.draw(worldCanvas[key].map, (canvas.cx + v[1]) * (32 * chunkSize), (canvas.cy + v[2]) * (32 * chunkSize)) end
+    end
+end
 
+function getWorldAsset(v,x,y,notFindWall)
     local foregroundAsset = v['ForegroundTile']
     local backgroundAsset = v['GroundTile']
 
-    if not notFindWall then
+    -- if not notFindWall then
         if isTileWall(v) then
             v = getDrawableWall(v, x,y)
         end
-    end
+    -- end
 
     if isTileWater(v) then
         v = getDrawableWater(v, x, y)
