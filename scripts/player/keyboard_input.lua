@@ -68,6 +68,7 @@ function love.keypressed(key)
             end
         elseif crafting.open then
             checkCraftingKeyPressed(key)
+            checkHotbarKeyPressed(key)
         else
             checkHotbarKeyPressed(key)
             checkTargetingPress(key)
