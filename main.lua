@@ -48,6 +48,7 @@ require "data.data_controller"
 require "scripts.player.settings"
 require "scripts.ui.components.npc-chat"
 require "scripts.ui.components.tutorial"
+require "scripts.achievements"
 Luven = require "scripts.libraries.luven.luven"
 
 steam = require 'luasteam'
@@ -59,7 +60,7 @@ newOutliner = require 'scripts.libraries.outliner'
 version = "Early Access" 
 versionType = "dev" -- "dev" for quick login, "release" for not
 if versionType == "dev" then require 'dev' end
-versionNumber = "1.1.4" -- very important for settings
+versionNumber = "1.1.5" -- very important for settings
 
 phase = "login"
 blockMap = {}
@@ -261,6 +262,7 @@ function love.update(dt)
         if info then
             local response = json:decode(info)
             local previousPlayers = copy(players) -- Temp
+         
             players = response['Players']
             npcs = response['NPC']
             auras = response['Auras']
@@ -380,6 +382,8 @@ function love.update(dt)
                 tick()
                 previousTick = response['Tick']
             end
+
+            checkAchievementUnlocks()
         end
     end
 end

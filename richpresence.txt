@@ -1,0 +1,12 @@
+"lang"
+{
+	"english"
+	{
+		"tokens"
+		{
+			"#StatusAdventuring"	"Adventuring in %location%"
+            "#StatusFighting"   "Fighting %enemy% in %location%"
+            "#StatusCrafting"   "Crafting in %location%"
+		}
+	}
+}

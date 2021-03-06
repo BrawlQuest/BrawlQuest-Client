@@ -98,6 +98,8 @@ function updateCrafting(dt)
                     if json:decode(table.concat(b))["success"] == null then
                         crafting.result = json:decode(table.concat(b))
                         crafting.result.alpha = 2
+                        steam.userStats.setAchievement('craft_achievement')
+                        steam.userStats.storeStats()
                     else
                         crafting.result = null
                     end
@@ -493,6 +495,8 @@ function checkCraftingKeyPressed(key)
         checkHotbarChange()
     elseif key == keybinds.INTERACT or checkMoveOrAttack(key, "move") then
         crafting.open = false
+        steam.friends.setRichPresence("steam_display", "#StatusAdventuring")
+        steam.friends.setRichPresence("location", zoneTitle.title)
         crafting.enteredItems = {}
         crafting.craftableItems = {}
         crafting.craftable = false
