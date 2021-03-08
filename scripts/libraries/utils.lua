@@ -8,19 +8,19 @@ function initVar()
 end
 
 function updateVar(dt)
-
+    local e = Var
 end
 
 function drawVar(x,y)
-
+    local e = Var
 end
 
 function checkVarKeyPressed(key)
-
+    local e = Var
 end
 
 function checkVarMousePressed(button)
-
+    local e = Var
 end
 
 initVar()
