@@ -108,8 +108,9 @@ function drawSettingsPanel()
             if controls.currentKeybind == i then
                 love.graphics.setColor(0,0,0, settPan.opacityCERP * 1)
             end
-            love.graphics.printf("\"" .. v.v .. "\"", nextX, nextY + settPan.fontHeight, settPan.objectValueWidth, "center") -- prints the value of things
-
+            if v and v.v then
+                love.graphics.printf("\"" .. v.v .. "\"", nextX, nextY + settPan.fontHeight, settPan.objectValueWidth, "center") -- prints the value of things
+            end
             thisY = thisY + height + settPan.objectPadding
             max = max + height + settPan.objectPadding
         end

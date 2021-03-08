@@ -12,7 +12,7 @@ stats = {
 
 function checkAchievementUnlocks()
     statStoreTimer = statStoreTimer - 1
-    if me and statStoreTimer < 1 then
+    if me and statStoreTimer < 1 and love.system.getOS() ~= "Linux" then
         if me.LegArmourID == 37 and me.ChestArmourID == 35 and me.HeadArmourID == 36 then
             steam.userStats.setAchievement('leather_armour_achievement')
         elseif  me.LegArmourID == 40 and me.ChestArmourID == 39 and me.HeadArmourID == 38 then

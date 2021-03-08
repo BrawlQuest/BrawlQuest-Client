@@ -18,6 +18,10 @@ servers = {
     url= "https://swordbreak.brawlquest.com",
   },
   {
+    name="Test Server (UK)",
+    url="https://dev.brawlquest.com",
+  },
+  {
     name="Local",
     url="http://localhost:8080"
   }
