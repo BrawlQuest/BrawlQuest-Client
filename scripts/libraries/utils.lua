@@ -2,7 +2,8 @@
 
 function initVar()
     Var = {
-        amount = 0,
+        open = true,
+        amount = 1,
     }
 end
 
@@ -14,6 +15,9 @@ function drawVar(x,y)
 
 end
 
+initVar()
+updateVar(dt)
+drawVar(x,y)
 ]]
 
 

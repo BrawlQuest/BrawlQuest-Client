@@ -30,6 +30,7 @@ require "scripts.ui.components.zone-titles"
 require "scripts.ui.components.profile"
 require "scripts.ui.components.hotbar"
 require "scripts.ui.components.events"
+require "scripts.ui.components.enchanting"
 require "scripts.libraries.api"
 require "scripts.libraries.utils"
 require "scripts.libraries.colorize"
@@ -127,6 +128,7 @@ function love.load()
     initWorldMask()
     initDeath()
     initPlayers()
+    initEnchanting()
     love.graphics.setFont(textFont)
 end
 
@@ -197,12 +199,11 @@ function love.draw()
             --     love.graphics.rectangle("fill", player.target.x * 32, player.target.y * 32, 32, 32)
             --     love.graphics.setColor(1,1,1)
             -- end
-            Luven.drawEnd()
+        Luven.drawEnd()
 
-            if death.open then drawDeath() end
-            if not worldEdit.open then drawHUD() end
-            drawNewWorldEditHud()
-
+        if death.open then drawDeath() end
+        if not worldEdit.open then drawHUD() end
+        drawNewWorldEditHud()
         Luven.camera:draw()
 
         local offset = cerp(10, 324 * scale, inventory.amount)
@@ -256,6 +257,7 @@ function love.update(dt)
         Luven.update(dt)
         if showClouds then updateClouds(dt) end
         if showWorldMask then updateWorldMask(dt) end
+        if enchanting.open then updateEnchanting(dt) end
         updateCamera(dt)
         updateOtherPlayers(dt)
         local info = love.thread.getChannel('players'):pop()

@@ -201,20 +201,20 @@ function drawHUD()
     love.graphics.push()
         love.graphics.scale(scale)
         drawTooltip()
+        if enchanting.amount > 0 then drawEnchanting(x,y) end
     love.graphics.pop()
 end
 
 function drawTextBelowPlayer(text)
-        love.graphics.setFont(playerNameFont)
-        local thisX, thisY = player.dx+14 , player.dy + 48
-        local nameWidth = playerNameFont:getWidth(text)
-        local nameHeight = playerNameFont:getHeight(text)
-        local padding = 2
-        love.graphics.setColor(0, 0, 0, 0.6)
-        roundRectangle("fill", (thisX) - (nameWidth / 2) - (padding) - 2, thisY - nameHeight - 3, nameWidth + (padding * 2) + 3, nameHeight + (padding * 2), 3)
-        love.graphics.setColor(1, 1, 1, 1)
-        love.graphics.print(text, (thisX) - (nameWidth * 0.5), thisY - nameHeight - 2 + padding)
- 
+    love.graphics.setFont(playerNameFont)
+    local thisX, thisY = player.dx+14 , player.dy + 48
+    local nameWidth = playerNameFont:getWidth(text)
+    local nameHeight = playerNameFont:getHeight(text)
+    local padding = 2
+    love.graphics.setColor(0, 0, 0, 0.6)
+    roundRectangle("fill", (thisX) - (nameWidth / 2) - (padding) - 2, thisY - nameHeight - 3, nameWidth + (padding * 2) + 3, nameHeight + (padding * 2), 3)
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.print(text, (thisX) - (nameWidth * 0.5), thisY - nameHeight - 2 + padding)
 end
 
 function isMouseOverTile(thisX, thisY)

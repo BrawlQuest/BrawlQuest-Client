@@ -1,4 +1,5 @@
 isWorldCreated = false
+worldCanvas = {}
 worldLookup = {}
 lightSource = {}
 lowestX = 0
@@ -50,6 +51,10 @@ function createWorld()
         elseif isTileType(v.ForegroundTile, "Sand") then
             -- addLeaf(v.X*32 + 16, v.Y*32 + 16, "sand")
         end
+    end
+
+    for key, v in next, worldCanvas do
+        worldCanvas[key].map:release( )
     end
 
     reinitLighting()
@@ -122,10 +127,10 @@ function drawWorld()
         local highX, highY = (canvas.cx + 1) * (32 * chunkSize), (canvas.cy + 1) * (32 * chunkSize)
         if player.dx >= lowX and player.dx < highX and player.dy >= lowY and player.dy < highY then
             local midX, midY = (canvas.cx + 0.5) * (32 * chunkSize), (canvas.cy + 0.5) * (32 * chunkSize)
-            if player.dx <= midX and player.dy < midY then drawCanvases(-1, -1, canvas, lowX, lowY, highX, highY)
-            elseif player.dx <= midX and player.dy > midY then drawCanvases(-1, 1, canvas, lowX, lowY, highX, highY)
-            elseif player.dx >= midX and player.dy < midY then drawCanvases(1, -1, canvas, lowX, lowY, highX, highY)
-            elseif player.dx >= midX and player.dy > midY then drawCanvases(1, 1, canvas, lowX, lowY, highX, highY) end
+            if player.dx <= midX and player.dy <= midY then drawCanvases(-1, -1, canvas, lowX, lowY, highX, highY)
+            elseif player.dx <= midX and player.dy >= midY then drawCanvases(-1, 1, canvas, lowX, lowY, highX, highY)
+            elseif player.dx >= midX and player.dy <= midY then drawCanvases(1, -1, canvas, lowX, lowY, highX, highY)
+            elseif player.dx >= midX and player.dy >= midY then drawCanvases(1, 1, canvas, lowX, lowY, highX, highY) end
             break
         end
         -- love.graphics.draw(canvas.map, lowX, lowY)
