@@ -40,7 +40,7 @@ function initEnchanting()
         font = love.graphics.newFont("assets/ui/fonts/C&C Red Alert [INET].ttf", 13),
         text = {
             desc = "The mana has chosen you. To enchant an item your character will be reset to Level 1 as well as all of your quests and NPC conversations. You gain a permanent double XP buff, meaning that getting back to Level 25 on your character should take half the time.\nYou don't lose any of your items, although your stats will be reset to 1 and your armour and weapon will be unequipped.",
-            ifNot = "If you don't have equipped an item you'd like to enchant, come back with the item you'd like to enchant equipped",
+            ifNot = "If you haven't equipped an item you'd like to enchant, come back with the item you'd like to enchant equipped",
         },
         flash = {
             light = false,
