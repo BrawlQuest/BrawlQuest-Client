@@ -153,6 +153,7 @@ function newEnemyData(data) -- called when nearby data is returned
 
         enemy.Target = v.Target
         enemy.TargetName = v.TargetName
+        
         enemy.X = v.X
         enemy.Y = v.Y
 
@@ -164,6 +165,7 @@ function newEnemyData(data) -- called when nearby data is returned
         end
 
         enemy.IsAggro = v.IsAggro
+
         if v.IsAggro then
             if v.HP > 0 then
                 enemiesInAggro = enemiesInAggro + 1

@@ -136,6 +136,7 @@ function login()
                     characters[i].Color = {love.math.random(), love.math.random(), love.math.random(),  1}
                     end
                 end
+                steam.userStats.requestCurrentStats() -- init achievements and stat tracking
         -- end
         if versionType == "dev" then
             r, h = http.request {

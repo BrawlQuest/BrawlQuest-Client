@@ -174,7 +174,9 @@ end
 function checkInventoryMousePressed(button)
     if selectedItem ~= nil and selectedItem.ID ~= nil and inventory.isMouseOverInventoryItem then
         if  not usedItemThisTick then
+            statStoreTimer = 0
             apiGET("/item/" .. player.name .. "/" .. selectedItem.ID)
+       
             usedItemThisTick = true
         end
     end

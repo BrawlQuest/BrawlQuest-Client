@@ -108,6 +108,8 @@ function love.keypressed(key)
                 if nearbyAnvil then
                     getRecipesHeight()
                     crafting.open = true
+                    steam.friends.setRichPresence("steam_display", "#StatusCrafting")
+                    steam.friends.setRichPresence("location", zoneTitle.title)
                     -- inventory.notNPC = true
                 else
                     startConversation()

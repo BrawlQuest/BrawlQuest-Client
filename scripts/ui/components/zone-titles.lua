@@ -19,7 +19,9 @@ function updateZoneTitle(dt)
         zoneTitle.title = worldLookup[player.x][player.y].Name 
         -- zoneTitle.alphaUp = true
         -- zoneTitle.alpha = 0
-        zoneChange(worldLookup[player.x][player.y].Name, 0)
+        steam.friends.setRichPresence("steam_display", "#StatusAdventuring")
+        steam.friends.setRichPresence("location", zoneTitle.title)
+        zoneChange(worldLookup[player.x][player.y].Name)
     end
 
     if zoneTitle.alphaUp then
