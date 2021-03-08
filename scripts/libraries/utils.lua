@@ -1,3 +1,21 @@
+--[[
+
+function initVar()
+    Var = {
+        amount = 0,
+    }
+end
+
+function updateVar(dt)
+
+end
+
+function drawVar(x,y)
+
+end
+
+]]
+
 
 function getImgIfNotExist(v)
     if not worldImg[v] then

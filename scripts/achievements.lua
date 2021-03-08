@@ -40,7 +40,7 @@ function checkAchievementUnlocks()
             steam.userStats.setAchievement('mount_achievement')
         end
 
-        steam.userStats.setStat("lvl", me.LVL)
+        if versionType ~= "dev" then steam.userStats.setStat("lvl", me.LVL) end
 
         steam.userStats.storeStats()
         statStoreTimer = 60
