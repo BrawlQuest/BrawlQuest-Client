@@ -38,6 +38,7 @@ function love.keypressed(key)
     else
         if worldEdit.open then 
             checkWorldEditKeyPressed(key)
+        elseif enchanting.open then checkEnchantingKeyPressed(key)
         elseif worldEdit.isTyping then
         elseif isSettingsWindowOpen then
             checkSettingKeyPressed(key)
@@ -81,6 +82,12 @@ function love.keypressed(key)
                 settPan.movement.x, settPan.movement.y = 0, 0 
                 isSettingsWindowOpen = true
                 loadSliders()
+            end
+
+            if key == "f" then
+                enchanting.phase = 1
+                enchanting.open = true
+                enchanting.amount = 1
             end
 
             if key == "tab" then

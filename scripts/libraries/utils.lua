@@ -15,9 +15,19 @@ function drawVar(x,y)
 
 end
 
+function checkVarKeyPressed(key)
+
+end
+
+function checkVarMousePressed(button)
+
+end
+
 initVar()
 updateVar(dt)
 drawVar(x,y)
+checkVarKeyPressed(key)
+checkVarMousePressed(button)
 ]]
 
 

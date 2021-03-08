@@ -15,9 +15,8 @@ function love.mousepressed(x, y, button)
         checkNPCChatMousePressed(button)
         end
         checkWorldEditMouseDown(button)
-        if mouseOverChat then
-            isTypingInChat = not isTypingInChat
-        end
+        if mouseOverChat then isTypingInChat = not isTypingInChat end
+        if enchanting.open then checkEnchantingMousePressed(button) end
     end
 end
 

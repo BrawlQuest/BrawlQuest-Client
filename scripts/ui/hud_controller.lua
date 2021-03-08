@@ -201,7 +201,7 @@ function drawHUD()
     love.graphics.push()
         love.graphics.scale(scale)
         drawTooltip()
-        if enchanting.amount > 0 then drawEnchanting(x,y) end
+        if enchanting.open then drawEnchanting(x,y) end
     love.graphics.pop()
 end
 
