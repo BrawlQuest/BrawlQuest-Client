@@ -94,7 +94,7 @@ function setItemTooltip(item)
         valueAdditional.desc = item.Val / 32 .. "m/s Mount"
         valueAdditional.color = {0.8, 0.2, 1}
     end
-    if me and item and me.LVL >= item.Worth then
+    if me and me.LVL and item and item.Worth and me.LVL >= item.Worth then
         setTooltip(item.Name, "", {valueAdditional, {
             desc = item.Desc,
             color = {0.8, 0.8, 0.8}

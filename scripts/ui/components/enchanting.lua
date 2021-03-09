@@ -69,14 +69,14 @@ function initEnchanting()
                 {
                     title = "",
                     desc = "+0.8 m/s speed boost whilst riding this mount",
-                    img = love.graphics.newImage("assets/ui/enchantment/0.png"),
+                    img = love.graphics.newImage("assets/ui/enchantment/1.png"),
                 },
             },
             ["Shield"] = {
                 {
                     title = "",
                     desc = "+25 defence boost whilst using this shield",
-                    img = love.graphics.newImage("assets/ui/enchantment/0.png"),
+                    img = love.graphics.newImage("assets/ui/enchantment/2.png"),
                 },
             },
         },
@@ -147,7 +147,7 @@ function drawEnchanting()
                         love.graphics.draw(playerImg, dx, dy - offset, 0, e.itemScale)
                     end
                     if me[v.."ID"] ~= 0 then drawItemIfExists(me[v].ImgPath, dx, dy - offset, "", 1, e.itemScale) end
-                elseif me.Mount and me.Mount.Name ~= "None" then
+                elseif me.Mount and me.Mount.Name ~= "None" and me.Mount.Name ~= "" then
                     drawItemIfExists(me[v].ImgPath, dx, dy - offset, "", 1, e.itemScale)
                 end
             end
@@ -171,7 +171,7 @@ function drawEnchanting()
                     love.graphics.draw(playerImg, dx - offset, dy, 0, picScale - 2) 
                 end
                 if me[e.chosenItem.."ID"] ~= 0 then drawItemIfExists(me[e.chosenItem].ImgPath, dx - offset, dy, "", 1, picScale - 2) end
-            elseif me.Mount and me.Mount.Name ~= "None" then drawItemIfExists(me[e.chosenItem].ImgPath, dx - offset, dy, "", 1, picScale - 2) end
+            elseif me.Mount and me.Mount.Name ~= "None" and me.Mount.Name ~= "" then drawItemIfExists(me[e.chosenItem].ImgPath, dx - offset, dy, "", 1, picScale - 2) end
             love.graphics.printf(me[e.chosenItem].Name, x, y + 32 * picScale, (32 * picScale) / smallPrintScale, "center",  0, smallPrintScale)
         else 
             love.graphics.setColor(0.5,0.5,0.5)
@@ -194,7 +194,7 @@ function drawEnchanting()
         end
 
         e.mouseOver.perk = 0
-        if e.chosenItem ~= "" then
+        if e.chosenItem ~= "" and me[enchanting.chosenItem] and me[enchanting.chosenItem].Name ~= "None" then
             local perk
             if e.chosenItem == "HeadArmour" or e.chosenItem == "ChestArmour" or e.chosenItem == "LegArmour" then perk = "Armour"
             else perk = e.chosenItem end
@@ -312,7 +312,7 @@ function checkEnchantingKeyPressed(key)
             if e.selectedPerk > 1 then
                 e.selectedPerk = e.selectedPerk - 1
             else e.selectedPerk = #e.perks[perk] end
-        elseif key == "return" then e.phase = 3
+        elseif key == "return" and me[enchanting.chosenItem] and me[enchanting.chosenItem].Name ~= "None" then e.phase = 3
         elseif key == "f" or checkMoveOrAttack(key, "move") then e.open = false
         end
     elseif e.phase == 3 then
@@ -335,7 +335,7 @@ function checkEnchantingMousePressed(button)
                 if e.chosenItem == v then e.chosenItemCount = i end
             end
         end
-        if e.mouseOver.commit then e.phase = 3 end
+        if e.mouseOver.commit and me[enchanting.chosenItem] and me[enchanting.chosenItem].Name ~= "None" then e.phase = 3 end
     elseif e.phase == 3 then
         if e.mouseOver.return3 == true then
 
@@ -352,5 +352,9 @@ function enchantItem()
     if e.chosenItem == "HeadArmour" or e.chosenItem == "ChestArmour" or e.chosenItem == "LegArmour" then perk = "Armour"
     else perk = e.chosenItem end
     print("Trying to enchant ID" .. me[enchanting.chosenItem].ID.. " Enchantment = " .. e.perks[perk][e.selectedPerk].desc)
-    initEnchanting() -- just resets all the variables
+    
+    e.open = false
+    e.chosenItem = "LegArmour"
+    e.chosenItemCount = 1
+    e.phase = 1
 end
