@@ -76,17 +76,9 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
         drawItemBacking(thisX, thisY)
 
         love.graphics.setColor(1,1,1,1)
-     
-        if item then
-            itemImg[item.ImgPath] = getImgIfNotExist(item.ImgPath)
-            if itemImg[item.ImgPath]:getWidth() <= 32 and itemImg[item.ImgPath]:getHeight() <= 32 then
-                love.graphics.draw(itemImg[item.ImgPath],
-                    thisX + 18 - (itemImg[item.ImgPath]:getWidth() / (2 - useItemColor[number])),
-                    thisY + 18 - (itemImg[item.ImgPath]:getHeight() / (2 - useItemColor[number])),  0, 1 + useItemColor[number])
-            else
-                love.graphics.draw(itemImg[item.ImgPath], thisX + 2 - (16 * useItemColor[number]), thisY + 2 - (16 * useItemColor[number]), 0, 1 + useItemColor[number]) -- Item
-            end       
-        end 
+        
+        
+        if item then drawItem(thisX,thisY,item,number) end
 
         love.graphics.setColor(1,1,1,1)
         love.graphics.draw(inventory.images.numbers[number], thisX - 3, thisY + 26)
@@ -130,26 +122,7 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
         drawItemBacking(thisX, thisY)
 
         love.graphics.setColor(1,1,1,1)
-        if item then
-            itemImg[item.ImgPath] = getImgIfNotExist(item.ImgPath)
-            if string.sub(item.Type, 1, 4) == "arm_" then
-                love.graphics.setColor(1,1,1,0.5)
-                love.graphics.draw(playerImg, thisX + 2, thisY + 2)
-                love.graphics.setColor(1,1,1,1)
-            end
-          
-            if inventory.usedItemThisTick then
-                love.graphics.setColor(1,1,1,0.4)
-            end
-
-            if itemImg[item.ImgPath]:getWidth() <= 32 and itemImg[item.ImgPath]:getHeight() <= 32 then
-                love.graphics.draw(itemImg[item.ImgPath],
-                    thisX + 18 - (itemImg[item.ImgPath]:getWidth() / 2),
-                    thisY + 18 - (itemImg[item.ImgPath]:getHeight() / 2))
-            else
-                love.graphics.draw(itemImg[item.ImgPath], thisX + 2, thisY + 2) -- Item
-            end
-        end
+        if item then drawItem(thisX,thisY,item) end
 
         if amount and amount > 1 then
             if amount <= 9 then
@@ -168,6 +141,53 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
             love.graphics.print(amount, thisX + 5, thisY + 4)
         end
         love.graphics.setColor(1,1,1)
+    end
+end
+
+function drawItem(x,y,item,number)
+    if number then drawItemImageHotbar(x,y,item,number) else drawItemImage(x,y,item) end
+    if showEnchantments then
+        love.graphics.push()
+            love.graphics.stencil(function() 
+                love.graphics.setShader(alphaShader)
+                if number then drawItemImageHotbar(x,y,item,number) else drawItemImage(x,y,item) end
+                love.graphics.setShader()
+            end)
+            drawEnchantment(x, y)
+        love.graphics.pop()
+        love.graphics.setColor(1,1,1)
+    end
+end
+
+function drawItemImage(x,y,item)
+    itemImg[item.ImgPath] = getImgIfNotExist(item.ImgPath)
+    if string.sub(item.Type, 1, 4) == "arm_" then
+        love.graphics.setColor(1,1,1,0.5)
+        love.graphics.draw(playerImg, x + 2, y + 2)
+        love.graphics.setColor(1,1,1,1)
+    end
+  
+    if inventory.usedItemThisTick then
+        love.graphics.setColor(1,1,1,0.4)
+    end
+
+    if itemImg[item.ImgPath]:getWidth() <= 32 and itemImg[item.ImgPath]:getHeight() <= 32 then
+        love.graphics.draw(itemImg[item.ImgPath],
+            x + 18 - (itemImg[item.ImgPath]:getWidth() / 2),
+            y + 18 - (itemImg[item.ImgPath]:getHeight() / 2))
+    else
+        love.graphics.draw(itemImg[item.ImgPath], x + 2, y + 2) -- Item
+    end
+end
+
+function drawItemImageHotbar(x,y,item,number)
+    itemImg[item.ImgPath] = getImgIfNotExist(item.ImgPath)
+    if itemImg[item.ImgPath]:getWidth() <= 32 and itemImg[item.ImgPath]:getHeight() <= 32 then
+        love.graphics.draw(itemImg[item.ImgPath],
+            x + 18 - (itemImg[item.ImgPath]:getWidth() / (2 - useItemColor[number])),
+            y + 18 - (itemImg[item.ImgPath]:getHeight() / (2 - useItemColor[number])),  0, 1 + useItemColor[number])
+    else
+        love.graphics.draw(itemImg[item.ImgPath], x + 2 - (16 * useItemColor[number]), y + 2 - (16 * useItemColor[number]), 0, 1 + useItemColor[number]) -- Item
     end
 end
 

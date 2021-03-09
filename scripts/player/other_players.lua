@@ -10,7 +10,7 @@ function initPlayers()
     showEnchantments = true
 end
 
-local shader = love.graphics.newShader[[
+alphaShader = love.graphics.newShader[[
     vec4 effect(vec4 colour, Image texture, vec2 texpos, vec2 scrpos)
     {
       vec4 pixel = Texel(texture, texpos) * colour;
@@ -67,7 +67,7 @@ function drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,type)
         if showEnchantments then
             love.graphics.push()
                 love.graphics.stencil(function() 
-                    love.graphics.setShader(shader)
+                    love.graphics.setShader(alphaShader)
                     if notBoat then love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name)..type), x + 6 + mountOffsetX, y + 9, 0, direction, 1, 0, 0)
                     else love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"), x  + mountOffsetX, y, 0, direction, 1, 0, 0) end
                     love.graphics.setShader()
@@ -85,7 +85,7 @@ function drawWeapon(x,y,v,ad,direction,offsetX)
         if showEnchantments then
             love.graphics.push()
                 love.graphics.stencil(function() 
-                    love.graphics.setShader(shader)
+                    love.graphics.setShader(alphaShader)
                     love.graphics.draw(itemImg[v.Weapon.ImgPath], x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32) * direction + offsetX, y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, direction, 1, 0, 0)
                     love.graphics.setShader()
                 end)
@@ -102,7 +102,7 @@ function drawArmourImage(x,y,v,ad,type,direction)
         if showEnchantments then
             love.graphics.push()
                 love.graphics.stencil(function() 
-                    love.graphics.setShader(shader)
+                    love.graphics.setShader(alphaShader)
                     if type ~= "ShieldFalse" then drawItemIfExists(v[type].ImgPath, x, y, ad.previousDirection) else love.graphics.draw(shieldFalse, x, y, 0, direction, 1) end
                     love.graphics.setShader()
                 end)
