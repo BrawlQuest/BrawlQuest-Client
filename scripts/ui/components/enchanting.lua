@@ -347,5 +347,6 @@ function checkEnchantingMousePressed(button)
 end
 
 function enchantItem()
+    -- print("Trying to enchant " .. me[e.chosenItem].ID)
     initEnchanting() -- just resets all the variables
 end
