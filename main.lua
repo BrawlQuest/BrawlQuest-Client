@@ -30,6 +30,7 @@ require "scripts.ui.components.zone-titles"
 require "scripts.ui.components.profile"
 require "scripts.ui.components.hotbar"
 require "scripts.ui.components.events"
+require "scripts.ui.components.enchanting"
 require "scripts.libraries.api"
 require "scripts.libraries.utils"
 require "scripts.libraries.colorize"
@@ -87,15 +88,50 @@ playerCount = 0
 world = {}
 worldImg = {}
 lightGivers = {
-    ["assets/world/objects/lantern.png"] = 1,
-    ["assets/world/objects/Mushroom.png"] = 0.5,
-    ["assets/world/objects/Pumpkin0.png"] = 0.8,
-    ["assets/world/objects/Pumpkin1.png"] = 0.8,
-    ["assets/world/objects/Pumpkin2.png"] = 0.8,
-    ["assets/world/objects/Lamp.png"] = 1,
-    ["assets/world/objects/Furnace.png"] = 1,
-    ["assets/world/objects/Campfire.png"] = 1,
-    ["assets/world/grounds/Lava.png"] = 0.2,
+    ["assets/world/objects/lantern.png"] = {
+        brightness = 0.8,
+        color = {1, 0.5, 0},
+    },
+    ["assets/world/objects/Mushroom.png"]  = {
+        brightness = 0.8,
+        color = {1, 0.6, 0},
+    },
+    ["assets/world/objects/Pumpkin0.png"] = {
+        brightness = 1,
+        color = {1, 0.5, 0},
+    },
+    ["assets/world/objects/Pumpkin1.png"] = {
+        brightness = 1,
+        color = {1, 0.5, 0},
+    },
+    ["assets/world/objects/Pumpkin2.png"] = {
+        brightness = 1,
+        color = {1, 0.5, 0},
+    },
+    ["assets/world/objects/Lamp.png"]  = {
+        brightness = 2,
+        color = {1, 0.5, 0},
+    },
+    ["assets/world/objects/Furnace.png"] = {
+        brightness = 1,
+        color = {1, 0.2, 0},
+    },
+    ["assets/world/objects/Campfire.png"] = {
+        brightness = 0.7,
+        color = {1, 0.2, 0},
+    },
+    ["assets/world/objects/Ice Torch.png"] = {
+        brightness = 1,
+        color = {0,0.5,1},
+    },
+    ["assets/world/grounds/Lava.png"] = {
+        brightness = 2,
+        color = {1, 0.5, 0},
+    },
+    ["assets/world/objects/Portal.png"] = {
+        brightness = 3,
+        color ={0.6,0,0.4}
+    },
 }
 
 oldInfo = {}
@@ -103,6 +139,7 @@ oldInfo = {}
 sendUpdate = false
 
 function love.load()
+    mx, my = 0, 0
     limits = love.graphics.getSystemLimits( )
     print(limits.multicanvas)
     outlinerOnly = newOutliner(true)
@@ -127,6 +164,7 @@ function love.load()
     initWorldMask()
     initDeath()
     initPlayers()
+    initEnchanting()
     love.graphics.setFont(textFont)
 end
 
@@ -167,6 +205,14 @@ function love.draw()
                 drawTextBelowPlayer("Press "..keybinds.INTERACT.." to craft")
                 inventory.notNPC = false
                 drawingText = true
+            elseif isNearbyTile("assets/world/objects/Portal.png") and not drawingText then
+                if me.LVL ~= 25 then
+                    drawTextBelowPlayer("You must be Level 25 to Enchant")
+                else
+                    drawTextBelowPlayer("Press "..keybinds.INTERACT.." to Enchant")
+                end
+                inventory.notNPC = false
+                drawingText = true
             end
 
             for i,v in ipairs(npcs) do
@@ -197,12 +243,11 @@ function love.draw()
             --     love.graphics.rectangle("fill", player.target.x * 32, player.target.y * 32, 32, 32)
             --     love.graphics.setColor(1,1,1)
             -- end
-            Luven.drawEnd()
+        Luven.drawEnd()
 
-            if death.open then drawDeath() end
-            if not worldEdit.open then drawHUD() end
-            drawNewWorldEditHud()
-
+        if death.open then drawDeath() end
+        if not worldEdit.open then drawHUD() end
+        drawNewWorldEditHud()
         Luven.camera:draw()
 
         local offset = cerp(10, 324 * scale, inventory.amount)
@@ -256,6 +301,7 @@ function love.update(dt)
         Luven.update(dt)
         if showClouds then updateClouds(dt) end
         if showWorldMask then updateWorldMask(dt) end
+        if enchanting.amount >= 0.01 then updateEnchanting(dt) end
         updateCamera(dt)
         updateOtherPlayers(dt)
         local info = love.thread.getChannel('players'):pop()

@@ -1,4 +1,5 @@
 isWorldCreated = false
+worldCanvas = {}
 worldLookup = {}
 lightSource = {}
 lowestX = 0
@@ -52,6 +53,10 @@ function createWorld()
         end
     end
 
+    for key, v in next, worldCanvas do
+        worldCanvas[key].map:release( )
+    end
+
     reinitLighting()
     local dim = {32 * (chunkSize), 32 * (chunkSize)}
     worldCanvas = {}
@@ -96,7 +101,7 @@ function drawTile(v, cx, cy)
     local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y)
     if lightGivers[foregroundAsset] and not lightSource[v.X .. "," .. v.Y] then
         lightSource[v.X .. "," .. v.Y] = true
-        Luven.addNormalLight(16 + v.X * 32, 16 + v.Y * 32, {1, 0.5, 0}, lightGivers[foregroundAsset])
+        Luven.addNormalLight(16 + v.X * 32, 16 + v.Y * 32,  lightGivers[foregroundAsset].color, lightGivers[foregroundAsset].brightness)
     end
     drawSimplexNoise(v.X, v.Y)
     if worldImg[backgroundAsset] then
@@ -122,10 +127,10 @@ function drawWorld()
         local highX, highY = (canvas.cx + 1) * (32 * chunkSize), (canvas.cy + 1) * (32 * chunkSize)
         if player.dx >= lowX and player.dx < highX and player.dy >= lowY and player.dy < highY then
             local midX, midY = (canvas.cx + 0.5) * (32 * chunkSize), (canvas.cy + 0.5) * (32 * chunkSize)
-            if player.dx < midX and player.dy < midY then drawCanvases(-1, -1, canvas, lowX, lowY, highX, highY)
-            elseif player.dx < midX and player.dy > midY then drawCanvases(-1, 1, canvas, lowX, lowY, highX, highY)
-            elseif player.dx > midX and player.dy < midY then drawCanvases(1, -1, canvas, lowX, lowY, highX, highY)
-            elseif player.dx > midX and player.dy > midY then drawCanvases(1, 1, canvas, lowX, lowY, highX, highY) end
+            if player.dx <= midX and player.dy <= midY then drawCanvases(-1, -1, canvas, lowX, lowY, highX, highY)
+            elseif player.dx <= midX and player.dy >= midY then drawCanvases(-1, 1, canvas, lowX, lowY, highX, highY)
+            elseif player.dx >= midX and player.dy <= midY then drawCanvases(1, -1, canvas, lowX, lowY, highX, highY)
+            elseif player.dx >= midX and player.dy >= midY then drawCanvases(1, 1, canvas, lowX, lowY, highX, highY) end
             break
         end
         -- love.graphics.draw(canvas.map, lowX, lowY)

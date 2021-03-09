@@ -15,14 +15,12 @@ function love.mousepressed(x, y, button)
         checkNPCChatMousePressed(button)
         end
         checkWorldEditMouseDown(button)
-        if mouseOverChat then
-            isTypingInChat = not isTypingInChat
-        end
+        if mouseOverChat then isTypingInChat = not isTypingInChat end
+        if enchanting.open then checkEnchantingMousePressed(button) end
     end
 end
 
 function love.mousereleased(x, y, button)
-
     if worldEdit.open and worldEdit.drawmode == "rectangle" then
        checkWorldEditRectMouseUp(button)
     elseif characterHub.amount > 0 then
@@ -34,7 +32,6 @@ function love.mousereleased(x, y, button)
             end
         end
     end
-    
 end
 
 function love.wheelmoved( dx, dy )

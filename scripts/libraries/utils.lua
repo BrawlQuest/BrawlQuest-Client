@@ -1,3 +1,35 @@
+--[[
+
+function initVar()
+    Var = {
+        open = true,
+        amount = 1,
+    }
+end
+
+function updateVar(dt)
+    local e = Var
+end
+
+function drawVar(x,y)
+    local e = Var
+end
+
+function checkVarKeyPressed(key)
+    local e = Var
+end
+
+function checkVarMousePressed(button)
+    local e = Var
+end
+
+initVar()
+updateVar(dt)
+drawVar(x,y)
+checkVarKeyPressed(key)
+checkVarMousePressed(button)
+]]
+
 
 function getImgIfNotExist(v)
     if not worldImg[v] then
@@ -56,12 +88,9 @@ function difference(a,b)
 end
 
 function isMouseOver(x,y,width,height)
-    cx,cy = love.mouse.getPosition()
-
-    if cx > x and cx < x+width and cy > y and cy < y+height then
+    if mx > x and mx < x+width and my > y and my < y+height then
         return true
     end
-    
     return false
 end
 

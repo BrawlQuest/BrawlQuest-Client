@@ -88,7 +88,7 @@ function updateQuestHub(dt)
         panelMovement(dt, questHub, -1, "commentAmount")
     end
 
-    if questHub.commentAmount > 0 then 
+    if questHub.commentAmount > 0 and quests[1][questHub.selectedQuest] then
         local textHeight = getTextHeight(quests[1][questHub.selectedQuest].comment, 127, questHub.font) - questHub.images.npcTalkBG:getHeight()
         questHub.commentOpen = true 
         questHub.commentOpacity = cerp(0, 1, questHub.commentAmount)

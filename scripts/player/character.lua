@@ -44,13 +44,13 @@ player = {
 newInventoryItems = {}
 me = {}
 
-function drawItemIfExists(path, x, y, previousDirection, rotation, imageScale, stencil)
+function drawItemIfExists(path, x, y, previousDirection, direction, imageScale, stencil)
     imageScale = imageScale or 1
     local offsetX = 0
-    if not rotation then
-        rotation = 1
+    if not direction then
+        direction = 1
         if previousDirection and previousDirection == "left" then
-            rotation = -1
+            direction = -1
             offsetX = 32
         end
     end
@@ -64,9 +64,9 @@ function drawItemIfExists(path, x, y, previousDirection, rotation, imageScale, s
     end
 
     if stencil then
-        love.graphics.draw(itemImg[path], stencil, x + offsetX, y, 0, rotation * imageScale, imageScale)
+        love.graphics.draw(itemImg[path], stencil, x + offsetX, y, 0, direction * imageScale, imageScale)
     else
-        love.graphics.draw(itemImg[path], x + offsetX, y, 0, rotation * imageScale, imageScale)
+        love.graphics.draw(itemImg[path], x + offsetX, y, 0, direction * imageScale, imageScale)
     end
 end
 

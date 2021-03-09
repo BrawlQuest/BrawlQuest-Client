@@ -3,30 +3,40 @@ tooltip = {
     y = 0,
     title = "Tooltip",
     desc = "Tooltip",
+    additional = {{
+        desc = "Example",
+        color = {0, 1, 0}
+    }},
     alpha = 0,
     padding = 4,
     spacing = 2,
-    perks = {
-        {title = "Strength", desc = "Increases maximum potential bonus damage output by 1 for each point (damage is wep value plus 1 to STR)",},
-        {title = "Intelligence", desc = "Increases the potency of your spells. Each point increases the impact of spells (check spell tooltips to see updated values)",},
-        {title = "Stamina", desc = "Increases your character's HP. You gain an extra 15 HP per point.",},
-    },
+    perks = {{
+        title = "Strength",
+        desc = "Increases maximum potential bonus damage output by 1 for each point (damage is wep value plus 1 to STR)"
+    }, {
+        title = "Intelligence",
+        desc = "Increases the potency of your spells. Each point increases the impact of spells (check spell tooltips to see updated values)"
+    }, {
+        title = "Stamina",
+        desc = "Increases your character's HP. You gain an extra 15 HP per point."
+    }}
 }
 
-function setTooltip(title, desc)
+function setTooltip(title, desc, additional)
     tooltip.x, tooltip.y = love.mouse.getPosition()
 
-    tooltip.x = (tooltip.x + 16)/scale -- avoid getting cut off by the mouse
-   
-  
-    tooltip.y = (tooltip.y + 16)/scale
+    tooltip.x = (tooltip.x + 16) / scale -- avoid getting cut off by the mouse
+    
+
+    tooltip.y = (tooltip.y + 16) / scale
     tooltip.alpha = 1
     tooltip.title = title
     tooltip.desc = desc
+    tooltip.additional = additional
 
-    local e = explode(desc,"{")
+    local e = explode(desc, "{")
     if me and me.STA and #e > 1 then
-        local e2 = explode(e[2],"}")
+        local e2 = explode(e[2], "}")
         local eq = e2[1]
         eq = eq:gsub("INT", me["INT"])
         eq = eq:gsub("STA", me["STA"])
@@ -34,7 +44,7 @@ function setTooltip(title, desc)
         func = assert(loadstring("return " .. eq))
         y = func()
         -- print(y)
-        tooltip.desc = e[1]..tostring(y)..e2[2]
+        tooltip.desc = e[1] .. tostring(y) .. e2[2]
     end
 end
 
@@ -45,59 +55,112 @@ end
 
 function setItemTooltip(item)
     love.graphics.setColor(0.6, 0.6, 0.6)
+    valueAdditional = {
+        desc = "Item",
+        color = {0.4, 0.4, 0.4}
+    }
     local valString = "Item"
     if item.Type == "wep" then
-        valString = "+" .. item.Val .. " Weapon"
+        valueAdditional.desc = "+" .. item.Val .. " Weapon"
+        valueAdditional.color = {1, 0.6, 0}
     elseif item.Type == "arm_head" then
-        valString = "+" .. item.Val .. " Head Armour"
+        valueAdditional.desc = "+" .. item.Val .. " Head Armour"
+        valueAdditional.color = {0.5, 0.87, 0.47}
     elseif item.Type == "arm_chest" then
-        valString = "+" .. item.Val .. " Chest Armour"
+        valueAdditional.desc = "+" .. item.Val .. " Chest Armour"
+        valueAdditional.color = {0.5, 0.87, 0.47}
     elseif item.Type == "arm_legs" then
-        valString = "+" .. item.Val .. " Leg Armour"
+        valueAdditional.desc = "+" .. item.Val .. " Leg Armour"
+        valueAdditional.color = {0.5, 0.87, 0.47}
     elseif item.Type == "shield" then
-        valString = "+" .. item.Val .. " Shield"
+        valueAdditional.desc = "+" .. item.Val .. " Shield"
+        valueAdditional.color = {0.5, 0.87, 0.47}
     elseif item.Type == "spell" then
-        valString = "Spell (" .. item.Val .. " Mana)"
+        valueAdditional.desc = "Spell (" .. item.Val .. " Mana)"
+        valueAdditional.color = {0.6, 0.6, 1}
     elseif item.Type == "hp_potion" then
-        valString = "Restores " .. item.Val .. " HP"
+        valueAdditional.desc = "Restores " .. item.Val .. " HP"
+        valueAdditional.color = {1, 0.5, 0.5}
     elseif item.Type == "mana_potion" then
-        valString = "Restores " .. item.Val .. " Mana"
+        valueAdditional.desc = "Restores " .. item.Val .. " Mana"
+        valueAdditional.color = {0.5, 0.5, 1}
     elseif item.Type == "reagent" then
-        valString = "Reagent"
+        valueAdditional.desc = "Reagent"
+        valueAdditional.color = {0.73, 1, 0}
     elseif item.Type == "buddy" then
-        valString = "Buddy"
+        valueAdditional.desc = "Buddy"
+        valueAdditional.color = {0.8, 0, 1}
+    elseif item.Type == "mount" then
+        valueAdditional.desc = item.Val / 32 .. "m/s Mount"
+        valueAdditional.color = {0.8, 0.2, 1}
     end
-    setTooltip(item.Name,  valString .. "\nRequires Level " .. item.Worth .. "+ \n\n" .. item.Desc )
+    if me and me.LVL >= item.Worth then
+        setTooltip(item.Name, "", {valueAdditional, {
+            desc = item.Desc,
+            color = {0.8, 0.8, 0.8}
+        }, {
+            desc = "Requires Level " .. item.Worth,
+            color = {0, 1, 0}
+        }})
+    else
+        setTooltip(item.Name, "", {valueAdditional, {
+            desc = item.Desc,
+            color = {0.8, 0.8, 0.8}
+        }, {
+            desc = "Requires Level " .. item.Worth,
+            color = {1, 0, 0}
+        }})
+    end
 end
 
 function drawTooltip(thisX, thisY)
-    love.graphics.setColor(0,0,0,tooltip.alpha)
-    if (tooltip.x - tooltip.padding) + (150 + (tooltip.padding*2)) > uiX then
-        tooltip.x = uiX - (150 + (tooltip.padding*2))
+    love.graphics.setColor(0, 0, 0, tooltip.alpha)
+    if (tooltip.x - tooltip.padding) + (150 + (tooltip.padding * 2)) > uiX then
+        tooltip.x = uiX - (150 + (tooltip.padding * 2))
     end
-    local height = getToolTipTitleHeight(tooltip.title) + getToolTipDescHeight(tooltip.desc) + (tooltip.padding*2) + tooltip.spacing
+    local height = getToolTipTitleHeight(tooltip.title) + getToolTipDescHeight(tooltip.desc) + (tooltip.padding * 2) +
+                       tooltip.spacing
+    if tooltip.additional then
+        for i, v in ipairs(tooltip.additional) do
+            height = height + getToolTipDescHeight(v.desc)
+        end
+    end
     if tooltip.y + height > uiY then
         tooltip.y = uiY - height
         tooltip.x = tooltip.x + 6
     end
-    love.graphics.rectangle("fill", tooltip.x - tooltip.padding,tooltip.y - tooltip.padding, 150 + (tooltip.padding*2), height)
-    love.graphics.setColor(1,1,1,tooltip.alpha)
-    love.graphics.printf(tooltip.title, npcChatFont, tooltip.x,tooltip.y,150,"left")
-    love.graphics.printf(tooltip.desc, characterHub.font, tooltip.x, tooltip.y + getToolTipTitleHeight(tooltip.title) + tooltip.spacing, 150, "left")
-    love.graphics.setColor(1,1,1,1)
+    love.graphics.rectangle("fill", tooltip.x - tooltip.padding, tooltip.y - tooltip.padding,
+        150 + (tooltip.padding * 2), height)
+    love.graphics.setColor(1, 1, 1, tooltip.alpha)
+    love.graphics.printf(tooltip.title, npcChatFont, tooltip.x, tooltip.y, 150, "left")
+    love.graphics.printf(tooltip.desc, characterHub.font, tooltip.x,
+        tooltip.y + getToolTipTitleHeight(tooltip.title) + tooltip.spacing, 150, "left")
+    local yPos = tooltip.y + getToolTipTitleHeight(tooltip.title) + tooltip.spacing + getToolTipDescHeight(tooltip.desc)
+    if tooltip.additional then
+        for i, v in ipairs(tooltip.additional) do
+            love.graphics.setColor(v.color[1], v.color[2], v.color[3], tooltip.alpha)
+            love.graphics.printf(v.desc, characterHub.font, tooltip.x, yPos, 150, "left")
+            yPos = yPos + getToolTipDescHeight(v.desc)
+        end
+    end
+    love.graphics.setColor(1, 1, 1, 1)
 end
 
 function getToolTipTitleHeight(title)
-    local width, lines = npcChatFont:getWrap( title, 150 )
-    return ((#lines)*(npcChatFont:getHeight()))
+    local width, lines = npcChatFont:getWrap(title, 150)
+    return ((#lines) * (npcChatFont:getHeight()))
 end
 
 function getToolTipDescHeight(title)
-    local width, lines = characterHub.font:getWrap( title, 150 )
-    return ((#lines)*(characterHub.font:getHeight()))
+    if title then
+        local width, lines = characterHub.font:getWrap(title, 150)
+        return ((#lines) * (characterHub.font:getHeight()))
+    else
+        return 0
+    end
 end
 
 function updateTooltip(dt)
-    tooltip.alpha = tooltip.alpha - 8*dt
+    tooltip.alpha = tooltip.alpha - 8 * dt
 end
 
