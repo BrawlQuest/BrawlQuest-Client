@@ -41,6 +41,7 @@ function initEnchanting()
         text = {
             desc = "The mana has chosen you. To enchant an item your character will be reset to Level 1 as well as all of your quests and NPC conversations. You gain a permanent double XP buff, meaning that getting back to Level 25 on your character should take half the time.\nYou don't lose any of your items, although your stats will be reset to 1 and your armour and weapon will be unequipped.",
             ifNot = "If you haven't equipped an item you'd like to enchant, come back with the item you'd like to enchant equipped",
+            final = "Are you sure you want to enchant this item? You will be sent back to level 1, and will not be able to use your high level items again until you level up.",
         },
         flash = {
             light = false,
@@ -51,6 +52,8 @@ function initEnchanting()
             perk = 0,
             item = "",
             commit = false,
+            back3 = false,
+            return3 = false,
         },
         chosenItem = "",
         chosenItemCount = 0,
@@ -116,7 +119,7 @@ function drawEnchanting()
         y = y + (getTextHeight(e.text.desc, w / textScale, e.font) * textScale) + 20
         -- if e.flash.light then love.graphics.setColor(1,0,0) end
         e.mouseOver.endPhaseOne = false
-        if isMouseOver(x - 20, y, w, e.font:getHeight() * textScale + 20) then
+        if isMouseOver(x - 20 * scale, y * scale, w * scale, (e.font:getHeight() * textScale + 20) * scale) then
             love.graphics.setColor(1,0,0)
             love.graphics.rectangle("fill", x - 20, y, w, e.font:getHeight() * textScale + 20, 10)
             love.graphics.setColor(1,1,1)
@@ -125,7 +128,7 @@ function drawEnchanting()
         love.graphics.printf("Press return to continue", x - 10, y + 8, w / textScale, "center", 0, textScale)
 
     elseif e.phase == 2 then 
-        local x, y = uiX / 2 - w / 2, uiY / 6
+        local x, y = uiX / 2 - w / 2, uiY / 4
         love.graphics.setColor(1,1,1)
         love.graphics.printf("Choose which item you want to enchant", x - 10, y - e.font:getHeight() * textScale - 10, w / textScale, "center", 0, textScale)
         e.mouseOver.item = ""
@@ -134,7 +137,7 @@ function drawEnchanting()
                 local dx, dy = x + (itemWidth + 30) * (i-1), y + 10
                 if e.chosenItem == v then love.graphics.setColor(1,1,1) else love.graphics.setColor(0,0,0,0.8) end
                 love.graphics.rectangle("fill", dx - 10, dy - 10, itemWidth + 20, itemWidth + 20, 10)
-                if isMouseOver(dx,dy, itemWidth, itemWidth) then
+                if isMouseOver(dx * scale,dy * scale, itemWidth * scale, itemWidth * scale) then
                     love.graphics.setColor(1,0,1)
                     e.mouseOver.item = v
                 else love.graphics.setColor(1,1,1) end
@@ -190,6 +193,7 @@ function drawEnchanting()
             love.graphics.rectangle("fill", dx, dy + 94 * (i-1), width, 84, 10)
         end
 
+        e.mouseOver.perk = 0
         if e.chosenItem ~= "" then
             local perk
             if e.chosenItem == "HeadArmour" or e.chosenItem == "ChestArmour" or e.chosenItem == "LegArmour" then perk = "Armour"
@@ -198,7 +202,8 @@ function drawEnchanting()
                 if e.selectedPerk == i then
                     love.graphics.setColor(1,1,1)
                     love.graphics.rectangle("fill", dx, dy, width, 84, 10)
-                elseif isMouseOver(dx, dy, width, 84) then
+                elseif isMouseOver(dx * scale, dy * scale, width * scale, 84 * scale) then
+                    e.mouseOver.perk = i
                     love.graphics.setColor(1,0,0)
                     love.graphics.rectangle("fill", dx, dy, width, 84, 10)
                 end
@@ -216,7 +221,7 @@ function drawEnchanting()
         w = w - 10
 
         e.mouseOver.commit = false
-        if isMouseOver(x, y, w, 64) and e.chosenItem ~= "" then
+        if isMouseOver(x * scale, y * scale, w * scale, 64 * scale) and e.chosenItem ~= "" then
             e.mouseOver.commit = true
             love.graphics.setColor(1,0,0)
         else love.graphics.setColor(0,0,0,0.8) end
@@ -224,7 +229,53 @@ function drawEnchanting()
         love.graphics.rectangle("fill", x, y, w, 64, 10)
         love.graphics.setColor(1,1,1)
         love.graphics.printf("Enchant Selected Item", x, y + 32 - (e.font:getHeight() * textScale) * 0.5, w / textScale, "center", 0, textScale)
+    elseif e.phase == 3 then
+        local picScale =  8
+        local width = 32 * picScale
+        local x,y = uiX / 2 - w * 0.5, uiY / 2 - width * 0.5
+        
+        love.graphics.setColor(0,0,0,0.8)
+        love.graphics.rectangle("fill", x, y, w, width, 10)
+        love.graphics.setColor(1,1,1)
+
+        local dx, dy = x + 32, y + 32
+        local offset = 0
+        if e.chosenItem ~= "Mount" then
+            if e.items[e.chosenItem].armour then
+                offset = 20
+                love.graphics.draw(playerImg, dx - offset, dy, 0, picScale - 2)
+            end
+            if me[e.chosenItem.."ID"] ~= 0 then drawItemIfExists(me[e.chosenItem].ImgPath, dx - offset, dy, "", 1, picScale - 2) end
+        elseif me.Mount and me.Mount.Name ~= "None" then drawItemIfExists(me[e.chosenItem].ImgPath, dx - offset, dy, "", 1, picScale - 2) end
+
+        dx, dy = x + width, dy
+        width = w - (width + 40)
+        love.graphics.printf(me[e.chosenItem].Name, dx, dy, width / textScale, "left",  0, textScale)
+        dy = dy + (getTextHeight(me[e.chosenItem].Name, width / textScale, e.font) * textScale)
+        love.graphics.printf("Current Value:\nValue After Enchantment (+25):", dx, dy, width / smallPrintScale, "left",  0, smallPrintScale)
+        love.graphics.printf("+"..me[e.chosenItem].Val .. "\n+" .. me[e.chosenItem].Val + 25, dx, dy, width / smallPrintScale, "right",  0, smallPrintScale)
+
+
+        love.graphics.setColor(1,1,1)
+        love.graphics.printf(e.text.final, x + 10, y - (getTextHeight(e.text.final, (w - 20) / textScale, e.font) * textScale) - 20, (w - 20) / textScale, "center", 0, textScale)
+
+        y = y + 32 * picScale + 10 -- draw underneath boxes
+        drawEnchantmentButton(x,y,w * 0.5 - 5, 64, "Go Back (escape)", e.mouseOver.back3)
+
+        x = x + w * 0.5 + 5
+        drawEnchantmentButton(x,y,w * 0.5 - 5, 64, "Enchant Item (return)", e.mouseOver.return3)
     end
+end
+
+function drawEnchantmentButton(x,y,w,h,text,bool)
+    local e = enchanting
+    if isMouseOver(x * scale,y * scale,w * scale,h * scale) then
+        bool = true
+        love.graphics.setColor(1,0,0)
+    else love.graphics.setColor(0,0,0,0.8) bool = false end
+    love.graphics.rectangle("fill", x, y, w, h, 10)
+    love.graphics.setColor(1,1,1)
+    love.graphics.printf(text, x, y + h * 0.5 - (e.font:getHeight() * 3) / 2, w / 3, "center", 0, 3)
 end
 
 function checkEnchantingKeyPressed(key)
@@ -233,49 +284,77 @@ function checkEnchantingKeyPressed(key)
     if e.chosenItem == "HeadArmour" or e.chosenItem == "ChestArmour" or e.chosenItem == "LegArmour" then perk = "Armour"
     else perk = e.chosenItem end
 
-    if key == keybinds.ATTACK_RIGHT then 
-        if e.chosenItemCount < #e.itemNames then 
-            e.chosenItemCount = e.chosenItemCount + 1
-        else e.chosenItemCount = 1 end
-        e.chosenItem = e.itemNames[e.chosenItemCount]
-        e.selectedPerk = 1
-    elseif key == keybinds.ATTACK_LEFT then 
-        if e.chosenItemCount > 1 then 
-            e.chosenItemCount = e.chosenItemCount - 1
-        else e.chosenItemCount = #e.itemNames end
-        e.chosenItem = e.itemNames[e.chosenItemCount]
-        e.selectedPerk = 1
-    elseif key == keybinds.ATTACK_DOWN and e.chosenItem ~= "" then 
-        if e.selectedPerk < #e.perks[perk] then 
-            e.selectedPerk = e.selectedPerk + 1
-        else e.selectedPerk = 1 end
-    elseif key == keybinds.ATTACK_UP and e.chosenItem ~= "" then 
-        if e.selectedPerk > 1 then
-            e.selectedPerk = e.selectedPerk - 1
-        else e.selectedPerk = #e.perks[perk] end
-    end
-    if key == keybinds.ATTACK_UP and e.chosenItem ~= "" then
-        
-    end
-    if key == "return" then
-        e.phase = 2
-    elseif key == "f" or checkMoveOrAttack(key, "move") then
-        e.open = false
+    if e.phase == 1 then
+        if key == "return" then e.phase = 2 end
+        if key == "f" or checkMoveOrAttack(key, "move") then e.open = false end
+    elseif e.phase == 2 then
+        if key == keybinds.ATTACK_RIGHT then 
+            if e.chosenItemCount < #e.itemNames then 
+                e.chosenItemCount = e.chosenItemCount + 1
+            else e.chosenItemCount = 1 end
+            e.chosenItem = e.itemNames[e.chosenItemCount]
+            e.selectedPerk = 1
+        elseif key == keybinds.ATTACK_LEFT then 
+            if e.chosenItemCount > 1 then 
+                e.chosenItemCount = e.chosenItemCount - 1
+            else e.chosenItemCount = #e.itemNames end
+            e.chosenItem = e.itemNames[e.chosenItemCount]
+            e.selectedPerk = 1
+        elseif key == keybinds.ATTACK_DOWN and e.chosenItem ~= "" then 
+            if e.selectedPerk < #e.perks[perk] then 
+                e.selectedPerk = e.selectedPerk + 1
+            else e.selectedPerk = 1 end
+        elseif key == keybinds.ATTACK_UP and e.chosenItem ~= "" then 
+            if e.selectedPerk > 1 then
+                e.selectedPerk = e.selectedPerk - 1
+            else e.selectedPerk = #e.perks[perk] end
+        elseif key == "return" then e.phase = 3
+        elseif key == "f" or checkMoveOrAttack(key, "move") then e.open = false
+        end
+    elseif e.phase == 3 then
+        if key == "return" then
+            enchantItem()
+        elseif key == "escape" then
+            e.phase = 2
+        end
     end
 end
 
 function checkEnchantingMousePressed(button)
     local e = enchanting
-    if e.mouseOver.endPhaseOne then
-        e.phase = 2
-    elseif e.mouseOver.item ~= "" then
-        e.chosenItem = e.mouseOver.item
-        for i,v in ipairs(e.itemNames) do
-            if e.chosenItem == v then e.chosenItemCount = i end
+    -- if e.mouseOver.endPhaseOne and e.phase == 1 then
+    --     e.phase = 2
+    -- elseif e.mouseOver.commit and e.phase == 2 then
+    --     e.phase = 3
+    -- elseif e.mouseOver.item ~= "" then
+    --     e.chosenItem = e.mouseOver.item
+    --     for i,v in ipairs(e.itemNames) do
+    --         if e.chosenItem == v then e.chosenItemCount = i end
+    --     end
+    -- elseif e.mouseOver.perk > 0 then
+    --     e.selectedPerk = e.mouseOver.perk
+    -- end
+
+    if e.phase == 1 then
+        if e.mouseOver.endPhaseOne then e.phase = 2 end
+    elseif e.phase == 2 then
+        if e.mouseOver.item ~= "" then
+            e.chosenItem = e.mouseOver.item
+            for i,v in ipairs(e.itemNames) do
+                if e.chosenItem == v then e.chosenItemCount = i end
+            end
         end
-    elseif e.mouseOver.perk > 0 then
-        e.selectedPerk = e.mouseOver.perk
-    elseif e.mouseOver.commit then
-        e.phase = 3
+        if e.mouseOver.commit then e.phase = 3 end
+    elseif e.phase == 3 then
+        if e.mouseOver.return3 then
+            enchantItem()
+        elseif e.mouseOver.back3 then
+            e.phase = 2
+        end
     end
+end
+
+function enchantItem()
+
+    initEnchanting() -- just resets all the variables
 end
