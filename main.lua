@@ -196,8 +196,6 @@ function love.draw()
             drawPlayer(me, -1)
             if showWorldAnimations then drawLeaves() end
             drawLoot()
-            
-            if not worldEdit.open then drawWorldMask() end  
 
             local drawingText = false
             if isNearbyTile("assets/world/objects/Anvil.png") and not drawingText then
@@ -234,7 +232,7 @@ function love.draw()
                 end
             end
 
-            if showWorldMask and not worldEdit.open then drawWorldMask() end --not worldEdit.open or
+            if showWorldMask and not worldEdit.open and enchanting.amount < 0.01 then drawWorldMask() end --not worldEdit.open or
             if showClouds and not worldEdit.open and enchanting.amount < 0.01 then drawClouds() end
 
             -- if player.target.active then

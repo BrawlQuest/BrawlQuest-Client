@@ -92,12 +92,11 @@ function updateEnchanting(dt)
         if e.amount < 0.01 then e.amount = 0 end
     end
     e.cerp = cerp(0,1,e.amount)
-    print(enchanting.amount)
 end
 
 function drawEnchanting()
     local e = enchanting
-    love.graphics.setColor(0,0,0,0.8)
+    love.graphics.setColor(0,0,0,0.9)
     love.graphics.rectangle("fill",0,0,uiX, uiY)
     local titleScale = 8
     local textScale = 3
@@ -185,7 +184,6 @@ function drawEnchanting()
         love.graphics.setColor(1,1,1)
         love.graphics.printf("Choose an enchantment", x, y, width / textScale, "left", 0, textScale)
         y = y + e.font:getHeight() * textScale + 5
-
 
         dx, dy = x, y
         love.graphics.setColor(0,0,0,0.8)
@@ -335,6 +333,7 @@ function checkEnchantingMousePressed(button)
                 if e.chosenItem == v then e.chosenItemCount = i end
             end
         end
+        if e.mouseOver.perk > 0 then e.selectedPerk = e.mouseOver.perk end
         if e.mouseOver.commit and me[enchanting.chosenItem] and me[enchanting.chosenItem].Name ~= "None" then e.phase = 3 end
     elseif e.phase == 3 then
         if e.mouseOver.return3 == true then
