@@ -2,37 +2,26 @@ function initEnchanting()
     enchanting = {
         open = false,
         amount = 0,
+        cerp = 0,
         phase = 1,
         itemNames = {"LegArmour","ChestArmour","HeadArmour","Shield","Weapon","Mount"},
         items = {
             ["LegArmour"] = {
-                x = 0,
-                y = 0,
                 armour = true
             },
             ["ChestArmour"] = {
-                x = 0,
-                y = 0,
                 armour = true
             },
             ["HeadArmour"] = {
-                x = 0,
-                y = 0,
                 armour = true
             },
             ["Weapon"] = {
-                x = 0,
-                y = 0,
                 armour = false
             },
             ["Mount"] = {
-                x = 0,
-                y = 0,
                 armour = false
             },
             ["Shield"] = {
-                x = 0,
-                y = 0,
                 armour = true
             },
         },
@@ -43,10 +32,6 @@ function initEnchanting()
             ifNot = "If you haven't equipped an item you'd like to enchant, come back with the item you'd like to enchant equipped",
             final = "Are you sure you want to enchant this item? You will be sent back to level 1, and will not be able to use your high level items again until you level up.",
         },
-        flash = {
-            light = false,
-            amount = 0,
-        },
         mouseOver = {
             endPhaseOne = false,
             perk = 0,
@@ -55,46 +40,59 @@ function initEnchanting()
             back3 = false,
             return3 = false,
         },
-        chosenItem = "",
-        chosenItemCount = 0,
+        chosenItem = "LegArmour",
+        chosenItemCount = 1,
         perks = {
             ["Armour"] = {
                     {
+                        title = "",
                         desc = "+25 Strength whilst wearing this armour",
                         img = love.graphics.newImage("assets/ui/enchantment/0.png"),
                     }, {
+                        title = "",
                         desc = "+25 Intelligence whilst wearing this armour",
                         img = love.graphics.newImage("assets/ui/enchantment/1.png"),
                     }, {
+                        title = "",
                         desc = "+25 Stamina whilst wearing this armour",
                         img = love.graphics.newImage("assets/ui/enchantment/2.png"),
                     },
                 },
             ["Weapon"] = {
                 {
+                    title = "",
                     desc = "+25 Damage whilst using this weapon",
                     img = love.graphics.newImage("assets/ui/enchantment/0.png"),
                 }, 
             },
             ["Mount"] = {                
                 {
+                    title = "",
                     desc = "+0.8 m/s speed boost whilst riding this mount",
                     img = love.graphics.newImage("assets/ui/enchantment/0.png"),
                 },
             },
             ["Shield"] = {
                 {
+                    title = "",
                     desc = "+25 defence boost whilst using this shield",
                     img = love.graphics.newImage("assets/ui/enchantment/0.png"),
                 },
             },
         },
-        selectedPerk = 0,
+        selectedPerk = 1,
     }
 end
 
 function updateEnchanting(dt)
     local e = enchanting
+    if e.open then
+        panelMovement(dt, enchanting, 1, "amount", 0.5)
+    else panelMovement(dt, enchanting, -1, "amount", 0.5)
+        if e.amount < 0.01 then e.amount = 0 end
+    end
+    e.cerp = cerp(0,1,e.amount)
+    print(enchanting.amount)
 end
 
 function drawEnchanting()
@@ -135,24 +133,26 @@ function drawEnchanting()
         if me and me.HeadArmour then
             for i,v in ipairs(e.itemNames) do -- draws armour and base images if needed
                 local dx, dy = x + (itemWidth + 30) * (i-1), y + 10
+                local offset = 0
                 if e.chosenItem == v then love.graphics.setColor(1,1,1) else love.graphics.setColor(0,0,0,0.8) end
                 love.graphics.rectangle("fill", dx - 10, dy - 10, itemWidth + 20, itemWidth + 20, 10)
+                love.graphics.setColor(1,1,1)
                 if isMouseOver(dx * scale,dy * scale, itemWidth * scale, itemWidth * scale) then
-                    love.graphics.setColor(1,0,1)
                     e.mouseOver.item = v
-                else love.graphics.setColor(1,1,1) end
-
+                    offset = 3
+                end
                 if v ~= "Mount" then
                     if e.items[v].armour then
                         dx = dx - 10
-                        love.graphics.draw(playerImg, dx, dy, 0, e.itemScale)
+                        love.graphics.draw(playerImg, dx, dy - offset, 0, e.itemScale)
                     end
-                    if me[v.."ID"] ~= 0 then drawItemIfExists(me[v].ImgPath, dx, dy, "", 1, e.itemScale) end
+                    if me[v.."ID"] ~= 0 then drawItemIfExists(me[v].ImgPath, dx, dy - offset, "", 1, e.itemScale) end
                 elseif me.Mount and me.Mount.Name ~= "None" then
-                    drawItemIfExists(me[v].ImgPath, dx, dy, "", 1, e.itemScale)
+                    drawItemIfExists(me[v].ImgPath, dx, dy - offset, "", 1, e.itemScale)
                 end
             end
         end
+        love.graphics.setColor(1,1,1)
         x, y = x - 10, y + itemWidth + 30
         love.graphics.printf(e.text.ifNot, x, y, w / smallPrintScale, "center", 0, smallPrintScale)
         local picScale =  8
@@ -233,6 +233,10 @@ function drawEnchanting()
         local picScale =  8
         local width = 32 * picScale
         local x,y = uiX / 2 - w * 0.5, uiY / 2 - width * 0.5
+
+        local perk = "HeadArmour"
+        if e.chosenItem == "HeadArmour" or e.chosenItem == "ChestArmour" or e.chosenItem == "LegArmour" then perk = "Armour"
+        else perk = e.chosenItem end
         
         love.graphics.setColor(0,0,0,0.8)
         love.graphics.rectangle("fill", x, y, w, width, 10)
@@ -245,34 +249,34 @@ function drawEnchanting()
                 offset = 20
                 love.graphics.draw(playerImg, dx - offset, dy, 0, picScale - 2)
             end
-            if me[e.chosenItem.."ID"] ~= 0 then drawItemIfExists(me[e.chosenItem].ImgPath, dx - offset, dy, "", 1, picScale - 2) end
+            if me[e.chosenItem.."ID"] ~= 0 then 
+                drawItemIfExists(me[e.chosenItem].ImgPath, dx - offset, dy, "", 1, picScale - 2)
+            end
         elseif me.Mount and me.Mount.Name ~= "None" then drawItemIfExists(me[e.chosenItem].ImgPath, dx - offset, dy, "", 1, picScale - 2) end
 
         dx, dy = x + width, dy
         width = w - (width + 40)
         love.graphics.printf(me[e.chosenItem].Name, dx, dy, width / textScale, "left",  0, textScale)
         dy = dy + (getTextHeight(me[e.chosenItem].Name, width / textScale, e.font) * textScale)
-        love.graphics.printf("Current Value:\nValue After Enchantment (+25):", dx, dy, width / smallPrintScale, "left",  0, smallPrintScale)
-        love.graphics.printf("+"..me[e.chosenItem].Val .. "\n+" .. me[e.chosenItem].Val + 25, dx, dy, width / smallPrintScale, "right",  0, smallPrintScale)
-
+        love.graphics.printf(e.perks[perk][e.selectedPerk].desc, dx, dy, width / smallPrintScale, "left",  0, smallPrintScale)
 
         love.graphics.setColor(1,1,1)
         love.graphics.printf(e.text.final, x + 10, y - (getTextHeight(e.text.final, (w - 20) / textScale, e.font) * textScale) - 20, (w - 20) / textScale, "center", 0, textScale)
 
         y = y + 32 * picScale + 10 -- draw underneath boxes
-        drawEnchantmentButton(x,y,w * 0.5 - 5, 64, "Go Back (escape)", e.mouseOver.back3)
+        drawEnchantmentButton(x,y,w * 0.5 - 5, 64, "Go Back (escape)", "back3")
 
         x = x + w * 0.5 + 5
-        drawEnchantmentButton(x,y,w * 0.5 - 5, 64, "Enchant Item (return)", e.mouseOver.return3)
+        drawEnchantmentButton(x,y,w * 0.5 - 5, 64, "Enchant Item (return)", "return3")
     end
 end
 
 function drawEnchantmentButton(x,y,w,h,text,bool)
     local e = enchanting
     if isMouseOver(x * scale,y * scale,w * scale,h * scale) then
-        bool = true
+        e.mouseOver[bool] = true
         love.graphics.setColor(1,0,0)
-    else love.graphics.setColor(0,0,0,0.8) bool = false end
+    else love.graphics.setColor(0,0,0,0.8) e.mouseOver[bool] = false end
     love.graphics.rectangle("fill", x, y, w, h, 10)
     love.graphics.setColor(1,1,1)
     love.graphics.printf(text, x, y + h * 0.5 - (e.font:getHeight() * 3) / 2, w / 3, "center", 0, 3)
@@ -322,19 +326,6 @@ end
 
 function checkEnchantingMousePressed(button)
     local e = enchanting
-    -- if e.mouseOver.endPhaseOne and e.phase == 1 then
-    --     e.phase = 2
-    -- elseif e.mouseOver.commit and e.phase == 2 then
-    --     e.phase = 3
-    -- elseif e.mouseOver.item ~= "" then
-    --     e.chosenItem = e.mouseOver.item
-    --     for i,v in ipairs(e.itemNames) do
-    --         if e.chosenItem == v then e.chosenItemCount = i end
-    --     end
-    -- elseif e.mouseOver.perk > 0 then
-    --     e.selectedPerk = e.mouseOver.perk
-    -- end
-
     if e.phase == 1 then
         if e.mouseOver.endPhaseOne then e.phase = 2 end
     elseif e.phase == 2 then
@@ -346,15 +337,16 @@ function checkEnchantingMousePressed(button)
         end
         if e.mouseOver.commit then e.phase = 3 end
     elseif e.phase == 3 then
-        if e.mouseOver.return3 then
+        if e.mouseOver.return3 == true then
+
             enchantItem()
-        elseif e.mouseOver.back3 then
+        elseif e.mouseOver.back3 == true then
             e.phase = 2
         end
     end
 end
 
 function enchantItem()
-
+    -- print("Trying to enchant " .. me[e.chosenItem].ID)
     initEnchanting() -- just resets all the variables
 end

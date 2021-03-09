@@ -87,7 +87,7 @@ function love.keypressed(key)
             if key == "f" then
                 enchanting.phase = 1
                 enchanting.open = true
-                enchanting.amount = 1
+                enchanting.amount = 0.01
             end
 
             if key == "tab" then

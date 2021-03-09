@@ -114,11 +114,12 @@ function drawArmourImage(x,y,v,ad,type,direction)
     end
 end
 
-function drawEnchantment(x, y)
+function drawEnchantment(x, y, noiseScale)
+    noiseScale = noiseScale or 1
     love.graphics.setStencilTest("equal", 1)
     love.graphics.setColor(0.8,0,1,0.6)
     love.graphics.setBlendMode("add")
-    love.graphics.draw(enchantment, x + enchantmentPos - 64, y - 32)
+    love.graphics.draw(enchantment, x + enchantmentPos - 64, y - 32, 0, noiseScale)
     love.graphics.setStencilTest("always", 0)
     love.graphics.setBlendMode("alpha")
 end

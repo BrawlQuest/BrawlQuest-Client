@@ -301,7 +301,7 @@ function love.update(dt)
         Luven.update(dt)
         if showClouds then updateClouds(dt) end
         if showWorldMask then updateWorldMask(dt) end
-        if enchanting.open then updateEnchanting(dt) end
+        if enchanting.amount >= 0.01 then updateEnchanting(dt) end
         updateCamera(dt)
         updateOtherPlayers(dt)
         local info = love.thread.getChannel('players'):pop()
