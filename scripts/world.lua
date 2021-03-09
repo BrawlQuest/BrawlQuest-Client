@@ -101,7 +101,7 @@ function drawTile(v, cx, cy)
     local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y)
     if lightGivers[foregroundAsset] and not lightSource[v.X .. "," .. v.Y] then
         lightSource[v.X .. "," .. v.Y] = true
-        Luven.addNormalLight(16 + v.X * 32, 16 + v.Y * 32, {1, 0.5, 0}, lightGivers[foregroundAsset])
+        Luven.addNormalLight(16 + v.X * 32, 16 + v.Y * 32,  lightGivers[foregroundAsset].color, lightGivers[foregroundAsset].brightness)
     end
     drawSimplexNoise(v.X, v.Y)
     if worldImg[backgroundAsset] then

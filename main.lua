@@ -88,15 +88,50 @@ playerCount = 0
 world = {}
 worldImg = {}
 lightGivers = {
-    ["assets/world/objects/lantern.png"] = 1,
-    ["assets/world/objects/Mushroom.png"] = 0.5,
-    ["assets/world/objects/Pumpkin0.png"] = 0.8,
-    ["assets/world/objects/Pumpkin1.png"] = 0.8,
-    ["assets/world/objects/Pumpkin2.png"] = 0.8,
-    ["assets/world/objects/Lamp.png"] = 1,
-    ["assets/world/objects/Furnace.png"] = 1,
-    ["assets/world/objects/Campfire.png"] = 1,
-    ["assets/world/grounds/Lava.png"] = 0.2,
+    ["assets/world/objects/lantern.png"] = {
+        brightness = 0.8,
+        color = {1, 0.5, 0},
+    },
+    ["assets/world/objects/Mushroom.png"]  = {
+        brightness = 0.8,
+        color = {1, 0.6, 0},
+    },
+    ["assets/world/objects/Pumpkin0.png"] = {
+        brightness = 1,
+        color = {1, 0.5, 0},
+    },
+    ["assets/world/objects/Pumpkin1.png"] = {
+        brightness = 1,
+        color = {1, 0.5, 0},
+    },
+    ["assets/world/objects/Pumpkin2.png"] = {
+        brightness = 1,
+        color = {1, 0.5, 0},
+    },
+    ["assets/world/objects/Lamp.png"]  = {
+        brightness = 2,
+        color = {1, 0.5, 0},
+    },
+    ["assets/world/objects/Furnace.png"] = {
+        brightness = 1,
+        color = {1, 0.2, 0},
+    },
+    ["assets/world/objects/Campfire.png"] = {
+        brightness = 0.7,
+        color = {1, 0.2, 0},
+    },
+    ["assets/world/objects/Ice Torch.png"] = {
+        brightness = 1,
+        color = {0,0.5,1},
+    },
+    ["assets/world/grounds/Lava.png"] = {
+        brightness = 2,
+        color = {1, 0.5, 0},
+    },
+    ["assets/world/objects/Portal.png"] = {
+        brightness = 3,
+        color ={0.6,0,0.4}
+    },
 }
 
 oldInfo = {}
@@ -168,6 +203,14 @@ function love.draw()
             local drawingText = false
             if isNearbyTile("assets/world/objects/Anvil.png") and not drawingText then
                 drawTextBelowPlayer("Press "..keybinds.INTERACT.." to craft")
+                inventory.notNPC = false
+                drawingText = true
+            elseif isNearbyTile("assets/world/objects/Portal.png") and not drawingText then
+                if me.LVL ~= 25 then
+                    drawTextBelowPlayer("You must be Level 25 to Enchant")
+                else
+                    drawTextBelowPlayer("Press "..keybinds.INTERACT.." to Enchant")
+                end
                 inventory.notNPC = false
                 drawingText = true
             end
