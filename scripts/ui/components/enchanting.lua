@@ -87,7 +87,7 @@ end
 function updateEnchanting(dt)
     local e = enchanting
     if e.open then
-        panelMovement(dt, enchanting, 1, "amount", 0.5)
+        panelMovement(dt, enchanting, 1, "amount", 0.1)
     else panelMovement(dt, enchanting, -1, "amount", 0.5)
         if e.amount < 0.01 then e.amount = 0 end
     end
@@ -347,6 +347,13 @@ function checkEnchantingMousePressed(button)
 end
 
 function enchantItem()
+
+    local e = enchanting
+    local perk = "HeadArmour"
+    if e.chosenItem == "HeadArmour" or e.chosenItem == "ChestArmour" or e.chosenItem == "LegArmour" then perk = "Armour"
+    else perk = e.chosenItem end
+    print("Trying to enchant ID" .. me[enchanting.chosenItem].ID.. " Enchantment = " .. e.perks[perk][e.selectedPerk].desc)
+
     -- print("Trying to enchant " .. me[e.chosenItem].ID)
     c, h = http.request {
         url = api.url .. "/enchant/" .. me.ID .. "/" .. me[e.chosenItem].ID .. "/",
@@ -356,5 +363,6 @@ function enchantItem()
         },
 
     }
+
     initEnchanting() -- just resets all the variables
 end
