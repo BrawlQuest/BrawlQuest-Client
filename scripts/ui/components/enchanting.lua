@@ -51,6 +51,9 @@ function initEnchanting()
             item = "",
         },
         chosenItem = "",
+        perks = {
+            
+        },
     }
 end
 
@@ -137,7 +140,12 @@ function drawEnchanting()
         local width = w - 32 * picScale - 20
         x = x + 32 * picScale + 20
         love.graphics.setColor(1,1,1)
-        love.graphics.printf("Options", x, y, width / textScale, "left", 0, textScale)
+        love.graphics.printf("Choose an enchantment", x, y, width / textScale, "left", 0, textScale)
+        y = y + e.font:getHeight() * textScale + 10
+        love.graphics.setColor(0,0,0,0.8)
+        love.graphics.rectangle("fill", x, y, width, 40, 10)
+        love.graphics.setColor(1,1,1)
+
 
     end
 end
