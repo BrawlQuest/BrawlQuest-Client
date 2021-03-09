@@ -104,6 +104,7 @@ oldInfo = {}
 sendUpdate = false
 
 function love.load()
+    mx, my = 0, 0
     limits = love.graphics.getSystemLimits( )
     print(limits.multicanvas)
     outlinerOnly = newOutliner(true)

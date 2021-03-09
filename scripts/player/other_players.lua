@@ -22,7 +22,7 @@ local shader = love.graphics.newShader[[
 function drawCharacter(v, x, y, ad)
     if ad then
         local notBoat = not string.find(v.Mount.Name,  "boat")
-        love.graphics.setColor(1,1,1)
+        local direction, offsetX, mountOffsetX
 
         if not itemImg[v.Weapon.ImgPath] then
             if love.filesystem.getInfo(v.Weapon.ImgPath) then
@@ -32,48 +32,17 @@ function drawCharacter(v, x, y, ad)
             end
         end
 
-        -- if v.ShieldID ~= 0 and notBoat then -- we don't want to draw the player if they're in a boat
-        --     drawItemIfExists(v.Shield.ImgPath, x, y, ad.previousDirection)
-        -- end
-        
-
-        local direction, offsetX, mountOffsetX
         if ad and ad.previousDirection and ad.previousDirection == "right" then
             direction, offsetX, mountOffsetX = 1,0,0
         elseif ad and ad.previousDirection and ad.previousDirection == "left" then
             direction, offsetX, mountOffsetX = -1,32,getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"):getWidth() - 8
         end
 
-        
-
-        -- if ad and ad.previousDirection and ad.previousDirection == "left" then -- superfluous code now
-        --     direction = -1
-        --     offsetX = 32
-        --     if v.Mount.Name ~= "" then mountOffsetX = getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"):getWidth() - 8 end
-        --     if notBoat then
-        --         love.graphics.draw(itemImg[v.Weapon.ImgPath], x + (itemImg[v.Weapon.ImgPath]:getWidth() - 32) + 32,
-        --             y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, direction, 1, 0, 0)
-        --     end
-        -- elseif ad and ad.previousDirection and ad.previousDirection == "right" then
-        --     if notBoat then
-        --     love.graphics.draw(itemImg[v.Weapon.ImgPath], x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32),
-        --         y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, direction, 1, 0, 0)
-        --     end
-        -- end
-
+        love.graphics.setColor(1,1,1)
         drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,"/back.png")
-        -- if notBoat then drawWeapon(x,y,v,ad,direction,offsetX) end
-        -- if v.ShieldID ~= 0 and notBoat then drawArmourImage(x,y,v,ad,"ShieldFalse") end
-
-        -- if v.Mount.Name ~= "" then
-        --     if  string.find(v.Mount.Name, "boat") then -- there is no offset for boats as the player isn't drawn
-        --         love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"), x  + mountOffsetX, y, 0, direction, 1, 0, 0)
-        --     else
-        --         love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"), x + 6 + mountOffsetX, y + 9, 0, direction, 1, 0, 0)
-        --     end
-        -- end
         
         if notBoat then
+            love.graphics.setColor(1,1,1)
             drawBuddy(v)
             if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) end
             if v.ShieldID ~= 0 then drawArmourImage(x + offsetX,y,v,ad,"ShieldFalse",direction) end
@@ -83,16 +52,9 @@ function drawCharacter(v, x, y, ad)
             drawArmourImage(x,y,v,ad,"LegArmour")
             drawArmourImage(x,y,v,ad,"ChestArmour")
             drawArmourImage(x,y,v,ad,"HeadArmour")
-
             love.graphics.setColor(1,1,1)
-
             drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,"/fore.png")
-            -- if v.Mount.Name ~= "" then
-            --     love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/fore.png"), x + 6 + mountOffsetX, y + 9, 0, direction, 1, 0, 0)
-            -- end
-
             if v.IsShield and v.ShieldID ~= 0 and notBoat then drawArmourImage(x,y,v,ad,"Shield",direction) end
-            -- drawItemIfExists(v.Shield.ImgPath, x, y, ad.previousDirection)
         end
     end
 end
