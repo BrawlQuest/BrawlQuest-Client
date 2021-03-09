@@ -6,6 +6,7 @@
 function initPlayers()
     enchantment = love.graphics.newImage("assets/player/gen/enchantment.png")
     enchantmentPos = 0
+    shieldFalse = love.graphics.newImage("assets/player/gen/shield false.png")
 end
 
 local shader = love.graphics.newShader[[
@@ -19,64 +20,110 @@ local shader = love.graphics.newShader[[
 
 function drawCharacter(v, x, y, ad)
     if ad then
+        local notBoat = not string.find(v.Mount.Name,  "boat")
         love.graphics.setColor(1,1,1)
-        if not itemImg[v.Weapon.ImgPath] then
-            if love.filesystem.getInfo(v.Weapon.ImgPath) then
-                itemImg[v.Weapon.ImgPath] = love.graphics.newImage(v.Weapon.ImgPath)
-            else
-                itemImg[v.Weapon.ImgPath] = love.graphics.newImage("assets/error.png")
-            end
+
+        -- if not itemImg[v.Weapon.ImgPath] then
+        --     if love.filesystem.getInfo(v.Weapon.ImgPath) then
+        --         itemImg[v.Weapon.ImgPath] = love.graphics.newImage(v.Weapon.ImgPath)
+        --     else
+        --         itemImg[v.Weapon.ImgPath] = love.graphics.newImage("assets/error.png")
+        --     end
+        -- end
+
+        -- if v.ShieldID ~= 0 and notBoat then -- we don't want to draw the player if they're in a boat
+        --     drawItemIfExists(v.Shield.ImgPath, x, y, ad.previousDirection)
+        -- end
+        if v.ShieldID ~= 0 and notBoat then drawArmourImage(x,y,v,ad,"ShieldFalse") end
+
+        local direction, offsetX, mountOffsetX
+        if ad and ad.previousDirection and ad.previousDirection == "right" then
+            direction, offsetX, mountOffsetX = 1,0,0
+        elseif ad and ad.previousDirection and ad.previousDirection == "left" then
+            direction, offsetX, mountOffsetX = -1,32,getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"):getWidth() - 8
         end
 
-        if v.ShieldID ~= 0 and not string.find(v.Mount.Name, "boat") then -- we don't want to draw the player if they're in a boat
-            drawItemIfExists(v.Shield.ImgPath, x, y, ad.previousDirection)
-        end
+        if notBoat then drawWeapon(x,y,v,ad,direction,offsetX) end
 
-        local rotation = 1
-        local offsetX = 0
-        local mountOffsetX = 0
-        if ad and ad.previousDirection and ad.previousDirection == "left" then
-            rotation = -1
-            offsetX = 32
-            if v.Mount.Name ~= "" then
-                mountOffsetX = getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"):getWidth()-8
-            end
-            if not string.find(v.Mount.Name, "boat") then
-                love.graphics.draw(itemImg[v.Weapon.ImgPath], x + (itemImg[v.Weapon.ImgPath]:getWidth() - 32) + 32,
-                    y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), player.wobble, rotation, 1, 0, 0)
-            end
-        elseif ad and ad.previousDirection and ad.previousDirection == "right" then
-            if not string.find(v.Mount.Name, "boat") then
-            love.graphics.draw(itemImg[v.Weapon.ImgPath], x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32),
-                y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), player.wobble, rotation, 1, 0, 0)
-            end
-        end
+        -- if ad and ad.previousDirection and ad.previousDirection == "left" then -- superfluous code now
+        --     direction = -1
+        --     offsetX = 32
+        --     if v.Mount.Name ~= "" then mountOffsetX = getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"):getWidth() - 8 end
+        --     if notBoat then
+        --         love.graphics.draw(itemImg[v.Weapon.ImgPath], x + (itemImg[v.Weapon.ImgPath]:getWidth() - 32) + 32,
+        --             y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, direction, 1, 0, 0)
+        --     end
+        -- elseif ad and ad.previousDirection and ad.previousDirection == "right" then
+        --     if notBoat then
+        --     love.graphics.draw(itemImg[v.Weapon.ImgPath], x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32),
+        --         y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, direction, 1, 0, 0)
+        --     end
+        -- end
 
-        if v.Mount.Name ~= "" then
-            if  string.find(v.Mount.Name, "boat") then -- there is no offset for boats as the player isn't drawn
-                love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"), x  + mountOffsetX, y, 0, rotation, 1, 0, 0)
-            else
-                love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"), x + 6 + mountOffsetX, y + 9, 0, rotation, 1, 0, 0)
-            end
-        end
+        drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,"/back.png")
+
+        -- if v.Mount.Name ~= "" then
+        --     if  string.find(v.Mount.Name, "boat") then -- there is no offset for boats as the player isn't drawn
+        --         love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"), x  + mountOffsetX, y, 0, direction, 1, 0, 0)
+        --     else
+        --         love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"), x + 6 + mountOffsetX, y + 9, 0, direction, 1, 0, 0)
+        --     end
+        -- end
         
-        if not string.find(v.Mount.Name, "boat") then
+        if notBoat then
             drawBuddy(v)
             if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) end
-            love.graphics.draw(playerImg, x + offsetX, y, player.wobble, rotation, 1, 0, 0)
+            love.graphics.draw(playerImg, x + offsetX, y, 0, direction, 1, 0, 0)
             drawArmourImage(x,y,v,ad,"LegArmour")
             drawArmourImage(x,y,v,ad,"ChestArmour")
             drawArmourImage(x,y,v,ad,"HeadArmour")
 
             love.graphics.setColor(1,1,1)
 
-            if v.Mount.Name ~= "" then
-                love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/fore.png"), x + 6 + mountOffsetX, y + 9, 0, rotation, 1, 0, 0)
-            end
+            drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,"/fore.png")
+            -- if v.Mount.Name ~= "" then
+            --     love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/fore.png"), x + 6 + mountOffsetX, y + 9, 0, direction, 1, 0, 0)
+            -- end
 
-            if v.IsShield and v.ShieldID ~= 0 then
-                drawItemIfExists(v.Shield.ImgPath, x, y, ad.previousDirection)
-            end
+            if v.IsShield and v.ShieldID ~= 0 and notBoat then drawArmourImage(x,y,v,ad,"Shield") end
+            -- drawItemIfExists(v.Shield.ImgPath, x, y, ad.previousDirection)
+        end
+    end
+end
+
+function drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,type)
+    if v.Mount.Name ~= "" then
+        if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) else love.graphics.setColor(1, 1, 1) end
+        if notBoat then love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name)..type), x + 6 + mountOffsetX, y + 9, 0, direction, 1, 0, 0)
+        else love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"), x  + mountOffsetX, y, 0, direction, 1, 0, 0) end
+        love.graphics.draw(itemImg[v.Weapon.ImgPath], x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32) + offsetX, y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, direction, 1, 0, 0)
+        if v.Enchantment then
+            love.graphics.push()
+                love.graphics.stencil(function() 
+                    love.graphics.setShader(shader)
+                    if notBoat then love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name)..type), x + 6 + mountOffsetX, y + 9, 0, direction, 1, 0, 0)
+                    else love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"), x  + mountOffsetX, y, 0, direction, 1, 0, 0) end
+                    love.graphics.setShader()
+                end)
+                drawEnchantment(x, y)
+            love.graphics.pop()
+        end
+    end
+end
+
+function drawWeapon(x,y,v,ad,direction,offsetX)
+    if v["WeaponID"] ~= 0 then
+        if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) else love.graphics.setColor(1, 1, 1) end
+        love.graphics.draw(itemImg[v.Weapon.ImgPath], x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32) + offsetX, y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, direction, 1, 0, 0)
+        if v.Enchantment then
+            love.graphics.push()
+                love.graphics.stencil(function() 
+                    love.graphics.setShader(shader)
+                    love.graphics.draw(itemImg[v.Weapon.ImgPath], x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32) + offsetX, y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, direction, 1, 0, 0)
+                    love.graphics.setShader()
+                end)
+                drawEnchantment(x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32) + offsetX, y)
+            love.graphics.pop()
         end
     end
 end
@@ -84,23 +131,27 @@ end
 function drawArmourImage(x,y,v,ad,type)
     if v[type.."ID"] ~= 0 then
         if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) else love.graphics.setColor(1, 1, 1) end
-        drawItemIfExists(v[type].ImgPath, x, y, ad.previousDirection)
+        if type ~= "ShieldFalse" then drawItemIfExists(v[type].ImgPath, x, y, ad.previousDirection) else love.graphics.draw(shieldFalse, x, y, 0, ad.previousDirection, 1) end
         if v.Enchantment then
             love.graphics.push()
                 love.graphics.stencil(function() 
                     love.graphics.setShader(shader)
-                    drawItemIfExists(v[type].ImgPath, x, y, ad.previousDirection)
+                    if type ~= "ShieldFalse" then drawItemIfExists(v[type].ImgPath, x, y, ad.previousDirection) else love.graphics.draw(shieldFalse, x, y, 0, ad.previousDirection, 1) end
                     love.graphics.setShader()
                 end)
-                love.graphics.setStencilTest("equal", 1)
-                love.graphics.setColor(0.8,0,1,0.4)
-                love.graphics.setBlendMode("add")
-                love.graphics.draw(enchantment, x + enchantmentPos - 64, y)
-                love.graphics.setStencilTest("always", 0)
-                love.graphics.setBlendMode("alpha")
+                drawEnchantment(x, y)
             love.graphics.pop()
         end
     end
+end
+
+function drawEnchantment(x, y)
+    love.graphics.setStencilTest("equal", 1)
+    love.graphics.setColor(0.8,0,1,0.4)
+    love.graphics.setBlendMode("add")
+    love.graphics.draw(enchantment, x + enchantmentPos - 64, y)
+    love.graphics.setStencilTest("always", 0)
+    love.graphics.setBlendMode("alpha")
 end
 
 function drawPlayer(v, i)
@@ -123,6 +174,7 @@ function drawPlayer(v, i)
     else
         thisPlayer = players[i]
     end
+
     if thisPlayer and v and thisPlayer.Weapon then
         if not v.previousDirection then
             v.previousDirection = "right"
