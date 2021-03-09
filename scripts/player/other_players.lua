@@ -34,7 +34,7 @@ function drawCharacter(v, x, y, ad)
         -- if v.ShieldID ~= 0 and notBoat then -- we don't want to draw the player if they're in a boat
         --     drawItemIfExists(v.Shield.ImgPath, x, y, ad.previousDirection)
         -- end
-        if v.ShieldID ~= 0 and notBoat then drawArmourImage(x,y,v,ad,"ShieldFalse") end
+        
 
         local direction, offsetX, mountOffsetX
         if ad and ad.previousDirection and ad.previousDirection == "right" then
@@ -43,7 +43,7 @@ function drawCharacter(v, x, y, ad)
             direction, offsetX, mountOffsetX = -1,32,getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"):getWidth() - 8
         end
 
-        if notBoat then drawWeapon(x,y,v,ad,direction,offsetX) end
+        
 
         -- if ad and ad.previousDirection and ad.previousDirection == "left" then -- superfluous code now
         --     direction = -1
@@ -61,6 +61,8 @@ function drawCharacter(v, x, y, ad)
         -- end
 
         drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,"/back.png")
+        -- if notBoat then drawWeapon(x,y,v,ad,direction,offsetX) end
+        -- if v.ShieldID ~= 0 and notBoat then drawArmourImage(x,y,v,ad,"ShieldFalse") end
 
         -- if v.Mount.Name ~= "" then
         --     if  string.find(v.Mount.Name, "boat") then -- there is no offset for boats as the player isn't drawn
@@ -73,6 +75,8 @@ function drawCharacter(v, x, y, ad)
         if notBoat then
             drawBuddy(v)
             if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) end
+            if v.IsShield and v.ShieldID ~= 0 then drawArmourImage(x,y,v,ad,"ShieldFalse") end
+            drawWeapon(x,y,v,ad,direction,offsetX)
             love.graphics.draw(playerImg, x + offsetX, y, 0, direction, 1, 0, 0)
             drawArmourImage(x,y,v,ad,"LegArmour")
             drawArmourImage(x,y,v,ad,"ChestArmour")
