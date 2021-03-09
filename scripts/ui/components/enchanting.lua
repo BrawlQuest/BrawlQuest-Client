@@ -2,37 +2,26 @@ function initEnchanting()
     enchanting = {
         open = false,
         amount = 0,
+        cerp = 0,
         phase = 1,
         itemNames = {"LegArmour","ChestArmour","HeadArmour","Shield","Weapon","Mount"},
         items = {
             ["LegArmour"] = {
-                x = 0,
-                y = 0,
                 armour = true
             },
             ["ChestArmour"] = {
-                x = 0,
-                y = 0,
                 armour = true
             },
             ["HeadArmour"] = {
-                x = 0,
-                y = 0,
                 armour = true
             },
             ["Weapon"] = {
-                x = 0,
-                y = 0,
                 armour = false
             },
             ["Mount"] = {
-                x = 0,
-                y = 0,
                 armour = false
             },
             ["Shield"] = {
-                x = 0,
-                y = 0,
                 armour = true
             },
         },
@@ -42,10 +31,6 @@ function initEnchanting()
             desc = "The mana has chosen you. To enchant an item your character will be reset to Level 1 as well as all of your quests and NPC conversations. You gain a permanent double XP buff, meaning that getting back to Level 25 on your character should take half the time.\nYou don't lose any of your items, although your stats will be reset to 1 and your armour and weapon will be unequipped.",
             ifNot = "If you haven't equipped an item you'd like to enchant, come back with the item you'd like to enchant equipped",
             final = "Are you sure you want to enchant this item? You will be sent back to level 1, and will not be able to use your high level items again until you level up.",
-        },
-        flash = {
-            light = false,
-            amount = 0,
         },
         mouseOver = {
             endPhaseOne = false,
@@ -60,41 +45,54 @@ function initEnchanting()
         perks = {
             ["Armour"] = {
                     {
+                        title = "",
                         desc = "+25 Strength whilst wearing this armour",
                         img = love.graphics.newImage("assets/ui/enchantment/0.png"),
                     }, {
+                        title = "",
                         desc = "+25 Intelligence whilst wearing this armour",
                         img = love.graphics.newImage("assets/ui/enchantment/1.png"),
                     }, {
+                        title = "",
                         desc = "+25 Stamina whilst wearing this armour",
                         img = love.graphics.newImage("assets/ui/enchantment/2.png"),
                     },
                 },
             ["Weapon"] = {
                 {
+                    title = "",
                     desc = "+25 Damage whilst using this weapon",
                     img = love.graphics.newImage("assets/ui/enchantment/0.png"),
                 }, 
             },
             ["Mount"] = {                
                 {
+                    title = "",
                     desc = "+0.8 m/s speed boost whilst riding this mount",
                     img = love.graphics.newImage("assets/ui/enchantment/0.png"),
                 },
             },
             ["Shield"] = {
                 {
+                    title = "",
                     desc = "+25 defence boost whilst using this shield",
                     img = love.graphics.newImage("assets/ui/enchantment/0.png"),
                 },
             },
         },
-        selectedPerk = 0,
+        selectedPerk = 1,
     }
 end
 
 function updateEnchanting(dt)
     local e = enchanting
+    if e.open then
+        panelMovement(dt, enchanting, 1, "amount", 0.5)
+    else panelMovement(dt, enchanting, -1, "amount", 0.5)
+        if e.amount < 0.01 then e.amount = 0 end
+    end
+    e.cerp = cerp(0,1,e.amount)
+    print(enchanting.amount)
 end
 
 function drawEnchanting()
@@ -235,6 +233,10 @@ function drawEnchanting()
         local picScale =  8
         local width = 32 * picScale
         local x,y = uiX / 2 - w * 0.5, uiY / 2 - width * 0.5
+
+        local perk = "HeadArmour"
+        if e.chosenItem == "HeadArmour" or e.chosenItem == "ChestArmour" or e.chosenItem == "LegArmour" then perk = "Armour"
+        else perk = e.chosenItem end
         
         love.graphics.setColor(0,0,0,0.8)
         love.graphics.rectangle("fill", x, y, w, width, 10)
@@ -247,16 +249,16 @@ function drawEnchanting()
                 offset = 20
                 love.graphics.draw(playerImg, dx - offset, dy, 0, picScale - 2)
             end
-            if me[e.chosenItem.."ID"] ~= 0 then drawItemIfExists(me[e.chosenItem].ImgPath, dx - offset, dy, "", 1, picScale - 2) end
+            if me[e.chosenItem.."ID"] ~= 0 then 
+                drawItemIfExists(me[e.chosenItem].ImgPath, dx - offset, dy, "", 1, picScale - 2)
+            end
         elseif me.Mount and me.Mount.Name ~= "None" then drawItemIfExists(me[e.chosenItem].ImgPath, dx - offset, dy, "", 1, picScale - 2) end
 
         dx, dy = x + width, dy
         width = w - (width + 40)
         love.graphics.printf(me[e.chosenItem].Name, dx, dy, width / textScale, "left",  0, textScale)
         dy = dy + (getTextHeight(me[e.chosenItem].Name, width / textScale, e.font) * textScale)
-        love.graphics.printf("Current Value:\nValue After Enchantment (+25):", dx, dy, width / smallPrintScale, "left",  0, smallPrintScale)
-        love.graphics.printf("+"..me[e.chosenItem].Val .. "\n+" .. me[e.chosenItem].Val + 25, dx, dy, width / smallPrintScale, "right",  0, smallPrintScale)
-
+        love.graphics.printf(e.perks[perk][e.selectedPerk].desc, dx, dy, width / smallPrintScale, "left",  0, smallPrintScale)
 
         love.graphics.setColor(1,1,1)
         love.graphics.printf(e.text.final, x + 10, y - (getTextHeight(e.text.final, (w - 20) / textScale, e.font) * textScale) - 20, (w - 20) / textScale, "center", 0, textScale)
@@ -336,6 +338,7 @@ function checkEnchantingMousePressed(button)
         if e.mouseOver.commit then e.phase = 3 end
     elseif e.phase == 3 then
         if e.mouseOver.return3 == true then
+
             enchantItem()
         elseif e.mouseOver.back3 == true then
             e.phase = 2
