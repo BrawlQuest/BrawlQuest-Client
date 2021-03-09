@@ -186,7 +186,7 @@ function checkLoginTextinput(key)
 end
 
 function loginViaSteam()
-    if versionType ~= "dev" then
+    if versionType ~= "dev" and love.system.getOS() ~= "Linux"  then
         local originalID = steam.user.getSteamID()
         local str = tostring(originalID)
      

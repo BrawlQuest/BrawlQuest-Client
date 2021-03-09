@@ -52,7 +52,7 @@ require "scripts.ui.components.tutorial"
 require "scripts.achievements"
 Luven = require "scripts.libraries.luven.luven"
 
-steam = require 'luasteam'
+if love.system.getOS() ~= "Linux" then steam = require 'luasteam' end -- we can disable other platforms here. Can't get Steam working on Linux and we aren't targetting it so this'll do for dev purposes
 json = require("scripts.libraries.json")
 http = require("socket.http")
 ltn12 = require("ltn12")
@@ -110,7 +110,7 @@ function love.load()
     outlinerOnly:outline(0.8,0,0) -- this is used to draw enemy outlines
     grayOutlinerOnly = newOutliner(true)
     grayOutlinerOnly:outline(0.8,0.8,0.8)
-    steam.init()
+    if love.system.getOS() ~= "Linux" then  steam.init() end
     love.graphics.setDefaultFilter("nearest", "nearest")
     initHardData()
     initLogin()
@@ -220,7 +220,7 @@ function love.draw()
 end
 
 function love.update(dt)
-    steam.runCallbacks()
+    if love.system.getOS() ~= "Linux" then steam.runCallbacks() end
 
     totalCoverAlpha = totalCoverAlpha - 1 * dt
     if phase == "login" then
@@ -433,5 +433,5 @@ function love.resize(width, height)
 end
 
 function love.quit()
-    steam.shutdown()
+    if love.system.getOS() ~= "Linux" then steam.shutdown() end
 end
