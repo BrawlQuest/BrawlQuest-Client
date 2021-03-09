@@ -55,8 +55,8 @@ function initEnchanting()
             back3 = false,
             return3 = false,
         },
-        chosenItem = "",
-        chosenItemCount = 0,
+        chosenItem = "LegArmour",
+        chosenItemCount = 1,
         perks = {
             ["Armour"] = {
                     {
@@ -135,24 +135,26 @@ function drawEnchanting()
         if me and me.HeadArmour then
             for i,v in ipairs(e.itemNames) do -- draws armour and base images if needed
                 local dx, dy = x + (itemWidth + 30) * (i-1), y + 10
+                local offset = 0
                 if e.chosenItem == v then love.graphics.setColor(1,1,1) else love.graphics.setColor(0,0,0,0.8) end
                 love.graphics.rectangle("fill", dx - 10, dy - 10, itemWidth + 20, itemWidth + 20, 10)
+                love.graphics.setColor(1,1,1)
                 if isMouseOver(dx * scale,dy * scale, itemWidth * scale, itemWidth * scale) then
-                    love.graphics.setColor(1,0,1)
                     e.mouseOver.item = v
-                else love.graphics.setColor(1,1,1) end
-
+                    offset = 3
+                end
                 if v ~= "Mount" then
                     if e.items[v].armour then
                         dx = dx - 10
-                        love.graphics.draw(playerImg, dx, dy, 0, e.itemScale)
+                        love.graphics.draw(playerImg, dx, dy - offset, 0, e.itemScale)
                     end
-                    if me[v.."ID"] ~= 0 then drawItemIfExists(me[v].ImgPath, dx, dy, "", 1, e.itemScale) end
+                    if me[v.."ID"] ~= 0 then drawItemIfExists(me[v].ImgPath, dx, dy - offset, "", 1, e.itemScale) end
                 elseif me.Mount and me.Mount.Name ~= "None" then
-                    drawItemIfExists(me[v].ImgPath, dx, dy, "", 1, e.itemScale)
+                    drawItemIfExists(me[v].ImgPath, dx, dy - offset, "", 1, e.itemScale)
                 end
             end
         end
+        love.graphics.setColor(1,1,1)
         x, y = x - 10, y + itemWidth + 30
         love.graphics.printf(e.text.ifNot, x, y, w / smallPrintScale, "center", 0, smallPrintScale)
         local picScale =  8
@@ -260,19 +262,19 @@ function drawEnchanting()
         love.graphics.printf(e.text.final, x + 10, y - (getTextHeight(e.text.final, (w - 20) / textScale, e.font) * textScale) - 20, (w - 20) / textScale, "center", 0, textScale)
 
         y = y + 32 * picScale + 10 -- draw underneath boxes
-        drawEnchantmentButton(x,y,w * 0.5 - 5, 64, "Go Back (escape)", e.mouseOver.back3)
+        drawEnchantmentButton(x,y,w * 0.5 - 5, 64, "Go Back (escape)", "back3")
 
         x = x + w * 0.5 + 5
-        drawEnchantmentButton(x,y,w * 0.5 - 5, 64, "Enchant Item (return)", e.mouseOver.return3)
+        drawEnchantmentButton(x,y,w * 0.5 - 5, 64, "Enchant Item (return)", "return3")
     end
 end
 
 function drawEnchantmentButton(x,y,w,h,text,bool)
     local e = enchanting
     if isMouseOver(x * scale,y * scale,w * scale,h * scale) then
-        bool = true
+        e.mouseOver[bool] = true
         love.graphics.setColor(1,0,0)
-    else love.graphics.setColor(0,0,0,0.8) bool = false end
+    else love.graphics.setColor(0,0,0,0.8) e.mouseOver[bool] = false end
     love.graphics.rectangle("fill", x, y, w, h, 10)
     love.graphics.setColor(1,1,1)
     love.graphics.printf(text, x, y + h * 0.5 - (e.font:getHeight() * 3) / 2, w / 3, "center", 0, 3)
@@ -322,19 +324,6 @@ end
 
 function checkEnchantingMousePressed(button)
     local e = enchanting
-    -- if e.mouseOver.endPhaseOne and e.phase == 1 then
-    --     e.phase = 2
-    -- elseif e.mouseOver.commit and e.phase == 2 then
-    --     e.phase = 3
-    -- elseif e.mouseOver.item ~= "" then
-    --     e.chosenItem = e.mouseOver.item
-    --     for i,v in ipairs(e.itemNames) do
-    --         if e.chosenItem == v then e.chosenItemCount = i end
-    --     end
-    -- elseif e.mouseOver.perk > 0 then
-    --     e.selectedPerk = e.mouseOver.perk
-    -- end
-
     if e.phase == 1 then
         if e.mouseOver.endPhaseOne then e.phase = 2 end
     elseif e.phase == 2 then
@@ -346,15 +335,14 @@ function checkEnchantingMousePressed(button)
         end
         if e.mouseOver.commit then e.phase = 3 end
     elseif e.phase == 3 then
-        if e.mouseOver.return3 then
+        if e.mouseOver.return3 == true then
             enchantItem()
-        elseif e.mouseOver.back3 then
+        elseif e.mouseOver.back3 == true then
             e.phase = 2
         end
     end
 end
 
 function enchantItem()
-
     initEnchanting() -- just resets all the variables
 end

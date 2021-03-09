@@ -74,10 +74,7 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
         end
 
         drawItemBacking(thisX, thisY)
-
         love.graphics.setColor(1,1,1,1)
-        
-        
         if item then drawItem(thisX,thisY,item,number) end
 
         love.graphics.setColor(1,1,1,1)
