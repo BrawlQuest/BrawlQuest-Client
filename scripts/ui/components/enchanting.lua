@@ -348,5 +348,13 @@ end
 
 function enchantItem()
     -- print("Trying to enchant " .. me[e.chosenItem].ID)
+    c, h = http.request {
+        url = api.url .. "/enchant/" .. me.ID .. "/" .. me[e.chosenItem].ID .. "/",
+        method = "GET",
+        headers = {
+            ["token"] = token
+        },
+
+    }
     initEnchanting() -- just resets all the variables
 end
