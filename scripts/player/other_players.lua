@@ -8,6 +8,7 @@ function initPlayers()
     enchantmentPos = 0
     shieldFalse = love.graphics.newImage("assets/player/gen/shield false.png")
     showEnchantments = false
+    playerNameAlpha = 1
 end
 
 alphaShader = love.graphics.newShader[[
@@ -141,6 +142,7 @@ function drawPlayer(v, i)
         thisPlayer.HP = player.hp
         thisPlayer.Mana = me.Mana
         v.RedAlpha = 0
+        v.NameAlpha = playerNameAlpha
     else
         thisPlayer = players[i]
     end
@@ -334,28 +336,27 @@ function updateOtherPlayers(dt)
         end
 
         local distance = distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X * 32, v.Y * 32)
-        
+        setNamePlateAlpha(v, i)
 
         if distance > 128 then
             playersDrawable[i].X = v.X * 32
             playersDrawable[i].Y = v.Y * 32
         end
-        
+
         if distance > 1 then
             local speed = 64
             if playersDrawable[i].Mount.Name ~= "None" or worldEdit.open then
                 speed = tonumber(playersDrawable[i].Mount.Val) or 64
-                if playersDrawable[i].Mount.Enchantment ~= "None" then
+                local enchant = playersDrawable[i].Mount.Enchantment or false
+                if enchant and enchant ~= "None" and enchant ~= "" then
                     speed = speed + 25
                 end
             end
-            if worldLookup[v.X] and worldLookup[v.X][v.Y] and isTileType(worldLookup[v.X][v.Y].ForegroundTile, "Path") then
+            if worldLookup[v.X] and worldLookup[v.X][v.Y] and (isTileType(worldLookup[v.X][v.Y].ForegroundTile, "Path") or isTileType(worldLookup[v.X][v.Y].GroundTile, "Path")) then
                 speed = speed * 1.4
             end
 
-            -- if distanceToPoint(v.X * 32, v.Y * 32, player.dx, player.dy) < 64 then playersDrawable[i].NameAlpha = 0 else playersDrawable[i].NameAlpha = 1 end
-            setNamePlateAlpha(v, i)
-
+            
             if playersDrawable[i].X - 1 > v.X * 32 then
                 playersDrawable[i].X = playersDrawable[i].X - speed * dt
                 playersDrawable[i].previousDirection = "left"
@@ -403,5 +404,5 @@ end
 
 function setNamePlateAlpha(v, i)
     local distance = distanceToPoint(v.X * 32, v.Y * 32, player.dx, player.dy)
-    if distance < 32 then playersDrawable[i].NameAlpha = 0 else playersDrawable[i].NameAlpha = 1 end
+    if distance < 128 then playersDrawable[i].NameAlpha = distance / 128 playerNameAlpha = distance / 128 else playersDrawable[i].NameAlpha = 1 playerNameAlpha = 1 end
 end
