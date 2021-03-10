@@ -145,7 +145,7 @@ function love.load()
     outlinerOnly = newOutliner(true)
     outlinerOnly:outline(0.8,0,0) -- this is used to draw enemy outlines
     grayOutlinerOnly = newOutliner(true)
-    grayOutlinerOnly:outline(0.8,0.8,0.8)
+    grayOutlinerOnly:outline(1,1,1)
     if love.system.getOS() ~= "Linux" then  steam.init() end
     love.graphics.setDefaultFilter("nearest", "nearest")
     initHardData()
