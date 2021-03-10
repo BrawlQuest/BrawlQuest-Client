@@ -45,36 +45,36 @@ function initEnchanting()
         perks = {
             ["Armour"] = {
                     {
-                        title = "",
+                        title = "STR",
                         desc = "+25 Strength whilst wearing this armour",
                         img = love.graphics.newImage("assets/ui/enchantment/0.png"),
                     }, {
-                        title = "",
+                        title = "INT",
                         desc = "+25 Intelligence whilst wearing this armour",
                         img = love.graphics.newImage("assets/ui/enchantment/1.png"),
                     }, {
-                        title = "",
+                        title = "STA",
                         desc = "+25 Stamina whilst wearing this armour",
                         img = love.graphics.newImage("assets/ui/enchantment/2.png"),
                     },
                 },
             ["Weapon"] = {
                 {
-                    title = "",
+                    title = "Val",
                     desc = "+25 Damage whilst using this weapon",
                     img = love.graphics.newImage("assets/ui/enchantment/0.png"),
                 }, 
             },
             ["Mount"] = {                
                 {
-                    title = "",
+                    title = "Val",
                     desc = "+0.8 m/s speed boost whilst riding this mount",
                     img = love.graphics.newImage("assets/ui/enchantment/0.png"),
                 },
             },
             ["Shield"] = {
                 {
-                    title = "",
+                    title = "Val",
                     desc = "+25 defence boost whilst using this shield",
                     img = love.graphics.newImage("assets/ui/enchantment/0.png"),
                 },
@@ -356,7 +356,7 @@ function enchantItem()
 
     -- print("Trying to enchant " .. me[e.chosenItem].ID)
     c, h = http.request {
-        url = api.url .. "/enchant/" .. me.ID .. "/" .. me[e.chosenItem].ID .. "/",
+        url = api.url .. "/enchant/" .. me.ID .. "/" .. me[e.chosenItem].ID .. "/" .. e.perks[perk][e.selectedPerk].title,
         method = "GET",
         headers = {
             ["token"] = token

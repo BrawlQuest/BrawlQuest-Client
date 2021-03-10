@@ -56,7 +56,7 @@ function drawItemIfExists(path, x, y, previousDirection, direction, imageScale, 
     end
 
     if not itemImg[path] then
-        if love.filesystem.getInfo(path) then
+        if love.filesystem.getInfo(path).size  then
             itemImg[path] = love.graphics.newImage(path)
         else
             itemImg[path] = love.graphics.newImage("assets/error.png")

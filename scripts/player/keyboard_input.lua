@@ -1,4 +1,4 @@
-function love.keypressed(key) 
+function love.keypressed(key)
     if phase == "login" then
         if loginPhase == "prelaunch" then
             launch.inAmount = 1
@@ -6,9 +6,13 @@ function love.keypressed(key)
             launch.outCERP = 1
             loginPhase = "loading"
             loginViaSteam()
-            if key == "escape" and versionType == "dev" then love.event.quit() end
+            if key == "escape" and versionType == "dev" then
+                love.event.quit()
+            end
         elseif loginPhase == "login" or loginPhase == "loading" then
-            if key == "escape" and versionType == "dev" then love.event.quit() end
+            if key == "escape" and versionType == "dev" then
+                love.event.quit()
+            end
             checkLoginKeyPressedPhaseLogin(key)
         elseif loginPhase == "dev" then
             if versionType == "dev" then
@@ -26,7 +30,9 @@ function love.keypressed(key)
             elseif key == "right" or key == "d" then
                 loginPhase = "login"
             end
-            if key == "escape" and versionType == "dev" then love.event.quit() end
+            if key == "escape" and versionType == "dev" then
+                love.event.quit()
+            end
         elseif loginPhase == "creation" then
             checkLoginKeyPressedPhaseCreation(key)
         elseif loginPhase == "characters" then
@@ -36,9 +42,10 @@ function love.keypressed(key)
             zoneChange("You did not login")
         end
     else
-        if worldEdit.open then 
+        if worldEdit.open then
             checkWorldEditKeyPressed(key)
-        elseif enchanting.open then checkEnchantingKeyPressed(key)
+        elseif enchanting.open then
+            checkEnchantingKeyPressed(key)
         elseif worldEdit.isTyping then
         elseif isSettingsWindowOpen then
             checkSettingKeyPressed(key)
@@ -47,7 +54,7 @@ function love.keypressed(key)
             checkTutorialKeyPressed(key)
         elseif isTypingInChat then
             if key == "backspace" then
-                enteredChatText = string.sub( enteredChatText, 1, string.len( enteredChatText) - 1)
+                enteredChatText = string.sub(enteredChatText, 1, string.len(enteredChatText) - 1)
             elseif key == "return" and enteredChatText ~= "" then
                 posYChat = 0
                 chatData = {
@@ -56,15 +63,26 @@ function love.keypressed(key)
                     ["Message"] = enteredChatText,
                     ["Created"] = os.time(os.date("!*t"))
                 }
-                c, h = http.request{url = api.url.."/chat", method="POST", source=ltn12.source.string(json:encode(chatData)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(chatData)),["token"]=token}}
+                c, h = http.request {
+                    url = api.url .. "/chat",
+                    method = "POST",
+                    source = ltn12.source.string(json:encode(chatData)),
+                    headers = {
+                        ["Content-Type"] = "application/json",
+                        ["Content-Length"] = string.len(json:encode(chatData)),
+                        ["token"] = token
+                    }
+                }
                 enteredChatText = ""
-                if not chatRepeat then isTypingInChat = false end
-            elseif key == "escape" or (key == "return" and enteredChatText == "") then 
+                if not chatRepeat then
+                    isTypingInChat = false
+                end
+            elseif key == "escape" or (key == "return" and enteredChatText == "") then
                 isTypingInChat = false
             end
         elseif showNPCChatBackground then
             checkNPCChatKeyPressed(key)
-            if key == keybinds.INTERACT or key == "escape" or checkMoveOrAttack(key, "move") then 
+            if key == keybinds.INTERACT or key == "escape" or checkMoveOrAttack(key, "move") then
                 showNPCChatBackground = false
             end
         elseif crafting.open then
@@ -74,25 +92,25 @@ function love.keypressed(key)
             checkHotbarKeyPressed(key)
             checkTargetingPress(key)
 
-            if key == "return" and not isSettingsWindowOpen then isTypingInChat = true end
+            if key == "return" and not isSettingsWindowOpen then
+                isTypingInChat = true
+            end
 
-            if key == keybinds.SHIELD then shieldUpSfx:play() end
+            if key == keybinds.SHIELD then
+                shieldUpSfx:play()
+            end
 
             if key == "escape" then
-                settPan.movement.x, settPan.movement.y = 0, 0 
+                settPan.movement.x, settPan.movement.y = 0, 0
                 isSettingsWindowOpen = true
                 loadSliders()
             end
 
-            if key == "f" then
-                enchanting.phase = 1
-                enchanting.open = true
-                enchanting.amount = 0.01
-            end
-
             if key == "tab" then
                 showHUD = not showHUD
-                if not showHUD then zoneChange("UI Hidden. Press TAB to turn UI back on.", 2) end
+                if not showHUD then
+                    zoneChange("UI Hidden. Press TAB to turn UI back on.", 2)
+                end
                 settings[3][1].v = showHUD
                 writeSettings()
             end
@@ -112,7 +130,13 @@ function love.keypressed(key)
             end
 
             if key == keybinds.INTERACT then -- Hello Mr HackerMan! Removing the isNearbyTile will allow you to open the crafting menu from anywhere, but won't allow you to actually craft any items. Sorry! =(
-                if nearbyAnvil then
+                if isNearbyTile("assets/world/objects/Portal.pmg") and me.LVL == 25 then
+
+                    enchanting.phase = 1
+                    enchanting.open = true
+                    enchanting.amount = 0.01
+
+                elseif nearbyAnvil then
                     getRecipesHeight()
                     crafting.open = true
                     steam.friends.setRichPresence("steam_display", "#StatusCrafting")
@@ -123,7 +147,7 @@ function love.keypressed(key)
                 end
             end
         end
-        
+
         if not worldEdit.isTyping and not isTypingInChat and versionType == "dev" then
             if key == "." then
                 scaleHUD("up")
@@ -146,7 +170,9 @@ function love.keyreleased(key)
     if key == keybinds.SHIELD and not isTypingInChat and phase == "game" and not worldEdit.isTyping then
         shieldDownSfx:play()
     end
-    if phase == "game" and (key == keybinds.ATTACK_UP or key == keybinds.ATTACK_DOWN or key == keybinds.ATTACK_LEFT or key == keybinds.ATTACK_RIGHT) then
+    if phase == "game" and
+        (key == keybinds.ATTACK_UP or key == keybinds.ATTACK_DOWN or key == keybinds.ATTACK_LEFT or key ==
+            keybinds.ATTACK_RIGHT) then
         checkTargetingRelease(key)
     end
 end
@@ -163,7 +189,7 @@ function love.textinput(key)
     end
 end
 
-local keys = {"UP", "DOWN", "LEFT", "RIGHT", "ATTACK_UP", "ATTACK_DOWN", "ATTACK_LEFT", "ATTACK_RIGHT",}
+local keys = {"UP", "DOWN", "LEFT", "RIGHT", "ATTACK_UP", "ATTACK_DOWN", "ATTACK_LEFT", "ATTACK_RIGHT"}
 function checkMoveOrAttack(key, type)
     local push, pop = 1, 8
     if type then
@@ -174,7 +200,9 @@ function checkMoveOrAttack(key, type)
         end
     end
     local output = false
-    if key == "escape" then return true end
+    if key == "escape" then
+        return true
+    end
     for i = push, pop do
         if key == keybinds[keys[i]] then
             output = true

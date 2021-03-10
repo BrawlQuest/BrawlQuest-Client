@@ -7,7 +7,7 @@ function initPlayers()
     enchantment = love.graphics.newImage("assets/player/gen/enchantment.png")
     enchantmentPos = 0
     shieldFalse = love.graphics.newImage("assets/player/gen/shield false.png")
-    showEnchantments = true
+    showEnchantments = false
 end
 
 alphaShader = love.graphics.newShader[[
@@ -64,7 +64,7 @@ function drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,type)
         if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) else love.graphics.setColor(1, 1, 1) end
         if notBoat then love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name)..type), x + 6 + mountOffsetX, y + 9, 0, direction, 1, 0, 0)
         else love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"), x  + mountOffsetX, y, 0, direction, 1, 0, 0) end
-        if showEnchantments then
+        if v.Mount.Enchantment ~= "None" then
             love.graphics.push()
                 love.graphics.stencil(function() 
                     love.graphics.setShader(alphaShader)
@@ -82,7 +82,7 @@ function drawWeapon(x,y,v,ad,direction,offsetX)
     if v["WeaponID"] ~= 0 then
         if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) else love.graphics.setColor(1, 1, 1) end
         love.graphics.draw(itemImg[v.Weapon.ImgPath], x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32) * direction + offsetX, y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, direction, 1, 0, 0)
-        if showEnchantments then
+        if v.Weapon.Enchantment ~= "None" then
             love.graphics.push()
                 love.graphics.stencil(function() 
                     love.graphics.setShader(alphaShader)
@@ -99,7 +99,7 @@ function drawArmourImage(x,y,v,ad,type,direction)
     if v[type.."ID"] ~= 0 then
         if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) else love.graphics.setColor(1, 1, 1) end
         if type ~= "ShieldFalse" then drawItemIfExists(v[type].ImgPath, x, y, ad.previousDirection) else love.graphics.draw(shieldFalse, x, y, 0, direction, 1) end
-        if showEnchantments then
+        if  v[type].Enchantment ~= "None" then
             love.graphics.push()
                 love.graphics.stencil(function() 
                     love.graphics.setShader(alphaShader)
@@ -184,7 +184,7 @@ function drawPlayer(v, i)
         end
         local underCharacterBarY = v.Y+34
         local thisHealth
-        if i == -1 then thisHealth = getMaxHealth() else thisHealth = 100 + thisPlayer.STA * 15 end
+        if i == -1 then thisHealth = getMaxHealth() else thisHealth = thisPlayer.MaxHP end
         if thisPlayer.HP < thisHealth then
             love.graphics.setColor(0.4,0,0)
             love.graphics.rectangle("fill", v.X, underCharacterBarY, 32, 4)

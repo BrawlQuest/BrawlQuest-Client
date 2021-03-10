@@ -264,7 +264,11 @@ function getSTA(i)
 end
 
 function getMaxHealth()
-    if me.STA then return 100 + (15 * me.STA) else return 115 end
+    if me.MaxHP then
+        return me.MaxHP
+    else
+        return 115
+    end
 end
 
 function drawBattlebarItem(thisX, thisY, item, stats)
