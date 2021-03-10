@@ -165,7 +165,10 @@ function drawPlayer(v, i)
 
         -- local text
         -- if thisPlayer.Prestige > 1 then text = thisPlayer.Prestige .. "," .. thisPlayer.LVL else text = thisPlayer.LVL end
-        drawNamePlate(v.X + boi, v.Y, v.Name, 1, thisPlayer.LVL, thisPlayer.Prestige) -- thisPlayer.LVL
+        local alpha
+        if true then alpha = v.NameAlpha else alpha = 1 end
+
+        drawNamePlate(v.X + boi, v.Y, v.Name, v.NameAlpha, thisPlayer.LVL, thisPlayer.Prestige) -- thisPlayer.LVL
         
         if thisPlayer ~= nil and thisPlayer.AX then
             local diffX
@@ -307,7 +310,8 @@ function updateOtherPlayers(dt)
                 ['RedAlpha'] = 0,
                 ['Mount'] = v.Mount,
                 ['Color'] = v.Color,
-                ['Buddy'] = v.Buddy
+                ['Buddy'] = v.Buddy,
+                ['NameAlpha'] = 1,
             }
         end
         playersDrawable[i].Mount = v.Mount
@@ -328,14 +332,16 @@ function updateOtherPlayers(dt)
                 end
             end
         end
+
+        local distance = distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X * 32, v.Y * 32)
         
 
-        if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X * 32, v.Y * 32) > 128 then
+        if distance > 128 then
             playersDrawable[i].X = v.X * 32
             playersDrawable[i].Y = v.Y * 32
         end
         
-        if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X * 32, v.Y * 32) > 1 then
+        if distance > 1 then
             local speed = 64
             if playersDrawable[i].Mount.Name ~= "None" or worldEdit.open then
                 speed = tonumber(playersDrawable[i].Mount.Val) or 64
@@ -346,7 +352,10 @@ function updateOtherPlayers(dt)
             if worldLookup[v.X] and worldLookup[v.X][v.Y] and isTileType(worldLookup[v.X][v.Y].ForegroundTile, "Path") then
                 speed = speed * 1.4
             end
-            
+
+            -- if distanceToPoint(v.X * 32, v.Y * 32, player.dx, player.dy) < 64 then playersDrawable[i].NameAlpha = 0 else playersDrawable[i].NameAlpha = 1 end
+            setNamePlateAlpha(v, i)
+
             if playersDrawable[i].X - 1 > v.X * 32 then
                 playersDrawable[i].X = playersDrawable[i].X - speed * dt
                 playersDrawable[i].previousDirection = "left"
@@ -370,6 +379,7 @@ function tickOtherPlayers()
         if playersDrawable[i] then
             if v['Name'] ~= playersDrawable[i]['Name'] then
                 playersDrawable[i] = v
+                setNamePlateAlpha(v, i)
             end
             if v.AX ~= 0 then
                 if v.AX < v.X then
@@ -389,4 +399,9 @@ function tickOtherPlayers()
             end
         end
     end
+end
+
+function setNamePlateAlpha(v, i)
+    local distance = distanceToPoint(v.X * 32, v.Y * 32, player.dx, player.dy)
+    if distance < 32 then playersDrawable[i].NameAlpha = 0 else playersDrawable[i].NameAlpha = 1 end
 end
