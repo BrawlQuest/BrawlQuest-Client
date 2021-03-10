@@ -163,9 +163,9 @@ function drawPlayer(v, i)
             boi = 16 + 3
         end
 
-        local text
-        if thisPlayer.Prestige > 1 then text = thisPlayer.Prestige .. "," .. thisPlayer.LVL else text = thisPlayer.LVL end
-        drawNamePlate(v.X + boi, v.Y, v.Name, 1, text) -- thisPlayer.LVL
+        -- local text
+        -- if thisPlayer.Prestige > 1 then text = thisPlayer.Prestige .. "," .. thisPlayer.LVL else text = thisPlayer.LVL end
+        drawNamePlate(v.X + boi, v.Y, v.Name, 1, thisPlayer.LVL, thisPlayer.Prestige) -- thisPlayer.LVL
         
         if thisPlayer ~= nil and thisPlayer.AX then
             local diffX
@@ -222,28 +222,45 @@ function drawArrowImage(diffX, diffY, x, y)
     end
 end
 
-function drawNamePlate(x,y,name, alpha, level)
+function drawNamePlate(x,y,name, alpha, level, prestige)
     level = level or null
     love.graphics.setFont(playerNameFont)  
     alpha = alpha or 1
     if level then
+        local prestAmount = 0
+        if prestige > 1 then prestAmount = 1 end
         local thisX, thisY = x , y - 4
         local nameWidth, levelWidth = playerNameFont:getWidth(name) + 1, playerNameFont:getWidth(level)
+        local prestigeWidth = playerNameFont:getWidth(prestige)
         local nameHeight = playerNameFont:getHeight(name)
         local padding = {x = 3, y = 2}
-        local fullWidth = levelWidth + nameWidth + padding.x * 4
+        local fullWidth = levelWidth + nameWidth + prestigeWidth + padding.x * 6
         local dx = thisX - (fullWidth * 0.5)
         local dy = thisY - nameHeight - padding.y - 1
         local dh = nameHeight + (padding.y * 2)
         
         love.graphics.setColor(0, 0, 0, 0.6 * alpha)
         roundRectangle("fill", dx, dy, fullWidth, dh, 3)
+        love.graphics.setColor(1,120 / 255,0,1 * alpha)
+        roundRectangle("fill", dx, dy, prestigeWidth + padding.x * 2, dh, 3, {true, false, false, true})
         love.graphics.setColor(1,0,0,alpha)
-        roundRectangle("fill", dx, dy, levelWidth + padding.x * 2, dh, 3, {true, false, false, true})
+        love.graphics.rectangle("fill", dx + (prestigeWidth + padding.x * 2), dy, levelWidth + padding.x * 2, dh)
 
         love.graphics.setColor(1, 1, 1, alpha)
-        love.graphics.print(level, dx + padding.x + 0.5, thisY - nameHeight - 2 + padding.y)
-        love.graphics.print(name, dx + padding.x * 3 + levelWidth, thisY - nameHeight - 2 + padding.y)
+        love.graphics.print(prestige, dx + padding.x + 0.5, thisY - nameHeight - 2 + padding.y)
+        love.graphics.print(level, dx + padding.x + 0.5 + (prestigeWidth + padding.x * 2), thisY - nameHeight - 2 + padding.y)
+        love.graphics.print(name, dx + padding.x * 3 + levelWidth + (prestigeWidth + padding.x * 2), thisY - nameHeight - 2 + padding.y)
+
+        -- if prestige and prestige > 1 then
+        --     padding = {x = 4, y = 3}
+        --     local prestigeWidth = playerNameFont:getWidth(prestige)
+        --     local prestigeHeight = playerNameFont:getHeight(prestige)
+        --     local w, h = prestigeWidth + padding.x * 2 - 1, prestigeHeight + padding.y * 2 - 2
+        --     love.graphics.setColor(1,120 / 255,0,1 * alpha)
+        --     roundRectangle("fill", dx - padding.x - (w - padding.x * 2), dy - padding.y - (h - padding.y * 2), w, h, 4)
+        --     love.graphics.setColor(1,1,1,alpha)
+        --     love.graphics.print(prestige, dx - (w - padding.x * 2), dy - (h - padding.y * 2))
+        -- end
     else
         level = level or null
         alpha = alpha or 1

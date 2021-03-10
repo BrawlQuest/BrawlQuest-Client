@@ -53,8 +53,8 @@ function love.keypressed(key)
         elseif tutorialOpen then
             checkTutorialKeyPressed(key)
         elseif isTypingInChat then
-            if key == "backspace" then
-                enteredChatText = string.sub(enteredChatText, 1, string.len(enteredChatText) - 1)
+            if key == "backspace" and string.len(enteredChatText) > 0 then
+                enteredChatText = deleteText(enteredChatText)
             elseif key == "return" and enteredChatText ~= "" then
                 posYChat = 0
                 chatData = {

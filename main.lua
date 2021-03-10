@@ -56,6 +56,7 @@ if love.system.getOS() ~= "Linux" then steam = require 'luasteam' end -- we can 
 json = require("scripts.libraries.json")
 http = require("socket.http")
 ltn12 = require("ltn12")
+utf8 = require("utf8")
 newOutliner = require 'scripts.libraries.outliner'
 
 version = "Early Access" 
