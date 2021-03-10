@@ -163,7 +163,9 @@ function drawPlayer(v, i)
             boi = 16 + 3
         end
 
-        drawNamePlate(v.X + boi, v.Y, v.Name, 1, thisPlayer.LVL) -- thisPlayer.LVL
+        local text
+        if thisPlayer.Prestige > 1 then text = thisPlayer.Prestige .. "," .. thisPlayer.LVL else text = thisPlayer.LVL end
+        drawNamePlate(v.X + boi, v.Y, v.Name, 1, text) -- thisPlayer.LVL
         
         if thisPlayer ~= nil and thisPlayer.AX then
             local diffX

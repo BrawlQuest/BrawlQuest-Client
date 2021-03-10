@@ -293,7 +293,6 @@ function love.update(dt)
         if death.open then updateDeath(dt) end
         -- updateRangedWeapons(dt)
         if showNPCChatBackground then updateNPCChat(dt) end
-        -- if showClouds then updateClouds(dt) end
         if showWorldAnimations then updateLeaves(dt) end
         Luven.update(dt)
         if showClouds and enchanting.amount < 0.01 then updateClouds(dt) end
@@ -342,7 +341,7 @@ function love.update(dt)
 
             local previousMe = copy(me) -- Temp
             me = response['Me']
-            if perks.stats[1] == 0 then
+            if not isMouseDown() then-- if perks.stats[1] == 0 then
                 perks.stats = {me.STR, me.INT, me.STA, player.cp}
             end
             
