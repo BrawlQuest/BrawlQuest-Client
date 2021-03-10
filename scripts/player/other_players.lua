@@ -312,6 +312,9 @@ function updateOtherPlayers(dt)
             local speed = 64
             if playersDrawable[i].Mount.Name ~= "None" or worldEdit.open then
                 speed = tonumber(playersDrawable[i].Mount.Val) or 64
+                if playersDrawable[i].Mount.Enchantment ~= "None" then
+                    speed = speed + 25
+                end
             end
             if worldLookup[v.X] and worldLookup[v.X][v.Y] and isTileType(worldLookup[v.X][v.Y].ForegroundTile, "Path") then
                 speed = speed * 1.4
