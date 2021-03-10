@@ -34,7 +34,7 @@ function updateChat(dt)
 			chat.deleteTick = chat.deleteTick + 30 * dt
 			if chat.deleteTick > 1 then
 				chat.deleteTick = 0
-				enteredChatText = string.sub( enteredChatText, 1, string.len( enteredChatText) - 1)
+				enteredChatText = deleteText(enteredChatText)
 			end
 		end
 	else
