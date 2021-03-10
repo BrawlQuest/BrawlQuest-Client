@@ -139,8 +139,10 @@ function love.keypressed(key)
                 elseif nearbyAnvil then
                     getRecipesHeight()
                     crafting.open = true
+                    if love.system.getOS() ~= "Linux" then 
                     steam.friends.setRichPresence("steam_display", "#StatusCrafting")
                     steam.friends.setRichPresence("location", zoneTitle.title)
+                    end
                     -- inventory.notNPC = true
                 else
                     startConversation()
