@@ -240,13 +240,14 @@ function drawNamePlate(x,y,name, alpha, level, prestige)
             
             love.graphics.setColor(0, 0, 0, 0.6 * alpha)
             roundRectangle("fill", dx, dy, fullWidth, dh, 3)
-            love.graphics.setColor(1,120 / 255,0,1 * alpha)
-            roundRectangle("fill", dx, dy, prestigeWidth + padding.x * 2, dh, 3, {true, false, false, true})
+            -- love.graphics.setColor(1,1,1,1 * alpha)
+            -- roundRectangle("fill", dx, dy, prestigeWidth + padding.x * 2, dh, 3, {true, false, false, true})
             love.graphics.setColor(1,0,0,alpha)
             love.graphics.rectangle("fill", dx + (prestigeWidth + padding.x * 2), dy, levelWidth + padding.x * 2, dh)
 
-            love.graphics.setColor(1, 1, 1, alpha)
+            love.graphics.setColor(1, 0, 0, alpha)
             love.graphics.print(prestige, dx + padding.x + 0.5, thisY - nameHeight - 2 + padding.y)
+            love.graphics.setColor(1, 1, 1, alpha)
             love.graphics.print(level, dx + padding.x + 0.5 + (prestigeWidth + padding.x * 2), thisY - nameHeight - 2 + padding.y)
             love.graphics.print(name, dx + padding.x * 3 + levelWidth + (prestigeWidth + padding.x * 2), thisY - nameHeight - 2 + padding.y)
         else
