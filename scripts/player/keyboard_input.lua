@@ -130,7 +130,7 @@ function love.keypressed(key)
             end
 
             if key == keybinds.INTERACT then -- Hello Mr HackerMan! Removing the isNearbyTile will allow you to open the crafting menu from anywhere, but won't allow you to actually craft any items. Sorry! =(
-                if isNearbyTile("assets/world/objects/Portal.pmg") and me.LVL == 25 then
+                if isNearbyTile("assets/world/objects/Portal.png") and me.LVL == 25 then
 
                     enchanting.phase = 1
                     enchanting.open = true
