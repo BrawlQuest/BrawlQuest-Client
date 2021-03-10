@@ -2,8 +2,8 @@ Bresenham = require "..scripts.libraries.bresenham"
 
 function initWorldMask()
     worldMask = {
-        opacity = 0.6,
-        opacity2 = 0.8,
+        opacity = 0.9,
+        opacity2 = 0.9,
         gridSize = 32,
         range = 11,
         current = {x = 0, y = 0,},
@@ -81,10 +81,12 @@ function drawWorldMask()
                     end       
                     if show then love.graphics.rectangle("fill", math.round(x) * gridSize, math.round(y) * gridSize, gridSize, gridSize) end
                 else -- if not drawing shadows
-                    local intensity = range / (range + (difference(range, distance) * 4))
+                    local intensity = range / (range + (difference(range, distance) * 5))
                     if intensity > 0.1 then
-                        love.graphics.setColor(r, g, 0, (intensity - 0.2) * (worldMask.opacity2))
+                        love.graphics.setColor(r, g, 0, (intensity) * (worldMask.opacity2))
                         love.graphics.rectangle("fill", math.round(x) * gridSize, math.round(y) * gridSize, gridSize, gridSize)
+                        -- love.graphics.setColor(1,1,1)
+                        -- love.graphics.print(math.round(intensity, 2), math.round(x) * gridSize, math.round(y) * gridSize)
                     end
                     -- worldMaskTables[1][#worldMaskTables[1] + 1] = {x = x, y = y, visable = true, intensity = intensity}
                 end
