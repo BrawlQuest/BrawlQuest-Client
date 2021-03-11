@@ -123,6 +123,7 @@ function drawEnchantment(x, y, noiseScale)
     love.graphics.draw(enchantment, x + enchantmentPos - 64, y - 32, 0, noiseScale)
     love.graphics.setStencilTest("always", 0)
     love.graphics.setBlendMode("alpha")
+    love.graphics.setStencilTest()
 end
 
 function drawPlayer(v, i)

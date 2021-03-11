@@ -16,29 +16,25 @@ function drawToolBarInventory(thisX, thisY)
     thisX, thisY = thisX, thisY - 97
     love.graphics.setColor(1, 1, 1, 1)
 
-    inventory.mouseOverButtonsAmount = 0
-    drawHotbar(thisX, thisY)
-
+    local elseY = thisY
     if inventory.open then
         -- getInventory()
         love.graphics.setColor(1, 1, 1, inventory.opacity)
-        thisY = thisY - cerp(0, (uiY - 97), inventory.amount)
+        elseY = elseY - cerp(0, (uiY - 97), inventory.amount)
 
         love.graphics.setFont(inventory.headerFont)
-        love.graphics.print("INVENTORY", thisX + 8, thisY + 14)
+        love.graphics.print("INVENTORY", thisX + 8, elseY + 14)
 
-        love.graphics.stencil(drawInventoryStencil, "replace", 1) -- stencils inventory
-        love.graphics.setStencilTest("greater", 0) -- push
-        thisY = thisY + 50 + posYInventory
-        
+        elseY = elseY + 50 + posYInventory
         for i = 1, #inventory.fields do -- Draws each inventory field
             if inventoryFieldLength[i] ~= 0 then
-                drawInventoryItemField(thisX + 8, thisY, i)
-                thisY = thisY + getUserInventoryFieldHeight(i)
+                drawInventoryItemField(thisX + 8, elseY, i)
+                elseY = elseY + getUserInventoryFieldHeight(i)
             end
         end
-        love.graphics.setStencilTest() -- pop
     end
+    inventory.mouseOverButtonsAmount = 0
+    drawHotbar(thisX, thisY)
 end
 
 function drawInventoryItem(thisX, thisY, field, item, amount, number)
@@ -150,11 +146,7 @@ function drawItem(x,y,item,number)
                 if number then drawItemImageHotbar(x,y,item,number) else drawItemImage(x,y,item) end
                 love.graphics.setShader()
             end)
-            
-            
-                drawEnchantment(x, y)
-        
-           
+            drawEnchantment(x, y)
         love.graphics.pop()
         love.graphics.setColor(1,1,1)
     end
