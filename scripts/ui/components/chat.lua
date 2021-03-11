@@ -234,3 +234,27 @@ function drawChatStencil()
 		((cerp(cerp(uiY ,uiY - 134 + 14, questHub.amount), uiY - ((uiY/1.25)+5), questsPanel.amount))/0.5)
 	)
 end
+
+function sendChatText()
+	posYChat = 0
+	chatData = {
+		["PlayerName"] = me.Name,
+		["Channel"] = "Global",
+		["Message"] = enteredChatText,
+		["Created"] = os.time(os.date("!*t"))
+	}
+	c, h = http.request {
+		url = api.url .. "/chat",
+		method = "POST",
+		source = ltn12.source.string(json:encode(chatData)),
+		headers = {
+			["Content-Type"] = "application/json",
+			["Content-Length"] = string.len(json:encode(chatData)),
+			["token"] = token
+		}
+	}
+	enteredChatText = ""
+	if not chatRepeat then
+		isTypingInChat = false
+	end
+end

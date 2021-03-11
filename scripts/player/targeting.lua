@@ -1,11 +1,17 @@
 function initTargeting()
-    attackKeys = {keybinds.ATTACK_UP, keybinds.ATTACK_DOWN, keybinds.ATTACK_LEFT, keybinds.ATTACK_RIGHT}
+    keyNames = {"ATTACK_UP", "ATTACK_DOWN", "ATTACK_LEFT", "ATTACK_RIGHT"}
     moveKeys = {keybinds.UP, keybinds.DOWN, keybinds.LEFT, keybinds.RIGHT}
     targetHeld = false
     keys = {keybinds.ATTACK_UP, keybinds.ATTACK_DOWN, keybinds.ATTACK_LEFT, keybinds.ATTACK_RIGHT}
     heldKeys = {false, false, false, false,}
     targetKeys = {false, false, false, false,}
     holdAttack = not oldTargeting
+end
+
+function checkAttack(key)
+    local output = false
+    for i,v in ipairs(keyNames) do if key == keybinds[v] then output = true break end end
+    return output
 end
 
 function checkTargetingPress(key)

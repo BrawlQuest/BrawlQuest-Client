@@ -70,6 +70,10 @@ function checkClickLoginPhaseLogin(x,y)
     end
 end
 
+function checkLoginKeyPressedPhasePrelaunch(key)
+
+end
+
 function checkLoginKeyPressedPhaseLogin(key)
     if key == "backspace" then
         textfields[editingField] = deleteText(textfields[editingField])
@@ -85,10 +89,8 @@ function checkLoginKeyPressedPhaseLogin(key)
             login()
         end
     end
-
-    if versionType == "dev" then
-        devLogin(key)
-    end
+    if versionType == "dev" then devLogin(key) end
+    if key == "escape" and versionType == "dev" then love.event.quit() end
 end
 
 function checkLoginTextinputPhaseLogin(key)
