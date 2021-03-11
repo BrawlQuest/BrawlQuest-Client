@@ -5,6 +5,7 @@
 ]]
 function initPlayers()
     enchantment = love.graphics.newImage("assets/player/gen/enchantment.png")
+    profileEnchantment = love.graphics.newImage("assets/player/gen/profileEnchantment.png")
     enchantmentPos = 0
     shieldFalse = love.graphics.newImage("assets/player/gen/shield false.png")
     showEnchantments = false
