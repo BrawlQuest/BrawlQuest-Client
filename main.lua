@@ -264,6 +264,9 @@ end
 function love.update(dt)
     if love.system.getOS() ~= "Linux" then steam.runCallbacks() end
 
+    enchantmentPos = enchantmentPos + 15 * dt
+    if enchantmentPos > 64 then enchantmentPos = 0 end
+
     totalCoverAlpha = totalCoverAlpha - 1 * dt
     if phase == "login" then
         updateLogin(dt)

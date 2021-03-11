@@ -293,10 +293,6 @@ end
 attackHitAmount = 0
 
 function updateOtherPlayers(dt)
-
-    enchantmentPos = enchantmentPos + 15 * dt
-    if enchantmentPos > 64 then enchantmentPos = 0 end
-
     if attackHitAmount > 0 then
         attackHitAmount = attackHitAmount - 2 * dt
     end

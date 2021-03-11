@@ -94,8 +94,8 @@ function checkLoginKeyPressedPhaseLogin(key)
             login()
         end
     end
-    if versionType == "dev" then devLogin(key) end
-    if key == "escape" and versionType == "dev" then love.event.quit() end
+    -- if versionType == "dev" then devLogin(key) end
+    -- if key == "escape" and versionType == "dev" then love.event.quit() end
 end
 
 function checkLoginTextinputPhaseLogin(key)
