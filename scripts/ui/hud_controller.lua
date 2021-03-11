@@ -125,15 +125,10 @@ function updateHUD( dt )
         end
     end
 
-    if worldEdit.open then
-        if difference(worldScale, worldEditScales[selectedWorldScale]) > 0 then
-            worldScale = cerp(previousWorldScale, worldEditScales[selectedWorldScale], worldScaleAmount)
-        end
+    if worldEdit.open then if difference(worldScale, worldEditScales[selectedWorldScale]) > 0 then worldScale = cerp(previousWorldScale, worldEditScales[selectedWorldScale], worldScaleAmount) end
     else
         if selectedWorldScale > #worldScales then selectedWorldScale = #worldScales end
-        if difference(worldScale, worldScales[selectedWorldScale]) > 0 then
-            worldScale = cerp(previousWorldScale, worldScales[selectedWorldScale], worldScaleAmount)
-        end
+        if difference(worldScale, worldScales[selectedWorldScale]) > 0 then worldScale = cerp(previousWorldScale, worldScales[selectedWorldScale], worldScaleAmount) end
     end
 
     if showHUD then
@@ -150,11 +145,8 @@ function updateHUD( dt )
     updateFloats(dt)
     updateSFX()
     updateTutorial(dt)
-
-     updateZoneTitle(dt)
-
+    updateZoneTitle(dt)
     updateNewWorldEdit(dt)
-
 
     if isSettingsWindowOpen then
         updateSettingsPanel(dt)
@@ -176,7 +168,6 @@ function drawHUD()
             drawQuestHub(uiX/i, uiY/i)
             if questsPanel.open then drawQuestsPanel((uiX/i) - 313, (uiY/i) + cerp(-14, 0 - ((uiY/1.25) - 15), questsPanel.amount)) end
             if crafting.open then drawCrafting() end
-
             drawAuraHeadings()
             if showEvents then drawAreaName() end
         love.graphics.pop()
@@ -184,9 +175,7 @@ function drawHUD()
         love.graphics.push() -- chat and quests scaling TODO: Quests
             local i = 0.5
             love.graphics.scale(scale*i)
-            if showChat then
-                drawChatPanel(uiX/i, (uiY - cerp(cerp(0, 100, questHub.amount), ((uiY/1.25)-15), questsPanel.amount)) / i)
-            end
+            if showChat then drawChatPanel(uiX/i, (uiY - cerp(cerp(0, 100, questHub.amount), ((uiY/1.25)-15), questsPanel.amount)) / i) end
             drawZoneTitle()
         love.graphics.pop()
     else

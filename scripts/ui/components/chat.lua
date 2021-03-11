@@ -41,6 +41,9 @@ function updateChat(dt)
 		chat.deleteDelay = 0
 		chat.deleteText = false
 	end
+	velyChat = velyChat - velyChat * math.min( dt * 15, 1 )
+	posYChat = posYChat + velyChat * dt
+	if posYChat < 0 then posYChat = 0 end
 end
 
 function checkChatTextInput(key)
