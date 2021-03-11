@@ -175,7 +175,7 @@ function checkClickLogin(x, y)
     end
 end
 
-function checkLoginTextinput(key)
+function checkLoginTextInput(key)
     if loginPhase == "login" and key ~= " " then
         checkLoginTextinputPhaseLogin(key)
     elseif loginPhase == "characters" then

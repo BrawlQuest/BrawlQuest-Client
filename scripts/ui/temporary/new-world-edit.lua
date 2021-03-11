@@ -647,7 +647,7 @@ function getWorldInfo()
     print("Music: " .. json:encode(avaliableMusic))
 end
 
-function checkWorldEditTextinput(key)
+function checkWorldEditTextInput(key)
     worldEdit.enteredWorldText = worldEdit.enteredWorldText .. key
 end
 

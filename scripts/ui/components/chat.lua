@@ -43,17 +43,15 @@ function updateChat(dt)
 	end
 end
 
-function checkChatTextinput(key)
-	if isTypingInChat then
-		enteredChatText = enteredChatText .. key
-	end
+function checkChatTextInput(key)
+	if isTypingInChat then enteredChatText = enteredChatText .. key end
 end
 
 function drawChatPanel(thisX, thisY) -- the function to recall it all
 	love.graphics.setFont(chatFont)
-	local thisY = thisY - getEnterChatBoxHeight(enteredChatText)
+	thisY = thisY - getEnterChatBoxHeight(enteredChatText)
 	local chatEnterY = thisY
-	local thisY = thisY + posYChat
+	thisY = thisY + posYChat
 
 	love.graphics.stencil(drawChatStencil, "replace", 1) -- stencils inventory
     love.graphics.setStencilTest("greater", 0) -- push
@@ -123,7 +121,7 @@ function drawChatbox(thisX, thisY, username, text, player, i)
 	end
 end
 
-function drawChatboxProfilePic(thisX, thisY, username, text, player, i)
+function drawChatboxProfilePic(thisX, thisY, username, text, player)
 	if username == me.Name then
 		drawProfilePic(thisX+chatWidth+(chatCorner:getWidth() * 2) + 8, getProfilePicY(thisY, text, username), 1, "left")
 		drawChatboxBackground(thisX, thisY, username, text, "right")
@@ -164,30 +162,20 @@ end
 
 function getChatTextHeight(text) -- gets the chat height for recalling stuff
 	local width, lines = chatFont:getWrap( text, chatWidth )
-	if #lines >= 1 then
-	 	return ((#lines)*(chatFont:getHeight()))+2
-	else
-		return chatFont:getHeight()+2
-	end
+	if #lines >= 1 then	return ((#lines)*(chatFont:getHeight())) + 2
+	else return chatFont:getHeight() + 2 end
 end
 
 function getChatHeight(username, text, i) -- gets the chat height for recalling stuff
-	if i == 1 then
-		return getChatboxProfilePicHeight(username, text, i)
-	elseif	username == previousUsername then
-		return (getChatTextHeight(text)+(chatCorner:getHeight()*2))--+chatSpacing
-	else
-		return getChatboxProfilePicHeight(username, text, i)
-	end
+	if i == 1 then return getChatboxProfilePicHeight(username, text, i)
+	elseif	username == previousUsername then return (getChatTextHeight(text)+(chatCorner:getHeight()*2))
+	else return getChatboxProfilePicHeight(username, text, i) end
 	previousUsername = username
 end
 
 function getChatWidth(text)
-	if chatFont:getWidth(text) > chatWidth then
-		return chatWidth
-	else
-		return chatFont:getWidth(text)
-	end
+	if chatFont:getWidth(text) > chatWidth then	return chatWidth
+	else return chatFont:getWidth(text) end
 end
 
 function drawEnterChatBox(thisX, thisY, text)
@@ -202,9 +190,7 @@ function drawEnterChatBox(thisX, thisY, text)
 	elseif isTypingInChat then
 		text = text .. "|"
 		love.graphics.setColor(1,1,1,1)
-	else
-		love.graphics.setColor(0,0,0,0.7)
-	end
+	else love.graphics.setColor(0,0,0,0.7) end
 
 	for i = 0, 1 do
 		love.graphics.draw(chatCorner, thisX+(i*enterChatWidth)+(i*(chatCorner:getWidth()*2)), thisY, math.rad(0+(i*90)))
@@ -217,9 +203,7 @@ function drawEnterChatBox(thisX, thisY, text)
 
 	love.graphics.printf(text, thisX+chatCorner:getHeight(), thisY+chatCorner:getHeight(), enterChatWidth, "left")
 	love.graphics.setColor(1,1,1,1)
-	if not isTypingInChat and text == "" then
-		love.graphics.printf("Press Enter to Chat", thisX+chatCorner:getHeight(), thisY+chatCorner:getHeight(), enterChatWidth, "left")
-	end
+	if not isTypingInChat and text == "" then love.graphics.printf("Press Enter to Chat", thisX+chatCorner:getHeight(), thisY+chatCorner:getHeight(), enterChatWidth, "left") end
 end
 
 function getEnterChatBoxHeight(text)

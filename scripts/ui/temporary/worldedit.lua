@@ -87,7 +87,7 @@ function drawEditWorldWindow()
     love.graphics.setColor(1,1,1,1)
 end
 
-function checkEditWorldTextinput(key)
+function checkEditWorldTextInput(key)
     textfields[editingField] = textfields[editingField] .. key
 end
 

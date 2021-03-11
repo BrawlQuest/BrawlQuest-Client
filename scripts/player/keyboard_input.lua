@@ -52,7 +52,7 @@ function checkKeyPressedPhaseGame(key)
         local nearbyAnvil = isNearbyTile("assets/world/objects/Anvil.png")
         if key == keybinds.QUESETS and not nearbyAnvil then questsPanel.forceOpen = not questsPanel.forceOpen end
         if key == keybinds.INTERACT then -- Hello Mr HackerMan! Removing the isNearbyTile will allow you to open the crafting menu from anywhere, but won't allow you to actually craft any items. Sorry! =(
-            if isNearbyTile("assets/world/objects/Portal.png") and me.LVL == 25 or key == "e" and versionType == "dev" then
+            if isNearbyTile("assets/world/objects/Portal.png") and me.LVL == 25 or (key == "f" and versionType == "dev") then
                 enchanting.phase = 1
                 enchanting.open = true
                 enchanting.amount = 0.01
@@ -78,13 +78,13 @@ end
 
 function love.textinput(key)
     if phase == "login" then
-        checkLoginTextinput(key)
+        checkLoginTextInput(key)
     elseif isWorldEditWindowOpen and key ~= "'" then
-        checkEditWorldTextinput(key)
+        checkEditWorldTextInput(key)
     elseif isTypingInChat then
-        checkChatTextinput(key)
+        checkChatTextInput(key)
     elseif worldEdit.isTyping then
-        checkWorldEditTextinput(key)
+        checkWorldEditTextInput(key)
     end
 end
 

@@ -71,7 +71,12 @@ function checkClickLoginPhaseLogin(x,y)
 end
 
 function checkLoginKeyPressedPhasePrelaunch(key)
-
+    launch.inAmount = 1
+    launch.outAmount = 1
+    launch.outCERP = 1
+    loginPhase = "loading"
+    loginViaSteam()
+    if key == "escape" and versionType == "dev" then love.event.quit() end
 end
 
 function checkLoginKeyPressedPhaseLogin(key)
