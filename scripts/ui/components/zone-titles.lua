@@ -19,6 +19,9 @@ function updateZoneTitle(dt)
         zoneTitle.title = worldLookup[player.x][player.y].Name 
         -- zoneTitle.alphaUp = true
         -- zoneTitle.alpha = 0
+        if zoneTitle.title == "Foundation Forest" then
+            openTutorial(11)
+        end
         if love.system.getOS() ~= "Linux" then 
             steam.friends.setRichPresence("steam_display", "#StatusAdventuring")
             steam.friends.setRichPresence("location", zoneTitle.title)

@@ -38,6 +38,10 @@ tutorial = {
     {
         title = "Attacking",
         desc = "Remember to press "..keybinds.ATTACK_UP..", "..keybinds.ATTACK_LEFT..", "..keybinds.ATTACK_DOWN.." and "..keybinds.ATTACK_RIGHT.." to attack.",
+    },
+    {
+        title = "Welcome to Foundation Forest!",
+        desc = "You can place down Wall, Floor and Furniture objects in Foundation Forest. There ISN'T currently a way of destroying walls, so if you get stuck press ESC -> Respawn!"
     }
 }
 
