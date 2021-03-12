@@ -1,7 +1,7 @@
 
 function initChallenges()
     challenges = {
-        open = true,
+        open = false,
         amount = 1,
         font = love.graphics.newFont("assets/ui/fonts/C&C Red Alert [INET].ttf", 13),
         mouseOver = 0,
