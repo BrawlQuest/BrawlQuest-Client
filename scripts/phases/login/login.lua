@@ -133,13 +133,12 @@ function updateLogin(dt)
             launch.outAmount = launch.outAmount + 0.8 * dt
             if launch.outAmount > 1 then
                 loginPhase = "loading"
-                if love.system.getOS() ~= "Linux" then  steam.init() end
                 loginViaSteam()
             end
             launch.outCERP = cerp(0,1,launch.outAmount)
         end
     elseif loginPhase == "loading" then
-        loadingAmount = loadingAmount + 0.2 * dt
+        loadingAmount = loadingAmount + 0.5 * dt
         if loadingAmount >= 1 then
             loginAttempts = loginAttempts + 1
             loadingText = "Login Failed: Attempt: " .. loginAttempts .. "\n Check Your Internet Connection\n Reattempting Login "

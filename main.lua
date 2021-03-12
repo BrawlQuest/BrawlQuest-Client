@@ -149,11 +149,13 @@ sendUpdate = false
 
 function love.load()
     mx, my = 0, 0
+    limits = love.graphics.getSystemLimits( )
+    print(limits.multicanvas)
     outlinerOnly = newOutliner(true)
     outlinerOnly:outline(0.8,0,0) -- this is used to draw enemy outlines
     grayOutlinerOnly = newOutliner(true)
     grayOutlinerOnly:outline(1,1,1)
-    -- if love.system.getOS() ~= "Linux" then  steam.init() end
+    if love.system.getOS() ~= "Linux" then  steam.init() end
     love.graphics.setDefaultFilter("nearest", "nearest")
     initHardData()
     initLogin()
