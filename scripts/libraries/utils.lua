@@ -40,7 +40,6 @@ function getImgIfNotExist(v)
             print("Can't find "..v)
         end
     end
-
     return worldImg[v]
 end
 

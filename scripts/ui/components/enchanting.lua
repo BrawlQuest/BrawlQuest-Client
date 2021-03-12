@@ -259,7 +259,10 @@ function drawEnchanting()
         love.graphics.printf(e.perks[perk][e.selectedPerk].desc, dx, dy, width / smallPrintScale, "left",  0, smallPrintScale)
 
         love.graphics.setColor(1,1,1)
-        love.graphics.printf(e.text.final, x + 10, y - (getTextHeight(e.text.final, (w - 20) / textScale, e.font) * textScale) - 20, (w - 20) / textScale, "center", 0, textScale)
+        love.graphics.printf(e.text.final, x + 10, y - (getTextHeight(e.text.final, (w - 20) / textScale, e.font) * (textScale + 1)) - 20, (w - 20) / textScale, "center", 0, textScale)
+        love.graphics.setColor(1,0,0)
+        textScale = textScale + 1
+        love.graphics.printf("NO, ENCHANTMENTS DO NOT STACK!", x + 10, y - (e.font:getHeight() * textScale) - 20, (w - 20) / textScale, "center", 0, textScale)
 
         y = y + 32 * picScale + 10 -- draw underneath boxes
         drawEnchantmentButton(x,y,w * 0.5 - 5, 64, "Go Back (escape)", "back3")
