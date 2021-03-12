@@ -181,7 +181,7 @@ function checkSettingsMousePressed(button)
                             scaleHUD("up")
                         elseif settPan.mouseOver == 11 then
                             settings[1][1].v = false
-                            -- TODO: kill yourself
+                            suicide()
                         elseif settPan.mouseOver == 21 or settPan.mouseOver == 22 or settPan.mouseOver == 25 then
                             bv.v = not bv.v
                             highdpi = settings[2][1].v
@@ -291,4 +291,8 @@ function getDisplay()
         window = {x = x, y = y}
         screenDimensions = {width = love.graphics.getWidth(), height = love.graphics.getHeight(),}
     end
+end
+
+function suicide()
+    print("kill me now!!!!")
 end
