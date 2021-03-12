@@ -2,8 +2,8 @@ Bresenham = require "..scripts.libraries.bresenham"
 
 function initWorldMask()
     worldMask = {
-        opacity = 0.9,
-        opacity2 = 0.9,
+        opacity = 0.85,
+        opacity2 = 0.85,
         gridSize = 32,
         range = 11,
         current = {x = 0, y = 0,},

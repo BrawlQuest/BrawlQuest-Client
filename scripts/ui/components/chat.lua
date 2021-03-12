@@ -34,26 +34,27 @@ function updateChat(dt)
 			chat.deleteTick = chat.deleteTick + 30 * dt
 			if chat.deleteTick > 1 then
 				chat.deleteTick = 0
-				enteredChatText = string.sub( enteredChatText, 1, string.len( enteredChatText) - 1)
+				enteredChatText = deleteText(enteredChatText)
 			end
 		end
 	else
 		chat.deleteDelay = 0
 		chat.deleteText = false
 	end
+	velyChat = velyChat - velyChat * math.min( dt * 15, 1 )
+	posYChat = posYChat + velyChat * dt
+	if posYChat < 0 then posYChat = 0 end
 end
 
-function checkChatTextinput(key)
-	if isTypingInChat then
-		enteredChatText = enteredChatText .. key
-	end
+function checkChatTextInput(key)
+	if isTypingInChat then enteredChatText = enteredChatText .. key end
 end
 
 function drawChatPanel(thisX, thisY) -- the function to recall it all
 	love.graphics.setFont(chatFont)
-	local thisY = thisY - getEnterChatBoxHeight(enteredChatText)
+	thisY = thisY - getEnterChatBoxHeight(enteredChatText)
 	local chatEnterY = thisY
-	local thisY = thisY + posYChat
+	thisY = thisY + posYChat
 
 	love.graphics.stencil(drawChatStencil, "replace", 1) -- stencils inventory
     love.graphics.setStencilTest("greater", 0) -- push
@@ -123,7 +124,7 @@ function drawChatbox(thisX, thisY, username, text, player, i)
 	end
 end
 
-function drawChatboxProfilePic(thisX, thisY, username, text, player, i)
+function drawChatboxProfilePic(thisX, thisY, username, text, player)
 	if username == me.Name then
 		drawProfilePic(thisX+chatWidth+(chatCorner:getWidth() * 2) + 8, getProfilePicY(thisY, text, username), 1, "left")
 		drawChatboxBackground(thisX, thisY, username, text, "right")
@@ -137,7 +138,12 @@ function drawChatboxProfilePic(thisX, thisY, username, text, player, i)
 		love.graphics.setColor(1,1,1,1)
 		local coords = ""
 		if versionType == "dev" then coords = " X,Y: " .. player.X .. ", " .. player.Y end
-		love.graphics.print(player.LVL .. " " .. username .. coords, i+4, thisY + getChatTextHeight(text)+(chatCorner:getHeight()*2)+10)
+		if player.Prestige > 1 then
+			love.graphics.print(player.Prestige .. " " .. player.LVL .. " " .. username .. coords, i+4, thisY + getChatTextHeight(text)+(chatCorner:getHeight()*2)+10)
+			love.graphics.setColor(1,0,0)
+			love.graphics.print(player.Prestige, i+4, thisY + getChatTextHeight(text)+(chatCorner:getHeight()*2)+10)
+		else love.graphics.print(player.LVL .. " " .. username .. coords, i+4, thisY + getChatTextHeight(text)+(chatCorner:getHeight()*2)+10)
+		end
 	end
 end
 
@@ -159,30 +165,20 @@ end
 
 function getChatTextHeight(text) -- gets the chat height for recalling stuff
 	local width, lines = chatFont:getWrap( text, chatWidth )
-	if #lines >= 1 then
-	 	return ((#lines)*(chatFont:getHeight()))+2
-	else
-		return chatFont:getHeight()+2
-	end
+	if #lines >= 1 then	return ((#lines)*(chatFont:getHeight())) + 2
+	else return chatFont:getHeight() + 2 end
 end
 
 function getChatHeight(username, text, i) -- gets the chat height for recalling stuff
-	if i == 1 then
-		return getChatboxProfilePicHeight(username, text, i)
-	elseif	username == previousUsername then
-		return (getChatTextHeight(text)+(chatCorner:getHeight()*2))--+chatSpacing
-	else
-		return getChatboxProfilePicHeight(username, text, i)
-	end
+	if i == 1 then return getChatboxProfilePicHeight(username, text, i)
+	elseif	username == previousUsername then return (getChatTextHeight(text)+(chatCorner:getHeight()*2))
+	else return getChatboxProfilePicHeight(username, text, i) end
 	previousUsername = username
 end
 
 function getChatWidth(text)
-	if chatFont:getWidth(text) > chatWidth then
-		return chatWidth
-	else
-		return chatFont:getWidth(text)
-	end
+	if chatFont:getWidth(text) > chatWidth then	return chatWidth
+	else return chatFont:getWidth(text) end
 end
 
 function drawEnterChatBox(thisX, thisY, text)
@@ -197,9 +193,7 @@ function drawEnterChatBox(thisX, thisY, text)
 	elseif isTypingInChat then
 		text = text .. "|"
 		love.graphics.setColor(1,1,1,1)
-	else
-		love.graphics.setColor(0,0,0,0.7)
-	end
+	else love.graphics.setColor(0,0,0,0.7) end
 
 	for i = 0, 1 do
 		love.graphics.draw(chatCorner, thisX+(i*enterChatWidth)+(i*(chatCorner:getWidth()*2)), thisY, math.rad(0+(i*90)))
@@ -212,9 +206,7 @@ function drawEnterChatBox(thisX, thisY, text)
 
 	love.graphics.printf(text, thisX+chatCorner:getHeight(), thisY+chatCorner:getHeight(), enterChatWidth, "left")
 	love.graphics.setColor(1,1,1,1)
-	if not isTypingInChat and text == "" then
-		love.graphics.printf("Press Enter to Chat", thisX+chatCorner:getHeight(), thisY+chatCorner:getHeight(), enterChatWidth, "left")
-	end
+	if not isTypingInChat and text == "" then love.graphics.printf("Press Enter to Chat", thisX+chatCorner:getHeight(), thisY+chatCorner:getHeight(), enterChatWidth, "left") end
 end
 
 function getEnterChatBoxHeight(text)
@@ -228,4 +220,28 @@ function drawChatStencil()
 		((313)/0.5),
 		((cerp(cerp(uiY ,uiY - 134 + 14, questHub.amount), uiY - ((uiY/1.25)+5), questsPanel.amount))/0.5)
 	)
+end
+
+function sendChatText()
+	posYChat = 0
+	chatData = {
+		["PlayerName"] = me.Name,
+		["Channel"] = "Global",
+		["Message"] = enteredChatText,
+		["Created"] = os.time(os.date("!*t"))
+	}
+	c, h = http.request {
+		url = api.url .. "/chat",
+		method = "POST",
+		source = ltn12.source.string(json:encode(chatData)),
+		headers = {
+			["Content-Type"] = "application/json",
+			["Content-Length"] = string.len(json:encode(chatData)),
+			["token"] = token
+		}
+	}
+	enteredChatText = ""
+	if not chatRepeat then
+		isTypingInChat = false
+	end
 end

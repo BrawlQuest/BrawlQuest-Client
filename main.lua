@@ -56,6 +56,7 @@ if love.system.getOS() ~= "Linux" then steam = require 'luasteam' end -- we can 
 json = require("scripts.libraries.json")
 http = require("socket.http")
 ltn12 = require("ltn12")
+utf8 = require("utf8")
 newOutliner = require 'scripts.libraries.outliner'
 
 version = "Early Access" 
@@ -271,6 +272,9 @@ end
 function love.update(dt)
     if love.system.getOS() ~= "Linux" then steam.runCallbacks() end
 
+    enchantmentPos = enchantmentPos + 15 * dt
+    if enchantmentPos > 64 then enchantmentPos = 0 end
+
     totalCoverAlpha = totalCoverAlpha - 1 * dt
     if phase == "login" then
         updateLogin(dt)
@@ -301,7 +305,6 @@ function love.update(dt)
         if death.open then updateDeath(dt) end
         -- updateRangedWeapons(dt)
         if showNPCChatBackground then updateNPCChat(dt) end
-        -- if showClouds then updateClouds(dt) end
         if showWorldAnimations then updateLeaves(dt) end
         Luven.update(dt)
         if showClouds and enchanting.amount < 0.01 then updateClouds(dt) end
@@ -313,8 +316,16 @@ function love.update(dt)
         if info then
             local response = json:decode(info)
 
+
+            local previousMe = copy(me) -- Temp
+            me = response['Me']
+            if not isMouseDown() then-- if perks.stats[1] == 0 then
+                perks.stats = {me.STR, me.INT, me.STA, player.cp}
+            end
+
             if response then
                 local previousPlayers = copy(players) -- Temp
+
             
                 players = response['Players']
                 npcs = response['NPC']

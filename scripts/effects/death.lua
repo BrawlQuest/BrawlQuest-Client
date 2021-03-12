@@ -15,8 +15,8 @@ function updateDeath(dt)
     player.cy = y
     player.dy = y
 
-    worldMask.opacity = 0.6 * (death.amount * death.amount)
-    worldMask.opacity2 = 0.8 * (death.amount * death.amount)
+    worldMask.opacity = 0.85 * (death.amount * death.amount)
+    worldMask.opacity2 = 0.85 * (death.amount * death.amount)
     if death.amount >= 1 then
         death.open = false
         death.amount = 0

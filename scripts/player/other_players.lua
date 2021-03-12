@@ -5,9 +5,11 @@
 ]]
 function initPlayers()
     enchantment = love.graphics.newImage("assets/player/gen/enchantment.png")
+    profileEnchantment = love.graphics.newImage("assets/player/gen/profileEnchantment.png")
     enchantmentPos = 0
     shieldFalse = love.graphics.newImage("assets/player/gen/shield false.png")
     showEnchantments = false
+    playerNameAlpha = 1
 end
 
 alphaShader = love.graphics.newShader[[
@@ -122,6 +124,7 @@ function drawEnchantment(x, y, noiseScale)
     love.graphics.draw(enchantment, x + enchantmentPos - 64, y - 32, 0, noiseScale)
     love.graphics.setStencilTest("always", 0)
     love.graphics.setBlendMode("alpha")
+    love.graphics.setStencilTest()
 end
 
 function drawPlayer(v, i)
@@ -141,6 +144,7 @@ function drawPlayer(v, i)
         thisPlayer.HP = player.hp
         thisPlayer.Mana = me.Mana
         v.RedAlpha = 0
+        v.NameAlpha = playerNameAlpha
     else
         thisPlayer = players[i]
     end
@@ -163,7 +167,12 @@ function drawPlayer(v, i)
             boi = 16 + 3
         end
 
-        drawNamePlate(v.X + boi, v.Y, v.Name, 1, thisPlayer.LVL) -- thisPlayer.LVL
+        -- local text
+        -- if thisPlayer.Prestige > 1 then text = thisPlayer.Prestige .. "," .. thisPlayer.LVL else text = thisPlayer.LVL end
+        local alpha
+        if true then alpha = v.NameAlpha else alpha = 1 end
+
+        drawNamePlate(v.X + boi, v.Y, v.Name, v.NameAlpha, thisPlayer.LVL, thisPlayer.Prestige) -- thisPlayer.LVL
         
         if thisPlayer ~= nil and thisPlayer.AX then
             local diffX
@@ -220,28 +229,53 @@ function drawArrowImage(diffX, diffY, x, y)
     end
 end
 
-function drawNamePlate(x,y,name, alpha, level)
+function drawNamePlate(x,y,name, alpha, level, prestige)
     level = level or null
     love.graphics.setFont(playerNameFont)  
     alpha = alpha or 1
     if level then
-        local thisX, thisY = x , y - 4
-        local nameWidth, levelWidth = playerNameFont:getWidth(name) + 1, playerNameFont:getWidth(level)
-        local nameHeight = playerNameFont:getHeight(name)
-        local padding = {x = 3, y = 2}
-        local fullWidth = levelWidth + nameWidth + padding.x * 4
-        local dx = thisX - (fullWidth * 0.5)
-        local dy = thisY - nameHeight - padding.y - 1
-        local dh = nameHeight + (padding.y * 2)
-        
-        love.graphics.setColor(0, 0, 0, 0.6 * alpha)
-        roundRectangle("fill", dx, dy, fullWidth, dh, 3)
-        love.graphics.setColor(1,0,0,alpha)
-        roundRectangle("fill", dx, dy, levelWidth + padding.x * 2, dh, 3, {true, false, false, true})
+        if prestige and prestige > 1 then
+            local thisX, thisY = x , y - 4
+            local nameWidth, levelWidth = playerNameFont:getWidth(name) + 1, playerNameFont:getWidth(level)
+            local prestigeWidth = playerNameFont:getWidth(prestige)
+            local nameHeight = playerNameFont:getHeight(name)
+            local padding = {x = 3, y = 2}
+            local fullWidth = levelWidth + nameWidth + prestigeWidth + padding.x * 6
+            local dx = thisX - (fullWidth * 0.5)
+            local dy = thisY - nameHeight - padding.y - 1
+            local dh = nameHeight + (padding.y * 2)
+            
+            love.graphics.setColor(0, 0, 0, 0.6 * alpha)
+            roundRectangle("fill", dx, dy, fullWidth, dh, 3)
+            -- love.graphics.setColor(1,1,1,1 * alpha)
+            -- roundRectangle("fill", dx, dy, prestigeWidth + padding.x * 2, dh, 3, {true, false, false, true})
+            love.graphics.setColor(1,0,0,alpha)
+            love.graphics.rectangle("fill", dx + (prestigeWidth + padding.x * 2), dy, levelWidth + padding.x * 2, dh)
 
-        love.graphics.setColor(1, 1, 1, alpha)
-        love.graphics.print(level, dx + padding.x + 0.5, thisY - nameHeight - 2 + padding.y)
-        love.graphics.print(name, dx + padding.x * 3 + levelWidth, thisY - nameHeight - 2 + padding.y)
+            love.graphics.setColor(1, 0, 0, alpha)
+            love.graphics.print(prestige, dx + padding.x + 0.5, thisY - nameHeight - 2 + padding.y)
+            love.graphics.setColor(1, 1, 1, alpha)
+            love.graphics.print(level, dx + padding.x + 0.5 + (prestigeWidth + padding.x * 2), thisY - nameHeight - 2 + padding.y)
+            love.graphics.print(name, dx + padding.x * 3 + levelWidth + (prestigeWidth + padding.x * 2), thisY - nameHeight - 2 + padding.y)
+        else
+            local thisX, thisY = x , y - 4
+            local nameWidth, levelWidth = playerNameFont:getWidth(name) + 1, playerNameFont:getWidth(level)
+            local nameHeight = playerNameFont:getHeight(name)
+            local padding = {x = 3, y = 2}
+            local fullWidth = levelWidth + nameWidth + padding.x * 4
+            local dx = thisX - (fullWidth * 0.5)
+            local dy = thisY - nameHeight - padding.y - 1
+            local dh = nameHeight + (padding.y * 2)
+            
+            love.graphics.setColor(0, 0, 0, 0.6 * alpha)
+            roundRectangle("fill", dx, dy, fullWidth, dh, 3)
+            love.graphics.setColor(1,0,0,alpha)
+            roundRectangle("fill", dx, dy, levelWidth + padding.x * 2, dh, 3, {true, false, false, true})
+            
+            love.graphics.setColor(1, 1, 1, alpha)
+            love.graphics.print(level, dx + padding.x + 0.5, thisY - nameHeight - 2 + padding.y)
+            love.graphics.print(name, dx + padding.x * 3 + levelWidth, thisY - nameHeight - 2 + padding.y)
+        end
     else
         level = level or null
         alpha = alpha or 1
@@ -259,10 +293,6 @@ end
 attackHitAmount = 0
 
 function updateOtherPlayers(dt)
-
-    enchantmentPos = enchantmentPos + 15 * dt
-    if enchantmentPos > 64 then enchantmentPos = 0 end
-
     if attackHitAmount > 0 then
         attackHitAmount = attackHitAmount - 2 * dt
     end
@@ -280,7 +310,8 @@ function updateOtherPlayers(dt)
                 ['RedAlpha'] = 0,
                 ['Mount'] = v.Mount,
                 ['Color'] = v.Color,
-                ['Buddy'] = v.Buddy
+                ['Buddy'] = v.Buddy,
+                ['NameAlpha'] = 1,
             }
         end
         playersDrawable[i].Mount = v.Mount
@@ -301,24 +332,28 @@ function updateOtherPlayers(dt)
                 end
             end
         end
-        
 
-        if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X * 32, v.Y * 32) > 128 then
+        local distance = distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X * 32, v.Y * 32)
+        setNamePlateAlpha(v, i)
+
+        if distance > 128 then
             playersDrawable[i].X = v.X * 32
             playersDrawable[i].Y = v.Y * 32
         end
-        
-        if distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X * 32, v.Y * 32) > 1 then
+
+        if distance > 1 then
             local speed = 64
             if playersDrawable[i].Mount.Name ~= "None" or worldEdit.open then
                 speed = tonumber(playersDrawable[i].Mount.Val) or 64
-                if playersDrawable[i].Mount.Enchantment ~= "None" then
+                local enchant = playersDrawable[i].Mount.Enchantment or false
+                if enchant and enchant ~= "None" and enchant ~= "" then
                     speed = speed + 25
                 end
             end
-            if worldLookup[v.X] and worldLookup[v.X][v.Y] and isTileType(worldLookup[v.X][v.Y].ForegroundTile, "Path") then
+            if worldLookup[v.X] and worldLookup[v.X][v.Y] and (isTileType(worldLookup[v.X][v.Y].ForegroundTile, "Path") or isTileType(worldLookup[v.X][v.Y].GroundTile, "Path")) then
                 speed = speed * 1.4
             end
+
             
             if playersDrawable[i].X - 1 > v.X * 32 then
                 playersDrawable[i].X = playersDrawable[i].X - speed * dt
@@ -343,6 +378,7 @@ function tickOtherPlayers()
         if playersDrawable[i] then
             if v['Name'] ~= playersDrawable[i]['Name'] then
                 playersDrawable[i] = v
+                setNamePlateAlpha(v, i)
             end
             if v.AX ~= 0 then
                 if v.AX < v.X then
@@ -362,4 +398,9 @@ function tickOtherPlayers()
             end
         end
     end
+end
+
+function setNamePlateAlpha(v, i)
+    local distance = distanceToPoint(v.X * 32, v.Y * 32, player.dx, player.dy)
+    if distance < 128 then playersDrawable[i].NameAlpha = distance / 128 playerNameAlpha = distance / 128 else playersDrawable[i].NameAlpha = 1 playerNameAlpha = 1 end
 end

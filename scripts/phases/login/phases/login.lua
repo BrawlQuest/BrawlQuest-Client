@@ -70,11 +70,20 @@ function checkClickLoginPhaseLogin(x,y)
     end
 end
 
+function checkLoginKeyPressedPhasePrelaunch(key)
+    launch.inAmount = 1
+    launch.outAmount = 1
+    launch.outCERP = 1
+    loginPhase = "loading"
+    loginViaSteam()
+    if key == "escape" and versionType == "dev" then love.event.quit() end
+end
+
 function checkLoginKeyPressedPhaseLogin(key)
     if key == "backspace" then
-        textfields[editingField] =  string.sub( textfields[editingField], 1, string.len(textfields[editingField]) - 1)
+        textfields[editingField] = deleteText(textfields[editingField])
         if editingField == 2 then
-            textfields[3] =  string.sub( textfields[3], 1, string.len(textfields[3]) - 1)
+            textfields[3] = deleteText(textfields[3])
         end
     elseif key == "tab" or key == "return" then
         if editingField == 1 then
@@ -85,10 +94,8 @@ function checkLoginKeyPressedPhaseLogin(key)
             login()
         end
     end
-
-    if versionType == "dev" then
-        devLogin(key)
-    end
+    -- if versionType == "dev" then devLogin(key) end
+    -- if key == "escape" and versionType == "dev" then love.event.quit() end
 end
 
 function checkLoginTextinputPhaseLogin(key)

@@ -6,8 +6,8 @@ function love.mousepressed(x, y, button)
         checkEditWorldClick(x, y)
     elseif phase == "game" then
         checkQuestPanelMousePressed(button)
-        checkInventoryMousePressed(button)
         checkHotbarMousePressed(button)
+        if inventory.mouseOverButtonsAmount == 0 then checkInventoryMousePressed(button) end
         if isSettingsWindowOpen then checkSettingsMousePressed(button) end
         checkStatsMousePressed(button)
         if crafting.open then checkCraftingMousePressed(button) end
@@ -36,24 +36,15 @@ end
 
 function love.wheelmoved( dx, dy )
     if phase == "game" then
-        if isSettingsWindowOpen then
-            scrollSettings(dx, dy)
-        elseif crafting.open then
-            crafting.velY = crafting.velY + dy * 512            
-        elseif isMouseOver(0, 0, 313 * scale, (uiY - 97) * scale) then
-            velyInventory = velyInventory + dy * 512
-        elseif isMouseOver(((uiX) - 313) * scale, ((uiY) - ((uiY/1.25) - 15)) * scale, (313) * scale, ((uiY/1.25) - 106 - 14) * scale) then
-            velYQuest = velYQuest + dy * 512
-        elseif showNPCChatBackground then
-            npcChatArg.posY = npcChatArg.posY + (dy * (npcChatArg.font:getHeight() * 0.5))
-        elseif questHub.commentOpen and #quests[1] > 0 then
-            questHub.velY = questHub.velY + dy * 512
-        elseif worldEdit.open then
-            zoomCamera(dy, worldEditScales)
-        else 
-            if isTypingInChat then velyChat = velyChat + dy * 512 end
-            zoomCamera(dy, worldScales)
-        end
+        if isSettingsWindowOpen then scrollSettings(dx, dy)
+        elseif isTypingInChat then velyChat = velyChat + dy * 512
+        elseif crafting.open then crafting.velY = crafting.velY + dy * 512            
+        elseif isMouseOver(0, 0, 313 * scale, (uiY - 97) * scale) then velyInventory = velyInventory + dy * 512
+        elseif isMouseOver(((uiX) - 313) * scale, ((uiY) - ((uiY/1.25) - 15)) * scale, (313) * scale, ((uiY/1.25) - 106 - 14) * scale) then velYQuest = velYQuest + dy * 512
+        elseif showNPCChatBackground then npcChatArg.posY = npcChatArg.posY + (dy * (npcChatArg.font:getHeight() * 0.5))
+        elseif questHub.commentOpen and #quests[1] > 0 then questHub.velY = questHub.velY + dy * 512
+        elseif worldEdit.open then zoomCamera(dy, worldEditScales)
+        else zoomCamera(dy, worldScales) end
     end
 end
 
@@ -61,11 +52,8 @@ function zoomCamera(dy, table)
     if not worldScaleSmoothing then worldScaleSmoothing = true end
     previousWorldScale = worldScale
     worldScaleAmount = 0
-    if dy > 0 then
-        selectedWorldScale = selectedWorldScale - 1
-    else
-        selectedWorldScale = selectedWorldScale + 1
-    end
+    if dy > 0 then selectedWorldScale = selectedWorldScale - 1
+    else selectedWorldScale = selectedWorldScale + 1 end
     if selectedWorldScale < 1 then selectedWorldScale = 1
     elseif selectedWorldScale > #table then selectedWorldScale = #table end
 end
@@ -93,8 +81,4 @@ function checkMouseTargeting()
         player.target.active = true
         player.target.x = player.x + 1
     end
-end
-
-function checkForceTargeting()
-    
 end

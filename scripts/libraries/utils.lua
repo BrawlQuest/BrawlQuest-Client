@@ -49,6 +49,12 @@ function getTextHeight(text, width, thisFont)
  	return ((#lines)*(thisFont:getHeight()))
 end
 
+function deleteText(text, amount) -- text = deleteText(text, amount)
+    amount = amount or 1
+    local byteOffset = utf8.offset(text, -1)
+    if byteOffset and string.len(text) > 0 then return string.sub(text, 1, byteOffset - 1) end
+end
+
 function copy(obj, seen)
     if type(obj) ~= 'table' then return obj end
     if seen and seen[obj] then return seen[obj] end

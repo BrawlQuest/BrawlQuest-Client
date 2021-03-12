@@ -4,30 +4,50 @@ function drawProfilePic(thisX, thisY, thisScale, thisRotation, v)
 	v = v or me
 	drawProfileBackground(thisX, thisY, thisScale)
 
-	love.graphics.push()
-		i = 4 * thisScale
-		love.graphics.scale(i)
+	r = 1
+	if thisRotation == "left" then r = -1 thisX = thisX + profilePic:getWidth() * thisScale end
+	thisScale = 4 * thisScale
+	love.graphics.setColor(1,1,1,1)
+	-- if v.Color ~= null then love.graphics.setColor(unpack(v.Color)) end
+	love.graphics.draw(playerImg, profileImgStencil, thisX, thisY, 0, r * thisScale, thisScale)
+	love.graphics.setColor(1,1,1,1)
 
-		r, thisX = getProfileRotation(thisRotation, thisX, i)
-
-		love.graphics.setColor(1,1,1,1)
-		-- if v.Color ~= null then love.graphics.setColor(unpack(v.Color)) end
-		love.graphics.draw(playerImg, profileImgStencil, thisX, thisY / i, 0, r, 1)
-		love.graphics.setColor(1,1,1,1)
-
-		if v and v.HeadArmour then
-			if v.ChestArmourID ~= 0 then
-				drawItemIfExists(v.ChestArmour.ImgPath, thisX, thisY / i, "", r, 1, profileImgStencil)
-			end	
-			if v.HeadArmourID ~= 0 then
-				drawItemIfExists(v.HeadArmour.ImgPath, thisX, thisY / i, "", r, 1, profileImgStencil)
-			end
+	if v and v.HeadArmour then
+		if v.ChestArmourID ~= 0 then
+			drawProfileArmour(thisX,thisY,v.ChestArmour,r,thisScale)
+			-- drawItemIfExists(v.ChestArmour.ImgPath, thisX, thisY, "", r, thisScale, profileImgStencil)
+		end	
+		if v.HeadArmourID ~= 0 then
+			drawProfileArmour(thisX,thisY,v.HeadArmour,r,thisScale)
+			-- drawItemIfExists(v.HeadArmour.ImgPath, thisX, thisY, "", r, thisScale, profileImgStencil)
 		end
-	love.graphics.pop()
+	end
+end
+
+function drawProfileArmour(x,y,item,r,thisScale)
+    drawItemIfExists(item.ImgPath, x, y, "", r, thisScale, profileImgStencil)
+    if item.Enchantment ~= "None" then
+        love.graphics.push()
+            love.graphics.stencil(function() 
+                love.graphics.setShader(alphaShader)
+                drawItemIfExists(item.ImgPath, x, y, "", r, thisScale, profileImgStencil)
+                love.graphics.setShader()
+            end)
+			love.graphics.setStencilTest("equal", 1)
+			love.graphics.setColor(0.8,0,1,0.6)
+			love.graphics.setBlendMode("add")
+			local offset = 3
+			if r == 1 then offset = 2 end
+			love.graphics.draw(profileEnchantment, x + (enchantmentPos * 2 - 64 * offset), y, 0, 2)
+			love.graphics.setStencilTest("always", 0)
+			love.graphics.setBlendMode("alpha")
+			love.graphics.setStencilTest()
+        love.graphics.pop()
+        love.graphics.setColor(1,1,1)
+    end
 end
 
 function drawNPCProfilePic(thisX, thisY, thisScale, thisRotation, image)
-
 	if not worldImg[image] then
 		if love.filesystem.getInfo(image) then
 			worldImg[image] = love.graphics.newImage(image)
@@ -36,35 +56,15 @@ function drawNPCProfilePic(thisX, thisY, thisScale, thisRotation, image)
 			print("AN ERROR OCURRED. "..image.." can't be found.")
 		end
 	end
-
 	drawProfileBackground(thisX, thisY, thisScale)
-	love.graphics.push()
-		i = 4 * thisScale
-		love.graphics.scale(i)
-
-		r, thisX = getProfileRotation(thisRotation, thisX, i)
-		love.graphics.draw(worldImg[image], npcImgStencil, thisX, thisY / i, 0, r, 1)
-	love.graphics.pop()
+	r = 1
+	if thisRotation == "left" then r = -1 thisX = thisX + profilePic:getWidth() * thisScale end
+	thisScale = 4 * thisScale
+	love.graphics.draw(worldImg[image], npcImgStencil, thisX, thisY, 0, r * thisScale, thisScale)
 end
 
 function drawProfileBackground(thisX, thisY, thisScale)
-	love.graphics.push()
-		local i = 1 * thisScale
-		love.graphics.scale(i)
-		love.graphics.setColor(0,0,0,0.6)
-		love.graphics.draw(profilePic, thisX / i, thisY / i)
-		love.graphics.setColor(1,1,1,1)
-	love.graphics.pop()
-end
-
-function getProfileRotation(thisRotation, thisX, i)
-	if thisRotation == "left" then
-		thisX = thisX/i + (playerImg:getWidth()/2)
-		r = -1
-		return r, thisX
-	else
-		thisX = thisX/i
-		r = 1
-		return r, thisX
-	end
+	love.graphics.setColor(0,0,0,0.6)
+	love.graphics.draw(profilePic, thisX, thisY, 0, 1)
+	love.graphics.setColor(1,1,1,1)
 end
