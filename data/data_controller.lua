@@ -12,6 +12,7 @@ function initHardData()
     targetImg = love.graphics.newImage("assets/ui/target.png")
     xpImg = love.graphics.newImage("assets/ui/xp.png")
     questAlertImg = love.graphics.newImage("assets/ui/alert.png")
+    questCompleteImg = love.graphics.newImage("assets/ui/complete.png")
     itemAlertImg = love.graphics.newImage("assets/ui/alert-item.png")
 
 
