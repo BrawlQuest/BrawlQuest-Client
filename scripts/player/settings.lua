@@ -294,5 +294,12 @@ function getDisplay()
 end
 
 function suicide()
-    print("kill me now!!!!")
+    c, h = http.request {
+        url = api.url .. "/respawn/" .. username,
+        method = "GET",
+        headers = {
+            ["token"] = token
+        },
+
+    }
 end
