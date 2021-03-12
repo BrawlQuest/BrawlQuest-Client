@@ -193,7 +193,7 @@ function movePlayer(dt)
         end
     end
     
-    if isMoving then
+    if distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) > 1 then
         local speed = 64
         if me and me.Mount and me.Mount.Name ~= "None" or worldEdit.open then
             speed = tonumber(me.Mount.Val) or 64 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.

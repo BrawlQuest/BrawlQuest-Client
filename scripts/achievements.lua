@@ -31,13 +31,23 @@ function checkAchievementUnlocks()
             steam.userStats.setAchievement('boat_achievement')
         end
 
-        if me.Mount.Name ~= "None" then
-            steam.userStats.setAchievement('boat_achievement')
+        if me.Mount.Name ~= "None" and me.Mount.Name ~= "Error" and me.Mount.Name ~= "" then
+            steam.userStats.setAchievement('mount_achievement')
         end
 
 
         if me.Buddy ~= "None" then
-            steam.userStats.setAchievement('mount_achievement')
+            steam.userStats.setAchievement('buddy_achievement')
+        end
+
+        if me.LVL >= 2 then
+            steam.userStats.setAchievement('level_1_achievement')
+        end
+        if me.LVL >= 10 then
+            steam.userStats.setAchievement('level_10_achievement')
+        end
+        if me.LVL >= 25 then
+            steam.userStats.setAchievement('level_25_achievement')
         end
 
         steam.userStats.storeStats()
