@@ -142,9 +142,10 @@ function worldCollison(x, y)
 end
 
 isMoving = false
+movementStarted = 1 -- the max time it'll ever take to cross a tile. This should fix rubberbanding.
 
 function movePlayer(dt)
-    if player.x * 32 == player.dx and player.y * 32 == player.dy and not isTypingInChat and not worldEdit.isTyping and not tutorialOpen then -- movement smoothing has finished
+    if (me and not me.IsDead) and (not isMoving or (distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) < 1 and not isTypingInChat and not worldEdit.isTyping and not tutorialOpen)) then -- movement smoothing has finished
         local prev = {x = player.x, y = player.y}
         if love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.LEFT) and not (worldCollison(prev.x - 1, prev.y - 1) or worldCollison(prev.x - 1, prev.y) or worldCollison(prev.x, prev.y - 1)) then
             prev.y = prev.y - 1
@@ -190,7 +191,9 @@ function movePlayer(dt)
             end
             isMoving = true
         end
-    else -- movement smoothing
+    end
+    
+    if isMoving then
         local speed = 64
         if me and me.Mount and me.Mount.Name ~= "None" or worldEdit.open then
             speed = tonumber(me.Mount.Val) or 64 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
@@ -235,6 +238,9 @@ function movePlayer(dt)
                 player.cy = player.cy + speed * dt
                 if player.cy >= y then player.dy = y end
             end
+        end
+        if distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) < 1  then
+            isMoving = false
         end
     end
 end
