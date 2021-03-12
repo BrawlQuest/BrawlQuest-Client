@@ -330,7 +330,9 @@ function checkEnchantingMousePressed(button)
         if e.mouseOver.item ~= "" then
             e.chosenItem = e.mouseOver.item
             for i,v in ipairs(e.itemNames) do
-                if e.chosenItem == v then e.chosenItemCount = i end
+                if e.chosenItem == v then 
+                    if v ~= "Mount" then e.chosenItemCount = i elseif me.Mount and me.Mount.Name ~= "None" then e.chosenItemCount = i end
+                end
             end
         end
         if e.mouseOver.perk > 0 then e.selectedPerk = e.mouseOver.perk end

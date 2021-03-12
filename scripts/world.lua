@@ -153,15 +153,10 @@ function getWorldAsset(v,x,y,notFindWall)
     local backgroundAsset = v['GroundTile']
 
     -- if not notFindWall then
-        if isTileWall(v) then
-            v = getDrawableWall(v, x,y)
-        end
+        if isTileWall(v) then v = getDrawableWall(v, x,y) end
     -- end
 
-    if isTileWater(v) then
-        v = getDrawableWater(v, x, y)
-    end
-
+    if isTileWater(v) then v = getDrawableWater(v, x, y) end
     return v
 end
 
