@@ -31,6 +31,7 @@ require "scripts.ui.components.profile"
 require "scripts.ui.components.hotbar"
 require "scripts.ui.components.events"
 require "scripts.ui.components.enchanting"
+require "scripts.ui.components.challenges"
 require "scripts.libraries.api"
 require "scripts.libraries.utils"
 require "scripts.libraries.colorize"
@@ -174,6 +175,7 @@ function love.load()
     initDeath()
     initPlayers()
     initEnchanting()
+    initChallenges()
     love.graphics.setFont(textFont)
 end
 
@@ -302,6 +304,7 @@ function love.update(dt)
         updateMusic(dt)
         updateLoot(dt)
         updateEvents(dt)
+        updateChallenges(dt)
         if death.open then updateDeath(dt) end
         -- updateRangedWeapons(dt)
         if showNPCChatBackground then updateNPCChat(dt) end

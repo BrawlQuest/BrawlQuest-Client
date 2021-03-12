@@ -44,15 +44,16 @@ function getImgIfNotExist(v)
     return worldImg[v]
 end
 
-function getTextHeight(text, width, thisFont)
-	local width, lines = thisFont:getWrap(text, width)
- 	return ((#lines)*(thisFont:getHeight()))
+function getTextHeight(text, width, thisFont, thisScale)
+    thisScale = thisScale or 1
+	local width, lines = thisFont:getWrap(text, width / thisScale)
+ 	return ((#lines)*(thisFont:getHeight())) * thisScale
 end
 
 function deleteText(text, amount) -- text = deleteText(text, amount)
     amount = amount or 1
     local byteOffset = utf8.offset(text, -1)
-    if byteOffset and string.len(text) > 0 then return string.sub(text, 1, byteOffset - 1) end
+    if byteOffset and string.len(text) > 0 then return string.sub(text, 1, byteOffset - 1) else return text end
 end
 
 function copy(obj, seen)

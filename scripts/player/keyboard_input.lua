@@ -15,7 +15,6 @@ function love.keypressed(key)
     end
 end
 
-
 function checkKeyPressedPhaseGame(key)
     if worldEdit.open then
         checkWorldEditKeyPressed(key)
@@ -41,7 +40,6 @@ function checkKeyPressedPhaseGame(key)
             settPan.movement.x, settPan.movement.y = 0, 0
             isSettingsWindowOpen = true
             loadSliders()
-
         end
         if key == "tab" then
             showHUD = not showHUD
@@ -69,9 +67,7 @@ function checkKeyPressedPhaseGame(key)
             end
         end
         if (key == "f" and versionType == "dev") then
-            enchanting.phase = 1
-            enchanting.open = true
-            enchanting.amount = 0.01
+            challenges.open = not challenges.open
         end
     end
 end
