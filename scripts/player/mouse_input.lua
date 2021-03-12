@@ -7,13 +7,12 @@ function love.mousepressed(x, y, button)
     elseif phase == "game" then
         checkQuestPanelMousePressed(button)
         checkHotbarMousePressed(button)
+        if challenges.open then checkChallengesMousePressed(button) end
         if inventory.mouseOverButtonsAmount == 0 then checkInventoryMousePressed(button) end
         if isSettingsWindowOpen then checkSettingsMousePressed(button) end
         checkStatsMousePressed(button)
         if crafting.open then checkCraftingMousePressed(button) end
-        if showNPCChatBackground then
-        checkNPCChatMousePressed(button)
-        end
+        if showNPCChatBackground then checkNPCChatMousePressed(button) end
         checkWorldEditMouseDown(button)
         if mouseOverChat then isTypingInChat = not isTypingInChat end
         if enchanting.open then checkEnchantingMousePressed(button) end

@@ -125,7 +125,7 @@ function drawEnchanting()
         love.graphics.printf("Press return to continue", x - 10, y + 8, w / textScale, "center", 0, textScale)
 
     elseif e.phase == 2 then 
-        local x, y = uiX / 2 - w / 2, uiY / 4
+        local x, y = uiX / 2 - w / 2, uiY / 2 - 300
         love.graphics.setColor(1,1,1)
         love.graphics.printf("Choose which item you want to enchant", x - 10, y - e.font:getHeight() * textScale - 10, w / textScale, "center", 0, textScale)
         e.mouseOver.item = ""
@@ -259,7 +259,10 @@ function drawEnchanting()
         love.graphics.printf(e.perks[perk][e.selectedPerk].desc, dx, dy, width / smallPrintScale, "left",  0, smallPrintScale)
 
         love.graphics.setColor(1,1,1)
-        love.graphics.printf(e.text.final, x + 10, y - (getTextHeight(e.text.final, (w - 20) / textScale, e.font) * textScale) - 20, (w - 20) / textScale, "center", 0, textScale)
+        love.graphics.printf(e.text.final, x + 10, y - (getTextHeight(e.text.final, (w - 20) / textScale, e.font) * (textScale + 1)) - 20, (w - 20) / textScale, "center", 0, textScale)
+        love.graphics.setColor(1,0,0)
+        textScale = textScale + 1
+        love.graphics.printf("NO, ENCHANTMENTS DO NOT STACK!", x + 10, y - (e.font:getHeight() * textScale) - 20, (w - 20) / textScale, "center", 0, textScale)
 
         y = y + 32 * picScale + 10 -- draw underneath boxes
         drawEnchantmentButton(x,y,w * 0.5 - 5, 64, "Go Back (escape)", "back3")
@@ -330,7 +333,9 @@ function checkEnchantingMousePressed(button)
         if e.mouseOver.item ~= "" then
             e.chosenItem = e.mouseOver.item
             for i,v in ipairs(e.itemNames) do
-                if e.chosenItem == v then e.chosenItemCount = i end
+                if e.chosenItem == v then 
+                    if v ~= "Mount" then e.chosenItemCount = i elseif me.Mount and me.Mount.Name ~= "None" then e.chosenItemCount = i end
+                end
             end
         end
         if e.mouseOver.perk > 0 then e.selectedPerk = e.mouseOver.perk end
