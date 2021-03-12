@@ -202,7 +202,7 @@ function movePlayer(dt)
                 speed = 256
             end
         end
-        if worldLookup[player.x] and worldLookup[player.x][player.y] and (isTileType(worldLookup[player.x][player.y].ForegroundTile, "Path") or isTileType(worldLookup[player.x][player.y].GroundTile, "Path")) then
+        if worldLookup[player.x] and worldLookup[player.x][player.y] and worldLookup[player.x][player.y].ForegroundTile and worldLookup[player.x][player.y].GroundTile and (isTileType(worldLookup[player.x][player.y].ForegroundTile, "Path") or isTileType(worldLookup[player.x][player.y].GroundTile, "Path")) then
             speed = speed * 1.4
         end
 

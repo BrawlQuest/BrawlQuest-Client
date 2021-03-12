@@ -18,6 +18,7 @@ end
 function checkKeyPressedPhaseGame(key)
     if worldEdit.open then
         checkWorldEditKeyPressed(key)
+    elseif challenges.open then checkChallengesKeyPressed(key)
     elseif enchanting.open then checkEnchantingKeyPressed(key)
     elseif worldEdit.isTyping then
     elseif isSettingsWindowOpen then checkSettingKeyPressed(key)

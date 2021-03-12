@@ -33,7 +33,7 @@ checkVarMousePressed(button)
 
 function getImgIfNotExist(v)
     if not worldImg[v] then
-        if v and love.filesystem.getInfo(v) then
+        if v and v ~= "" and love.filesystem.getInfo(v) then
             worldImg[v] = love.graphics.newImage(v)
         else
             worldImg[v] = love.graphics.newImage("assets/error.png")
@@ -77,11 +77,11 @@ end
 
 function explode (inputstr, sep)
     if sep == nil then
-            sep = "%s"
+        sep = "%s"
     end
     local t={}
     for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
-            table.insert(t, str)
+        table.insert(t, str)
     end
     return t
 end
