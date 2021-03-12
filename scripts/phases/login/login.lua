@@ -138,7 +138,7 @@ function updateLogin(dt)
             launch.outCERP = cerp(0,1,launch.outAmount)
         end
     elseif loginPhase == "loading" then
-        loadingAmount = loadingAmount + 0.5 * dt
+        loadingAmount = loadingAmount + 0.2 * dt
         if loadingAmount >= 1 then
             loginAttempts = loginAttempts + 1
             loadingText = "Login Failed: Attempt: " .. loginAttempts .. "\n Check Your Internet Connection\n Reattempting Login "

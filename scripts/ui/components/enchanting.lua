@@ -125,7 +125,7 @@ function drawEnchanting()
         love.graphics.printf("Press return to continue", x - 10, y + 8, w / textScale, "center", 0, textScale)
 
     elseif e.phase == 2 then 
-        local x, y = uiX / 2 - w / 2, uiY / 4
+        local x, y = uiX / 2 - w / 2, uiY / 2 - 300
         love.graphics.setColor(1,1,1)
         love.graphics.printf("Choose which item you want to enchant", x - 10, y - e.font:getHeight() * textScale - 10, w / textScale, "center", 0, textScale)
         e.mouseOver.item = ""
