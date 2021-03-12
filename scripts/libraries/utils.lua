@@ -52,7 +52,7 @@ end
 function deleteText(text, amount) -- text = deleteText(text, amount)
     amount = amount or 1
     local byteOffset = utf8.offset(text, -1)
-    if byteOffset and string.len(text) > 0 then return string.sub(text, 1, byteOffset - 1) end
+    if byteOffset and string.len(text) > 0 then return string.sub(text, 1, byteOffset - 1) else return text end
 end
 
 function copy(obj, seen)
