@@ -69,7 +69,7 @@ end
 
 function checkChallengesMousePressed(button)
     local c = challenges
-    if c.mouseOver > 1 then chal[c.mouseOver].Tracking = not chal[c.mouseOver].Tracking end
+    if c.mouseOver > 0 then chal[c.mouseOver].Tracking = not chal[c.mouseOver].Tracking end
 end
 
 -- initChallenges()
