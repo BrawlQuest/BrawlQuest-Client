@@ -225,7 +225,9 @@ function drawSettingsButton(thisX, thisY, width, height, ai, av, bi, bv)
     else love.graphics.setColor(1,1,1, settPan.opacityCERP)
     end
 
-    love.graphics.printf(boolToString(bv.v), thisX + width - 90, thisY + settPan.fontHeight, 90, "center") -- prints the value of things
+    local text
+    if bi == 1 and ai == 1 then text = "kill me" else text = boolToString(bv.v) end
+    love.graphics.printf(text, thisX + width - 90, thisY + settPan.fontHeight, 90, "center") -- prints the value of things
 
     love.graphics.setColor(1,1,1, settPan.opacityCERP)
     love.graphics.print(bv.name, thisX + 10, thisY + settPan.fontHeight) -- prints the name of things
