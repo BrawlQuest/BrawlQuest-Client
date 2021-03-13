@@ -64,7 +64,7 @@ newOutliner = require 'scripts.libraries.outliner'
 version = "Early Access" 
 versionType = "release" -- "dev" for quick login, "release" for not
 if versionType == "dev" then require 'dev' end
-versionNumber = "1.2.1" -- very important for settings
+versionNumber = "1.2.1+2" -- very important for settings
 
 phase = "login"
 blockMap = {}
@@ -374,7 +374,16 @@ function love.update(dt)
                     if perks.stats[1] == 0 then
                         perks.stats = {me.STR, me.INT, me.STA, player.cp}
                     end
-                    
+                    if me.IsDead == true then
+                        c, h = http.request {
+                            url = api.url .. "/revive/" .. username,
+                            method = "GET",
+                            headers = {
+                                ["token"] = token
+                            },
+                
+                        }
+                    end
                     if distanceToPoint(me.X, me.Y, player.x, player.y) > 4 then
                         player.x = me.X
                         player.y = me.Y

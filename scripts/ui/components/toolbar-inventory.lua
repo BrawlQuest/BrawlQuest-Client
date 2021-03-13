@@ -186,7 +186,7 @@ function getItemAmount(item)
     local amount = 0
     if item ~= null then
         for i, v in ipairs(inventoryAlpha) do
-            if json:encode(v.Item) == json:encode(item) then
+            if v.Item.ID == item.ID then
                 amount = v.Inventory.Amount
             end
         end
