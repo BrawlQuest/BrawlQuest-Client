@@ -2,7 +2,7 @@ function initItemDrag()
     itemDrag = {
         dragging = false,
         amount = 1,
-        item = {},
+        item = null,
     }
 end
 
@@ -29,10 +29,12 @@ end
 
 function checkItemDragMouseReleased(button)
     local iD = itemDrag
-    if inventory.mouseOverButtonsAmount > 0 then
+    if iD.item and inventory.mouseOverButtonsAmount > 0 then
         hotbar[inventory.mouseOverButtonsAmount] = {item = iD.item, amount = iD.amount}
         hotbarChanged = true
         writeSettings()
+        iD.item = null
+        iD.amount = 0
     end
     iD.dragging = false
 end

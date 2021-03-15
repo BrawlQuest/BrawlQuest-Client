@@ -44,6 +44,8 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
         local isMouse = isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale)
         -- amount = inventory.amount
 
+        if isMouse then inventory.mouseOverButtonsAmount = number end
+
         if item and isItemUnusable(item) then
             love.graphics.setColor(0.2, 0.2, 0.2)
             if isMouse and item then
@@ -55,7 +57,6 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
             cerp(0, 1, useItemColor[number]),
             cerp(0, 1, useItemColor[number]),
             1)
-            inventory.mouseOverButtonsAmount = number
             height = inventory.images.itemBG:getHeight()
             thisY = thisY - 2
         else

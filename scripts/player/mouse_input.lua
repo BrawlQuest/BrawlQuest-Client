@@ -11,7 +11,7 @@ function love.mousepressed(x, y, button)
         if isSettingsWindowOpen then checkSettingsMousePressed(button) end
         checkStatsMousePressed(button)
         if crafting.open then checkCraftingMousePressed(button) end
-        if inventory.mouseOverButtonsAmount == 0 then checkItemDragMousePressed(button) end
+        if inventory.mouseOverButtonsAmount == 0 and inventory.isMouseOverInventoryItem then checkItemDragMousePressed(button) end
         if showNPCChatBackground then checkNPCChatMousePressed(button) end
         checkWorldEditMouseDown(button)
         if mouseOverChat then isTypingInChat = not isTypingInChat end
@@ -32,8 +32,10 @@ function love.mousereleased(x, y, button)
                 end
             end
         end
-        if itemDrag.dragging then checkItemDragMouseReleased(button) 
-        elseif inventory.mouseOverButtonsAmount == 0 then checkInventoryMousePressed(button) end
+        
+        if inventory.mouseOverButtonsAmount == 0 and json:encode(itemDrag.item) == json:encode(selectedItem) then checkInventoryMousePressed(button) end
+        -- else checkItemDragMouseReleased(button) end
+        checkItemDragMouseReleased(button)
     end
 end
 

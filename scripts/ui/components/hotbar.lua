@@ -55,10 +55,10 @@ function checkHotbarMousePressed(button)
                     hotbarChanged = true
                     break
                 elseif button == 2 then
-                    hotbar[i] = {item = null, amount = 0}
-                    hotbarChanged = true
-                    writeSettings()
-                    break
+                    -- hotbar[i] = {item = null, amount = 0}
+                    -- hotbarChanged = true
+                    -- writeSettings()
+                    -- break
                 end
                 hotbarChanged = true
             end
