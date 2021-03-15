@@ -143,7 +143,7 @@ function love.draw()
             love.graphics.setColor(1, 1, 1)
             drawNPCs()
             drawEnemies()
-            -- drawRangedWeaponEffects()
+            drawRangedWeaponEffects()
 
             for i, v in ipairs(playersDrawable) do
                 drawPlayer(v, i)
@@ -254,7 +254,7 @@ function love.update(dt)
         updateChallenges(dt)
         if itemDrag.dragging then updateItemDrag(dt) end
         if death.open then updateDeath(dt) end
-        -- updateRangedWeapons(dt)
+        updateRangedWeapons(dt)
         if showNPCChatBackground then updateNPCChat(dt) end
         if showWorldAnimations then updateLeaves(dt) end
         Luven.update(dt)
@@ -425,7 +425,7 @@ function tick()
     checkTargeting()
     nextTick = 1
     getInventory()
-    -- tickRangedWeapons()
+    tickRangedWeapons()
     if hotbarChanged then
         hotbarChangeCount = hotbarChangeCount + 1
         if hotbarChangeCount > 0 then
