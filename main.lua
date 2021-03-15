@@ -32,6 +32,7 @@ require "scripts.ui.components.hotbar"
 require "scripts.ui.components.events"
 require "scripts.ui.components.enchanting"
 require "scripts.ui.components.challenges"
+require "scripts.ui.components.item-drag"
 require "scripts.libraries.api"
 require "scripts.libraries.utils"
 require "scripts.libraries.colorize"
@@ -88,63 +89,6 @@ playersOnline = ""
 firstLaunch = true
 playerCount = 0
 
-world = {}
-worldImg = {}
-lightGivers = {
-    ["assets/world/objects/lantern.png"] = {
-        brightness = 0.8,
-        color = {1, 0.5, 0},
-    },
-    ["assets/world/objects/Mushroom.png"]  = {
-        brightness = 0.8,
-        color = {1, 0.6, 0},
-    },
-    ["assets/world/objects/Pumpkin0.png"] = {
-        brightness = 1,
-        color = {1, 0.5, 0},
-    },
-    ["assets/world/objects/Pumpkin1.png"] = {
-        brightness = 1,
-        color = {1, 0.5, 0},
-    },
-    ["assets/world/objects/Pumpkin2.png"] = {
-        brightness = 1,
-        color = {1, 0.5, 0},
-    },
-    ["assets/world/objects/Lamp.png"]  = {
-        brightness = 2,
-        color = {1, 0.5, 0},
-    },
-    ["assets/world/objects/Furnace.png"] = {
-        brightness = 1,
-        color = {1, 0.2, 0},
-    },
-    ["assets/world/objects/Campfire.png"] = {
-        brightness = 0.7,
-        color = {1, 0.2, 0},
-    },
-    ["assets/world/objects/Ice Torch.png"] = {
-        brightness = 1,
-        color = {0,0.5,1},
-    },
-    ["assets/world/grounds/Lava.png"] = {
-        brightness = 2,
-        color = {1, 0.5, 0},
-    },
-    ["assets/world/objects/Portal.png"] = {
-        brightness = 3,
-        color ={0.6,0,0.4}
-    },
-    ["assets/world/walls/Red Wall.png"] = {
-        brightness = 4,
-        color ={0.8,0,0.0}
-    },
-    ["assets/world/objects/Mould Mushroom.png"] = {
-        brightness = 0.7,
-        color ={1,0,0.8}
-    },
-}
-
 oldInfo = {}
 
 sendUpdate = false
@@ -177,6 +121,7 @@ function love.load()
     initPlayers()
     initEnchanting()
     initChallenges()
+    initItemDrag()
     love.graphics.setFont(textFont)
 end
 
@@ -306,6 +251,7 @@ function love.update(dt)
         updateLoot(dt)
         updateEvents(dt)
         updateChallenges(dt)
+        if itemDrag.dragging then updateItemDrag(dt) end
         if death.open then updateDeath(dt) end
         -- updateRangedWeapons(dt)
         if showNPCChatBackground then updateNPCChat(dt) end

@@ -35,18 +35,10 @@ end
 function checkHotbarKeyPressed(key)
     for i,v in ipairs(hotbar) do
         if key == tostring(i) or (i == 7 and key == "space") then
-            if inventory.isMouseOverInventoryItem == true then
-                hotbar[i].item = selectedItem
-                hotbar[i].amount = selectedItemAmount
-                writeSettings()
+            if v.item ~= nil and v.item.ID ~= nil and not isItemUnusable(v.item) and not usedItemThisTick then
+                useHotbarItem(i,v)
                 hotbarChanged = true
                 break
-            else
-                if v.item ~= nil and v.item.ID ~= nil and not isItemUnusable(v.item) and not usedItemThisTick then
-                    useHotbarItem(i,v)
-                    hotbarChanged = true
-                    break
-                end
             end
         end
     end

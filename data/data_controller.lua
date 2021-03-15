@@ -18,48 +18,105 @@ function initHardData()
 
     arrowImg = {}
     arrowImg[-1]  = {
-            [0]=love.graphics.newImage("assets/ui/target/w_arrow_1.png"),
-            [-1] = love.graphics.newImage("assets/ui/target/nw_arrow_1.png"),
-            [1]=love.graphics.newImage("assets/ui/target/sw_arrow_1.png")
-        }
-        arrowImg[0] = 
-        {
-            [-1] = love.graphics.newImage("assets/ui/target/n_arrow_1.png"),
-            [1] = love.graphics.newImage("assets/ui/target/s_arrow_1.png")
-        }
-        arrowImg[1] = {
-            [0] = love.graphics.newImage("assets/ui/target/e_arrow_1.png"),
-            [-1] = love.graphics.newImage("assets/ui/target/ne_arrow_1.png"),
-            [1] = love.graphics.newImage("assets/ui/target/se_arrow_1.png")
-        }
+        [0]=love.graphics.newImage("assets/ui/target/w_arrow_1.png"),
+        [-1] = love.graphics.newImage("assets/ui/target/nw_arrow_1.png"),
+        [1]=love.graphics.newImage("assets/ui/target/sw_arrow_1.png")
+    }
+    arrowImg[0] = 
+    {
+        [-1] = love.graphics.newImage("assets/ui/target/n_arrow_1.png"),
+        [1] = love.graphics.newImage("assets/ui/target/s_arrow_1.png")
+    }
+    arrowImg[1] = {
+        [0] = love.graphics.newImage("assets/ui/target/e_arrow_1.png"),
+        [-1] = love.graphics.newImage("assets/ui/target/ne_arrow_1.png"),
+        [1] = love.graphics.newImage("assets/ui/target/se_arrow_1.png")
+    }
 
-        cornerArrowImage = love.graphics.newImage("assets/ui/target/corner.png")
-        edgeArrowImage = love.graphics.newImage("assets/ui/target/edge.png")
+    cornerArrowImage = love.graphics.newImage("assets/ui/target/corner.png")
+    edgeArrowImage = love.graphics.newImage("assets/ui/target/edge.png")
 
-        arrowData = {
-            [-1] = {
-                [-1] = {image = cornerArrowImage, position = {x = 0, y = 0,}, rotation = math.rad(180),},
-                [0] = {image = edgeArrowImage, position = {x = 0, y = 16,}, rotation = math.rad(180)},
-                [1] = {image = cornerArrowImage, position = {x = 0, y = 0,}, rotation = math.rad(90),},
-            },
-            [0] = {
-                [-1] = {image = edgeArrowImage, position = {x = -16, y = 0,}, rotation = math.rad(-90),},
-                [1] = {image = edgeArrowImage, position = {x = 16, y = 0,}, rotation = math.rad(90),},
-            },
-            [1] = {
-                [-1] = {image = cornerArrowImage, position = {x = 0, y = 0,}, rotation = math.rad(-90),},
-                [0] = {image = edgeArrowImage, position = {x = 0, y = -16,}, rotation = math.rad(0),},
-                [1] = {image = cornerArrowImage, position = {x = 0, y = 0,}, rotation = math.rad(0),},
-            },
-        }
-        
-        foliageImg = {
-            love.graphics.newImage("assets/world/objects/foliage/BQ Foliage-1.png"),
-            love.graphics.newImage("assets/world/objects/foliage/BQ Foliage-2.png"),
-            love.graphics.newImage("assets/world/objects/foliage/BQ Foliage-3.png"),
-            love.graphics.newImage("assets/world/objects/foliage/BQ Foliage-4.png"),
-        }
+    arrowData = {
+        [-1] = {
+            [-1] = {image = cornerArrowImage, position = {x = 0, y = 0,}, rotation = math.rad(180),},
+            [0] = {image = edgeArrowImage, position = {x = 0, y = 16,}, rotation = math.rad(180)},
+            [1] = {image = cornerArrowImage, position = {x = 0, y = 0,}, rotation = math.rad(90),},
+        },
+        [0] = {
+            [-1] = {image = edgeArrowImage, position = {x = -16, y = 0,}, rotation = math.rad(-90),},
+            [1] = {image = edgeArrowImage, position = {x = 16, y = 0,}, rotation = math.rad(90),},
+        },
+        [1] = {
+            [-1] = {image = cornerArrowImage, position = {x = 0, y = 0,}, rotation = math.rad(-90),},
+            [0] = {image = edgeArrowImage, position = {x = 0, y = -16,}, rotation = math.rad(0),},
+            [1] = {image = cornerArrowImage, position = {x = 0, y = 0,}, rotation = math.rad(0),},
+        },
+    }
+    
+    foliageImg = {
+        love.graphics.newImage("assets/world/objects/foliage/BQ Foliage-1.png"),
+        love.graphics.newImage("assets/world/objects/foliage/BQ Foliage-2.png"),
+        love.graphics.newImage("assets/world/objects/foliage/BQ Foliage-3.png"),
+        love.graphics.newImage("assets/world/objects/foliage/BQ Foliage-4.png"),
+    }
 
-        initLighting()
-        initBones()
+    initLighting()
+    initBones()
+
+    world = {}
+    worldImg = {}
+    lightGivers = {
+        ["assets/world/objects/lantern.png"] = {
+            brightness = 0.8,
+            color = {1, 0.5, 0},
+        },
+        ["assets/world/objects/Mushroom.png"]  = {
+            brightness = 0.8,
+            color = {1, 0.6, 0},
+        },
+        ["assets/world/objects/Pumpkin0.png"] = {
+            brightness = 1,
+            color = {1, 0.5, 0},
+        },
+        ["assets/world/objects/Pumpkin1.png"] = {
+            brightness = 1,
+            color = {1, 0.5, 0},
+        },
+        ["assets/world/objects/Pumpkin2.png"] = {
+            brightness = 1,
+            color = {1, 0.5, 0},
+        },
+        ["assets/world/objects/Lamp.png"]  = {
+            brightness = 2,
+            color = {1, 0.5, 0},
+        },
+        ["assets/world/objects/Furnace.png"] = {
+            brightness = 1,
+            color = {1, 0.2, 0},
+        },
+        ["assets/world/objects/Campfire.png"] = {
+            brightness = 0.7,
+            color = {1, 0.2, 0},
+        },
+        ["assets/world/objects/Ice Torch.png"] = {
+            brightness = 1,
+            color = {0,0.5,1},
+        },
+        ["assets/world/grounds/Lava.png"] = {
+            brightness = 2,
+            color = {1, 0.5, 0},
+        },
+        ["assets/world/objects/Portal.png"] = {
+            brightness = 3,
+            color ={0.6,0,0.4}
+        },
+        ["assets/world/walls/Red Wall.png"] = {
+            brightness = 4,
+            color ={0.8,0,0.0}
+        },
+        ["assets/world/objects/Mould Mushroom.png"] = {
+            brightness = 0.7,
+            color ={1,0,0.8}
+        },
+    }
 end

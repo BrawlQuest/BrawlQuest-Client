@@ -8,10 +8,10 @@ function love.mousepressed(x, y, button)
         checkQuestPanelMousePressed(button)
         checkHotbarMousePressed(button)
         if challenges.open then checkChallengesMousePressed(button) end
-        if inventory.mouseOverButtonsAmount == 0 then checkInventoryMousePressed(button) end
         if isSettingsWindowOpen then checkSettingsMousePressed(button) end
         checkStatsMousePressed(button)
         if crafting.open then checkCraftingMousePressed(button) end
+        if inventory.mouseOverButtonsAmount == 0 then checkItemDragMousePressed(button) end
         if showNPCChatBackground then checkNPCChatMousePressed(button) end
         checkWorldEditMouseDown(button)
         if mouseOverChat then isTypingInChat = not isTypingInChat end
@@ -20,16 +20,20 @@ function love.mousepressed(x, y, button)
 end
 
 function love.mousereleased(x, y, button)
-    if worldEdit.open and worldEdit.drawmode == "rectangle" then
-       checkWorldEditRectMouseUp(button)
-    elseif characterHub.amount > 0 then
-        if characterHub.selectedPerk > -1 then
-            if perks.changeAmount > 0 then
-                apiGET("/stat/"..player.name.."/"..perkTitles[characterHub.selectedPerk+1].."/"..perks.changeAmount)
-            else
-                c, h = http.request{url = api.url.."/stat/"..player.name.."/"..perkTitles[characterHub.selectedPerk+1].."/"..math.abs(perks.changeAmount), method="DELETE", headers={["token"]=token}}
+    if phase == "game" then
+        if worldEdit.open and worldEdit.drawmode == "rectangle" then
+        checkWorldEditRectMouseUp(button)
+        elseif characterHub.amount > 0 then
+            if characterHub.selectedPerk > -1 then
+                if perks.changeAmount > 0 then
+                    apiGET("/stat/"..player.name.."/"..perkTitles[characterHub.selectedPerk+1].."/"..perks.changeAmount)
+                else
+                    c, h = http.request{url = api.url.."/stat/"..player.name.."/"..perkTitles[characterHub.selectedPerk+1].."/"..math.abs(perks.changeAmount), method="DELETE", headers={["token"]=token}}
+                end
             end
         end
+        if itemDrag.dragging then checkItemDragMouseReleased(button) 
+        elseif inventory.mouseOverButtonsAmount == 0 then checkInventoryMousePressed(button) end
     end
 end
 

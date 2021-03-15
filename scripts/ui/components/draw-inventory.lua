@@ -117,22 +117,7 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
         love.graphics.setColor(1,1,1,1)
         if item then drawItem(thisX,thisY,item) end
 
-        if amount and amount > 1 then
-            if amount <= 9 then
-                inventory.imageNumber = 1
-            elseif amount > 9 and amount <= 99 then
-                inventory.imageNumber = 2
-            elseif amount > 99 and amount <= 999 then
-                inventory.imageNumber = 3
-            else
-                inventory.imageNumber = 4
-            end
-            thisX, thisY = thisX + 39 - inventory.images.numberBg[inventory.imageNumber]:getWidth(),
-                thisY + 39 - inventory.images.numberBg[inventory.imageNumber]:getHeight()
-            love.graphics.draw(inventory.images.numberBg[inventory.imageNumber], thisX, thisY)
-            love.graphics.setColor(0, 0, 0)
-            love.graphics.print(amount, thisX + 5, thisY + 4)
-        end
+        drawItemAmount(thisX, thisY, amount)
         love.graphics.setColor(1,1,1)
     end
 end
@@ -210,6 +195,21 @@ function drawItemBacking(thisX, thisY)
     roundRectangle("fill", thisX, thisY, inventory.images.itemBG:getWidth(), inventory.images.itemBG:getHeight(), 4)
 end
 
-function drawInventoryStencil()
-    love.graphics.rectangle("fill", (0), (0 + 50), 313, (uiY - 97 - 50 - 50))
+function drawItemAmount(x,y,amount)
+    if amount and amount > 1 then
+        if amount <= 9 then
+            inventory.imageNumber = 1
+        elseif amount > 9 and amount <= 99 then
+            inventory.imageNumber = 2
+        elseif amount > 99 and amount <= 999 then
+            inventory.imageNumber = 3
+        else
+            inventory.imageNumber = 4
+        end
+        x, y = x + 39 - inventory.images.numberBg[inventory.imageNumber]:getWidth(),
+            y + 39 - inventory.images.numberBg[inventory.imageNumber]:getHeight()
+        love.graphics.draw(inventory.images.numberBg[inventory.imageNumber], x, y)
+        love.graphics.setColor(0, 0, 0)
+        love.graphics.print(amount, inventory.itemFont, x + 5, y + 4)
+    end
 end

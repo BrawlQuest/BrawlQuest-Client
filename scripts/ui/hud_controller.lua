@@ -192,6 +192,7 @@ function drawHUD()
         drawTooltip()
         if challenges.open then drawChallenges() end
         if enchanting.open then drawEnchanting() end
+        if itemDrag.dragging then drawItemDrag() end
     love.graphics.pop()
 end
 
