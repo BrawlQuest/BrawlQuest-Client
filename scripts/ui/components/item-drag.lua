@@ -3,27 +3,35 @@ function initItemDrag()
         dragging = false,
         amount = 1,
         item = null,
+        alpha = 0,
     }
 end
 
 function updateItemDrag(dt)
     local iD = itemDrag
+    panelMovement(dt, itemDrag, 1, "alpha", 4)
 end
 
 function drawItemDrag()
     local iD = itemDrag
-    local x,y = mx / scale, my / scale
+    local x,y = mx / scale - 16, my / scale - 16
+    love.graphics.setColor(1,1,1,iD.alpha)
     drawItemBacking(x,y)
-    love.graphics.setColor(1,1,1,1)
     if iD.item then drawItem(x,y,iD.item) end
-    drawItemAmount(x,y,iD.amount)
+    drawItemAmount(x,y,iD.amount,iD.alpha)
     love.graphics.setColor(1,1,1)
 end
 
-function checkItemDragMousePressed(button)
+function checkItemDragMousePressed(button, hotbarI)
     local iD = itemDrag
-    iD.item = copy(selectedItem)
-    iD.amount = selectedItemAmount
+    if hotbarI then
+        iD.item = copy(hotbar[hotbarI].item)
+        iD.amount = hotbar[hotbarI].amount
+    else
+        iD.item = copy(selectedItem)
+        iD.amount = selectedItemAmount
+    end
+    iD.alpha = 0
     iD.dragging = true
 end
 

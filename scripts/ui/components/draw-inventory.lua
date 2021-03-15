@@ -196,7 +196,8 @@ function drawItemBacking(thisX, thisY)
     roundRectangle("fill", thisX, thisY, inventory.images.itemBG:getWidth(), inventory.images.itemBG:getHeight(), 4)
 end
 
-function drawItemAmount(x,y,amount)
+function drawItemAmount(x,y,amount, alpha)
+    alpha = alpha or 1
     if amount and amount > 1 then
         if amount <= 9 then
             inventory.imageNumber = 1
@@ -210,7 +211,7 @@ function drawItemAmount(x,y,amount)
         x, y = x + 39 - inventory.images.numberBg[inventory.imageNumber]:getWidth(),
             y + 39 - inventory.images.numberBg[inventory.imageNumber]:getHeight()
         love.graphics.draw(inventory.images.numberBg[inventory.imageNumber], x, y)
-        love.graphics.setColor(0, 0, 0)
+        love.graphics.setColor(0, 0, 0, alpha)
         love.graphics.print(amount, inventory.itemFont, x + 5, y + 4)
     end
 end
