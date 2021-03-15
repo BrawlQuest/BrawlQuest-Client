@@ -33,6 +33,7 @@ function checkItemDragMousePressed(button, hotbarI)
     end
     iD.alpha = 0
     iD.dragging = true
+    showMouse = false
 end
 
 function checkItemDragMouseReleased(button)
@@ -45,6 +46,7 @@ function checkItemDragMouseReleased(button)
         iD.amount = 0
     end
     iD.dragging = false
+    showMouse = true
 end
 
 -- initItemDrag()

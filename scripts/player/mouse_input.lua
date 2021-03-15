@@ -39,6 +39,21 @@ function love.mousereleased(x, y, button)
     end
 end
 
+function love.mousemoved(x, y, dx, dy, istouch)
+    if not itemDrag.dragging then showMouse = true end
+end
+
+local speed = 8
+function updateMouse(dt)
+    if showMouse and mouseAmount < 1 then
+        mouseAmount = mouseAmount + speed * dt
+        if mouseAmount >= 1 then mouseAmount = 1 end
+    elseif mouseAmount > 0 then 
+        mouseAmount = mouseAmount - speed * dt
+        if mouseAmount <= 0 then mouseAmount = 0 end
+    end
+end
+
 function love.wheelmoved( dx, dy )
     if phase == "game" then
         if isSettingsWindowOpen then scrollSettings(dx, dy)

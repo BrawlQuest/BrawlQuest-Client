@@ -94,7 +94,7 @@ oldInfo = {}
 sendUpdate = false
 
 function love.load()
-    mx, my = 0, 0
+    showMouse, mouseAmount, mx, my = true, 1, 0, 0
     limits = love.graphics.getSystemLimits( )
     print(limits.multicanvas)
     outlinerOnly = newOutliner(true)
@@ -213,7 +213,7 @@ function love.draw()
         love.graphics.print(text, offset, 10)
     end
     mx, my = love.mouse.getPosition()
-    love.graphics.setColor(1,1,1)
+    love.graphics.setColor(1,1,1,mouseAmount)
     love.graphics.draw(mouseImg, mx, my)
 end
 
@@ -241,6 +241,7 @@ function love.update(dt)
 
             nextUpdate = 0.5
         end
+        updateMouse(dt)
         updateHUD(dt)
         updateEnemies(dt)
         updateNPCs(dt)

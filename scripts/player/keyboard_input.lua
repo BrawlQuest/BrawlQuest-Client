@@ -16,6 +16,7 @@ function love.keypressed(key)
 end
 
 function checkKeyPressedPhaseGame(key)
+    showMouse = false
     if worldEdit.open then checkWorldEditKeyPressed(key)
     elseif challenges.open then checkChallengesKeyPressed(key)
     elseif enchanting.open then checkEnchantingKeyPressed(key)
