@@ -64,7 +64,7 @@ end
 
 function checkChallengesKeyPressed(key)
     local c = challenges
-    if checkMoveOrAttack(key) then c.open = false end
+    if checkMoveOrAttack(key) or key == "f" then c.open = false end
 end
 
 function checkChallengesMousePressed(button)

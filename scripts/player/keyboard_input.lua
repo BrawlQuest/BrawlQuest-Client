@@ -16,8 +16,7 @@ function love.keypressed(key)
 end
 
 function checkKeyPressedPhaseGame(key)
-    if worldEdit.open then
-        checkWorldEditKeyPressed(key)
+    if worldEdit.open then checkWorldEditKeyPressed(key)
     elseif challenges.open then checkChallengesKeyPressed(key)
     elseif enchanting.open then checkEnchantingKeyPressed(key)
     elseif worldEdit.isTyping then
@@ -67,9 +66,7 @@ function checkKeyPressedPhaseGame(key)
                 startConversation()
             end
         end
-        if (key == "f" and versionType == "dev") then
-            challenges.open = not challenges.open
-        end
+        if (key == "f" and versionType == "dev") then challenges.open = not challenges.open end
     end
 end
 
