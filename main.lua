@@ -2,8 +2,8 @@
 require "scripts.dummy.lanterns"
 require "scripts.libraries.api"
 require "scripts.player.character"
-require "scripts.player.keyboard_input"
-require "scripts.player.mouse_input"
+require "scripts.player.keyboard"
+require "scripts.player.mouse"
 require "scripts.effects.bones"
 require "scripts.effects.lighting"
 require "scripts.effects.music"
@@ -33,6 +33,7 @@ require "scripts.ui.components.events"
 require "scripts.ui.components.enchanting"
 require "scripts.ui.components.challenges"
 require "scripts.ui.components.item-drag"
+require "scripts.ui.components.forging"
 require "scripts.libraries.api"
 require "scripts.libraries.utils"
 require "scripts.libraries.colorize"
@@ -122,6 +123,7 @@ function love.load()
     initEnchanting()
     initChallenges()
     initItemDrag()
+    initForging()
     love.graphics.setFont(textFont)
 end
 
@@ -254,6 +256,7 @@ function love.update(dt)
         updateChallenges(dt)
         if itemDrag.dragging then updateItemDrag(dt) end
         if death.open then updateDeath(dt) end
+        if forging.open then updateForging(dt) end
         updateRangedWeapons(dt)
         if showNPCChatBackground then updateNPCChat(dt) end
         if showWorldAnimations then updateLeaves(dt) end

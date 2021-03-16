@@ -17,6 +17,7 @@ function love.mousepressed(x, y, button)
         checkWorldEditMouseDown(button)
         if mouseOverChat then isTypingInChat = not isTypingInChat end
         if enchanting.open then checkEnchantingMousePressed(button) end
+        if forging.open then checkForgingMousePressed(button) end
     end
 end
 

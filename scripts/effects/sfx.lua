@@ -22,6 +22,8 @@ function initSFX()
     shieldDownSfx = love.audio.newSource("assets/sfx/player/actions/shield.wav", "static")
     shieldDownSfx:setPitch(0.5)
 
+    forgingSfx = love.audio.newSource("assets/ui/forging/microwave.wav", "static")
+
     speakSound = love.audio.newSource("assets/sfx/speak.wav", "static")
 
     stepSounds = {
@@ -77,6 +79,7 @@ function setSFXVolumes()
     birds:setVolume(1 * sfxVolume)
     -- horseMountSfx:setVolume(1*sfxVolume)
     stepSfx:setVolume(0.5 * sfxVolume)
+    forgingSfx:setVolume(1 * sfxVolume)
     for i = 1, #attackSfxs do
         attackSfxs[i]:setVolume(1*sfxVolume)
     end
