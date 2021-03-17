@@ -35,6 +35,14 @@ function initLeaves()
         yv = {0,0},
         r = {0,0}
     }
+    leafImg["murky"] = {
+        img = love.graphics.newImage("assets/leaves/magic.png"),
+        chance = 10000,
+        xv = {-50,-10},
+        yv = {0,0},
+        r = {0,100},
+        light = {0,0,1}
+    }
 end
 
 function addLeaf(x,y,type,alpha)
@@ -51,6 +59,10 @@ function addLeaf(x,y,type,alpha)
             alpha = 0,
             type = type,
         }
+        -- if leafImg[type].light then
+        --     local lightID = Luven.addNormalLight(x,y,leafImg[type].light,1)
+        --     leaves[#leaves].light = lightID
+        -- end
  
 end
 
@@ -60,6 +72,10 @@ function updateLeaves(dt)
             v.x = v.x - v.xv*dt
             v.y = v.y - v.yv*dt
             v.r = v.r + v.rs*dt
+        --     if v.light then
+        --  --       Luven.setLightPosition(v.light,v.x,v.y)
+        -- --    Luven.setLightPower(v.light, v.alpha)
+        --     end
             v.alpha = v.alpha - love.math.random(0,300)/100*dt
             if v.alpha < 0 and love.math.random(1,leafImg[v.type].chance) == 1 then
                 v.x = v.bx
@@ -67,6 +83,9 @@ function updateLeaves(dt)
                 v.yv = love.math.random(leafImg[v.type].yv[1],leafImg[v.type].yv[2])
                 v.y = v.by
                 v.alpha = 5
+                if v.light then
+                    Luven.setLightPower(v.light,2)
+                end
             end
         end
     end
