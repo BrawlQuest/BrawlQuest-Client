@@ -68,7 +68,7 @@ function checkKeyPressedPhaseGame(key)
                 startConversation()
             end
         end
-        if (key == "f" and versionType == "dev") then forging.open = not forging.open end
+        if (key == "f" and versionType == "dev") then openForging() end
     end
 end
 

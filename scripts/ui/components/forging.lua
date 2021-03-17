@@ -1,30 +1,90 @@
 
 function initForging()
     forging = {
-        open = true,
+        open = false,
         amount = 1,
         w = 600,
         h = 400,
         r = 0,
         ra = 1,
+        a = 0,
+        alpha = 1,
         forging = false,
         forgeImg = love.graphics.newImage("assets/world/objects/Furnace.png"),
         font = crafting.font,
         mouseOver = {
             furnace = false,
         },
+        ores = {
+            json:decode([[{
+                "Desc": "A strong and metallic substance, perfect for crafting.",
+                "Enchantment": "None",
+                "ID": 7,
+                "ImgPath": "assets/items/reagent/Metal.png",
+                "Name": "Metal",
+                "Type": "reagent",
+                "Val": "0",
+                "Worth": 1
+            }]]),
+            json:decode([[{
+                "Desc": "An immensely rare and precious material, which when combined with Mana sparks and comes to life.",
+                "Enchantment": "None",
+                "ID": 46,
+                "ImgPath": "assets/items/reagent/Exotic Material.png",
+                "Name": "Exotic Material",
+                "Type": "reagent",
+                "Val": "1",
+                "Worth": 1
+            }]]),
+            json:decode([[{
+                "Desc": "An immensely rare and precious material, which when combined with Mana sparks and comes to life.",
+                "Enchantment": "None",
+                "ID": 46,
+                "ImgPath": "assets/items/reagent/Exotic Material.png",
+                "Name": "Exotic Material",
+                "Type": "reagent",
+                "Val": "1",
+                "Worth": 1
+            }]]),
+        },
+        enteredItems = {},
+        resultItems = {},
+        showResults = false,
     }
-
 end
 
 function updateForging(dt)
     local f = forging
     if f.forging then
-        f.ra = f.ra + 5 * dt
+        f.ra = f.ra + 10 * dt
         if f.ra > 2 then f.ra = 0 end
-        local offset = 4
+        local offset = 1
         f.r = cerp(-offset, offset, f.ra)
-    else f.r = 0 end
+
+        f.a = f.a + 0.3 * dt
+        if f.a >= 1 then -- end forging
+            forgingPush:stop()
+            forgingPop:play()
+            f.forging = false
+            f.a = 0
+            f.showResults = true
+            f.resultItems = copy(f.enteredItems)
+            f.enteredItems = {}
+        end
+    elseif f.showResults then
+        f.alpha = 0.3
+        f.r = 0
+        f.a = f.a + 0.5 * dt
+        if f.a >= 1 then
+            f.showResults = false
+            f.a = 0
+            f.alpha = 1
+            f.showResults = false
+            f.resultItems = {}
+        end
+    else
+        f.r = 0
+    end
 end
 
 function drawForging()
@@ -33,56 +93,99 @@ function drawForging()
     love.graphics.setFont(f.font)
     love.graphics.setColor(0,0,0,0.8)
     love.graphics.rectangle("fill", x - f.w / 2, y - f.h / 2, f.w, f.h, 10)
-    love.graphics.setColor(1,1,1,1)
+    love.graphics.setColor(1,1,1,f.alpha)
 
     love.graphics.push()
         love.graphics.translate(x + 100, y)
         love.graphics.rotate(math.rad(f.r))
         local offset = 0
         f.mouseOver.furnace = true
-        if isMouseOver((x + 100 - 160) * scale, (y - 160) * scale, 320 * scale, 320 * scale) then
+        if isMouseOver((x + 100 - 160) * scale, (y - 160) * scale, 320 * scale, 320 * scale) and not f.forging then
             offset = 3
-            love.graphics.setColor(1, 0.5, 0.5)
+            love.graphics.setColor(1, 0.5, 0.5, f.alpha)
             f.mouseOver.furnace = true
         else f.mouseOver.furnace = false end
-        love.graphics.draw(f.forgeImg, -16 * 10, -16 * 10 - offset, 0, 10)
+        love.graphics.draw(f.forgeImg, -16 * 10 + f.r, -16 * 10 - offset, 0, 10)
     love.graphics.pop()
 
-    love.graphics.setColor(1,1,1,1)
+    love.graphics.setColor(1,1,1,f.alpha)
     x,y = x - f.w / 2 + 10, y - f.h / 2 + 10
     love.graphics.print("FORGING", x + 10, y, 0, 4)
 
     y = y + f.font:getHeight() * 4
     love.graphics.print("Entered Ores", x + 10, y, 0, 3)
 
-    x,y = uiX / 2 + f.w / 2, uiY / 2 - f.h / 2
-    love.graphics.setColor(1,1,0)
-    local minus = (f.font:getWidth("Press the furnace to forge!") ) / 2
-    love.graphics.push()
-        love.graphics.translate(x - 20, y + 20)
-        love.graphics.rotate(math.rad(25))
-        love.graphics.scale(3)
-        love.graphics.print("Press the furnace to forge!", -f.font:getWidth("Press the furnace to forge!") / 2)
-    love.graphics.pop()
+    if #f.enteredItems == 0 then
+        local w, h = 200, getTextHeight("You don't have any ores to smelt", 200, f.font, 2)
+        x, y = x + 10, (uiY / 2) + 30 - h / 2
+        love.graphics.printf("You don't have any ores to smelt", x, y, 200 / 2, "center", 0, 2)
+    elseif #f.enteredItems > 0 then
+        x,y = x + 10, y + f.font:getHeight() * 3 + 6
+        for i,v in ipairs(f.enteredItems) do
+            drawInventoryItem(x,y,v.item,v.amount)
+            love.graphics.print(v.item.Name, x + 44, y + 8, 0, 2)
+            y = y + 46
+        end
 
+        x,y = uiX / 2 + f.w / 2, uiY / 2 - f.h / 2
+        love.graphics.setColor(1,1,0,f.alpha)
+        love.graphics.push()
+            love.graphics.translate(x - 20, y + 20)
+            love.graphics.rotate(math.rad(25))
+            love.graphics.scale(3)
+            love.graphics.print("Press the furnace to forge!", -f.font:getWidth("Press the furnace to forge!") / 2)
+        love.graphics.pop()
+    end
+
+    if #f.resultItems > 0 then
+        love.graphics.setColor(1,1,1)
+        x,y = (uiX / 2), (uiY / 2)
+        local w,h = #f.resultItems * 34 + 10 * (#f.resultItems - 1), 34
+        love.graphics.push()
+            love.graphics.translate(x,y)
+            love.graphics.scale(2)
+            local dx = 0
+            for i,v in ipairs(f.resultItems) do
+                drawInventoryItem(dx - w / 2, 0, v.item, v.amount)
+                dx = dx + 44
+            end
+            love.graphics.printf("You Received:", 0 - w / 2, -20, w / 2, "center", 0, 2)
+        love.graphics.pop()
+    end
 end
 
 function checkForgingKeyPressed(key)
     local f = forging
-    if f.mouseOver.furnace then
-        f.forging = true
-        forgingSfx:play()
-    end
-    
-    if checkMoveOrAttack(key) then f.open = false end
+    if key == "return" and #f.enteredItems > 0 then smeltOres() end
+    if (key == "f" or checkMoveOrAttack(key)) and not f.forging and not f.showResults then f.open = false end
 end
 
 function checkForgingMousePressed(button)
     local f = forging
     if f.mouseOver.furnace then
-        f.forging = true
-        forgingSfx:play()
+        smeltOres()
     end
+end
+
+function enterOres()
+    local f = forging
+    for i, item in ipairs(f.ores) do
+        local amount = getItemAmount(item)
+        if getItemAmount(item) > 0 then f.enteredItems[#f.enteredItems+1] = {item = item, amount = amount} end
+    end
+end
+
+function smeltOres()
+    local f = forging
+    f.forging = true
+    forgingPush:play()
+end
+
+function openForging()
+    local f = forging
+    f.open = true
+    f.enteredItems = {}
+    enterOres()
 end
 
 --[[

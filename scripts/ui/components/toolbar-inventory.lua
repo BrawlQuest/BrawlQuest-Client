@@ -184,7 +184,7 @@ end
 
 function getItemAmount(item)
     local amount = 0
-    if item ~= null then
+    if item then
         for i, v in ipairs(inventoryAlpha) do
             if v.Item.ID == item.ID then
                 amount = v.Inventory.Amount

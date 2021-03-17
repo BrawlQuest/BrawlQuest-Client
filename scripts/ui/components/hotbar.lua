@@ -28,7 +28,7 @@ end
 function drawHotbar(thisX, thisY)
     love.graphics.setColor(1,1,1)
     for i,v in ipairs(hotbar) do
-        drawInventoryItem(thisX + 9 + (43 * (i - 1)), thisY - 42, 0, v.item, v.amount, i)
+        drawInventoryItem(thisX + 9 + (43 * (i - 1)), thisY - 42, v.item, v.amount, i)
     end
 end
 

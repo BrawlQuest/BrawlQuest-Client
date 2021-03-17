@@ -37,7 +37,7 @@ function drawToolBarInventory(thisX, thisY)
     drawHotbar(thisX, thisY)
 end
 
-function drawInventoryItem(thisX, thisY, field, item, amount, number)
+function drawInventoryItem(thisX, thisY, item, amount, number)
     love.graphics.setFont(inventory.itemFont)
     if number then
         local height = 19
@@ -177,17 +177,17 @@ function drawInventoryItemField(thisX, thisY, field)
 
     for i,v in ipairs(userInventory[field]) do  
         if i <= 7 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 0), field, v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 0), v.Item, v.Inventory.Amount)
         elseif i > 7 and i <= 14 then
-            drawInventoryItem(thisX + (43 * (i - 8)), thisY + (inventory.itemSpacing * 1), field, v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 8)), thisY + (inventory.itemSpacing * 1), v.Item, v.Inventory.Amount)
         elseif i > 14 and i <= 21 then
-            drawInventoryItem(thisX + (43 * (i - 15)), thisY + (inventory.itemSpacing * 2), field, v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 15)), thisY + (inventory.itemSpacing * 2), v.Item, v.Inventory.Amount)
         elseif i > 21 and i <= 28 then
-            drawInventoryItem(thisX + (43 * (i - 22)), thisY + (inventory.itemSpacing * 3), field, v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 22)), thisY + (inventory.itemSpacing * 3), v.Item, v.Inventory.Amount)
         elseif i > 28 and i <= 35 then
-            drawInventoryItem(thisX + (43 * (i - 29)), thisY + (inventory.itemSpacing * 4), field, v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 29)), thisY + (inventory.itemSpacing * 4), v.Item, v.Inventory.Amount)
         else
-            drawInventoryItem(thisX + (43 * (i - 36)), thisY + (inventory.itemSpacing * 5), field, v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 36)), thisY + (inventory.itemSpacing * 5), v.Item, v.Inventory.Amount)
         end
     end
 end
