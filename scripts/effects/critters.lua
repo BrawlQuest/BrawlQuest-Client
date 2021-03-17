@@ -106,7 +106,9 @@ function updateCritters(dt)
             end
         elseif v.alpha < 2 and distanceToPoint(player.dx, player.dy, v.x, v.y) > 256 then
             v.alpha = v.alpha + 1 * dt
-            Luven.setLightPower(v.light, v.alpha / 2)
+            if v.light then
+                Luven.setLightPower(v.light, v.alpha / 2)
+            end
         end
         for a, k in pairs(v.critter) do
             if distanceToPoint(player.dx, player.dy, v.x, v.y) < 64 then
@@ -115,7 +117,9 @@ function updateCritters(dt)
                     k.targetY = k.y + love.math.random(-128, 128)
                     k.scattering = true
                     if critterType[v.type].sounds then
-                        love.audio.play(critterType[v.type].sounds.hide[love.math.random(1,#critterType[v.type].sounds.hide)])
+                        local hideSound = critterType[v.type].sounds.hide[love.math.random(1,#critterType[v.type].sounds.hide)]
+                        hideSound:setVolume(sfxVolume)
+                        love.audio.play(hideSound)
                     end
                 end
                 speed = 48 * dt
@@ -130,9 +134,11 @@ function updateCritters(dt)
             elseif k.y > k.targetY + 1 then
                 k.y = k.y - speed
             end
-            if not k.scaattering and distanceToPoint(player.dx, player.dy, v.x, v.y) < 256 and love.math.random(1,3500) == 1 then
+            if not k.scattering and distanceToPoint(player.dx, player.dy, v.x, v.y) < 256 and love.math.random(1,3500) == 1 and v.alpha > 1 then
                 if critterType[v.type].sounds then
-                    love.audio.play(critterType[v.type].sounds.idle[love.math.random(1,#critterType[v.type].sounds.idle)])
+                    local idleSound = critterType[v.type].sounds.idle[love.math.random(1,#critterType[v.type].sounds.idle)]
+                    idleSound:setVolume(sfxVolume)
+                    love.audio.play(idleSound)
                 end
             end
             if love.math.random(1, 2500) == 1 and distanceToPoint(player.dx, player.dy, v.x, v.y) > 64 then
