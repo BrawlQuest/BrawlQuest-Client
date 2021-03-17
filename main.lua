@@ -16,6 +16,7 @@ require "scripts.effects.camera"
 require "scripts.effects.clouds"
 require "scripts.effects.world-mask"
 require "scripts.effects.death"
+require "scripts.effects.critters"
 require "scripts.ui.hud_controller"
 require "scripts.ui.components.character-hub"
 require "scripts.ui.components.crafting"
@@ -62,9 +63,9 @@ utf8 = require("utf8")
 newOutliner = require 'scripts.libraries.outliner'
 
 version = "Early Access" 
-versionType = "release" -- "dev" for quick login, "release" for not
+versionType = "dev" -- "dev" for quick login, "release" for not
 if versionType == "dev" then require 'dev' end
-versionNumber = "1.2.1+2" -- very important for settings
+versionNumber = "1.2.1+3" -- very important for settings
 
 phase = "login"
 blockMap = {}
@@ -177,6 +178,7 @@ function love.load()
     initPlayers()
     initEnchanting()
     initChallenges()
+    initCritters()
     love.graphics.setFont(textFont)
 end
 
@@ -206,7 +208,7 @@ function love.draw()
             drawFloats()
             
             drawPlayer(me, -1)
-            if showWorldAnimations then drawLeaves() end
+            if showWorldAnimations then drawLeaves() drawCritters() end
             drawLoot()
 
             local drawingText = false
@@ -309,7 +311,7 @@ function love.update(dt)
         if death.open then updateDeath(dt) end
         -- updateRangedWeapons(dt)
         if showNPCChatBackground then updateNPCChat(dt) end
-        if showWorldAnimations then updateLeaves(dt) end
+        if showWorldAnimations then updateLeaves(dt) updateCritters(dt) end
         Luven.update(dt)
         if showClouds and enchanting.amount < 0.01 then updateClouds(dt) end
         if showWorldMask then updateWorldMask(dt) end
@@ -360,7 +362,13 @@ function love.update(dt)
                     timeOfDay = timeOfDay + 0.1
                     usedItemThisTick = false
                     if not worldEdit.open then
-                        Luven.setAmbientLightColor({timeOfDay, timeOfDay, timeOfDay+  0.1})
+                        if worldLookup[me.X] and worldLookup[me.X][me.Y] then -- custom lighting for different zones
+                            if worldLookup[me.X][me.Y].Name == "Elodine's Gift"  then
+                                Luven.setAmbientLightColor({0.1,0.1,0.1})
+                            end
+                        else
+                            Luven.setAmbientLightColor({timeOfDay, timeOfDay, timeOfDay+  0.1})
+                        end
                     else
                         Luven.setAmbientLightColor({1,1,1})
                     end

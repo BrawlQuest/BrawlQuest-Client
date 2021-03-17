@@ -23,10 +23,11 @@ function loadMusic()
         Longing = love.audio.newSource("assets/music/album1/Longing.mp3", "stream"),
         Permafrost = love.audio.newSource("assets/music/temp/Some-Dreamy-Place.mp3", "stream"),
         Enchantment = love.audio.newSource("assets/music/ambient/enchant.mp3", "stream"),
-        ["Enchantment Haunt"] = love.audio.newSource("assets/music/ambient/enchant haunt.mp3", "stream")
+        ["Enchantment Haunt"] = love.audio.newSource("assets/music/ambient/enchant haunt.mp3", "stream"),
+        ["Dreamlands"] = love.audio.newSource("assets/music/temp/Dreamlands.mp3", "stream")
     }
 
-    worldMusic = {"PuerLavari", "Mining", "Sax", "ToFindTheOne", "Heat", "Longing", "Permafrost", "Enchantment", "Enchantment Haunt"}
+    worldMusic = {"PuerLavari", "Mining", "Sax", "ToFindTheOne", "Heat", "Longing", "Permafrost", "Enchantment", "Enchantment Haunt", "Dreamlands"}
     battleMusic = {"Titans", "Skirmish", "Skirmish2", "CaperOfCruelty", "HIJINKS", }
 
     musicSwitchAmount = 0

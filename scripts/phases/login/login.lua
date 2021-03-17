@@ -43,7 +43,7 @@ function initLogin()
         "",
         "Created By" ,
         "Thomas Lock & Danjoe Stubbs",
-        "Original music by JoeyFunWithMusic\nAdditional music by Eric Matyas (Some Dreamy Place, Ocean Game Title, Left Behind, Dreamlands)",
+        "Original music by JoeyFunWithMusic\nAdditional music by Eric Matyas (Some Dreamy Place, Ocean Game Title, Left Behind, Dreamlands, Their Sacred Place)",
         "",
         "Graphics by David E. Gervais,used here under a CC license. pousse.rapiere.free.fr/tome/",
         "",
@@ -185,11 +185,11 @@ function checkLoginTextInput(key)
     end
 end
 
-function loginViaSteam()
-    if versionType ~= "dev" and love.system.getOS() ~= "Linux"  then
+function loginViaSteam(skipDev)
+    if skipDev or (versionType ~= "dev" and love.system.getOS() ~= "Linux")  then
         local originalID = steam.user.getSteamID()
         local str = tostring(originalID)
-     
+        print("Logging in as "..str)
         if str ~= "nil" then
             textfields[1] = str
             textfields[2] = str

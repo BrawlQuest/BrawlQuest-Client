@@ -9,14 +9,7 @@ function devLogin(key)
         quickLogin("Danjoe", 3)
     end
     if key == "left" or key == "a" then
-        local originalID = steam.user.getSteamID()
-        local str = tostring(originalID)
-        if str ~= "nil" then
-            textfields[1] = str
-            textfields[2] = str
-            textfields[3] = str
-            login()
-        end
+        loginViaSteam(true)
     elseif key == "right" or key == "d" then loginPhase = "login" end
     if key == "escape" then love.event.quit() end
 end

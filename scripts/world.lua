@@ -15,6 +15,7 @@ end
 
 function createWorld()
     leaves = {}
+    critters = {}
     lightSource = {}
     highestX = 0
     highestY = 0
@@ -50,7 +51,11 @@ function createWorld()
             addLeaf(v.X*32 + 16, v.Y*32 + 8, "fire")
         elseif isTileType(v.ForegroundTile, "Sand") then
             -- addLeaf(v.X*32 + 16, v.Y*32 + 16, "sand")
+        elseif isTileType(v.GroundTile, "Murky") then
+            addLeaf(v.X*32, v.Y*32+16, "murky")
         end
+
+       
     end
 
     for key, v in next, worldCanvas do
@@ -71,6 +76,7 @@ function createWorld()
             love.graphics.setCanvas(worldCanvas[cx .. "," .. cy].map)
                 love.graphics.clear()
                 love.graphics.setColor(1, 1, 1)
+  
                 
                 for x = 0, chunkSize do
                     for y = 0, chunkSize do
@@ -82,6 +88,7 @@ function createWorld()
                 for i, v in ipairs(world) do
                     if v.X >= cx * chunkSize and v.X < (cx + 1) * chunkSize and v.Y >= cy * chunkSize and v.Y < (cy + 1) * chunkSize then
                         drawTile(v, cx, cy)
+                        addCritters(v)
                     end
                 end
             love.graphics.setCanvas()
@@ -114,7 +121,6 @@ function drawTile(v, cx, cy)
     elseif (isTileWall(v.GroundTile) or isTileWall(v.ForegroundTile)) and not worldLookup[v.X][v.Y+1] then -- no tile below us but we still need to cast a shadow
         love.graphics.rectangle("fill", (x) * 32, (y) * 32, 32, 16)
     end 
-
     love.graphics.setColor(1,1,1,1)
     if foregroundAsset ~= backgroundAsset and worldImg[foregroundAsset] then love.graphics.draw(worldImg[foregroundAsset], (x) * 32, (y) * 32) end
 end
