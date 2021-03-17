@@ -61,7 +61,7 @@ function updateForging(dt)
         local offset = 1
         f.r = cerp(-offset, offset, f.ra)
 
-        f.a = f.a + 0.3 * dt
+        f.a = f.a + 0.35 * dt
         if f.a >= 1 then -- end forging
             forgingPush:stop()
             forgingPop:play()
@@ -91,7 +91,7 @@ function drawForging()
     local f = forging
     local x,y = (uiX / 2), (uiY / 2)
     love.graphics.setFont(f.font)
-    love.graphics.setColor(0,0,0,0.8)
+    love.graphics.setColor(0,0,0,0.86)
     love.graphics.rectangle("fill", x - f.w / 2, y - f.h / 2, f.w, f.h, 10)
     love.graphics.setColor(1,1,1,f.alpha)
 
