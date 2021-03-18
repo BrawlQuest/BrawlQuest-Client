@@ -4,21 +4,27 @@
 critters = {}
 
 critterType = {
-    ["Squall's End"] = {
-        img = "assets/items/buddy/Chicken.png",
-        allowed = {"Squall's End"}
-    },
     ["assets/world/grounds/grass/grass08.png"] = {
         img = "assets/items/buddy/Chicken.png",
         allowed = {"Westlum", "Squall's End", "Foundation Forest"},
-        chance = 100
+        chance = 100,
+        name = "chicken",
+        amount = 3
+    },
+      ["assets/world/grounds/Cave Floor.png"] = {
+        img = "assets/critter/shade.png",
+        allowed = {"Squall's End"},
+        chance = 10,
+        name = "shade",
+        amount = 2
     },
     ["assets/world/grounds/Murky Grass.png"] = {
         img = "assets/critter/mystic.png",
         allowed = {"Elodine's Gift"},
         light = {0, 0, 1},
-        chance = 50,
-        name = "mystic"
+        chance = 150,
+        name = "mystic",
+        amount = 4
     }
     --  ["assets/world/grounds/Water.png"] = "assets/critter/fish.png",
 }
@@ -52,7 +58,7 @@ function addCritters(v)
         critters[#critters + 1] = {
             x = v.X * 32,
             y = v.Y * 32,
-            amount = love.math.random(1, 4),
+            amount = love.math.random(1, critterType[v.GroundTile].amount),
             alpha = 2,
             critter = {},
             type = v.GroundTile
@@ -87,7 +93,6 @@ function drawCritters()
 end
 
 function updateCritters(dt)
-    local speed = 8 * dt
     for i, v in ipairs(critters) do
         if distanceToPoint(player.dx, player.dy, v.x, v.y) < 64 then
             v.alpha = v.alpha - 3 * dt
@@ -106,11 +111,13 @@ function updateCritters(dt)
             end
         elseif v.alpha < 2 and distanceToPoint(player.dx, player.dy, v.x, v.y) > 256 then
             v.alpha = v.alpha + 1 * dt
+         
             if v.light then
                 Luven.setLightPower(v.light, v.alpha / 2)
             end
         end
         for a, k in pairs(v.critter) do
+            local speed = 8 *dt
             if distanceToPoint(player.dx, player.dy, v.x, v.y) < 64 then
                 if not k.scattering then
                     k.targetX = k.x + love.math.random(-128, 128)
@@ -121,8 +128,15 @@ function updateCritters(dt)
                         hideSound:setVolume(sfxVolume)
                         love.audio.play(hideSound)
                     end
+                
                 end
-                speed = 48 * dt
+                if k.scattering then
+                    speed = 48 * dt
+                end
+            elseif distanceToPoint(player.dx, player.dy, v.x, v.y) > 256 and k.scattering then
+                k.scattering = false
+                k.x = v.x
+                k.y = v.y
             end
             if k.x < k.targetX - 1 then
                 k.x = k.x + speed
@@ -142,14 +156,14 @@ function updateCritters(dt)
                 end
             end
             if love.math.random(1, 2500) == 1 and distanceToPoint(player.dx, player.dy, v.x, v.y) > 64 then
-                k.targetX = v.x + love.math.random(0, 32)
-                k.targetY = v.y + love.math.random(0, 32)
-                if k.targetX > v.x + 32 - getImgIfNotExist(v.type):getWidth() then
+                k.targetX = v.x + love.math.random(0, 32- getImgIfNotExist(critterType[v.type].img):getWidth())
+                k.targetY = v.y + love.math.random(0, 32 - getImgIfNotExist(critterType[v.type].img):getHeight())
+                if k.targetX > v.x + 32 then
                     k.targetX = v.x + 32
                 elseif k.targetX < v.x then
                     k.targetX = v.x
                 end
-                if k.targetY > v.y + 32 - getImgIfNotExist(v.type):getHeight() then
+                if k.targetY > v.y + 32 then
                     k.targetY = v.y + 32
                 elseif k.targetY < v.y then
                     k.targetY = v.y
