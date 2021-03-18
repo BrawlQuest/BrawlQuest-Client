@@ -37,12 +37,14 @@ function drawToolBarInventory(thisX, thisY)
     drawHotbar(thisX, thisY)
 end
 
-function drawInventoryItem(thisX, thisY, field, item, amount, number)
+function drawInventoryItem(thisX, thisY, item, amount, number)
     love.graphics.setFont(inventory.itemFont)
     if number then
         local height = 19
         local isMouse = isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale)
         -- amount = inventory.amount
+
+        if isMouse then inventory.mouseOverButtonsAmount = number end
 
         if item and isItemUnusable(item) then
             love.graphics.setColor(0.2, 0.2, 0.2)
@@ -55,7 +57,6 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
             cerp(0, 1, useItemColor[number]),
             cerp(0, 1, useItemColor[number]),
             1)
-            inventory.mouseOverButtonsAmount = number
             height = inventory.images.itemBG:getHeight()
             thisY = thisY - 2
         else
@@ -117,22 +118,7 @@ function drawInventoryItem(thisX, thisY, field, item, amount, number)
         love.graphics.setColor(1,1,1,1)
         if item then drawItem(thisX,thisY,item) end
 
-        if amount and amount > 1 then
-            if amount <= 9 then
-                inventory.imageNumber = 1
-            elseif amount > 9 and amount <= 99 then
-                inventory.imageNumber = 2
-            elseif amount > 99 and amount <= 999 then
-                inventory.imageNumber = 3
-            else
-                inventory.imageNumber = 4
-            end
-            thisX, thisY = thisX + 39 - inventory.images.numberBg[inventory.imageNumber]:getWidth(),
-                thisY + 39 - inventory.images.numberBg[inventory.imageNumber]:getHeight()
-            love.graphics.draw(inventory.images.numberBg[inventory.imageNumber], thisX, thisY)
-            love.graphics.setColor(0, 0, 0)
-            love.graphics.print(amount, thisX + 5, thisY + 4)
-        end
+        drawItemAmount(thisX, thisY, amount)
         love.graphics.setColor(1,1,1)
     end
 end
@@ -191,17 +177,17 @@ function drawInventoryItemField(thisX, thisY, field)
 
     for i,v in ipairs(userInventory[field]) do  
         if i <= 7 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 0), field, v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 0), v.Item, v.Inventory.Amount)
         elseif i > 7 and i <= 14 then
-            drawInventoryItem(thisX + (43 * (i - 8)), thisY + (inventory.itemSpacing * 1), field, v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 8)), thisY + (inventory.itemSpacing * 1), v.Item, v.Inventory.Amount)
         elseif i > 14 and i <= 21 then
-            drawInventoryItem(thisX + (43 * (i - 15)), thisY + (inventory.itemSpacing * 2), field, v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 15)), thisY + (inventory.itemSpacing * 2), v.Item, v.Inventory.Amount)
         elseif i > 21 and i <= 28 then
-            drawInventoryItem(thisX + (43 * (i - 22)), thisY + (inventory.itemSpacing * 3), field, v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 22)), thisY + (inventory.itemSpacing * 3), v.Item, v.Inventory.Amount)
         elseif i > 28 and i <= 35 then
-            drawInventoryItem(thisX + (43 * (i - 29)), thisY + (inventory.itemSpacing * 4), field, v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 29)), thisY + (inventory.itemSpacing * 4), v.Item, v.Inventory.Amount)
         else
-            drawInventoryItem(thisX + (43 * (i - 36)), thisY + (inventory.itemSpacing * 5), field, v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 36)), thisY + (inventory.itemSpacing * 5), v.Item, v.Inventory.Amount)
         end
     end
 end
@@ -210,6 +196,22 @@ function drawItemBacking(thisX, thisY)
     roundRectangle("fill", thisX, thisY, inventory.images.itemBG:getWidth(), inventory.images.itemBG:getHeight(), 4)
 end
 
-function drawInventoryStencil()
-    love.graphics.rectangle("fill", (0), (0 + 50), 313, (uiY - 97 - 50 - 50))
+function drawItemAmount(x,y,amount, alpha)
+    alpha = alpha or 1
+    if amount and amount > 1 then
+        if amount <= 9 then
+            inventory.imageNumber = 1
+        elseif amount > 9 and amount <= 99 then
+            inventory.imageNumber = 2
+        elseif amount > 99 and amount <= 999 then
+            inventory.imageNumber = 3
+        else
+            inventory.imageNumber = 4
+        end
+        x, y = x + 39 - inventory.images.numberBg[inventory.imageNumber]:getWidth(),
+            y + 39 - inventory.images.numberBg[inventory.imageNumber]:getHeight()
+        love.graphics.draw(inventory.images.numberBg[inventory.imageNumber], x, y)
+        love.graphics.setColor(0, 0, 0, alpha)
+        love.graphics.print(amount, inventory.itemFont, x + 5, y + 4)
+    end
 end

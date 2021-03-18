@@ -91,7 +91,7 @@ function drawWorldMask()
                     -- worldMaskTables[1][#worldMaskTables[1] + 1] = {x = x, y = y, visable = true, intensity = intensity}
                 end
 
-                -- drawRangedWeaponsGrid(x,y)
+                drawRangedWeaponsGrid(x,y) 
 
             else -- outside of the circle
                 love.graphics.setColor(r, g, 0,worldMask.opacity)

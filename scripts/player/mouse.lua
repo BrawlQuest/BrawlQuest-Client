@@ -6,30 +6,52 @@ function love.mousepressed(x, y, button)
         checkEditWorldClick(x, y)
     elseif phase == "game" then
         checkQuestPanelMousePressed(button)
-        checkHotbarMousePressed(button)
+        -- checkHotbarMousePressed(button)
         if challenges.open then checkChallengesMousePressed(button) end
-        if inventory.mouseOverButtonsAmount == 0 then checkInventoryMousePressed(button) end
         if isSettingsWindowOpen then checkSettingsMousePressed(button) end
         checkStatsMousePressed(button)
         if crafting.open then checkCraftingMousePressed(button) end
+        if inventory.mouseOverButtonsAmount == 0 and inventory.isMouseOverInventoryItem then checkItemDragMousePressed(button) 
+        elseif inventory.mouseOverButtonsAmount > 0 then checkItemDragMousePressed(button, inventory.mouseOverButtonsAmount) end
         if showNPCChatBackground then checkNPCChatMousePressed(button) end
         checkWorldEditMouseDown(button)
         if mouseOverChat then isTypingInChat = not isTypingInChat end
         if enchanting.open then checkEnchantingMousePressed(button) end
+        if forging.open then checkForgingMousePressed(button) end
     end
 end
 
 function love.mousereleased(x, y, button)
-    if worldEdit.open and worldEdit.drawmode == "rectangle" then
-       checkWorldEditRectMouseUp(button)
-    elseif characterHub.amount > 0 then
-        if characterHub.selectedPerk > -1 then
-            if perks.changeAmount > 0 then
-                apiGET("/stat/"..player.name.."/"..perkTitles[characterHub.selectedPerk+1].."/"..perks.changeAmount)
-            else
-                c, h = http.request{url = api.url.."/stat/"..player.name.."/"..perkTitles[characterHub.selectedPerk+1].."/"..math.abs(perks.changeAmount), method="DELETE", headers={["token"]=token}}
+    if phase == "game" then
+        if worldEdit.open and worldEdit.drawmode == "rectangle" then
+        checkWorldEditRectMouseUp(button)
+        elseif characterHub.amount > 0 then
+            if characterHub.selectedPerk > -1 then
+                if perks.changeAmount > 0 then
+                    apiGET("/stat/"..player.name.."/"..perkTitles[characterHub.selectedPerk+1].."/"..perks.changeAmount)
+                else
+                    c, h = http.request{url = api.url.."/stat/"..player.name.."/"..perkTitles[characterHub.selectedPerk+1].."/"..math.abs(perks.changeAmount), method="DELETE", headers={["token"]=token}}
+                end
             end
         end
+        if inventory.mouseOverButtonsAmount == 0 and json:encode(itemDrag.item) == json:encode(selectedItem) then checkInventoryMousePressed(button) 
+        elseif inventory.mouseOverButtonsAmount > 0 and json:encode(itemDrag.item) == json:encode(hotbar[inventory.mouseOverButtonsAmount].item) then checkHotbarMousePressed(button) end
+        checkItemDragMouseReleased(button)
+    end
+end
+
+function love.mousemoved(x, y, dx, dy, istouch)
+    if not itemDrag.dragging then showMouse = true end
+end
+
+local speed = 8
+function updateMouse(dt)
+    if showMouse and mouseAmount < 1 then
+        mouseAmount = mouseAmount + speed * dt
+        if mouseAmount >= 1 then mouseAmount = 1 end
+    elseif mouseAmount > 0 then 
+        mouseAmount = mouseAmount - speed * dt
+        if mouseAmount <= 0 then mouseAmount = 0 end
     end
 end
 

@@ -28,25 +28,17 @@ end
 function drawHotbar(thisX, thisY)
     love.graphics.setColor(1,1,1)
     for i,v in ipairs(hotbar) do
-        drawInventoryItem(thisX + 9 + (43 * (i - 1)), thisY - 42, 0, v.item, v.amount, i)
+        drawInventoryItem(thisX + 9 + (43 * (i - 1)), thisY - 42, v.item, v.amount, i)
     end
 end
 
 function checkHotbarKeyPressed(key)
     for i,v in ipairs(hotbar) do
         if key == tostring(i) or (i == 7 and key == "space") then
-            if inventory.isMouseOverInventoryItem == true then
-                hotbar[i].item = selectedItem
-                hotbar[i].amount = selectedItemAmount
-                writeSettings()
+            if v.item ~= nil and v.item.ID ~= nil and not isItemUnusable(v.item) and not usedItemThisTick then
+                useHotbarItem(i,v)
                 hotbarChanged = true
                 break
-            else
-                if v.item ~= nil and v.item.ID ~= nil and not isItemUnusable(v.item) and not usedItemThisTick then
-                    useHotbarItem(i,v)
-                    hotbarChanged = true
-                    break
-                end
             end
         end
     end
@@ -55,23 +47,20 @@ end
 debugItems = false
 
 function checkHotbarMousePressed(button)
-    if inventory.mouseOverButtonsAmount > 0 then
-        for i,v in ipairs(hotbar) do
-            if i == inventory.mouseOverButtonsAmount and v.item ~= nil and v.item.ID ~= nil and  not usedItemThisTick  then
-                if button == 1  then
-                    useHotbarItem(i,v)
-                    hotbarChanged = true
-                    break
-                elseif button == 2 then
-                    hotbar[i] = {item = null, amount = 0}
-                    hotbarChanged = true
-                    writeSettings()
-                    break
-                end
+
+        local i,v = inventory.mouseOverButtonsAmount, copy(hotbar[inventory.mouseOverButtonsAmount])
+        if v.item and v.item.ID and not usedItemThisTick then
+            if button == 1  then
+                useHotbarItem(i,v)
                 hotbarChanged = true
+            elseif button == 2 then
+                hotbar[i] = {item = null, amount = 0}
+                hotbarChanged = true
+                writeSettings()
             end
+            hotbarChanged = true
         end
-    end
+
 end
 
 function useHotbarItem(i,v)

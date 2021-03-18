@@ -66,6 +66,8 @@ function initCrafting()
         crafting.catalogue = {}
     end
 
+    local success,msg = love.filesystem.write("recipes.txt", json:encode_pretty(crafting.recipes))
+
     for i, v in ipairs(crafting.fields) do
         crafting.openField[i] = false
     end
@@ -515,19 +517,20 @@ function enterCraftingItems(v)
     for j = 1, #v.ItemsItem do
         local amount = required[j].Amount
         -- print(v.ItemsItem[j].Name .. " " .. amount)
-        if getItemAmount(v.ItemsItem[j]) >= amount then
+        local invAmount = getItemAmount(v.ItemsItem[j])
+        if invAmount >= amount then
             crafting.enteredItems[j] = {
                 item = v.ItemsItem[j],
                 amount = amount,
                 random = {X = math.random()*100, Y = math.random()*100},
             }
             craft[#craft+1] = true
-        elseif getItemAmount(v.ItemsItem[j]) < 1 then
+        elseif invAmount < 1 then
             craft[#craft+1] = false
         else
             crafting.enteredItems[j] = {
                 item = v.ItemsItem[j],
-                amount = getItemAmount(v.ItemsItem[j]),
+                amount = invAmount,
                 random = {X = math.random()*100, Y = math.random()*100},
             }
             craft[#craft+1] = false

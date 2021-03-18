@@ -52,6 +52,8 @@ function initCharacterHub()
             {name = "Leg Armour", v = "LegArmour"},
         },
     }
+
+    armourTypes = {"HeadArmour", "ChestArmour", "LegArmour",}
 end
 
 function updateCharacterHub(dt)
@@ -228,6 +230,7 @@ function drawCharacterHubMeters(thisX, thisY)
     love.graphics.setFont(characterHub.font)
     local j = (100/151)
     local meterLevels = {math.clamp(0, me.HP, getMaxHealth()), me.Mana, me.XP}
+    local meterMaxes = {getMaxHealth(), 100, 100}
     for i = 0, 2 do
         local spacing = 23 * i
         love.graphics.setColor(unpack(characterHub.backgroundColor))
@@ -235,7 +238,7 @@ function drawCharacterHubMeters(thisX, thisY)
         love.graphics.setColor(unpack(characterHub.barColors[i+1]))
         love.graphics.draw(hubImages.meterSide, thisX, thisY + spacing)
         love.graphics.draw(hubImages.meterSide, thisX + 212, thisY + 19 + spacing, math.rad(180))
-        love.graphics.rectangle("fill", thisX + 31, thisY + spacing, math.clamp(0, meterLevels[i+1] / ((100 + getSTA(i)) / 151), 151), 19)
+        love.graphics.rectangle("fill", thisX + 31, thisY + spacing, math.clamp(0, meterLevels[i+1] / (meterMaxes[i+1] / 151), 151), 19)
         love.graphics.setColor(1,1,1,1)
         love.graphics.draw(hubImages.meterIcons[i+1], thisX, thisY + spacing)
         love.graphics.draw(hubImages.meterNames[i+1], thisX, thisY + spacing)
@@ -254,21 +257,8 @@ function checkStatsMousePressed(button)
     end
 end
 
-function getSTA(i)
-    i = i or 0
-    if me.STA then
-        if i == 0 then return 15 * (me.STA) else return 0 end
-    else
-        return 0
-    end
-end
-
 function getMaxHealth()
-    if me.MaxHP then
-        return me.MaxHP
-    else
-        return 115
-    end
+    return me.MaxHP or 115
 end
 
 function drawBattlebarItem(thisX, thisY, item, stats)

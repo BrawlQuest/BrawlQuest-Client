@@ -11,8 +11,9 @@ function updateVar(dt)
     local e = Var
 end
 
-function drawVar(x,y)
+function drawVar()
     local e = Var
+    local x,y = uiX / 2 * scale, uiY / 2 * scale
 end
 
 function checkVarKeyPressed(key)
@@ -23,9 +24,12 @@ function checkVarMousePressed(button)
     local e = Var
 end
 
+--[[
 initVar()
 updateVar(dt)
-drawVar(x,y)
+drawVar()
+if Var.open then updateVar(dt) end
+if Var.open then drawVar() end
 checkVarKeyPressed(key)
 checkVarMousePressed(button)
 ]]

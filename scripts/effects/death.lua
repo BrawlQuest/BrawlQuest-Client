@@ -20,7 +20,6 @@ function updateDeath(dt)
     if death.amount >= 1 then
         death.open = false
         death.amount = 0
-     
     end
 end
 
