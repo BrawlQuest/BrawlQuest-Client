@@ -1,5 +1,9 @@
 -- Luven related functions
 
+lightOverride = {
+    val = 0.2,
+}
+
 function initLighting() 
     worldScale = 2
     Luven.init()
