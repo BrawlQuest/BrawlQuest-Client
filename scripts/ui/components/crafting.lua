@@ -103,6 +103,9 @@ function updateCrafting(dt)
                         crafting.result.alpha = 2
                         if love.system.getOS() ~= "Linux" then 
                             steam.userStats.setAchievement('craft_achievement')
+                            if crafting.result.Type == "spell" then
+                                steam.userStats.setAchievement('craft_spell_achievement')
+                            end
                             steam.userStats.storeStats()
                         end
                     else

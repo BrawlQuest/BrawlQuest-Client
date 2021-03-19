@@ -23,6 +23,18 @@ function checkAchievementUnlocks()
             steam.userStats.setAchievement('hero_armour_achievement')
         end
 
+        if me.Prestige > 1 then
+            steam.userStats.setAchievement('enchant_achievement')
+        end
+
+        if me.Prestige >= 10 then
+            steam.userStats.setAchievement('prestige_achievement')
+        end
+
+        if worldLookup[me.X] and worldLookup[me.X][me.Y] and worldLookup[me.X][me.Y].Name == "Dominion of "..me.Name then
+            steam.userStats.setAchievement('build_achievement')
+        end
+
         if me.Mount.ID == 64 then
             steam.userStats.setAchievement('pirate_achievement')
         end
