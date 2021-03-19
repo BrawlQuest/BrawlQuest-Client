@@ -337,7 +337,7 @@ function transitionToPhaseGame()
             awakeSfx:play()
             love.graphics.setBackgroundColor(0, 0, 0)
             phase = "game"
-            love.audio.stop( titleMusic )
+            titleMusic:stop()
 
             createWorld()
             openTutorial(1)

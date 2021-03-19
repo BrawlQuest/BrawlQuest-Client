@@ -403,7 +403,7 @@ function checkCraftingMousePressed(button)
     if button == 1 and crafting.mouseOverAnvil == true and crafting.craftable and not crafting.changed then
         crafting.isCrafting = true
         crafting.whiteout = 0
-        love.audio.stop(crafting.swing)
+        crafting.swing:stop()
         crafting.swing:setPitch(love.math.random(30,80)/100)
         crafting.swing:setRelative(true)
         crafting.swing:play()
@@ -493,7 +493,7 @@ function checkCraftingKeyPressed(key)
     elseif key == "return" and crafting.craftable and not crafting.changed then
         crafting.isCrafting = true
         crafting.whiteout = 0
-        love.audio.stop(crafting.swing)
+        crafting.swing:stop()
         crafting.swing:setPitch(love.math.random(30,80)/100)
         crafting.swing:setRelative(true)
         crafting.swing:play()
