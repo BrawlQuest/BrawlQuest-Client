@@ -334,7 +334,7 @@ function transitionToPhaseGame()
         if b[1] then
             world = json:decode(table.concat(b))
 
-            love.audio.play(awakeSfx)
+            awakeSfx:play()
             love.graphics.setBackgroundColor(0, 0, 0)
             phase = "game"
             love.audio.stop( titleMusic )

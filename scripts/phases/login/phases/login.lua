@@ -76,6 +76,9 @@ function checkLoginKeyPressedPhasePrelaunch(key)
     launch.outCERP = 1
     loginPhase = "loading"
     loginViaSteam()
+    birds:setLooping(true)
+    birds:setVolume(0.1 * sfxVolume)
+    birds:play()
     if key == "escape" and versionType == "dev" then love.event.quit() end
 end
 

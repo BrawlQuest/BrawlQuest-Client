@@ -59,7 +59,7 @@ function initLogin()
     buttonImage = love.graphics.newImage("assets/ui/login/button.png")
     textFieldImage = love.graphics.newImage("assets/ui/login/textbox.png")
     basePanelImage = love.graphics.newImage("assets/ui/login/character base panel.png")
-    lightningSfx = love.audio.newSource("assets/sfx/weather/lightning_b.wav", "static")
+    lightningSfx = love.audio.newSource("assets/sfx/weather/lightning_b.ogg", "static")
     lightningSfx:setVolume(0.5)
     initLoginBackground()
     loadingAmount = 0
@@ -125,7 +125,8 @@ function updateLogin(dt)
             launch.inAmount = launch.inAmount + 0.22 * dt
             if launch.inAmount > 1 then
                 birds:setLooping(true)
-                love.audio.play(birds)
+                birds:setVolume(0.1 * sfxVolume)
+                birds:play()
                 launch.inAmount = 1
             end
             launch.inCERP = cerp(0, 1, launch.inAmount)

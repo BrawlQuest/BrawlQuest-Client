@@ -311,7 +311,7 @@ function love.update(dt)
                     setLighting(response)
                     local previousMe = copy(me) -- Temp
                     me = response['Me']
-                    love.audio.setPosition(me.X, me.Y)
+                    love.audio.setPosition(player.x, player.y)
                     if response["PlayerStructures"] then
                         structures = response["PlayerStructures"]
                         updateWorldLookup()
@@ -343,7 +343,7 @@ function love.update(dt)
                         if death.previousPosition.hp < getMaxHealth() * 0.9 then
                             death.open = true
                             totalCoverAlpha = 2
-                            love.audio.play(awakeSfx)
+                            awakeSfx:play()
                         else
                             player.dx = me.X * 32
                             player.dy = me.Y * 32
@@ -366,7 +366,7 @@ function love.update(dt)
                             if player.lvl ~= 0 then
                                 openTutorial(6)
                             end
-                            love.audio.play(lvlSfx)
+                            lvlSfx:play()
                             perks.stats[4] = player.cp
                             addFloat("level", player.dx + 16, player.dy + 16, null, {1,0,0}, 10)
                         end

@@ -126,7 +126,8 @@ function updateCritters(dt)
                     if critterType[v.type].sounds then
                         local hideSound = critterType[v.type].sounds.hide[love.math.random(1,#critterType[v.type].sounds.hide)]
                         hideSound:setVolume(sfxVolume)
-                        love.audio.play(hideSound)
+                        hideSound:setPosition(v.x / 32, v.y / 32)
+                        hideSound:play()
                     end
                 
                 end
@@ -152,7 +153,8 @@ function updateCritters(dt)
                 if critterType[v.type].sounds then
                     local idleSound = critterType[v.type].sounds.idle[love.math.random(1,#critterType[v.type].sounds.idle)]
                     idleSound:setVolume(sfxVolume)
-                    love.audio.play(idleSound)
+                    idleSound:setPosition(v.x / 32, v.y / 32)
+                    idleSound:play()
                 end
             end
             if love.math.random(1, 2500) == 1 and distanceToPoint(player.dx, player.dy, v.x, v.y) > 64 then

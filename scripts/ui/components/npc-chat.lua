@@ -164,6 +164,7 @@ function updateNPCChat(dt)
                 -- end
               --  speakSound:stop()
                 speakSound:setPitch(love.math.random(60,100)/100)
+                speakSound:setRelative(true)
                 speakSound:setVolume(0.1*sfxVolume)
                 speakSound:play()
                 chatWritten = chatWritten..string.sub(npcChat.Title,#chatWritten+1,#chatWritten+1)
@@ -258,9 +259,6 @@ function checkNPCChatKeyPressed(key)
         continueConversation()
     elseif key == "space" then
         chatWritten = npcChat.Title
-        speakSound:setPitch(love.math.random(60,100)/100)
-        speakSound:setVolume(0.1 * sfxVolume)
-        speakSound:play()
     end
 end
 

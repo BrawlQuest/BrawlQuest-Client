@@ -320,7 +320,8 @@ function updateOtherPlayers(dt)
             -- print("player Hit")
             playersDrawable[i].HP = v.HP
             playersDrawable[i].RedAlpha = 1
-            love.audio.play(playerHitSfx) 
+            playerHitSfx:setPosition((playersDrawable[i].X + 16) / 32, (playersDrawable[i].Y + 16) / 32)
+            playerHitSfx:play()
             boneSpurt(playersDrawable[i].X + 16, playersDrawable[i].Y + 16, 10, 25, 1, 1, 1)
         end
 

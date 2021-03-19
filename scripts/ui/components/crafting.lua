@@ -12,7 +12,7 @@ function initCrafting()
         isCrafting = false,
         craftable = false,
         sfx = love.audio.newSource("assets/sfx/player/actions/anvil.ogg", "static"),
-        swing = love.audio.newSource("assets/sfx/player/actions/swing.wav", "static"),
+        swing = love.audio.newSource("assets/sfx/player/actions/swing.ogg", "static"),
         whiteout = 0,
         recipes = {},
         fields = {},
@@ -81,7 +81,8 @@ function updateCrafting(dt)
             if crafting.hammerDown < 0 then
                 crafting.whiteout = crafting.whiteout + 20 * dt
                 crafting.sfx:setPitch(love.math.random(50,100)/100)
-                love.audio.play(crafting.sfx)
+                crafting.sfx:setRelative(true)
+                crafting.sfx:play()
                 if crafting.whiteout > 1 and crafting.selectedItem ~= null then
                     crafting.hammerDown = 1
                     crafting.isCrafting = false
@@ -404,7 +405,8 @@ function checkCraftingMousePressed(button)
         crafting.whiteout = 0
         love.audio.stop(crafting.swing)
         crafting.swing:setPitch(love.math.random(30,80)/100)
-        love.audio.play(crafting.swing)
+        crafting.swing:setRelative(true)
+        crafting.swing:play()
         checkHotbarChange()
     elseif button == 1 and crafting.overOpenField > 0 then
         crafting.openField[crafting.overOpenField] = not crafting.openField[crafting.overOpenField]
@@ -493,7 +495,8 @@ function checkCraftingKeyPressed(key)
         crafting.whiteout = 0
         love.audio.stop(crafting.swing)
         crafting.swing:setPitch(love.math.random(30,80)/100)
-        love.audio.play(crafting.swing)
+        crafting.swing:setRelative(true)
+        crafting.swing:play()
         crafting.changed = true
         enterCraftingItems(crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j])
         checkHotbarChange()

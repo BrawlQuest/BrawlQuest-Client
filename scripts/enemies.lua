@@ -117,7 +117,8 @@ function newEnemyData(data) -- called when nearby data is returned
                 if sfxVolume > 0 then
                     enemyHitSfx:setPitch(love.math.random(50, 100) / 100)
                     enemyHitSfx:setVolume(1 * sfxVolume)
-                    love.audio.play(enemyHitSfx)
+                    enemyHitSfx:setPosition(v.X, v.Y)
+                    enemyHitSfx:play()
                     enemy.red = 1
                 end
             end
@@ -150,7 +151,8 @@ function newEnemyData(data) -- called when nearby data is returned
                 -- --   aggroSfx:setPosition(v.x-player.x,v.y-player.y)
                 --     aggroSfx:setPosition(enemy.X-player.x,enemy.Y-player.y)
                 -- end
-                love.audio.play(aggroSfx)
+                aggroSfx:setPosition(v.X, v.Y)
+                aggroSfx:play()
             end
         end
 
@@ -177,7 +179,7 @@ function newEnemyData(data) -- called when nearby data is returned
             --      boneSpurt(player.dx+16,player.dy+16,v.Enemy.ATK,48,1,0,0)
             --    local attackSfx = attackSfxs[love.math.random(1, #attackSfxs)]
             --    attackSfx:setPitch(love.math.random(50, 100) / 100)
-            --    love.audio.play(attackSfx)
+            --    attackSfx:play()
             if player.isMounted or player.isMounting then
                 beginMounting()
             end
@@ -270,10 +272,10 @@ function drawEnemies()
 
             elseif not v.hasBurst then
                 burstLoot(v.dx + 16, v.dy + 16, player.owedxp, "xp")
-                local deathSound =
-                    enemySounds[v.Enemy.Name].death[love.math.random(1, #enemySounds[v.Enemy.Name].death)]
-                love.audio.play(deathSound)
+                local deathSound = enemySounds[v.Enemy.Name].death[love.math.random(1, #enemySounds[v.Enemy.Name].death)]
                 deathSound:setVolume(1 * sfxVolume)
+                deathSound:setPosition(v.X, v.Y)
+                deathSound:play()
                 for a=1,v.Enemy.Width do
                     for k=1,v.Enemy.Height do
                         boneSpurt(v.dx + 16 + ((a-1)*32), v.dy + 16 + ((k-1)*32), 10, 25, 1, 1, 1, "mob", v.Enemy.Name)
