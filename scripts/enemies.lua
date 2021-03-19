@@ -258,9 +258,9 @@ function drawEnemies()
                             love.graphics.line(v.dx + 16, v.dy + 16, player.dx + 16, player.dy + 16)
                             love.graphics.setColor(1, 1, 1, intensity)
                             if v.Enemy.XP / player.lvl > 1 then
-                                outlinerOnly:draw(2, enemyImg[v.Enemy.Name], enemyQuads[v.Enemy.Name], v.dx + offsetX, v.dy, 0, rotation, 1, v.Enemy.Width-1, v.Enemy.Height-1)
+                                outlinerOnly:draw(2, enemyImg[v.Enemy.Name], enemyQuads[v.Enemy.Name], v.dx + offsetX, v.dy, 0, rotation, 1)
                             else
-                                grayOutlinerOnly:draw(2, enemyImg[v.Enemy.Name], enemyQuads[v.Enemy.Name], v.dx + offsetX, v.dy, 0, rotation, 1, v.Enemy.Width-1, v.Enemy.Height-1)
+                                grayOutlinerOnly:draw(2, enemyImg[v.Enemy.Name], enemyQuads[v.Enemy.Name], v.dx + offsetX, v.dy, 0, rotation, 1)
                             end
                         end
                     end
