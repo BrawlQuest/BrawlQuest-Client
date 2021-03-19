@@ -11,16 +11,27 @@ function initRangedWeapons()
         prevHit = {x = 0, y = 0,},
     }
     throw = {
+        open = false,
         amount = 0,
         speed = 2,
     }
 end
 
 function updateRangedWeapons(dt)
+    local t = target
     panelMovement(dt, target, -1, "amount", 1.5)
     if target.amount < 0 then target.selected = false end
     panelMovement(dt, throw, 1, "amount", throw.speed)
-    -- print(throw.amount)
+    if throw.open and throw.amount == 1 then
+        --create a weird sfx
+        if staffExplode:isPlaying() then staffExplode:stop() end
+        staffExplode = generateNoise()
+        staffExplode:setVolume(0.2 * sfxVolume)
+        staffExplode:setPosition(t.hit.x, t.hit.y)
+        -- staffExplode:setPitch(love.math.random()) 
+        staffExplode:play()
+        throw.open = false
+    end
 end
 
 function tickRangedWeapons()
@@ -28,6 +39,7 @@ function tickRangedWeapons()
         target.amount = 1
         target.selected = false
         throw.amount = 0
+        throw.open = true
         target.paths = {origin = {x = player.x, y = player.y}}
         target.shootable, target.counter = Bresenham.line(player.x, player.y, target.x, target.y, function (x, y)
             if worldLookup[x] and worldLookup[x][y] and worldLookup[x][y].Collision ~= null then

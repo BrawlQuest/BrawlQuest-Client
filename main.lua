@@ -311,6 +311,7 @@ function love.update(dt)
                     setLighting(response)
                     local previousMe = copy(me) -- Temp
                     me = response['Me']
+                    love.audio.setPosition(me.X, me.Y)
                     if response["PlayerStructures"] then
                         structures = response["PlayerStructures"]
                         updateWorldLookup()

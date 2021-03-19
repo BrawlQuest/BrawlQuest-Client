@@ -1,3 +1,5 @@
+sfxr = require("scripts.libraries.sfxr")
+
 function initSFX()
 
     previousSFXVolume = sfxVolume
@@ -55,6 +57,7 @@ function initSFX()
         ["assets/npc/Priest.png"] = love.audio.newSource("assets/sfx/npc/soldier.mp3", "static"),
     }
 
+    staffExplode = generateNoise()
     setSFXVolumes()
 end
 
@@ -106,4 +109,17 @@ function playFootstepSound(v)
     stepSfx:setPitch(love.math.random(85,200)/100)
     stepSfx:setVolume(0.5 * sfxVolume)
     stepSfx:play()
+end
+
+function generateNoise(tab)
+    if not tab then 
+        local sound = sfxr.newSound({
+            BITDEPTH = 16,
+            SAMPLERATE = 44100,
+        })
+        sound:randomExplosion()
+        local soundData = sound:generateSoundData()
+        return love.audio.newSource(soundData, "stream")
+    end
+    -- source:play()
 end
