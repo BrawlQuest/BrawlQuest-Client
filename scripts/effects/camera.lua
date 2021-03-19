@@ -19,6 +19,9 @@ function initCamera()
         },
         previousLocation = {0,0,0,},
         nextLocation = {0,0,0,},
+        timeAmount = 1,
+        oldTimeAmount,
+        newTimeAmount,
     }
 end
 
@@ -37,20 +40,53 @@ function updateCamera(dt)
 
     local l = lighting
     if l.open then
-        panelMovement(dt, lighting, 1, "amount", 1) 
-        for i = 1, 3 do
-            l.tab[i] = cerp(l.previousLocation[i], l.nextLocation[i], l.amount)
-        end
+        panelMovement(dt, lighting, 1, "amount", 0.5) 
+        for i = 1, 3 do l.tab[i] = cerp(l.previousLocation[i], l.nextLocation[i], l.amount) end
         if l.amount == 1 then l.open = false end
-        print(l.amount)
+        l.timeAmount = cerp(l.oldTimeAmount, l.newTimeAmount, l.amount)
+        setAmbientLighting()
+    end
+end
 
-        local timeAmount, oldTimeAmount, newTimeAmount
-        if l.locations[l.previous] then oldTimeAmount = l.locations[l.previous].todAmount else oldTimeAmount = 1 end
-        if l.locations[l.next] then newTimeAmount = l.locations[l.next].todAmount else newTimeAmount = 1 end
-        timeAmount = cerp(oldTimeAmount, newTimeAmount, l.amount)
+function setAmbientLighting()
+    local l = lighting
+    local tab = {l.tab[1] + timeOfDay * l.timeAmount, l.tab[2] + timeOfDay * l.timeAmount, l.tab[3] + timeOfDay * l.timeAmount}
+    Luven.setAmbientLightColor(tab)
+end
 
-        local tab = {l.tab[1] + timeOfDay * timeAmount, l.tab[2] + timeOfDay * timeAmount, l.tab[3] + timeOfDay * timeAmount}
-        Luven.setAmbientLightColor(tab)
-        print(json:encode_pretty(tab))
+function setLighting(response)
+    local l = lighting
+
+    timeOfDay = cerp(0.1, 1, ((math.abs(response['CurrentHour']) * 60) + 0) / 720)
+    timeOfDay = timeOfDay + 0.1
+
+    if not worldEdit.open then
+        
+        if worldLookup[me.X] and worldLookup[me.X][me.Y] and worldLookup[me.X][me.Y].Name ~= "" then -- custom lighting for different zones
+            local location = worldLookup[me.X][me.Y].Name
+            if l.current ~= location and not l.open then
+                lighting.next = location
+                lighting.previous = l.current
+                l.current = location
+                lighting.previousLocation = l.tab
+
+                lighting.amount = 0
+                lighting.open = true
+
+                if l.locations[location] then
+                    local v = l.locations[location]
+                    lighting.nextLocation = v.tab
+                    l.newTimeAmount = v.todAmount
+                else
+                    lighting.nextLocation = {0,0,0}
+                    l.newTimeAmount = 1
+                end
+                if l.locations[l.previous] then l.oldTimeAmount = l.locations[l.previous].todAmount else l.oldTimeAmount = 1 end
+            end
+        end
+        if not lighting.open then setAmbientLighting() end
+    else
+        l.current = "lol"
+        Luven.setAmbientLightColor({1,1,1})
     end
 end

@@ -307,35 +307,8 @@ function love.update(dt)
                             player = v["Sender"]
                         }
                     end
-                    timeOfDay = cerp(0.1, 1, ((math.abs(response['CurrentHour']) * 60) + 0) / 720)
-                    timeOfDay = timeOfDay + 0.1
                     usedItemThisTick = false
-                    local l = lighting
-                    if not worldEdit.open then
-                        
-                        if worldLookup[me.X] and worldLookup[me.X][me.Y] and worldLookup[me.X][me.Y].Name ~= "" then -- custom lighting for different zones
-                            local location = worldLookup[me.X][me.Y].Name
-                            if l.current ~= location and not l.open then
-                                l.current = location
-                                if l.locations[location] then
-                                    lighting.next = location
-                                    lighting.previous = l.current
-                                    lighting.previousLocation = l.tab
-                                    local v = l.locations[location]
-                                    lighting.nextLocation = v.tab
-                                    lighting.amount = 0
-                                    lighting.open = true
-                                else
-                                    lighting.nextLocation = {0,0,0}
-                                    lighting.amount = 0
-                                    lighting.open = true
-                                end
-                            end
-                        end
-                    else
-                        Luven.setAmbientLightColor({1,1,1})
-                    end
-
+                    setLighting(response)
                     local previousMe = copy(me) -- Temp
                     me = response['Me']
                     if response["PlayerStructures"] then
