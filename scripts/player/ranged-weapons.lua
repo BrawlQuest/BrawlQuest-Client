@@ -6,30 +6,36 @@ function initRangedWeapons()
         amount = 0,
         shootable = true,
         counter = 0,
-        path = {origin = {x = 0, y = 0}},
+        paths = {origin = {x = 0, y = 0}},
+        hit = {x = 0, y = 0,},
+        prevHit = {x = 0, y = 0,},
+    }
+    throw = {
+        amount = 0,
+        speed = 2,
     }
 end
 
 function updateRangedWeapons(dt)
-    if target.amount > 0 then
-        target.amount = target.amount - 1.5 * dt
-        if target.amount < 0 then
-            target.selected = false
-            target.amount = 0
-        end
-    end
+    panelMovement(dt, target, -1, "amount", 1.5)
+    if target.amount < 0 then target.selected = false end
+    panelMovement(dt, throw, 1, "amount", throw.speed)
+    -- print(throw.amount)
 end
 
 function tickRangedWeapons()
-    if target.selected and target.amount == 0 then 
+    if target.selected and target.amount == 0 then
         target.amount = 1
-        target.path = {origin = {x = player.x, y = player.y}}
+        target.selected = false
+        throw.amount = 0
+        target.paths = {origin = {x = player.x, y = player.y}}
         target.shootable, target.counter = Bresenham.line(player.x, player.y, target.x, target.y, function (x, y)
             if worldLookup[x] and worldLookup[x][y] and worldLookup[x][y].Collision ~= null then
-                target.path[#target.path + 1] = {x = x, y = y,}
+                target.paths[#target.paths + 1] = {x = x, y = y,}
                 return not worldLookup[x][y].Collision
             end
         end)
+        hitTarget()
     end
 end
 
@@ -50,8 +56,8 @@ function drawRangedWeaponsGrid(x,y)
         if target.shootable == true then love.graphics.setColor(0,1,0,targetCerp) else love.graphics.setColor(1,0,0,targetCerp) end
         -- love.graphics.rectangle("fill", target.x * 32, target.y * 32, 32, 32)
         -- love.graphics.setColor(1,1,1, targetCerp)
-        for i,v in ipairs(target.path) do
-            if i > 2 and i < #target.path then
+        for i,v in ipairs(target.paths) do
+            if i > 2 and i < #target.paths then
                 love.graphics.rectangle("fill", v.x * 32, v.y * 32, 32, 32) 
             end
         end
@@ -60,20 +66,28 @@ end
 
 function drawRangedWeaponEffects()
     if target.amount > 0 then 
-        love.graphics.setColor(1,1,1,target.amount + 0.2)
+        love.graphics.setColor(1,1,1,throw.amount + 0.2)
         love.graphics.setLineWidth( 2 + target.amount )
-        local origin, dest = target.path.origin, target.path
-        local offset = -1
-        if target.shootable == true then offset = 0 end
-        if #dest > 1 then
+        local origin, paths = target.paths.origin, target.paths
+        if #paths > 1 then
             local originX = player.dx + 16
             local originY = player.dy + 16
-            -- local destX = cerp(originX, dest[#dest + offset].x * 32 + 16, 1 - target.amount)
-            -- local destY = cerp(originY, dest[#dest + offset].y * 32 + 16, 1 - target.amount)
-            local destX = dest[#dest + offset].x * 32 + 16
-            local destY = dest[#dest + offset].y * 32 + 16
-            love.graphics.line(originX, originY, destX, destY)
+            local destX = cerp(originX, paths[#paths].x * 32 + 16, throw.amount)
+            local destY = cerp(originY, paths[#paths].y * 32 + 16, throw.amount)
+            -- local destX = paths[#paths].x * 32 + 16
+            -- local destY = paths[#paths].y * 32 + 16
+            -- love.graphics.line(originX, originY, destX, destY)
+            love.graphics.setBlendMode("add")
+            love.graphics.setColor(1,0,1,0.8 * ((1 - throw.amount) + 0.2))
+            love.graphics.circle("fill", destX, destY, 10)
+            love.graphics.setBlendMode("alpha")
         end
     end
     love.graphics.setColor(1,1,1,1)
+end
+
+function hitTarget()
+    target.hit = target.paths[#target.paths] or null
+    print("You hit: " .. json:encode(target.hit))
+    local x, y = target.hit.x, target.hit.y -- hit a target on these coordinates
 end
