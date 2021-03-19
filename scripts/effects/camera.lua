@@ -37,7 +37,7 @@ function updateCamera(dt)
 
     local l = lighting
     if l.open then
-        panelMovement(dt, lighting, 1, "amount", 0.2) 
+        panelMovement(dt, lighting, 1, "amount", 1) 
         for i = 1, 3 do
             l.tab[i] = cerp(l.previousLocation[i], l.nextLocation[i], l.amount)
         end
