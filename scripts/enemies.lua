@@ -273,13 +273,25 @@ function drawEnemies()
                 local deathSound =
                     enemySounds[v.Enemy.Name].death[love.math.random(1, #enemySounds[v.Enemy.Name].death)]
                 love.audio.play(deathSound)
-                deathSound:setVolume(1 * sfxVolume)
-                for a=1,v.Enemy.Width do
-                    for k=1,v.Enemy.Height do
-                        boneSpurt(v.dx + 16 + ((a-1)*32), v.dy + 16 + ((k-1)*32), 10, 25, 1, 1, 1, "mob", v.Enemy.Name)
-                    end
+                if v.Enemy.Name == "Fire Phoenix" then
+                    steam.userStats.setAchievement('kill_phoenix_achievement')
+                    steam.userStats.storeStats()
+                elseif v.Enemy.Name == "Frost Entity" then
+                    steam.userStats.setAchievement('kill_frost_achievement')
+                    steam.userStats.storeStats()
                 end
-             
+                if v.Enemy.HP > 1000 then
+                    steam.userStats.setAchievement('kill_boss_achievement')
+                    steam.userStats.storeStats()
+                end
+                deathSound:setVolume(1 * sfxVolume)
+                if v.Enemy.Width and v.Enemy.Height then
+                    for a=1,v.Enemy.Width do
+                        for k=1,v.Enemy.Height do
+                            boneSpurt(v.dx + 16 + ((a-1)*32), v.dy + 16 + ((k-1)*32), 10, 25, 1, 1, 1, "mob", v.Enemy.Name)
+                        end
+                    end
+                end             
                 v.hasBurst = true
             end
         end
