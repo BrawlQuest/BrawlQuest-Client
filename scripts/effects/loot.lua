@@ -118,6 +118,7 @@ function updateLoot(dt)
             if v.type == "xp" then
                 xpSfx:stop()
                 xpSfx:setPitch(1 + (player.xp/100))
+                xpSfx:setPosition(v.x, v.y)
                 xpSfx:play()
             else
                 lootSfx:stop()

@@ -619,8 +619,9 @@ function getWorldInfo()
 
     local count = 0
     for i, v in ipairs(world) do
-        if not arrayContains(availablePlaceNames, worldLookup[v.X][v.Y].Name) then
-            availablePlaceNames[#availablePlaceNames + 1] = worldLookup[v.X][v.Y].Name
+        local location = worldLookup[v.X][v.Y].Name
+        if not arrayContains(availablePlaceNames, location) and not string.find(location, "Dominion") then
+            availablePlaceNames[#availablePlaceNames + 1] = location
         end
         if not arrayContains(avaliableMusic, worldLookup[v.X][v.Y].Music) then
             avaliableMusic[#avaliableMusic + 1] = worldLookup[v.X][v.Y].Music

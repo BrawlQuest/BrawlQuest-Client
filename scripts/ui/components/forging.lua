@@ -149,7 +149,7 @@ function drawForging()
                 drawInventoryItem(dx - w / 2, 0, v.item, v.amount)
                 dx = dx + 44
             end
-            love.graphics.printf("You Received:", 0 - w / 2, -20, w / 2, "center", 0, 2)
+            love.graphics.printf("You Received:", 0 - uiX / 2, -20, uiX / 2, "center", 0, 2)
         love.graphics.pop()
     end
 end

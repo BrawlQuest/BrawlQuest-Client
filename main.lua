@@ -307,23 +307,11 @@ function love.update(dt)
                             player = v["Sender"]
                         }
                     end
-                    timeOfDay = cerp(0.1, 1, ((math.abs(response['CurrentHour']) * 60) + 0) / 720)
-                    timeOfDay = timeOfDay + 0.1
                     usedItemThisTick = false
-                    if not worldEdit.open then
-                        if worldLookup[me.X] and worldLookup[me.X][me.Y] then -- custom lighting for different zones
-                            if worldLookup[me.X][me.Y].Name == "Elodine's Gift"  then
-                                Luven.setAmbientLightColor({0.1,0.1,0.1})
-                            end
-                        else
-                            Luven.setAmbientLightColor({timeOfDay, timeOfDay, timeOfDay+  0.1})
-                        end
-                    else
-                        Luven.setAmbientLightColor({1,1,1})
-                    end
-
+                    setLighting(response)
                     local previousMe = copy(me) -- Temp
                     me = response['Me']
+                    love.audio.setPosition(player.x, player.y)
                     if response["PlayerStructures"] then
                         structures = response["PlayerStructures"]
                         updateWorldLookup()
@@ -355,7 +343,7 @@ function love.update(dt)
                         if death.previousPosition.hp < getMaxHealth() * 0.9 then
                             death.open = true
                             totalCoverAlpha = 2
-                            love.audio.play(awakeSfx)
+                            awakeSfx:play()
                         else
                             player.dx = me.X * 32
                             player.dy = me.Y * 32
@@ -378,7 +366,7 @@ function love.update(dt)
                             if player.lvl ~= 0 then
                                 openTutorial(6)
                             end
-                            love.audio.play(lvlSfx)
+                            lvlSfx:play()
                             perks.stats[4] = player.cp
                             addFloat("level", player.dx + 16, player.dy + 16, null, {1,0,0}, 10)
                         end

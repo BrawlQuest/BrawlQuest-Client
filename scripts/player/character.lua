@@ -93,30 +93,30 @@ function updateCharacter(dt)
 
     movePlayer(dt)
 
-    if player.isMounting then
-        player.mount.stepSndPlay = player.mount.stepSndPlay - 1 * dt
-        if player.mount.stepSndPlay < 0 then
-            player.mount.stepSndPlay = 0.2
-        end
+    -- if player.isMounting then
+    --     player.mount.stepSndPlay = player.mount.stepSndPlay - 1 * dt
+    --     if player.mount.stepSndPlay < 0 then
+    --         player.mount.stepSndPlay = 0.2
+    --     end
 
-        if player.mount.x > player.dx + 8 then
-            player.mount.x = player.mount.x - 150 * dt
-        elseif player.mount.x < player.dx - 8 then
-            player.mount.x = player.mount.x + 150 * dt
-        end
+    --     if player.mount.x > player.dx + 8 then
+    --         player.mount.x = player.mount.x - 150 * dt
+    --     elseif player.mount.x < player.dx - 8 then
+    --         player.mount.x = player.mount.x + 150 * dt
+    --     end
 
-        if player.mount.y > player.dy + 8 then
-            player.mount.y = player.mount.y - 150 * dt
-        elseif player.mount.y < player.dy - 8 then
-            player.mount.y = player.mount.y + 150 * dt
-        end
+    --     if player.mount.y > player.dy + 8 then
+    --         player.mount.y = player.mount.y - 150 * dt
+    --     elseif player.mount.y < player.dy - 8 then
+    --         player.mount.y = player.mount.y + 150 * dt
+    --     end
 
-        if distanceToPoint(player.mount.x, player.mount.y, player.dx, player.dy) < 16 then
-            love.audio.play(horseMountSfx[love.math.random(1, #horseMountSfx)])
-            player.isMounted = true
-            player.isMounting = false
-        end
-    end
+    --     if distanceToPoint(player.mount.x, player.mount.y, player.dx, player.dy) < 16 then
+    --         love.audio.play(horseMountSfx[love.math.random(1, #horseMountSfx)])
+    --         player.isMounted = true
+    --         player.isMounting = false
+    --     end
+    -- end
 end
 
 function worldCollison(x, y)
@@ -184,7 +184,7 @@ function movePlayer(dt)
             player.x = prev.x
             player.y = prev.y
             if worldLookup[player.x]then
-                playFootstepSound(worldLookup[player.x][player.y])
+                playFootstepSound(worldLookup[player.x][player.y], player.x, player.y)
             end
             isMoving = true
         end
@@ -293,7 +293,9 @@ function updateInventory(response)
 
     for i,k in ipairs(newInventoryItems) do
         -- print(k.Item.Name)
-        love.audio.play(enemyHitSfx)
+        enemyHitSfx:setPosition(player.x, player.y)
+        enemyHitSfx:setRelative(false)
+        enemyHitSfx:play()
         burstLoot((player.x*32)-16, (player.y*32)-16, k.Inventory.Amount, k.Item.ImgPath)
         newInventoryItems = {}
     end

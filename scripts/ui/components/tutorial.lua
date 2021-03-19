@@ -72,14 +72,16 @@ end
 function drawTutorial()
     love.graphics.setColor(0,0,0,tutorialOpacity*0.8)
     love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
-    love.graphics.setFont(tutorialFont[1])
+    love.graphics.setFont(enchanting.font)
     love.graphics.setColor(1,1,1,tutorialOpacity)
-    love.graphics.printf(tutorial[tutorialActive].title,40,love.graphics.getHeight()/3,love.graphics.getWidth()-40,"center")
-    love.graphics.setFont(tutorialFont[2])
-    love.graphics.printf(tutorial[tutorialActive].desc,40,(love.graphics.getHeight()/3)*2,love.graphics.getWidth()-40,"center")
-    love.graphics.setColor(1,1,1,pressEnterOpacity*tutorialOpacity)
-    love.graphics.printf("Press ENTER to continue",40,(love.graphics.getHeight()/3)*2.5,love.graphics.getWidth()-40,"center")
-  
+    local w, h = love.graphics.getWidth() - 200, 10
+    local x, y = 100, love.graphics.getHeight()/2 - getTextHeight(tutorial[tutorialActive].title, w, enchanting.font, h) / 1.5 - getTextHeight(tutorial[tutorialActive].desc, w, enchanting.font, 3) / 2
+    love.graphics.printf(tutorial[tutorialActive].title, x, y, w / h, "center", 0, h)
+    y = y + getTextHeight(tutorial[tutorialActive].title, w, enchanting.font, h) + 20
+    love.graphics.printf(tutorial[tutorialActive].desc, x, y, w / 3, "center", 0, 3)
+    love.graphics.setColor(1,0,0,pressEnterOpacity*tutorialOpacity)
+    y = y + getTextHeight(tutorial[tutorialActive].desc, w, enchanting.font, 3) + 20
+    love.graphics.printf("Press ENTER to continue", x, y, w / 3,"center", 0, 3)
 end
 
 function updateTutorial(dt)
