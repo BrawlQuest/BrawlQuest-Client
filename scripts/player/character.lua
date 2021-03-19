@@ -293,7 +293,8 @@ function updateInventory(response)
 
     for i,k in ipairs(newInventoryItems) do
         -- print(k.Item.Name)
-        enemyHitSfx:setRelative(true)
+        enemyHitSfx:setPosition(player.x, player.y)
+        enemyHitSfx:setRelative(false)
         enemyHitSfx:play()
         burstLoot((player.x*32)-16, (player.y*32)-16, k.Inventory.Amount, k.Item.ImgPath)
         newInventoryItems = {}
