@@ -233,14 +233,25 @@ function love.update(dt)
         nextUpdate = nextUpdate - 1 * dt
         nextTick = nextTick - 1 * dt
         if nextUpdate < 0 then
-            getPlayerData('/players/' .. username, json:encode(
-                {
-                    ["X"] = player.x,
-                    ["Y"] = player.y,
-                    ["AX"] = player.target.x,
-                    ["AY"] = player.target.y,
-                    ["IsShield"] = love.keyboard.isDown(keybinds.SHIELD)
-                }))
+            if target.selected then
+                getPlayerData('/players/' .. username, json:encode(
+                    {
+                        ["X"] = player.x,
+                        ["Y"] = player.y,
+                        ["AX"] = target.hit.x,
+                        ["AY"] = target.hit.y,
+                        ["IsShield"] = love.keyboard.isDown(keybinds.SHIELD)
+                    }))
+            else
+                getPlayerData('/players/' .. username, json:encode(
+                    {
+                        ["X"] = player.x,
+                        ["Y"] = player.y,
+                        ["AX"] = player.target.x,
+                        ["AY"] = player.target.y,
+                        ["IsShield"] = love.keyboard.isDown(keybinds.SHIELD)
+                    }))
+                end
 
             nextUpdate = 0.5
         end

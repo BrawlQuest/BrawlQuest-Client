@@ -147,11 +147,9 @@ function newEnemyData(data) -- called when nearby data is returned
                 local aggroSfx = enemySounds[v.Enemy.Name].aggro[love.math.random(1, #enemySounds[v.Enemy.Name].aggro)]
                 aggroSfx:setPitch(love.math.random(80, 150) / 100)
                 aggroSfx:setVolume(1 * sfxVolume)
-                -- if aggroSfx:getChannelCount() == 1 then
-                -- --   aggroSfx:setPosition(v.x-player.x,v.y-player.y)
-                --     aggroSfx:setPosition(enemy.X-player.x,enemy.Y-player.y)
-                -- end
-                aggroSfx:setPosition(v.X, v.Y)
+                if aggroSfx:getChannelCount() == 1 then
+                    aggroSfx:setPosition(v.X, v.Y)
+                end
                 aggroSfx:play()
             end
         end
@@ -274,7 +272,9 @@ function drawEnemies()
                 burstLoot(v.dx + 16, v.dy + 16, player.owedxp, "xp")
                 local deathSound = enemySounds[v.Enemy.Name].death[love.math.random(1, #enemySounds[v.Enemy.Name].death)]
                 deathSound:setVolume(1 * sfxVolume)
-                deathSound:setPosition(v.dx / 32, v.dy / 32)
+                if deathSound:getChannelCount() == 1 then
+                    deathSound:setPosition(v.dx / 32, v.dy / 32)
+                end
                 deathSound:play()
                 if v.Enemy.Name == "Fire Phoenix" then
                     steam.userStats.setAchievement('kill_phoenix_achievement')
