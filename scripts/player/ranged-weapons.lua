@@ -102,4 +102,5 @@ function hitTarget()
     target.hit = target.paths[#target.paths] or null
     print("You hit: " .. json:encode(target.hit))
     local x, y = target.hit.x, target.hit.y -- hit a target on these coordinates
+    apiGET('/ranged/' .. me.ID .. "/" .. target.hit.x .. "/" .. target.hit.y)
 end
