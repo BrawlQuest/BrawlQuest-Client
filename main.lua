@@ -331,7 +331,7 @@ function love.update(dt)
                 
                         }
                     end
-                    if distanceToPoint(me.X, me.Y, player.x, player.y) > 4 then
+                    if me.IsDead then
                         player.x = me.X
                         player.y = me.Y
                         c, h = http.request {
