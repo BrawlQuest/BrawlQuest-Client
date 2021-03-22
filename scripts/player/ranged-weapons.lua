@@ -84,8 +84,8 @@ function drawRangedWeaponEffects()
         if #paths > 1 then
             local originX = player.dx + 16
             local originY = player.dy + 16
-            local destX = cerp(originX, paths[#paths].x * 32 + 16, throw.amount)
-            local destY = cerp(originY, paths[#paths].y * 32 + 16, throw.amount)
+            local destX = cerp(originX, paths[#paths].x * 32 + 16, 1 - target.amount)
+            local destY = cerp(originY, paths[#paths].y * 32 + 16, 1 - target.amount)
             -- local destX = paths[#paths].x * 32 + 16
             -- local destY = paths[#paths].y * 32 + 16
             -- love.graphics.line(originX, originY, destX, destY)
@@ -102,5 +102,5 @@ function hitTarget()
     target.hit = target.paths[#target.paths] or null
     print("You hit: " .. json:encode(target.hit))
     local x, y = target.hit.x, target.hit.y -- hit a target on these coordinates
-    apiGET('/ranged/' .. me.ID .. "/" .. target.hit.x .. "/" .. target.hit.y)
+    apiGET('/ranged/' .. me.ID .. "/" .. x .. "/" .. y)
 end
