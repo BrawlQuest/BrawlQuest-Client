@@ -15,6 +15,14 @@ function initRangedWeapons()
         amount = 0,
         speed = 2,
     }
+    explosions = {}
+    explImage = love.graphics.newImage("scripts/libraries/luven/lights/round.png")
+    smokeImg = love.graphics.newImage("assets/auras/Smoke.png")
+    smokeImages = {}
+    for x = 0, 8, 1 do
+        smokeImages[#smokeImages+1] = love.graphics.newQuad(x * 16, 0, 16, 16, smokeImg:getDimensions())
+    end
+    smokeParticles = {}
 end
 
 function updateRangedWeapons(dt)
@@ -30,8 +38,10 @@ function updateRangedWeapons(dt)
         staffExplode:setPosition(t.hit.x, t.hit.y)
         -- staffExplode:setPitch(love.math.random()) 
         staffExplode:play()
+        addExplosion(t.hit.x, t.hit.y)
         throw.open = false
     end
+    updateExplosions(dt)
 end
 
 function tickRangedWeapons()
@@ -70,7 +80,8 @@ function drawRangedWeaponsGrid(x,y)
         -- love.graphics.setColor(1,1,1, targetCerp)
         for i,v in ipairs(target.paths) do
             if i > 2 and i < #target.paths then
-                love.graphics.rectangle("fill", v.x * 32, v.y * 32, 32, 32) 
+                love.graphics.rectangle("fill", v.x * 32, v.y * 32, 32, 32)
+                break
             end
         end
     end
@@ -100,7 +111,58 @@ end
 
 function hitTarget()
     target.hit = target.paths[#target.paths] or null
-    print("You hit: " .. json:encode(target.hit))
     local x, y = target.hit.x, target.hit.y -- hit a target on these coordinates
     apiGET('/ranged/' .. me.ID .. "/" .. x .. "/" .. y)
+end
+
+function updateExplosions(dt)
+    for i,v in ipairs(explosions) do
+        v.alpha = v.alpha - 2 * dt
+        v.width = v.width - 1 * dt
+    end
+
+    for i,v in ipairs(smokeParticles) do
+        v.x = v.x + v.vx * dt
+        v.y = v.y + v.vy * dt
+        v.vx = math.damp(dt, v.vx, 20)
+        v.vy = math.damp(dt, v.vy, 20, -16)  
+    end
+end
+
+function drawExplosions()
+    love.graphics.setBlendMode("add")
+    for i,v in ipairs(explosions) do
+        love.graphics.setColor(1,0,0,v.alpha)
+        love.graphics.draw(explImage, v.x * 32 + 16 - explImage:getWidth() / (2 / v.width), v.y * 32 + 16 - explImage:getWidth() / (2 / v.width), 0, v.width)
+        -- love.graphics.circle("fill", v.x * 32 + 16, v.y * 32 + 16, 64 * v.width)
+        love.graphics.setColor(1,1,1,1)
+        love.graphics.draw(smokeImg, smokeImages[1], v.x * 32 + 16, v.y * 32 + 16)
+    end
+    love.graphics.setBlendMode("alpha")
+
+    for i,v in ipairs(smokeParticles) do
+        love.graphics.setColor(1,1,1,1)
+        love.graphics.draw(smokeImg, smokeImages[1], v.x, v.y)
+    end
+
+end
+
+function addExplosion(x,y)
+    explosions[#explosions+1] = {
+        x = x,
+        y = y,
+        alpha = 1,
+        width = 1,
+    }
+
+    for i = 1, 10 do
+        local r = math.rad(love.math.random(0, 360))
+        local speed = 32
+        smokeParticles[#smokeParticles+1] = {
+            vx = math.cos(r) * speed,
+            vy = math.sin(r) * speed,
+            x = x * 32,
+            y = y * 32,
+        }
+    end
 end

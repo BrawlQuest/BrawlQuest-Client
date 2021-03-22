@@ -147,6 +147,14 @@ function math.averageAngles(...)
 	for i=1,select('#',...) do local a= select(i,...) x, y = x+math.cos(a), y+math.sin(a) end
 	return math.atan2(y, x)
 end
+
+function math.damp(dt, var, speed, dest)
+    speed, dest = speed or 4, dest or 0
+    local output = var
+    if var < dest then var = var + speed * dt if var >= dest then output = dest else output = var end
+    elseif var > dest then var = var - speed * dt if var <= dest then output = dest else output = var end end
+    return output
+end
  
  
 -- Returns the distance between two points.

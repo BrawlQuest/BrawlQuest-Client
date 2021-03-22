@@ -156,6 +156,7 @@ function love.draw()
             
             drawPlayer(me, -1)
             if showWorldAnimations then drawLeaves() drawCritters() end
+            drawExplosions()
             drawLoot()
 
             local drawingText = false
