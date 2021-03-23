@@ -23,6 +23,7 @@ function initRangedWeapons()
         smokeImages[#smokeImages+1] = love.graphics.newQuad(x * 16, 0, 16, 16, smokeImg:getDimensions())
     end
     smokeParticles = {}
+    projectile = love.graphics.newImage("assets/player/gen/spell-projectile.png")
 end
 
 function updateRangedWeapons(dt)
@@ -100,9 +101,14 @@ function drawRangedWeaponEffects()
             -- local destX = paths[#paths].x * 32 + 16
             -- local destY = paths[#paths].y * 32 + 16
             -- love.graphics.line(originX, originY, destX, destY)
-            love.graphics.setBlendMode("add")
-            love.graphics.setColor(1,0,1,0.8 * ((1 - throw.amount) + 0.2))
-            love.graphics.circle("fill", destX, destY, 10)
+            -- love.graphics.setBlendMode("add")
+            love.graphics.setColor(1,0,1,0.6 * ((1 - target.amount) + 0.2))
+            love.graphics.push()
+            love.graphics.translate(destX, destY)
+            -- love.graphics.rotate(math.rad(90 * target.amount))
+            love.graphics.scale(0.75)
+            love.graphics.draw(projectile, -16, -16)
+            love.graphics.pop()
             love.graphics.setBlendMode("alpha")
         end
     end
@@ -119,13 +125,22 @@ function updateExplosions(dt)
     for i,v in ipairs(explosions) do
         v.alpha = v.alpha - 2 * dt
         v.width = v.width - 1 * dt
+        if v.alpha <= 0 then table.remove(explosions, i) end
     end
 
     for i,v in ipairs(smokeParticles) do
         v.x = v.x + v.vx * dt
         v.y = v.y + v.vy * dt
         v.vx = math.damp(dt, v.vx, 20)
-        v.vy = math.damp(dt, v.vy, 20, -16)  
+        v.vy = math.damp(dt, v.vy, 20, -16)
+        v.alpha = v.alpha - 0.2 * dt
+        if v.alpha <= 0 then table.remove(smokeParticles, i) end
+        v.imageAmount = v.imageAmount + v.frameRate * dt
+        if v.imageAmount >= 1 then
+            if v.imageNo > 1 then v.imageNo = v.imageNo - 1
+            else v.imageNo = v.imageNo + 1 end
+            v.imageAmount = 0
+        end
     end
 end
 
@@ -134,17 +149,13 @@ function drawExplosions()
     for i,v in ipairs(explosions) do
         love.graphics.setColor(1,0,0,v.alpha)
         love.graphics.draw(explImage, v.x * 32 + 16 - explImage:getWidth() / (2 / v.width), v.y * 32 + 16 - explImage:getWidth() / (2 / v.width), 0, v.width)
-        -- love.graphics.circle("fill", v.x * 32 + 16, v.y * 32 + 16, 64 * v.width)
-        love.graphics.setColor(1,1,1,1)
-        love.graphics.draw(smokeImg, smokeImages[1], v.x * 32 + 16, v.y * 32 + 16)
     end
-    love.graphics.setBlendMode("alpha")
 
     for i,v in ipairs(smokeParticles) do
-        love.graphics.setColor(1,1,1,1)
-        love.graphics.draw(smokeImg, smokeImages[1], v.x, v.y)
+        love.graphics.setColor(1,1,1,v.alpha)
+        love.graphics.draw(smokeImg, smokeImages[v.imageNo], v.x, v.y, 0, 2)
     end
-
+    love.graphics.setBlendMode("alpha")
 end
 
 function addExplosion(x,y)
@@ -163,6 +174,10 @@ function addExplosion(x,y)
             vy = math.sin(r) * speed,
             x = x * 32,
             y = y * 32,
+            imageNo = 8,
+            imageAmount = 0,
+            frameRate = love.math.random(1, 3),
+            alpha = 1,
         }
     end
 end
