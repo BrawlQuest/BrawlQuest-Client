@@ -133,7 +133,7 @@ function updateExplosions(dt)
         v.y = v.y + v.vy * dt
         v.vx = math.damp(dt, v.vx, 20)
         v.vy = math.damp(dt, v.vy, 20, -16)
-        v.alpha = v.alpha - 0.2 * dt
+        v.alpha = v.alpha - v.alphaRate * dt
         if v.alpha <= 0 then table.remove(smokeParticles, i) end
         v.imageAmount = v.imageAmount + v.frameRate * dt
         if v.imageAmount >= 1 then
@@ -176,8 +176,9 @@ function addExplosion(x,y)
             y = y * 32,
             imageNo = 8,
             imageAmount = 0,
-            frameRate = love.math.random(1, 3),
+            frameRate = love.math.random() * 2 + 1,
             alpha = 1,
+            alphaRate = love.math.random() * 0.4 + 0.2,
         }
     end
 end
