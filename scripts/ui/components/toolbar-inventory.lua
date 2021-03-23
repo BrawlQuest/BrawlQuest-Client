@@ -195,7 +195,7 @@ function getItemAmount(item)
 end
 
 function isItemUnusable(item)
-    if item and me.LVL and not debugItems then
+    if (item and me.LVL and not debugItems) or (item.Type == "spell" and me and me.SpellCooldown and me.SpellCooldown > 1) then
         return item.Worth * 1 > me.LVL
     else return false end
 end

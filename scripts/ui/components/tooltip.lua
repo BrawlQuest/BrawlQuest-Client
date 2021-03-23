@@ -93,6 +93,15 @@ function setItemTooltip(item)
     elseif item.Type == "mount" then
         valueAdditional.desc = item.Val / 32 .. "m/s Mount"
         valueAdditional.color = {0.8, 0.2, 1}
+    elseif item.Type == "wall" then
+        valueAdditional.desc = "Placeable Wall"
+        valueAdditional.color = {0.8,0.8,0.8}
+    elseif item.type == "furniture" then
+        valueAdditional.desc = "Placeable Furniture"
+        valueAdditional.color = {0.8,0.8,0.8}
+    elseif item.type == "floor" then
+        valueAdditional.desc = "Placeable Flooring"
+        valueAdditional.color = {0.8,0.8,0.8}
     end
     if me and me.LVL and item and item.Worth and me.LVL >= item.Worth then
         setTooltip(item.Name, "", {valueAdditional, {
@@ -128,8 +137,16 @@ function setItemTooltip(item)
                 desc = "Enchanted with +0.8m/s movement speed",
                 color = {0.7,0,1}
             }
-        end
       
+        end
+        
+    end
+
+    if item.Type == "wall" or item.Type == "furniture" or item.Type == "floor" then
+        tooltip.additional[#tooltip.additional + 1] = {
+            desc = "This item is placeable within any zone called 'Foundation Forest' or 'Dominion of "..me.Name.."'",
+            color = {0.6,0.6,1}
+        }
     end
 end
 
