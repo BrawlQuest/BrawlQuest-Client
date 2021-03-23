@@ -54,8 +54,10 @@ function tickRangedWeapons()
         target.paths = {origin = {x = player.x, y = player.y}}
         target.shootable, target.counter = Bresenham.line(player.x, player.y, target.x, target.y, function (x, y)
             if worldLookup[x] and worldLookup[x][y] and worldLookup[x][y].Collision ~= null then
+                local output = not worldLookup[x][y].Collision
                 target.paths[#target.paths + 1] = {x = x, y = y,}
-                return not worldLookup[x][y].Collision
+                if isTileWater(worldLookup[x][y].ForegroundTile) then output = true end
+                return output
             end
         end)
         hitTarget()
@@ -102,11 +104,11 @@ function drawRangedWeaponEffects()
             -- local destY = paths[#paths].y * 32 + 16
             -- love.graphics.line(originX, originY, destX, destY)
             -- love.graphics.setBlendMode("add")
-            love.graphics.setColor(1,0,1,0.6 * ((1 - target.amount) + 0.2))
+            love.graphics.setColor(1,0.5,0.5,0.9 * ((target.amount)))
             love.graphics.push()
             love.graphics.translate(destX, destY)
-            -- love.graphics.rotate(math.rad(90 * target.amount))
-            love.graphics.scale(0.75)
+            love.graphics.rotate(math.angle(originX, originY, paths[#paths].x * 32 + 16, paths[#paths].y * 32 + 16))
+            love.graphics.scale(1)
             love.graphics.draw(projectile, -16, -16)
             love.graphics.pop()
             love.graphics.setBlendMode("alpha")
