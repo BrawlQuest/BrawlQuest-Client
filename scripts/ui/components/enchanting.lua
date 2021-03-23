@@ -262,7 +262,7 @@ function drawEnchanting()
         love.graphics.printf(e.text.final, x + 10, y - (getTextHeight(e.text.final, (w - 20) / textScale, e.font) * (textScale + 1)) - 20, (w - 20) / textScale, "center", 0, textScale)
         love.graphics.setColor(1,0,0)
         textScale = textScale + 1
-        love.graphics.printf("NO, ENCHANTMENTS DO NOT STACK!", x + 10, y - (e.font:getHeight() * textScale) - 20, (w - 20) / textScale, "center", 0, textScale)
+        love.graphics.printf("ONLY ONE ENCHANTMENT PER ITEM", x + 10, y - (e.font:getHeight() * textScale) - 20, (w - 20) / textScale, "center", 0, textScale)
 
         y = y + 32 * picScale + 10 -- draw underneath boxes
         drawEnchantmentButton(x,y,w * 0.5 - 5, 64, "Go Back (escape)", "back3")
@@ -297,14 +297,22 @@ function checkEnchantingKeyPressed(key)
             if e.chosenItemCount < #e.itemNames then 
                 e.chosenItemCount = e.chosenItemCount + 1
             else e.chosenItemCount = 1 end
-            e.chosenItem = e.itemNames[e.chosenItemCount]
-            e.selectedPerk = 1
+            if e.itemNames[e.chosenItemCount] == "Mount" and (me.Mount.Name == "None" or me.Mount.Name == "") then
+                e.chosenItemCount = e.chosenItemCount - 1
+            else
+                e.chosenItem = e.itemNames[e.chosenItemCount]
+                e.selectedPerk = 1
+            end
         elseif key == keybinds.ATTACK_LEFT then 
             if e.chosenItemCount > 1 then 
                 e.chosenItemCount = e.chosenItemCount - 1
             else e.chosenItemCount = #e.itemNames end
-            e.chosenItem = e.itemNames[e.chosenItemCount]
-            e.selectedPerk = 1
+            if e.itemNames[e.chosenItemCount] == "Mount" and (me.Mount.Name == "None" or me.Mount.Name == "") then
+                e.chosenItemCount = e.chosenItemCount + 1
+            else
+                e.chosenItem = e.itemNames[e.chosenItemCount]
+                e.selectedPerk = 1
+            end
         elseif key == keybinds.ATTACK_DOWN and e.chosenItem ~= "" then 
             if e.selectedPerk < #e.perks[perk] then 
                 e.selectedPerk = e.selectedPerk + 1
@@ -331,10 +339,15 @@ function checkEnchantingMousePressed(button)
         if e.mouseOver.endPhaseOne then e.phase = 2 end
     elseif e.phase == 2 then
         if e.mouseOver.item ~= "" then
-            e.chosenItem = e.mouseOver.item
             for i,v in ipairs(e.itemNames) do
-                if e.chosenItem == v then 
-                    if v ~= "Mount" then e.chosenItemCount = i elseif me.Mount and me.Mount.Name ~= "None" then e.chosenItemCount = i end
+                if e.mouseOver.item == v then
+                    if v ~= "Mount" then
+                        e.chosenItemCount = i
+                        e.chosenItem = e.mouseOver.item
+                    elseif me.Mount and me.Mount.Name ~= "None" and me.Mount.Name ~= "" then
+                        e.chosenItemCount = i
+                        e.chosenItem = e.mouseOver.item
+                    end
                 end
             end
         end
@@ -342,7 +355,6 @@ function checkEnchantingMousePressed(button)
         if e.mouseOver.commit and me[enchanting.chosenItem] and me[enchanting.chosenItem].Name ~= "None" then e.phase = 3 end
     elseif e.phase == 3 then
         if e.mouseOver.return3 == true then
-
             enchantItem()
         elseif e.mouseOver.back3 == true then
             e.phase = 2
@@ -371,4 +383,10 @@ function enchantItem()
     e.chosenItem = "LegArmour"
     e.chosenItemCount = 1
     e.phase = 1
+end
+
+function openEnchanting()
+    enchanting.phase = 1
+    enchanting.open = true
+    enchanting.amount = 0.01
 end
