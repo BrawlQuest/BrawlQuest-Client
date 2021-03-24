@@ -15,6 +15,7 @@
         "elodine",
         "iheight",
         "iwidth",
+        "lerp",
         "sfxr"
     ]
 }

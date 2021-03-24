@@ -15,6 +15,15 @@ function initRangedWeapons()
         amount = 0,
         speed = 2,
     }
+    explosions = {}
+    explImage = love.graphics.newImage("scripts/libraries/luven/lights/round.png")
+    smokeImg = love.graphics.newImage("assets/auras/Smoke.png")
+    smokeImages = {}
+    for x = 0, 8, 1 do
+        smokeImages[#smokeImages+1] = love.graphics.newQuad(x * 16, 0, 16, 16, smokeImg:getDimensions())
+    end
+    smokeParticles = {}
+    projectile = love.graphics.newImage("assets/player/gen/spell-projectile.png")
 end
 
 function updateRangedWeapons(dt)
@@ -30,8 +39,10 @@ function updateRangedWeapons(dt)
         staffExplode:setPosition(t.hit.x, t.hit.y)
         -- staffExplode:setPitch(love.math.random()) 
         staffExplode:play()
+        addExplosion(t.hit.x, t.hit.y)
         throw.open = false
     end
+    updateExplosions(dt)
 end
 
 function tickRangedWeapons()
@@ -43,8 +54,10 @@ function tickRangedWeapons()
         target.paths = {origin = {x = player.x, y = player.y}}
         target.shootable, target.counter = Bresenham.line(player.x, player.y, target.x, target.y, function (x, y)
             if worldLookup[x] and worldLookup[x][y] and worldLookup[x][y].Collision ~= null then
+                local output = not worldLookup[x][y].Collision
                 target.paths[#target.paths + 1] = {x = x, y = y,}
-                return not worldLookup[x][y].Collision
+                if isTileWater(worldLookup[x][y].ForegroundTile) then output = true end
+                return output
             end
         end)
         hitTarget()
@@ -70,7 +83,8 @@ function drawRangedWeaponsGrid(x,y)
         -- love.graphics.setColor(1,1,1, targetCerp)
         for i,v in ipairs(target.paths) do
             if i > 2 and i < #target.paths then
-                love.graphics.rectangle("fill", v.x * 32, v.y * 32, 32, 32) 
+                love.graphics.rectangle("fill", v.x * 32, v.y * 32, 32, 32)
+                break
             end
         end
     end
@@ -84,14 +98,19 @@ function drawRangedWeaponEffects()
         if #paths > 1 then
             local originX = player.dx + 16
             local originY = player.dy + 16
-            local destX = cerp(originX, paths[#paths].x * 32 + 16, throw.amount)
-            local destY = cerp(originY, paths[#paths].y * 32 + 16, throw.amount)
+            local destX = cerp(originX, paths[#paths].x * 32 + 16, 1 - target.amount)
+            local destY = cerp(originY, paths[#paths].y * 32 + 16, 1 - target.amount)
             -- local destX = paths[#paths].x * 32 + 16
             -- local destY = paths[#paths].y * 32 + 16
             -- love.graphics.line(originX, originY, destX, destY)
-            love.graphics.setBlendMode("add")
-            love.graphics.setColor(1,0,1,0.8 * ((1 - throw.amount) + 0.2))
-            love.graphics.circle("fill", destX, destY, 10)
+            -- love.graphics.setBlendMode("add")
+            love.graphics.setColor(1,0.5,0.5,0.9 * ((target.amount)))
+            love.graphics.push()
+            love.graphics.translate(destX, destY)
+            love.graphics.rotate(math.angle(originX, originY, paths[#paths].x * 32 + 16, paths[#paths].y * 32 + 16))
+            love.graphics.scale(1)
+            love.graphics.draw(projectile, -16, -16)
+            love.graphics.pop()
             love.graphics.setBlendMode("alpha")
         end
     end
@@ -100,7 +119,68 @@ end
 
 function hitTarget()
     target.hit = target.paths[#target.paths] or null
-    print("You hit: " .. json:encode(target.hit))
     local x, y = target.hit.x, target.hit.y -- hit a target on these coordinates
-    apiGET('/ranged/' .. me.ID .. "/" .. target.hit.x .. "/" .. target.hit.y)
+    apiGET('/ranged/' .. me.ID .. "/" .. x .. "/" .. y)
+end
+
+function updateExplosions(dt)
+    for i,v in ipairs(explosions) do
+        v.alpha = v.alpha - 2 * dt
+        v.width = v.width - 1 * dt
+        if v.alpha <= 0 then table.remove(explosions, i) end
+    end
+
+    for i,v in ipairs(smokeParticles) do
+        v.x = v.x + v.vx * dt
+        v.y = v.y + v.vy * dt
+        v.vx = math.damp(dt, v.vx, 20)
+        v.vy = math.damp(dt, v.vy, 20, -16)
+        v.alpha = v.alpha - v.alphaRate * dt
+        if v.alpha <= 0 then table.remove(smokeParticles, i) end
+        v.imageAmount = v.imageAmount + v.frameRate * dt
+        if v.imageAmount >= 1 then
+            if v.imageNo > 1 then v.imageNo = v.imageNo - 1
+            else v.imageNo = v.imageNo + 1 end
+            v.imageAmount = 0
+        end
+    end
+end
+
+function drawExplosions()
+    love.graphics.setBlendMode("add")
+    for i,v in ipairs(explosions) do
+        love.graphics.setColor(1,0,0,v.alpha)
+        love.graphics.draw(explImage, v.x * 32 + 16 - explImage:getWidth() / (2 / v.width), v.y * 32 + 16 - explImage:getWidth() / (2 / v.width), 0, v.width)
+    end
+
+    for i,v in ipairs(smokeParticles) do
+        love.graphics.setColor(1,1,1,v.alpha)
+        love.graphics.draw(smokeImg, smokeImages[v.imageNo], v.x, v.y, 0, 2)
+    end
+    love.graphics.setBlendMode("alpha")
+end
+
+function addExplosion(x,y)
+    explosions[#explosions+1] = {
+        x = x,
+        y = y,
+        alpha = 1,
+        width = 1,
+    }
+
+    for i = 1, 10 do
+        local r = math.rad(love.math.random(0, 360))
+        local speed = 32
+        smokeParticles[#smokeParticles+1] = {
+            vx = math.cos(r) * speed,
+            vy = math.sin(r) * speed,
+            x = x * 32,
+            y = y * 32,
+            imageNo = 8,
+            imageAmount = 0,
+            frameRate = love.math.random() * 2 + 1,
+            alpha = 1,
+            alphaRate = love.math.random() * 0.4 + 0.2,
+        }
+    end
 end

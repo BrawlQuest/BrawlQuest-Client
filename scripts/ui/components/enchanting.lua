@@ -31,6 +31,9 @@ function initEnchanting()
             desc = "The mana has chosen you. To enchant an item your character will be reset to Level 1 as well as all of your quests and NPC conversations.\nYou don't lose any of your items, although your stats will be reset to 1 and your armour and weapon will be unequipped.",
             ifNot = "If you haven't equipped an item you'd like to enchant, come back with the item you'd like to enchant equipped",
             final = "Are you sure you want to enchant this item? You will be sent back to level 1, and will not be able to use your high level items again until you level up.",
+            already = "This item already has an enchantment on it and you can only have one enchantment per item. There are two options:",
+            option1 = "\n1. Upgrade Enchantment, you can add levels to your enchantment according to your current level, any levels added onto the current enchantment will be taken from your own.",
+            option2 = "\n2. ",
         },
         mouseOver = {
             endPhaseOne = false,
@@ -88,6 +91,7 @@ function updateEnchanting(dt)
     local e = enchanting
     if e.open then
         panelMovement(dt, enchanting, 1, "amount", 0.1)
+        if e.phase == 4 then enchantingSlider:update() end
     else panelMovement(dt, enchanting, -1, "amount", 0.5)
         if e.amount < 0.01 then e.amount = 0 end
     end
@@ -262,13 +266,21 @@ function drawEnchanting()
         love.graphics.printf(e.text.final, x + 10, y - (getTextHeight(e.text.final, (w - 20) / textScale, e.font) * (textScale + 1)) - 20, (w - 20) / textScale, "center", 0, textScale)
         love.graphics.setColor(1,0,0)
         textScale = textScale + 1
-        love.graphics.printf("NO, ENCHANTMENTS DO NOT STACK!", x + 10, y - (e.font:getHeight() * textScale) - 20, (w - 20) / textScale, "center", 0, textScale)
+        love.graphics.printf("ONLY ONE ENCHANTMENT PER ITEM", x + 10, y - (e.font:getHeight() * textScale) - 20, (w - 20) / textScale, "center", 0, textScale)
 
         y = y + 32 * picScale + 10 -- draw underneath boxes
         drawEnchantmentButton(x,y,w * 0.5 - 5, 64, "Go Back (escape)", "back3")
 
         x = x + w * 0.5 + 5
         drawEnchantmentButton(x,y,w * 0.5 - 5, 64, "Enchant Item (return)", "return3")
+    elseif e.phase == 4 then
+        love.graphics.setColor(1,1,1,1)
+        enchantingSlider:draw()
+        love.graphics.push()
+        love.graphics.translate(uiX / 2, uiY / 2)
+        love.graphics.print(math.floor(lerp(25, 30, enchantingSlider:getValue())), -200, -50, 0, 4)
+        love.graphics.printf(e.text.already, -400, 50, 800 / 3, "center", 0, 3)
+        love.graphics.pop()
     end
 end
 
@@ -297,14 +309,22 @@ function checkEnchantingKeyPressed(key)
             if e.chosenItemCount < #e.itemNames then 
                 e.chosenItemCount = e.chosenItemCount + 1
             else e.chosenItemCount = 1 end
-            e.chosenItem = e.itemNames[e.chosenItemCount]
-            e.selectedPerk = 1
+            if e.itemNames[e.chosenItemCount] == "Mount" and (me.Mount.Name == "None" or me.Mount.Name == "") then
+                e.chosenItemCount = e.chosenItemCount - 1
+            else
+                e.chosenItem = e.itemNames[e.chosenItemCount]
+                e.selectedPerk = 1
+            end
         elseif key == keybinds.ATTACK_LEFT then 
             if e.chosenItemCount > 1 then 
                 e.chosenItemCount = e.chosenItemCount - 1
             else e.chosenItemCount = #e.itemNames end
-            e.chosenItem = e.itemNames[e.chosenItemCount]
-            e.selectedPerk = 1
+            if e.itemNames[e.chosenItemCount] == "Mount" and (me.Mount.Name == "None" or me.Mount.Name == "") then
+                e.chosenItemCount = e.chosenItemCount + 1
+            else
+                e.chosenItem = e.itemNames[e.chosenItemCount]
+                e.selectedPerk = 1
+            end
         elseif key == keybinds.ATTACK_DOWN and e.chosenItem ~= "" then 
             if e.selectedPerk < #e.perks[perk] then 
                 e.selectedPerk = e.selectedPerk + 1
@@ -313,15 +333,17 @@ function checkEnchantingKeyPressed(key)
             if e.selectedPerk > 1 then
                 e.selectedPerk = e.selectedPerk - 1
             else e.selectedPerk = #e.perks[perk] end
-        elseif key == "return" and me[enchanting.chosenItem] and me[enchanting.chosenItem].Name ~= "None" then e.phase = 3
+        elseif key == "return" and me[enchanting.chosenItem] and me[enchanting.chosenItem].Name ~= "None" then transitionToEnchantingPhase4()
         elseif key == "f" or checkMoveOrAttack(key, "move") then e.open = false
         end
     elseif e.phase == 3 then
-        if key == "return" then
-            enchantItem()
-        elseif key == "escape" then
-            e.phase = 2
-        end
+        if key == "return" then enchantItem()
+        elseif key == "escape" then e.phase = 2
+        elseif checkMoveOrAttack(key, "move") then e.open = false end
+    elseif e.phase == 4 then
+        if key == "return" then enchantItem()
+        elseif key == "escape" then e.phase = 2
+        elseif checkMoveOrAttack(key, "move") then e.open = false end
     end
 end
 
@@ -331,27 +353,27 @@ function checkEnchantingMousePressed(button)
         if e.mouseOver.endPhaseOne then e.phase = 2 end
     elseif e.phase == 2 then
         if e.mouseOver.item ~= "" then
-            e.chosenItem = e.mouseOver.item
             for i,v in ipairs(e.itemNames) do
-                if e.chosenItem == v then 
-                    if v ~= "Mount" then e.chosenItemCount = i elseif me.Mount and me.Mount.Name ~= "None" then e.chosenItemCount = i end
+                if e.mouseOver.item == v then
+                    if v ~= "Mount" then
+                        e.chosenItemCount = i
+                        e.chosenItem = e.mouseOver.item
+                    elseif me.Mount and me.Mount.Name ~= "None" and me.Mount.Name ~= "" then
+                        e.chosenItemCount = i
+                        e.chosenItem = e.mouseOver.item
+                    end
                 end
             end
         end
         if e.mouseOver.perk > 0 then e.selectedPerk = e.mouseOver.perk end
-        if e.mouseOver.commit and me[enchanting.chosenItem] and me[enchanting.chosenItem].Name ~= "None" then e.phase = 3 end
+        if e.mouseOver.commit and me[enchanting.chosenItem] and me[enchanting.chosenItem].Name ~= "None" then transitionToEnchantingPhase4() end
     elseif e.phase == 3 then
-        if e.mouseOver.return3 == true then
-
-            enchantItem()
-        elseif e.mouseOver.back3 == true then
-            e.phase = 2
-        end
+        if e.mouseOver.return3 == true then enchantItem()
+        elseif e.mouseOver.back3 == true then e.phase = 2 end
     end
 end
 
 function enchantItem()
-
     local e = enchanting
     local perk = "HeadArmour"
     if e.chosenItem == "HeadArmour" or e.chosenItem == "ChestArmour" or e.chosenItem == "LegArmour" then perk = "Armour"
@@ -371,4 +393,20 @@ function enchantItem()
     e.chosenItem = "LegArmour"
     e.chosenItemCount = 1
     e.phase = 1
+end
+
+function openEnchanting()
+    enchanting.phase = 1
+    enchanting.open = true
+    enchanting.amount = 0.01
+end
+
+function transitionToEnchantingPhase4()
+    local e = enchanting
+    if not me[enchanting.chosenItem].Enchantment or me[enchanting.chosenItem].Enchantment == "None" then e.phase = 3
+    elseif me[enchanting.chosenItem].Enchantment ~= "None" then
+        e.phase = 4
+        local style = {track = "line", knob = "rectangle", width = 32,}
+        enchantingSlider = newSlider(uiX / 2, uiY / 2, 400, 0.5, 0, 1, function() end, style)
+    end
 end

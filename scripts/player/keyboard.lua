@@ -55,9 +55,7 @@ function checkKeyPressedPhaseGame(key)
         if key == keybinds.QUESETS and not nearbyAnvil then questsPanel.forceOpen = not questsPanel.forceOpen end
         if key == keybinds.INTERACT then -- Hello Mr HackerMan! Removing the isNearbyTile will allow you to open the crafting menu from anywhere, but won't allow you to actually craft any items. Sorry! =(
             if isNearbyTile("assets/world/objects/Portal.png") and me.LVL == 25 then
-                enchanting.phase = 1
-                enchanting.open = true
-                enchanting.amount = 0.01
+                openEnchanting()
             elseif nearbyAnvil then
                 getRecipesHeight()
                 crafting.open = true
@@ -68,7 +66,7 @@ function checkKeyPressedPhaseGame(key)
                 startConversation()
             end
         end
-        if (key == "f" and versionType == "dev") then openForging() end
+        if (key == "f" and versionType == "dev") then openEnchanting() end
     end
 end
 
