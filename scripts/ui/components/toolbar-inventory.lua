@@ -24,7 +24,9 @@ function initToolBarInventory()
     userInventory[6] = {}
     userInventory[7] = {}
     userInventory[8] = {}
-    inventoryFieldLength = {0, 0, 0, 0, 0, 0, 0, 0,}
+    userInventory[9] = {}
+    userInventory[10] = {}
+    inventoryFieldLength = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 
     useItemColorChanged = false
     userInventoryFieldHeight = {}
@@ -45,8 +47,8 @@ function initToolBarInventory()
         items = {},
         mouseOverButtonsAmount = 0,
 
-        fields = {"WEAPONS", "SPELLS", "ARMOUR", "REAGENT", "CONSUMABLES", "MOUNTS", "BUDDIES", "OTHER",},
-        fieldLength = {0, 0, 0, 0, 0, 0, 0,},
+        fields = {"WEAPONS", "SPELLS", "ARMOUR", "ORES", "REAGENT", "CONSUMABLES", "MOUNTS", "BUDDIES", "BUILDABLES", "OTHER",},
+        fieldLength = {0, 0, 0, 0, 0, 0, 0,0,0,0},
 
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
         headerFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 32),
@@ -108,28 +110,37 @@ function updateToolBarInventory(dt)
 end
 
 function getItemType(v)
-    local t = 8
+    local t = 10
     if v.Item.Type == "wep" then
         t = 1
     elseif v.Item.Type == "spell" then
         t = 2
     elseif string.sub(v.Item.Type, 1, 4) == "arm_" or v.Item.Type == "shield" then
         t = 3
-    elseif v.Item.Type == "reagent" then
+    elseif v.Item.Type == "ore" then
         t = 4
-    elseif v.Item.Type == "consumable" then 
+    elseif v.Item.Type == "reagent" then
         t = 5
-    elseif v.Item.Type == "mount" then
+    elseif v.Item.Type == "consumable" then 
         t = 6
-    elseif v.Item.Type == "buddy" then
+    elseif v.Item.Type == "mount" then
         t = 7
+    elseif v.Item.Type == "buddy" then
+        t = 8
+    elseif v.Item.Type == "wall" or v.Item.Type == "floor" or v.Item.Type == "furniture" then
+        t = 9
     end
     return t
 end
 
 function getInventory()
-    userInventory = {{}, {}, {}, {}, {}, {}, {}, {}, }
-    inventoryFieldLength = {0, 0, 0, 0, 0, 0, 0, 0,}
+    userInventory = {}
+    inventoryFieldLength = {}
+    for i, v in ipairs(inventoryAlpha) do
+        userInventory[i] = {}
+       inventoryFieldLength[i] = 0
+    end
+
     for i, v in ipairs(inventoryAlpha) do
         local t = getItemType(v)
         inventoryFieldLength[t] = inventoryFieldLength[t] + 1
