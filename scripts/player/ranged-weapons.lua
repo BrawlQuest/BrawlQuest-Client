@@ -109,7 +109,7 @@ function drawRangedWeaponEffects()
             love.graphics.translate(destX, destY)
             love.graphics.rotate(math.angle(originX, originY, paths[#paths].x * 32 + 16, paths[#paths].y * 32 + 16))
             love.graphics.scale(1)
-            love.graphics.draw(projectile, -16, -16)
+            love.graphics.draw(projectile, -projectile:getWidth() / 2, -projectile:getHeight() / 2)
             love.graphics.pop()
             love.graphics.setBlendMode("alpha")
         end

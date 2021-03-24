@@ -94,7 +94,7 @@ end
 
 function updateCritters(dt)
     for i, v in ipairs(critters) do
-        if distanceToPoint(player.dx, player.dy, v.x, v.y) < 64 then
+        if distanceToPoint(player.dx, player.dy, v.x, v.y) < 64 or distanceToPoint(target.hit.x * 32, target.hit.y * 32, v.x, v.y) < 64 then
             v.alpha = v.alpha - 3 * dt
             if v.light then
                 Luven.setLightPower(v.light, v.alpha / 2)
@@ -118,7 +118,7 @@ function updateCritters(dt)
         end
         for a, k in pairs(v.critter) do
             local speed = 8 *dt
-            if distanceToPoint(player.dx, player.dy, v.x, v.y) < 64 then
+            if distanceToPoint(player.dx, player.dy, v.x, v.y) < 64 or distanceToPoint(target.hit.x * 32, target.hit.y * 32, v.x, v.y) < 64 then
                 if not k.scattering then
                     k.targetX = k.x + love.math.random(-128, 128)
                     k.targetY = k.y + love.math.random(-128, 128)
@@ -129,7 +129,6 @@ function updateCritters(dt)
                         hideSound:setPosition(v.x / 32, v.y / 32)
                         hideSound:play()
                     end
-                
                 end
                 if k.scattering then
                     speed = 48 * dt
