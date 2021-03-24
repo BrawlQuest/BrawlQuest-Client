@@ -61,6 +61,7 @@ function tickRangedWeapons()
             end
         end)
         hitTarget()
+       
     end
 end
 
@@ -161,6 +162,7 @@ function drawExplosions()
 end
 
 function addExplosion(x,y)
+   
     explosions[#explosions+1] = {
         x = x,
         y = y,

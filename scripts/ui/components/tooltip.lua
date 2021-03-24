@@ -122,14 +122,16 @@ function setItemTooltip(item)
     end
 
     if me and item and item.Enchantment ~= "None" then
+        ench = explode(item.Enchantment, ",")
         if string.sub(item.Type,1,3) == "arm" then
+
             tooltip.additional[#tooltip.additional + 1] = {
-                desc = "Enchanted with +25 "..item.Enchantment,
+                desc = "Enchanted with +"..ench[1].." "..ench[2],
                 color = {0.7,0,1}
             }
         elseif item.Type == "wep" then
             tooltip.additional[#tooltip.additional + 1] = {
-                desc = "Enchanted with +25 Attack Damage",
+                desc = "Enchanted with +"..ench[2].." Attack Damage",
                 color = {0.7,0,1}
             }
         elseif item.Type == "mount" then

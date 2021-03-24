@@ -81,7 +81,6 @@ nextUpdate = 1
 timeOutTick = 3
 previousTick = 0
 nextTick = 0
-lastTick = 0
 totalCoverAlpha = 0 -- this covers the entire screen in white, for hiding purposes
 timeOfDay = 0
 enemiesInAggro = 0
@@ -156,12 +155,15 @@ function love.draw()
             
             drawPlayer(me, -1)
             if showWorldAnimations then drawLeaves() drawCritters() end
-            drawExplosions()
             drawLoot()
 
             local drawingText = false
             if isNearbyTile("assets/world/objects/Anvil.png") and not drawingText then
                 drawTextBelowPlayer("Press "..keybinds.INTERACT.." to craft")
+                inventory.notNPC = false
+                drawingText = true
+            elseif isNearbyTile("assets/world/objects/Furnace.png") and not drawingText then
+                drawTextBelowPlayer("Press "..keybinds.INTERACT.." to forge")
                 inventory.notNPC = false
                 drawingText = true
             elseif isNearbyTile("assets/world/objects/Portal.png") and not drawingText then
@@ -425,7 +427,6 @@ function tick()
     tickEnemies()
     tickAuras()
     checkTargeting()
-    lastTick = nextTick
     nextTick = 1
     getInventory()
     tickRangedWeapons()
