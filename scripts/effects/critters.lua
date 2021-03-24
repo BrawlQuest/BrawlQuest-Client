@@ -127,6 +127,7 @@ function updateCritters(dt)
                         local hideSound = critterType[v.type].sounds.hide[love.math.random(1,#critterType[v.type].sounds.hide)]
                         hideSound:setVolume(sfxVolume)
                         hideSound:setPosition(v.x / 32, v.y / 32)
+                        hideSound:setRolloff(sfxRolloff)
                         hideSound:play()
                     end
                 end
@@ -153,6 +154,7 @@ function updateCritters(dt)
                     local idleSound = critterType[v.type].sounds.idle[love.math.random(1,#critterType[v.type].sounds.idle)]
                     idleSound:setVolume(sfxVolume)
                     idleSound:setPosition(v.x / 32, v.y / 32)
+                    idleSound:setRolloff(sfxRolloff)
                     idleSound:play()
                 end
             end

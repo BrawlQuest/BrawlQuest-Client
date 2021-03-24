@@ -2,6 +2,9 @@ sfxr = require("scripts.libraries.sfxr")
 
 function initSFX()
 
+    sfxRolloff = 0.5
+    love.audio.setDistanceModel("exponent")
+
     previousSFXVolume = sfxVolume
 
     birds = love.audio.newSource("assets/sfx/ambient/forest/jungle.ogg", "stream")

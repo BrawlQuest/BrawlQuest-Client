@@ -33,7 +33,7 @@ function initEnchanting()
         text = {
             desc = "The mana has chosen you. To enchant an item your character will be reset to Level 1 as well as all of your quests and NPC conversations.\nYou don't lose any of your items, although your stats will be reset to 1 and your armour and weapon will be unequipped.",
             ifNot = "If you haven't equipped an item you'd like to enchant, come back with the item you'd like to enchant equipped",
-            final = "Are you sure you want to enchant this item? You will be sent back to level 1, and will not be able to use your high level items again until you level up.",
+            final = "Are you sure you want to enchant this item? You will be sent back to the level shown below, and will not be able to use your high level items again until you level up.",
             already = "This item already has an enchantment on it and you can only have one enchantment per item. There are two options:",
             options = {
                 {title = "Upgrade Enchantment", text = "You can boost this item's current enchantment up to your current level. The amount of levels you put into the enchantment will be taken away from your current level. The perk will stay the same."},
@@ -285,7 +285,7 @@ function drawEnchanting()
         enchantingSliderPhase3:draw()
 
         love.graphics.setColor(1,1,1)
-        love.graphics.printf(e.text.final, x + 10, y - (getTextHeight(e.text.final, (w - 20) / textScale, e.font) * (textScale + 1)), (w - 20) / textScale, "center", 0, textScale)
+        love.graphics.printf(e.text.final, x + 10, y - (getTextHeight(e.text.final, (w - 20) / textScale, e.font) * (textScale + 0.5)), (w - 20) / textScale, "center", 0, textScale)
         -- love.graphics.setColor(1,0,0)
         -- textScale = textScale + 1
         -- love.graphics.printf("ONLY ONE ENCHANTMENT PER ITEM", x + 10, y - (e.font:getHeight() * textScale) - 20, (w - 20) / textScale, "center", 0, textScale)
