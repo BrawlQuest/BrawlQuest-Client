@@ -16,6 +16,7 @@ require "scripts.effects.clouds"
 require "scripts.effects.world-mask"
 require "scripts.effects.death"
 require "scripts.effects.critters"
+require "scripts.effects.weather"
 require "scripts.ui.hud_controller"
 require "scripts.ui.components.character-hub"
 require "scripts.ui.components.crafting"
@@ -125,6 +126,7 @@ function love.load()
     initItemDrag()
     initForging()
     initCritters()
+    initWeather()
     love.graphics.setFont(textFont)
 end
 
@@ -195,7 +197,7 @@ function love.draw()
                     openTutorial(4)
                 end
             end
-
+            drawWeather()
             if showWorldMask and not worldEdit.open and enchanting.amount < 0.01 then drawWorldMask() end --not worldEdit.open or
             if showClouds and not worldEdit.open and enchanting.amount < 0.01 then drawClouds() end
 
@@ -204,8 +206,9 @@ function love.draw()
             --     love.graphics.rectangle("fill", player.target.x * 32, player.target.y * 32, 32, 32)
             --     love.graphics.setColor(1,1,1)
             -- end
+            
         Luven.drawEnd()
-
+      
         if death.open then drawDeath() end
         if not worldEdit.open then drawHUD() end
         drawNewWorldEditHud()
@@ -261,6 +264,7 @@ function love.update(dt)
         updateLoot(dt)
         updateEvents(dt)
         updateChallenges(dt)
+        updateWeather(dt)
         if itemDrag.dragging then updateItemDrag(dt) end
         if death.open then updateDeath(dt) end
         if forging.open then updateForging(dt) end

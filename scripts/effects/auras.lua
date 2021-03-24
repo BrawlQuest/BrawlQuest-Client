@@ -117,7 +117,7 @@ function updateAuras(dt)
 
     for i,v in ipairs(auraAuras) do
 
-        if not v.hasBurst then
+        if not v.hasBurst and nextTick and lastTick then
             v.width = cerp(0, (32*(v.Radius*2)), 1 - nextTick)
             v.width = v.width + (32*(v.Radius*2)) * dt
             if 1 - nextTick >= (1 - lastTick) * 0.8 then
