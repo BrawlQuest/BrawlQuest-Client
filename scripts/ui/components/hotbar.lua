@@ -35,7 +35,8 @@ end
 function checkHotbarKeyPressed(key)
     for i,v in ipairs(hotbar) do
         if key == tostring(i) or (i == 7 and key == "space") then
-            if v.item ~= nil and v.item.ID ~= nil and not isItemUnusable(v.item) and not usedItemThisTick then
+            
+            if v.item ~= nil and v.item.ID ~= nil and not isItemUnusable(v.item) and not isSpellUnusable(v.item) then
                 useHotbarItem(i,v)
                 hotbarChanged = true
                 break

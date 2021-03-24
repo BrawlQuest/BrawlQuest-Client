@@ -73,7 +73,7 @@ function drawInventoryItem(thisX, thisY, item, amount, number)
         drawItemBacking(thisX, thisY)
         love.graphics.setColor(1,1,1,1)
         if item then drawItem(thisX,thisY,item,number) end
-
+        drawSpellcooldown(item, thisX, thisY)
         love.graphics.setColor(1,1,1,1)
         love.graphics.draw(inventory.images.numbers[number], thisX - 3, thisY + 26)
 
@@ -98,7 +98,7 @@ function drawInventoryItem(thisX, thisY, item, amount, number)
 
         local isMouse = isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale)
 
-        if isItemUnusable(item) or item.Type == "spell" then
+        if isItemUnusable(item) then
             if isMouse and item then
                 selectedItem = item
                 selectedItemAmount = amount
@@ -117,17 +117,21 @@ function drawInventoryItem(thisX, thisY, item, amount, number)
 
         love.graphics.setColor(1,1,1,1)
         if item then drawItem(thisX,thisY,item) end
-       
+        drawSpellcooldown(item, thisX, thisY)
         drawItemAmount(thisX, thisY, amount)
         love.graphics.setColor(1,1,1)
     end
- 
-    if item and item.Type == "spell" then--isItemUnusable(item) and item.Type == "spell" and me and me.SpellCooldown and me.SpellCooldown < 0 then
+
+end
+
+function drawSpellcooldown(item, thisX, thisY)
+    if isSpellUnusable(item) and item and me then
         love.graphics.setColor(0,0,0,0.6)
         roundRectangle("fill", thisX, thisY, inventory.images.itemBG:getWidth(), inventory.images.itemBG:getHeight(), 4)
         love.graphics.setColor(1,0,0)
         love.graphics.setFont(inventory.font)
-        love.graphics.printf(20, thisX, thisY+10, inventory.images.itemBG:getWidth(), "center")
+        love.graphics.printf(me.SpellCooldown, thisX, thisY+10, inventory.images.itemBG:getWidth(), "center")
+        love.graphics.setFont(inventory.itemFont)
     end
 end
 
@@ -223,3 +227,4 @@ function drawItemAmount(x,y,amount, alpha)
         love.graphics.print(amount, inventory.itemFont, x + 5, y + 4)
     end
 end
+
