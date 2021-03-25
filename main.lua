@@ -240,6 +240,7 @@ function love.update(dt)
     if phase == "login" then
         updateLogin(dt)
     else
+        love.audio.setPosition(player.dx / 32, player.dy / 32)
         nextUpdate = nextUpdate - 1 * dt
         nextTick = nextTick - 1 * dt
         if nextUpdate < 0 then
@@ -268,7 +269,7 @@ function love.update(dt)
         updateEvents(dt)
         updateChallenges(dt)
         updateWeather(dt)
-        updateWorldEmitters()
+        updateWorldEmitters(dt)
         if itemDrag.dragging then updateItemDrag(dt) end
         if death.open then updateDeath(dt) end
         if forging.open then updateForging(dt) end
@@ -325,7 +326,7 @@ function love.update(dt)
                     setLighting(response)
                     local previousMe = copy(me) -- Temp
                     me = response['Me']
-                    love.audio.setPosition(player.x, player.y)
+                    
                     if response["PlayerStructures"] then
                         structures = response["PlayerStructures"]
                         updateWorldLookup()
