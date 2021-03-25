@@ -3,18 +3,24 @@
 
 function initWeather()
     weather = {
-        type = "rain",
+        type = "clear",
         x = 0,
         y = 0,
+        alpha = 0,
         img = {
             rain = love.graphics.newImage("assets/ui/weather/rain.png"),
             splash = love.graphics.newImage("assets/ui/weather/splash.png")
+        },
+        sound = {
+            rain = love.audio.newSource("assets/sfx/ambient/rain.ogg", "stream")
         },
         splashes = {},
         canvas = love.graphics.newCanvas(love.graphics.getWidth()*2,love.graphics.getHeight()*2),
         flash = Luven.addNormalLight(0,0,{1,1,1},1)
     }
     
+    weather.sound.rain:setLooping(true)
+
     weather.canvas = love.graphics.newCanvas(love.graphics.getWidth()*2,love.graphics.getHeight()*2)
     love.graphics.setCanvas(weather.canvas)
     love.graphics.setColor(0,0,0,0.2)
@@ -37,7 +43,7 @@ function drawWeather()
         love.graphics.setColor(1,1,1,v.alpha)
         love.graphics.draw(weather.img.splash, v.x, v.y)
     end
-    love.graphics.setColor(1,1,1,1)
+    love.graphics.setColor(1,1,1,weather.alpha)
     love.graphics.draw(weather.canvas, player.dx+weather.x-(love.graphics.getWidth()/2)+16, player.dy+weather.y-(love.graphics.getHeight()/2)+16)
 end
 
@@ -53,18 +59,34 @@ function updateWeather(dt)
     end
 
    
+   if weather.type ~= "rain" or (worldLookup[player.x] and worldLookup[player.x][player.y] and (not isTileType(worldLookup[player.x][player.y].GroundTile, "Cave Floor") and (isTileType(worldLookup[player.x][player.y].GroundTile, "Floor") or isTileType(worldLookup[player.x][player.y].GroundTile, "Wall") or isTileType(worldLookup[player.x][player.y].GroundTile, "Walkway")))) then
+        weather.alpha = weather.alpha - 1*dt
+        if weather.sound.rain:getVolume() > 0 then
+            weather.sound.rain:setVolume(weather.sound.rain:getVolume()-1*dt)
+        end
+        if weather.alpha < 0 then
+            weather.alpha = 0
+        end
+    elseif weather.type == "rain" then
         weather.splashes[#weather.splashes+1] = {
             x = player.dx + love.math.random(-400,400),
             y = player.dy + love.math.random(-400,400),
             alpha = 1
         }
-        
-        if love.math.random(1, 500) == 1 then
-            Luven.setLightPower(weather.flash,32)
-            Luven.setLightPosition(weather.flash,player.dx,player.dy)
+        weather.alpha = weather.alpha + 1*dt
+        if weather.alpha > 1 then
+            weather.alpha = 1
         end
-        Luven.setLightPower(weather.flash,Luven.getLightPower(weather.flash)-32*dt)
-
+        if not weather.sound.rain:isPlaying() then
+            weather.sound.rain:play() 
+        end
+        if weather.sound.rain:getVolume() < sfxVolume then
+            weather.sound.rain:setVolume(weather.sound.rain:getVolume()+1*dt)
+        else
+            weather.sound.rain:setVolume(sfxVolume)
+        end
+    end
+   
     for i,v in pairs(weather.splashes) do
         v.alpha = v.alpha - 1*dt
         if v.alpha < 0 then
