@@ -293,6 +293,7 @@ function drawNamePlate(x,y,name, alpha, level, prestige)
 end
 
 attackHitAmount = 0
+sparklesAmount = 0
 
 function updateOtherPlayers(dt)
     if attackHitAmount > 0 then
@@ -358,19 +359,32 @@ function updateOtherPlayers(dt)
                 speed = speed * 1.4
             end
 
-            
+            local iWantSparkles = false
+
             if playersDrawable[i].X - 1 > v.X * 32 then
                 playersDrawable[i].X = playersDrawable[i].X - speed * dt
                 playersDrawable[i].previousDirection = "left"
+                iWantSparkles = true
             elseif playersDrawable[i].X + 1 < v.X * 32 then
                 playersDrawable[i].X = playersDrawable[i].X + speed * dt
                 playersDrawable[i].previousDirection = "right"
+                iWantSparkles = true
             end
 
             if playersDrawable[i].Y - 1 > v.Y * 32 then
                 playersDrawable[i].Y = playersDrawable[i].Y - speed * dt
+                iWantSparkles = true
             elseif playersDrawable[i].Y + 1 < v.Y * 32 then
                 playersDrawable[i].Y = playersDrawable[i].Y + speed * dt
+                iWantSparkles = true
+            end
+
+            if v.Mount and v.Mount.Name ~= "None" and v.Mount.Enchantment ~= "None" then
+                sparklesAmount = sparklesAmount + 5 * dt
+                if iWantSparkles and sparklesAmount > 1 then
+                    sparklesAmount = 0
+                    addSparkles(playersDrawable[i].X + 16, playersDrawable[i].Y + 16, 5, 30, 20)
+                end
             end
         end
         updateBuddy(dt, playersDrawable[i])
@@ -401,6 +415,9 @@ function tickOtherPlayers()
                     playersDrawable[i].Y = playersDrawable[i].Y + 16
                 end
             end
+            -- if v.Mount and v.Mount.Name ~= "None" and v.Mount.Enchantment ~= "None" then
+                -- addSparkles(playersDrawable[i].X + 16, playersDrawable[i].Y + 16, 20, 10, 10)
+            -- end
         end
     end
 end

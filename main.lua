@@ -18,6 +18,7 @@ require "scripts.effects.death"
 require "scripts.effects.critters"
 require "scripts.effects.weather"
 require "scripts.effects.world-sfx-emitters"
+require "scripts.effects.particles"
 require "scripts.ui.hud_controller"
 require "scripts.ui.components.character-hub"
 require "scripts.ui.components.crafting"
@@ -129,6 +130,7 @@ function love.load()
     initForging()
     initCritters()
     initWeather()
+    initParticles()
     love.graphics.setFont(textFont)
 end
 
@@ -152,6 +154,7 @@ function love.draw()
             drawEnemies()
             drawRangedWeaponEffects()
             drawExplosions()
+            drawParticles()
 
             for i, v in ipairs(playersDrawable) do
                 drawPlayer(v, i)
@@ -270,6 +273,7 @@ function love.update(dt)
         updateChallenges(dt)
         updateWeather(dt)
         updateWorldEmitters(dt)
+        updateParticles(dt)
         if itemDrag.dragging then updateItemDrag(dt) end
         if death.open then updateDeath(dt) end
         if forging.open then updateForging(dt) end

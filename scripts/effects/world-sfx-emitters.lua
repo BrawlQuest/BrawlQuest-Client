@@ -5,14 +5,6 @@
 worldEmitters = {}
 playingAmbience = {}
 
-worldEmitSounds = {
-    jungle = love.audio.newSource("assets/sfx/ambient/forest/jungle.ogg", "stream"),
-    blacksmith =  love.audio.newSource("assets/sfx/ambient/blacksmith.ogg", "stream"),
-    lava = love.audio.newSource("assets/sfx/ambient/lava.ogg", "stream"),
-    water = love.audio.newSource("assets/sfx/ambient/water.ogg", "stream"),
-    fire = love.audio.newSource("assets/sfx/ambient/fire.ogg", "stream")
-}
-
 function addWorldEmitter(worldTile)
     if love.math.random(1,20) == 1 then
         if isTileType(worldTile.ForegroundTile, "Tree") then

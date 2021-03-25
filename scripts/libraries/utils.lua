@@ -34,6 +34,29 @@ checkVarKeyPressed(key)
 checkVarMousePressed(button)
 ]]
 
+--[[
+function updateVar(dt)
+    for i,v in ipairs(particles.sparkles) do
+        
+    end
+end
+
+function drawVar()
+    for i,v in ipairs(particles.sparkles) do
+        
+    end
+end
+
+function addVar()
+    
+end
+
+--[[
+updateVar(dt)
+drawVar()
+addVar()
+]]
+
 
 function getImgIfNotExist(v)
     if not worldImg[v] then
