@@ -62,6 +62,7 @@ function tickRangedWeapons()
             end
         end)
         hitTarget()
+       
     end
 end
 
@@ -71,7 +72,7 @@ function drawRangedWeaponsGrid(x,y)
     if isMouseOverTile(thisX, thisY) then
         love.graphics.setColor(1,1,1,0.5)
         roundRectangle("fill", thisX, thisY, 32, 32, 2)
-        if love.mouse.isDown(1) and target.amount == 0 then
+        if love.mouse.isDown(1) and target.amount == 0 and me.Weapon and string.find(me.Weapon.Name, "Staff") then
             target.selected = true
             target.x , target.y = x, y
         end
@@ -162,6 +163,7 @@ function drawExplosions()
 end
 
 function addExplosion(x,y)
+   
     explosions[#explosions+1] = {
         x = x,
         y = y,

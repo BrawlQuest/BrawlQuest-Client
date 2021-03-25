@@ -19,7 +19,7 @@ servers = {
   },
   {
     name="Test Server (UK)",
-    url="https://dev.brawlquest.com",
+    url="http://dev.brawlquest.com",
   },
   {
     name="Local",

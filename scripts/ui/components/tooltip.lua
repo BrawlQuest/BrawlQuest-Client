@@ -93,6 +93,15 @@ function setItemTooltip(item)
     elseif item.Type == "mount" then
         valueAdditional.desc = item.Val / 32 .. "m/s Mount"
         valueAdditional.color = {0.8, 0.2, 1}
+    elseif item.Type == "wall" then
+        valueAdditional.desc = "Placeable Wall"
+        valueAdditional.color = {0.8,0.8,0.8}
+    elseif item.type == "furniture" then
+        valueAdditional.desc = "Placeable Furniture"
+        valueAdditional.color = {0.8,0.8,0.8}
+    elseif item.type == "floor" then
+        valueAdditional.desc = "Placeable Flooring"
+        valueAdditional.color = {0.8,0.8,0.8}
     end
     if me and me.LVL and item and item.Worth and me.LVL >= item.Worth then
         setTooltip(item.Name, "", {valueAdditional, {
@@ -113,14 +122,16 @@ function setItemTooltip(item)
     end
 
     if me and item and item.Enchantment ~= "None" then
+        ench = explode(item.Enchantment, ",")
         if string.sub(item.Type,1,3) == "arm" then
+
             tooltip.additional[#tooltip.additional + 1] = {
-                desc = "Enchanted with +25 "..item.Enchantment,
+                desc = "Enchanted with +"..ench[1].." "..ench[2],
                 color = {0.7,0,1}
             }
         elseif item.Type == "wep" then
             tooltip.additional[#tooltip.additional + 1] = {
-                desc = "Enchanted with +25 Attack Damage",
+                desc = "Enchanted with +"..ench[2].." Attack Damage",
                 color = {0.7,0,1}
             }
         elseif item.Type == "mount" then
@@ -128,8 +139,23 @@ function setItemTooltip(item)
                 desc = "Enchanted with +0.8m/s movement speed",
                 color = {0.7,0,1}
             }
-        end
       
+        end
+        
+    end
+
+    if item.Type == "wall" or item.Type == "furniture" or item.Type == "floor" then
+        tooltip.additional[#tooltip.additional + 1] = {
+            desc = "This item is placeable within any zone called 'Foundation Forest' or 'Dominion of "..me.Name.."'",
+            color = {0.6,0.6,1}
+        }
+    end
+
+    if item.Type == "spell" and me and me.SpellCooldown > 0 then
+        tooltip.additional[#tooltip.additional + 1] = {
+            desc = "Global spell cooldown. Can be used in "..me.SpellCooldown.." seconds.",
+            color = {1,0,0}
+        }
     end
 end
 
