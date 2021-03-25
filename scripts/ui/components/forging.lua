@@ -78,9 +78,9 @@ function updateForging(dt)
             end
             f.forging = false
             f.a = 0
-            f.showResults = true
+            -- f.showResults = true
             f.open = false -- TODO: make the endpoint return the items smelted
-            f.resultItems = copy(f.enteredItems)
+            -- f.resultItems = copy(f.enteredItems)
             f.enteredItems = {}
         end
     elseif f.showResults then

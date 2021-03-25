@@ -112,7 +112,7 @@ function drawBones()
         if v.image == 3 then r = v.rota end
         if v.type == "level" then
             love.graphics.draw(levelImg, v.x - (16 * v.scale), v.y - (16 * v.scale), r, v.scale)
-        else
+        elseif bone[v.mobType] and bone[v.mobType][v.image] then
             love.graphics.draw(bone[v.mobType][v.image], v.x - (16 * v.scale), v.y - (16 * v.scale), r, v.scale)
         end
     end

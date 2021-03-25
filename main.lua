@@ -172,8 +172,8 @@ function love.draw()
                 inventory.notNPC = false
                 drawingText = true
             elseif isNearbyTile("assets/world/objects/Portal.png") and not drawingText then
-                if me.LVL ~= 25 then
-                    drawTextBelowPlayer("You must be Level 25 to Enchant")
+                if me.LVL ~= 30 then
+                    drawTextBelowPlayer("You must be Level 30 to Enchant")
                 else
                     drawTextBelowPlayer("Press "..keybinds.INTERACT.." to Enchant")
                 end

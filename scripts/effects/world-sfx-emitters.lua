@@ -43,7 +43,7 @@ function addWorldEmitter(worldTile)
             worldEmitters[#worldEmitters+1] = {
                 x = worldTile.X*32,
                 y = worldTile.Y*32,
-                sound = "fire"
+                sound = "assets/sfx/ambient/fire.ogg"
             }
         end
     end
