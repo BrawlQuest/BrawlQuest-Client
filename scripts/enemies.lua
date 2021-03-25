@@ -118,6 +118,7 @@ function newEnemyData(data) -- called when nearby data is returned
                     enemyHitSfx:setPitch(love.math.random(50, 100) / 100)
                     enemyHitSfx:setVolume(1 * sfxVolume)
                     enemyHitSfx:setPosition(v.X, v.Y)
+                    enemyHitSfx:setRolloff(sfxRolloff)
                     enemyHitSfx:play()
                     enemy.red = 1
                 end
@@ -149,6 +150,7 @@ function newEnemyData(data) -- called when nearby data is returned
                 aggroSfx:setVolume(1 * sfxVolume)
                 if aggroSfx:getChannelCount() == 1 then
                     aggroSfx:setPosition(v.X, v.Y)
+                    aggroSfx:setRolloff(sfxRolloff)
                 end
                 aggroSfx:play()
             end
@@ -274,6 +276,7 @@ function drawEnemies()
                 deathSound:setVolume(1 * sfxVolume)
                 if deathSound:getChannelCount() == 1 then
                     deathSound:setPosition(v.dx / 32, v.dy / 32)
+                    deathSound:setRolloff(sfxRolloff)
                 end
                 deathSound:play()
                 if v.Enemy.Name == "Fire Phoenix" then

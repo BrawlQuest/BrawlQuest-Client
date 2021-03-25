@@ -117,10 +117,12 @@ function startConversation()
                 if npcSounds[npcChat.ImgPath] then
                     npcSounds[npcChat.ImgPath]:setVolume(sfxVolume)
                     npcSounds[npcChat.ImgPath]:setPosition(v.X, v.Y)
+                    npcSounds[npcChat.ImgPath]:setRolloff(sfxRolloff)
                     npcSounds[npcChat.ImgPath]:play()
                 else
                     npcSounds["assets/npc/Person.png"]:setVolume(sfxVolume)
                     npcSounds["assets/npc/Person.png"]:setPosition(v.X, v.Y)
+                    npcSounds["assets/npc/Person.png"]:setRolloff(sfxRolloff)
                     npcSounds["assets/npc/Person.png"]:play()
                 end
 

@@ -119,6 +119,7 @@ function updateLoot(dt)
                 xpSfx:stop()
                 xpSfx:setPitch(1 + (player.xp/100))
                 xpSfx:setPosition(v.x, v.y)
+                xpSfx:setRolloff(sfxRolloff)
                 xpSfx:play()
             else
                 lootSfx:stop()

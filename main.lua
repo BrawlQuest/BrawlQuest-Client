@@ -464,6 +464,10 @@ function love.resize(width, height)
         uiX = love.graphics.getWidth()/scale -- scaling options
         uiY = love.graphics.getHeight()/scale
     end
+    if enchanting.open then
+        if enchanting.phase == 3 then transitionToEnchantingPhase3()
+        elseif enchanting.phase == 5 then transitionToEnchantingPhase5() end
+    end
     getDisplay()
     writeSettings()
 end

@@ -321,6 +321,7 @@ function updateOtherPlayers(dt)
             playersDrawable[i].HP = v.HP
             playersDrawable[i].RedAlpha = 1
             playerHitSfx:setPosition((playersDrawable[i].X + 16) / 32, (playersDrawable[i].Y + 16) / 32)
+            playerHitSfx:setRolloff(sfxRolloff)
             playerHitSfx:play()
             boneSpurt(playersDrawable[i].X + 16, playersDrawable[i].Y + 16, 10, 25, 1, 1, 1)
         end

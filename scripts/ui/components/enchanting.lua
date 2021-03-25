@@ -1,9 +1,12 @@
+local style = {track = "line", knob = "rectangle", width = 28,}
+
 function initEnchanting()
     enchanting = {
         open = false,
         amount = 0,
         cerp = 0,
         phase = 1,
+        floor = 1,
         itemNames = {"LegArmour","ChestArmour","HeadArmour","Shield","Weapon","Mount"},
         items = {
             ["LegArmour"] = {
@@ -30,10 +33,12 @@ function initEnchanting()
         text = {
             desc = "The mana has chosen you. To enchant an item your character will be reset to Level 1 as well as all of your quests and NPC conversations.\nYou don't lose any of your items, although your stats will be reset to 1 and your armour and weapon will be unequipped.",
             ifNot = "If you haven't equipped an item you'd like to enchant, come back with the item you'd like to enchant equipped",
-            final = "Are you sure you want to enchant this item? You will be sent back to level 1, and will not be able to use your high level items again until you level up.",
+            final = "Are you sure you want to enchant this item? You will be sent back to the level shown below, and will not be able to use your high level items again until you level up.",
             already = "This item already has an enchantment on it and you can only have one enchantment per item. There are two options:",
-            option1 = "\n1. Upgrade Enchantment, you can add levels to your enchantment according to your current level, any levels added onto the current enchantment will be taken from your own.",
-            option2 = "\n2. ",
+            options = {
+                {title = "Upgrade Enchantment", text = "You can boost this item's current enchantment up to your current level. The amount of levels you put into the enchantment will be taken away from your current level. The perk will stay the same."},
+                {title = "Change Enchantment", text = "You can change the enchantment type for this item, but you will loose all the levels you previously spent on it. This has the same effect as enchanting a completely new item.",},
+            },
         },
         mouseOver = {
             endPhaseOne = false,
@@ -42,6 +47,7 @@ function initEnchanting()
             commit = false,
             back3 = false,
             return3 = false,
+            options = 0,
         },
         chosenItem = "LegArmour",
         chosenItemCount = 1,
@@ -49,15 +55,15 @@ function initEnchanting()
             ["Armour"] = {
                     {
                         title = "STR",
-                        desc = "+25 Strength whilst wearing this armour",
+                        desc = "+25 Strength (STR) whilst wearing this armour",
                         img = love.graphics.newImage("assets/ui/enchantment/0.png"),
                     }, {
                         title = "INT",
-                        desc = "+25 Intelligence whilst wearing this armour",
+                        desc = "+25 Intelligence (INT) whilst wearing this armour",
                         img = love.graphics.newImage("assets/ui/enchantment/1.png"),
                     }, {
                         title = "STA",
-                        desc = "+25 Stamina whilst wearing this armour",
+                        desc = "+25 Stamina (STA) whilst wearing this armour",
                         img = love.graphics.newImage("assets/ui/enchantment/2.png"),
                     },
                 },
@@ -91,7 +97,8 @@ function updateEnchanting(dt)
     local e = enchanting
     if e.open then
         panelMovement(dt, enchanting, 1, "amount", 0.1)
-        if e.phase == 4 then enchantingSlider:update() end
+        if e.phase == 3 then enchantingSliderPhase3:update()
+        elseif e.phase == 5 then enchantingSliderPhase5:update() end
     else panelMovement(dt, enchanting, -1, "amount", 0.5)
         if e.amount < 0.01 then e.amount = 0 end
     end
@@ -106,7 +113,7 @@ function drawEnchanting()
     local textScale = 3
     local smallPrintScale = 2
     local itemWidth = 32 * e.itemScale 
-    local w = (itemWidth + 30) * #e.itemNames
+    local w = 756
 
     love.graphics.setFont(e.font)
     love.graphics.setColor(1,1,1)
@@ -175,7 +182,7 @@ function drawEnchanting()
                 end
                 if me[e.chosenItem.."ID"] ~= 0 then drawItemIfExists(me[e.chosenItem].ImgPath, dx - offset, dy, "", 1, picScale - 2) end
             elseif me.Mount and me.Mount.Name ~= "None" and me.Mount.Name ~= "" then drawItemIfExists(me[e.chosenItem].ImgPath, dx - offset, dy, "", 1, picScale - 2) end
-            love.graphics.printf(me[e.chosenItem].Name, x, y + 32 * picScale, (32 * picScale) / smallPrintScale, "center",  0, smallPrintScale)
+            love.graphics.printf(me[e.chosenItem].Name .. "\nEnchantment: " .. me[e.chosenItem].Enchantment, x, y + 30 * picScale, (32 * picScale) / smallPrintScale, "center",  0, smallPrintScale)
         else 
             love.graphics.setColor(0.5,0.5,0.5)
             love.graphics.draw(playerImg, x + 32 - 20, y + 32, 0, picScale - 2)
@@ -232,7 +239,7 @@ function drawEnchanting()
         love.graphics.setColor(1,1,1)
         love.graphics.printf("Enchant Selected Item", x, y + 32 - (e.font:getHeight() * textScale) * 0.5, w / textScale, "center", 0, textScale)
     elseif e.phase == 3 then
-        local picScale =  8
+        local picScale = 8
         local width = 32 * picScale
         local x,y = uiX / 2 - w * 0.5, uiY / 2 - width * 0.5
 
@@ -256,31 +263,58 @@ function drawEnchanting()
             end
         elseif me.Mount and me.Mount.Name ~= "None" then drawItemIfExists(me[e.chosenItem].ImgPath, dx - offset, dy, "", 1, picScale - 2) end
 
-        dx, dy = x + width, dy
+        dx, dy = x + width, dy - 10
         width = w - (width + 40)
+
+        me.LVL = 30
+
+        local levelCalc = math.floor(lerp(25, me.LVL, enchantingSliderPhase3:getValue()))
         love.graphics.printf(me[e.chosenItem].Name, dx, dy, width / textScale, "left",  0, textScale)
         dy = dy + (getTextHeight(me[e.chosenItem].Name, width / textScale, e.font) * textScale)
         love.graphics.printf(e.perks[perk][e.selectedPerk].desc, dx, dy, width / smallPrintScale, "left",  0, smallPrintScale)
+        dy = dy + getTextHeight(e.perks[perk][e.selectedPerk].desc, width, e.font, smallPrintScale) + 10
+        love.graphics.printf("Item Enchantment Level:", dx, dy, width / smallPrintScale, "left",  0, smallPrintScale)
+        love.graphics.printf(levelCalc, dx, dy, width / smallPrintScale, "right",  0, smallPrintScale)
+        dy = dy + e.font:getHeight() * smallPrintScale
+        love.graphics.printf("Levels Deducted:", dx, dy, width / smallPrintScale, "left",  0, smallPrintScale)
+        love.graphics.printf(levelCalc - e.floor, dx, dy, width / smallPrintScale, "right",  0, smallPrintScale)
+        dy = dy + e.font:getHeight() * smallPrintScale
+        love.graphics.printf("Your Level After Enchanting:", dx, dy, width / smallPrintScale, "left",  0, smallPrintScale)
+        love.graphics.printf(math.clamp(1, me.LVL - (levelCalc - e.floor), 1000), dx, dy, width / smallPrintScale, "right",  0, smallPrintScale)
+
+        enchantingSliderPhase3:draw()
 
         love.graphics.setColor(1,1,1)
-        love.graphics.printf(e.text.final, x + 10, y - (getTextHeight(e.text.final, (w - 20) / textScale, e.font) * (textScale + 1)) - 20, (w - 20) / textScale, "center", 0, textScale)
-        love.graphics.setColor(1,0,0)
-        textScale = textScale + 1
-        love.graphics.printf("ONLY ONE ENCHANTMENT PER ITEM", x + 10, y - (e.font:getHeight() * textScale) - 20, (w - 20) / textScale, "center", 0, textScale)
+        love.graphics.printf(e.text.final, x + 10, y - (getTextHeight(e.text.final, (w - 20) / textScale, e.font) * (textScale + 0.5)), (w - 20) / textScale, "center", 0, textScale)
+        -- love.graphics.setColor(1,0,0)
+        -- textScale = textScale + 1
+        -- love.graphics.printf("ONLY ONE ENCHANTMENT PER ITEM", x + 10, y - (e.font:getHeight() * textScale) - 20, (w - 20) / textScale, "center", 0, textScale)
 
         y = y + 32 * picScale + 10 -- draw underneath boxes
         drawEnchantmentButton(x,y,w * 0.5 - 5, 64, "Go Back (escape)", "back3")
 
         x = x + w * 0.5 + 5
         drawEnchantmentButton(x,y,w * 0.5 - 5, 64, "Enchant Item (return)", "return3")
+
     elseif e.phase == 4 then
-        love.graphics.setColor(1,1,1,1)
-        enchantingSlider:draw()
-        love.graphics.push()
-        love.graphics.translate(uiX / 2, uiY / 2)
-        love.graphics.print(math.floor(lerp(25, 30, enchantingSlider:getValue())), -200, -50, 0, 4)
-        love.graphics.printf(e.text.already, -400, 50, 800 / 3, "center", 0, 3)
-        love.graphics.pop()
+        local picScale = 8
+        x, y = uiX / 2 - w / 2, uiY / 2 - 16 * picScale
+        love.graphics.printf(e.text.already, x, y - getTextHeight(e.text.already, w, e.font, 3) - 20, w / 3, "center", 0, 3)
+        e.mouseOver.options = 0
+        for i,v in ipairs(e.text.options) do
+            if isMouseOver(x * scale, y * scale, w * scale, 200 * scale) then
+                love.graphics.setColor(1,0,0,1)
+                e.mouseOver.options = i
+            else love.graphics.setColor(0,0,0,0.8) end
+            love.graphics.rectangle("fill", x, y, w, 200, 10)
+            love.graphics.setColor(1,1,1,1)
+            love.graphics.printf(v.title, x + 30, y + 20, w / 3 - 60, "left", 0, 3)
+            love.graphics.printf(v.text, x + 30, y + 20 + e.font:getHeight() * 3, w / 2 - 60, "left", 0, 2)  
+            y = y + 200 + 20
+        end
+    elseif e.phase == 5 then
+        enchantingSliderPhase5:draw()
+        -- love.graphics.print(math.floor(lerp(25, 30, enchantingSliderPhase5:getValue())), -200, -50, 0, 4)
     end
 end
 
@@ -344,6 +378,9 @@ function checkEnchantingKeyPressed(key)
         if key == "return" then enchantItem()
         elseif key == "escape" then e.phase = 2
         elseif checkMoveOrAttack(key, "move") then e.open = false end
+    elseif e.phase == 5 then
+        if key == "escape" then e.phase = 4
+        elseif checkMoveOrAttack(key, "move") then e.open = false end
     end
 end
 
@@ -370,6 +407,13 @@ function checkEnchantingMousePressed(button)
     elseif e.phase == 3 then
         if e.mouseOver.return3 == true then enchantItem()
         elseif e.mouseOver.back3 == true then e.phase = 2 end
+    elseif e.phase == 4 then
+        if e.mouseOver.options == 1 then
+            transitionToEnchantingPhase5()
+        elseif e.mouseOver.options == 2 then
+            transitionToEnchantingPhase3()
+        end
+    elseif e.phase == 5 then
     end
 end
 
@@ -382,7 +426,7 @@ function enchantItem()
 
     -- print("Trying to enchant " .. me[e.chosenItem].ID)
     c, h = http.request {
-        url = api.url .. "/enchant/" .. me.ID .. "/" .. me[e.chosenItem].ID .. "/" .. e.perks[perk][e.selectedPerk].title,
+        url = api.url .. "/enchant/" .. me.ID .. "/" .. me[e.chosenItem].ID .. "/" .. e.perks[perk][e.selectedPerk].titles .. "/" .. me.LVL,
         method = "GET",
         headers = {
             ["token"] = token
@@ -401,12 +445,26 @@ function openEnchanting()
     enchanting.amount = 0.01
 end
 
+function transitionToEnchantingPhase3()
+    local e = enchanting
+    e.floor = 1
+    enchantingSliderPhase3 = newSlider(uiX / 2 + 108, uiY / 2 + 100, 448, 1, 0, 1, function() end, style)
+    e.phase = 3
+end
+
 function transitionToEnchantingPhase4()
     local e = enchanting
-    if not me[enchanting.chosenItem].Enchantment or me[enchanting.chosenItem].Enchantment == "None" then e.phase = 3
+    if not me[enchanting.chosenItem].Enchantment or me[enchanting.chosenItem].Enchantment == "None" then
+        transitionToEnchantingPhase3()
     elseif me[enchanting.chosenItem].Enchantment ~= "None" then
-        e.phase = 4
-        local style = {track = "line", knob = "rectangle", width = 32,}
-        enchantingSlider = newSlider(uiX / 2, uiY / 2, 400, 0.5, 0, 1, function() end, style)
+        e.phase = 4 -- go to the choose an enchantment type phase
     end
+end
+
+function transitionToEnchantingPhase5()
+    local e = enchanting
+    e.floor = 25
+    -- enchantingSliderPhase5 = newSlider(uiX / 2, uiY / 2, 400, 1, 0, 1, function() end, style)
+    enchantingSliderPhase3 = newSlider(uiX / 2 + 108, uiY / 2 + 100, 448, 1, 0, 1, function() end, style)
+    e.phase = 3
 end
