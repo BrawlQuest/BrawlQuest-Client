@@ -36,17 +36,22 @@ checkVarMousePressed(button)
 
 --[[
 function updateVar(dt)
-
+    for i,v in ipairs(particles.sparkles) do
+        
+    end
 end
 
 function drawVar()
-
+    for i,v in ipairs(particles.sparkles) do
+        
+    end
 end
 
 function addVar()
     
 end
 
+--[[
 updateVar(dt)
 drawVar()
 addVar()
