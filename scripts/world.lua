@@ -88,11 +88,16 @@ function createWorld()
                     if v.X >= cx * chunkSize and v.X < (cx + 1) * chunkSize and v.Y >= cy * chunkSize and v.Y < (cy + 1) * chunkSize then
                         drawTile(v, cx, cy)
                         addCritters(v)
-                        
                     end
-                    
                 end
             love.graphics.setCanvas()
+        end
+    end
+
+    for i, v in ipairs(world) do
+        if lightGivers[v.ForegroundTile] and not lightSource[v.X .. "," .. v.Y] then
+            lightSource[v.X .. "," .. v.Y] = true
+            Luven.addNormalLight(16 + (v.X * 32), 16 + (v.Y * 32), lightGivers[v.ForegroundTile].color, lightGivers[v.ForegroundTile].brightness)
         end
     end
 
@@ -108,10 +113,6 @@ function drawTile(v, cx, cy)
     local x, y = v.X - cx * chunkSize, v.Y - cy * chunkSize -- draw
     local backgroundAsset = getWorldAsset(v.GroundTile, v.X, v.Y)
     local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y)
-    if lightGivers[v.ForegroundTile] and not lightSource[v.X .. "," .. v.Y] then
-        lightSource[v.X .. "," .. v.Y] = true
-        Luven.addNormalLight(16 + v.X * 32, 16 + v.Y * 32,  lightGivers[v.ForegroundTile].color, lightGivers[v.ForegroundTile].brightness)
-    end
     drawSimplexNoise(v.X, v.Y)
     if worldImg[backgroundAsset] then
         love.graphics.draw(worldImg[backgroundAsset], (x) * 32, (y) * 32)  
@@ -139,7 +140,7 @@ function drawWorld()
             elseif player.dx <= midX and player.dy >= midY then drawCanvases(-1, 1, canvas, lowX, lowY, highX, highY)
             elseif player.dx >= midX and player.dy <= midY then drawCanvases(1, -1, canvas, lowX, lowY, highX, highY)
             elseif player.dx >= midX and player.dy >= midY then drawCanvases(1, 1, canvas, lowX, lowY, highX, highY) end
-            break
+            -- break
         end
         -- love.graphics.draw(canvas.map, lowX, lowY)
     end

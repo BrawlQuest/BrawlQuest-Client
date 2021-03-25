@@ -110,10 +110,6 @@ function initHardData()
             brightness = 3,
             color ={0.6,0,0.4}
         },
-        ["assets/world/walls/Red Wall.png"] = {
-            brightness = 4,
-            color ={0.8,0,0.0}
-        },
         ["assets/world/objects/Mould Mushroom.png"] = {
             brightness = 0.7,
             color ={1,0,0.8}
