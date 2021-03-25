@@ -17,6 +17,7 @@ require "scripts.effects.world-mask"
 require "scripts.effects.death"
 require "scripts.effects.critters"
 require "scripts.effects.weather"
+require "scripts.effects.world-sfx-emitters"
 require "scripts.ui.hud_controller"
 require "scripts.ui.components.character-hub"
 require "scripts.ui.components.crafting"
@@ -265,6 +266,7 @@ function love.update(dt)
         updateEvents(dt)
         updateChallenges(dt)
         updateWeather(dt)
+        updateWorldEmitters()
         if itemDrag.dragging then updateItemDrag(dt) end
         if death.open then updateDeath(dt) end
         if forging.open then updateForging(dt) end
@@ -419,7 +421,7 @@ function love.update(dt)
                         previousTick = response['Tick']
                     end
 
-                    weather.type = "rain"
+                    weather.type = response['Weather']
 
                     checkAchievementUnlocks()
                 end

@@ -40,7 +40,7 @@ function createWorld()
         if v.Y < lowestY then
             lowestY = v.Y
         end
-
+        addWorldEmitter(v)
         if not isTileType(v.ForegroundTile, "Dead") and isTileType(v.ForegroundTile, "Tree") and love.math.random(1,5) == 1 then
             if isTileType(v.ForegroundTile, "Snowy") then
                 addLeaf(v.X*32 + 16, v.Y*32 + 16, "snowy tree")

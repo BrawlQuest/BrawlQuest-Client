@@ -33,3 +33,21 @@ function addWorldEmitter(worldTile)
         end
     end
 end
+
+function updateWorldEmitters()
+    for i,v in pairs(worldEmitters) do
+        
+        if distanceToPoint(player.dx, player.dy, v.x, v.y) < 256 then
+            if v.sound:isPlaying() then
+                if v.sound:getChannelCount() == 1 then
+                    v.sound:setPosition(v.x/32,v.y/32)
+                end
+            elseif love.math.random(1,100) then
+                if v.sound:getChannelCount() == 1 then
+                    v.sound:setPosition(v.x/32,v.y/32)
+                end
+                v.sound:play()
+            end
+        end
+    end
+end
