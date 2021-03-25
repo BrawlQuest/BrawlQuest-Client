@@ -55,22 +55,22 @@ function initEnchanting()
             ["Armour"] = {
                     {
                         title = "STR",
-                        desc = "+25 Strength (STR) whilst wearing this armour",
+                        desc = "+30 Strength (STR) whilst wearing this armour",
                         img = love.graphics.newImage("assets/ui/enchantment/0.png"),
                     }, {
                         title = "INT",
-                        desc = "+25 Intelligence (INT) whilst wearing this armour",
+                        desc = "+30 Intelligence (INT) whilst wearing this armour",
                         img = love.graphics.newImage("assets/ui/enchantment/1.png"),
                     }, {
                         title = "STA",
-                        desc = "+25 Stamina (STA) whilst wearing this armour",
+                        desc = "+30 Stamina (STA) whilst wearing this armour",
                         img = love.graphics.newImage("assets/ui/enchantment/2.png"),
                     },
                 },
             ["Weapon"] = {
                 {
                     title = "Val",
-                    desc = "+25 Damage whilst using this weapon",
+                    desc = "+30 Damage whilst using this weapon",
                     img = love.graphics.newImage("assets/ui/enchantment/0.png"),
                 }, 
             },
@@ -84,7 +84,7 @@ function initEnchanting()
             ["Shield"] = {
                 {
                     title = "Val",
-                    desc = "+25 defence boost whilst using this shield",
+                    desc = "+30 defence boost whilst using this shield",
                     img = love.graphics.newImage("assets/ui/enchantment/2.png"),
                 },
             },
@@ -430,6 +430,8 @@ function enchantItem()
         method = "GET",
         headers = {["token"] = token},
     }
+
+    print( api.url .. "/enchant/" .. me.ID .. "/" .. me[e.chosenItem].ID .. "/" .. e.perks[perk][e.selectedPerk].title .. "/" .. e.itemLevel)
 
     e.open = false
     e.chosenItem = "LegArmour"
