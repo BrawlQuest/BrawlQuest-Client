@@ -140,7 +140,7 @@ function setItemTooltip(item)
             }
         elseif item.Type == "wep" then
             tooltip.additional[#tooltip.additional + 1] = {
-                desc = "Enchanted with +"..item.Enchantment.." Attack Damage",
+                desc = "Enchanted with +"..ench[2].." Attack Damage",
                 color = {0.7,0,1}
             }
         elseif item.Type == "mount" then

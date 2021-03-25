@@ -469,7 +469,7 @@ function transitionToEnchantingPhase5()
     for i,v in ipairs(e.perks.Armour) do
         if ench[1] == v.title then e.selectedPerk = i end
     end
-    e.floor = ench[2]
+    e.floor = tonumber(ench[2])
     -- enchantingSliderPhase5 = newSlider(uiX / 2, uiY / 2, 400, 1, 0, 1, function() end, style)
     enchantingSliderPhase3 = newSlider(uiX / 2 + 108, uiY / 2 + 100, 448, 1, 0, 1, function() end, style)
     e.phase = 3

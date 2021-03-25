@@ -67,7 +67,7 @@ utf8 = require("utf8")
 newOutliner = require 'scripts.libraries.outliner'
 
 version = "Early Access" 
-versionType = "dev" -- "dev" for quick login, "release" for not
+versionType = "release" -- "dev" for quick login, "release" for not
 if versionType == "dev" then require 'dev' end
 versionNumber = "1.3.0" -- very important for settings
 
