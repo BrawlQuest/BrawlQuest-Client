@@ -120,18 +120,27 @@ function setItemTooltip(item)
             color = {1, 0, 0}
         }})
     end
-
+    if item.Attributes and item.Attributes ~= "None" then
+        att = explode(item.Attributes, ";")
+        for i,v in ipairs(att) do
+            thisAttribute = explode(v, ",")
+            tooltip.additional[#tooltip.additional + 1] = {
+                desc = "Grants +"..thisAttribute[2].." "..thisAttribute[1],
+                color = {0.6,0.6,1}
+            }
+        end
+    end
     if me and item and item.Enchantment ~= "None" then
         ench = explode(item.Enchantment, ",")
         if string.sub(item.Type,1,3) == "arm" then
 
             tooltip.additional[#tooltip.additional + 1] = {
-                desc = "Enchanted with +"..ench[1].." "..ench[2],
+                desc = "Enchanted with +"..ench[2].." "..ench[1],
                 color = {0.7,0,1}
             }
         elseif item.Type == "wep" then
             tooltip.additional[#tooltip.additional + 1] = {
-                desc = "Enchanted with +"..ench[2].." Attack Damage",
+                desc = "Enchanted with +"..item.Enchantment.." Attack Damage",
                 color = {0.7,0,1}
             }
         elseif item.Type == "mount" then
