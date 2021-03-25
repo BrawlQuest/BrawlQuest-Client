@@ -292,8 +292,8 @@ function drawNamePlate(x,y,name, alpha, level, prestige)
     end
 end
 
-attackHitAmount = 0
-sparklesAmount = 0
+local attackHitAmount = 0
+local sparklesAmount = 0
 
 function updateOtherPlayers(dt)
     if attackHitAmount > 0 then
@@ -379,7 +379,7 @@ function updateOtherPlayers(dt)
                 iWantSparkles = true
             end
 
-            if v.Mount and v.Mount.Name ~= "None" and v.Mount.Enchantment ~= "None" then
+            if v.Mount and v.Mount.Name ~= "None" and v.Mount.Name ~= "" and v.Mount.Enchantment ~= "None" then
                 sparklesAmount = sparklesAmount + 5 * dt
                 if iWantSparkles and sparklesAmount > 1 then
                     sparklesAmount = 0
@@ -415,9 +415,6 @@ function tickOtherPlayers()
                     playersDrawable[i].Y = playersDrawable[i].Y + 16
                 end
             end
-            -- if v.Mount and v.Mount.Name ~= "None" and v.Mount.Enchantment ~= "None" then
-                -- addSparkles(playersDrawable[i].X + 16, playersDrawable[i].Y + 16, 20, 10, 10)
-            -- end
         end
     end
 end
