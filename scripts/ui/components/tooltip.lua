@@ -151,7 +151,7 @@ function setItemTooltip(item)
         }
     end
 
-    if item.Type == "spell" and me and me.SpellCooldown > 0 then
+    if item.Type == "spell" and me and me.SpellCooldown and me.SpellCooldown > 0 then
         tooltip.additional[#tooltip.additional + 1] = {
             desc = "Global spell cooldown. Can be used in "..me.SpellCooldown.." seconds.",
             color = {1,0,0}

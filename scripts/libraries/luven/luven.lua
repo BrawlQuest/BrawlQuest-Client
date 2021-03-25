@@ -236,7 +236,7 @@ end
 -- /// Luven variables declarations
 -- ///////////////////////////////////////////////
 
-local NUM_LIGHTS = 500
+local NUM_LIGHTS = 10000
 local lightsSize = 256
 
 local luvenPath = debug.getinfo(1,'S').source -- get Luven path
