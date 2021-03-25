@@ -87,7 +87,6 @@ function tickAuras()
                         img =  getImgIfNotExist("assets/auras/"..v.Stat..".png"),
                         Radius = v.Radius
                     }
-                
                 end
                 y = y + 1
             end

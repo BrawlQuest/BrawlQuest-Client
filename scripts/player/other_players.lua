@@ -292,7 +292,7 @@ function drawNamePlate(x,y,name, alpha, level, prestige)
     end
 end
 
-local attackHitAmount = 0
+attackHitAmount = 0
 local sparklesAmount = 0
 
 function updateOtherPlayers(dt)
@@ -402,7 +402,6 @@ function tickOtherPlayers()
             if v.AX ~= 0 then
                 if v.AX < v.X then
                     playersDrawable[i].X = playersDrawable[i].X - 16
-
                 elseif v.AX > v.X then
                     playersDrawable[i].X = playersDrawable[i].X + 16
                 end

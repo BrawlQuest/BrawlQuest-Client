@@ -67,7 +67,6 @@ function drawItemIfExists(path, x, y, previousDirection, direction, imageScale, 
     end
 end
 
-local attackHitAmount = 0
 local sparklesAmount = 0
 
 function updateCharacter(dt)
