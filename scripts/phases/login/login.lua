@@ -124,9 +124,7 @@ function updateLogin(dt)
         if launch.inAmount < 1 then
             launch.inAmount = launch.inAmount + 0.22 * dt
             if launch.inAmount > 1 then
-                birds:setLooping(true)
-                birds:setVolume(0.1 * sfxVolume)
-                birds:play()
+              
                 launch.inAmount = 1
             end
             launch.inCERP = cerp(0, 1, launch.inAmount)

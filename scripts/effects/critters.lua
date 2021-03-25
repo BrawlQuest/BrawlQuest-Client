@@ -136,8 +136,8 @@ function updateCritters(dt)
                 end
             elseif distanceToPoint(player.dx, player.dy, v.x, v.y) > 256 and k.scattering then
                 k.scattering = false
-                k.x = v.x
-                k.y = v.y
+                k.x = v.x + love.math.random(1, 32)
+                k.y = v.y + love.math.random(1, 32)
             end
             if k.x < k.targetX - 1 then
                 k.x = k.x + speed

@@ -419,6 +419,8 @@ function love.update(dt)
                         previousTick = response['Tick']
                     end
 
+                    weather.type = "rain"
+
                     checkAchievementUnlocks()
                 end
             end
