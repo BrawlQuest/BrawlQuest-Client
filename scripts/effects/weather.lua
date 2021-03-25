@@ -59,11 +59,11 @@ function updateWeather(dt)
             alpha = 1
         }
         
-        if love.math.random(1, 500) == 1 then
-            Luven.setLightPower(weather.flash,32)
-            Luven.setLightPosition(weather.flash,player.dx,player.dy)
-        end
-        Luven.setLightPower(weather.flash,Luven.getLightPower(weather.flash)-32*dt)
+        -- if love.math.random(1, 500) == 1 then
+        --     Luven.setLightPower(weather.flash,32)
+        --     Luven.setLightPosition(weather.flash,player.dx,player.dy)
+        -- end
+        -- Luven.setLightPower(weather.flash,Luven.getLightPower(weather.flash)-32*dt)
 
     for i,v in pairs(weather.splashes) do
         v.alpha = v.alpha - 1*dt
