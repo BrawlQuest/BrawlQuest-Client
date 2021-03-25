@@ -57,10 +57,10 @@ function checkKeyPressedPhaseGame(key)
             if isNearbyTile("assets/world/objects/Portal.png") and me.LVL == 30 then
                 openEnchanting()
             elseif isNearbyTile("assets/world/objects/Furnace.png") then
-                forging.ores = {}
+                forging.enteredItems = {}
                 for i,v in ipairs(inventoryAlpha) do
-                    if v.Type == "ore" then
-                        forging.ores[#forging.ores+1] = v
+                    if v.Item.Type == "ore" then
+                        forging.enteredItems[#forging.enteredItems+1] = v
                     end
                 end
                 forging.open = true

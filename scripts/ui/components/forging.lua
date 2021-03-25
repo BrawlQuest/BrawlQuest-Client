@@ -65,9 +65,21 @@ function updateForging(dt)
         if f.a >= 1 then -- end forging
             forgingPush:stop()
             forgingPop:play()
+            for i,v in ipairs(f.enteredItems) do
+                c, h = http.request {
+                    url = api.url .. "/forge/" .. me.Name .. "/" .. v.Item.ID,
+                    method = "GET",
+                    source = ltn12.source.string(body),
+                    headers = {
+                        ["token"] = token
+                    },
+                    sink = ltn12.sink.table(b)
+                }
+            end
             f.forging = false
             f.a = 0
             f.showResults = true
+            f.open = false -- TODO: make the endpoint return the items smelted
             f.resultItems = copy(f.enteredItems)
             f.enteredItems = {}
         end
@@ -122,8 +134,8 @@ function drawForging()
     elseif #f.enteredItems > 0 then
         x,y = x + 10, y + f.font:getHeight() * 3 + 6
         for i,v in ipairs(f.enteredItems) do
-            drawInventoryItem(x,y,v.item,v.amount)
-            love.graphics.print(v.item.Name, x + 44, y + 8, 0, 2)
+            drawInventoryItem(x,y,v.Item,v.amount)
+            love.graphics.print(v.Item.Name, x + 44, y + 8, 0, 2)
             y = y + 46
         end
 
@@ -146,7 +158,7 @@ function drawForging()
             love.graphics.scale(2)
             local dx = 0
             for i,v in ipairs(f.resultItems) do
-                drawInventoryItem(dx - w / 2, 0, v.item, v.amount)
+                drawInventoryItem(dx - w / 2, 0, v.Item, v.amount)
                 dx = dx + 44
             end
             love.graphics.printf("You Received:", 0 - uiX / 2, -20, uiX / 2, "center", 0, 2)
@@ -178,6 +190,7 @@ end
 function smeltOres()
     local f = forging
     f.forging = true
+  
     forgingPush:play()
 end
 
