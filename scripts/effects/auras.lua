@@ -33,7 +33,7 @@ function drawAuras()
     end
     love.graphics.setBlendMode("alpha")
     for i,v in ipairs(auraParticles) do
-        love.graphics.setColor(1,1,1,v.alpha)
+        love.graphics.setColor(1,1,1,v.alpha * 0.5)
         love.graphics.draw(v.img, v.x, v.y)
     end
 end
