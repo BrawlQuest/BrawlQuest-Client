@@ -138,11 +138,11 @@ function getInventory()
     inventoryFieldLength = {}
     for i, v in ipairs(inventoryAlpha) do
         userInventory[i] = {}
-       inventoryFieldLength[i] = 0
+        inventoryFieldLength[i] = 0
     end
 
     for i, v in ipairs(inventoryAlpha) do
-        local t = getItemType(v)
+        local t = getItemType(v) or 1
         inventoryFieldLength[t] = inventoryFieldLength[t] + 1
         if not itemImg[v.Item.ImgPath] then
             if love.filesystem.getInfo(v.Item.ImgPath) then
