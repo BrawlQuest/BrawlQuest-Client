@@ -1,6 +1,7 @@
 auras = {}
 auraParticles = {}
 auraAuras = {} -- don't ask
+previousAuras = {}
 auraColors = {
     HP = {1,0,0},
     INT = {0,0,1},
@@ -11,7 +12,6 @@ auraColors = {
 
 
 function drawAuras()
-
     love.graphics.setBlendMode("add")
     for i,v in ipairs(auraAuras) do
         if v.Stat == "HP" then
@@ -33,10 +33,9 @@ function drawAuras()
     end
     love.graphics.setBlendMode("alpha")
     for i,v in ipairs(auraParticles) do
-        love.graphics.setColor(1,1,1,v.alpha)
+        love.graphics.setColor(1,1,1,v.alpha * 0.5)
         love.graphics.draw(v.img, v.x, v.y)
-    end 
-    
+    end
 end
 
 function drawAuraHeadings()
@@ -57,7 +56,7 @@ function drawAuraHeadings()
 end
 
 function tickAuras()
---    auraAuras = {}
+--  auraAuras = {}
     for i,v in ipairs(auras) do
         local img = getImgIfNotExist("assets/auras/"..v.Stat..".png")
         local x = v.X - v.Radius
@@ -88,14 +87,13 @@ function tickAuras()
                         img =  getImgIfNotExist("assets/auras/"..v.Stat..".png"),
                         Radius = v.Radius
                     }
-                
                 end
                 y = y + 1
             end
             x = x + 1
             y = v.Y - v.Radius
         end
-    end 
+    end
 end
 
 function updateAuras(dt)

@@ -59,7 +59,8 @@ function updateWorldEmitters(dt)
         end
 
         for key, source in next, playingAmbience do
-            if not source:isPlaying() then table.removekey(playingAmbience, key) end
+            if source:isPlaying() then source:setVolume(sfxVolume*0.3)
+            else table.removekey(playingAmbience, key) end
         end
     end
 end

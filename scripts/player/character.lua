@@ -67,6 +67,8 @@ function drawItemIfExists(path, x, y, previousDirection, direction, imageScale, 
     end
 end
 
+local sparklesAmount = 0
+
 function updateCharacter(dt)
     if player.damageHUDAlphaUp then
         player.damageHUDAlpha = player.damageHUDAlpha + 3*dt
@@ -79,7 +81,16 @@ function updateCharacter(dt)
         player.damageHUDAlpha = player.damageHUDAlpha - 0.35*dt
         if player.damageHUDAlpha < 0 then player.damageHUDAlpha = 0 end
     end
-    
+
+
+    if me.Mount and me.Mount.Name ~= "None" and me.Mount.Name ~= "" and me.Mount.Enchantment ~= "None" then
+        sparklesAmount = sparklesAmount + 5 * dt
+        if isMoving and sparklesAmount > 1 then
+            sparklesAmount = 0
+            addSparkles(player.dx + 16, player.dy + 16, 5, 30, 20)
+        end
+    end
+
     checkTargeting()
     if me and player.dx and player.dy and player.buddy then
         local pl = {
@@ -140,6 +151,7 @@ end
 
 isMoving = false
 movementStarted = 1 -- the max time it'll ever take to cross a tile. This should fix rubberbanding.
+
 
 function movePlayer(dt)
     if (me and not me.IsDead) and (not isMoving or (distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) < 1 and not worldEdit.isTyping and not tutorialOpen)) and not isTypingInChat and not death.open then -- movement smoothing has finished
