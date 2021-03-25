@@ -76,7 +76,6 @@ function drawRangedWeaponsGrid(x,y)
             target.x , target.y = x, y
         end
     end
-    
 end
 
 function drawRangedWeaponEffects()

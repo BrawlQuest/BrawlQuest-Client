@@ -374,6 +374,7 @@ function updateOtherPlayers(dt)
             end
         end
         updateBuddy(dt, playersDrawable[i])
+       -- updateRangedWeapons(dt, playersDrawable[i])
     end
 end
 
