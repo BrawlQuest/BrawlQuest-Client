@@ -58,6 +58,8 @@ function drawCharacter(v, x, y, ad)
             drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,"/fore.png")
             if v.IsShield and v.ShieldID ~= 0 and notBoat then drawArmourImage(x,y,v,ad,"Shield",direction) end
         end
+
+        -- drawRangedWeaponEffects(v, x, y)
     end
 end
 
@@ -372,6 +374,7 @@ function updateOtherPlayers(dt)
             end
         end
         updateBuddy(dt, playersDrawable[i])
+       -- updateRangedWeapons(dt, playersDrawable[i])
     end
 end
 

@@ -90,6 +90,7 @@ function initEnchanting()
             },
         },
         selectedPerk = 1,
+        itemLevel = 25,
     }
 end
 
@@ -266,9 +267,8 @@ function drawEnchanting()
         dx, dy = x + width, dy - 10
         width = w - (width + 40)
 
-        me.LVL = 30
-
         local levelCalc = math.floor(lerp(25, me.LVL, enchantingSliderPhase3:getValue()))
+        e.itemLevel = levelCalc
         love.graphics.printf(me[e.chosenItem].Name, dx, dy, width / textScale, "left",  0, textScale)
         dy = dy + (getTextHeight(me[e.chosenItem].Name, width / textScale, e.font) * textScale)
         love.graphics.printf(e.perks[perk][e.selectedPerk].desc, dx, dy, width / smallPrintScale, "left",  0, smallPrintScale)
@@ -426,11 +426,9 @@ function enchantItem()
 
     -- print("Trying to enchant " .. me[e.chosenItem].ID)
     c, h = http.request {
-        url = api.url .. "/enchant/" .. me.ID .. "/" .. me[e.chosenItem].ID .. "/" .. e.perks[perk][e.selectedPerk].titles .. "/" .. me.LVL,
+        url = api.url .. "/enchant/" .. me.ID .. "/" .. me[e.chosenItem].ID .. "/" .. e.perks[perk][e.selectedPerk].titles .. "/" .. e.itemLevel,
         method = "GET",
-        headers = {
-            ["token"] = token
-        },
+        headers = {["token"] = token},
     }
 
     e.open = false
@@ -463,7 +461,11 @@ end
 
 function transitionToEnchantingPhase5()
     local e = enchanting
-    e.floor = 25
+    local ench = explode(me[e.chosenItem].Enchantment, ",")
+    for i,v in ipairs(e.perks.Armour) do
+        if ench[1] == v.title then e.selectedPerk = i end
+    end
+    e.floor = ench[2]
     -- enchantingSliderPhase5 = newSlider(uiX / 2, uiY / 2, 400, 1, 0, 1, function() end, style)
     enchantingSliderPhase3 = newSlider(uiX / 2 + 108, uiY / 2 + 100, 448, 1, 0, 1, function() end, style)
     e.phase = 3

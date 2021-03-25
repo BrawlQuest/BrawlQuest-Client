@@ -38,7 +38,7 @@ function updateRangedWeapons(dt)
         staffExplode:setVolume(0.2 * sfxVolume)
         staffExplode:setPosition(t.hit.x, t.hit.y)
         staffExplode:setRolloff(sfxRolloff)
-        -- staffExplode:setPitch(love.math.random()) 
+        -- staffExplode:setPitch(love.math.random())
         staffExplode:play()
         addExplosion(t.hit.x, t.hit.y)
         throw.open = false
@@ -62,7 +62,6 @@ function tickRangedWeapons()
             end
         end)
         hitTarget()
-       
     end
 end
 
@@ -77,25 +76,10 @@ function drawRangedWeaponsGrid(x,y)
             target.x , target.y = x, y
         end
     end
-
-    if target.selected and x == target.x and y == target.y then
-        local targetCerp = cerp(0, 0.6, target.amount)
-        if target.shootable == true then love.graphics.setColor(0,1,0,targetCerp) else love.graphics.setColor(1,0,0,targetCerp) end
-        -- love.graphics.rectangle("fill", target.x * 32, target.y * 32, 32, 32)
-        -- love.graphics.setColor(1,1,1, targetCerp)
-        for i,v in ipairs(target.paths) do
-            if i > 2 and i < #target.paths then
-                love.graphics.rectangle("fill", v.x * 32, v.y * 32, 32, 32)
-                break
-            end
-        end
-    end
 end
 
 function drawRangedWeaponEffects()
-    if target.amount > 0 then 
-        love.graphics.setColor(1,1,1,throw.amount + 0.2)
-        love.graphics.setLineWidth( 2 + target.amount )
+    if target.amount > 0 then
         local origin, paths = target.paths.origin, target.paths
         if #paths > 1 then
             local originX = player.dx + 16
