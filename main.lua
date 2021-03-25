@@ -82,6 +82,7 @@ nextUpdate = 1
 timeOutTick = 3
 previousTick = 0
 nextTick = 0
+lastTick = 0
 totalCoverAlpha = 0 -- this covers the entire screen in white, for hiding purposes
 timeOfDay = 0
 enemiesInAggro = 0
@@ -149,6 +150,7 @@ function love.draw()
             drawNPCs()
             drawEnemies()
             drawRangedWeaponEffects()
+            drawExplosions()
 
             for i, v in ipairs(playersDrawable) do
                 drawPlayer(v, i)
@@ -431,6 +433,7 @@ function tick()
     tickEnemies()
     tickAuras()
     checkTargeting()
+    lastTick = nextTick
     nextTick = 1
     getInventory()
     tickRangedWeapons()

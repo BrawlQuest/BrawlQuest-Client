@@ -38,7 +38,7 @@ function updateRangedWeapons(dt)
         staffExplode:setVolume(0.2 * sfxVolume)
         staffExplode:setPosition(t.hit.x, t.hit.y)
         staffExplode:setRolloff(sfxRolloff)
-        -- staffExplode:setPitch(love.math.random()) 
+        -- staffExplode:setPitch(love.math.random())
         staffExplode:play()
         addExplosion(t.hit.x, t.hit.y)
         throw.open = false
@@ -123,6 +123,7 @@ function hitTarget()
     target.hit = target.paths[#target.paths] or null
     local x, y = target.hit.x, target.hit.y -- hit a target on these coordinates
     apiGET('/ranged/' .. me.ID .. "/" .. x .. "/" .. y)
+    drawExplosions()
 end
 
 function updateExplosions(dt)
