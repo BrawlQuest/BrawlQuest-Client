@@ -34,6 +34,24 @@ checkVarKeyPressed(key)
 checkVarMousePressed(button)
 ]]
 
+--[[
+function updateVar(dt)
+
+end
+
+function drawVar()
+
+end
+
+function addVar()
+    
+end
+
+updateVar(dt)
+drawVar()
+addVar()
+]]
+
 
 function getImgIfNotExist(v)
     if not worldImg[v] then

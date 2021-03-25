@@ -426,7 +426,7 @@ function enchantItem()
 
     -- print("Trying to enchant " .. me[e.chosenItem].ID)
     c, h = http.request {
-        url = api.url .. "/enchant/" .. me.ID .. "/" .. me[e.chosenItem].ID .. "/" .. e.perks[perk][e.selectedPerk].titles .. "/" .. e.itemLevel,
+        url = api.url .. "/enchant/" .. me.ID .. "/" .. me[e.chosenItem].ID .. "/" .. e.perks[perk][e.selectedPerk].title .. "/" .. e.itemLevel,
         method = "GET",
         headers = {["token"] = token},
     }

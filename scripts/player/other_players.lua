@@ -401,6 +401,10 @@ function tickOtherPlayers()
                     playersDrawable[i].Y = playersDrawable[i].Y + 16
                 end
             end
+
+            if v.Mount and v.Mount.Name ~= "None" and v.Mount.Enchantment ~= "None" then
+                addSparkles(playersDrawable[i].X * 32, playersDrawable[i].Y * 32, 10, 10)
+            end
         end
     end
 end
