@@ -47,6 +47,7 @@ function updateWorldEmitters()
             if love.math.random(1,10) == 1 and not worldEmitSounds[v.sound]:isPlaying()  then
                 if worldEmitSounds[v.sound]:getChannelCount() == 1 then
                     worldEmitSounds[v.sound]:setPosition(v.x/32,v.y/32)
+                    worldEmitSounds[v.sound]:setRolloff(sfxRolloff)
                 end
                 worldEmitSounds[v.sound]:setVolume(sfxVolume*0.2)
                 worldEmitSounds[v.sound]:play()
