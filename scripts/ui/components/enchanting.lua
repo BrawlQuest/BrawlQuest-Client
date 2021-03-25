@@ -267,7 +267,9 @@ function drawEnchanting()
         dx, dy = x + width, dy - 10
         width = w - (width + 40)
 
-        local levelCalc = math.floor(lerp(25, me.LVL, enchantingSliderPhase3:getValue()))
+        local floor = 25
+        if e.floor > 25 then floor = e.floor end
+        local levelCalc = math.floor(lerp(floor, me.LVL, enchantingSliderPhase3:getValue()))
         e.itemLevel = levelCalc
         love.graphics.printf(me[e.chosenItem].Name, dx, dy, width / textScale, "left",  0, textScale)
         dy = dy + (getTextHeight(me[e.chosenItem].Name, width / textScale, e.font) * textScale)
