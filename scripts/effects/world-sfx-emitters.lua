@@ -9,11 +9,12 @@ worldEmitSounds = {
     jungle = love.audio.newSource("assets/sfx/ambient/forest/jungle.ogg", "stream"),
     blacksmith =  love.audio.newSource("assets/sfx/ambient/blacksmith.ogg", "stream"),
     lava = love.audio.newSource("assets/sfx/ambient/lava.ogg", "stream"),
-    water = love.audio.newSource("assets/sfx/ambient/water.ogg", "stream")
+    water = love.audio.newSource("assets/sfx/ambient/water.ogg", "stream"),
+    fire = love.audio.newSource("assets/sfx/ambient/fire.ogg", "stream")
 }
 
 function addWorldEmitter(worldTile)
-    if love.math.random(1,5) == 1 then
+    if love.math.random(1,20) == 1 then
         if isTileType(worldTile.ForegroundTile, "Tree") then
             worldEmitters[#worldEmitters+1] = {
                 x = worldTile.X*32,
@@ -38,6 +39,12 @@ function addWorldEmitter(worldTile)
                 y = worldTile.Y*32,
                 sound = "assets/sfx/ambient/water.ogg"
             }
+        elseif isTileType(worldTile.ForegroundTile, "Fire") or isTileType(worldTile.ForegroundTile, "Furnace") then
+            worldEmitters[#worldEmitters+1] = {
+                x = worldTile.X*32,
+                y = worldTile.Y*32,
+                sound = "fire"
+            }
         end
     end
 end
@@ -55,6 +62,7 @@ function updateWorldEmitters(dt)
         for i,v in pairs(worldEmitters) do
             if distanceToPoint(player.dx, player.dy, v.x, v.y) < 256 and not playingAmbience[v.x..","..v.y] and not arrayContains(playedThisTick, v.sound) then
                 playAmbience(v)
+
             end
         end
 

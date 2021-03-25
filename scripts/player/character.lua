@@ -191,9 +191,9 @@ function movePlayer(dt)
     end
     
     if distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) > 1 then
-        local speed = 64
+        local speed = 80
         if me and me.Mount and me.Mount.Name ~= "None" or worldEdit.open then
-            speed = tonumber(me.Mount.Val) or 64 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
+            speed = tonumber(me.Mount.Val) or 80 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
             local enchant = me.Mount.Enchantment or false
             if enchant and enchant ~= "None" and enchant ~= "" then
                 speed = speed + 25
