@@ -136,13 +136,13 @@ end
 function getInventory()
     userInventory = {}
     inventoryFieldLength = {}
-    for i, v in ipairs(inventoryAlpha) do
+    for i = 1, #inventory.fields do -- in ipairs(inventoryAlpha) do
         userInventory[i] = {}
         inventoryFieldLength[i] = 0
     end
 
     for i, v in ipairs(inventoryAlpha) do
-        local t = getItemType(v) or 1
+        local t = getItemType(v)
         inventoryFieldLength[t] = inventoryFieldLength[t] + 1
         if not itemImg[v.Item.ImgPath] then
             if love.filesystem.getInfo(v.Item.ImgPath) then
@@ -212,6 +212,5 @@ function isItemUnusable(item)
 end
 
 function isSpellUnusable(item)
-
     return item and item.Type == "spell" and me and me.SpellCooldown and me.SpellCooldown > 0
 end
