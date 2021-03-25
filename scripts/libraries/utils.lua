@@ -155,8 +155,13 @@ function math.damp(dt, var, speed, dest)
     elseif var > dest then var = var - speed * dt if var <= dest then output = dest else output = var end end
     return output
 end
- 
- 
+
+function table.removekey(table, key)
+    local element = table[key]
+    table[key] = nil
+    return element
+end
+
 -- Returns the distance between two points.
 function math.dist(x1,y1, x2,y2) return ((x2-x1)^2+(y2-y1)^2)^0.5 end
 -- Distance between two 3D points:

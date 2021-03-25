@@ -3,6 +3,7 @@
 ]]
 
 worldEmitters = {}
+playingAmbience = {}
 
 worldEmitSounds = {
     jungle = love.audio.newSource("assets/sfx/ambient/forest/jungle.ogg", "stream"),
@@ -17,41 +18,58 @@ function addWorldEmitter(worldTile)
             worldEmitters[#worldEmitters+1] = {
                 x = worldTile.X*32,
                 y = worldTile.Y*32,
-                sound = "jungle",
+                sound = "assets/sfx/ambient/forest/jungle.ogg",
             }
         elseif isTileType(worldTile.ForegroundTile, "Anvil") then
             worldEmitters[#worldEmitters+1] = {
                 x = worldTile.X*32,
                 y = worldTile.Y*32,
-                sound = "blacksmith",
+                sound = "assets/sfx/ambient/blacksmith.ogg",
             }
         elseif isTileType(worldTile.ForegroundTile, "Lava") then
             worldEmitters[#worldEmitters+1] = {
                 x = worldTile.X*32,
                 y = worldTile.Y*32,
-                sound = "lava",
+                sound = "assets/sfx/ambient/lava.ogg",
             }
         elseif isTileType(worldTile.ForegroundTile, "Water") then
             worldEmitters[#worldEmitters+1] = {
                 x = worldTile.X*32,
                 y = worldTile.Y*32,
-                sound = "water"
+                sound = "assets/sfx/ambient/water.ogg"
             }
         end
     end
 end
 
-function updateWorldEmitters()
-    for i,v in pairs(worldEmitters) do
-        if distanceToPoint(player.dx, player.dy, v.x, v.y) < 256 then
-            if love.math.random(1,10) == 1 and not worldEmitSounds[v.sound]:isPlaying()  then
-                if worldEmitSounds[v.sound]:getChannelCount() == 1 then
-                    worldEmitSounds[v.sound]:setPosition(v.x/32,v.y/32)
-                    worldEmitSounds[v.sound]:setRolloff(sfxRolloff)
-                end
-                worldEmitSounds[v.sound]:setVolume(sfxVolume*0.2)
-                worldEmitSounds[v.sound]:play()
+local playedThisTick = {}
+local playAmount = 0
+local playSpeed = 1
+
+function updateWorldEmitters(dt)
+    playAmount = playAmount + playSpeed * dt
+    if playAmount >= 1 then
+        playAmount = 0
+        playSpeed = 1 - love.math.random() * 0.5
+        playedThisTick = {}
+        for i,v in pairs(worldEmitters) do
+            if distanceToPoint(player.dx, player.dy, v.x, v.y) < 256 and not playingAmbience[v.x..","..v.y] and not arrayContains(playedThisTick, v.sound) then
+                playAmbience(v)
             end
         end
+
+        for key, source in next, playingAmbience do
+            if not source:isPlaying() then table.removekey(playingAmbience, key) end
+        end
     end
+end
+
+function playAmbience(v)
+    local count = #playingAmbience + 1
+    playingAmbience[v.x..","..v.y] = love.audio.newSource(v.sound, "stream")
+    playingAmbience[v.x..","..v.y]:setPosition(v.x/32,v.y/32)
+    playingAmbience[v.x..","..v.y]:setRolloff(1)
+    playingAmbience[v.x..","..v.y]:setVolume(sfxVolume*0.3)
+    playingAmbience[v.x..","..v.y]:play()
+    playedThisTick[#playedThisTick+1] = v.sound
 end
