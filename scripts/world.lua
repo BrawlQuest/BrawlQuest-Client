@@ -55,7 +55,6 @@ function createWorld()
             addLeaf(v.X*32, v.Y*32+16, "murky")
         end
 
-       
     end
 
     for key, v in next, worldCanvas do
@@ -89,7 +88,9 @@ function createWorld()
                     if v.X >= cx * chunkSize and v.X < (cx + 1) * chunkSize and v.Y >= cy * chunkSize and v.Y < (cy + 1) * chunkSize then
                         drawTile(v, cx, cy)
                         addCritters(v)
+                        
                     end
+                    
                 end
             love.graphics.setCanvas()
         end
@@ -100,15 +101,16 @@ function createWorld()
     else
         createNPCChatBackground(0,0)
     end
+
 end
 
 function drawTile(v, cx, cy)
     local x, y = v.X - cx * chunkSize, v.Y - cy * chunkSize -- draw
     local backgroundAsset = getWorldAsset(v.GroundTile, v.X, v.Y)
     local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y)
-    if lightGivers[foregroundAsset] and not lightSource[v.X .. "," .. v.Y] then
+    if lightGivers[v.ForegroundTile] and not lightSource[v.X .. "," .. v.Y] then
         lightSource[v.X .. "," .. v.Y] = true
-        Luven.addNormalLight(16 + v.X * 32, 16 + v.Y * 32,  lightGivers[foregroundAsset].color, lightGivers[foregroundAsset].brightness)
+        Luven.addNormalLight(16 + v.X * 32, 16 + v.Y * 32,  lightGivers[v.ForegroundTile].color, lightGivers[v.ForegroundTile].brightness)
     end
     drawSimplexNoise(v.X, v.Y)
     if worldImg[backgroundAsset] then
