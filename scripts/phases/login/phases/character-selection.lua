@@ -226,7 +226,8 @@ end
 
 function loginOrCreate()
     if characters[cs.selectedCharacter] and characters[cs.selectedCharacter].Name then
-        transitionToPhaseGame()
+        loginPhase = "loadingWorld"
+        worldLoading = {amount = 0}
     else
         if cs.nameText ~= "" then
             characters[cs.selectedCharacter] = {}
@@ -315,6 +316,9 @@ function checkCharacterSelectorKeyInput(key)
 end
 
 function transitionToPhaseGame()
+    print("transitioning")
+    love.graphics.setColor(1,1,1)
+    love.graphics.rectangle("fill", 0,0, uiX, uiY)
     -- print(json:encode_pretty(characters[cs.selectedCharacter]))
     me.Color = copy(characters[cs.selectedCharacter].Color)
     username = characters[cs.selectedCharacter]["Name"]
