@@ -17,6 +17,7 @@ function initRangedWeapons()
     }
     explosions = {}
     explImage = love.graphics.newImage("scripts/libraries/luven/lights/round.png")
+    noManaSFX = love.audio.newSource("assets/sfx/player/actions/no mana.ogg", "static")
     smokeImg = love.graphics.newImage("assets/auras/Smoke.png")
     smokeImages = {}
     for x = 0, 8, 1 do
@@ -47,7 +48,7 @@ function updateRangedWeapons(dt)
 end
 
 function tickRangedWeapons()
-    if target.selected and target.amount == 0 then
+    if target.selected and target.amount == 0 and me and me.Mana >= 5 then
         target.amount = 1
         target.selected = false
         throw.amount = 0
@@ -62,6 +63,9 @@ function tickRangedWeapons()
             end
         end)
         hitTarget()
+    elseif me and me.Mana < 5 then
+        noManaSFX:setVolume(sfxVolume)
+        love.audio.play(noManaSFX)
     end
 end
 
