@@ -3,8 +3,6 @@
 ]]
 require 'scripts.phases.login.background'
 require 'scripts.phases.login.phases.login'
-require 'scripts.phases.login.phases.characters'
-require 'scripts.phases.login.phases.creation'
 require 'scripts.phases.login.phases.server'
 require 'scripts.phases.login.phases.character-selection'
 
@@ -64,6 +62,7 @@ function initLogin()
     initLoginBackground()
     loadingAmount = 0
     loadingText = "Connecting to Servers "
+    worldLoadingText = "Loading World\nSit back and relax, this wont take long :D"
     loginAttempts = 1
     circleAmount = 0
     loadingDots = "\n"
@@ -96,25 +95,14 @@ function drawLogin()
         love.graphics.printf("Welcome to Dev Mode!\nPress LEFT or \"A\" to Login with Steam ID\nPress RIGHT or \"D\" to Login with anything else\nOtherwise you can quick login like before\n" .. loadingDots, chatFont, 0, love.graphics.getHeight() * 0.5 + 70, love.graphics.getWidth() / 1, "center", 0, 1)
     else
         drawLoginBackground()
-        if loginPhase == "login" then
-            drawLoginPhase(launch.outCERP)
-            -- drawAreaName()
-        elseif loginPhase == "loading" then
-            love.graphics.setColor(1,1,1,launch.outCERP)
-            love.graphics.draw(bqLogo, (love.graphics.getWidth() / 2) - ((bqLogo:getWidth() * logoScale) * 0.5), (love.graphics.getHeight() / 2) - ((bqLogo:getHeight() * logoScale) * 0.5) - 100, 0, logoScale)
-            love.graphics.printf(loadingText .. loadingDots, chatFont, 0, love.graphics.getHeight() * 0.5 + 70, love.graphics.getWidth() / 1, "center", 0, 1)
-        elseif loginPhase == "characters" then
-            drawCharacterSelection()
-        elseif loginPhase == "creation" then
-            drawCreationPhase()
-        elseif loginPhase == "server" then
-            drawServerPhase()
-        end
-
+        if loginPhase == "login" then drawLoginPhase(launch.outCERP)
+        elseif loginPhase == "loading" then drawLoadingText(loadingText)
+        elseif loginPhase == "characters" then drawCharacterSelection()
+        elseif loginPhase == "creation" then drawCreationPhase()
+        elseif loginPhase == "loadingWorld" then drawLoadingText(worldLoadingText)
+        elseif loginPhase == "server" then drawServerPhase() end
         love.graphics.setColor(1,1,1)
-        for i, v in ipairs(loginText) do
-            love.graphics.print(v, playerNameFont, 10, 10 + ((playerNameFont:getHeight() + 2) * (i-1)), 0, 1)
-        end
+        for i, v in ipairs(loginText) do love.graphics.print(v, playerNameFont, 10, 10 + ((playerNameFont:getHeight() + 2) * (i-1)), 0, 1) end
         drawAreaName()
     end
 end
@@ -123,10 +111,7 @@ function updateLogin(dt)
     if loginPhase == "prelaunch" then
         if launch.inAmount < 1 then
             launch.inAmount = launch.inAmount + 0.22 * dt
-            if launch.inAmount > 1 then
-              
-                launch.inAmount = 1
-            end
+            if launch.inAmount > 1 then launch.inAmount = 1 end
             launch.inCERP = cerp(0, 1, launch.inAmount)
         elseif launch.outAmount < 1 then
             launch.outAmount = launch.outAmount + 0.8 * dt
@@ -146,6 +131,9 @@ function updateLogin(dt)
         end
     elseif loginPhase == "characters" then
         updateCharacterSelection(dt)
+    elseif loginPhase == "loadingWorld" then
+        worldLoading.amount = worldLoading.amount + 1 * dt
+        if worldLoading.amount >= 1 then transitionToPhaseGame() end
     end
     updateLoginBackground(dt)
     updateEvents(dt)
@@ -163,24 +151,15 @@ function updateLogin(dt)
 end
 
 function checkClickLogin(x, y)
-    if loginPhase == "login" then
-        checkClickLoginPhaseLogin(x,y)
-    elseif loginPhase == "characters" then
-        -- checkClickLoginPhaseCharacter(x,y)
-    elseif loginPhase == "creation" then
-        checkClickLoginPhaseCreation(x,y)
-    elseif loginPhase == "server" then
-        checkClickLoginPhaseServer(x,y)
-    end
+    if loginPhase == "login" then checkClickLoginPhaseLogin(x,y)
+    elseif loginPhase == "creation" then checkClickLoginPhaseCreation(x,y)
+    elseif loginPhase == "server" then checkClickLoginPhaseServer(x,y) end
 end
 
 function checkLoginTextInput(key)
-    if loginPhase == "login" and key ~= " " then
-        checkLoginTextinputPhaseLogin(key)
-    elseif loginPhase == "characters" then
-        checkCharacterSelectorKeyInput(key)
-    elseif loginPhase == "creation" then
-        checkLoginTextinputPhaseCreation(key)
+    if loginPhase == "login" and key ~= " " then checkLoginTextinputPhaseLogin(key)
+    elseif loginPhase == "characters" then checkCharacterSelectorKeyInput(key)
+    elseif loginPhase == "creation" then checkLoginTextinputPhaseCreation(key)
     end
 end
 
@@ -201,4 +180,10 @@ function loginViaSteam(skipDev)
     else
         loginPhase = "dev"
     end
+end
+
+function drawLoadingText(text)
+    love.graphics.setColor(1,1,1,launch.outCERP)
+    love.graphics.draw(bqLogo, (love.graphics.getWidth() / 2) - ((bqLogo:getWidth() * logoScale) * 0.5), (love.graphics.getHeight() / 2) - ((bqLogo:getHeight() * logoScale) * 0.5) - 100, 0, logoScale)
+    love.graphics.printf(text .. loadingDots, chatFont, 0, love.graphics.getHeight() * 0.5 + 70, love.graphics.getWidth() / 1, "center", 0, 1)
 end
