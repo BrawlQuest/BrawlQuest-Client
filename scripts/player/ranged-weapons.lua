@@ -32,7 +32,7 @@ function updateRangedWeapons(dt)
     panelMovement(dt, target, -1, "amount", 1.5)
     if target.amount < 0 then target.selected = false end
     panelMovement(dt, throw, 1, "amount", throw.speed)
-    if throw.open and throw.amount == 1 then
+    if throw.open and throw.amount == 1 and t and t.hit and t.hit.x and t.hit.y then
         --create a weird sfx
         if staffExplode:isPlaying() then staffExplode:stop() end
         staffExplode = generateNoise()
