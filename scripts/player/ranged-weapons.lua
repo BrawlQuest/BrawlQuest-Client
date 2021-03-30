@@ -109,8 +109,10 @@ end
 
 function hitTarget()
     target.hit = target.paths[#target.paths] or null
-    local x, y = target.hit.x, target.hit.y -- hit a target on these coordinates
-    apiGET('/ranged/' .. me.ID .. "/" .. x .. "/" .. y)
+    if target.hit then
+        local x, y = target.hit.x, target.hit.y -- hit a target on these coordinates
+        apiGET('/ranged/' .. me.ID .. "/" .. x .. "/" .. y)
+    end
 end
 
 function updateExplosions(dt)
