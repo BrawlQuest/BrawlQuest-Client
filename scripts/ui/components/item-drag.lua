@@ -4,6 +4,7 @@ function initItemDrag()
         amount = 1,
         item = null,
         alpha = 0,
+        prevI = 0,
     }
 end
 
@@ -24,10 +25,12 @@ end
 
 function checkItemDragMousePressed(button, hotbarI)
     local iD = itemDrag
-    if hotbarI then
+    if hotbarI then -- copy from hotbar
+        iD.prevI = hotbarI
         iD.item = copy(hotbar[hotbarI].item)
         iD.amount = hotbar[hotbarI].amount
     else
+        iD.prevI = 0
         iD.item = copy(selectedItem)
         iD.amount = selectedItemAmount
     end
@@ -39,6 +42,7 @@ end
 function checkItemDragMouseReleased(button)
     local iD = itemDrag
     if iD.item and inventory.mouseOverButtonsAmount > 0 then
+        if iD.prevI > 0 then hotbar[iD.prevI] = copy(hotbar[inventory.mouseOverButtonsAmount]) end
         hotbar[inventory.mouseOverButtonsAmount] = {item = iD.item, amount = iD.amount}
         hotbarChanged = true
         writeSettings()

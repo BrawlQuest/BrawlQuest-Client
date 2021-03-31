@@ -177,20 +177,30 @@ function drawPlayer(v, i)
         drawNamePlate(v.X + boi, v.Y, v.Name, v.NameAlpha, thisPlayer.LVL, thisPlayer.Prestige) -- thisPlayer.LVL
         
         if thisPlayer ~= nil and thisPlayer.AX then
-            local diffX
-            local diffY
+            local diffX = 0
+            local diffY = 0
             if i == -1 and player.target.active then
-                if targetKeys[1] then diffY = -1
-                elseif targetKeys[2] then diffY = 1
-                else diffY = 0 end
-                if targetKeys[3] then diffX = -1
-                elseif targetKeys[4] then diffX = 1
-                else diffX = 0 end
+                if isMouseDown() and not holdingStaff() then
+                    local mx, my = love.mouse.getPosition()
+                    mx = player.cx - (player.cx - (mx - love.graphics.getWidth() * 0.5))
+                    my = player.cy - (player.cy - (my - love.graphics.getHeight() * 0.5))
+                    local range = {x = 4 * 32, y = 4 * 32}
+                    if my < -range.y then diffY = -1
+                    elseif my > range.y then diffY = 1 end
+                    if mx < -range.x then diffX = -1
+                    elseif mx > range.x then diffX = 1 end
+                else
+                    if targetKeys[1] then diffY = -1
+                    elseif targetKeys[2] then diffY = 1
+                    else diffY = 0 end
+                    if targetKeys[3] then diffX = -1
+                    elseif targetKeys[4] then diffX = 1
+                    else diffX = 0 end
+                end
             else
                 diffX = thisPlayer.AX - thisPlayer.X
                 diffY = thisPlayer.AY - thisPlayer.Y
             end
-
             drawArrowImage(diffX, diffY, v.X, v.Y)
         end
         local underCharacterBarY = v.Y+34

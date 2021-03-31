@@ -314,3 +314,8 @@ function updateInventory(response)
     end
     getInventory()
 end
+
+function holdingStaff()
+    if me and me.Weapon and string.find(me.Weapon.Name, "Staff") then return true
+    else return false end
+end

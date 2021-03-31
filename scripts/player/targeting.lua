@@ -93,7 +93,7 @@ function checkTargeting() -- Check which keys are down and place the player targ
         targetHeld = false
     end
 
-    if isMouseDown() then
+    if isMouseDown() and not holdingStaff() then
         checkMouseTargeting()
     else
         if targetKeys[1] then
