@@ -57,6 +57,12 @@ drawVar()
 addVar()
 ]]
 
+function math.match(val, tab) -- compares a value to a table of items
+    local output = false
+    for i,v in ipairs(tab) do if v == val then output = true break end end
+    return output
+end
+
 
 function getImgIfNotExist(v)
     if not worldImg[v] then

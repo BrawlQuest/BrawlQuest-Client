@@ -128,6 +128,7 @@ function updateCritters(dt)
                         hideSound:setVolume(sfxVolume)
                         hideSound:setPosition(v.x / 32, v.y / 32)
                         hideSound:setRolloff(sfxRolloff)
+                        setEnvironmentEffects(hideSound)
                         hideSound:play()
                     end
                 end
@@ -155,6 +156,7 @@ function updateCritters(dt)
                     idleSound:setVolume(sfxVolume)
                     idleSound:setPosition(v.x / 32, v.y / 32)
                     idleSound:setRolloff(sfxRolloff)
+                    setEnvironmentEffects(idleSound)
                     idleSound:play()
                 end
             end

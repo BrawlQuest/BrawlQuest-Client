@@ -166,6 +166,7 @@ function updateNPCChat(dt)
                 speakSound:setPitch(love.math.random(60,100)/100)
                 speakSound:setRelative(true)
                 speakSound:setVolume(0.1*sfxVolume)
+                setEnvironmentEffects(speakSound)
                 speakSound:play()
                 chatWritten = chatWritten..string.sub(npcChat.Title,#chatWritten+1,#chatWritten+1)
                 if string.sub(npcChat.Title,#chatWritten,#chatWritten) == "." or string.sub(npcChat.Title,#chatWritten,#chatWritten) == "?" then

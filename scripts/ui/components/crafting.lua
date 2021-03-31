@@ -82,6 +82,7 @@ function updateCrafting(dt)
                 crafting.whiteout = crafting.whiteout + 20 * dt
                 crafting.sfx:setPitch(love.math.random(50,100)/100)
                 crafting.sfx:setRelative(true)
+                setEnvironmentEffects(crafting.sfx)
                 crafting.sfx:play()
                 if crafting.whiteout > 1 and crafting.selectedItem ~= null then
                     crafting.hammerDown = 1
@@ -409,6 +410,7 @@ function checkCraftingMousePressed(button)
         crafting.swing:stop()
         crafting.swing:setPitch(love.math.random(30,80)/100)
         crafting.swing:setRelative(true)
+        setEnvironmentEffects(crafting.swing)
         crafting.swing:play()
         checkHotbarChange()
     elseif button == 1 and crafting.overOpenField > 0 then
@@ -499,6 +501,7 @@ function checkCraftingKeyPressed(key)
         crafting.swing:stop()
         crafting.swing:setPitch(love.math.random(30,80)/100)
         crafting.swing:setRelative(true)
+        setEnvironmentEffects(crafting.swing)
         crafting.swing:play()
         crafting.changed = true
         enterCraftingItems(crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j])

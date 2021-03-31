@@ -108,6 +108,7 @@ end
 
 function checkMusic()
     if worldLookup[player.x] and worldLookup[player.x][player.y] and worldLookup[player.x][player.y].Music ~= ("*" or null) then
+        setEnvironmentEffects(music[worldLookup[player.x][player.y].Music])
         currentPlaying = music[worldLookup[player.x][player.y].Music]:play()
     else
         currentPlaying = music["PuerLavari"]:play()

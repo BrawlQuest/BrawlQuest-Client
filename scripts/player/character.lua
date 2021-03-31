@@ -308,6 +308,7 @@ function updateInventory(response)
         enemyHitSfx:setPosition(player.x, player.y)
         enemyHitSfx:setRolloff(sfxRolloff)
         enemyHitSfx:setRelative(false)
+        setEnvironmentEffects(enemyHitSfx)
         enemyHitSfx:play()
         burstLoot((player.x*32)-16, (player.y*32)-16, k.Inventory.Amount, k.Item.ImgPath)
         newInventoryItems = {}

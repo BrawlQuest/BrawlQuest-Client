@@ -120,9 +120,11 @@ function updateLoot(dt)
                 xpSfx:setPitch(1 + (player.xp/100))
                 xpSfx:setPosition(v.x, v.y)
                 xpSfx:setRolloff(sfxRolloff)
+                setEnvironmentEffects(xpSfx)
                 xpSfx:play()
             else
                 lootSfx:stop()
+                setEnvironmentEffects(lootSfx)
                 lootSfx:play()
             end
             player.xp = player.xp + 1

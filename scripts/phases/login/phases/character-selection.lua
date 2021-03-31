@@ -337,7 +337,6 @@ function transitionToPhaseGame()
        c, h = http.request{url = api.url.."/world", method="GET", sink=ltn12.sink.table(b)}
         if b[1] then
             world = json:decode(table.concat(b))
-
             awakeSfx:play()
             love.graphics.setBackgroundColor(0, 0, 0)
             phase = "game"

@@ -2,6 +2,25 @@ sfxr = require("scripts.libraries.sfxr")
 
 function initSFX()
 
+    if love.audio.isEffectsSupported() then 
+        sfx = {
+            genRev = {
+                enabled = true,
+                action = function() love.audio.setEffect("genRev", {type = "reverb", gain = 0.3, decaytime = 1, highgain = 0.4, decayhighratio = 0.4, roomrolloff = 0.2, airabsorption = 0,}) end },
+            caveRev = {
+                enabled = true,
+                action = function() love.audio.setEffect("caveRev", {type = "reverb", decaytime = 3, highgain = 0.5, decayhighratio = 0.2,}) end },
+            elodineRev = {
+                enabled = true,
+                action = function() love.audio.setEffect("elodineRev", {type = "reverb", decaytime = 500, airabsorption = 10,}) end },
+            elodineFlange = {
+                enabled = true,
+                action = function() love.audio.setEffect("elodineFlange", {type = "echo", damping = 0.5, delay = 1, feedback = 0.3, spread = 0.3,}) end },
+        }
+    end
+
+    for key,v in next, sfx do v.action() end -- init sfx
+
     sfxRolloff = 0.5
     love.audio.setDistanceModel("exponent")
 
@@ -107,6 +126,7 @@ function playFootstepSound(v, x, y)
     stepSfx:setPitch(love.math.random(85,200)/100)
     stepSfx:setVolume(0.5 * sfxVolume)
     stepSfx:setRelative(true)
+    setEnvironmentEffects(stepSfx)
     stepSfx:play()
 end
 
@@ -121,4 +141,26 @@ function generateNoise(tab)
         return love.audio.newSource(soundData, "stream")
     end
     -- source:play()
+end
+
+local tileName = "Squall's End"
+
+function setEnvironmentEffects(sound)
+    local x,y = 0,0
+    setEffect(sound, "genRev", true)
+    if worldLookup[player.x] and worldLookup[player.x][player.y] then
+        if not math.match(worldLookup[player.x][player.y].Name, {"", "Spooky Forest",}) then tileName = worldLookup[player.x][player.y].Name end
+        print(tileName)
+        setEffect(sound, "elodineFlange", math.match(tileName, {"Elodine's Gift",}))
+        setEffect(sound, "elodineRev", math.match(tileName, {"Elodine's Gift",}))
+        setEffect(sound, "caveRev", math.match(tileName, {"Shieldbreak Mine", "Shieldbreak", "The Permafrost Mines"}))
+    end
+end
+
+function setEffect(sound, effect, bool)
+    if love.audio.isEffectsSupported() then
+        local v = sfx[effect]
+        if bool then if not sfx[effect].enabled then sfx[effect].action() end sound:setEffect(effect)
+        else sfx[effect].enabled = love.audio.setEffect(effect, false) end
+    end
 end

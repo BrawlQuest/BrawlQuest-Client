@@ -113,9 +113,9 @@ function love.load()
     initHUD()
     initLeaves()
     initSettings()
+    initSFX()
     loadMusic()
     initEditWorld()
-    initSFX()
     initTargeting()
     initEvents()
     initCamera()
@@ -362,6 +362,7 @@ function love.update(dt)
                         if death.previousPosition.hp < getMaxHealth() * 0.9 then
                             death.open = true
                             totalCoverAlpha = 2
+                            setEnvironmentEffects(awakeSfx)
                             awakeSfx:play()
                         else
                             player.dx = me.X * 32
@@ -385,6 +386,7 @@ function love.update(dt)
                             if player.lvl ~= 0 then
                                 openTutorial(6)
                             end
+                            setEnvironmentEffects(lvlSfx)
                             lvlSfx:play()
                             perks.stats[4] = player.cp
                             addFloat("level", player.dx + 16, player.dy + 16, null, {1,0,0}, 10)

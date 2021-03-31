@@ -78,7 +78,8 @@ function updateWeather(dt)
             weather.alpha = 1
         end
         if not weather.sound.rain:isPlaying() then
-            weather.sound.rain:play() 
+            setEnvironmentEffects(weather.sound.rain)
+            weather.sound.rain:play()
         end
         if weather.sound.rain:getVolume() < sfxVolume then
             weather.sound.rain:setVolume(weather.sound.rain:getVolume()+1*dt)
