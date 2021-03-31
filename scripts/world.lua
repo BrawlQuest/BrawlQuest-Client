@@ -54,7 +54,7 @@ function createWorld()
         elseif isTileType(v.GroundTile, "Murky") then
             addLeaf(v.X*32, v.Y*32+16, "murky")
         end
-
+      
     end
 
     for key, v in next, worldCanvas do
