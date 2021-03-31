@@ -268,3 +268,16 @@ function panelMovement(dt, table, dir, ID, speed)
         end
     end
 end
+
+soundStore = {}
+
+function playSoundIfExists(path)
+    if not soundStore[path] then
+        if love.filesystem.getInfo(path) then
+            soundStore[path] = love.audio.newSource(path, "static")
+            love.audio.play(soundStore[path])
+        end
+    else
+        love.audio.play(soundStore[path])
+    end
+end

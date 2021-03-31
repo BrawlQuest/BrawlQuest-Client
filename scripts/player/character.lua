@@ -217,6 +217,10 @@ function movePlayer(dt)
         if worldLookup[player.x] and worldLookup[player.x][player.y] and worldLookup[player.x][player.y].ForegroundTile and worldLookup[player.x][player.y].GroundTile and (isTileType(worldLookup[player.x][player.y].ForegroundTile, "Path") or isTileType(worldLookup[player.x][player.y].GroundTile, "Path")) then
             speed = speed * 1.4
         end
+        if me.ActiveSpell and me.ActiveSpell.Name == "Whirlwind" then
+            addSparkles(player.dx + 16, player.dy + 16, 5, 30, 20)
+            speed = 240
+        end
 
         if not death.open then
             local x,y = player.x * 32, player.y * 32
