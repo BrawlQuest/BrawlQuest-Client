@@ -276,10 +276,9 @@ function drawBattlebarItem(thisX, thisY, item, stats)
 		-- if v.Color ~= null then love.graphics.setColor(unpack(me.Color)) end
 		love.graphics.draw(playerImg, thisX + 4, thisY + 4)
 		love.graphics.setColor(1,1,1,1)
-        for i, vb in ipairs(armourHub.titles) do
-            if me and me[vb.v] then
-                drawItemIfExists(me[vb.v].ImgPath, thisX + 4, thisY + 4)
-            end
+        for i = #armourHub.titles, 1, -1 do
+            local vb = armourHub.titles[i]
+            if me and me[vb.v] then drawItemIfExists(me[vb.v].ImgPath, thisX + 4, thisY + 4) end
         end
     elseif item == "hold" then
         love.graphics.print(boolToString(holdAttack), characterHub.nameFont, thisX+(w / 2)-(characterHub.nameFont:getWidth(stats)/2), thisY + 16)

@@ -6,7 +6,7 @@ function initSFX()
         sfx = {
             genRev = {
                 enabled = true,
-                action = function() love.audio.setEffect("genRev", {type = "reverb", gain = 0.3, decaytime = 1, highgain = 0.4, decayhighratio = 0.4, roomrolloff = 0.2, airabsorption = 0,}) end },
+                action = function() love.audio.setEffect("genRev", {type = "reverb", gain = 0.3, decaytime = 0.5, highgain = 0.4, decayhighratio = 0.4, roomrolloff = 0.2, airabsorption = 0,}) end },
             caveRev = {
                 enabled = true,
                 action = function() love.audio.setEffect("caveRev", {type = "reverb", decaytime = 3, highgain = 0.5, decayhighratio = 0.2,}) end },
@@ -15,13 +15,13 @@ function initSFX()
                 action = function() love.audio.setEffect("elodineRev", {type = "reverb", decaytime = 500, airabsorption = 10,}) end },
             elodineFlange = {
                 enabled = true,
-                action = function() love.audio.setEffect("elodineFlange", {type = "echo", damping = 0.5, delay = 1, feedback = 0.3, spread = 0.3,}) end },
+                action = function() love.audio.setEffect("elodineFlange", {type = "echo", damping = 0.7, delay = 0.2, feedback = 0.8, spread = 0.3,}) end },
         }
     end
 
     for key,v in next, sfx do v.action() end -- init sfx
 
-    sfxRolloff = 0.5
+    sfxRolloff = 0.3
     love.audio.setDistanceModel("exponent")
 
     previousSFXVolume = sfxVolume
@@ -30,7 +30,6 @@ function initSFX()
 
     stepSfx = love.audio.newSource("assets/sfx/step/grass.ogg", "static")
     xpSfx = love.audio.newSource("assets/sfx/xp.ogg", "static")
-    xpSfx:setVolume(0.4*sfxVolume)
 
     lvlSfx = love.audio.newSource("assets/sfx/player/level.ogg", "static")
 
@@ -91,7 +90,7 @@ function setSFXVolumes()
     crafting.sfx:setVolume(1 * sfxVolume)
     crafting.swing:setVolume(1 * sfxVolume)
     lvlSfx:setVolume(0.6 * sfxVolume)
-    lootSfx:setVolume(0.7 * sfxVolume)
+    lootSfx:setVolume(0.5 * sfxVolume)
     shieldUpSfx:setVolume(0.4 * sfxVolume)
     shieldDownSfx:setVolume(0.4 * sfxVolume)
     xpSfx:setVolume(0.5 * sfxVolume)
@@ -150,7 +149,7 @@ function setEnvironmentEffects(sound)
     setEffect(sound, "genRev", true)
     if worldLookup[player.x] and worldLookup[player.x][player.y] then
         if not math.match(worldLookup[player.x][player.y].Name, {"", "Spooky Forest",}) then tileName = worldLookup[player.x][player.y].Name end
-        print(tileName)
+        -- print(tileName)
         setEffect(sound, "elodineFlange", math.match(tileName, {"Elodine's Gift",}))
         setEffect(sound, "elodineRev", math.match(tileName, {"Elodine's Gift",}))
         setEffect(sound, "caveRev", math.match(tileName, {"Shieldbreak Mine", "Shieldbreak", "The Permafrost Mines"}))
