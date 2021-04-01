@@ -60,6 +60,13 @@ function drawItemIfExists(path, x, y, previousDirection, direction, imageScale, 
         else itemImg[path] = love.graphics.newImage("assets/error.png") end
     end
 
+    if itemImg[path]:getWidth() > 32 then
+        x = x - (itemImg[path]:getWidth()-32)
+    end
+    if itemImg[path]:getHeight() > 32 then
+        y = y - (itemImg[path]:getHeight()-32)
+    end
+
     if stencil then
         love.graphics.draw(itemImg[path], stencil, x + offsetX, y, 0, direction * imageScale, imageScale)
     else
