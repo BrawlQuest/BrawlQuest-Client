@@ -99,7 +99,7 @@ function drawLogin()
         elseif loginPhase == "loading" then drawLoadingText(loadingText)
         elseif loginPhase == "characters" then drawCharacterSelection()
         elseif loginPhase == "creation" then drawCreationPhase()
-        elseif loginPhase == "loadingWorld" then drawLoadingText(worldLoadingText)
+        elseif loginPhase == "loadingWorld" then drawLoadingText(worldLoadingText.."\n\n"..#worldLookup)
         elseif loginPhase == "server" then drawServerPhase() end
         love.graphics.setColor(1,1,1)
         for i, v in ipairs(loginText) do love.graphics.print(v, playerNameFont, 10, 10 + ((playerNameFont:getHeight() + 2) * (i-1)), 0, 1) end

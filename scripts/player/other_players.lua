@@ -37,13 +37,15 @@ function drawCharacter(v, x, y, ad)
         if ad and ad.previousDirection and ad.previousDirection == "right" then
             direction, offsetX, mountOffsetX = 1,0,0
         elseif ad and ad.previousDirection and ad.previousDirection == "left" then
-            direction, offsetX, mountOffsetX = -1,32,getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"):getWidth() - 8
+            direction, offsetX, mountOffsetX = -1,32,getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"):getWidth() - 11
         end
 
         love.graphics.setColor(1,1,1)
         drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,"/back.png")
         
-        if notBoat then
+        if v.ActiveSpell and v.ActiveSpell.Name ~= "" and v.ActiveSpell.Name ~= "None" then
+            love.graphics.draw(getImgIfNotExist("assets/auras/full/"..v.ActiveSpell.Name..".png"), x,y)
+        elseif notBoat then
             love.graphics.setColor(1,1,1)
             drawBuddy(v)
             if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) end

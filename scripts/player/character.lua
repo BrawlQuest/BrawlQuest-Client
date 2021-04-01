@@ -60,6 +60,13 @@ function drawItemIfExists(path, x, y, previousDirection, direction, imageScale, 
         else itemImg[path] = love.graphics.newImage("assets/error.png") end
     end
 
+    if itemImg[path]:getWidth() > 32 then
+        x = x - (itemImg[path]:getWidth()-32)
+    end
+    if itemImg[path]:getHeight() > 32 then
+        y = y - (itemImg[path]:getHeight()-32)
+    end
+
     if stencil then
         love.graphics.draw(itemImg[path], stencil, x + offsetX, y, 0, direction * imageScale, imageScale)
     else
@@ -216,6 +223,10 @@ function movePlayer(dt)
         end
         if worldLookup[player.x] and worldLookup[player.x][player.y] and worldLookup[player.x][player.y].ForegroundTile and worldLookup[player.x][player.y].GroundTile and (isTileType(worldLookup[player.x][player.y].ForegroundTile, "Path") or isTileType(worldLookup[player.x][player.y].GroundTile, "Path")) then
             speed = speed * 1.4
+        end
+        if me.ActiveSpell and me.ActiveSpell.Name == "Whirlwind" then
+            addSparkles(player.dx + 16, player.dy + 16, 5, 30, 20)
+            speed = 240
         end
 
         if not death.open then
