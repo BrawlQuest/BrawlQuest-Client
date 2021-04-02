@@ -15,7 +15,7 @@ function initSFX()
                 action = function() love.audio.setEffect("elodineRev", {type = "reverb", decaytime = 500, airabsorption = 10,}) end },
             elodineFlange = {
                 enabled = true,
-                action = function() love.audio.setEffect("elodineFlange", {type = "echo", damping = 0.7, delay = 0.2, feedback = 0.8, spread = 0.3,}) end },
+                action = function() love.audio.setEffect("elodineFlange", {type = "echo", damping = 0.4, delay = 0.4, feedback = 0.4, spread = 0.2,}) end },
         }
     end
 
@@ -148,11 +148,11 @@ function setEnvironmentEffects(sound)
     local x,y = 0,0
     setEffect(sound, "genRev", true)
     if worldLookup[player.x] and worldLookup[player.x][player.y] then
-        if not math.match(worldLookup[player.x][player.y].Name, {"", "Spooky Forest",}) then tileName = worldLookup[player.x][player.y].Name end
+        if not orCalc(worldLookup[player.x][player.y].Name, {"", "Spooky Forest",}) then tileName = worldLookup[player.x][player.y].Name end
         -- print(tileName)
-        setEffect(sound, "elodineFlange", math.match(tileName, {"Elodine's Gift",}))
-        setEffect(sound, "elodineRev", math.match(tileName, {"Elodine's Gift",}))
-        setEffect(sound, "caveRev", math.match(tileName, {"Shieldbreak Mine", "Shieldbreak", "The Permafrost Mines"}))
+        setEffect(sound, "elodineFlange", orCalc(tileName, {"Elodine's Gift",}))
+        setEffect(sound, "elodineRev", orCalc(tileName, {"Elodine's Gift",}))
+        setEffect(sound, "caveRev", orCalc(tileName, {"Shieldbreak Mine", "Shieldbreak", "The Permafrost Mines"}))
     end
 end
 

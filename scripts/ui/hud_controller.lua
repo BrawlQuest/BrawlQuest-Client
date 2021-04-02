@@ -21,6 +21,7 @@ function initHUD()
     previousWorldScale = 4
     worldScaleAmount = 1
     worldScaleSmoothing = false
+    uiOpen = false
 
     skull = love.graphics.newImage("assets/monsters/effects/skull.png")
 
@@ -140,6 +141,8 @@ function updateHUD( dt )
         updateQuestHub(dt)
         updateCrafting(dt) -- fine
         if showChat then updateChat(dt) end
+
+        if orCalc(true, {crafting.open, not inventory.notNPC, forging.open, settPan.opacity > 0}) then uiOpen = true else uiOpen = false end
     end
 
     updateFloats(dt)

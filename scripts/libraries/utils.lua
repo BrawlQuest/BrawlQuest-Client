@@ -57,12 +57,17 @@ drawVar()
 addVar()
 ]]
 
-function math.match(val, tab) -- compares a value to a table of items
+function orCalc(val, tab) -- compares a value to a table of items
     local output = false
     for i,v in ipairs(tab) do if v == val then output = true break end end
     return output
 end
 
+function andCalc(val, tab) -- compares a value to a table of items
+    local count = 0
+    for i,v in ipairs(tab) do if v == val then count = count + 1 end end
+    if count == #tab then return true else return false end
+end
 
 function getImgIfNotExist(v)
     if not worldImg[v] then
