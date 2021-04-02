@@ -118,11 +118,13 @@ function updateLoot(dt)
             if v.type == "xp" then
                 xpSfx:stop()
                 xpSfx:setPitch(1 + (player.xp/100))
-                xpSfx:setPosition(v.x, v.y)
-                xpSfx:setRolloff(sfxRolloff)
+                xpSfx:setRelative(true)
+                setEnvironmentEffects(xpSfx)
                 xpSfx:play()
             else
                 lootSfx:stop()
+                setEnvironmentEffects(lootSfx)
+                -- lootSfx:setRolloff(sfxRolloff)
                 lootSfx:play()
             end
             player.xp = player.xp + 1

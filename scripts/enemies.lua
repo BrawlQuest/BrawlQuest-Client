@@ -124,6 +124,7 @@ function newEnemyData(data) -- called when nearby data is returned
                     enemyHitSfx:setVolume(1 * sfxVolume)
                     enemyHitSfx:setPosition(v.X, v.Y)
                     enemyHitSfx:setRolloff(sfxRolloff)
+                    setEnvironmentEffects(enemyHitSfx)
                     enemyHitSfx:play()
                     enemy.red = 1
                 end
@@ -157,6 +158,7 @@ function newEnemyData(data) -- called when nearby data is returned
                     aggroSfx:setPosition(v.X, v.Y)
                     aggroSfx:setRolloff(sfxRolloff)
                 end
+                setEnvironmentEffects(aggroSfx)
                 aggroSfx:play()
             end
         end
@@ -293,6 +295,7 @@ function drawEnemies()
                     deathSound:setPosition(v.dx / 32, v.dy / 32)
                     deathSound:setRolloff(sfxRolloff)
                 end
+                setEnvironmentEffects(deathSound)
                 deathSound:play()
                 if v.Enemy.Name == "Fire Phoenix" then
                     steam.userStats.setAchievement('kill_phoenix_achievement')

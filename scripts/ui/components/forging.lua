@@ -64,6 +64,7 @@ function updateForging(dt)
         f.a = f.a + 0.35 * dt
         if f.a >= 1 then -- end forging
             forgingPush:stop()
+            setEnvironmentEffects(forgingPop)
             forgingPop:play()
             for i,v in ipairs(f.enteredItems) do
                 c, h = http.request {
@@ -190,7 +191,7 @@ end
 function smeltOres()
     local f = forging
     f.forging = true
-  
+    setEnvironmentEffects(forgingPush)
     forgingPush:play()
 end
 

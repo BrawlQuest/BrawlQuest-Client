@@ -2,7 +2,26 @@ sfxr = require("scripts.libraries.sfxr")
 
 function initSFX()
 
-    sfxRolloff = 0.5
+    if love.audio.isEffectsSupported() then 
+        sfx = {
+            genRev = {
+                enabled = true,
+                action = function() love.audio.setEffect("genRev", {type = "reverb", gain = 0.3, decaytime = 0.5, highgain = 0.4, decayhighratio = 0.4, roomrolloff = 0.2, airabsorption = 0,}) end },
+            caveRev = {
+                enabled = true,
+                action = function() love.audio.setEffect("caveRev", {type = "reverb", decaytime = 3, highgain = 0.5, decayhighratio = 0.2,}) end },
+            elodineRev = {
+                enabled = true,
+                action = function() love.audio.setEffect("elodineRev", {type = "reverb", decaytime = 500, airabsorption = 10,}) end },
+            elodineFlange = {
+                enabled = true,
+                action = function() love.audio.setEffect("elodineFlange", {type = "echo", damping = 0.4, delay = 0.4, feedback = 0.4, spread = 0.2,}) end },
+        }
+    end
+
+    for key,v in next, sfx do v.action() end -- init sfx
+
+    sfxRolloff = 0.3
     love.audio.setDistanceModel("exponent")
 
     previousSFXVolume = sfxVolume
@@ -11,7 +30,6 @@ function initSFX()
 
     stepSfx = love.audio.newSource("assets/sfx/step/grass.ogg", "static")
     xpSfx = love.audio.newSource("assets/sfx/xp.ogg", "static")
-    xpSfx:setVolume(0.4*sfxVolume)
 
     lvlSfx = love.audio.newSource("assets/sfx/player/level.ogg", "static")
 
@@ -72,10 +90,10 @@ function setSFXVolumes()
     crafting.sfx:setVolume(1 * sfxVolume)
     crafting.swing:setVolume(1 * sfxVolume)
     lvlSfx:setVolume(0.6 * sfxVolume)
-    lootSfx:setVolume(0.7 * sfxVolume)
+    lootSfx:setVolume(0.5 * sfxVolume)
     shieldUpSfx:setVolume(0.4 * sfxVolume)
     shieldDownSfx:setVolume(0.4 * sfxVolume)
-    xpSfx:setVolume(0.5 * sfxVolume)
+    xpSfx:setVolume(0.7 * sfxVolume)
     awakeSfx:setVolume(0.3 * sfxVolume)
     critHitSfx:setVolume(1 * sfxVolume)
     enemyHitSfx:setVolume(1 * sfxVolume)
@@ -107,6 +125,7 @@ function playFootstepSound(v, x, y)
     stepSfx:setPitch(love.math.random(85,200)/100)
     stepSfx:setVolume(0.5 * sfxVolume)
     stepSfx:setRelative(true)
+    setEnvironmentEffects(stepSfx)
     stepSfx:play()
 end
 
@@ -121,4 +140,26 @@ function generateNoise(tab)
         return love.audio.newSource(soundData, "stream")
     end
     -- source:play()
+end
+
+local tileName = "Squall's End"
+
+function setEnvironmentEffects(sound)
+    local x,y = 0,0
+    setEffect(sound, "genRev", true)
+    if worldLookup[player.x] and worldLookup[player.x][player.y] then
+        if not orCalc(worldLookup[player.x][player.y].Name, {"", "Spooky Forest",}) then tileName = worldLookup[player.x][player.y].Name end
+        -- print(tileName)
+        setEffect(sound, "elodineFlange", orCalc(tileName, {"Elodine's Gift",}))
+        setEffect(sound, "elodineRev", orCalc(tileName, {"Elodine's Gift",}))
+        setEffect(sound, "caveRev", orCalc(tileName, {"Shieldbreak Mine", "Shieldbreak", "The Permafrost Mines"}))
+    end
+end
+
+function setEffect(sound, effect, bool)
+    if love.audio.isEffectsSupported() then
+        local v = sfx[effect]
+        if bool then if not sfx[effect].enabled then sfx[effect].action() end sound:setEffect(effect)
+        else sfx[effect].enabled = love.audio.setEffect(effect, false) end
+    end
 end

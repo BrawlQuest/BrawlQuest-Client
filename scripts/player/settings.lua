@@ -32,7 +32,7 @@ function initSettings()
     displayWidth, displayHeight = love.window.getDesktopDimensions(display)
     screenDimensions = {width = displayWidth * 0.8, height =  displayHeight * 0.8,}
     window = {x = displayWidth * 0.1, y = displayHeight * 0.1}
-    vsync = false
+    vsync = true
     showChat = true
     openUiOnHover = true
     openInventoryOnHover = true

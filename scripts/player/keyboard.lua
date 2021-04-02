@@ -37,7 +37,7 @@ function checkKeyPressedPhaseGame(key)
         checkHotbarKeyPressed(key)
         checkTargetingPress(key)
         if key == "return" and not isSettingsWindowOpen then isTypingInChat = true end
-        if me and me.ShieldID ~= 0 and key == keybinds.SHIELD then shieldUpSfx:setRelative(true) shieldUpSfx:play() end
+        if me and me.ShieldID ~= 0 and key == keybinds.SHIELD then shieldUpSfx:setRelative(true) setEnvironmentEffects(shieldUpSfx) shieldUpSfx:play() end
         if key == "escape" then
             settPan.movement.x, settPan.movement.y = 0, 0
             isSettingsWindowOpen = true
@@ -91,7 +91,7 @@ end
 function love.keyreleased(key)
     if phase == "game" then
         if checkAttack(key) then checkTargetingRelease(key) end
-        if me and me.ShieldID ~= 0 and key == keybinds.SHIELD and not isTypingInChat and not worldEdit.isTyping then shieldDownSfx:setRelative(true) shieldDownSfx:play() end
+        if me and me.ShieldID ~= 0 and key == keybinds.SHIELD and not isTypingInChat and not worldEdit.isTyping then shieldDownSfx:setRelative(true) setEnvironmentEffects(shieldDownSfx) shieldDownSfx:play() end
     end
 end
 

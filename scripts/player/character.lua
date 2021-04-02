@@ -319,9 +319,15 @@ function updateInventory(response)
         enemyHitSfx:setPosition(player.x, player.y)
         enemyHitSfx:setRolloff(sfxRolloff)
         enemyHitSfx:setRelative(false)
+        setEnvironmentEffects(enemyHitSfx)
         enemyHitSfx:play()
         burstLoot((player.x*32)-16, (player.y*32)-16, k.Inventory.Amount, k.Item.ImgPath)
         newInventoryItems = {}
     end
     getInventory()
+end
+
+function holdingStaff()
+    if me and me.Weapon and string.find(me.Weapon.Name, "Staff") then return true
+    else return false end
 end

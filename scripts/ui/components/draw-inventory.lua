@@ -136,6 +136,12 @@ function drawSpellcooldown(item, thisX, thisY)
 end
 
 function drawItem(x,y,item,number)
+    if string.sub(item.Type, 1, 4) == "arm_" then
+        love.graphics.setColor(1,1,1,0.5)
+        love.graphics.draw(playerImg, x + 2, y + 2)
+        love.graphics.setColor(1,1,1,1)
+    end
+
     if number then drawItemImageHotbar(x,y,item,number) else drawItemImage(x,y,item) end
     if item.Enchantment ~= "None" then
         love.graphics.push()
@@ -152,11 +158,7 @@ end
 
 function drawItemImage(x,y,item)
     itemImg[item.ImgPath] = getImgIfNotExist(item.ImgPath)
-    if string.sub(item.Type, 1, 4) == "arm_" then
-        love.graphics.setColor(1,1,1,0.5)
-        love.graphics.draw(playerImg, x + 2, y + 2)
-        love.graphics.setColor(1,1,1,1)
-    end
+
   
     if inventory.usedItemThisTick then
         love.graphics.setColor(1,1,1,0.4)

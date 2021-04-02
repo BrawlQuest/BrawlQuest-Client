@@ -71,6 +71,7 @@ function playAmbience(v)
     playingAmbience[v.x..","..v.y]:setPosition(v.x/32,v.y/32)
     playingAmbience[v.x..","..v.y]:setRolloff(1)
     playingAmbience[v.x..","..v.y]:setVolume(sfxVolume*0.3)
+    setEnvironmentEffects(playingAmbience[v.x..","..v.y])
     playingAmbience[v.x..","..v.y]:play()
     playedThisTick[#playedThisTick+1] = v.sound
 end
