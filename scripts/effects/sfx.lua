@@ -145,15 +145,15 @@ end
 local tileName = "Squall's End"
 
 function setEnvironmentEffects(sound)
-    local x,y = 0,0
-    setEffect(sound, "genRev", true)
-    if worldLookup[player.x] and worldLookup[player.x][player.y] then
-        if not orCalc(worldLookup[player.x][player.y].Name, {"", "Spooky Forest",}) then tileName = worldLookup[player.x][player.y].Name end
-        -- print(tileName)
-      --  setEffect(sound, "elodineFlange", orCalc(tileName, {"Elodine's Gift",}))
-      --  setEffect(sound, "elodineRev", orCalc(tileName, {"Elodine's Gift",}))
-        setEffect(sound, "caveRev", orCalc(tileName, {"Shieldbreak Mine", "Shieldbreak", "The Permafrost Mines"}))
-    end
+--     local x,y = 0,0
+-- --  setEffect(sound, "genRev", true)
+--     if worldLookup[player.x] and worldLookup[player.x][player.y] then
+--         if not orCalc(worldLookup[player.x][player.y].Name, {"", "Spooky Forest",}) then tileName = worldLookup[player.x][player.y].Name end
+--         -- print(tileName)
+--       --  setEffect(sound, "elodineFlange", orCalc(tileName, {"Elodine's Gift",}))
+--       --  setEffect(sound, "elodineRev", orCalc(tileName, {"Elodine's Gift",}))
+--       --  setEffect(sound, "caveRev", orCalc(tileName, {"Shieldbreak Mine", "Shieldbreak", "The Permafrost Mines"}))
+--     end
 end
 
 function setEffect(sound, effect, bool)

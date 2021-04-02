@@ -292,7 +292,7 @@ function playSoundIfExists(path)
         end
     else
         soundStore[path]:setPosition(player.dx/32,player.dy/32)
-        oundStore[path]:setVolume(sfxVolume)
+        soundStore[path]:setVolume(sfxVolume)
         love.audio.play(soundStore[path])
     end
 end
