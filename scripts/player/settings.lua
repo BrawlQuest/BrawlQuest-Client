@@ -89,7 +89,7 @@ function initSettings()
         selKeybindCount = 0,
         currentKeybind = 0,
         previousKeybind = 0,
-        keybinds = {title = "Keybinds", reset = false, v = setDefualtKeybinds(),},
+        keybinds = {title = "Keybinds", reset = false, v = setDefaultKeybinds(),},
     }
 
     settings = {
@@ -153,7 +153,7 @@ function writeSettings()
     }))
 end
 
-function setDefualtKeybinds()
+function setDefaultKeybinds()
     return {
         {name = "UP", v = keybinds.UP, sel = false,},
         {name = "DOWN", v = keybinds.DOWN, sel = false,},
@@ -219,7 +219,7 @@ function checkSettingsMousePressed(button)
 
         if controls.keybinds.reset == true then
             keybinds = copy(defaultKeybinds)
-            controls.keybinds.v = setDefualtKeybinds()
+            controls.keybinds.v = setDefaultKeybinds()
         end
     end
 

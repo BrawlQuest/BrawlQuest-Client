@@ -10,12 +10,12 @@ function initSFX()
             caveRev = {
                 enabled = true,
                 action = function() love.audio.setEffect("caveRev", {type = "reverb", decaytime = 3, highgain = 0.5, decayhighratio = 0.2,}) end },
-            elodineRev = {
-                enabled = true,
-                action = function() love.audio.setEffect("elodineRev", {type = "reverb", decaytime = 500, airabsorption = 10,}) end },
-            elodineFlange = {
-                enabled = true,
-                action = function() love.audio.setEffect("elodineFlange", {type = "echo", damping = 0.4, delay = 0.4, feedback = 0.4, spread = 0.2,}) end },
+            -- elodineRev = {
+            --     enabled = true,
+            --     action = function() love.audio.setEffect("elodineRev", {type = "reverb", decaytime = 500, airabsorption = 10,}) end },
+            -- elodineFlange = {
+            --     enabled = true,
+            --     action = function() love.audio.setEffect("elodineFlange", {type = "echo", damping = 0.4, delay = 0.4, feedback = 0.4, spread = 0.2,}) end },
         }
     end
 
@@ -145,15 +145,12 @@ end
 local tileName = "Squall's End"
 
 function setEnvironmentEffects(sound)
---     local x,y = 0,0
--- --  setEffect(sound, "genRev", true)
---     if worldLookup[player.x] and worldLookup[player.x][player.y] then
---         if not orCalc(worldLookup[player.x][player.y].Name, {"", "Spooky Forest",}) then tileName = worldLookup[player.x][player.y].Name end
---         -- print(tileName)
---       --  setEffect(sound, "elodineFlange", orCalc(tileName, {"Elodine's Gift",}))
---       --  setEffect(sound, "elodineRev", orCalc(tileName, {"Elodine's Gift",}))
---       --  setEffect(sound, "caveRev", orCalc(tileName, {"Shieldbreak Mine", "Shieldbreak", "The Permafrost Mines"}))
---     end
+    local x,y = 0,0
+    setEffect(sound, "genRev", true)
+    if worldLookup[player.x] and worldLookup[player.x][player.y] then
+        if not orCalc(worldLookup[player.x][player.y].Name, {"", "Spooky Forest",}) then tileName = worldLookup[player.x][player.y].Name end
+        setEffect(sound, "caveRev", orCalc(tileName, {"Shieldbreak Mine", "Shieldbreak", "The Permafrost Mines"}))
+    end
 end
 
 function setEffect(sound, effect, bool)
