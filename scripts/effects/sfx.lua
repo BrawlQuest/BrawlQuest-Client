@@ -150,7 +150,7 @@ function setEnvironmentEffects(sound)
     if worldLookup[player.x] and worldLookup[player.x][player.y] then
         if not orCalc(worldLookup[player.x][player.y].Name, {"", "Spooky Forest",}) then tileName = worldLookup[player.x][player.y].Name end
         -- print(tileName)
-        setEffect(sound, "elodineFlange", orCalc(tileName, {"Elodine's Gift",}))
+      --  setEffect(sound, "elodineFlange", orCalc(tileName, {"Elodine's Gift",}))
         setEffect(sound, "elodineRev", orCalc(tileName, {"Elodine's Gift",}))
         setEffect(sound, "caveRev", orCalc(tileName, {"Shieldbreak Mine", "Shieldbreak", "The Permafrost Mines"}))
     end
