@@ -150,7 +150,7 @@ function worldCollison(x, y)
             output = true
         end
     end
-     if enemyCollisions[x] and enemyCollisions[x][y] == true then
+     if enemyCollisions[x] and enemyCollisions[x][y] == true and me and me.Invulnerability < 0 then
         output = true
     end
     return output

@@ -275,9 +275,11 @@ function playSoundIfExists(path)
     if not soundStore[path] then
         if love.filesystem.getInfo(path) then
             soundStore[path] = love.audio.newSource(path, "static")
+            soundStore[path]:setPosition(player.dx/32,player.dy/32)
             love.audio.play(soundStore[path])
         end
     else
+        soundStore[path]:setPosition(player.dx/32,player.dy/32)
         love.audio.play(soundStore[path])
     end
 end
