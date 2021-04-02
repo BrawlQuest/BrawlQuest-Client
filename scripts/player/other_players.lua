@@ -63,7 +63,7 @@ function drawCharacter(v, x, y, ad)
             drawArmourImage(x,y,v,ad,"HeadArmour")
             love.graphics.setColor(1,1,1)
             drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,"/fore.png")
-            if v.IsShield and v.ShieldID ~= 0 and notBoat then drawArmourImage(x,y,v,ad,"Shield",direction) end
+            if v.IsShield and v.ShieldID ~= 0 and notBoat then drawArmourImage(x+12,y,v,ad,"Shield",direction) end
         end
 
         -- drawRangedWeaponEffects(v, x, y)
@@ -109,6 +109,9 @@ end
 function drawArmourImage(x,y,v,ad,type,direction)
     if v[type.."ID"] ~= 0 then
         if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) else love.graphics.setColor(1, 1, 1) end
+        if v.Invulnerability >= 0 then
+            love.graphics.setColor(1,1,1,0.3)
+        end
         if type ~= "ShieldFalse" then drawItemIfExists(v[type].ImgPath, x, y, ad.previousDirection) else love.graphics.draw(shieldFalse, x, y, 0, direction, 1) end
         if v[type] and v[type].Enchantment ~= "None" then
             love.graphics.push()

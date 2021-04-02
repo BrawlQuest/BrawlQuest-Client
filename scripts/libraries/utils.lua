@@ -276,10 +276,12 @@ function playSoundIfExists(path)
         if love.filesystem.getInfo(path) then
             soundStore[path] = love.audio.newSource(path, "static")
             soundStore[path]:setPosition(player.dx/32,player.dy/32)
+            soundStore[path]:setVolume(sfxVolume)
             love.audio.play(soundStore[path])
         end
     else
         soundStore[path]:setPosition(player.dx/32,player.dy/32)
+        oundStore[path]:setVolume(sfxVolume)
         love.audio.play(soundStore[path])
     end
 end

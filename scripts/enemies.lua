@@ -28,13 +28,17 @@ function newEnemyData(data) -- called when nearby data is returned
     enemiesInAggro = 0
     enemyCollisions = copy(enemyCollisionsPrevious[enemyCollisionsI])
 
+    for i, v in ipairs(enemies) do
+        enemies[i].updated = false
+    end
+
     for i, v in ipairs(data) do
-        local id = v.ID
-        local enemy = enemies[v.ID]
+        local id = v.InstanceID
+        local enemy = enemies[v.InstanceID]
 
         if not enemy then
-            enemies[v.ID] = v
-            enemy = enemies[v.ID]
+            enemies[v.InstanceID] = v
+            enemy = enemies[v.InstanceID]
             enemy.dx = v.X * 32
             enemy.speed = 32
             enemy.dy = v.Y * 32
@@ -71,8 +75,9 @@ function newEnemyData(data) -- called when nearby data is returned
                         local files = recursiveEnumerate("assets/sfx/monsters/" .. enemy.Enemy.Name .. "/" .. i, {})
                         for k, file in ipairs(files) do
                             --     print("Found "..file)
-                            if explode(file, ".")[#explode(file, ".")] == "ogg" or explode(file, ".")[#explode(file, ".")] == "mp3" or explode(file, ".")[#explode(file, ".")] ==
-                                "wav" then
+                            if explode(file, ".")[#explode(file, ".")] == "ogg" or
+                                explode(file, ".")[#explode(file, ".")] == "mp3" or
+                                explode(file, ".")[#explode(file, ".")] == "wav" then
                                 enemySounds[enemy.Enemy.Name][i][#enemySounds[enemy.Enemy.Name][i] + 1] =
                                     love.audio.newSource(file, "static")
                             end
@@ -158,7 +163,7 @@ function newEnemyData(data) -- called when nearby data is returned
 
         enemy.Target = v.Target
         enemy.TargetName = v.TargetName
-        
+
         enemy.X = v.X
         enemy.Y = v.Y
 
@@ -170,6 +175,8 @@ function newEnemyData(data) -- called when nearby data is returned
         end
 
         enemy.IsAggro = v.IsAggro
+        enemy.updated = true
+        enemy.lastUpdate = os.time(os.date("!*t"))
 
         if v.IsAggro then
             if v.HP > 0 then
@@ -196,6 +203,11 @@ function newEnemyData(data) -- called when nearby data is returned
         enemyCollisionsPrevious[0] = {}
     end
 
+    for i, v in pairs(enemies) do
+        if not v.updated or os.time(os.date("!*t")) - v.lastUpdate < 5 then
+            table.remove(enemies, i)
+        end
+    end
 end
 
 -- print(me.HP / (100 + (15 * me.STA)))
@@ -206,7 +218,7 @@ function drawEnemies()
         local distance = distanceToPoint(player.cx, player.cy, v.dx, v.dy)
         local range = worldMask.range * 32
         if distance <= range then
-            if v.HP > 0 then
+            if v.HP > 0 and v.updated then
                 local intensity = 1 - (range / (range + difference(range, distance) * 4) - 0.2)
                 local rotation = 1
                 local offsetX = 0
@@ -255,14 +267,16 @@ function drawEnemies()
                         enemies[i].linesDrawable = true
                     end
                     if enemies[i].linesDrawable == true and v.IsAggro then
-                        if (v.Enemy.Range+1)*32 >= distanceToPoint(v.dx,v.dy,player.dx,player.dy) then
+                        if (v.Enemy.Range + 1) * 32 >= distanceToPoint(v.dx, v.dy, player.dx, player.dy) then
                             love.graphics.setColor(1, 0, 0, nextTick * intensity)
                             love.graphics.line(v.dx + 16, v.dy + 16, player.dx + 16, player.dy + 16)
                             love.graphics.setColor(1, 1, 1, intensity)
                             if v.Enemy.XP / player.lvl > 1 then
-                                outlinerOnly:draw(2, enemyImg[v.Enemy.Name], enemyQuads[v.Enemy.Name], v.dx + offsetX, v.dy, 0, rotation, 1)
+                                outlinerOnly:draw(2, enemyImg[v.Enemy.Name], enemyQuads[v.Enemy.Name], v.dx + offsetX,
+                                    v.dy, 0, rotation, 1)
                             else
-                                grayOutlinerOnly:draw(2, enemyImg[v.Enemy.Name], enemyQuads[v.Enemy.Name], v.dx + offsetX, v.dy, 0, rotation, 1)
+                                grayOutlinerOnly:draw(2, enemyImg[v.Enemy.Name], enemyQuads[v.Enemy.Name],
+                                    v.dx + offsetX, v.dy, 0, rotation, 1)
                             end
                         end
                     end
@@ -272,7 +286,8 @@ function drawEnemies()
 
             elseif not v.hasBurst then
                 burstLoot(v.dx + 16, v.dy + 16, player.owedxp, "xp")
-                local deathSound = enemySounds[v.Enemy.Name].death[love.math.random(1, #enemySounds[v.Enemy.Name].death)]
+                local deathSound =
+                    enemySounds[v.Enemy.Name].death[love.math.random(1, #enemySounds[v.Enemy.Name].death)]
                 deathSound:setVolume(1 * sfxVolume)
                 if deathSound:getChannelCount() == 1 then
                     deathSound:setPosition(v.dx / 32, v.dy / 32)
@@ -291,9 +306,10 @@ function drawEnemies()
                     steam.userStats.storeStats()
                 end
                 if v.Enemy.Width and v.Enemy.Height then
-                    for a=1,v.Enemy.Width do
-                        for k=1,v.Enemy.Height do
-                            boneSpurt(v.dx + 16 + ((a-1)*32), v.dy + 16 + ((k-1)*32), 10, 25, 1, 1, 1, "mob", v.Enemy.Name)
+                    for a = 1, v.Enemy.Width do
+                        for k = 1, v.Enemy.Height do
+                            boneSpurt(v.dx + 16 + ((a - 1) * 32), v.dy + 16 + ((k - 1) * 32), 10, 25, 1, 1, 1, "mob",
+                                v.Enemy.Name)
                         end
                     end
                 end
