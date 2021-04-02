@@ -182,6 +182,8 @@ function love.draw()
                 end
                 inventory.notNPC = false
                 drawingText = true
+            elseif isNearbyTile("assets/world/objects/Well.png") and not drawingText  then
+                drawTextBelowPlayer("Press "..keybinds.INTERACT.." to Cleanse")
             end
 
             for i,v in ipairs(npcs) do

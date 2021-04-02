@@ -81,6 +81,7 @@ function updateWeather(dt)
             setEnvironmentEffects(weather.sound.rain)
             weather.sound.rain:play()
         end
+        weather.sound.rain:setPosition(player.dx/32,player.dy/32)
         if weather.sound.rain:getVolume() < sfxVolume then
             weather.sound.rain:setVolume(weather.sound.rain:getVolume()+1*dt)
         else

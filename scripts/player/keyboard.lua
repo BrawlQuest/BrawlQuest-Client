@@ -50,7 +50,7 @@ function checkKeyPressedPhaseGame(key)
             writeSettings()
         end
         if key == "'" and versionType == "dev" then worldEdit.open = not worldEdit.open end
-        if key == keybinds.INVENTORY and inventory.notNPC then inventory.forceOpen = not inventory.forceOpen end
+        if key == keybinds.INVENTORY and key ~= keybinds.INTERACT and inventory.notNPC then inventory.forceOpen = not inventory.forceOpen end
         local nearbyAnvil = isNearbyTile("assets/world/objects/Anvil.png")
         if key == keybinds.QUESETS and not nearbyAnvil then questsPanel.forceOpen = not questsPanel.forceOpen end
         if key == keybinds.INTERACT then -- Hello Mr HackerMan! Removing the isNearbyTile will allow you to open the crafting menu from anywhere, but won't allow you to actually craft any items. Sorry! =(
@@ -64,12 +64,22 @@ function checkKeyPressedPhaseGame(key)
                     end
                 end
                 forging.open = true
+            elseif isNearbyTile("assets/world/objects/Well.png") and not drawingText  then
+                c, h = http.request {
+                    url = api.url .. "/cleanse/" .. me.ID,
+                    method = "GET",
+                    headers = {
+                        ["token"] = token
+                    },
+                }
             elseif nearbyAnvil then
                 getRecipesHeight()
                 crafting.open = true
                 steam.friends.setRichPresence("steam_display", "#StatusCrafting")
                 steam.friends.setRichPresence("location", zoneTitle.title)
-                -- inventory.notNPC = true
+              
+            elseif inventory.notNPC then
+                inventory.forceOpen = not inventory.forceOpen
             else
                 startConversation()
             end

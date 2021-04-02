@@ -51,7 +51,12 @@ function drawCharacter(v, x, y, ad)
             if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) end
             if v.ShieldID ~= 0 then drawArmourImage(x + offsetX,y,v,ad,"ShieldFalse",direction) end
             drawWeapon(x,y,v,ad,direction,offsetX)
-            love.graphics.setColor(1,1,1)
+            if v.Invulnerability >= 0 then
+                love.graphics.setColor(1,1,1,0.3)
+            else
+                love.graphics.setColor(1,1,1)
+            end
+           
             love.graphics.draw(playerImg, x + offsetX, y, 0, direction, 1, 0, 0)
             drawArmourImage(x,y,v,ad,"LegArmour")
             drawArmourImage(x,y,v,ad,"ChestArmour")
