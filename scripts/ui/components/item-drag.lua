@@ -48,6 +48,7 @@ function checkItemDragMouseReleased(button)
         writeSettings()
         iD.item = null
         iD.amount = 0
+    elseif iD.item then hotbar[iD.prevI] = {item = null, amount = 0}
     end
     iD.dragging = false
     showMouse = true

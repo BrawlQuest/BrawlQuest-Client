@@ -141,7 +141,6 @@ function updateHUD( dt )
         updateQuestHub(dt)
         updateCrafting(dt) -- fine
         if showChat then updateChat(dt) end
-
         if orCalc(true, {crafting.open, not inventory.notNPC, forging.open, settPan.opacity > 0}) then uiOpen = true else uiOpen = false end
     end
 
