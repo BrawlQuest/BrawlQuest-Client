@@ -72,7 +72,13 @@ function initSettings()
         showHUD = contents["showHUD"] or showHUD
         -- openUiOnHover = contents["openUiOnHover"] or openUiOnHover
         oldTargeting = contents["oldTargeting"] or oldTargeting
-        hotbar = contents["hotbar"] or hotbar
+        if contents["hotbar"] and #contents["hotbar"] ~= 7 then
+            hotbar = hotbar
+        else
+            hotbar = contents["hotbar"] or hotbar
+        end
+        
+      
         openInventoryOnHover = contents["openInventoryOnHover"] or openInventoryOnHover
         openQuestsOnHover = contents["openQuestsOnHover"] or openQuestsOnHover
         if contents["craftingFields"] and #contents["craftingFields"] == #crafting.openField then crafting.openField = contents["craftingFields"] end
