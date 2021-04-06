@@ -12,7 +12,7 @@ function initSFX()
                 action = function() love.audio.setEffect("caveRev", {type = "reverb", decaytime = 3, highgain = 0.5, decayhighratio = 0.2,}) end },
             elodineRev = {
                 enabled = true,
-                action = function() love.audio.setEffect("elodineRev", {type = "reverb", decaytime = 4, airabsorption = 10, highgain = 0.6, density = 0.05}) end },
+                action = function() love.audio.setEffect("elodineRev", {type = "reverb", decaytime = 2, airabsorption = 10, highgain = 0.6, density = 0.05}) end },
             -- elodineFlange = {
             --     enabled = true,
             --     action = function() love.audio.setEffect("elodineFlange", {type = "echo", damping = 0.4, delay = 0.4, feedback = 0.4, spread = 0.2,}) end },

@@ -187,7 +187,7 @@ function checkInventoryMousePressed(button)
         if  not usedItemThisTick then
             statStoreTimer = 0
             apiGET("/item/" .. player.name .. "/" .. selectedItem.ID)
-            playSoundIfExists("assets/sfx/items/"..selectedItem.Name..".ogg")
+            playSoundIfExists("assets/sfx/items/"..selectedItem.Name..".ogg", true)
             usedItemThisTick = true
         end
     end
