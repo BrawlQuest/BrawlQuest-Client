@@ -52,21 +52,31 @@ function updateWorldEmitters(dt)
         playSpeed = 1 - love.math.random() * 0.5
         playedThisTick = {}
         for i,v in pairs(worldEmitters) do
-            if distanceToPoint(player.dx, player.dy, v.x, v.y) < 256 and not playingAmbience[v.x..","..v.y] and not arrayContains(playedThisTick, v.sound) then
+            if distanceToPoint(player.dx, player.dy, v.x, v.y) < 256 and not playingAmbience[v.x..","..v.y] and not arrayContains(playedThisTick, v.sound) and love.audio.getActiveSourceCount( ) < 15 then
                 playAmbience(v)
-
             end
         end
 
         for key, source in next, playingAmbience do
-            if source:isPlaying() then source:setVolume(sfxVolume*0.3)
-            else table.removekey(playingAmbience, key) end
+            if source:isPlaying() then
+                local v = explode(key, ",")
+                source:setVolume(sfxVolume*0.3)
+                if distanceToPoint(player.dx, player.dy, v[1], v[2]) > 256 * 3 then stopSource(source, key) end
+            else
+                stopSource(source, key)
+            end
         end
     end
 end
 
+function stopSource(source, key)
+    source:stop()
+    source:release()
+    table.removekey(playingAmbience, key)
+end
+
 function playAmbience(v)
-    local count = #playingAmbience + 1
+    print("Playing New Ambience")
     playingAmbience[v.x..","..v.y] = love.audio.newSource(v.sound, "stream")
     playingAmbience[v.x..","..v.y]:setPosition(v.x/32,v.y/32)
     playingAmbience[v.x..","..v.y]:setRolloff(1)

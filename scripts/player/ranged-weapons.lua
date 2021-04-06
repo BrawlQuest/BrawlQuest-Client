@@ -66,7 +66,7 @@ function tickRangedWeapons()
         hitTarget()
     elseif me and me.Mana < 5 then
         noManaSFX:setVolume(sfxVolume)
-        love.audio.play(noManaSFX)
+        noManaSFX:play()
     end
 end
 

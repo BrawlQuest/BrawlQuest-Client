@@ -30,8 +30,8 @@ updateVar(dt)
 drawVar()
 if Var.open then updateVar(dt) end
 if Var.open then drawVar() end
-checkVarKeyPressed(key)
-checkVarMousePressed(button)
+elseif Var.open then checkVarKeyPressed(key)
+if Var.open then checkVarMousePressed(button) end
 ]]
 
 --[[
@@ -282,17 +282,20 @@ end
 
 soundStore = {}
 
-function playSoundIfExists(path)
+function playSoundIfExists(path, notRelative)
     if not soundStore[path] then
         if love.filesystem.getInfo(path) then
             soundStore[path] = love.audio.newSource(path, "static")
-            soundStore[path]:setPosition(player.dx/32,player.dy/32)
+            if notRelative then soundStore[path]:setRelative(true) else soundStore[path]:setPosition(player.dx/32,player.dy/32) end
+            setEnvironmentEffects(soundStore[path])
             soundStore[path]:setVolume(sfxVolume)
-            love.audio.play(soundStore[path])
+            soundStore[path]:play()
         end
     else
-        soundStore[path]:setPosition(player.dx/32,player.dy/32)
+        if soundStore[path]:isPlaying() then soundStore[path]:stop() end
+        if notRelative then soundStore[path]:setRelative(true) else soundStore[path]:setPosition(player.dx/32,player.dy/32) end
+        setEnvironmentEffects(soundStore[path])
         soundStore[path]:setVolume(sfxVolume)
-        love.audio.play(soundStore[path])
+        soundStore[path]:play()
     end
 end

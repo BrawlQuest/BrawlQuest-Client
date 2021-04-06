@@ -68,7 +68,7 @@ function useHotbarItem(i,v)
     useItemColor[i] = 1
     useItemColorChanged = true
     apiGET("/item/" .. player.name .. "/" .. v.item.ID)
-    playSoundIfExists("assets/sfx/items/"..v.item.Name..".ogg")
+    playSoundIfExists("assets/sfx/items/"..v.item.Name..".ogg", true)
     usedItemThisTick = true
     writeSettings()
 end

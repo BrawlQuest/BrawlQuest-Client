@@ -28,6 +28,7 @@ function newEnemyData(data) -- called when nearby data is returned
     enemiesInAggro = 0
     enemyCollisions = copy(enemyCollisionsPrevious[enemyCollisionsI])
 
+
     for i, v in ipairs(enemies) do
         enemies[i].updated = false
     end
@@ -174,25 +175,17 @@ function newEnemyData(data) -- called when nearby data is returned
                 enemyCollisions[v.X] = {}
             end
             enemyCollisions[v.X][v.Y] = true
+            enemy.updated = true
+            enemy.lastUpdate = os.time(os.date("!*t"))
         end
 
         enemy.IsAggro = v.IsAggro
-        enemy.updated = true
-        enemy.lastUpdate = os.time(os.date("!*t"))
+     
 
         if v.IsAggro then
             if v.HP > 0 then
                 enemiesInAggro = enemiesInAggro + 1
             end
-            --      if v.TargetName == player.name then -- TODO: fix v.TargetName on the API so this can work properly
-            --      boneSpurt(player.dx+16,player.dy+16,v.Enemy.ATK,48,1,0,0)
-            --    local attackSfx = attackSfxs[love.math.random(1, #attackSfxs)]
-            --    attackSfx:setPitch(love.math.random(50, 100) / 100)
-            --    attackSfx:play()
-            if player.isMounted or player.isMounting then
-                beginMounting()
-            end
-            --  end
         end
     end
 
@@ -205,9 +198,10 @@ function newEnemyData(data) -- called when nearby data is returned
         enemyCollisionsPrevious[0] = {}
     end
 
-    for i, v in pairs(enemies) do
-        if not v.updated or os.time(os.date("!*t")) - v.lastUpdate < 5 then
+    for i, v in ipairs(enemies) do
+        if os.time(os.date("!*t")) - v.lastUpdate > 5 then -- TODO: figure out why this doesn't actually remove an enemy from the table
             table.remove(enemies, i)
+            print("Removed an enemy")
         end
     end
 end
@@ -220,7 +214,7 @@ function drawEnemies()
         local distance = distanceToPoint(player.cx, player.cy, v.dx, v.dy)
         local range = worldMask.range * 32
         if distance <= range then
-            if v.HP > 0 and v.updated then
+            if v.HP > 0 and v.updated and os.time(os.date("!*t")) - v.lastUpdate < 5 then
                 local intensity = 1 - (range / (range + difference(range, distance) * 4) - 0.2)
                 local rotation = 1
                 local offsetX = 0
@@ -285,7 +279,7 @@ function drawEnemies()
                 else
                     enemies[i].linesDrawable = false
                 end
-
+                love.graphics.print(os.time(os.date("!*t")) - v.lastUpdate, v.dx, v.dy)
             elseif not v.hasBurst then
                 burstLoot(v.dx + 16, v.dy + 16, player.owedxp, "xp")
                 local deathSound =

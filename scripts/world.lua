@@ -69,8 +69,10 @@ function createWorld()
     -- if (player.x / chunkSize) then
     -- for cx = lowX, lowX + 1 do
     --     for cy = lowY, lowY + 1 do
-    for cx = -2, 1 do
+    for cx = -1, 1 do
         for cy = -2, 0 do
+    -- for cx = 0, 1 do
+    --     for cy = 0, 0 do
             worldCanvas[cx..","..cy] = {cx = cx, cy = cy, map = love.graphics.newCanvas(unpack(dim))}
             love.graphics.setCanvas(worldCanvas[cx .. "," .. cy].map)
                 love.graphics.clear()
@@ -134,14 +136,14 @@ function drawWorld()
     for i, canvas in next, worldCanvas do
         local lowX,lowY = canvas.cx * (32 * chunkSize), canvas.cy * (32 * chunkSize)
         local highX, highY = (canvas.cx + 1) * (32 * chunkSize), (canvas.cy + 1) * (32 * chunkSize)
-        if player.dx >= lowX and player.dx < highX and player.dy >= lowY and player.dy < highY then
+        -- if player.dx >= lowX and player.dx < highX and player.dy >= lowY and player.dy < highY then
             local midX, midY = (canvas.cx + 0.5) * (32 * chunkSize), (canvas.cy + 0.5) * (32 * chunkSize)
             if player.dx <= midX and player.dy <= midY then drawCanvases(-1, -1, canvas, lowX, lowY, highX, highY)
             elseif player.dx <= midX and player.dy >= midY then drawCanvases(-1, 1, canvas, lowX, lowY, highX, highY)
             elseif player.dx >= midX and player.dy <= midY then drawCanvases(1, -1, canvas, lowX, lowY, highX, highY)
             elseif player.dx >= midX and player.dy >= midY then drawCanvases(1, 1, canvas, lowX, lowY, highX, highY) end
             -- break
-        end
+        -- end
         -- love.graphics.draw(canvas.map, lowX, lowY)
     end
     love.graphics.setBlendMode("alpha")
