@@ -279,8 +279,8 @@ function drawEnemies()
                 else
                     enemies[i].linesDrawable = false
                 end
-                love.graphics.print(os.time(os.date("!*t")) - v.lastUpdate, v.dx, v.dy)
-            elseif not v.hasBurst then
+            
+            elseif os.time(os.date("!*t")) - v.lastUpdate < 5 and not v.hasBurst then
                 burstLoot(v.dx + 16, v.dy + 16, player.owedxp, "xp")
                 local deathSound =
                     enemySounds[v.Enemy.Name].death[love.math.random(1, #enemySounds[v.Enemy.Name].death)]
