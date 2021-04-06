@@ -52,7 +52,7 @@ function updateWorldEmitters(dt)
         playSpeed = 1 - love.math.random() * 0.5
         playedThisTick = {}
         for i,v in pairs(worldEmitters) do
-            if distanceToPoint(player.dx, player.dy, v.x, v.y) < 256 and not playingAmbience[v.x..","..v.y] and not arrayContains(playedThisTick, v.sound) then
+            if distanceToPoint(player.dx, player.dy, v.x, v.y) < 256 and not playingAmbience[v.x..","..v.y] and not arrayContains(playedThisTick, v.sound) and love.audio.getActiveSourceCount( ) < 10 then
                 playAmbience(v)
 
             end

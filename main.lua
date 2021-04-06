@@ -237,7 +237,6 @@ end
 
 function love.update(dt)
     if love.system.getOS() ~= "Linux" then steam.runCallbacks() end
-
     enchantmentPos = enchantmentPos + 15 * dt
     if enchantmentPos > 64 then enchantmentPos = 0 end
 
@@ -258,7 +257,6 @@ function love.update(dt)
                         ["AY"] = player.target.y,
                         ["IsShield"] = love.keyboard.isDown(keybinds.SHIELD)
                     }))
-             
 
             nextUpdate = 0.5
         end
