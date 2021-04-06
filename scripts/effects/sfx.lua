@@ -149,7 +149,7 @@ function setEnvironmentEffects(sound)
     setEffect(sound, "genRev", true)
     if worldLookup[player.x] and worldLookup[player.x][player.y] then
         if not orCalc(worldLookup[player.x][player.y].Name, {"", "Spooky Forest",}) then tileName = worldLookup[player.x][player.y].Name end
-        setEffect(sound, "caveRev", orCalc(tileName, {"Shieldbreak Mine", "Shieldbreak", "The Permafrost Mines"}))
+        -- setEffect(sound, "caveRev", orCalc(tileName, {"Shieldbreak Mine", "Shieldbreak", "The Permafrost Mines"}))
     end
 end
 
