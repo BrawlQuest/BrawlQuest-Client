@@ -75,6 +75,23 @@ function checkKeyPressedPhaseGame(key)
             elseif nearbyAnvil then
                 getRecipesHeight()
                 crafting.open = true
+                b = {}
+                c, h = http.request{url = api.url.."/crafts", method="GET", source=ltn12.source.string(body), sink=ltn12.sink.table(b)}
+                if b[1] ~= null then
+                    crafting.catalogue = json:decode(table.concat(b))
+                    for i, v in ipairs(crafting.catalogue) do
+                        crafting.itemCount = crafting.itemCount + 1
+                        if crafting.recipes[v.Item.Type] then
+                            crafting.recipes[v.Item.Type][#crafting.recipes[v.Item.Type] + 1] = copy(v)
+                        else
+                            crafting.recipes[v.Item.Type] = {copy(v),}
+                            crafting.fields[#crafting.fields+1] = v.Item.Type
+                        end
+                    end
+                else
+                    crafting.catalogue = {}
+                end
+            
                 steam.friends.setRichPresence("steam_display", "#StatusCrafting")
                 steam.friends.setRichPresence("location", zoneTitle.title)
               
