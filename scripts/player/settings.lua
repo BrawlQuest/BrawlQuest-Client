@@ -124,7 +124,7 @@ function initSettings()
             {name = "Show Chat", v = showChat, type = "button", desc = "This allows you to hide chat. Don't worry about chat though, we use a content filter.", },
             {name = "Chat Remain On Enter", v = chatRepeat, type = "button", desc = "This allows you to send messages in a row without having to re-press \"Return\"", },
             {name = "Hover Inventory", v = openInventoryOnHover, type = "button", desc = "Allows you to toggle whether the Inventory opens on mouse over.", },
-            {name = "Hover Quests", v = openQuestsOnHover, type = "button", desc = "Allows you to toggle whether the Quests opens on mouse over.", },
+            {name = "Hover Quests", v = false, type = "button", desc = "Allows you to toggle whether the Quests opens on mouse over.", },
         },
     }
 end
@@ -151,7 +151,7 @@ function writeSettings()
         showWorldAnimations = showWorldAnimations,
         -- openUiOnHover = openUiOnHover,
         openInventoryOnHover = openInventoryOnHover,
-        openQuestsOnHover = openQuestsOnHover,
+        openQuestsOnHover = false,
         hotbar = hotbar,
         oldTargeting = oldTargeting,
         craftingFields = crafting.openField,
@@ -209,7 +209,7 @@ function checkSettingsMousePressed(button)
                         -- showWorldMask = settings[2][5].v
                         showWorldAnimations = settings[2][4].v
                         openInventoryOnHover = settings[4][5].v
-                        openQuestsOnHover = settings[4][6].v
+                        openQuestsOnHover = false
                         break
                     end
                 end
