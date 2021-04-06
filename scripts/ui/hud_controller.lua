@@ -195,6 +195,7 @@ function drawHUD()
         if challenges.open then drawChallenges() end
         if forging.open then drawForging() end
         if enchanting.open then drawEnchanting() end
+        if news.open then drawNews() end
         if itemDrag.dragging then drawItemDrag() end
     love.graphics.pop()
 end

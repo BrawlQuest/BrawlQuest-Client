@@ -43,7 +43,7 @@ function drawCharacter(v, x, y, ad)
         love.graphics.setColor(1,1,1)
         drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,"/back.png")
         
-        if v.ActiveSpell and v.ActiveSpell.Name ~= "" and v.ActiveSpell.Name ~= "None" then
+        if v.ActiveSpell and v.ActiveSpell.Name and v.ActiveSpell.Name ~= "" and v.ActiveSpell.Name ~= "None" then
             love.graphics.draw(getImgIfNotExist("assets/auras/full/"..v.ActiveSpell.Name..".png"), x,y)
         elseif notBoat then
             love.graphics.setColor(1,1,1)

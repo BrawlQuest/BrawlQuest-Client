@@ -37,6 +37,7 @@ require "scripts.ui.components.enchanting"
 require "scripts.ui.components.challenges"
 require "scripts.ui.components.item-drag"
 require "scripts.ui.components.forging"
+require "scripts.ui.components.news"
 require "scripts.libraries.api"
 require "scripts.libraries.utils"
 require "scripts.libraries.colorize"
@@ -131,6 +132,7 @@ function love.load()
     initCritters()
     initWeather()
     initParticles()
+    initNews()
     love.graphics.setFont(textFont)
 end
 
@@ -240,6 +242,8 @@ function love.update(dt)
     enchantmentPos = enchantmentPos + 15 * dt
     if enchantmentPos > 64 then enchantmentPos = 0 end
 
+    love.graphics.print(json:encode(love.audio.getActiveEffects()))
+
     totalCoverAlpha = totalCoverAlpha - 1 * dt
     if phase == "login" then
         updateLogin(dt)
@@ -274,6 +278,7 @@ function love.update(dt)
         updateWeather(dt)
         updateWorldEmitters(dt)
         updateParticles(dt)
+        if news.open then updateNews(dt) end
         if itemDrag.dragging then updateItemDrag(dt) end
         if death.open then updateDeath(dt) end
         if forging.open then updateForging(dt) end
@@ -439,7 +444,11 @@ function love.update(dt)
     end
 end
 
+local tickCount = 0
+
 function tick()
+    tickCount = tickCount + 1
+    print(tickCount)
     tickOtherPlayers()
     tickEnemies()
     tickAuras()

@@ -30,8 +30,8 @@ updateVar(dt)
 drawVar()
 if Var.open then updateVar(dt) end
 if Var.open then drawVar() end
-checkVarKeyPressed(key)
-checkVarMousePressed(button)
+elseif Var.open then checkVarKeyPressed(key)
+if Var.open then checkVarMousePressed(button) end
 ]]
 
 --[[
