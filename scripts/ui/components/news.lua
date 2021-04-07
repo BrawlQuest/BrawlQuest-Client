@@ -10,6 +10,7 @@ function initNews()
         },
         selected = {
             item = 1,
+            cerp = 0,
             exit = false,
         },
         items = {
@@ -41,6 +42,16 @@ function updateNews(dt)
             news.open = false
         end
     end
+
+    panelMovement(dt, news, 1, "amount", 0.5)
+    if news.amount >= 1 then
+        news.amount = 0
+        news.selected.item = news.selected.item + 1
+        if news.selected.item > #news.items then news.selected.item = 1 end
+    end
+
+    local speed = ((news.selected.item) - news.selected.cerp) * 6
+    news.selected.cerp = news.selected.cerp + speed * dt
 end
 
 function drawNews()
@@ -73,7 +84,7 @@ function drawNews()
             love.graphics.stencil(function() love.graphics.rectangle("fill", dx + 1, dy + 1, dw - 2, dh - 2, 5) end, "replace", 1)
             love.graphics.setStencilTest("greater", 0) -- push
 
-            local cx,cy = dx,dy
+            local cx,cy = dx - dw * (news.selected.cerp - 1), dy
             for i, item in ipairs(news.items) do
                 love.graphics.draw(item.img, cx, cy)
                 cx = cx + dw
@@ -81,7 +92,6 @@ function drawNews()
 
             if mouseOver then love.graphics.setColor(1,0,0,news.alpha) else love.graphics.setColor(0,0,0,news.alpha) end
             love.graphics.draw(news.gradient, dx, dy)
-            drawNewsItem(news.selected.item, dx, dy, dw, dh)
 
             dw,dh = dw - 20, dh
             dx,dy = dx + 16, dy + dh - 10
@@ -106,10 +116,6 @@ function drawNews()
         textX = "center",
         mouseFunc = function() news.mouseOver.exit = true end,
     })
-end
-
-function drawNewsItem(item, dx, dy, dw, dh)
-
 end
 
 function checkNewsKeyPressed(key)
