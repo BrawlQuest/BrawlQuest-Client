@@ -161,7 +161,15 @@ movementStarted = 1 -- the max time it'll ever take to cross a tile. This should
 
 
 function movePlayer(dt)
-    if (me and not me.IsDead) and (not isMoving or (distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) < 1 and not worldEdit.isTyping and not tutorialOpen)) and not isTypingInChat and not death.open and not forging.forging then -- movement smoothing has finished
+    if andCalc(true, {
+            (me and not me.IsDead),
+            (not isMoving or (distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) < 1)),
+            not worldEdit.isTyping,
+            not tutorialOpen,
+            not death.open,
+            not forging.forging,
+            news.alpha ~= 1,
+        }) then -- movement smoothing has finished
         local prev = {x = player.x, y = player.y}
         if love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.LEFT) and not (worldCollison(prev.x - 1, prev.y - 1) or worldCollison(prev.x - 1, prev.y) or worldCollison(prev.x, prev.y - 1)) then
             prev.y = prev.y - 1
