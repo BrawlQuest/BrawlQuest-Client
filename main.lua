@@ -449,7 +449,7 @@ local tickCount = 0
 
 function tick()
     tickCount = tickCount + 1
-    print(tickCount)
+    -- print(tickCount)
     tickOtherPlayers()
     tickEnemies()
     tickAuras()
