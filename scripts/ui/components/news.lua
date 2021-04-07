@@ -1,9 +1,9 @@
 function initNews()
     news = {
-        open = true,
+        open = false,
         closing = false,
-        amount = 1,
-        alpha = 1,
+        amount = 0,
+        alpha = 0,
         mouseOver = {
             item = 0,
             exit = false,
@@ -15,15 +15,20 @@ function initNews()
         },
         items = {
             {
-                header = "New Update 1.3.1+3!",
+                header = "1",
                 desc = "This is a general bug update. It should all be good.",
                 action = function() print("I WANT YOU") end,
                 img = love.graphics.newImage("assets/ui/news/01.png")
             },{
-                header = "New1.3.1+3!",
+                header = "2",
                 desc = "This is a generl be good.",
                 action = function() print("Second") end,
-                img = love.graphics.newImage("assets/ui/news/01.png")
+                img = love.graphics.newImage("assets/ui/news/02.png")
+            },{
+                header = "3",
+                desc = "This is a generl be good.",
+                action = function() print("Second") end,
+                img = love.graphics.newImage("assets/ui/news/03.png")
             },
         },
         exit = {
@@ -43,14 +48,15 @@ function updateNews(dt)
         end
     end
 
-    panelMovement(dt, news, 1, "amount", 0.5)
+    if news.open then panelMovement(dt, news, 1, "amount", 0.2) end
     if news.amount >= 1 then
         news.amount = 0
         news.selected.item = news.selected.item + 1
         if news.selected.item > #news.items then news.selected.item = 1 end
     end
 
-    local speed = ((news.selected.item) - news.selected.cerp) * 6
+    print(news.selected.cerp)
+    local speed = (news.selected.item - news.selected.cerp) * 6
     news.selected.cerp = news.selected.cerp + speed * dt
 end
 
