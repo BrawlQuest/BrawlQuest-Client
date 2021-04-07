@@ -55,7 +55,6 @@ function updateNews(dt)
         if news.selected.item > #news.items then news.selected.item = 1 end
     end
 
-    print(news.selected.cerp)
     local speed = (news.selected.item - news.selected.cerp) * 6
     news.selected.cerp = news.selected.cerp + speed * dt
 end
