@@ -74,26 +74,53 @@ function recreateWorld()
         for cy = player.wy - 1, player.wy do
             worldCanvas[cx..","..cy] = {cx = cx, cy = cy, map = love.graphics.newCanvas(unpack(dim))}
             love.graphics.setCanvas(worldCanvas[cx .. "," .. cy].map)
-                love.graphics.clear()
-                love.graphics.setColor(1, love.math.random(), love.math.random(), 0.8)
+            love.graphics.clear()
+            love.graphics.setColor(1, love.math.random(), love.math.random(), 0.8)
 
-                for x = 0, chunkSize - 1 do
-                    for y = 0, chunkSize - 1 do
-                        drawSimplexNoise(x + cx * chunkSize, y + cy * chunkSize)  -- sets background noise
-                        love.graphics.draw(groundImg, x * 32, y * 32)
-                    end
+            local tiles = {}
+            for i, v in ipairs(world) do
+                if v.X >= cx * chunkSize and v.X < (cx + 1) * chunkSize and v.Y >= cy * chunkSize and v.Y < (cy + 1) * chunkSize then
+                    drawTile(v, cx, cy)
+                    addCritters(v)
+                    local x,y = v.X - cx * chunkSize, v.Y - cy * chunkSize
+                    if v.GroundTile and v.GroundTile ~= "" then tiles[x..","..y] = true end
                 end
-                
-                for i, v in ipairs(world) do
-                    if v.X >= cx * chunkSize and v.X < (cx + 1) * chunkSize and v.Y >= cy * chunkSize and v.Y < (cy + 1) * chunkSize then
-                        drawTile(v, cx, cy)
-                        addCritters(v)
-                    end
+            end
+
+            local groundTiles = {}
+            for x = 0, chunkSize - 1 do
+                for y = 0, chunkSize - 1 do
+                    if not tiles[x..","..y] then drawGroundImages(cx,cy,x,y,groundTiles) end
                 end
-                
+            end
+
             love.graphics.setCanvas()
         end
     end
+end
+
+local nf = {0.006, 0.07, 0.1} -- noise factors
+function drawGroundImages(cx,cy,x,y,groundTiles)
+    local nx,ny = x + cx * chunkSize, y + cy * chunkSize
+    drawSimplexNoise(nx,ny)  -- sets background noise
+    -- love.graphics.draw(groundImg, x * 32, y * 32)
+
+
+    local largeNoise = love.math.noise(nx * nf[1], ny * nf[1]) - love.math.noise(nx * nf[2], ny * nf[2]) * 0.1
+    local smallNoise = love.math.noise(nx * nf[3], ny * nf[3])
+
+    if largeNoise >= 0.8 and largeNoise < 0.9 then drawNoiseTile("assets/world/grounds/Sand.png",x,y) groundTiles[nx..","..ny] = true
+    elseif largeNoise >= 0.9 then drawNoiseTile("assets/world/grounds/grass/grass02.png",x,y) groundTiles[nx..","..ny] = true end
+
+    -- if not groundTiles[nx..","..ny] and smallNoise < largeNoise * 0.5 then
+    --     drawNoiseTile("assets/world/grounds/Sand.png",x,y) groundTiles[nx..","..ny] = true
+    -- end
+
+    if not groundTiles[nx..","..ny] then drawNoiseTile("assets/world/grounds/Water.png",x,y) end
+end
+
+function drawNoiseTile(asset,x,y)
+    love.graphics.draw(worldImg[asset], x * 32, y * 32)
 end
 
 function drawTile(v, cx, cy)
@@ -101,15 +128,12 @@ function drawTile(v, cx, cy)
     local backgroundAsset = getWorldAsset(v.GroundTile, v.X, v.Y)
     local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y)
     drawSimplexNoise(v.X, v.Y)
-    if worldImg[backgroundAsset] then
-        love.graphics.draw(worldImg[backgroundAsset], (x) * 32, (y) * 32)  
-    end 
-
+    if worldImg[backgroundAsset] then love.graphics.draw(worldImg[backgroundAsset], x * 32, y * 32) end
     love.graphics.setColor(0,0,0,0.5)
     if worldLookup[v.X][v.Y-1] and (isTileWall(worldLookup[v.X][v.Y-1].ForegroundTile) or isTileWall(worldLookup[v.X][v.Y-1].GroundTile)) and not isTileWall(v.ForegroundTile) then
-        love.graphics.rectangle("fill", (x) * 32, (y) * 32, 32, 16)
+        love.graphics.rectangle("fill", x * 32, y * 32, 32, 16)
     elseif (isTileWall(v.GroundTile) or isTileWall(v.ForegroundTile)) and not worldLookup[v.X][v.Y+1] then -- no tile below us but we still need to cast a shadow
-        love.graphics.rectangle("fill", (x) * 32, (y) * 32, 32, 16)
+        love.graphics.rectangle("fill", x * 32, y * 32, 32, 16)
     end 
     love.graphics.setColor(1,1,1,1)
     if foregroundAsset ~= backgroundAsset and worldImg[foregroundAsset] then love.graphics.draw(worldImg[foregroundAsset], (x) * 32, (y) * 32) end
@@ -119,19 +143,7 @@ function drawWorld()
     love.graphics.setColor(1,1,1,1)
     love.graphics.setBlendMode("alpha", "premultiplied")
     for key, canvas in next, worldCanvas do
-        local lowX,lowY = canvas.cx * (32 * chunkSize), canvas.cy * (32 * chunkSize)
-        -- local highX, highY = (canvas.cx + 1) * (32 * chunkSize), (canvas.cy + 1) * (32 * chunkSize)
-        -- -- if player.dx >= lowX and player.dx < highX and player.dy >= lowY and player.dy < highY then
-        --     local midX, midY = (canvas.cx + 0.5) * (32 * chunkSize), (canvas.cy + 0.5) * (32 * chunkSize)
-        --     if player.dx <= midX and player.dy <= midY then drawCanvases(-1, -1, canvas, lowX, lowY, highX, highY)
-        --     elseif player.dx <= midX and player.dy >= midY then drawCanvases(-1, 1, canvas, lowX, lowY, highX, highY)
-        --     elseif player.dx >= midX and player.dy <= midY then drawCanvases(1, -1, canvas, lowX, lowY, highX, highY)
-        --     elseif player.dx >= midX and player.dy >= midY then drawCanvases(1, 1, canvas, lowX, lowY, highX, highY) end
-        --     -- break
-        -- -- end
-        -- -- love.graphics.draw(canvas.map, lowX, lowY)
-
-        love.graphics.draw(worldCanvas[key].map, lowX, lowY)
+        love.graphics.draw(worldCanvas[key].map, canvas.cx * (32 * chunkSize), canvas.cy * (32 * chunkSize))
     end
     love.graphics.setBlendMode("alpha")
     love.graphics.setColor(1,1,1)
@@ -146,9 +158,7 @@ function drawCanvases(x, y, canvas, lowX, lowY, highX, highY)
     end
 end
 
-function getWorldAsset(v,x,y,notFindWall)
-    local foregroundAsset = v['ForegroundTile']
-    local backgroundAsset = v['GroundTile']
+function getWorldAsset(v,x,y)
     if isTileWall(v) then v = getDrawableWall(v, x,y) end
     if isTileWater(v) then v = getDrawableWater(v, x, y) end
     return v
@@ -242,11 +252,10 @@ function isTileWater(tileName)
 end
 
 function getDrawableWater(tileName, x, y)
-    if  worldLookup[x-1] and 
-    worldLookup[x+1] and 
-    worldLookup[x] and worldLookup[x-1][y]  then
+    if  worldLookup[x-1] and worldLookup[x+1] and worldLookup[x] and worldLookup[x-1][y] then
         local fp = explode(tileName, "/")
         tileName = explode(fp[#fp], ".")[1]
+
         local nearby = {
             top = false,
             left = false,
@@ -270,8 +279,7 @@ function getDrawableWater(tileName, x, y)
         }
     
 
-        for i = 1, 8 do
-            v = worldToCheck[i]
+        for i,v in ipairs(worldToCheck) do
             if v and (isTileWater(v.ForegroundTile) or isTileWater(v.GroundTile)) then
                 if v.X == x - 1 and v.Y == y then
                     nearby.left = true
@@ -291,7 +299,6 @@ function getDrawableWater(tileName, x, y)
                     nearby.bottomRight = true
                 end
             end
-
         end
 
         local assetName = "1.png"
