@@ -32,13 +32,12 @@ player = {
         stepSndPlay = 0.3
     },
     color = {1,0.4,0.2,1},
-    walk = 0,
     cp = 0,
-    distance = 0,
-    direction = {x = 0, y = 0},
-    wobble = 0, 
-    wobbleValue = 0,
     speed = {x = 0, y = 0},
+    wx = 0,
+    wy = 0,
+    worldPosition = "0,0",
+    prevWorldPosition = "0,0",
 }
 
 newInventoryItems = {}

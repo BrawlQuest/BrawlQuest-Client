@@ -458,6 +458,7 @@ function tick()
     nextTick = 1
     getInventory()
     tickRangedWeapons()
+    tickWorld()
     if hotbarChanged then
         hotbarChangeCount = hotbarChangeCount + 1
         if hotbarChangeCount > 0 then

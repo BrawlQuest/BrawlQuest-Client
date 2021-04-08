@@ -2,10 +2,17 @@ isWorldCreated = false
 worldCanvas = {}
 worldLookup = {}
 lightSource = {}
-lowestX = 0
-lowestY = 0
-chunkSize = 128
+local chunkSize = 128
+local halfChunk = chunkSize / 2
 
+function tickWorld()
+    player.wx, player.wy = math.floor((player.x + halfChunk) / chunkSize), math.floor((player.y + halfChunk) / chunkSize)
+    player.worldPosition = player.wx .. "," .. player.wy
+    if player.worldPosition ~= player.prevWorldPosition then
+        player.prevWorldPosition = player.worldPosition
+        recreateWorld()
+    end
+end
 
 function drawSimplexNoise(x, y)
     local noiseFactor = 0.23 -- 0.18
@@ -14,73 +21,64 @@ function drawSimplexNoise(x, y)
 end
 
 function createWorld()
-    leaves = {}
-    critters = {}
-    lightSource = {}
-    highestX = 0
-    highestY = 0
-    lowestX = 0
-    lowestY = 0
+
     for i,v in ipairs(world) do
         if not worldLookup[v.X] then
             worldLookup[v.X] = {}
         end
-
         worldLookup[v.X][v.Y] = copy(v)
+    end
 
-        if v.X > highestX then
-            highestX = v.X
-        end
-        if v.Y > highestY then
-            highestY = v.Y
-        end
-        if v.X < lowestX then
-            lowestX = v.X
-        end
-        if v.Y < lowestY then
-            lowestY = v.Y
-        end
-        addWorldEmitter(v)
-        if not isTileType(v.ForegroundTile, "Dead") and isTileType(v.ForegroundTile, "Tree") and love.math.random(1,5) == 1 then
-            if isTileType(v.ForegroundTile, "Snowy") then
-                addLeaf(v.X*32 + 16, v.Y*32 + 16, "snowy tree")
-            else
-                addLeaf(v.X*32 + 16, v.Y*32 + 16, "tree")
+    recreateWorld()
+
+    if player.x and player.y then
+        createNPCChatBackground(player.x,player.y)
+    else
+        createNPCChatBackground(0,0)
+    end
+end
+
+function recreateWorld()
+    recalculateLighting()
+    leaves = {}
+    critters = {}
+    worldEmitters = {}
+    for i,v in ipairs(world) do
+        if math.floor((v.X + halfChunk) / chunkSize) == player.wx and math.floor((v.Y + halfChunk) / chunkSize) == player.wy then
+            -- print("TRUE " .. v.X .. "," .. v.Y)
+            addWorldEmitter(v)
+            if not isTileType(v.ForegroundTile, "Dead") and isTileType(v.ForegroundTile, "Tree") and love.math.random(1,5) == 1 then
+                if isTileType(v.ForegroundTile, "Snowy") then addLeaf(v.X*32 + 16, v.Y*32 + 16, "snowy tree")
+                else addLeaf(v.X*32 + 16, v.Y*32 + 16, "tree") end
+            elseif isTileType(v.ForegroundTile, "Campfire") then
+                addLeaf(v.X*32 + 16, v.Y*32 + 8, "fire")
+            elseif isTileType(v.ForegroundTile, "Sand") then
+                -- addLeaf(v.X*32 + 16, v.Y*32 + 16, "sand")
+            elseif isTileType(v.GroundTile, "Murky") then
+                addLeaf(v.X*32, v.Y*32+16, "murky")
             end
-        elseif isTileType(v.ForegroundTile, "Campfire") then
-            addLeaf(v.X*32 + 16, v.Y*32 + 8, "fire")
-        elseif isTileType(v.ForegroundTile, "Sand") then
-            -- addLeaf(v.X*32 + 16, v.Y*32 + 16, "sand")
-        elseif isTileType(v.GroundTile, "Murky") then
-            addLeaf(v.X*32, v.Y*32+16, "murky")
+
+            if lightGivers[v.ForegroundTile] and not lightSource[v.X .. "," .. v.Y] then
+                lightSource[v.X .. "," .. v.Y] = true
+                Luven.addNormalLight(16 + (v.X * 32), 16 + (v.Y * 32), lightGivers[v.ForegroundTile].color, lightGivers[v.ForegroundTile].brightness)
+            end
         end
-      
     end
 
-    for key, v in next, worldCanvas do
-        worldCanvas[key].map:release( )
-    end
+    for key, v in next, worldCanvas do v.map:release( ) end
 
-    reinitLighting()
-    local dim = {32 * (chunkSize), 32 * (chunkSize)}
+    local dim = {32 * chunkSize, 32 * chunkSize}
     worldCanvas = {}
-    print((player.x / chunkSize) .. ",   " .. (player.y / chunkSize))
-    local lowX, lowY = math.floor(player.x / chunkSize), math.floor(player.y / chunkSize)
-    -- if (player.x / chunkSize) then
-    -- for cx = lowX, lowX + 1 do
-    --     for cy = lowY, lowY + 1 do
-    for cx = -1, 1 do
-        for cy = -2, 0 do
-    -- for cx = 0, 1 do
-    --     for cy = 0, 0 do
+
+    for cx = player.wx - 1, player.wx do
+        for cy = player.wy - 1, player.wy do
             worldCanvas[cx..","..cy] = {cx = cx, cy = cy, map = love.graphics.newCanvas(unpack(dim))}
             love.graphics.setCanvas(worldCanvas[cx .. "," .. cy].map)
                 love.graphics.clear()
-                love.graphics.setColor(1, 1, 1)
-  
-                
-                for x = 0, chunkSize do
-                    for y = 0, chunkSize do
+                love.graphics.setColor(1, love.math.random(), love.math.random(), 0.8)
+
+                for x = 0, chunkSize - 1 do
+                    for y = 0, chunkSize - 1 do
                         drawSimplexNoise(x + cx * chunkSize, y + cy * chunkSize)  -- sets background noise
                         love.graphics.draw(groundImg, x * 32, y * 32)
                     end
@@ -92,23 +90,10 @@ function createWorld()
                         addCritters(v)
                     end
                 end
+                
             love.graphics.setCanvas()
         end
     end
-
-    for i, v in ipairs(world) do
-        if lightGivers[v.ForegroundTile] and not lightSource[v.X .. "," .. v.Y] then
-            lightSource[v.X .. "," .. v.Y] = true
-            Luven.addNormalLight(16 + (v.X * 32), 16 + (v.Y * 32), lightGivers[v.ForegroundTile].color, lightGivers[v.ForegroundTile].brightness)
-        end
-    end
-
-    if player.x and player.y then
-        createNPCChatBackground(player.x,player.y)
-    else
-        createNPCChatBackground(0,0)
-    end
-
 end
 
 function drawTile(v, cx, cy)
@@ -133,18 +118,20 @@ end
 function drawWorld()
     love.graphics.setColor(1,1,1,1)
     love.graphics.setBlendMode("alpha", "premultiplied")
-    for i, canvas in next, worldCanvas do
+    for key, canvas in next, worldCanvas do
         local lowX,lowY = canvas.cx * (32 * chunkSize), canvas.cy * (32 * chunkSize)
-        local highX, highY = (canvas.cx + 1) * (32 * chunkSize), (canvas.cy + 1) * (32 * chunkSize)
-        -- if player.dx >= lowX and player.dx < highX and player.dy >= lowY and player.dy < highY then
-            local midX, midY = (canvas.cx + 0.5) * (32 * chunkSize), (canvas.cy + 0.5) * (32 * chunkSize)
-            if player.dx <= midX and player.dy <= midY then drawCanvases(-1, -1, canvas, lowX, lowY, highX, highY)
-            elseif player.dx <= midX and player.dy >= midY then drawCanvases(-1, 1, canvas, lowX, lowY, highX, highY)
-            elseif player.dx >= midX and player.dy <= midY then drawCanvases(1, -1, canvas, lowX, lowY, highX, highY)
-            elseif player.dx >= midX and player.dy >= midY then drawCanvases(1, 1, canvas, lowX, lowY, highX, highY) end
-            -- break
-        -- end
-        -- love.graphics.draw(canvas.map, lowX, lowY)
+        -- local highX, highY = (canvas.cx + 1) * (32 * chunkSize), (canvas.cy + 1) * (32 * chunkSize)
+        -- -- if player.dx >= lowX and player.dx < highX and player.dy >= lowY and player.dy < highY then
+        --     local midX, midY = (canvas.cx + 0.5) * (32 * chunkSize), (canvas.cy + 0.5) * (32 * chunkSize)
+        --     if player.dx <= midX and player.dy <= midY then drawCanvases(-1, -1, canvas, lowX, lowY, highX, highY)
+        --     elseif player.dx <= midX and player.dy >= midY then drawCanvases(-1, 1, canvas, lowX, lowY, highX, highY)
+        --     elseif player.dx >= midX and player.dy <= midY then drawCanvases(1, -1, canvas, lowX, lowY, highX, highY)
+        --     elseif player.dx >= midX and player.dy >= midY then drawCanvases(1, 1, canvas, lowX, lowY, highX, highY) end
+        --     -- break
+        -- -- end
+        -- -- love.graphics.draw(canvas.map, lowX, lowY)
+
+        love.graphics.draw(worldCanvas[key].map, lowX, lowY)
     end
     love.graphics.setBlendMode("alpha")
     love.graphics.setColor(1,1,1)
@@ -162,11 +149,7 @@ end
 function getWorldAsset(v,x,y,notFindWall)
     local foregroundAsset = v['ForegroundTile']
     local backgroundAsset = v['GroundTile']
-
-    -- if not notFindWall then
-        if isTileWall(v) then v = getDrawableWall(v, x,y) end
-    -- end
-
+    if isTileWall(v) then v = getDrawableWall(v, x,y) end
     if isTileWater(v) then v = getDrawableWater(v, x, y) end
     return v
 end
