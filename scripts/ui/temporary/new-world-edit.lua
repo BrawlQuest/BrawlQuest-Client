@@ -582,13 +582,14 @@ function saveWorldChanges()
     pendingWorldChanges = {}
     local b = {}
     c, h = http.request{url = api.url.."/world", method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
-    world = json:decode(table.concat(b))
+    initWorldTable(b)
     createWorld()
     initDrawableNewWorldEditTiles()
     getWorldInfo() 
     worldEdit.changed = false
     editorCtl.state[1] = false
     editorCtl.state[5] = false
+    player.cx, player.cy = player.dx, player.dy
 end 
  
 function checkIfReadyToQuit()
@@ -618,13 +619,17 @@ function getWorldInfo()
     end
 
     local count = 0
-    for i, v in ipairs(world) do
-        local location = worldLookup[v.X][v.Y].Name
-        if not arrayContains(availablePlaceNames, location) and not string.find(location, "Dominion") then
-            availablePlaceNames[#availablePlaceNames + 1] = location
-        end
-        if not arrayContains(avaliableMusic, worldLookup[v.X][v.Y].Music) then
-            avaliableMusic[#avaliableMusic + 1] = worldLookup[v.X][v.Y].Music
+    for key,tiles in next, worldChunks do
+        if orCalc(key, {player.wx - 1 ..","..player.wy - 1, player.wx..","..player.wy - 1, player.wx - 1 ..","..player.wy, player.wx..","..player.wy,}) then
+            for i,v in ipairs(tiles) do
+                local location = worldLookup[v.X][v.Y].Name
+                if not arrayContains(availablePlaceNames, location) and not string.find(location, "Dominion") then
+                    availablePlaceNames[#availablePlaceNames + 1] = location
+                end
+                if not arrayContains(avaliableMusic, worldLookup[v.X][v.Y].Music) then
+                    avaliableMusic[#avaliableMusic + 1] = worldLookup[v.X][v.Y].Music
+                end
+            end
         end
     end
 

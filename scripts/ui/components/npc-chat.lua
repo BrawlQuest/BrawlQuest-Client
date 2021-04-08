@@ -29,11 +29,15 @@ function createNPCChatBackground(x, y)
     npcChatBackground = {}
     local foundX = false
     local pathAhead = {}
-    for i, v in pairs(world) do
-        if v.X == x and v.Y == y then
-            npcChatBackground[1] = v.GroundTile
-        elseif v.Y == y and v.X > x then
-            pathAhead[#pathAhead + 1] = v
+    for key,tiles in next, worldChunks do
+        if orCalc(key, {player.wx - 1 ..","..player.wy - 1, player.wx..","..player.wy - 1, player.wx - 1 ..","..player.wy, player.wx..","..player.wy,}) then
+            for i,v in ipairs(tiles) do
+                if v.X == x and v.Y == y then
+                    npcChatBackground[1] = v.GroundTile
+                elseif v.Y == y and v.X > x then
+                    pathAhead[#pathAhead + 1] = v
+                end
+            end
         end
     end
     table.sort(pathAhead, function(a, b)
