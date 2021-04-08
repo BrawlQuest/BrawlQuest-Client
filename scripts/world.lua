@@ -75,24 +75,6 @@ function recreateWorld()
             end
         end
     end
-        -- if math.floor((v.X + halfChunk) / chunkSize) == player.wx and math.floor((v.Y + halfChunk) / chunkSize) == player.wy then
-            -- print("TRUE " .. v.X .. "," .. v.Y)
-            -- addWorldEmitter(v)
-            -- if not isTileType(v.ForegroundTile, "Dead") and isTileType(v.ForegroundTile, "Tree") and love.math.random(1,5) == 1 then
-            --     if isTileType(v.ForegroundTile, "Snowy") then addLeaf(v.X*32 + 16, v.Y*32 + 16, "snowy tree")
-            --     else addLeaf(v.X*32 + 16, v.Y*32 + 16, "tree") end
-            -- elseif isTileType(v.ForegroundTile, "Campfire") then
-            --     addLeaf(v.X*32 + 16, v.Y*32 + 8, "fire")
-            -- elseif isTileType(v.ForegroundTile, "Sand") then
-            --     -- addLeaf(v.X*32 + 16, v.Y*32 + 16, "sand")
-            -- elseif isTileType(v.GroundTile, "Murky") then
-            --     addLeaf(v.X*32, v.Y*32+16, "murky")
-            -- end
-
-            -- if lightGivers[v.ForegroundTile] and not lightSource[v.X .. "," .. v.Y] then
-            --     lightSource[v.X .. "," .. v.Y] = true
-            --     Luven.addNormalLight(16 + (v.X * 32), 16 + (v.Y * 32), lightGivers[v.ForegroundTile].color, lightGivers[v.ForegroundTile].brightness)
-            -- end
 
     for key, v in next, worldCanvas do v.map:release( ) end
 
@@ -115,7 +97,6 @@ function recreateWorld()
                             addCritters(v)
                             local x,y = v.X - cx * chunkSize, v.Y - cy * chunkSize
                             if v.GroundTile and v.GroundTile ~= "" then originalTiles[x..","..y] = true end
-                            -- originalTiles[x..","..y] = true
                         end
                     end
                 end
@@ -133,7 +114,7 @@ function recreateWorld()
     end
 end
 
-local nf = {0.006, 0.07, 0.1, 0.3} -- noise factors {0.006, 0.07, 0.1}
+local nf = {0.009, 0.07, 0.1, 0.3} -- noise factors {0.006, 0.07, 0.1}
 function drawGroundImages(cx,cy,x,y,groundTiles)
     local nx,ny = x + cx * chunkSize, y + cy * chunkSize
     -- drawSimplexNoise(nx,ny)  -- sets background noise
@@ -145,18 +126,18 @@ function drawGroundImages(cx,cy,x,y,groundTiles)
     local groundColor = largeNoise * 1.5 - 0.5 - smallNoise * 0.04
     love.graphics.setColor(groundColor, groundColor, groundColor)
 
-    if largeNoise >= 0.9 - smallNoise * 0.05 then
+    if largeNoise >= 0.8 - smallNoise * 0.05 then
         drawNoiseTile("assets/world/grounds/grass/grass04.png",x,y)
-        if smallNoise > 0.9 and smallNoise < 0.95 and largeNoise > 0.93 then drawNoiseTile("assets/world/objects/Beach Tree.png",x,y) 
+        if smallNoise > 0.9 and smallNoise < 0.85 and largeNoise > 0.83 then drawNoiseTile("assets/world/objects/Beach Tree.png",x,y) 
         elseif smallNoise >= 0.95 then 
             drawNoiseTile("assets/world/objects/lantern.png",x,y)
             Luven.addNormalLight(16 + (nx * 32), 16 + (ny * 32), lightGivers["assets/world/objects/lantern.png"].color, lightGivers["assets/world/objects/lantern.png"].brightness)
         end
         groundTiles[nx..","..ny] = true
-    elseif largeNoise - smallNoise * 0.05 > 0.87 then
+    elseif largeNoise - smallNoise * 0.05 > 0.77 then
         drawNoiseTile("assets/world/grounds/Sandy Grass.png",x,y)
         groundTiles[nx..","..ny] = true
-    elseif largeNoise > 0.8 then
+    elseif largeNoise > 0.7 then
         drawNoiseTile("assets/world/grounds/Sand.png",x,y)
         if smallNoise > 0.95 and largeNoise > 0.85 then drawNoiseTile("assets/world/objects/foliage/BQ Foliage-3.png",x,y) end
         groundTiles[nx..","..ny] = true
