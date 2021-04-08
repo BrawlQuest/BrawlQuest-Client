@@ -36,11 +36,11 @@ function createWorld()
 
     recreateWorld()
 
-    if player.x and player.y then
-        createNPCChatBackground(player.x,player.y)
-    else
-        createNPCChatBackground(0,0)
-    end
+    -- if player.x and player.y then
+    --     createNPCChatBackground(player.x,player.y)
+    -- else
+    --     createNPCChatBackground(0,0)
+    -- end
 end
 
 function recreateWorld()
@@ -83,21 +83,24 @@ function recreateWorld()
 
     for cx = player.wx - 1, player.wx do
         for cy = player.wy - 1, player.wy do
-            worldCanvas[cx..","..cy] = {cx = cx, cy = cy, map = love.graphics.newCanvas(unpack(dim))}
+            for key, v in next, worldCanvas do
+                if not orCalc(key, {player.wx - 1 ..","..player.wy - 1, player.wx..","..player.wy - 1, player.wx - 1 ..","..player.wy, player.wx..","..player.wy,}) then
+                    v.map:release( )
+                end
+            end
+            if not worldCanvas[cx..","..cy] then worldCanvas[cx..","..cy] = {cx = cx, cy = cy, map = love.graphics.newCanvas(unpack(dim))} end
             love.graphics.setCanvas(worldCanvas[cx .. "," .. cy].map)
-            love.graphics.clear()
+            -- love.graphics.clear()
             love.graphics.setColor(1, love.math.random(), love.math.random(), 0.8)
 
             local originalTiles = {}
             for key,tiles in next, worldChunks do
-                if orCalc(key, {player.wx - 1 ..","..player.wy - 1, player.wx..","..player.wy - 1, player.wx - 1 ..","..player.wy, player.wx..","..player.wy,}) then
+                if key == cx .. "," .. cy then
                     for i,v in ipairs(tiles) do
-                        if v.X >= cx * chunkSize and v.X < (cx + 1) * chunkSize and v.Y >= cy * chunkSize and v.Y < (cy + 1) * chunkSize then
-                            drawTile(v, cx, cy)
-                            addCritters(v)
-                            local x,y = v.X - cx * chunkSize, v.Y - cy * chunkSize
-                            if v.GroundTile and v.GroundTile ~= "" then originalTiles[x..","..y] = true end
-                        end
+                        drawTile(v, cx, cy)
+                        addCritters(v)
+                        local x,y = v.X - cx * chunkSize, v.Y - cy * chunkSize
+                        if v.GroundTile and v.GroundTile ~= "" then originalTiles[x..","..y] = true end
                     end
                 end
             end
