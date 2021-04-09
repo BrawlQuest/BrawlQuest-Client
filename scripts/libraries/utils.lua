@@ -286,14 +286,14 @@ function playSoundIfExists(path, notRelative)
     if not soundStore[path] then
         if love.filesystem.getInfo(path) then
             soundStore[path] = love.audio.newSource(path, "static")
-            if notRelative then soundStore[path]:setRelative(true) else soundStore[path]:setPosition(player.dx/32,player.dy/32) end
+            if notRelative and soundStore[path]:getChannelCount() > 1 then soundStore[path]:setRelative(true) else soundStore[path]:setPosition(player.dx/32,player.dy/32) end
             setEnvironmentEffects(soundStore[path])
             soundStore[path]:setVolume(sfxVolume)
             soundStore[path]:play()
         end
     else
         if soundStore[path]:isPlaying() then soundStore[path]:stop() end
-        if notRelative then soundStore[path]:setRelative(true) else soundStore[path]:setPosition(player.dx/32,player.dy/32) end
+        if notRelative and soundStore[path]:getChannelCount() > 1  then soundStore[path]:setRelative(true) else soundStore[path]:setPosition(player.dx/32,player.dy/32) end
         setEnvironmentEffects(soundStore[path])
         soundStore[path]:setVolume(sfxVolume)
         soundStore[path]:play()

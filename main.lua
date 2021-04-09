@@ -370,10 +370,10 @@ function love.update(dt)
                         -- this is in this order for a reason dummy
 
                         table.sort(inventoryAlpha, function(a, b)
-                            if not a.Item.Val then
+                            if not tonumber(a.Item.Val) then
                                 a.Item.Val = "0"
                             end
-                            if not b.Item.Val then
+                            if not tonumber(b.Item.Val) then
                                 b.Item.Val = "1"
                             end -- these are different to prevent it going back and forth when sorting
                             return tonumber(a.Item.Val) < tonumber(b.Item.Val)
