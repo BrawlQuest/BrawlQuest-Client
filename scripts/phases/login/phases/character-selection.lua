@@ -366,8 +366,5 @@ function initWorldTable(b)
         if not worldChunks[x..","..y] then worldChunks[x..","..y] = {} end
         worldChunks[x..","..y][#worldChunks[x..","..y] + 1] = copy(tile)
     end
-
-    -- for key, v in next, worldChunks do
-    -- end
 end
 

@@ -229,7 +229,7 @@ function love.draw()
         love.graphics.setColor(1,1,1)
         love.graphics.setFont(settPan.itemFont)
         local text
-        if true then text = "BrawlQuest "..version.." "..versionNumber.."\nX,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount .."\n"..playersOnline
+        if true then text = "BrawlQuest "..version.." "..versionNumber.."\nX,Y: " .. player.x..","..player.y .. "\nwX,wY: " .. player.wx..","..player.wy .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount .."\n"..playersOnline
         else text = "X,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount end
         love.graphics.print(text, offset, 10)
     end

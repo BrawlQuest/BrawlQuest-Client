@@ -1,5 +1,6 @@
 isWorldCreated = false
 worldCanvas = {}
+worldImages = {}
 worldLookup = {}
 lightSource = {}
 chunkSize = 128
@@ -10,7 +11,7 @@ function tickWorld()
     player.worldPosition = player.wx .. "," .. player.wy
     if player.worldPosition ~= player.prevWorldPosition then
         player.prevWorldPosition = player.worldPosition
-        recreateWorld()
+        createWorld()
     end
 end
 
@@ -21,29 +22,6 @@ function drawSimplexNoise(x, y)
 end
 
 function createWorld()
-    -- for key, v in next, worldChunks do
-    --     if orCalc(key, {player.wx - 1 ..","..player.wy - 1, player.wx..","..player.wy - 1, player.wx - 1 ..","..player.wy, player.wx..","..player.wy,}) then
-    --         for i, tile in ipairs(v) do
-                
-    --         end
-    --     end
-    -- end
-
-    -- for i,v in ipairs(world) do
-    --     if not worldLookup[v.X] then worldLookup[v.X] = {} end
-    --     worldLookup[v.X][v.Y] = copy(v)
-    -- end
-
-    recreateWorld()
-
-    -- if player.x and player.y then
-    --     createNPCChatBackground(player.x,player.y)
-    -- else
-    --     createNPCChatBackground(0,0)
-    -- end
-end
-
-function recreateWorld()
     recalculateLighting()
     leaves = {}
     critters = {}
@@ -81,49 +59,107 @@ function recreateWorld()
     local dim = {32 * chunkSize, 32 * chunkSize}
     worldCanvas = {}
 
+    -- for cx = player.wx - 1, player.wx do
+    --     for cy = player.wy - 1, player.wy do
+    --         for key, v in next, worldCanvas do
+    --             if not orCalc(key, {player.wx - 1 ..","..player.wy - 1, player.wx..","..player.wy - 1, player.wx - 1 ..","..player.wy, player.wx..","..player.wy,}) then
+    --                 v.map:release( )
+    --             end
+    --         end
+    --         if not worldCanvas[cx..","..cy] then worldCanvas[cx..","..cy] = {cx = cx, cy = cy, map = love.graphics.newCanvas(unpack(dim))} end
+    --         love.graphics.setCanvas(worldCanvas[cx .. "," .. cy].map)
+    --         -- love.graphics.clear()
+    --         love.graphics.setColor(1, love.math.random(), love.math.random(), 0.8)
+
+    --         local originalTiles = {}
+    --         for key,tiles in next, worldChunks do
+    --             if key == cx .. "," .. cy then
+    --                 for i,v in ipairs(tiles) do
+    --                     drawTile(v, cx, cy)
+    --                     addCritters(v)
+    --                     local x,y = v.X - cx * chunkSize, v.Y - cy * chunkSize
+    --                     if v.GroundTile and v.GroundTile ~= "" then originalTiles[x..","..y] = true end
+    --                 end
+    --             end
+    --         end
+
+    --         local groundTiles = {}
+    --         for x = 0, chunkSize - 1 do
+    --             for y = 0, chunkSize - 1 do
+    --                 if not originalTiles[x..","..y] then drawGroundImages(cx,cy,x,y,groundTiles) end
+    --             end
+    --         end
+
+    --         love.graphics.setCanvas()
+    --     end
+    -- end
+
+    for key, v in next, worldImages do
+        if not orCalc(key, {player.wx - 1 ..","..player.wy - 1, player.wx..","..player.wy - 1, player.wx - 1 ..","..player.wy, player.wx..","..player.wy,}) then
+            v:release( )
+            table.removekey(worldImages, key)
+        end
+    end
+
     for cx = player.wx - 1, player.wx do
         for cy = player.wy - 1, player.wy do
-            for key, v in next, worldCanvas do
-                if not orCalc(key, {player.wx - 1 ..","..player.wy - 1, player.wx..","..player.wy - 1, player.wx - 1 ..","..player.wy, player.wx..","..player.wy,}) then
-                    v.map:release( )
+            if not worldImages[cx..","..cy] then
+                local info = love.filesystem.getInfo( love.filesystem.getSaveDirectory() .. "/" .. cx .. "," .. cy .. ".png" )
+                if info then
+                    
                 end
-            end
-            if not worldCanvas[cx..","..cy] then worldCanvas[cx..","..cy] = {cx = cx, cy = cy, map = love.graphics.newCanvas(unpack(dim))} end
-            love.graphics.setCanvas(worldCanvas[cx .. "," .. cy].map)
-            -- love.graphics.clear()
-            love.graphics.setColor(1, love.math.random(), love.math.random(), 0.8)
+                chunkCanvas = love.graphics.newCanvas(unpack(dim))
+                love.graphics.setCanvas(chunkCanvas)
+                love.graphics.clear()
 
-            local originalTiles = {}
-            for key,tiles in next, worldChunks do
-                if key == cx .. "," .. cy then
-                    for i,v in ipairs(tiles) do
-                        drawTile(v, cx, cy)
-                        addCritters(v)
-                        local x,y = v.X - cx * chunkSize, v.Y - cy * chunkSize
-                        if v.GroundTile and v.GroundTile ~= "" then originalTiles[x..","..y] = true end
+                local originalTiles = {}
+                for key,tiles in next, worldChunks do
+                    if key == cx .. "," .. cy then
+                        for i,v in ipairs(tiles) do
+                            drawTile(v, cx, cy)
+                            addCritters(v)
+                            local x,y = v.X - cx * chunkSize, v.Y - cy * chunkSize
+                            if v.GroundTile and v.GroundTile ~= "" then originalTiles[x..","..y] = true end
+                        end
                     end
                 end
-            end
 
-            local groundTiles = {}
-            for x = 0, chunkSize - 1 do
-                for y = 0, chunkSize - 1 do
-                    if not originalTiles[x..","..y] then drawGroundImages(cx,cy,x,y,groundTiles) end
+                local groundTiles = {}
+                for x = 0, chunkSize - 1 do
+                    for y = 0, chunkSize - 1 do
+                        if not originalTiles[x..","..y] then 
+                            drawGroundImages(cx,cy,x,y,groundTiles)
+                        end
+                    end
                 end
+                love.graphics.setCanvas()
+                local imageData = chunkCanvas:newImageData( )
+                -- imageData:encode("png", cx .. "," .. cy .. ".png")
+                worldImages[cx..","..cy] = love.graphics.newImage(imageData)
             end
-
-            love.graphics.setCanvas()
         end
+    end
+
+    --[[
+        if not image then
+            create new image
+        else get current image
+    ]]
+
+    if player.x and player.y then
+        createNPCChatBackground(player.x,player.y)
+    else
+        createNPCChatBackground(0,0)
     end
 end
 
-local nf = {0.009, 0.07, 0.1, 0.3} -- noise factors {0.006, 0.07, 0.1}
+local nf = {0.009, 0.07, 0.002, 0.3} -- noise factors {0.006, 0.07, 0.1}
 function drawGroundImages(cx,cy,x,y,groundTiles)
     local nx,ny = x + cx * chunkSize, y + cy * chunkSize
     -- drawSimplexNoise(nx,ny)  -- sets background noise
     -- love.graphics.draw(groundImg, x * 32, y * 32)
 
-    local largeNoise = love.math.noise(nx * nf[1], ny * nf[1]) - love.math.noise(nx * nf[2], ny * nf[2]) * 0.1 - love.math.noise(nx * nf[3], ny * nf[3]) * 0.0
+    local largeNoise = love.math.noise(nx * nf[1], ny * nf[1]) - love.math.noise(nx * nf[2], ny * nf[2]) * 0.1-- + love.math.noise(nx * nf[3], ny * nf[3]) * 0.2
     local smallNoise = love.math.noise(nx * nf[4], ny * nf[4])
 
     local groundColor = largeNoise * 1.5 - 0.5 - smallNoise * 0.04
@@ -144,18 +180,15 @@ function drawGroundImages(cx,cy,x,y,groundTiles)
         drawNoiseTile("assets/world/grounds/Sand.png",x,y)
         if smallNoise > 0.95 and largeNoise > 0.85 then drawNoiseTile("assets/world/objects/foliage/BQ Foliage-3.png",x,y) end
         groundTiles[nx..","..ny] = true
+    else
+        local waterColor = 0.6 + largeNoise * 0.4
+        love.graphics.setColor(waterColor, waterColor, waterColor)
+        drawNoiseTile("assets/world/grounds/Water.png",x,y)
     end
-
-    -- if not groundTiles[nx..","..ny] and smallNoise < largeNoise * 0.5 then
-    --     drawNoiseTile("assets/world/grounds/Sand.png",x,y) groundTiles[nx..","..ny] = true
-    -- end
-
-    local waterColor = 0.6 + largeNoise * 0.4
-    love.graphics.setColor(waterColor, waterColor, waterColor)
-    if not groundTiles[nx..","..ny] then drawNoiseTile("assets/world/grounds/Water.png",x,y) end
 end
 
 function drawNoiseTile(asset,x,y)
+    if not worldImg[asset] then worldImg[asset] = getImgIfNotExist(asset) end
     love.graphics.draw(worldImg[asset], x * 32, y * 32)
 end
 
@@ -177,21 +210,17 @@ end
 
 function drawWorld()
     love.graphics.setColor(1,1,1,1)
-    love.graphics.setBlendMode("alpha", "premultiplied")
-    for key, canvas in next, worldCanvas do
-        love.graphics.draw(worldCanvas[key].map, canvas.cx * (32 * chunkSize), canvas.cy * (32 * chunkSize))
-    end
-    love.graphics.setBlendMode("alpha")
-    love.graphics.setColor(1,1,1)
-end
+    -- love.graphics.setBlendMode("alpha", "premultiplied")
+    -- for key, canvas in next, worldCanvas do
+    --     love.graphics.draw(worldCanvas[key].map, canvas.cx * (32 * chunkSize), canvas.cy * (32 * chunkSize))
+    -- end
+    -- love.graphics.setBlendMode("alpha")
 
-function drawCanvases(x, y, canvas, lowX, lowY, highX, highY)
-    love.graphics.draw(canvas.map, lowX, lowY)
-    local modes = {{x,0}, {0,y}, {x,y},}
-    for i,v in ipairs(modes) do
-        local key = canvas.cx + v[1] .. "," .. canvas.cy + v[2]
-        if worldCanvas[key] then love.graphics.draw(worldCanvas[key].map, (canvas.cx + v[1]) * (32 * chunkSize), (canvas.cy + v[2]) * (32 * chunkSize)) end
+    for key,img in next, worldImages do
+        v = explode(key, ",")
+        love.graphics.draw(img, v[1] * (32 * chunkSize), v[2] * (32 * chunkSize))
     end
+    love.graphics.setColor(1,1,1)
 end
 
 function getWorldAsset(v,x,y)
