@@ -98,6 +98,10 @@ function loadChunks(cx,cy)
             for x = 0, chunkSize - 1 do
                 for y = 0, chunkSize - 1 do
                     if not originalTiles[x..","..y] then  drawGroundImages(cx,cy,x,y,groundTiles) end
+                    -- generate new tiles
+                    -- add to worldLookup
+                    -- iterate through new tiles to find isTileWall or isTileWater
+                    -- draw new tiles end
                 end
             end
             
