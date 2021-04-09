@@ -68,7 +68,7 @@ utf8 = require("utf8")
 newOutliner = require 'scripts.libraries.outliner'
 
 version = "Early Access" 
-versionType = "release" -- "dev" for quick login, "release" for not
+versionType = "dev" -- "dev" for quick login, "release" for not
 if versionType == "dev" then require 'dev' end
 
 versionNumber = "1.3.1+2" -- very important for settings
@@ -449,7 +449,7 @@ local tickCount = 0
 
 function tick()
     tickCount = tickCount + 1
-    print(tickCount)
+    -- print(tickCount)
     tickOtherPlayers()
     tickEnemies()
     tickAuras()
