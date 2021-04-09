@@ -136,6 +136,7 @@ function love.load()
     initNews()
     love.graphics.setFont(textFont)
     recursivelyDelete( "img" )
+    love.filesystem.createDirectory( "img" )
 end
 
 function love.draw()

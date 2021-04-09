@@ -2,8 +2,9 @@ isWorldCreated = false
 worldImages = {}
 worldLookup = {}
 lightSource = {}
-chunkSize = 32
+chunkSize = 16
 halfChunk = chunkSize / 2
+chunkMap = {-3, 2, -2, 1}
 
 function tickWorld()
     player.wx, player.wy = math.floor((player.x + halfChunk) / chunkSize), math.floor((player.y + halfChunk) / chunkSize)
@@ -27,8 +28,12 @@ function createWorld()
     critters = {}
     worldEmitters = {}
     worldLookup = {}
+
+    local tab = {}
+    for x = chunkMap[1], chunkMap[2] do for y = chunkMap[3], chunkMap[4] do tab[#tab+1] = player.wx + x .."," .. player.wy + y end end
+
     for key,tiles in next, worldChunks do
-        if orCalc(key, {player.wx - 1 ..","..player.wy - 1, player.wx..","..player.wy - 1, player.wx - 1 ..","..player.wy, player.wx..","..player.wy,}) then
+        if orCalc(key, tab) then
             for i,v in ipairs(tiles) do
                 if not worldLookup[v.X] then worldLookup[v.X] = {} end
                 worldLookup[v.X][v.Y] = copy(v)
@@ -54,15 +59,15 @@ function createWorld()
     end
 
     for key, v in next, worldImages do
-        if not orCalc(key, {player.wx - 1 ..","..player.wy - 1, player.wx..","..player.wy - 1, player.wx - 1 ..","..player.wy, player.wx..","..player.wy,}) then
-            print("Releasing " .. key)
+        if not orCalc(key, tab) then
+            -- print("Releasing " .. key)
             v:release( )
             table.removekey(worldImages, key)
         end
     end
 
-    for cx = player.wx - 1, player.wx do
-        for cy = player.wy - 1, player.wy do
+    for cx = player.wx + chunkMap[1], player.wx + chunkMap[2] do
+        for cy = player.wy + chunkMap[3], player.wy + chunkMap[4] do
             if not worldImages[cx..","..cy] then
                 local fileString = "img/" .. cx .. "," .. cy .. ".tga"
                 local info = love.filesystem.getInfo( fileString )
@@ -100,11 +105,11 @@ function createWorld()
         end
     end
 
-    if player.x and player.y then
-        createNPCChatBackground(player.x,player.y)
-    else
-        createNPCChatBackground(0,0)
-    end
+    -- if player.x and player.y then
+    --     createNPCChatBackground(player.x,player.y)
+    -- else
+    --     createNPCChatBackground(0,0)
+    -- end
 end
 
 local nf = {0.009, 0.07, 0.002, 0.3} -- noise factors {0.006, 0.07, 0.1}

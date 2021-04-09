@@ -75,7 +75,7 @@ function initSettings()
         if contents["hotbar"] and #contents["hotbar"] ~= 7 then
             hotbar = hotbar
         else
-            hotbar = contents["hotbar"] or hotbar
+            hotbar = contents["hotbar"]
         end
         
       
