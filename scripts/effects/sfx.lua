@@ -2,24 +2,24 @@ sfxr = require("scripts.libraries.sfxr")
 
 function initSFX()
 
-    if love.audio.isEffectsSupported() then 
-        sfx = {
-            genRev = {
-                enabled = true,
-                action = function() love.audio.setEffect("genRev", {type = "reverb", gain = 0.3, decaytime = 0.5, highgain = 0.4, decayhighratio = 0.4, roomrolloff = 0.2, airabsorption = 0,}) end },
-            caveRev = {
-                enabled = true,
-                action = function() love.audio.setEffect("caveRev", {type = "reverb", decaytime = 3, highgain = 0.5, decayhighratio = 0.2,}) end },
-            elodineRev = {
-                enabled = true,
-                action = function() love.audio.setEffect("elodineRev", {type = "reverb", decaytime = 2, airabsorption = 10, highgain = 0.6, density = 0.05}) end },
-            -- elodineFlange = {
-            --     enabled = true,
-            --     action = function() love.audio.setEffect("elodineFlange", {type = "echo", damping = 0.4, delay = 0.4, feedback = 0.4, spread = 0.2,}) end },
-        }
-    end
+    -- if love.audio.isEffectsSupported() then 
+    --     sfx = {
+    --         genRev = {
+    --             enabled = true,
+    --             action = function() love.audio.setEffect("genRev", {type = "reverb", gain = 0.3, decaytime = 0.5, highgain = 0.4, decayhighratio = 0.4, roomrolloff = 0.2, airabsorption = 0,}) end },
+    --         caveRev = {
+    --             enabled = true,
+    --             action = function() love.audio.setEffect("caveRev", {type = "reverb", decaytime = 3, highgain = 0.5, decayhighratio = 0.2,}) end },
+    --         elodineRev = {
+    --             enabled = true,
+    --             action = function() love.audio.setEffect("elodineRev", {type = "reverb", decaytime = 2, airabsorption = 10, highgain = 0.6, density = 0.05}) end },
+    --         -- elodineFlange = {
+    --         --     enabled = true,
+    --         --     action = function() love.audio.setEffect("elodineFlange", {type = "echo", damping = 0.4, delay = 0.4, feedback = 0.4, spread = 0.2,}) end },
+    --     }
+    -- end
 
-    for key,v in next, sfx do v.action() end -- init sfx
+    -- for key,v in next, sfx do v.action() end -- init sfx
 
     sfxRolloff = 0.3
     love.audio.setDistanceModel("exponent")
@@ -145,14 +145,14 @@ end
 local tileName = "Squall's End"
 
 function setEnvironmentEffects(sound)
-    local x,y = 0,0
-    setEffect(sound, "genRev", true)
-    if worldLookup[player.x] and worldLookup[player.x][player.y] then
-        -- print(worldLookup[player.x][player.y].Name)
-        if not orCalc(worldLookup[player.x][player.y].Name, {"", "Spooky Forest",}) then tileName = worldLookup[player.x][player.y].Name end
-        setEffect(sound, "caveRev", orCalc(tileName, {"Shieldbreak Mine", "Shieldbreak", "The Permafrost Mines"}))
-        setEffect(sound, "elodineRev", orCalc(tileName, {"Elodine's Gift",}))
-    end
+    -- local x,y = 0,0
+    -- setEffect(sound, "genRev", true)
+    -- if worldLookup[player.x] and worldLookup[player.x][player.y] then
+    --     -- print(worldLookup[player.x][player.y].Name)
+    --     if not orCalc(worldLookup[player.x][player.y].Name, {"", "Spooky Forest",}) then tileName = worldLookup[player.x][player.y].Name end
+    --     setEffect(sound, "caveRev", orCalc(tileName, {"Shieldbreak Mine", "Shieldbreak", "The Permafrost Mines"}))
+    --     setEffect(sound, "elodineRev", orCalc(tileName, {"Elodine's Gift",}))
+    -- end
 end
 
 function setEffect(sound, effect, bool)

@@ -356,6 +356,7 @@ function transitionToPhaseGame()
     news.open = true
     news.alpha = 1
     news.selected.item = 1
+    getNews()
 end
 
 function initWorldTable(b)

@@ -51,7 +51,7 @@ function initCrafting()
 
     b = {}
     c, h = http.request{url = api.url.."/crafts", method="GET", source=ltn12.source.string(body), sink=ltn12.sink.table(b)}
-    if b[1] ~= null then
+    if b ~= nil and b[1] ~= nil then
         crafting.catalogue = json:decode(table.concat(b))
         for i, v in ipairs(crafting.catalogue) do
             crafting.itemCount = crafting.itemCount + 1
@@ -63,10 +63,11 @@ function initCrafting()
             end
         end
     else
+        love.window.showMessageBox("Error loading crafting catalogue", "Post this on Discord please!\n"..tostring(b).."\n")
         crafting.catalogue = {}
     end
 
-    local success,msg = love.filesystem.write("recipes.txt", json:encode_pretty(crafting.recipes))
+  --  local success,msg = love.filesystem.write("recipes.txt", json:encode_pretty(crafting.recipes))
 
     for i, v in ipairs(crafting.fields) do
         crafting.openField[i] = false
@@ -74,6 +75,7 @@ function initCrafting()
 
     getRecipesHeight()
 end
+
 
 function updateCrafting(dt)
     if crafting.open then
