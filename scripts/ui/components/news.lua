@@ -140,14 +140,14 @@ function drawNews()
             end
             love.graphics.draw(news.gradient, dx, dy)
 
-            dw, dh = dw - 20, dh
+            dw, dh = dw - 32, dh
             dx, dy = dx + 16, dy + dh - 10
             love.graphics.setColor(1, 1, 1, news.alpha)
             love.graphics.printf(news.items[news.selected.item].header, dx,
-                dy - getTextHeight(news.items[news.selected.item].header, dw, font, 5) -
-                    getTextHeight(news.items[news.selected.item].header, dw, font, 2), dw, "left", 0, 5)
+                dy - getTextHeight(news.items[news.selected.item].header, dw, font, 5) - 10 -
+                    getTextHeight(news.items[news.selected.item].desc, dw, font, 2), dw / 5, "left", 0, 5)
             love.graphics.printf(news.items[news.selected.item].desc, dx,
-                dy - getTextHeight(news.items[news.selected.item].header, dw, font, 2), dw, "left", 0, 2)
+                dy - getTextHeight(news.items[news.selected.item].desc, dw, font, 2), dw / 2, "left", 0, 2)
             love.graphics.setStencilTest()
         end
     })
@@ -181,6 +181,7 @@ function checkNewsMousePressed(button)
     if news.mouseOver.exit then
         news.exit.action()
     end
+    if news.mouseOver.item > 0 then news.items[news.mouseOver.item].action() end
 end
 
 function drawGeneralButton(x, y, tab)
