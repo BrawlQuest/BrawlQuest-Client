@@ -104,38 +104,40 @@ function createWorld()
     for cx = player.wx - 1, player.wx do
         for cy = player.wy - 1, player.wy do
             if not worldImages[cx..","..cy] then
-                local info = love.filesystem.getInfo( love.filesystem.getSaveDirectory() .. "/" .. cx .. "," .. cy .. ".png" )
-                if info then
-                    
-                end
-                chunkCanvas = love.graphics.newCanvas(unpack(dim))
-                love.graphics.setCanvas(chunkCanvas)
-                love.graphics.clear()
+                local fileString = love.filesystem.getSaveDirectory() .. "/" .. cx .. "," .. cy .. ".png"
+                print(fileString)
+                local info = love.filesystem.getInfo( fileString )
+                print(info)
+                if info then worldImages[cx..","..cy] = love.graphics.newImage(fileString) print("Loading from file") else
+                    chunkCanvas = love.graphics.newCanvas(unpack(dim))
+                    love.graphics.setCanvas(chunkCanvas)
+                    love.graphics.clear()
 
-                local originalTiles = {}
-                for key,tiles in next, worldChunks do
-                    if key == cx .. "," .. cy then
-                        for i,v in ipairs(tiles) do
-                            drawTile(v, cx, cy)
-                            addCritters(v)
-                            local x,y = v.X - cx * chunkSize, v.Y - cy * chunkSize
-                            if v.GroundTile and v.GroundTile ~= "" then originalTiles[x..","..y] = true end
+                    local originalTiles = {}
+                    for key,tiles in next, worldChunks do
+                        if key == cx .. "," .. cy then
+                            for i,v in ipairs(tiles) do
+                                drawTile(v, cx, cy)
+                                addCritters(v)
+                                local x,y = v.X - cx * chunkSize, v.Y - cy * chunkSize
+                                if v.GroundTile and v.GroundTile ~= "" then originalTiles[x..","..y] = true end
+                            end
                         end
                     end
-                end
 
-                local groundTiles = {}
-                for x = 0, chunkSize - 1 do
-                    for y = 0, chunkSize - 1 do
-                        if not originalTiles[x..","..y] then 
-                            drawGroundImages(cx,cy,x,y,groundTiles)
+                    local groundTiles = {}
+                    for x = 0, chunkSize - 1 do
+                        for y = 0, chunkSize - 1 do
+                            if not originalTiles[x..","..y] then 
+                                drawGroundImages(cx,cy,x,y,groundTiles)
+                            end
                         end
                     end
+                    love.graphics.setCanvas()
+                    local imageData = chunkCanvas:newImageData( )
+                    -- imageData:encode("png", cx .. "," .. cy .. ".png")
+                    worldImages[cx..","..cy] = love.graphics.newImage(imageData)
                 end
-                love.graphics.setCanvas()
-                local imageData = chunkCanvas:newImageData( )
-                -- imageData:encode("png", cx .. "," .. cy .. ".png")
-                worldImages[cx..","..cy] = love.graphics.newImage(imageData)
             end
         end
     end
