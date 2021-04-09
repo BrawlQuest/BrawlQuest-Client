@@ -62,7 +62,7 @@ function initLogin()
     initLoginBackground()
     loadingAmount = 0
     loadingText = "Connecting to Servers "
-    worldLoadingText = "Loading World\nSit back and relax, this wont take long :D"
+    worldLoadingText = "Loading World\nSit back and relax, this won't take long :D"
     loginAttempts = 1
     circleAmount = 0
     loadingDots = "\n"
