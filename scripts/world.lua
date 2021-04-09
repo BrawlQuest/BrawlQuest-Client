@@ -69,7 +69,6 @@ function createWorld()
                 if info then worldImages[cx..","..cy] = love.graphics.newImage(fileString) else
                     chunkCanvas = love.graphics.newCanvas(32 * chunkSize, 32 * chunkSize)
                     love.graphics.setCanvas(chunkCanvas)
-                    -- love.graphics.clear()
 
                     local originalTiles = {}
                     for key,tiles in next, worldChunks do
@@ -91,6 +90,7 @@ function createWorld()
                             end
                         end
                     end
+                    
                     love.graphics.setCanvas()
                     local imageData = chunkCanvas:newImageData( )
                     imageData:encode("tga", "img/" .. cx .. "," .. cy .. ".tga")
