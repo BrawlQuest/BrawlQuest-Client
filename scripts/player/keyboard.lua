@@ -18,7 +18,7 @@ end
 function checkKeyPressedPhaseGame(key)
     showMouse = false
     if worldEdit.open then checkWorldEditKeyPressed(key)
-    -- elseif news.open then checkNewsKeyPressed(key)
+    elseif news.open then checkNewsKeyPressed(key)
     elseif forging.open then checkForgingKeyPressed(key)
     elseif challenges.open then checkChallengesKeyPressed(key)
     elseif enchanting.open then checkEnchantingKeyPressed(key)

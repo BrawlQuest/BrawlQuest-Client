@@ -36,7 +36,8 @@ function initHUD()
     headerFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 18) -- TODO: get a license for this font
     headerMediumFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 28)
     headerBigFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 32) -- TODO: get a license for this font
-    font = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 18)
+
+    font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8)
 
     chatFont = love.graphics.newFont("assets/ui/fonts/C&C Red Alert [INET].ttf", 26)
 
@@ -141,7 +142,7 @@ function updateHUD( dt )
         updateQuestHub(dt)
         updateCrafting(dt) -- fine
         if showChat then updateChat(dt) end
-        if orCalc(true, {crafting.open, not inventory.notNPC, forging.open, settPan.opacity > 0}) then uiOpen = true else uiOpen = false end
+        if orCalc(true, {crafting.open, not inventory.notNPC, forging.open, settPan.opacity > 0, news.alpha ~= 1,}) then uiOpen = true else uiOpen = false end
     end
 
     updateFloats(dt)
@@ -160,7 +161,7 @@ function updateHUD( dt )
 end
 
 function drawHUD()
-    if showHUD then
+    if andCalc(true, {showHUD, news.alpha ~= 1}) then
         love.graphics.push()
             local i = 1
             love.graphics.scale(scale)
