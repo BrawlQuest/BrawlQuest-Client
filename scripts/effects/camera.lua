@@ -87,6 +87,6 @@ function setLighting(response)
         if not lighting.open then setAmbientLighting() end
     else
         l.current = "lol"
-        Luven.setAmbientLightColor({1,1,1})
+        Luven.setAmbientLightColor({0.2,0.1,0.1})
     end
 end

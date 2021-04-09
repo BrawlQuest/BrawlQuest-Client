@@ -135,6 +135,7 @@ function love.load()
     initParticles()
     initNews()
     love.graphics.setFont(textFont)
+    recursivelyDelete( "img" )
 end
 
 function love.draw()
