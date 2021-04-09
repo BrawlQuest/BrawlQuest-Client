@@ -49,12 +49,10 @@ end
 function getNews()
 
     b, c, h = http.request("https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=871940&count=3")
-    print("Loaded news: "..b)
     newsItems = json:decode(b)
 
     news.items = {}
     for i,newsItem in ipairs(newsItems.appnews.newsitems) do
-        print(json:encode(newsItem))
         news.items[#news.items + 1] = {
             header = newsItem.title,
             desc = newsItem.feedlabel,
@@ -100,7 +98,7 @@ function drawNews()
     drawButtonBg(x, y, w, h, 10, {1, 1, 1, news.alpha})
 
     love.graphics.setColor(1, 1, 1, news.alpha)
-    love.graphics.print("Welcome Back " .. me.Name .. "!", x + 20, y + 25, 0, 4)
+    love.graphics.print("Welcome back " .. me.Name .. "!", x + 20, y + 25, 0, 4)
 
     dx, dy = x + 20, y + 70
     dw, dh = w - 40, 260
