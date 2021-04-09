@@ -304,7 +304,7 @@ function drawEnemies()
                     steam.userStats.setAchievement('kill_boss_achievement')
                     steam.userStats.storeStats()
                 end
-                local kills = steam.userStats.getStatInt("kill")
+                local success,kills = steam.userStats.getStatInt("kill")
                 steam.userStats.setStatInt("kill", kills+1)
                 if v.Enemy.Width and v.Enemy.Height then
                     for a = 1, v.Enemy.Width do

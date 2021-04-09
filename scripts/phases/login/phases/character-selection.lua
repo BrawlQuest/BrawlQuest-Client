@@ -352,7 +352,7 @@ function transitionToPhaseGame()
     else
         zoneChange("Error code "..tostring(c))
     end
-    news.open = false
+    news.open = true
     news.alpha = 1
     news.selected.item = 1
 end
