@@ -71,7 +71,7 @@ version = "Early Access"
 versionType = "dev" -- "dev" for quick login, "release" for not
 if versionType == "dev" then require 'dev' end
 
-versionNumber = "1.3.1+2" -- very important for settings
+versionNumber = "1.3.1+3" -- very important for settings
 
 phase = "login"
 blockMap = {}

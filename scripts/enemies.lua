@@ -296,7 +296,7 @@ function drawEnemies()
                 if v.Enemy.Name == "Fire Phoenix" then
                     steam.userStats.setAchievement('kill_phoenix_achievement')
                     steam.userStats.storeStats()
-                elseif v.Enemy.Name == "Frost Entity" then
+                elseif v.Enemy.Name == "Entity of Frost" then
                     steam.userStats.setAchievement('kill_frost_achievement')
                     steam.userStats.storeStats()
                 end
@@ -304,6 +304,8 @@ function drawEnemies()
                     steam.userStats.setAchievement('kill_boss_achievement')
                     steam.userStats.storeStats()
                 end
+                local kills = steam.userStats.getStatInt("kill")
+                steam.userStats.setStatInt("kill", kills+1)
                 if v.Enemy.Width and v.Enemy.Height then
                     for a = 1, v.Enemy.Width do
                         for k = 1, v.Enemy.Height do
