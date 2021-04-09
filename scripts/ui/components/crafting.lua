@@ -66,7 +66,7 @@ function initCrafting()
         crafting.catalogue = {}
     end
 
-    local success,msg = love.filesystem.write("recipes.txt", json:encode_pretty(crafting.recipes))
+  --  local success,msg = love.filesystem.write("recipes.txt", json:encode_pretty(crafting.recipes))
 
     for i, v in ipairs(crafting.fields) do
         crafting.openField[i] = false
@@ -74,6 +74,7 @@ function initCrafting()
 
     getRecipesHeight()
 end
+
 
 function updateCrafting(dt)
     if crafting.open then
