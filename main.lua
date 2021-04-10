@@ -486,7 +486,7 @@ function love.update(dt)
                                 "Gather " .. v.Quest.ValueRequired .. "x " .. v.Quest.Value
                         elseif v.Quest.Type == "go" then
                             quests[v.Tracked][#quests[v.Tracked]].task =
-                                "Go to " .. (worldLookup[v.Quest.X][v.Quest.Y].Name or v.Quest.X .. ", " .. v.Quest.Y)
+                                "Go to " .. (worldLookup[v.Quest.X..","..v.Quest.Y].Name or v.Quest.X .. ", " .. v.Quest.Y) -- ..","..
                         end
                     end
 

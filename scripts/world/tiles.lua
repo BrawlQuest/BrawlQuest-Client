@@ -21,70 +21,68 @@ function getDrawableWall(tileName, x, y) -- this is used to smooth the corners o
         right = false,
         bottom = false,
     }
-    if  worldLookup[x-1] and 
-    worldLookup[x+1] and 
-    worldLookup[x] then
+    -- if  worldLookup[x-1] and worldLookup[x+1] and worldLookup[x] then
     local worldToCheck = {
-        worldLookup[x-1][y],
-        worldLookup[x+1][y],
-        worldLookup[x][y-1],
-        worldLookup[x][y+1]
+        worldLookup[x-1 ..","..y],
+        worldLookup[x+1 ..","..y],
+        worldLookup[x..","..y-1],
+        worldLookup[x..","..y+1]
     }
- 
+
 
     for i = 1, 4 do
         v = worldToCheck[i]
-            if v and (isTileWall(v.ForegroundTile) or isTileWall(v.GroundTile)) then
-                if v.X == x - 1 and v.Y == y then
-                    nearby.left = true
-                elseif v.X == x + 1 and v.Y == y then
-                    nearby.right = true
-                elseif v.X == x and v.Y == y + 1 then
-                    nearby.bottom = true
-                elseif v.X == x and v.Y == y - 1 then
-                    nearby.top = true
-                end
+        if v and (isTileWall(v.ForegroundTile) or isTileWall(v.GroundTile)) then
+            if v.X == x - 1 and v.Y == y then
+                nearby.left = true
+            elseif v.X == x + 1 and v.Y == y then
+                nearby.right = true
+            elseif v.X == x and v.Y == y + 1 then
+                nearby.bottom = true
+            elseif v.X == x and v.Y == y - 1 then
+                nearby.top = true
             end
         end
-
-        local assetName = "1.png"
-
-        if nearby.top and nearby.bottom and nearby.left and nearby.right then
-            assetName = "12.png"
-        elseif nearby.top and nearby.bottom and nearby.left then
-            assetName = "15.png"
-        elseif nearby.top and nearby.bottom and nearby.right then
-            assetName = "9.png"
-        elseif nearby.left and nearby.right and nearby.bottom then
-            assetName = "11.png"
-        elseif nearby.left and nearby.right and nearby.top then
-            assetName = "13.png"
-        elseif nearby.top and nearby.left then
-            assetName = "16.png"
-        elseif nearby.top and nearby.right then
-            assetName = "10.png"
-        elseif nearby.bottom and nearby.left then
-            assetName = "14.png"
-        elseif nearby.bottom and nearby.right then
-            assetName = "8.png"
-        elseif nearby.left and nearby.right then
-            assetName = "6.png"
-        elseif nearby.top and nearby.bottom then
-            assetName = "3.png"
-        elseif nearby.top then
-            assetName = "4.png"
-        elseif nearby.bottom then
-            assetName = "2.png"
-        elseif nearby.left then
-            assetName = "7.png"
-        elseif nearby.right then
-            assetName = "5.png"
-        end
-
-        return "assets/world/objects/Wall/" .. tileName .. "/" .. assetName
-    else
-        return "assets/world/objects/Wall/" .. tileName .. "/1.png"
     end
+
+    local assetName = "1.png"
+
+    if nearby.top and nearby.bottom and nearby.left and nearby.right then
+        assetName = "12.png"
+    elseif nearby.top and nearby.bottom and nearby.left then
+        assetName = "15.png"
+    elseif nearby.top and nearby.bottom and nearby.right then
+        assetName = "9.png"
+    elseif nearby.left and nearby.right and nearby.bottom then
+        assetName = "11.png"
+    elseif nearby.left and nearby.right and nearby.top then
+        assetName = "13.png"
+    elseif nearby.top and nearby.left then
+        assetName = "16.png"
+    elseif nearby.top and nearby.right then
+        assetName = "10.png"
+    elseif nearby.bottom and nearby.left then
+        assetName = "14.png"
+    elseif nearby.bottom and nearby.right then
+        assetName = "8.png"
+    elseif nearby.left and nearby.right then
+        assetName = "6.png"
+    elseif nearby.top and nearby.bottom then
+        assetName = "3.png"
+    elseif nearby.top then
+        assetName = "4.png"
+    elseif nearby.bottom then
+        assetName = "2.png"
+    elseif nearby.left then
+        assetName = "7.png"
+    elseif nearby.right then
+        assetName = "5.png"
+    end
+
+    return "assets/world/objects/Wall/" .. tileName .. "/" .. assetName
+    -- else
+    --     return "assets/world/objects/Wall/" .. tileName .. "/1.png"
+    -- end
 end
 
 function isTileWater(tileName)
@@ -92,7 +90,7 @@ function isTileWater(tileName)
 end
 
 function getDrawableWater(tileName, x, y)
-    if  worldLookup[x-1] and worldLookup[x+1] and worldLookup[x] and worldLookup[x-1][y] then
+    -- if  worldLookup[x-1] and worldLookup[x+1] and worldLookup[x] and worldLookup[x-1][y] then
         local fp = explode(tileName, "/")
         tileName = explode(fp[#fp], ".")[1]
 
@@ -108,14 +106,14 @@ function getDrawableWater(tileName, x, y)
         }
 
         local worldToCheck = {
-            worldLookup[x-1][y],
-            worldLookup[x+1][y],
-            worldLookup[x][y+1],
-            worldLookup[x][y-1],
-            worldLookup[x-1][y-1],
-            worldLookup[x+1][y-1],
-            worldLookup[x-1][y+1],
-            worldLookup[x+1][y+1]
+            worldLookup[x-1 ..","..y],
+            worldLookup[x+1 ..","..y],
+            worldLookup[x..","..y+1],
+            worldLookup[x..","..y-1],
+            worldLookup[x-1 ..","..y-1],
+            worldLookup[x+1 ..","..y-1],
+            worldLookup[x-1 ..","..y+1],
+            worldLookup[x+1 ..","..y+1]
         }
     
 
@@ -212,15 +210,25 @@ function getDrawableWater(tileName, x, y)
         end
 
         return "assets/world/water/"  .. assetName
-    else
-        return "assets/world/water/1.png" 
-    end
+    -- else
+    --     return "assets/world/water/1.png" 
+    -- end
 end
 
 function isNearbyTile(name)
-    return worldLookup and worldLookup[player.x] and worldLookup[player.x+1] and worldLookup[player.x-1] and
-     worldLookup[player.x+1][player.y] and worldLookup[player.x-1][player.y] and worldLookup[player.x][player.y+1] and
-      worldLookup[player.x][player.y-1] and
-      (worldLookup[player.x+1][player.y].ForegroundTile == name or worldLookup[player.x-1][player.y].ForegroundTile == name or
-      worldLookup[player.x][player.y+1].ForegroundTile == name or  worldLookup[player.x][player.y-1].ForegroundTile == name)
+    -- local tab = {}
+    -- for x = -1, 1 do
+    --     for y = -1, 1 do
+    --         tab[#tab+1] = worldLookup[player.x + x ..",".. player.y + y]
+    --     end
+    -- end
+
+    -- for i,v in ipairs(tab) do
+    --     tab[#tab+1] = v.ForegroundTile == name
+    -- end
+
+    return worldLookup[player.x+1 ..","..player.y] and worldLookup[player.x-1 ..","..player.y] and worldLookup[player.x ..","..player.y+1] and
+      worldLookup[player.x..","..player.y-1] and
+      (worldLookup[player.x+1 ..","..player.y].ForegroundTile == name or worldLookup[player.x-1 ..","..player.y].ForegroundTile == name or
+      worldLookup[player.x..","..player.y+1].ForegroundTile == name or  worldLookup[player.x..","..player.y-1].ForegroundTile == name)
 end

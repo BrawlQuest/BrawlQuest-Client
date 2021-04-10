@@ -62,8 +62,8 @@ function setLighting(response)
 
     if not worldEdit.open then
         
-        if worldLookup[me.X] and worldLookup[me.X][me.Y] and worldLookup[me.X][me.Y].Name ~= "" then -- custom lighting for different zones
-            local location = worldLookup[me.X][me.Y].Name
+        if worldLookup[me.X..","..me.Y] and worldLookup[me.X..","..me.Y].Name ~= "" then -- custom lighting for different zones
+            local location = worldLookup[me.X..","..me.Y].Name
             if l.current ~= location and not l.open then
                 lighting.next = location
                 lighting.previous = l.current
@@ -87,6 +87,6 @@ function setLighting(response)
         if not lighting.open then setAmbientLighting() end
     else
         l.current = "lol"
-        Luven.setAmbientLightColor({0.2,0.1,0.1})
+        Luven.setAmbientLightColor({1,1,1})
     end
 end

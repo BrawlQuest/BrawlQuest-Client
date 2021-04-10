@@ -36,8 +36,9 @@ function createWorld()
     for key,tiles in next, worldChunks do
         if orCalc(key, tab) then
             for i,v in ipairs(tiles) do
-                if not worldLookup[v.X] then worldLookup[v.X] = {} end
-                worldLookup[v.X][v.Y] = copy(v)
+                worldLookup[v.X..","..v.Y] = copy(v) -- worldLookup[x..","..y]
+                -- if not worldLookup[v.X] then worldLookup[v.X] = {} end
+                -- worldLookup[v.X][v.Y] = copy(v)
 
                 addWorldEmitter(v)
                 if not isTileType(v.ForegroundTile, "Dead") and isTileType(v.ForegroundTile, "Tree") and love.math.random(1,5) == 1 then
@@ -159,9 +160,9 @@ function drawTile(v, cx, cy)
     drawSimplexNoise(v.X, v.Y)
     if worldImg[backgroundAsset] then love.graphics.draw(worldImg[backgroundAsset], x * 32, y * 32) end
     love.graphics.setColor(0,0,0,0.5)
-    if worldLookup[v.X][v.Y-1] and (isTileWall(worldLookup[v.X][v.Y-1].ForegroundTile) or isTileWall(worldLookup[v.X][v.Y-1].GroundTile)) and not isTileWall(v.ForegroundTile) then
+    if worldLookup[v.X..","..v.Y-1] and (isTileWall(worldLookup[v.X..","..v.Y-1].ForegroundTile) or isTileWall(worldLookup[v.X..","..v.Y-1].GroundTile)) and not isTileWall(v.ForegroundTile) then
         love.graphics.rectangle("fill", x * 32, y * 32, 32, 16)
-    elseif (isTileWall(v.GroundTile) or isTileWall(v.ForegroundTile)) and not worldLookup[v.X][v.Y+1] then -- no tile below us but we still need to cast a shadow
+    elseif (isTileWall(v.GroundTile) or isTileWall(v.ForegroundTile)) and not worldLookup[v.X..","..v.Y+1] then -- no tile below us but we still need to cast a shadow
         love.graphics.rectangle("fill", x * 32, y * 32, 32, 16)
     end 
     love.graphics.setColor(1,1,1,1)

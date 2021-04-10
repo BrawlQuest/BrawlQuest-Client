@@ -343,9 +343,9 @@ function drawNewWorldEditTiles()
                 
                     if love.mouse.isDown(1) then
                         if editorCtl.state[4] then -- rubber
-                            if worldLookup[x] and worldLookup[x][y] then
-                                worldEdit.draw[x][y][1] = worldLookup[x][y].GroundTile
-                                worldEdit.draw[x][y][2] = worldLookup[x][y].ForegroundTile
+                            if worldLookup[x..","..y] then
+                                worldEdit.draw[x][y][1] = worldLookup[x..","..y].GroundTile
+                                worldEdit.draw[x][y][2] = worldLookup[x..","..y].ForegroundTile
                                 worldEdit.draw[x][y][3] = ""
                             else
                                 for i = 1, 3 do
@@ -373,9 +373,9 @@ function drawNewWorldEditTiles()
                             worldEdit.draw[x][y][2] = ""
 
                         elseif love.keyboard.isDown("lshift") then
-                            if worldLookup[x] and worldLookup[x][y] then
-                                worldEdit.draw[x][y][1] = worldLookup[x][y].GroundTile
-                                worldEdit.draw[x][y][2] = worldLookup[x][y].ForegroundTile
+                            if worldLookup[x..","..y] then
+                                worldEdit.draw[x][y][1] = worldLookup[x..","..y].GroundTile
+                                worldEdit.draw[x][y][2] = worldLookup[x..","..y].ForegroundTile
                             else
                                 for i = 1, 3 do
                                     worldEdit.draw[x][y][i] = ""
@@ -402,13 +402,13 @@ function checkWorldEditMouseDown(button)
     if worldEdit.open then
 
         if button == 1 and worldEdit.tileSelect then -- Selecting a tile to copy - enemies
-            if worldLookup[worldEdit.tileSelection.x][worldEdit.tileSelection.y] then
-                if worldLookup[worldEdit.tileSelection.x][worldEdit.tileSelection.y].GroundTile ~= worldLookup[worldEdit.tileSelection.x][worldEdit.tileSelection.y].ForegroundTile then
-                    worldEdit.drawableTile[2] = worldLookup[worldEdit.tileSelection.x][worldEdit.tileSelection.y].ForegroundTile
+            if worldLookup[worldEdit.tileSelection.x..","..worldEdit.tileSelection.y] then
+                if worldLookup[worldEdit.tileSelection.x..","..worldEdit.tileSelection.y].GroundTile ~= worldLookup[worldEdit.tileSelection.x..","..worldEdit.tileSelection.y].ForegroundTile then
+                    worldEdit.drawableTile[2] = worldLookup[worldEdit.tileSelection.x..","..worldEdit.tileSelection.y].ForegroundTile
                 end
-                worldEdit.drawableTile[1] = worldLookup[worldEdit.tileSelection.x][worldEdit.tileSelection.y].GroundTile
-                worldEdit.drawableTile[4] = worldLookup[worldEdit.tileSelection.x][worldEdit.tileSelection.y].Collision
-                editorCtl.state[2] = worldLookup[worldEdit.tileSelection.x][worldEdit.tileSelection.y].Collision
+                worldEdit.drawableTile[1] = worldLookup[worldEdit.tileSelection.x..","..worldEdit.tileSelection.y].GroundTile
+                worldEdit.drawableTile[4] = worldLookup[worldEdit.tileSelection.x..","..worldEdit.tileSelection.y].Collision
+                editorCtl.state[2] = worldLookup[worldEdit.tileSelection.x..","..worldEdit.tileSelection.y].Collision
             else
                 worldEdit.drawableTile[1] = "assets/world/grounds/grass/grass08.png"
                 worldEdit.drawableTile[2] = "assets/world/grounds/grass/grass08.png"
@@ -557,6 +557,9 @@ function checkWorldEditKeyPressed(key)
 end
 
 function saveWorldChanges()
+    recursivelyDelete( "img" )
+    love.filesystem.createDirectory( "img" )
+    for key, v in next, worldImages do v:release( ) table.removekey(worldImages, key) end
     local count = 0
     for x = worldEdit.worldSize * -1, worldEdit.worldSize do
         for y = worldEdit.worldSize * -1, worldEdit.worldSize do
@@ -622,12 +625,12 @@ function getWorldInfo()
     for key,tiles in next, worldChunks do
         if orCalc(key, {player.wx - 1 ..","..player.wy - 1, player.wx..","..player.wy - 1, player.wx - 1 ..","..player.wy, player.wx..","..player.wy,}) then
             for i,v in ipairs(tiles) do
-                local location = worldLookup[v.X][v.Y].Name
+                local location = worldLookup[v.X..","..v.Y].Name
                 if not arrayContains(availablePlaceNames, location) and not string.find(location, "Dominion") then
                     availablePlaceNames[#availablePlaceNames + 1] = location
                 end
-                if not arrayContains(avaliableMusic, worldLookup[v.X][v.Y].Music) then
-                    avaliableMusic[#avaliableMusic + 1] = worldLookup[v.X][v.Y].Music
+                if not arrayContains(avaliableMusic, worldLookup[v.X..","..v.Y].Music) then
+                    avaliableMusic[#avaliableMusic + 1] = worldLookup[v.X..","..v.Y].Music
                 end
             end
         end
