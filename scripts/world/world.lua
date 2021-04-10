@@ -18,8 +18,11 @@ function tickWorld()
 end
 
 function drawSimplexNoise(x, y)
+    local noise
     local noiseFactor = 0.23 -- 0.18
-    local noise = 1 - ((love.math.noise( x * 0.06, y * 0.06) - (love.math.noise( x * 0.5, y * 0.5) * 0.2)) * noiseFactor)
+    islandNoise = math.clamp(0.8, love.math.noise(x * 0.009, y * 0.009) - love.math.noise(x * 0.07, y * 0.07) * 0.1, 1) + ((love.math.noise( x * 0.06, y * 0.06) - (love.math.noise( x * 0.5, y * 0.5) * 0.2)) * 2 - 1) * 0.1
+    if islandNoise > 0.85 then noise = islandNoise else noise = 1 - ((love.math.noise( x * 0.06, y * 0.06) - (love.math.noise( x * 0.5, y * 0.5) * 0.2)) * noiseFactor) end
+    noise = islandNoise
     love.graphics.setColor(noise * 1 ,noise * 1 ,noise )
 end
 
@@ -155,12 +158,11 @@ function loadNoiseTiles(cx,cy,x,y)
                 createNoiseTile(grass, tree, cx,cy,x,y,nx,ny,groundColor)  -- draw Grass
             elseif smallNoise >= 0.8 then
                 createNoiseTile(grass, "assets/world/objects/foliage/BQ Foliage-2.png", cx,cy,x,y,nx,ny,groundColor)  -- draw Grass
-            end
+            else createNoiseTile(grass, nil, cx,cy,x,y,nx,ny,groundColor) end
         elseif biome == "Volcanic" then
             if largeNoise > 0.9 then createNoiseTile(grass, "assets/world/grounds/Lava.png", cx,cy,x,y,nx,ny,groundColor) 
             else createNoiseTile(grass, nil, cx,cy,x,y,nx,ny,groundColor) end
-        else createNoiseTile(grass, nil, cx,cy,x,y,nx,ny,groundColor)
-        end
+        else createNoiseTile(grass, nil, cx,cy,x,y,nx,ny,groundColor) end
 
     elseif largeNoise - smallNoise * 0.05 > 0.77 and biome ~= "Ice" then
         local blend

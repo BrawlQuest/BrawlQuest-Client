@@ -186,6 +186,12 @@ function isMouseDown()
     else return false end
 end
 
+function math.average(array) -- gets the average number of an array
+    local num = 0
+    for i,v in ipairs(array) do num = num + v end
+    if #array > 0 then return num / #array else return 0 end
+end
+
 function math.averageAngles(...)
 	local x,y = 0,0
 	for i=1,select('#',...) do local a= select(i,...) x, y = x+math.cos(a), y+math.sin(a) end
