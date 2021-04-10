@@ -2,7 +2,6 @@ isWorldCreated = false
 worldImages = {}
 worldLookup = {}
 lightSource = {}
-noiseLights = {}
 originalTiles = {}
 chunkSize = 16
 halfChunk = chunkSize / 2
@@ -70,10 +69,6 @@ function createWorld()
         end
     end
 
-    -- for key,light in next, noiseLights do
-    --     Luven.addNormalLight(16 + (light.x * 32), 16 + (light.y * 32), lightGivers["assets/world/objects/lantern.png"].color, lightGivers["assets/world/objects/lantern.png"].brightness)
-    -- end
-
     -- if player.x and player.y then
     --     createNPCChatBackground(player.x,player.y)
     -- else
@@ -120,40 +115,80 @@ function drawChunks(cx,cy)
     end
 end
 
-local nf = {0.009, 0.07, 0.002, 0.3} -- noise factors {0.006, 0.07, 0.1}
+local nf = {
+    [1] = 0.009,  -- largeNoise - Main (creates islands)
+    [2] = 0.07,   -- largeNoise - deviance
+    [3] = 0.3,    -- smallNoise - mainly for putting in trees and stuff
+    [4] = 0.08,  -- typeNoise  - where different tree types might be selected
+    [5] = 0.0002  -- biomeNoise - different brackets from climate (0 cold, 1 hot)
+}
 function loadNoiseTiles(cx,cy,x,y)
     local nx,ny = x + cx * chunkSize, y + cy * chunkSize
-    -- drawSimplexNoise(nx,ny)  -- sets background noise
     -- love.graphics.draw(groundImg, x * 32, y * 32)
 
-    local largeNoise = love.math.noise(nx * nf[1], ny * nf[1]) - love.math.noise(nx * nf[2], ny * nf[2]) * 0.1-- + love.math.noise(nx * nf[3], ny * nf[3]) * 0.2
-    local smallNoise = love.math.noise(nx * nf[4], ny * nf[4])
-
+    local largeNoise = love.math.noise(nx * nf[1], ny * nf[1]) - love.math.noise(nx * nf[2], ny * nf[2]) * 0.1
+    local smallNoise = love.math.noise(nx * nf[3], ny * nf[3]) * largeNoise
+    local typeNoise = love.math.noise(nx * nf[4], ny * nf[4])
+    local biomeNoise = love.math.noise(nx * nf[5], ny * nf[5])
     local groundColor = largeNoise * 1.5 - 0.5 - smallNoise * 0.04
-    if largeNoise >= 0.8 - smallNoise * 0.05 then createNoiseTile("assets/world/grounds/grass/grass04.png",cx,cy,x,y,nx,ny,groundColor)
-        if smallNoise > 0.9 and smallNoise < 0.85 and largeNoise > 0.83 then createNoiseTile("assets/world/objects/Beach Tree.png",cx,cy,x,y,nx,ny,groundColor)
-        elseif smallNoise >= 0.95 then  createNoiseTile("assets/world/objects/lantern.png",cx,cy,x,y,nx,ny,groundColor)
-            noiseLights[nx..","..ny] = {x = nx, y = ny,}
-        end
-    elseif largeNoise - smallNoise * 0.05 > 0.77 then createNoiseTile("assets/world/grounds/Sandy Grass.png",cx,cy,x,y,nx,ny,groundColor)
-    elseif largeNoise > 0.7 then createNoiseTile("assets/world/grounds/Sand.png",cx,cy,x,y,nx,ny,groundColor)
-        if smallNoise > 0.95 and largeNoise > 0.85 then createNoiseTile("assets/world/objects/foliage/BQ Foliage-3.png",cx,cy,x,y,nx,ny,groundColor) end
-    else
-        local waterColor = 0.6 + largeNoise * 0.4
 
-        createNoiseTile("assets/world/grounds/Water.png",cx,cy,x,y,nx,ny,waterColor)
+    local biome
+    local grass
+    if biomeNoise < 0.3 + smallNoise * 0.01 then 
+        biome = "Ice"
+        grass = "assets/world/grounds/Snow.png"
+    elseif biomeNoise < 0.6  - smallNoise * 0.01 then
+        biome = "Grass"
+        grass = "assets/world/grounds/grass/grass04.png"
+    else
+        biome = "Volcanic"
+        grass = "assets/world/grounds/Cave Floor.png" 
     end
+
+    if largeNoise >= 0.8 - smallNoise * 0.05 then
+
+        if biome == "Grass" then
+            if smallNoise > 0.99 then
+                createNoiseTile(grass, "assets/world/objects/lantern.png", cx,cy,x,y,nx,ny,groundColor)
+            elseif smallNoise > 0.9 then
+                local tree if typeNoise > 0.5 then tree = "assets/world/objects/Murky Tree.png" else tree = "assets/world/objects/tree.png" end
+                createNoiseTile(grass, tree, cx,cy,x,y,nx,ny,groundColor)  -- draw Grass
+            elseif smallNoise >= 0.8 then
+                createNoiseTile(grass, "assets/world/objects/foliage/BQ Foliage-2.png", cx,cy,x,y,nx,ny,groundColor)  -- draw Grass
+            end
+        elseif biome == "Volcanic" then
+            if largeNoise > 0.9 then createNoiseTile(grass, "assets/world/grounds/Lava.png", cx,cy,x,y,nx,ny,groundColor) 
+            else createNoiseTile(grass, nil, cx,cy,x,y,nx,ny,groundColor) end
+        else createNoiseTile(grass, nil, cx,cy,x,y,nx,ny,groundColor)
+        end
+
+    elseif largeNoise - smallNoise * 0.05 > 0.77 and biome ~= "Ice" then
+        local blend
+        if biome == "Grass" then blend = "assets/world/grounds/Sandy Grass.png" elseif biome == "Volcanic" then blend = "assets/world/grounds/Sandstone.png" end
+        createNoiseTile(blend, nil, cx,cy,x,y,nx,ny,groundColor)
+    elseif largeNoise > 0.7 then
+
+        if largeNoise > 0.75 and smallNoise > 0.9 then
+            createNoiseTile("assets/world/grounds/Sand.png", "assets/world/objects/Barrel.png", cx,cy,x,y,nx,ny,groundColor)
+        elseif largeNoise > 0.71 and smallNoise > 0.94 then
+            createNoiseTile("assets/world/grounds/Sand.png", "assets/world/objects/Cactus.png", cx,cy,x,y,nx,ny,groundColor)
+        else
+            createNoiseTile("assets/world/grounds/Sand.png", nil, cx,cy,x,y,nx,ny,groundColor) 
+        end
+
+    else createNoiseTile("assets/world/grounds/Water.png", nil, cx,cy,x,y,nx,ny, 0.6 + largeNoise * 0.4) end
+
+
 end
 
-function createNoiseTile(asset,cx,cy,x,y,nx,ny,color,foreground)
-    if not worldImg[asset] then worldImg[asset] = getImgIfNotExist(asset) end
-    love.graphics.draw(worldImg[asset], x * 32, y * 32)
+function createNoiseTile(groundTile,foregroundTile,cx,cy,x,y,nx,ny,color)
+    if not worldImg[groundTile] then worldImg[groundTile] = getImgIfNotExist(groundTile) end
     if not worldChunks[cx..","..cy] then worldChunks[cx..","..cy] = {} end
-    worldChunks[cx..","..cy][#worldChunks[cx..","..cy]+1] = {
-        ["Collision"] = asset == "assets/world/grounds/Water.png",
+    local tile = {
+        ["Collision"] = groundTile == "assets/world/grounds/Water.png",
         ["Enemy"] = "",
-        ["ForegroundTile"] = foreground or asset,
-        ["GroundTile"] = asset,
+        ["ForegroundTile"] = foregroundTile or groundTile,
+        ["GroundTile"] = groundTile,
         -- ["ID"] = 135248,
         ["Music"] = "Sax",
         ["Name"] = "Coastlands",
@@ -161,32 +196,29 @@ function createNoiseTile(asset,cx,cy,x,y,nx,ny,color,foreground)
         ["Y"] = ny,
         ["Color"] = color or 1,
     }
-    worldLookup[nx..","..ny] = {
-        ["Collision"] = asset == "assets/world/grounds/Water.png",
-        ["Enemy"] = "",
-        ["ForegroundTile"] = foreground or asset,
-        ["GroundTile"] = asset,
-        -- ["ID"] = 135248,
-        ["Music"] = "Sax",
-        ["Name"] = "Coastlands",
-        ["X"] = nx,
-        ["Y"] = ny,
-        ["Color"] = color or 1,
-    }
+    worldChunks[cx..","..cy][#worldChunks[cx..","..cy]+1] = tile
+    worldLookup[nx..","..ny] = tile
+    if lightGivers[foregroundTile] and not lightSource[nx..","..ny] then
+        lightSource[nx..","..ny] = true
+        Luven.addNormalLight(16 + (nx * 32), 16 + (ny * 32), lightGivers[foregroundTile].color, lightGivers[foregroundTile].brightness)
+    end
 end
 
 function drawTile(v, cx, cy)
     local x, y = v.X - cx * chunkSize, v.Y - cy * chunkSize -- draw
     local backgroundAsset = getWorldAsset(v.GroundTile, v.X, v.Y)
     local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y)
+    
     if v.Color then love.graphics.setColor(v.Color, v.Color, v.Color) else drawSimplexNoise(v.X, v.Y) end
     if worldImg[backgroundAsset] then love.graphics.draw(worldImg[backgroundAsset], x * 32, y * 32) end
+
     love.graphics.setColor(0,0,0,0.5)
     if worldLookup[v.X..","..v.Y-1] and (isTileWall(worldLookup[v.X..","..v.Y-1].ForegroundTile) or isTileWall(worldLookup[v.X..","..v.Y-1].GroundTile)) and not isTileWall(v.ForegroundTile) then
         love.graphics.rectangle("fill", x * 32, y * 32, 32, 16)
     elseif (isTileWall(v.GroundTile) or isTileWall(v.ForegroundTile)) and not worldLookup[v.X..","..v.Y+1] then -- no tile below us but we still need to cast a shadow
         love.graphics.rectangle("fill", x * 32, y * 32, 32, 16)
     end 
+
     love.graphics.setColor(1,1,1,1)
     if foregroundAsset ~= backgroundAsset and worldImg[foregroundAsset] then love.graphics.draw(worldImg[foregroundAsset], (x) * 32, (y) * 32) end
 end

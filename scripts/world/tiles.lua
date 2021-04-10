@@ -1,4 +1,4 @@
-function getWorldAsset(v,x,y)
+function getWorldAsset(v,x,y,color)
     if isTileWall(v) then v = getDrawableWall(v, x,y) end
     if isTileWater(v) then v = getDrawableWater(v, x, y) end
     return v
@@ -21,14 +21,13 @@ function getDrawableWall(tileName, x, y) -- this is used to smooth the corners o
         right = false,
         bottom = false,
     }
-    -- if  worldLookup[x-1] and worldLookup[x+1] and worldLookup[x] then
+
     local worldToCheck = {
         worldLookup[x-1 ..","..y],
         worldLookup[x+1 ..","..y],
         worldLookup[x..","..y-1],
         worldLookup[x..","..y+1],
     }
-
 
     for i = 1, 4 do
         v = worldToCheck[i]
@@ -46,7 +45,6 @@ function getDrawableWall(tileName, x, y) -- this is used to smooth the corners o
     end
 
     local assetName = "1.png"
-
     if nearby.top and nearby.bottom and nearby.left and nearby.right then
         assetName = "12.png"
     elseif nearby.top and nearby.bottom and nearby.left then
@@ -106,37 +104,21 @@ function getDrawableWater(tileName, x, y)
         }
 
         local worldToCheck = {
-            worldLookup[x-1 ..","..y],
-            worldLookup[x+1 ..","..y],
-            worldLookup[x..","..y+1],
-            worldLookup[x..","..y-1],
-            worldLookup[x-1 ..","..y-1],
-            worldLookup[x+1 ..","..y-1],
-            worldLookup[x-1 ..","..y+1],
-            worldLookup[x+1 ..","..y+1]
+            {x = -1, y = 0, key = "left", tile = worldLookup[x-1 ..","..y],},
+            {x = 1, y = 0, key = "right", tile = worldLookup[x+1 ..","..y],},
+            {x = 0, y = 1, key = "bottom", tile = worldLookup[x..","..y+1],},
+            {x = 0, y = -1, key = "top", tile = worldLookup[x..","..y-1],},
+            {x = -1, y = -1, key = "topLeft", tile = worldLookup[x-1 ..","..y-1],},
+            {x = 1, y = -1, key = "topRight", tile = worldLookup[x+1 ..","..y-1],},
+            {x = -1, y = 1, key = "bottomLeft", tile = worldLookup[x-1 ..","..y+1],},
+            {x = 1, y = 1, key = "bottomRight", tile = worldLookup[x+1 ..","..y+1],},
         }
     
-
+        -- checks if water is nearby
         for i,v in ipairs(worldToCheck) do
-            if v and (isTileWater(v.ForegroundTile) or isTileWater(v.GroundTile)) then
-                if v.X == x - 1 and v.Y == y then
-                    nearby.left = true
-                elseif v.X == x + 1 and v.Y == y then
-                    nearby.right = true
-                elseif v.X == x and v.Y == y + 1 then
-                    nearby.bottom = true
-                elseif v.X == x and v.Y == y - 1 then
-                    nearby.top = true
-                elseif v.X == x - 1 and v.Y == y - 1 then
-                    nearby.topLeft = true
-                elseif v.X == x + 1 and v.Y == y - 1 then
-                    nearby.topRight = true
-                elseif v.X == x - 1 and v.Y == y + 1 then
-                    nearby.bottomLeft = true
-                elseif v.X == x + 1 and v.Y == y + 1 then
-                    nearby.bottomRight = true
-                end
-            end
+            if v.tile and (isTileWater(v.tile.ForegroundTile) or isTileWater(v.tile.GroundTile)) then
+                if v.tile.X == x + v.x and v.tile.Y == y + v.y then  nearby[v.key] = true end
+            elseif not v.tile then nearby[v.key] = true end
         end
 
         local assetName = "1.png"
