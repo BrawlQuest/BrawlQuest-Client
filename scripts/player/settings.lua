@@ -130,7 +130,7 @@ function initSettings()
 end
 
 function writeSettings()
-    local success,msg = love.filesystem.write("settings.txt", json:encode_pretty({
+    love.filesystem.write("settings.txt", json:encode_pretty({
         version = version .. " " .. versionNumber,
         keybinds = keybinds,
         musicVolume = musicVolume,

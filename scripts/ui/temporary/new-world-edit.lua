@@ -593,8 +593,8 @@ function saveWorldChanges()
     editorCtl.state[1] = false
     editorCtl.state[5] = false
     player.cx, player.cy = player.dx, player.dy
-end 
- 
+end
+
 function checkIfReadyToQuit()
     if worldEdit.changed then
         local buttons = {"Save And Quit", "Quit Without Saving", "Cancel", enterbutton = 1, escapebutton = 3}

@@ -26,7 +26,7 @@ function getDrawableWall(tileName, x, y) -- this is used to smooth the corners o
         worldLookup[x-1 ..","..y],
         worldLookup[x+1 ..","..y],
         worldLookup[x..","..y-1],
-        worldLookup[x..","..y+1]
+        worldLookup[x..","..y+1],
     }
 
 
