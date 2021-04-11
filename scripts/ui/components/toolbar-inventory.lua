@@ -141,6 +141,9 @@ function getInventory()
         inventoryFieldLength[i] = 0
     end
 
+  
+
+
     for i, v in ipairs(inventoryAlpha) do
         local t = getItemType(v)
         inventoryFieldLength[t] = inventoryFieldLength[t] + 1
@@ -153,6 +156,7 @@ function getInventory()
         end
         userInventory[t][#userInventory[t] + 1] = v
     end
+
 end
 
 function getUserInventoryFieldHeight(field)

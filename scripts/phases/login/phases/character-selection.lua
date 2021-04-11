@@ -37,9 +37,7 @@ function updateCharacterSelection(dt)
     end
     cs.dualCERP = cerp(0, 1, cs.dualAmount)
 
-    for i, v in ipairs(cs.slider) do
-        v:update()
-    end
+    for i, v in ipairs(cs.slider) do v:update() end
 end
 
 function drawCharacterSelection()
@@ -354,5 +352,9 @@ function transitionToPhaseGame()
     else
         zoneChange("Error code "..tostring(c))
     end
+    news.open = true
+    news.alpha = 1
+    news.selected.item = 1
+    getNews()
 end
 

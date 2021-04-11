@@ -49,7 +49,7 @@ function checkAchievementUnlocks()
 
 
         if me.Buddy ~= "None" then
-            steam.userStats.setAchievement('buddy_achievement')
+            steam.userStats.setAchievement('pet_achievement')
         end
 
         if me.LVL >= 2 then

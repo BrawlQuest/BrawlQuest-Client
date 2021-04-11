@@ -280,7 +280,9 @@ function drawEnemies()
                     enemies[i].linesDrawable = false
                 end
             
-            elseif os.time(os.date("!*t")) - v.lastUpdate < 5 and not v.hasBurst then
+
+            elseif  v and v.lastUpdate and os.time(os.date("!*t")) - v.lastUpdate < 5 and not v.hasBurst then
+
                 burstLoot(v.dx + 16, v.dy + 16, player.owedxp, "xp")
                 local deathSound =
                     enemySounds[v.Enemy.Name].death[love.math.random(1, #enemySounds[v.Enemy.Name].death)]
@@ -294,7 +296,7 @@ function drawEnemies()
                 if v.Enemy.Name == "Fire Phoenix" then
                     steam.userStats.setAchievement('kill_phoenix_achievement')
                     steam.userStats.storeStats()
-                elseif v.Enemy.Name == "Frost Entity" then
+                elseif v.Enemy.Name == "Entity of Frost" then
                     steam.userStats.setAchievement('kill_frost_achievement')
                     steam.userStats.storeStats()
                 end
@@ -302,6 +304,8 @@ function drawEnemies()
                     steam.userStats.setAchievement('kill_boss_achievement')
                     steam.userStats.storeStats()
                 end
+                local success,kills = steam.userStats.getStatInt("kill")
+                steam.userStats.setStatInt("kill", kills+1)
                 if v.Enemy.Width and v.Enemy.Height then
                     for a = 1, v.Enemy.Width do
                         for k = 1, v.Enemy.Height do

@@ -60,18 +60,22 @@ require "scripts.ui.components.tutorial"
 require "scripts.achievements"
 Luven = require "scripts.libraries.luven.luven"
 
-if love.system.getOS() ~= "Linux" then steam = require 'luasteam' end -- we can disable other platforms here. Can't get Steam working on Linux and we aren't targetting it so this'll do for dev purposes
+if love.system.getOS() ~= "Linux" then
+    steam = require 'luasteam'
+end -- we can disable other platforms here. Can't get Steam working on Linux and we aren't targetting it so this'll do for dev purposes
 json = require("scripts.libraries.json")
 http = require("socket.http")
 ltn12 = require("ltn12")
 utf8 = require("utf8")
 newOutliner = require 'scripts.libraries.outliner'
 
-version = "Early Access" 
-versionType = "release" -- "dev" for quick login, "release" for not
-if versionType == "dev" then require 'dev' end
+version = "Early Access"
+versionType = "dev" -- "dev" for quick login, "release" for not
+if versionType == "dev" then
+    require 'dev'
+end
 
-versionNumber = "1.3.1+2" -- very important for settings
+versionNumber = "1.3.1+3" -- very important for settings
 
 phase = "login"
 blockMap = {}
@@ -102,13 +106,15 @@ sendUpdate = false
 
 function love.load()
     showMouse, mouseAmount, mx, my = true, 1, 0, 0
-    limits = love.graphics.getSystemLimits( )
+    limits = love.graphics.getSystemLimits()
     print(limits.multicanvas)
     outlinerOnly = newOutliner(true)
-    outlinerOnly:outline(0.8,0,0) -- this is used to draw enemy outlines
+    outlinerOnly:outline(0.8, 0, 0) -- this is used to draw enemy outlines
     grayOutlinerOnly = newOutliner(true)
-    grayOutlinerOnly:outline(1,1,1)
-    if love.system.getOS() ~= "Linux" then  steam.init() end
+    grayOutlinerOnly:outline(1, 1, 1)
+    if love.system.getOS() ~= "Linux" then
+        steam.init()
+    end
     love.graphics.setDefaultFilter("nearest", "nearest")
     initHardData()
     initLogin()
@@ -144,104 +150,126 @@ function love.draw()
     else
         Luven.drawBegin()
 
-            drawWorld()
+        drawWorld()
 
-            if worldEdit.open and player then
-                drawNewWorldEditTiles()
+        if worldEdit.open and player then
+            drawNewWorldEditTiles()
+        end
+        drawStructures()
+        drawAuras()
+        drawBones()
+        love.graphics.setColor(1, 1, 1)
+        drawNPCs()
+        drawEnemies()
+        drawRangedWeaponEffects()
+        drawExplosions()
+        drawParticles()
+
+        for i, v in ipairs(playersDrawable) do
+            drawPlayer(v, i)
+        end
+        drawFloats()
+
+        drawPlayer(me, -1)
+        if showWorldAnimations then
+            drawLeaves()
+            drawCritters()
+        end
+        drawLoot()
+
+        local drawingText = false
+        if isNearbyTile("assets/world/objects/Anvil.png") and not drawingText then
+            drawTextBelowPlayer("Press " .. keybinds.INTERACT .. " to craft")
+            inventory.notNPC = false
+            drawingText = true
+        elseif isNearbyTile("assets/world/objects/Furnace.png") and not drawingText then
+            drawTextBelowPlayer("Press " .. keybinds.INTERACT .. " to forge")
+            inventory.notNPC = false
+            drawingText = true
+        elseif isNearbyTile("assets/world/objects/Portal.png") and not drawingText then
+            if me.LVL ~= 30 then
+                drawTextBelowPlayer("You must be Level 30 to Enchant")
+            else
+                drawTextBelowPlayer("Press " .. keybinds.INTERACT .. " to Enchant")
             end
-            drawStructures()
-            drawAuras()
-            drawBones()
-            love.graphics.setColor(1, 1, 1)
-            drawNPCs()
-            drawEnemies()
-            drawRangedWeaponEffects()
-            drawExplosions()
-            drawParticles()
+            inventory.notNPC = false
+            drawingText = true
+        elseif isNearbyTile("assets/world/objects/Well.png") and not drawingText then
+            drawTextBelowPlayer("Press " .. keybinds.INTERACT .. " to Cleanse")
+        end
 
-            for i, v in ipairs(playersDrawable) do
-                drawPlayer(v, i)
-            end
-            drawFloats()
-            
-            drawPlayer(me, -1)
-            if showWorldAnimations then drawLeaves() drawCritters() end
-            drawLoot()
-
-            local drawingText = false
-            if isNearbyTile("assets/world/objects/Anvil.png") and not drawingText then
-                drawTextBelowPlayer("Press "..keybinds.INTERACT.." to craft")
-                inventory.notNPC = false
-                drawingText = true
-            elseif isNearbyTile("assets/world/objects/Furnace.png") and not drawingText then
-                drawTextBelowPlayer("Press "..keybinds.INTERACT.." to forge")
-                inventory.notNPC = false
-                drawingText = true
-            elseif isNearbyTile("assets/world/objects/Portal.png") and not drawingText then
-                if me.LVL ~= 30 then
-                    drawTextBelowPlayer("You must be Level 30 to Enchant")
-                else
-                    drawTextBelowPlayer("Press "..keybinds.INTERACT.." to Enchant")
-                end
-                inventory.notNPC = false
-                drawingText = true
-            elseif isNearbyTile("assets/world/objects/Well.png") and not drawingText  then
-                drawTextBelowPlayer("Press "..keybinds.INTERACT.." to Cleanse")
-            end
-
-            for i,v in ipairs(npcs) do
-                if distanceToPoint(player.x,player.y,v.X,v.Y) <= 1 and not showNPCChatBackground  and v.Conversation ~= "" then
-                    local isQuestCompleter = false
-                    for k,q in ipairs(quests[1]) do
-                        if q.rawData.Quest.ReturnNPCID == v.ID and q.currentAmount == q.requiredAmount then
-                            drawTextBelowPlayer("Press "..keybinds.INTERACT.." to complete quest")
-                            isQuestCompleter = true
-                        end
+        for i, v in ipairs(npcs) do
+            if distanceToPoint(player.x, player.y, v.X, v.Y) <= 1 and not showNPCChatBackground and v.Conversation ~= "" then
+                local isQuestCompleter = false
+                for k, q in ipairs(quests[1]) do
+                    if q.rawData.Quest.ReturnNPCID == v.ID and q.currentAmount == q.requiredAmount then
+                        drawTextBelowPlayer("Press " .. keybinds.INTERACT .. " to complete quest")
+                        isQuestCompleter = true
                     end
-
-                    if not isQuestCompleter and not drawingText then
-                        drawTextBelowPlayer("Press "..keybinds.INTERACT.." to talk")
-                        drawingText = true
-                    end
-                        
-                    inventory.notNPC = false
-                    openTutorial(4)
                 end
-            end
-            drawWeather()
-            if showWorldMask and not worldEdit.open and enchanting.amount < 0.01 then drawWorldMask() end --not worldEdit.open or
-            if showClouds and not worldEdit.open and enchanting.amount < 0.01 then drawClouds() end
 
-            -- if player.target.active then
-            --     love.graphics.setColor(1,0,0,0.5 * nextTick)
-            --     love.graphics.rectangle("fill", player.target.x * 32, player.target.y * 32, 32, 32)
-            --     love.graphics.setColor(1,1,1)
-            -- end
-            
+                if not isQuestCompleter and not drawingText then
+                    drawTextBelowPlayer("Press " .. keybinds.INTERACT .. " to talk")
+                    drawingText = true
+                end
+
+                inventory.notNPC = false
+                openTutorial(4)
+            end
+        end
+        drawWeather()
+        if showWorldMask and not worldEdit.open and enchanting.amount < 0.01 then
+            drawWorldMask()
+        end -- not worldEdit.open or
+        if showClouds and not worldEdit.open and enchanting.amount < 0.01 then
+            drawClouds()
+        end
+
+        -- if player.target.active then
+        --     love.graphics.setColor(1,0,0,0.5 * nextTick)
+        --     love.graphics.rectangle("fill", player.target.x * 32, player.target.y * 32, 32, 32)
+        --     love.graphics.setColor(1,1,1)
+        -- end
+
         Luven.drawEnd()
-      
-        if death.open then drawDeath() end
-        if not worldEdit.open then drawHUD() end
+
+        if death.open then
+            drawDeath()
+        end
+        if not worldEdit.open then
+            drawHUD()
+        end
         drawNewWorldEditHud()
         Luven.camera:draw()
 
         local offset = cerp(10, 324 * scale, inventory.amount)
-        love.graphics.setColor(1,1,1)
+        love.graphics.setColor(1, 1, 1)
         love.graphics.setFont(settPan.itemFont)
         local text
-        if true then text = "BrawlQuest "..version.." "..versionNumber.."\nX,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount .."\n"..playersOnline
-        else text = "X,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount end
+        if true then
+            text = "BrawlQuest " .. version .. " " .. versionNumber .. "\nX,Y: " .. player.x .. "," .. player.y ..
+                       " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount .. "\n" ..
+                       playersOnline
+        else
+            text =
+                "X,Y: " .. player.x .. "," .. player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " ..
+                    playerCount
+        end
         love.graphics.print(text, offset, 10)
     end
     mx, my = love.mouse.getPosition()
-    love.graphics.setColor(1,1,1,mouseAmount)
+    love.graphics.setColor(1, 1, 1, mouseAmount)
     love.graphics.draw(mouseImg, mx, my)
 end
 
 function love.update(dt)
-    if love.system.getOS() ~= "Linux" then steam.runCallbacks() end
+    if love.system.getOS() ~= "Linux" then
+        steam.runCallbacks()
+    end
     enchantmentPos = enchantmentPos + 15 * dt
-    if enchantmentPos > 64 then enchantmentPos = 0 end
+    if enchantmentPos > 64 then
+        enchantmentPos = 0
+    end
 
     love.graphics.print(json:encode(love.audio.getActiveEffects()))
 
@@ -253,15 +281,15 @@ function love.update(dt)
         nextUpdate = nextUpdate - 1 * dt
         nextTick = nextTick - 1 * dt
         if nextUpdate < 0 then
-      
-                getPlayerData('/players/' .. username, json:encode(
-                    {
-                        ["X"] = player.x,
-                        ["Y"] = player.y,
-                        ["AX"] = player.target.x,
-                        ["AY"] = player.target.y,
-                        ["IsShield"] = love.keyboard.isDown(keybinds.SHIELD)
-                    }))
+
+            getPlayerData('/players/' .. username, json:encode(
+                {
+                    ["X"] = player.x,
+                    ["Y"] = player.y,
+                    ["AX"] = player.target.x,
+                    ["AY"] = player.target.y,
+                    ["IsShield"] = love.keyboard.isDown(keybinds.SHIELD)
+                }))
 
             nextUpdate = 0.5
         end
@@ -279,17 +307,36 @@ function love.update(dt)
         updateWeather(dt)
         updateWorldEmitters(dt)
         updateParticles(dt)
-        if news.open then updateNews(dt) end
-        if itemDrag.dragging then updateItemDrag(dt) end
-        if death.open then updateDeath(dt) end
-        if forging.open then updateForging(dt) end
+        if news.open then
+            updateNews(dt)
+        end
+        if itemDrag.dragging then
+            updateItemDrag(dt)
+        end
+        if death.open then
+            updateDeath(dt)
+        end
+        if forging.open then
+            updateForging(dt)
+        end
         updateRangedWeapons(dt)
-        if showNPCChatBackground then updateNPCChat(dt) end
-        if showWorldAnimations then updateLeaves(dt) updateCritters(dt) end
+        if showNPCChatBackground then
+            updateNPCChat(dt)
+        end
+        if showWorldAnimations then
+            updateLeaves(dt)
+            updateCritters(dt)
+        end
         Luven.update(dt)
-        if showClouds and enchanting.amount < 0.01 then updateClouds(dt) end
-        if showWorldMask then updateWorldMask(dt) end
-        if enchanting.amount >= 0.01 then updateEnchanting(dt) end
+        if showClouds and enchanting.amount < 0.01 then
+            updateClouds(dt)
+        end
+        if showWorldMask then
+            updateWorldMask(dt)
+        end
+        if enchanting.amount >= 0.01 then
+            updateEnchanting(dt)
+        end
         updateCamera(dt)
         updateOtherPlayers(dt)
         local info = love.thread.getChannel('players'):pop()
@@ -299,34 +346,45 @@ function love.update(dt)
             if response then
                 local previousMe = copy(me) -- Temp
                 me = response['Me']
-                if not isMouseDown() then-- if perks.stats[1] == 0 then
+                if not isMouseDown() then -- if perks.stats[1] == 0 then
                     perks.stats = {me.STR, me.INT, me.STA, player.cp}
                 end
 
                 if response then
                     local previousPlayers = copy(players) -- Temp
 
-                
                     players = response['Players']
                     npcs = response['NPC']
                     auras = response['Auras']
                     playersOnline = ""
                     playerCount = 0
                     if response['OnlinePlayers'] then
-                        for i,v in ipairs(response['OnlinePlayers']) do
+                        for i, v in ipairs(response['OnlinePlayers']) do
                             playersOnline = playersOnline .. v .. "\n"
                             playerCount = playerCount + 1
                         end
                     end
                     if json:encode(inventoryAlpha) ~= json:encode(response['Inventory']) then
                         updateInventory(response)
-                        inventoryAlpha = response['Inventory']
+                        inventoryAlpha = response['Inventory'] -- this is in this order for a reason dummy
+                        -- this is in this order for a reason dummy
+
+                        table.sort(inventoryAlpha, function(a, b)
+                            if not tonumber(a.Item.Val) then
+                                a.Item.Val = "0"
+                            end
+                            if not tonumber(b.Item.Val) then
+                                b.Item.Val = "1"
+                            end -- these are different to prevent it going back and forth when sorting
+                            return tonumber(a.Item.Val) < tonumber(b.Item.Val)
+                        end)
+
                     end
                     player.cp = response['CharPoints']
                     messages = {}
-                    for i=1, #response['Chat']['Global'] do
+                    for i = 1, #response['Chat']['Global'] do
                         local v = response['Chat']['Global'][#response['Chat']['Global'] + 1 - i]
-                        messages[#messages+1] = {
+                        messages[#messages + 1] = {
                             username = v["Sender"]["Name"],
                             text = v["Message"],
                             player = v["Sender"]
@@ -336,7 +394,7 @@ function love.update(dt)
                     setLighting(response)
                     local previousMe = copy(me) -- Temp
                     me = response['Me']
-                    
+
                     if response["PlayerStructures"] then
                         structures = response["PlayerStructures"]
                         updateWorldLookup()
@@ -350,8 +408,8 @@ function love.update(dt)
                             method = "GET",
                             headers = {
                                 ["token"] = token
-                            },
-                
+                            }
+
                         }
                     end
                     if me.IsDead then
@@ -362,8 +420,8 @@ function love.update(dt)
                             method = "GET",
                             headers = {
                                 ["token"] = token
-                            },
-                
+                            }
+
                         }
                         if death.previousPosition.hp < getMaxHealth() * 0.9 then
                             death.open = true
@@ -377,7 +435,13 @@ function love.update(dt)
                             player.cy = me.Y * 32
                         end
                     end
-                    if not death.open then death.previousPosition = {x = player.x, y = player.y, hp = player.hp} end
+                    if not death.open then
+                        death.previousPosition = {
+                            x = player.x,
+                            y = player.y,
+                            hp = player.hp
+                        }
+                    end
                     player.name = me.Name
                     player.buddy = me.Buddy
                     if player.hp > me.HP and me.HP < getMaxHealth() then
@@ -395,38 +459,38 @@ function love.update(dt)
                             setEnvironmentEffects(lvlSfx)
                             lvlSfx:play()
                             perks.stats[4] = player.cp
-                            addFloat("level", player.dx + 16, player.dy + 16, null, {1,0,0}, 10)
+                            addFloat("level", player.dx + 16, player.dy + 16, null, {1, 0, 0}, 10)
                         end
                         player.lvl = me.LVL
                         firstLaunch = false
                     end
                     player.name = me.Name
                     newEnemyData(response['Enemies'])
-                    quests = {
-                        {},
-                        {},
-                        {},
-                    }
-                    for i,v in ipairs(response['MyQuests']) do
+                    quests = {{}, {}, {}}
+                    for i, v in ipairs(response['MyQuests']) do
                         local trackedVar = 2
                         if v.Tracked == 1 then
                             trackedVar = 1
                         end
-                        quests[v.Tracked][#quests[v.Tracked]+1] = {
-                            title = v.Quest.Title,
-                            comment = v.Quest.Desc,
-                            profilePic = v.Quest.ImgPath,
-                            giver = "",
-                            requiredAmount = v.Quest.ValueRequired,
-                            currentAmount = v.Progress,
-                            rawData = v
-                        }
+                        quests[v.Tracked][#quests[v.Tracked] + 1] =
+                            {
+                                title = v.Quest.Title,
+                                comment = v.Quest.Desc,
+                                profilePic = v.Quest.ImgPath,
+                                giver = "",
+                                requiredAmount = v.Quest.ValueRequired,
+                                currentAmount = v.Progress,
+                                rawData = v
+                            }
                         if v.Quest.Type == "kill" then
-                            quests[v.Tracked][#quests[v.Tracked]].task = "Kill "..v.Quest.ValueRequired.."x "..v.Quest.Value
+                            quests[v.Tracked][#quests[v.Tracked]].task =
+                                "Kill " .. v.Quest.ValueRequired .. "x " .. v.Quest.Value
                         elseif v.Quest.Type == "gather" then
-                                quests[v.Tracked][#quests[v.Tracked]].task = "Gather "..v.Quest.ValueRequired.."x "..v.Quest.Value
+                            quests[v.Tracked][#quests[v.Tracked]].task =
+                                "Gather " .. v.Quest.ValueRequired .. "x " .. v.Quest.Value
                         elseif v.Quest.Type == "go" then
-                            quests[v.Tracked][#quests[v.Tracked]].task = "Go to "..(worldLookup[v.Quest.X][v.Quest.Y].Name or v.Quest.X..", "..v.Quest.Y)
+                            quests[v.Tracked][#quests[v.Tracked]].task =
+                                "Go to " .. (worldLookup[v.Quest.X][v.Quest.Y].Name or v.Quest.X .. ", " .. v.Quest.Y)
                         end
                     end
 
@@ -449,7 +513,7 @@ local tickCount = 0
 
 function tick()
     tickCount = tickCount + 1
-    print(tickCount)
+    -- print(tickCount)
     tickOtherPlayers()
     tickEnemies()
     tickAuras()
@@ -485,17 +549,23 @@ function love.resize(width, height)
         loadSliders()
     end
     if scale then
-        uiX = love.graphics.getWidth()/scale -- scaling options
-        uiY = love.graphics.getHeight()/scale
+        uiX = love.graphics.getWidth() / scale -- scaling options
+        
+        uiY = love.graphics.getHeight() / scale
     end
     if enchanting.open then
-        if enchanting.phase == 3 then transitionToEnchantingPhase3()
-        elseif enchanting.phase == 5 then transitionToEnchantingPhase5() end
+        if enchanting.phase == 3 then
+            transitionToEnchantingPhase3()
+        elseif enchanting.phase == 5 then
+            transitionToEnchantingPhase5()
+        end
     end
     getDisplay()
     writeSettings()
 end
 
 function love.quit()
-    if love.system.getOS() ~= "Linux" then steam.shutdown() end
+    if love.system.getOS() ~= "Linux" then
+        steam.shutdown()
+    end
 end
