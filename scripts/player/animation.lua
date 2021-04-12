@@ -36,6 +36,6 @@ end
 
 function drawAnimation(v, x, y, dir)
     frame = v.Frame or 1
-    love.graphics.draw(baseShadow, x, y + 11 , 0, dir, 1)
-    love.graphics.draw(baseSpriteSheet, baseImages[frame], x, y - 4, 0, dir, 1)
+    love.graphics.draw(baseShadow, x, y + 15 - 3, 0, dir, 1)
+    love.graphics.draw(baseSpriteSheet, baseImages[frame], x, y - 3, 0, dir, 1)
 end
