@@ -43,6 +43,7 @@ require "scripts.libraries.utils"
 require "scripts.libraries.colorize"
 require "scripts.libraries.simple-slider"
 require "scripts.phases.login.login"
+require "scripts.player.animation"
 require "scripts.player.other_players"
 require "scripts.player.ranged-weapons"
 require "scripts.player.targeting"
@@ -140,6 +141,7 @@ function love.load()
     initWeather()
     initParticles()
     initNews()
+    initAnimation()
     love.graphics.setFont(textFont)
 end
 

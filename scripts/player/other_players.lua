@@ -10,6 +10,8 @@ function initPlayers()
     shieldFalse = love.graphics.newImage("assets/player/gen/shield false.png")
     showEnchantments = false
     playerNameAlpha = 1
+
+
 end
 
 alphaShader = love.graphics.newShader[[
@@ -57,10 +59,13 @@ function drawCharacter(v, x, y, ad)
                 love.graphics.setColor(1,1,1)
             end
            
-            love.graphics.draw(playerImg, x + offsetX, y, 0, direction, 1, 0, 0)
-            drawArmourImage(x,y,v,ad,"LegArmour")
-            drawArmourImage(x,y,v,ad,"ChestArmour")
-            drawArmourImage(x,y,v,ad,"HeadArmour")
+            -- love.graphics.draw(playerImg, x + offsetX, y, 0, direction, 1, 0, 0)
+
+            drawAnimation(v, x + offsetX, y, direction)
+
+            -- drawArmourImage(x,y,v,ad,"LegArmour")
+            -- drawArmourImage(x,y,v,ad,"ChestArmour")
+            -- drawArmourImage(x,y,v,ad,"HeadArmour")
             love.graphics.setColor(1,1,1)
             drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,"/fore.png")
             if v.IsShield and v.ShieldID ~= 0 and notBoat then drawArmourImage(x+12,y,v,ad,"Shield",direction) end
@@ -335,6 +340,7 @@ function updateOtherPlayers(dt)
                 ['Color'] = v.Color,
                 ['Buddy'] = v.Buddy,
                 ['NameAlpha'] = 1,
+                Frame = 1,
             }
         end
         playersDrawable[i].Mount = v.Mount
@@ -407,6 +413,12 @@ function updateOtherPlayers(dt)
                     addSparkles(playersDrawable[i].X + 16, playersDrawable[i].Y + 16, 5, 30, 20)
                 end
             end
+
+            players[i].Frame = (players[i].Frame or 0) + 1
+            if players[i].Frame > 8 then players[i].Frame = 1 end
+            print(players[i].Frame)
+        else -- position == 1
+            players[i].Frame = 1
         end
         updateBuddy(dt, playersDrawable[i])
        -- updateRangedWeapons(dt, playersDrawable[i])
