@@ -162,6 +162,8 @@ function drawPlayer(v, i)
         thisPlayer.Mana = me.Mana
         v.RedAlpha = 0
         v.NameAlpha = playerNameAlpha
+        v.Frame = player.frame
+        thisPlayer.Frame = player.frame
     else
         thisPlayer = players[i]
     end
@@ -340,7 +342,6 @@ function updateOtherPlayers(dt)
                 ['Color'] = v.Color,
                 ['Buddy'] = v.Buddy,
                 ['NameAlpha'] = 1,
-                Frame = 1,
             }
         end
         playersDrawable[i].Mount = v.Mount
@@ -372,6 +373,8 @@ function updateOtherPlayers(dt)
             playersDrawable[i].X = v.X * 32
             playersDrawable[i].Y = v.Y * 32
         end
+
+        animateOtherPlayer(dt, distance > 3, i)
 
         if distance > 1 then
             local speed = 64
@@ -413,12 +416,6 @@ function updateOtherPlayers(dt)
                     addSparkles(playersDrawable[i].X + 16, playersDrawable[i].Y + 16, 5, 30, 20)
                 end
             end
-
-            players[i].Frame = (players[i].Frame or 0) + 1
-            if players[i].Frame > 8 then players[i].Frame = 1 end
-            print(players[i].Frame)
-        else -- position == 1
-            players[i].Frame = 1
         end
         updateBuddy(dt, playersDrawable[i])
        -- updateRangedWeapons(dt, playersDrawable[i])

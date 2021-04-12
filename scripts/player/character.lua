@@ -39,6 +39,8 @@ player = {
     wobble = 0, 
     wobbleValue = 0,
     speed = {x = 0, y = 0},
+    frameAmount = 0,
+    frame = 1,
 }
 
 newInventoryItems = {}
@@ -161,6 +163,7 @@ movementStarted = 1 -- the max time it'll ever take to cross a tile. This should
 
 
 function movePlayer(dt)
+
     if andCalc(true, {
             (me and not me.IsDead),
             (not isMoving or (distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) < 1)),
@@ -217,7 +220,10 @@ function movePlayer(dt)
         end
     end
     
-    if distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) > 1 then
+    local distance = distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy)
+    animateCharacter(dt, distance > 1)
+    
+    if distance > 1 then
         local speed = 80
         if me and me.Mount and me.Mount.Name ~= "None" or worldEdit.open then
             speed = tonumber(me.Mount.Val) or 80 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
@@ -271,9 +277,10 @@ function movePlayer(dt)
                 if player.cy >= y then player.dy = y end
             end
         end
-        if distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) < 1  then
-            isMoving = false
-        end
+
+        -- if distance < 1 then isMoving = false end
+    else
+        isMoving = false
     end
 end
 
