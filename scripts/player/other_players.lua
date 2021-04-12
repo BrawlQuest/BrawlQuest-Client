@@ -28,14 +28,6 @@ function drawCharacter(v, x, y, ad)
         local notBoat = not string.find(v.Mount.Name,  "boat")
         local direction, offsetX, mountOffsetX
 
-        if not itemImg[v.Weapon.ImgPath] then
-            if love.filesystem.getInfo(v.Weapon.ImgPath) then
-                itemImg[v.Weapon.ImgPath] = love.graphics.newImage(v.Weapon.ImgPath)
-            else
-                itemImg[v.Weapon.ImgPath] = love.graphics.newImage("assets/error.png")
-            end
-        end
-
         if ad and ad.previousDirection and ad.previousDirection == "right" then
             direction, offsetX, mountOffsetX = 1,0,0
         elseif ad and ad.previousDirection and ad.previousDirection == "left" then
@@ -95,6 +87,15 @@ function drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,type)
 end
 
 function drawWeapon(x,y,v,ad,direction,offsetX)
+
+    if not itemImg[v.Weapon.ImgPath] then
+        if love.filesystem.getInfo(v.Weapon.ImgPath) then
+            itemImg[v.Weapon.ImgPath] = love.graphics.newImage(v.Weapon.ImgPath)
+        else
+            itemImg[v.Weapon.ImgPath] = love.graphics.newImage("assets/error.png")
+        end
+    end
+
     if v["WeaponID"] ~= 0 then
         if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) else love.graphics.setColor(1, 1, 1) end
         love.graphics.draw(itemImg[v.Weapon.ImgPath], x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32) * direction + offsetX, y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, direction, 1, 0, 0)
@@ -193,7 +194,7 @@ function drawPlayer(v, i)
 
         drawNamePlate(v.X + boi, v.Y, v.Name, v.NameAlpha, thisPlayer.LVL, thisPlayer.Prestige) -- thisPlayer.LVL
         
-        if thisPlayer ~= nil and thisPlayer.AX then
+        if thisPlayer ~= nil and thisPlayer.AX then -- attack players
             local diffX = 0
             local diffY = 0
             if i == -1 and player.target.active then

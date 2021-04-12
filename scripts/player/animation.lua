@@ -8,30 +8,32 @@ function initAnimation()
     end
 end
 
+local speed = 10
+
 function animateCharacter(dt, bool)
     if bool or player.frame > 1 then
-        player.frameAmount = player.frameAmount + 8 * dt
+        player.frameAmount = player.frameAmount + speed * dt
         if player.frameAmount >= 1 then
             player.frame = player.frame + 1
             if not bool then player.frame = 1 end
             if player.frame > 5 then player.frame = 1 end
             player.frameAmount = 0
         end
-    else player.frame = 1 end
+    end
 end
 
 function animateOtherPlayer(dt, bool, i)
     local plr = players[i]
     if bool or (plr.Frame and plr.Frame > 1) then
         if not plr.frameAmount then plr.frameAmount = 0 end
-        plr.frameAmount = plr.frameAmount + 8 * dt
+        plr.frameAmount = plr.frameAmount + speed * dt
         if plr.frameAmount >= 1 then
             plr.Frame = (plr.Frame or 1) + 1
             if not bool then plr.Frame = 1 end
             if plr.Frame > 5 then plr.Frame = 1 end
             plr.frameAmount = 0
         end
-    else plr.Frame = 1 end
+    end
 end
 
 function drawAnimation(v, x, y, dir)
