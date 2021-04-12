@@ -6,6 +6,10 @@ local nf = {
     [5] = 0.0002  -- biomeNoise - different brackets from climate (0 cold, 1 hot)
 }
 
+function initBiomes()
+    
+end
+
 function loadChunks(cx,cy)
     for x = 0, chunkSize - 1 do
         for y = 0, chunkSize - 1 do
@@ -40,7 +44,7 @@ function loadNoiseTiles(cx,cy,x,y)
     if largeNoise >= 0.8 - smallNoise * 0.05 then
 
         if biome == "Grass" then
-            if smallNoise > 0.99 then
+            if smallNoise > 0.95 then
                 createNoiseTile(grass, "assets/world/objects/lantern.png", cx,cy,x,y,nx,ny,groundColor)
             elseif smallNoise > 0.9 then
                 local tree if typeNoise > 0.5 then tree = "assets/world/objects/Murky Tree.png" else tree = "assets/world/objects/tree.png" end
