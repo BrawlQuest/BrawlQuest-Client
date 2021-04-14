@@ -4,7 +4,7 @@ function initAnimation()
     baseSwing = love.graphics.newImage("assets/player/base/base-swing.png")
     baseImages = {}
     baseImages[#baseImages+1] = love.graphics.newQuad(0, 0, 32, 32, baseSpriteSheet:getDimensions())
-    for x = 1, 15 do
+    for x = 1, 16 do
         baseImages[#baseImages+1] = love.graphics.newQuad(x * 32, 0, 32, 32, baseSpriteSheet:getDimensions())
     end
     swingImages = {}
@@ -26,10 +26,9 @@ function animateCharacter(dt, bool)
         player.frameAmount = player.frameAmount + speed * dt
         if player.frameAmount >= 1 then
             player.frame = player.frame + 1
-            if player.frame >= 15 then
+            if player.frame >= 16 then
                 player.frame = 1
                 animatePlayerAttack = false
-                print(nextTick)
             end
             player.frameAmount = 0
         end
@@ -46,12 +45,20 @@ end
 
 function animateOtherPlayer(dt, bool, i)
     local plr = players[i]
-    if plr.Attacking then
-        if plr.Frame and plr.Frame < 10 then plr.Frame = 10 end
-        plr.Frame = (plr.Frame or 1) + 1
-        if plr.Frame >= 15 then
-            plr.Frame = 1
-            plr.Attacking = false
+    if plr.Attacking or (plr.Frame and plr.Frame > 10) then
+        if not plr.frameAmount then plr.frameAmount = 0 end
+        if plr.Frame and plr.Frame < 10 then
+            plr.Frame = 10
+            plr.frameAmount = 0
+        end
+        plr.frameAmount = plr.frameAmount + speed * dt
+        if plr.frameAmount >= 1 then
+            plr.Frame = (plr.Frame or 10) + 1
+            if plr.Frame >= 16 then
+                plr.Frame = 1
+                plr.Attacking = false
+            end
+            plr.frameAmount = 0
         end
     elseif bool or (plr.Frame and plr.Frame > 1) then
         if not plr.frameAmount then plr.frameAmount = 0 end
@@ -75,5 +82,6 @@ function drawAnimation(v, x, y, dir)
     frame = v.Frame or 1
     love.graphics.draw(baseShadow, x, y + 15 - 3, 0, dir, 1)
     love.graphics.draw(baseSpriteSheet, baseImages[frame], x, y - 3, 0, dir, 1)
-    if frame >= 13 and frame <= 15 then print(frame - 12) love.graphics.draw(baseSwing, swingImages[frame - 12], x - (32 * dir), y - 3 - 32, 0, dir, 1) end
+    if frame >= 13 and frame <= 15 then love.graphics.draw(baseSwing, swingImages[frame - 12], x - (32 * dir), y - 3 - 32, 0, dir, 1) end
+    love.graphics.print(v.AX .. "," .. v.AY, x,y + 34)
 end

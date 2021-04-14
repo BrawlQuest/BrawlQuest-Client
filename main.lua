@@ -353,7 +353,7 @@ function love.update(dt)
                 end
 
                 if response then
-                    local previousPlayers = copy(players) -- Temp
+                    previousPlayers = copy(players) -- Temp
 
                     players = response['Players']
                     npcs = response['NPC']

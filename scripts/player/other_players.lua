@@ -394,11 +394,11 @@ function updateOtherPlayers(dt)
 
             if playersDrawable[i].X - 1 > v.X * 32 then
                 playersDrawable[i].X = playersDrawable[i].X - speed * dt
-                playersDrawable[i].previousDirection = "left"
+                -- playersDrawable[i].previousDirection = "left"
                 iWantSparkles = true
             elseif playersDrawable[i].X + 1 < v.X * 32 then
                 playersDrawable[i].X = playersDrawable[i].X + speed * dt
-                playersDrawable[i].previousDirection = "right"
+                -- playersDrawable[i].previousDirection = "right"
                 iWantSparkles = true
             end
 
@@ -419,38 +419,43 @@ function updateOtherPlayers(dt)
             end
         end
         updateBuddy(dt, playersDrawable[i])
-       -- updateRangedWeapons(dt, playersDrawable[i])
+        -- updateRangedWeapons(dt, playersDrawable[i])
+
+        if not v.Frame then
+            if previousPlayers and previousPlayers[i] and previousPlayers[i].Frame then
+                v.Frame = previousPlayers[i].Frame
+            else v.Frame = 1 end
+        end
+        
+        if (v.X ~= v.AX or v.Y ~= v.AY) and nextTick > 0.4 and nextTick < 0.5 then v.Attacking = true end
     end
 end
 
 function tickOtherPlayers()
     for i, v in pairs(players) do
         if playersDrawable[i] then
-            if v['Name'] ~= playersDrawable[i]['Name'] then
-                playersDrawable[i] = v
+            local plr = playersDrawable[i]
+            if v['Name'] ~= plr['Name'] then
+                plr = v
                 setNamePlateAlpha(v, i)
             end
             if v.AX ~= 0 then
                 if v.AX < v.X then
-                    playersDrawable[i].X = playersDrawable[i].X - 16
+                    plr.X = plr.X - 16
+                    plr.previousDirection = "left"
                 elseif v.AX > v.X then
-                    playersDrawable[i].X = playersDrawable[i].X + 16
+                    plr.X = plr.X + 16
+                    plr.previousDirection = "right"
                 end
             end
 
             if v.AY ~= 0 then
                 if v.AY < v.Y then
-                    playersDrawable[i].Y = playersDrawable[i].Y - 16
+                    plr.Y = plr.Y - 16
                 elseif v.AY > v.Y then
-                    playersDrawable[i].Y = playersDrawable[i].Y + 16
+                    plr.Y = plr.Y + 16
                 end
             end
-
-        end
-        if not orCalc(0, {v.AX, v.AY}) then
-            -- animate attack
-            v.Attacking = true
-            print(i .. " ATTACKING")
         end
     end
 end
