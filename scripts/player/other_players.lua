@@ -44,7 +44,7 @@ function drawCharacter(v, x, y, ad)
             drawBuddy(v)
             if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) end
             if v.ShieldID ~= 0 then drawArmourImage(x + offsetX,y,v,ad,"ShieldFalse",direction) end
-            drawWeapon(x,y,v,ad,direction,offsetX)
+            -- drawWeapon(x,y,v,ad,direction,offsetX)
             if v.Invulnerability >= 0 then
                 love.graphics.setColor(1,1,1,0.3)
             else
@@ -170,9 +170,7 @@ function drawPlayer(v, i)
     end
 
     if thisPlayer and v and thisPlayer.Weapon then
-        if not v.previousDirection then
-            v.previousDirection = "right"
-        end
+        if not v.previousDirection then v.previousDirection = "right" end
         -- print(v.RedAlpha)
         if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) end
         drawCharacter(thisPlayer, v.X, v.Y, v)
@@ -181,11 +179,8 @@ function drawPlayer(v, i)
         love.graphics.setFont(playerNameFont)
         
         local boi = 0
-        if v.previousDirection == "left" then
-            boi = 11 + 3
-        else
-            boi = 16 + 3
-        end
+        if v.previousDirection == "left" then boi = 11 + 3
+        else boi = 16 + 3 end
 
         -- local text
         -- if thisPlayer.Prestige > 1 then text = thisPlayer.Prestige .. "," .. thisPlayer.LVL else text = thisPlayer.LVL end
@@ -394,11 +389,9 @@ function updateOtherPlayers(dt)
 
             if playersDrawable[i].X - 1 > v.X * 32 then
                 playersDrawable[i].X = playersDrawable[i].X - speed * dt
-                -- playersDrawable[i].previousDirection = "left"
                 iWantSparkles = true
             elseif playersDrawable[i].X + 1 < v.X * 32 then
                 playersDrawable[i].X = playersDrawable[i].X + speed * dt
-                -- playersDrawable[i].previousDirection = "right"
                 iWantSparkles = true
             end
 
@@ -426,7 +419,7 @@ function updateOtherPlayers(dt)
                 v.Frame = previousPlayers[i].Frame
             else v.Frame = 1 end
         end
-        
+
         if (v.X ~= v.AX or v.Y ~= v.AY) and nextTick > 0.4 and nextTick < 0.5 then v.Attacking = true end
     end
 end
@@ -454,6 +447,14 @@ function tickOtherPlayers()
                     plr.Y = plr.Y - 16
                 elseif v.AY > v.Y then
                     plr.Y = plr.Y + 16
+                end
+            end
+
+            if previousPlayers and previousPlayers[i] then
+                if v.X < previousPlayers[i].X then
+                    playersDrawable[i].previousDirection = "left"
+                elseif v.X > previousPlayers[i].X then
+                    playersDrawable[i].previousDirection = "right"
                 end
             end
         end

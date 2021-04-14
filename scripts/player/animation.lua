@@ -36,7 +36,7 @@ function animateCharacter(dt, bool)
         player.frameAmount = player.frameAmount + speed * dt
         if player.frameAmount >= 1 then
             player.frame = player.frame + 1
-            if not bool then player.frame = 1 end
+            -- if not bool then player.frame = 1 end
             if player.frame > 5 then player.frame = 1 end
             player.frameAmount = 0
         end
@@ -78,10 +78,35 @@ function tickAnimation()
     -- print("I'm Attacking")
 end
 
-function drawAnimation(v, x, y, dir)
+function drawAnimation(v,x,y,dir)
+    y = y - 3
     frame = v.Frame or 1
-    love.graphics.draw(baseShadow, x, y + 15 - 3, 0, dir, 1)
-    love.graphics.draw(baseSpriteSheet, baseImages[frame], x, y - 3, 0, dir, 1)
-    if frame >= 13 and frame <= 15 then love.graphics.draw(baseSwing, swingImages[frame - 12], x - (32 * dir), y - 3 - 32, 0, dir, 1) end
-    love.graphics.print(v.AX .. "," .. v.AY, x,y + 34)
+    love.graphics.draw(baseShadow, x, y + 15, 0, dir, 1)
+
+    if frame > 10 then
+    else drawAnimationWeapon(v,x,y,dir)
+    end
+    
+
+    love.graphics.setColor(1,1,1)
+    love.graphics.draw(baseSpriteSheet, baseImages[frame], x, y, 0, dir, 1)
+    if frame >= 13 and frame <= 15 then love.graphics.draw(baseSwing, swingImages[frame - 12], x - (32 * dir), y - 32, 0, dir, 1) end
+end
+
+function drawAnimationWeapon(v,x,y,dir)
+    x,y = x - (2 * dir), y - 1
+    if v["WeaponID"] ~= 0 then
+        -- if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) else love.graphics.setColor(1, 1, 1) end
+        love.graphics.draw(itemImg[v.Weapon.ImgPath], x, y, 0, dir, 1, 0, 0)
+        if v.Weapon.Enchantment ~= "None" then
+            love.graphics.push()
+                love.graphics.stencil(function() 
+                    love.graphics.setShader(alphaShader)
+                    love.graphics.draw(itemImg[v.Weapon.ImgPath], x, y, 0, dir, 1, 0, 0)
+                    love.graphics.setShader()
+                end)
+                drawEnchantment(x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32), y)
+            love.graphics.pop()
+        end
+    end
 end
