@@ -3,8 +3,8 @@ function initAnimation()
     baseShadow = love.graphics.newImage("assets/player/base/base-shadow.png")
     baseSwing = love.graphics.newImage("assets/player/base/base-swing.png")
     baseImages = {}
-    baseImages[#baseImages+1] = love.graphics.newQuad(0, 0, 32, 32, baseSpriteSheet:getDimensions())
-    for x = 1, 16 do
+    -- baseImages[#baseImages+1] = love.graphics.newQuad(0, 0, 32, 32, baseSpriteSheet:getDimensions())
+    for x = 0, 15 do
         baseImages[#baseImages+1] = love.graphics.newQuad(x * 32, 0, 32, 32, baseSpriteSheet:getDimensions())
     end
     swingImages = {}
@@ -15,6 +15,7 @@ function initAnimation()
 end
 
 local speed = 10
+local idle, walkStart, walkEnd = 1, 2, 5
 
 function animateCharacter(dt, bool)
     if nextTick > 0.4 and nextTick < 0.5 then animatePlayerAttack = player.attacking end
@@ -32,12 +33,12 @@ function animateCharacter(dt, bool)
             end
             player.frameAmount = 0
         end
-    elseif bool or player.frame > 1 then
+    elseif bool or player.frame > walkStart then
         player.frameAmount = player.frameAmount + speed * dt
         if player.frameAmount >= 1 then
             player.frame = player.frame + 1
             -- if not bool then player.frame = 1 end
-            if player.frame > 5 then player.frame = 1 end
+            if player.frame > walkEnd then player.frame = idle end
             player.frameAmount = 0
         end
     end
@@ -82,27 +83,41 @@ function drawAnimation(v,x,y,dir)
     y = y - 3
     frame = v.Frame or 1
     love.graphics.draw(baseShadow, x, y + 15, 0, dir, 1)
-
-    if frame > 10 then
-    else drawAnimationWeapon(v,x,y,dir)
+    if frame >= 10 then
+        local wx,wy = x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32) * dir, y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32)
+        if frame == 10 then drawAnimationWeapon(v,wx,wy - 3, dir)
+        elseif frame == 11 then drawAnimationWeapon(v,wx + (24 * dir), wy - 16, dir, 45)
+        elseif frame == 12 then drawAnimationWeapon(v,wx + (70 * dir), wy + 18, dir * -1, -40)
+        elseif frame >= 13 then drawAnimationWeapon(v,wx + (16 * dir), wy - 3, dir) end
+    else
+        local off = 0
+        if frame == 1 or frame % 2 == 0 then off = 1 end
+        local wx, wy, r = x,y - off, 0
+        if string.find(v.Weapon.ImgPath, "a1/special", 18) or
+            string.find(v.Weapon.ImgPath, "sword", 22) or
+            string.find(v.Weapon.ImgPath, "dagger", 22) then wx, wy, r = wx + 32 * dir, wy + 32, 180 end
+        drawAnimationWeapon(v, wx, wy, dir, r)
     end
-    
 
     love.graphics.setColor(1,1,1)
     love.graphics.draw(baseSpriteSheet, baseImages[frame], x, y, 0, dir, 1)
-    if frame >= 13 and frame <= 15 then love.graphics.draw(baseSwing, swingImages[frame - 12], x - (32 * dir), y - 32, 0, dir, 1) end
+
+    love.graphics.setBlendMode("add")
+    if frame >= 12 and frame <= 14 then love.graphics.draw(baseSwing, swingImages[frame - 11], x - (27 * dir), y - 27, 0, dir, 1) end
+    love.graphics.setBlendMode("alpha")
 end
 
-function drawAnimationWeapon(v,x,y,dir)
+function drawAnimationWeapon(v,x,y,dir,r)
+    r = (r or 0) * dir
     x,y = x - (2 * dir), y - 1
     if v["WeaponID"] ~= 0 then
         -- if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) else love.graphics.setColor(1, 1, 1) end
-        love.graphics.draw(itemImg[v.Weapon.ImgPath], x, y, 0, dir, 1, 0, 0)
+        love.graphics.draw(itemImg[v.Weapon.ImgPath], x, y, math.rad(r), dir, 1, 0, 0)
         if v.Weapon.Enchantment ~= "None" then
             love.graphics.push()
                 love.graphics.stencil(function() 
                     love.graphics.setShader(alphaShader)
-                    love.graphics.draw(itemImg[v.Weapon.ImgPath], x, y, 0, dir, 1, 0, 0)
+                    love.graphics.draw(itemImg[v.Weapon.ImgPath], x, y, math.rad(r), dir, 1, 0, 0)
                     love.graphics.setShader()
                 end)
                 drawEnchantment(x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32), y)
