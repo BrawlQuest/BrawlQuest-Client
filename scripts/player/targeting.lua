@@ -42,9 +42,14 @@ function checkTargetingPress(key)
     for i,v in ipairs(keys) do
         if key == v then -- if the key pressed == a direction, set the targetKeys direction to true
             targetKeys[i] = true
-         
             break
         end
+    end
+
+    if key == keybinds.ATTACK_LEFT then
+        player.previousDirection = "left"
+    elseif key == keybinds.ATTACK_RIGHT then
+        player.previousDirection = "right"
     end
 end
 
@@ -71,10 +76,15 @@ function checkTargeting() -- Check which keys are down and place the player targ
     local wasActive = player.target.active
     player.target = {x = player.x, y = player.y, active = false}
 
-    local holding = false
+    player.attacking = false
     for i,v in ipairs(keys) do
         if love.keyboard.isDown(v) then
-            holding = true
+            player.attacking = true
+            if v == keybinds.ATTACK_LEFT then
+                player.previousDirection = "left"
+            elseif v == keybinds.ATTACK_RIGHT then
+                player.previousDirection = "right"
+            end
             break
         end
     end
@@ -87,7 +97,7 @@ function checkTargeting() -- Check which keys are down and place the player targ
         end
     end
 
-    if not oldTargeting and ((moving and not isTypingInChat) and not holding) then
+    if not oldTargeting and ((moving and not isTypingInChat) and not player.attacking ) then
         heldKeys = {false, false, false, false,}
         targetKeys = {false, false, false, false,}
         targetHeld = false

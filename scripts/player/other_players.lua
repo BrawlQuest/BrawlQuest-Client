@@ -445,6 +445,12 @@ function tickOtherPlayers()
                     playersDrawable[i].Y = playersDrawable[i].Y + 16
                 end
             end
+
+        end
+        if not orCalc(0, {v.AX, v.AY}) then
+            -- animate attack
+            v.Attacking = true
+            print(i .. " ATTACKING")
         end
     end
 end

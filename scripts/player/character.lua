@@ -41,6 +41,7 @@ player = {
     speed = {x = 0, y = 0},
     frameAmount = 0,
     frame = 1,
+    attacking = true,
 }
 
 newInventoryItems = {}
@@ -161,7 +162,6 @@ end
 isMoving = false
 movementStarted = 1 -- the max time it'll ever take to cross a tile. This should fix rubberbanding.
 
-
 function movePlayer(dt)
 
     if andCalc(true, {
@@ -172,6 +172,7 @@ function movePlayer(dt)
             not death.open,
             not forging.forging,
             news.alpha ~= 1,
+            not player.attacking,
         }) then -- movement smoothing has finished
         local prev = {x = player.x, y = player.y}
         if love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.LEFT) and not (worldCollison(prev.x - 1, prev.y - 1) or worldCollison(prev.x - 1, prev.y) or worldCollison(prev.x, prev.y - 1)) then
