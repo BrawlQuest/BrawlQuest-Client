@@ -18,7 +18,7 @@ local speed = 10
 local idle, walkStart, walkEnd = 1, 2, 5
 
 function animateCharacter(dt, bool)
-    if nextTick > 0.4 and nextTick < 0.5 then animatePlayerAttack = player.attacking end
+    if nextTick > 0.3 and nextTick < 0.4 then animatePlayerAttack = player.attacking end
     if animatePlayerAttack then
         if player.frame < 10 then
             player.frame = 10
