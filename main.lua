@@ -411,7 +411,6 @@ function love.update(dt)
                             headers = {
                                 ["token"] = token
                             }
-
                         }
                     end
                     if me.IsDead then
