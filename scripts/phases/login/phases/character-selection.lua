@@ -341,6 +341,7 @@ function transitionToPhaseGame()
             phase = "game"
             titleMusic:stop()
 
+            recalculateLighting()
             createWorld()
             openTutorial(1)
             if musicVolume > 0 then

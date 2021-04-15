@@ -543,6 +543,7 @@ function love.resize(width, height)
     if phase == "login" then
         initLogin()
     else
+        recalculateLighting()
         createWorld()
         loadSliders()
     end

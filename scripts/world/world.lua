@@ -28,7 +28,7 @@ end
 
 function createWorld()
     if not love.filesystem.getInfo( "img" ) then love.filesystem.createDirectory( "img" ) end
-    recalculateLighting()
+    -- recalculateLighting()
     leaves = {}
     critters = {}
     worldEmitters = {}
@@ -43,7 +43,7 @@ function createWorld()
             for i,v in ipairs(tiles) do
 
                 worldLookup[v.X..","..v.Y] = copy(v)
-                addWorldEmitter(v)
+                -- addWorldEmitter(v)
                 
                 if not isTileType(v.ForegroundTile, "Dead") and isTileType(v.ForegroundTile, "Tree") and love.math.random(1,5) == 1 then
                     if isTileType(v.ForegroundTile, "Snowy") then addLeaf(v.X*32 + 16, v.Y*32 + 16, "snowy tree")
@@ -72,11 +72,11 @@ function createWorld()
         end
     end
 
-    if player.x and player.y then
-        createNPCChatBackground(player.x,player.y)
-    else
-        createNPCChatBackground(0,0)
-    end
+    -- if player.x and player.y then
+    --     createNPCChatBackground(player.x,player.y)
+    -- else
+    --     createNPCChatBackground(0,0)
+    -- end
 end
 
 function drawChunks(cx,cy)
@@ -92,9 +92,7 @@ function drawChunks(cx,cy)
                 for i,v in ipairs(tiles) do
                     drawTile(v, cx, cy)
                     -- love.filesystem.write("tile.txt", json:encode_pretty(v))
-                    addCritters(v)
-                    local x,y = v.X - cx * chunkSize, v.Y - cy * chunkSize
-                    
+                    -- addCritters(v)
                 end
             end
         end

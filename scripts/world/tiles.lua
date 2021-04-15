@@ -113,15 +113,19 @@ function getDrawableWater(tileName, x, y)
             {x = -1, y = 1, key = "bottomLeft", tile = worldLookup[x-1 ..","..y+1],},
             {x = 1, y = 1, key = "bottomRight", tile = worldLookup[x+1 ..","..y+1],},
         }
+
+        local count = 0
     
         -- checks if water is nearby
         for i,v in ipairs(worldToCheck) do
             if v.tile and (isTileWater(v.tile.ForegroundTile) or isTileWater(v.tile.GroundTile)) then
                 if v.tile.X == x + v.x and v.tile.Y == y + v.y then  nearby[v.key] = true end
+                count = count + 1
             elseif not v.tile then nearby[v.key] = true end
         end
 
         local assetName = "1.png"
+        if count == 8 then return "assets/world/water/12.png" end
 
         if nearby.top and nearby.bottom and nearby.left and nearby.right then
             assetName = "12.png"
