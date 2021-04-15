@@ -10,6 +10,8 @@ function initPlayers()
     shieldFalse = love.graphics.newImage("assets/player/gen/shield false.png")
     showEnchantments = false
     playerNameAlpha = 1
+
+
 end
 
 alphaShader = love.graphics.newShader[[
@@ -25,14 +27,6 @@ function drawCharacter(v, x, y, ad)
     if ad then
         local notBoat = not string.find(v.Mount.Name,  "boat")
         local direction, offsetX, mountOffsetX
-
-        if not itemImg[v.Weapon.ImgPath] then
-            if love.filesystem.getInfo(v.Weapon.ImgPath) then
-                itemImg[v.Weapon.ImgPath] = love.graphics.newImage(v.Weapon.ImgPath)
-            else
-                itemImg[v.Weapon.ImgPath] = love.graphics.newImage("assets/error.png")
-            end
-        end
 
         if ad and ad.previousDirection and ad.previousDirection == "right" then
             direction, offsetX, mountOffsetX = 1,0,0
@@ -50,17 +44,20 @@ function drawCharacter(v, x, y, ad)
             drawBuddy(v)
             if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) end
             if v.ShieldID ~= 0 then drawArmourImage(x + offsetX,y,v,ad,"ShieldFalse",direction) end
-            drawWeapon(x,y,v,ad,direction,offsetX)
+            -- drawWeapon(x,y,v,ad,direction,offsetX)
             if v.Invulnerability >= 0 then
                 love.graphics.setColor(1,1,1,0.3)
             else
                 love.graphics.setColor(1,1,1)
             end
            
-            love.graphics.draw(playerImg, x + offsetX, y, 0, direction, 1, 0, 0)
-            drawArmourImage(x,y,v,ad,"LegArmour")
-            drawArmourImage(x,y,v,ad,"ChestArmour")
-            drawArmourImage(x,y,v,ad,"HeadArmour")
+            -- love.graphics.draw(playerImg, x + offsetX, y, 0, direction, 1, 0, 0)
+
+            drawAnimation(v, x + offsetX, y, direction)
+
+            -- drawArmourImage(x,y,v,ad,"LegArmour")
+            -- drawArmourImage(x,y,v,ad,"ChestArmour")
+            -- drawArmourImage(x,y,v,ad,"HeadArmour")
             love.graphics.setColor(1,1,1)
             drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,"/fore.png")
             if v.IsShield and v.ShieldID ~= 0 and notBoat then drawArmourImage(x+12,y,v,ad,"Shield",direction) end
@@ -90,6 +87,15 @@ function drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,type)
 end
 
 function drawWeapon(x,y,v,ad,direction,offsetX)
+
+    if not itemImg[v.Weapon.ImgPath] then
+        if love.filesystem.getInfo(v.Weapon.ImgPath) then
+            itemImg[v.Weapon.ImgPath] = love.graphics.newImage(v.Weapon.ImgPath)
+        else
+            itemImg[v.Weapon.ImgPath] = love.graphics.newImage("assets/error.png")
+        end
+    end
+
     if v["WeaponID"] ~= 0 then
         if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) else love.graphics.setColor(1, 1, 1) end
         love.graphics.draw(itemImg[v.Weapon.ImgPath], x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32) * direction + offsetX, y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, direction, 1, 0, 0)
@@ -157,14 +163,14 @@ function drawPlayer(v, i)
         thisPlayer.Mana = me.Mana
         v.RedAlpha = 0
         v.NameAlpha = playerNameAlpha
+        v.Frame = player.frame
+        thisPlayer.Frame = player.frame
     else
         thisPlayer = players[i]
     end
 
     if thisPlayer and v and thisPlayer.Weapon then
-        if not v.previousDirection then
-            v.previousDirection = "right"
-        end
+        if not v.previousDirection then v.previousDirection = "right" end
         -- print(v.RedAlpha)
         if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) end
         drawCharacter(thisPlayer, v.X, v.Y, v)
@@ -173,11 +179,8 @@ function drawPlayer(v, i)
         love.graphics.setFont(playerNameFont)
         
         local boi = 0
-        if v.previousDirection == "left" then
-            boi = 11 + 3
-        else
-            boi = 16 + 3
-        end
+        if v.previousDirection == "left" then boi = 11 + 3
+        else boi = 16 + 3 end
 
         -- local text
         -- if thisPlayer.Prestige > 1 then text = thisPlayer.Prestige .. "," .. thisPlayer.LVL else text = thisPlayer.LVL end
@@ -186,7 +189,7 @@ function drawPlayer(v, i)
 
         drawNamePlate(v.X + boi, v.Y, v.Name, v.NameAlpha, thisPlayer.LVL, thisPlayer.Prestige) -- thisPlayer.LVL
         
-        if thisPlayer ~= nil and thisPlayer.AX then
+        if thisPlayer ~= nil and thisPlayer.AX then -- attack players
             local diffX = 0
             local diffY = 0
             if i == -1 and player.target.active then
@@ -367,6 +370,8 @@ function updateOtherPlayers(dt)
             playersDrawable[i].Y = v.Y * 32
         end
 
+        animateOtherPlayer(dt, distance > 3, i)
+
         if distance > 1 then
             local speed = 64
             if playersDrawable[i].Mount.Name ~= "None" or worldEdit.open then
@@ -384,11 +389,9 @@ function updateOtherPlayers(dt)
 
             if playersDrawable[i].X - 1 > v.X * 32 then
                 playersDrawable[i].X = playersDrawable[i].X - speed * dt
-                playersDrawable[i].previousDirection = "left"
                 iWantSparkles = true
             elseif playersDrawable[i].X + 1 < v.X * 32 then
                 playersDrawable[i].X = playersDrawable[i].X + speed * dt
-                playersDrawable[i].previousDirection = "right"
                 iWantSparkles = true
             end
 
@@ -409,30 +412,49 @@ function updateOtherPlayers(dt)
             end
         end
         updateBuddy(dt, playersDrawable[i])
-       -- updateRangedWeapons(dt, playersDrawable[i])
+        -- updateRangedWeapons(dt, playersDrawable[i])
+
+        if not v.Frame then
+            if previousPlayers and previousPlayers[i] and previousPlayers[i].Frame then
+                v.Frame = previousPlayers[i].Frame
+            else v.Frame = 1 end
+        end
+
+        if (v.X ~= v.AX or v.Y ~= v.AY) and nextTick > 0.3 and nextTick < 0.4 then v.Attacking = true end
     end
 end
 
 function tickOtherPlayers()
     for i, v in pairs(players) do
         if playersDrawable[i] then
-            if v['Name'] ~= playersDrawable[i]['Name'] then
-                playersDrawable[i] = v
+            local plr = playersDrawable[i]
+            if v['Name'] ~= plr['Name'] then
+                plr = v
                 setNamePlateAlpha(v, i)
             end
             if v.AX ~= 0 then
                 if v.AX < v.X then
-                    playersDrawable[i].X = playersDrawable[i].X - 16
+                    plr.X = plr.X - 16
+                    plr.previousDirection = "left"
                 elseif v.AX > v.X then
-                    playersDrawable[i].X = playersDrawable[i].X + 16
+                    plr.X = plr.X + 16
+                    plr.previousDirection = "right"
                 end
             end
 
             if v.AY ~= 0 then
                 if v.AY < v.Y then
-                    playersDrawable[i].Y = playersDrawable[i].Y - 16
+                    plr.Y = plr.Y - 16
                 elseif v.AY > v.Y then
-                    playersDrawable[i].Y = playersDrawable[i].Y + 16
+                    plr.Y = plr.Y + 16
+                end
+            end
+
+            if previousPlayers and previousPlayers[i] then
+                if v.X < previousPlayers[i].X then
+                    playersDrawable[i].previousDirection = "left"
+                elseif v.X > previousPlayers[i].X then
+                    playersDrawable[i].previousDirection = "right"
                 end
             end
         end
