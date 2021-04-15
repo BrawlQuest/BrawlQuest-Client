@@ -89,15 +89,15 @@ function updateQuestHub(dt)
     end
 
     if questHub.commentAmount > 0 and quests[1][questHub.selectedQuest] then
-        local textHeight = getTextHeight(quests[1][questHub.selectedQuest].comment, 127, questHub.font) - questHub.images.npcTalkBG:getHeight()
+        local textHeight = getTextHeight(quests[1][questHub.selectedQuest].comment, 127, questHub.nameFont) -- questHub.images.npcTalkBG:getHeight()
         questHub.commentOpen = true 
         questHub.commentOpacity = cerp(0, 1, questHub.commentAmount)
         questHub.velY = questHub.velY - questHub.velY * math.min( dt * 15, 1 ) 
         questHub.posY = questHub.posY + questHub.velY * dt
         if questHub.posY > 0 then
             questHub.posY = 0
-        elseif questHub.posY < textHeight then
-            questHub.posY = textHeight
+        elseif questHub.posY < -textHeight then
+            questHub.posY = -textHeight
         end
     else questHub.commentOpen = false end
 
@@ -194,7 +194,9 @@ function drawQuestHubNPCTalk(thisX, thisY)
         -- drawQuestHubNPCTalkStencil()
         love.graphics.stencil(drawQuestHubNPCTalkStencil, "replace", 1) -- stencils inventory
         love.graphics.setStencilTest("greater", 0) -- push
+        if quests[1][questHub.selectedQuest] and quests[1][questHub.selectedQuest].comment then
             love.graphics.printf(quests[1][questHub.selectedQuest].comment, questHub.font, thisX + 8, thisY + 7 + questHub.posY, 127)
+        end
         love.graphics.setStencilTest() -- pop
     end
 end
