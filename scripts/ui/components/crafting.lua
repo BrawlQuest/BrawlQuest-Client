@@ -63,7 +63,7 @@ function initCrafting()
             end
         end
     else
-        love.window.showMessageBox("Error loading crafting catalogue", "Post this on Discord please!\n"..tostring(b).."\n")
+        love.window.showMessageBox("Error loading crafting catalogue", "Post this on Discord please!\n"..json:encode_pretty(b).."\n")
         crafting.catalogue = {}
     end
 
@@ -136,7 +136,7 @@ function updateCrafting(dt)
             crafting.result.alphaCERP = cerp(0, 1, math.clamp(0, crafting.result.alpha, 1))
         end
 
-        crafting.velY = crafting.velY - crafting.velY * math.min( dt * 15, 1 ) 
+        crafting.velY = crafting.velY - crafting.velY * math.min( dt * 15, 1 )
         crafting.posY = crafting.posY + crafting.velY * dt
         if crafting.posY > 0 then
             crafting.posY = 0 
