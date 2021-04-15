@@ -22,12 +22,12 @@ end
 function checkIfCollision(x,y)
     local output = true
     if not worldMask.detected then
-        if worldLookup[x][y].Collision then --checks if a colliosion is reached
+        if worldLookup[x..","..y].Collision then --checks if a colliosion is reached
             worldMask.detected = true
             output = true   -- defers the output to later
         end
     elseif worldMask.detected then -- checks if there are multiple collisions in a row
-        if not worldLookup[x][y].Collision then 
+        if not worldLookup[x..","..y].Collision then 
             output = false -- if the collisons end, then break,
         else
             output = true 
@@ -57,13 +57,13 @@ function drawWorldMask()
                         local elseX, elseY = thisX - 0.5, thisY - 0.5
                         local show = true
 
-                        if worldLookup[thisX] and worldLookup[thisX][thisY] and worldLookup[thisX][thisY].Collision ~= null then
+                        if worldLookup[thisX..","..thisY] and worldLookup[thisX..","..thisY].Collision ~= null then
                             return checkIfCollision(thisX, thisY)
-                        elseif worldLookup[thisX] and worldLookup[thisX][elseY] and worldLookup[thisX][elseY].Collision ~= null then
+                        elseif worldLookup[thisX..","..elseY] and worldLookup[thisX..","..elseY].Collision ~= null then
                             return checkIfCollision(thisX, elseY)
-                        elseif worldLookup[elseX] and worldLookup[elseX][thisY] and worldLookup[elseX][thisY].Collision ~= null then
+                        elseif worldLookup[elseX..","..thisY] and worldLookup[elseX..","..thisY].Collision ~= null then
                             return checkIfCollision(elseX, thisY)
-                        elseif worldLookup[elseX] and worldLookup[elseX][elseY] and worldLookup[elseX][elseY].Collision ~= null then
+                        elseif worldLookup[elseX..","..elseY] and worldLookup[elseX..","..elseY].Collision ~= null then
                             return checkIfCollision(elseX, elseY)
                         else
                             return true -- if there is no tile, just count it as blank.

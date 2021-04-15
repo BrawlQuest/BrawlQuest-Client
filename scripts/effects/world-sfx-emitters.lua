@@ -76,7 +76,6 @@ function stopSource(source, key)
 end
 
 function playAmbience(v)
-    print("Playing New Ambience")
     playingAmbience[v.x..","..v.y] = love.audio.newSource(v.sound, "stream")
     playingAmbience[v.x..","..v.y]:setPosition(v.x/32,v.y/32)
     playingAmbience[v.x..","..v.y]:setRolloff(1)
