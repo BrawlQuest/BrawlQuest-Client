@@ -59,7 +59,7 @@ function updateWeather(dt)
     end
 
    
-   if weather.type ~= "rain" or (worldLookup[player.x] and worldLookup[player.x][player.y] and (not isTileType(worldLookup[player.x][player.y].GroundTile, "Cave Floor") and (isTileType(worldLookup[player.x][player.y].GroundTile, "Floor") or isTileType(worldLookup[player.x][player.y].GroundTile, "Wall") or isTileType(worldLookup[player.x][player.y].GroundTile, "Walkway")))) then
+   if weather.type ~= "rain" or (worldLookup[player.x..","..player.y] and (not isTileType(worldLookup[player.x..","..player.y].GroundTile, "Cave Floor") and (isTileType(worldLookup[player.x..","..player.y].GroundTile, "Floor") or isTileType(worldLookup[player.x..","..player.y].GroundTile, "Wall") or isTileType(worldLookup[player.x..","..player.y].GroundTile, "Walkway")))) then
         weather.alpha = weather.alpha - 1*dt
         if weather.sound.rain:getVolume() > 0 then
             weather.sound.rain:setVolume(weather.sound.rain:getVolume()-1*dt)

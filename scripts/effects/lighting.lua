@@ -16,3 +16,9 @@ function reinitLighting(w,h)
     Luven.dispose()
     initLighting()
 end
+
+function recalculateLighting()
+    Luven.dispose()
+    lightSource = {}
+    Luven.init()
+end

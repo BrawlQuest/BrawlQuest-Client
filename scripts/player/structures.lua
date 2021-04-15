@@ -6,7 +6,7 @@ structures = {}
 
 function updateWorldLookup() 
     for i,v in ipairs(structures) do
-        worldLookup[v.X][v.Y] = v
+        worldLookup[v.X..","..v.Y] = v
     end
 end
 

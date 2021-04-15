@@ -49,7 +49,9 @@ require "scripts.player.ranged-weapons"
 require "scripts.player.targeting"
 require "scripts.enemies"
 require "scripts.npcs"
-require "scripts.world"
+require "scripts.world.world"
+require "scripts.world.tiles"
+require "scripts.world.biomes"
 require "scripts.ui.temporary.worldedit"
 require "scripts.ui.temporary.new-world-edit"
 require "scripts.ui.temporary.world-edit-rect"
@@ -143,6 +145,8 @@ function love.load()
     initNews()
     initAnimation()
     love.graphics.setFont(textFont)
+    recursivelyDelete( "img" )
+    love.filesystem.createDirectory( "img" )
 end
 
 function love.draw()
@@ -248,15 +252,8 @@ function love.draw()
         love.graphics.setColor(1, 1, 1)
         love.graphics.setFont(settPan.itemFont)
         local text
-        if true then
-            text = "BrawlQuest " .. version .. " " .. versionNumber .. "\nX,Y: " .. player.x .. "," .. player.y ..
-                       " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount .. "\n" ..
-                       playersOnline
-        else
-            text =
-                "X,Y: " .. player.x .. "," .. player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " ..
-                    playerCount
-        end
+        if true then text = "BrawlQuest "..version.." "..versionNumber.."\nX,Y: " .. player.x..","..player.y .. "\nwX,wY: " .. player.wx..","..player.wy .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount .."\n"..playersOnline
+        else text = "X,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount end
         love.graphics.print(text, offset, 10)
     end
     mx, my = love.mouse.getPosition()
@@ -491,7 +488,7 @@ function love.update(dt)
                                 "Gather " .. v.Quest.ValueRequired .. "x " .. v.Quest.Value
                         elseif v.Quest.Type == "go" then
                             quests[v.Tracked][#quests[v.Tracked]].task =
-                                "Go to " .. (worldLookup[v.Quest.X][v.Quest.Y].Name or v.Quest.X .. ", " .. v.Quest.Y)
+                                "Go to " .. (worldLookup[v.Quest.X..","..v.Quest.Y].Name or v.Quest.X .. ", " .. v.Quest.Y) -- ..","..
                         end
                     end
 
@@ -523,7 +520,7 @@ function tick()
     nextTick = 1
     getInventory()
     tickRangedWeapons()
-    tickAnimation()
+    tickWorld()
     if hotbarChanged then
         hotbarChangeCount = hotbarChangeCount + 1
         if hotbarChangeCount > 0 then
@@ -547,6 +544,7 @@ function love.resize(width, height)
     if phase == "login" then
         initLogin()
     else
+        recalculateLighting()
         createWorld()
         loadSliders()
     end

@@ -31,7 +31,7 @@ function checkAchievementUnlocks()
             steam.userStats.setAchievement('prestige_achievement')
         end
 
-        if worldLookup[me.X] and worldLookup[me.X][me.Y] and worldLookup[me.X][me.Y].Name == "Dominion of "..me.Name then
+        if worldLookup[me.X..","..me.Y] and worldLookup[me.X..","..me.Y].Name == "Dominion of "..me.Name then
             steam.userStats.setAchievement('build_achievement')
         end
 

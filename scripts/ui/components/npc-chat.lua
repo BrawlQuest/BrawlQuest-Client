@@ -29,16 +29,14 @@ function createNPCChatBackground(x, y)
     npcChatBackground = {}
     local foundX = false
     local pathAhead = {}
-    for i, v in pairs(world) do
-        if v.X == x and v.Y == y then
-            npcChatBackground[1] = v.GroundTile
-        elseif v.Y == y and v.X > x then
-            pathAhead[#pathAhead + 1] = v
+    for key,tiles in next, worldChunks do
+        for i,v in ipairs(tiles) do
+            if v.X == x and v.Y == y then npcChatBackground[1] = v.GroundTile
+            elseif v.Y == y and v.X > x then pathAhead[#pathAhead + 1] = v end
         end
     end
-    table.sort(pathAhead, function(a, b)
-        return a.X < b.X
-    end)
+
+    table.sort(pathAhead, function(a, b) return a.X < b.X end)
 
     for i, v in ipairs(pathAhead) do
         if v.Collision and not foundX then
@@ -133,9 +131,9 @@ function scrollNPCChatText(text)
         else
             return height - npcChatArg.posY
         end
-    else 
+    else
         npcChatArg.posY = 0
-        return 0 
+        return 0
     end
 end
 

@@ -153,6 +153,18 @@ function recursiveEnumerate(folder, r)
 	return r
 end
 
+function recursivelyDelete( item )
+    if love.filesystem.getInfo( item , "directory" ) then
+        for _, child in pairs( love.filesystem.getDirectoryItems( item )) do
+            recursivelyDelete( item .. '/' .. child )
+            love.filesystem.remove( item .. '/' .. child )
+        end
+    elseif love.filesystem.getInfo( item ) then
+        love.filesystem.remove( item )
+    end
+    love.filesystem.remove( item )
+end
+
 function tableDifference(a, b)
     if a and b then
         local aa = {}
@@ -172,6 +184,12 @@ end
 function isMouseDown()
     if love.mouse.isDown(1) or love.mouse.isDown(2) then return true
     else return false end
+end
+
+function math.average(array) -- gets the average number of an array
+    local num = 0
+    for i,v in ipairs(array) do num = num + v end
+    if #array > 0 then return num / #array else return 0 end
 end
 
 function math.averageAngles(...)

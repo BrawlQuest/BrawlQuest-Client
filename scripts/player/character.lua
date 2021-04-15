@@ -32,16 +32,15 @@ player = {
         stepSndPlay = 0.3
     },
     color = {1,0.4,0.2,1},
-    walk = 0,
     cp = 0,
-    distance = 0,
-    direction = {x = 0, y = 0},
-    wobble = 0, 
-    wobbleValue = 0,
     speed = {x = 0, y = 0},
     frameAmount = 0,
     frame = 1,
     attacking = true,
+    wx = 0,
+    wy = 0,
+    worldPosition = "0,0",
+    prevWorldPosition = "0,0",
 }
 
 newInventoryItems = {}
@@ -143,13 +142,13 @@ end
 function worldCollison(x, y)
     local output = false
     if worldEdit.open and versionType == "dev" then return output end
-    if worldLookup[x] and worldLookup[x][y] then
-        if worldLookup[x][y].Collision == true then
+    if worldLookup[x..","..y] then
+        if worldLookup[x..","..y].Collision == true then
             output = true
         end
-        if me.Mount and string.find(me.Mount.Name, "boat") and isTileType(worldLookup[x][y].ForegroundTile, "Water") then
+        if me.Mount and string.find(me.Mount.Name, "boat") and isTileType(worldLookup[x..","..y].ForegroundTile, "Water") then
             output = false
-        elseif me.Mount and string.find(me.Mount.Name, "boat") and not worldLookup[x][y].Collision then
+        elseif me.Mount and string.find(me.Mount.Name, "boat") and not worldLookup[x..","..y].Collision then
             output = true
         end
     end
@@ -168,6 +167,7 @@ function movePlayer(dt)
             (me and not me.IsDead),
             (not isMoving or (distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) < 1)),
             not worldEdit.isTyping,
+            not isTypingInChat,
             not tutorialOpen,
             not death.open,
             not forging.forging,
@@ -214,8 +214,8 @@ function movePlayer(dt)
         if (prev.x ~= player.x or prev.y ~= player.y) or worldEdit.open then
             player.x = prev.x
             player.y = prev.y
-            if worldLookup[player.x]then
-                playFootstepSound(worldLookup[player.x][player.y], player.x, player.y)
+            if worldLookup[player.x..","..player.y]then
+                playFootstepSound(worldLookup[player.x..","..player.y], player.x, player.y)
             end
             isMoving = true
         end
@@ -236,7 +236,7 @@ function movePlayer(dt)
                 speed = 256
             end
         end
-        if worldLookup[player.x] and worldLookup[player.x][player.y] and worldLookup[player.x][player.y].ForegroundTile and worldLookup[player.x][player.y].GroundTile and (isTileType(worldLookup[player.x][player.y].ForegroundTile, "Path") or isTileType(worldLookup[player.x][player.y].GroundTile, "Path")) then
+        if worldLookup[player.x..","..player.y] and worldLookup[player.x..","..player.y].ForegroundTile and worldLookup[player.x..","..player.y].GroundTile and (isTileType(worldLookup[player.x..","..player.y].ForegroundTile, "Path") or isTileType(worldLookup[player.x..","..player.y].GroundTile, "Path")) then
             speed = speed * 1.4
         end
         if me.ActiveSpell and me.ActiveSpell.Name == "Whirlwind" then

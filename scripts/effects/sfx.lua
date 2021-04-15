@@ -102,15 +102,9 @@ function setSFXVolumes()
     -- horseMountSfx:setVolume(1*sfxVolume)
     forgingPush:setVolume(1 * sfxVolume)
     forgingPop:setVolume(1 * sfxVolume)
-    for i = 1, #attackSfxs do
-        attackSfxs[i]:setVolume(1*sfxVolume)
-    end
-    for i = 1, #aggroSfxs do
-        aggroSfxs[i]:setVolume(1*sfxVolume)
-    end
-    for i = 1, #deathSfxs do
-        deathSfxs[i]:setVolume(1*sfxVolume)
-    end
+    for i = 1, #attackSfxs do attackSfxs[i]:setVolume(1*sfxVolume) end
+    for i = 1, #aggroSfxs do aggroSfxs[i]:setVolume(1*sfxVolume) end
+    for i = 1, #deathSfxs do deathSfxs[i]:setVolume(1*sfxVolume) end
 end
 
 function playFootstepSound(v, x, y)
@@ -147,9 +141,9 @@ local tileName = "Squall's End"
 function setEnvironmentEffects(sound)
     -- local x,y = 0,0
     -- setEffect(sound, "genRev", true)
-    -- if worldLookup[player.x] and worldLookup[player.x][player.y] then
-    --     -- print(worldLookup[player.x][player.y].Name)
-    --     if not orCalc(worldLookup[player.x][player.y].Name, {"", "Spooky Forest",}) then tileName = worldLookup[player.x][player.y].Name end
+    -- if worldLookup[player.x..","..player.y] then
+    --     -- print(worldLookup[player.x..","..player.y].Name)
+    --     if not orCalc(worldLookup[player.x..","..player.y].Name, {"", "Spooky Forest",}) then tileName = worldLookup[player.x..","..player.y].Name end
     --     setEffect(sound, "caveRev", orCalc(tileName, {"Shieldbreak Mine", "Shieldbreak", "The Permafrost Mines"}))
     --     setEffect(sound, "elodineRev", orCalc(tileName, {"Elodine's Gift",}))
     -- end
@@ -165,8 +159,6 @@ function setEffect(sound, effect, bool)
                 end
                 sound:setEffect(effect)
             end
-        else
-            sfx[effect].enabled = love.audio.setEffect(effect, false)
-        end
+        else sfx[effect].enabled = love.audio.setEffect(effect, false) end
     end
 end
