@@ -14,7 +14,7 @@ function initAnimation()
     animatePlayerAttack = false
 end
 
-local speed = 10
+local walkSpeed, attackSpeed = 6, 10
 local idle, walkStart, walkEnd = 1, 2, 5
 
 function animateCharacter(dt, bool)
@@ -24,7 +24,7 @@ function animateCharacter(dt, bool)
             player.frame = 10
             player.frameAmount = 0
         end
-        player.frameAmount = player.frameAmount + speed * dt
+        player.frameAmount = player.frameAmount + attackSpeed * dt
         if player.frameAmount >= 1 then
             player.frame = player.frame + 1
             if player.frame >= 16 then
@@ -34,13 +34,14 @@ function animateCharacter(dt, bool)
             player.frameAmount = 0
         end
     elseif bool or player.frame > walkStart then
-        player.frameAmount = player.frameAmount + speed * dt
+        player.frameAmount = player.frameAmount + walkSpeed * dt
         if player.frameAmount >= 1 then
             player.frame = player.frame + 1
-            -- if not bool then player.frame = 1 end
-            if player.frame > walkEnd then player.frame = idle end
+            if player.frame > walkEnd then player.frame = walkStart end
             player.frameAmount = 0
+            if not bool then player.frame = idle end
         end
+    else player.frame = idle
     end
 end
 
@@ -105,6 +106,8 @@ function drawAnimation(v,x,y,dir)
     love.graphics.setBlendMode("add")
     if frame >= 12 and frame <= 14 then love.graphics.draw(baseSwing, swingImages[frame - 11], x - (27 * dir), y - 27, 0, dir, 1) end
     love.graphics.setBlendMode("alpha")
+
+    love.graphics.print(frame, x, y+34)
 end
 
 function drawAnimationWeapon(v,x,y,dir,r)
