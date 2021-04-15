@@ -75,7 +75,7 @@ function initSettings()
         if contents["hotbar"] and #contents["hotbar"] ~= 7 then
             hotbar = hotbar
         else
-            hotbar = contents["hotbar"] or hotbar
+            hotbar = contents["hotbar"]
         end
         
       
@@ -130,7 +130,7 @@ function initSettings()
 end
 
 function writeSettings()
-    local success,msg = love.filesystem.write("settings.txt", json:encode_pretty({
+    love.filesystem.write("settings.txt", json:encode_pretty({
         version = version .. " " .. versionNumber,
         keybinds = keybinds,
         musicVolume = musicVolume,

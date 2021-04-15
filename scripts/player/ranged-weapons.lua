@@ -56,10 +56,10 @@ function tickRangedWeapons()
         throw.open = true
         target.paths = {origin = {x = player.x, y = player.y}}
         target.shootable, target.counter = Bresenham.line(player.x, player.y, target.x, target.y, function (x, y)
-            if worldLookup[x] and worldLookup[x][y] and worldLookup[x][y].Collision ~= null then
-                local output = not worldLookup[x][y].Collision
+            if worldLookup[x..","..y] and worldLookup[x..","..y].Collision ~= null then
+                local output = not worldLookup[x..","..y].Collision
                 target.paths[#target.paths + 1] = {x = x, y = y,}
-                if isTileWater(worldLookup[x][y].ForegroundTile) then output = true end
+                if isTileWater(worldLookup[x..","..y].ForegroundTile) then output = true end
                 return output
             end
         end)

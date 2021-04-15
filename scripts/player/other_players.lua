@@ -376,7 +376,7 @@ function updateOtherPlayers(dt)
                     speed = speed + 25
                 end
             end
-            if worldLookup[v.X] and worldLookup[v.X][v.Y] and (isTileType(worldLookup[v.X][v.Y].ForegroundTile, "Path") or isTileType(worldLookup[v.X][v.Y].GroundTile, "Path")) then
+            if worldLookup[v.X..","..v.Y] and (isTileType(worldLookup[v.X..","..v.Y].ForegroundTile, "Path") or isTileType(worldLookup[v.X..","..v.Y].GroundTile, "Path")) then
                 speed = speed * 1.4
             end
 
