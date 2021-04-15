@@ -420,7 +420,7 @@ function updateOtherPlayers(dt)
             else v.Frame = 1 end
         end
 
-        if (v.X ~= v.AX or v.Y ~= v.AY) and nextTick > 0.4 and nextTick < 0.5 then v.Attacking = true end
+        if (v.X ~= v.AX or v.Y ~= v.AY) and nextTick > 0.3 and nextTick < 0.4 then v.Attacking = true end
     end
 end
 
