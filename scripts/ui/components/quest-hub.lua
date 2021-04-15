@@ -83,7 +83,6 @@ end
 function updateQuestHub(dt)
     if isMouseOver((uiX - 468) * scale, (uiY - 102) * scale, 468 * scale, 102 * scale) and #quests[1] > 0 then -- Opens Comment
         panelMovement(dt, questHub,  1, "commentAmount")
-
     else
         panelMovement(dt, questHub, -1, "commentAmount")
     end
@@ -108,14 +107,16 @@ function updateQuestHub(dt)
     end
 
     if questHub.amount > 0 then questHub.open = true
-        questHub.opacity = cerp(0, 1, questHub.amount) 
+        questHub.opacity = cerp(0, 1, questHub.amount)
     else questHub.open = false end
+
+    local fieldHeight = getFullQuestsPanelFieldHeight()
     
     if questsPanel.forceOpen and not isTypingInChat then
         panelMovement(dt, questsPanel, 1)
-        if getFullQuestsPanelFieldHeight() * scale > (cerp((uiY/1.25) - 55,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale then
+        if fieldHeight * scale > (cerp((uiY/1.25) - 55,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale then
             posYQuest = posYQuest + velYQuest * dt
-            local questsFieldHeight = 0 - getFullQuestsPanelFieldHeight() + (cerp((uiY/1.25) - 55, ((uiY/1.25) - 106 - 14 - 55), questHub.amount))
+            local questsFieldHeight = 0 - fieldHeight + (cerp((uiY/1.25) - 55, ((uiY/1.25) - 106 - 14 - 55), questHub.amount))
             if posYQuest > 0 then
                 posYQuest = 0
             elseif posYQuest < questsFieldHeight then
@@ -129,12 +130,11 @@ function updateQuestHub(dt)
         (313) * scale,
         (cerp((uiY/1.25) - 55 ,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale) then -- Opens Quests Panel
             panelMovement(dt, questsPanel, 1)
-            if getFullQuestsPanelFieldHeight() * scale > (cerp((uiY/1.25) - 55,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale then
+            if fieldHeight * scale > (cerp((uiY/1.25) - 55,((uiY/1.25) - 106 - 14 - 55), questHub.amount)) * scale then
                 posYQuest = posYQuest + velYQuest * dt
-                if posYQuest > 0 then
-                    posYQuest = 0
-                elseif posYQuest < 0 - getFullQuestsPanelFieldHeight() + (cerp((uiY/1.25) - 55, ((uiY/1.25) - 106 - 14 - 55), questHub.amount)) then
-                    posYQuest = 0 - getFullQuestsPanelFieldHeight() + (cerp((uiY/1.25) - 55, ((uiY/1.25) - 106 - 14 - 55), questHub.amount))
+                if posYQuest > 0 then posYQuest = 0
+                elseif posYQuest < 0 - fieldHeight + (cerp((uiY/1.25) - 55, ((uiY/1.25) - 106 - 14 - 55), questHub.amount)) then
+                    posYQuest = 0 - fieldHeight + (cerp((uiY/1.25) - 55, ((uiY/1.25) - 106 - 14 - 55), questHub.amount))
                 end
             else posYQuest = 0
             end
