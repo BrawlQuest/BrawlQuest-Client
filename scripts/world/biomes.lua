@@ -20,7 +20,6 @@ end
 
 function loadNoiseTiles(cx,cy,x,y)
     local nx,ny = x + cx * chunkSize, y + cy * chunkSize
-    -- love.graphics.draw(groundImg, x * 32, y * 32)
 
     local largeNoise = love.math.noise(nx * nf[1], ny * nf[1]) - love.math.noise(nx * nf[2], ny * nf[2]) * 0.1
     local smallNoise = love.math.noise(nx * nf[3], ny * nf[3]) * largeNoise
@@ -38,7 +37,7 @@ function loadNoiseTiles(cx,cy,x,y)
         grass = "assets/world/grounds/grass/grass04.png"
     else
         biome = "Volcanic"
-        grass = "assets/world/grounds/Cave Floor.png" 
+        grass = "assets/world/grounds/Cave Floor.png"
     end
 
     if largeNoise >= 0.8 - smallNoise * 0.05 then
@@ -72,8 +71,6 @@ function loadNoiseTiles(cx,cy,x,y)
         end
 
     else createNoiseTile("assets/world/grounds/Water.png", nil, cx,cy,x,y,nx,ny, 0.6 + largeNoise * 0.4) end
-
-
 end
 
 function createNoiseTile(groundTile,foregroundTile,cx,cy,x,y,nx,ny,color)

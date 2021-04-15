@@ -121,7 +121,7 @@ function drawTile(v, cx, cy)
         love.graphics.rectangle("fill", x * 32, y * 32, 32, 16)
     end 
 
-    love.graphics.setColor(1,1,1,1)
+    if v.Color then love.graphics.setColor(v.Color, v.Color, v.Color) else drawSimplexNoise(v.X, v.Y) end
     if foregroundAsset ~= backgroundAsset and worldImg[foregroundAsset] then love.graphics.draw(worldImg[foregroundAsset], (x) * 32, (y) * 32) end
 end
 
