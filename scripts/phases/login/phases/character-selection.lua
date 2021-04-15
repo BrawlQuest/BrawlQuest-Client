@@ -334,7 +334,8 @@ function transitionToPhaseGame()
         local b = {}
        c, h = http.request{url = api.url.."/world", method="GET", sink=ltn12.sink.table(b)}
         if b[1] then
-            world = json:decode(table.concat(b))
+            -- world = json:decode(table.concat(b))
+            initWorldTable(b)
             awakeSfx:play()
             love.graphics.setBackgroundColor(0, 0, 0)
             phase = "game"
@@ -356,5 +357,15 @@ function transitionToPhaseGame()
     news.alpha = 1
     news.selected.item = 1
     getNews()
+end
+
+function initWorldTable(b)
+    world = json:decode(table.concat(b))
+    worldChunks = {}
+    for i,tile in ipairs(world) do
+        local x,y = math.floor((tile.X) / chunkSize), math.floor((tile.Y) / chunkSize)
+        if not worldChunks[x..","..y] then worldChunks[x..","..y] = {} end
+        worldChunks[x..","..y][#worldChunks[x..","..y] + 1] = copy(tile)
+    end
 end
 
