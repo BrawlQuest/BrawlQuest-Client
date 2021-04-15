@@ -282,7 +282,7 @@ function drawBattlebarItem(thisX, thisY, item, stats)
         end
     elseif item == "hold" then
         love.graphics.print(boolToString(holdAttack), characterHub.nameFont, thisX+(w / 2)-(characterHub.nameFont:getWidth(stats)/2), thisY + 16)
-    elseif item then
+    else
         love.graphics.draw(item, thisX + 4, thisY + 4)
     end
 

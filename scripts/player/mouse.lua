@@ -91,22 +91,16 @@ function checkMouseTargeting()
     if my < -range.y then 
         player.target.active = true
         player.target.y = player.y - 1
-        player.attacking = true
     elseif my > range.y then
         player.target.active = true
         player.target.y = player.y + 1
-        player.attacking = true
     end
 
     if mx < -range.x then
         player.target.active = true
         player.target.x = player.x - 1
-        player.attacking = true
-        player.previousDirection = "left"
     elseif mx > range.x then
         player.target.active = true
         player.target.x = player.x + 1
-        player.attacking = true
-        player.previousDirection = "right"
     end
 end

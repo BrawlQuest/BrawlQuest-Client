@@ -43,7 +43,6 @@ require "scripts.libraries.utils"
 require "scripts.libraries.colorize"
 require "scripts.libraries.simple-slider"
 require "scripts.phases.login.login"
-require "scripts.player.animation"
 require "scripts.player.other_players"
 require "scripts.player.ranged-weapons"
 require "scripts.player.targeting"
@@ -141,7 +140,6 @@ function love.load()
     initWeather()
     initParticles()
     initNews()
-    initAnimation()
     love.graphics.setFont(textFont)
 end
 
@@ -353,7 +351,7 @@ function love.update(dt)
                 end
 
                 if response then
-                    previousPlayers = copy(players) -- Temp
+                    local previousPlayers = copy(players) -- Temp
 
                     players = response['Players']
                     npcs = response['NPC']
@@ -524,7 +522,6 @@ function tick()
     nextTick = 1
     getInventory()
     tickRangedWeapons()
-    tickAnimation()
     if hotbarChanged then
         hotbarChangeCount = hotbarChangeCount + 1
         if hotbarChangeCount > 0 then
