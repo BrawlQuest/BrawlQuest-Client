@@ -94,6 +94,8 @@ function drawAnimation(v,x,y,dir)
     love.graphics.setColor(1,1,1)
     love.graphics.draw(baseSpriteSheet, baseImages[frame], x, y, 0, dir, 1)
 
+    if v.IsShield and v.ShieldID ~= 0 and notBoat then drawArmourImage(x+12 - 5 * dir,y,v,ad,"Shield",dir) end
+
     love.graphics.setBlendMode("add")
     if frame >= 12 and frame <= 14 then love.graphics.draw(baseSwing, swingImages[frame - 11], x - (27 * dir), y - 27, 0, dir, 1) end
     love.graphics.setBlendMode("alpha")
