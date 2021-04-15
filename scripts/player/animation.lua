@@ -84,7 +84,7 @@ function drawAnimation(v,x,y,dir)
     frame = v.Frame or 1
     love.graphics.draw(baseShadow, x, y + 15, 0, dir, 1)
     if frame >= 10 then
-        local wx,wy = x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32) * dir, y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32)
+        local wx,wy = x - (getImgIfNotExist(v.Weapon.ImgPath):getWidth() - 32) * dir, y - (getImgIfNotExist(v.Weapon.ImgPath):getHeight() - 32)
         if frame == 10 then drawAnimationWeapon(v,wx,wy - 3, dir)
         elseif frame == 11 then drawAnimationWeapon(v,wx + (24 * dir), wy - 16, dir, 45)
         elseif frame == 12 then drawAnimationWeapon(v,wx + (70 * dir), wy + 18, dir * -1, -40)
@@ -112,15 +112,15 @@ function drawAnimationWeapon(v,x,y,dir,r)
     x,y = x - (2 * dir), y - 1
     if v["WeaponID"] ~= 0 then
         -- if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) else love.graphics.setColor(1, 1, 1) end
-        love.graphics.draw(itemImg[v.Weapon.ImgPath], x, y, math.rad(r), dir, 1, 0, 0)
+        love.graphics.draw(getImgIfNotExist(v.Weapon.ImgPath), x, y, math.rad(r), dir, 1, 0, 0)
         if v.Weapon.Enchantment ~= "None" then
             love.graphics.push()
                 love.graphics.stencil(function() 
                     love.graphics.setShader(alphaShader)
-                    love.graphics.draw(itemImg[v.Weapon.ImgPath], x, y, math.rad(r), dir, 1, 0, 0)
+                    love.graphics.draw(getImgIfNotExist(v.Weapon.ImgPath), x, y, math.rad(r), dir, 1, 0, 0)
                     love.graphics.setShader()
                 end)
-                drawEnchantment(x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32), y)
+                drawEnchantment(x - (getImgIfNotExist(v.Weapon.ImgPath):getWidth() - 32), y)
             love.graphics.pop()
         end
     end
