@@ -164,6 +164,7 @@ function movePlayer(dt)
             (me and not me.IsDead),
             (not isMoving or (distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) < 1)),
             not worldEdit.isTyping,
+            not isTypingInChat,
             not tutorialOpen,
             not death.open,
             not forging.forging,

@@ -28,7 +28,7 @@ end
 
 function createWorld()
     if not love.filesystem.getInfo( "img" ) then love.filesystem.createDirectory( "img" ) end
-    recalculateLighting()
+    -- recalculateLighting()
     leaves = {}
     critters = {}
     worldEmitters = {}
@@ -42,15 +42,17 @@ function createWorld()
         if orCalc(key, tab) then
             for i,v in ipairs(tiles) do
 
-                worldLookup[v.X..","..v.Y] = copy(v)
-                addWorldEmitter(v)
+                worldLookup[v.X..","..v.Y] = v
                 
-                if not isTileType(v.ForegroundTile, "Dead") and isTileType(v.ForegroundTile, "Tree") and love.math.random(1,5) == 1 then
-                    if isTileType(v.ForegroundTile, "Snowy") then addLeaf(v.X*32 + 16, v.Y*32 + 16, "snowy tree")
-                    else addLeaf(v.X*32 + 16, v.Y*32 + 16, "tree") end
-                elseif isTileType(v.ForegroundTile, "Campfire") then addLeaf(v.X*32 + 16, v.Y*32 + 8, "fire")
-                elseif isTileType(v.ForegroundTile, "Sand") then -- addLeaf(v.X*32 + 16, v.Y*32 + 16, "sand")
-                elseif isTileType(v.GroundTile, "Murky") then addLeaf(v.X*32, v.Y*32+16, "murky") end
+                if showWorldAnimations then
+                    addWorldEmitter(v)
+                    if not isTileType(v.ForegroundTile, "Dead") and isTileType(v.ForegroundTile, "Tree") and love.math.random(1,5) == 1 then
+                        if isTileType(v.ForegroundTile, "Snowy") then addLeaf(v.X*32 + 16, v.Y*32 + 16, "snowy tree")
+                        else addLeaf(v.X*32 + 16, v.Y*32 + 16, "tree") end
+                    elseif isTileType(v.ForegroundTile, "Campfire") then addLeaf(v.X*32 + 16, v.Y*32 + 8, "fire")
+                    elseif isTileType(v.ForegroundTile, "Sand") then -- addLeaf(v.X*32 + 16, v.Y*32 + 16, "sand")
+                    elseif isTileType(v.GroundTile, "Murky") then addLeaf(v.X*32, v.Y*32+16, "murky") end
+                end
     
                 if lightGivers[v.ForegroundTile] and not lightSource[v.X .. "," .. v.Y] then
                     lightSource[v.X .. "," .. v.Y] = true
@@ -72,11 +74,11 @@ function createWorld()
         end
     end
 
-    if player.x and player.y then
-        createNPCChatBackground(player.x,player.y)
-    else
-        createNPCChatBackground(0,0)
-    end
+    -- if player.x and player.y then
+    --     createNPCChatBackground(player.x,player.y)
+    -- else
+    --     createNPCChatBackground(0,0)
+    -- end
 end
 
 function drawChunks(cx,cy)
@@ -92,9 +94,7 @@ function drawChunks(cx,cy)
                 for i,v in ipairs(tiles) do
                     drawTile(v, cx, cy)
                     -- love.filesystem.write("tile.txt", json:encode_pretty(v))
-                    addCritters(v)
-                    local x,y = v.X - cx * chunkSize, v.Y - cy * chunkSize
-                    
+                    -- addCritters(v)
                 end
             end
         end

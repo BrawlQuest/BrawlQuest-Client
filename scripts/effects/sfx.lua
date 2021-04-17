@@ -102,15 +102,9 @@ function setSFXVolumes()
     -- horseMountSfx:setVolume(1*sfxVolume)
     forgingPush:setVolume(1 * sfxVolume)
     forgingPop:setVolume(1 * sfxVolume)
-    for i = 1, #attackSfxs do
-        attackSfxs[i]:setVolume(1*sfxVolume)
-    end
-    for i = 1, #aggroSfxs do
-        aggroSfxs[i]:setVolume(1*sfxVolume)
-    end
-    for i = 1, #deathSfxs do
-        deathSfxs[i]:setVolume(1*sfxVolume)
-    end
+    for i = 1, #attackSfxs do attackSfxs[i]:setVolume(1*sfxVolume) end
+    for i = 1, #aggroSfxs do aggroSfxs[i]:setVolume(1*sfxVolume) end
+    for i = 1, #deathSfxs do deathSfxs[i]:setVolume(1*sfxVolume) end
 end
 
 function playFootstepSound(v, x, y)
@@ -165,8 +159,6 @@ function setEffect(sound, effect, bool)
                 end
                 sound:setEffect(effect)
             end
-        else
-            sfx[effect].enabled = love.audio.setEffect(effect, false)
-        end
+        else sfx[effect].enabled = love.audio.setEffect(effect, false) end
     end
 end

@@ -63,7 +63,7 @@ function initCrafting()
             end
         end
     else
-        love.window.showMessageBox("Error loading crafting catalogue", "Post this on Discord please!\n"..tostring(b).."\n")
+        love.window.showMessageBox("Error loading crafting catalogue", "Post this on Discord please!\n"..json:encode_pretty(b).."\n")
         crafting.catalogue = {}
     end
 
@@ -82,10 +82,12 @@ function updateCrafting(dt)
         if crafting.isCrafting then
             if crafting.hammerDown < 0 then
                 crafting.whiteout = crafting.whiteout + 20 * dt
-                crafting.sfx:setPitch(love.math.random(50,100)/100)
-                crafting.sfx:setRelative(true)
-                setEnvironmentEffects(crafting.sfx)
-                crafting.sfx:play()
+                if sfxVolume > 0 then
+                    crafting.sfx:setPitch(love.math.random(50,100)/100)
+                    crafting.sfx:setRelative(true)
+                    setEnvironmentEffects(crafting.sfx)
+                    crafting.sfx:play()
+                end
                 if crafting.whiteout > 1 and crafting.selectedItem ~= null then
                     crafting.hammerDown = 1
                     crafting.isCrafting = false
@@ -134,7 +136,7 @@ function updateCrafting(dt)
             crafting.result.alphaCERP = cerp(0, 1, math.clamp(0, crafting.result.alpha, 1))
         end
 
-        crafting.velY = crafting.velY - crafting.velY * math.min( dt * 15, 1 ) 
+        crafting.velY = crafting.velY - crafting.velY * math.min( dt * 15, 1 )
         crafting.posY = crafting.posY + crafting.velY * dt
         if crafting.posY > 0 then
             crafting.posY = 0 
@@ -409,11 +411,13 @@ function checkCraftingMousePressed(button)
     if button == 1 and crafting.mouseOverAnvil == true and crafting.craftable and not crafting.changed then
         crafting.isCrafting = true
         crafting.whiteout = 0
-        crafting.swing:stop()
-        crafting.swing:setPitch(love.math.random(30,80)/100)
-        crafting.swing:setRelative(true)
-        setEnvironmentEffects(crafting.swing)
-        crafting.swing:play()
+        if sfxVolume > 0 then
+            crafting.swing:stop()
+            crafting.swing:setPitch(love.math.random(30,80)/100)
+            crafting.swing:setRelative(true)
+            setEnvironmentEffects(crafting.swing)
+            crafting.swing:play()
+        end
         checkHotbarChange()
     elseif button == 1 and crafting.overOpenField > 0 then
         crafting.openField[crafting.overOpenField] = not crafting.openField[crafting.overOpenField]
@@ -500,11 +504,13 @@ function checkCraftingKeyPressed(key)
     elseif key == "return" and crafting.craftable and not crafting.changed then
         crafting.isCrafting = true
         crafting.whiteout = 0
-        crafting.swing:stop()
-        crafting.swing:setPitch(love.math.random(30,80)/100)
-        crafting.swing:setRelative(true)
-        setEnvironmentEffects(crafting.swing)
-        crafting.swing:play()
+        if sfxVolume > 0 then
+            crafting.swing:stop()
+            crafting.swing:setPitch(love.math.random(30,80)/100)
+            crafting.swing:setRelative(true)
+            setEnvironmentEffects(crafting.swing)
+            crafting.swing:play()
+        end
         crafting.changed = true
         enterCraftingItems(crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j])
         checkHotbarChange()
