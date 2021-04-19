@@ -13,6 +13,6 @@ end
 function drawStructures()
     for i,v in ipairs(structures) do
         local asset = getWorldAsset(v.ForegroundTile, v.X, v.Y)
-        love.graphics.draw(worldImg[asset], v.X*32, v.Y*32)
+        love.graphics.draw(getImgIfNotExist(v.ForegroundTile), v.X*32, v.Y*32)
     end
 end

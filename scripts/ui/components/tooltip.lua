@@ -130,14 +130,6 @@ function setItemTooltip(item)
             }
         end
     end
-
-    if item.Type == "spell" then
-        tooltip.additional[#tooltip.additional + 1] = {
-            desc = "Not consumed on use",
-            color = {0.8,0.8,1}
-        }
-    end
-
     if me and item and item.Enchantment ~= "None" then
         ench = explode(item.Enchantment, ",")
         if string.sub(item.Type,1,3) == "arm" then
@@ -173,7 +165,6 @@ function setItemTooltip(item)
             desc = "Global spell cooldown. Can be used in "..me.SpellCooldown.." seconds.",
             color = {1,0,0}
         }
-        
     end
 end
 
