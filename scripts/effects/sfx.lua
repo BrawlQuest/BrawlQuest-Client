@@ -107,7 +107,7 @@ function setSFXVolumes()
     for i = 1, #deathSfxs do deathSfxs[i]:setVolume(1*sfxVolume) end
 end
 
-function playFootstepSound(v, x, y)
+function playFootstepSound(v, x, y, relative)
     stepSfx:stop()
     if v and stepSounds[v.GroundTile] then
         stepSfx = stepSounds[v.GroundTile]
@@ -118,7 +118,12 @@ function playFootstepSound(v, x, y)
     end
     stepSfx:setPitch(love.math.random(85,200)/100)
     stepSfx:setVolume(0.5 * sfxVolume)
-    stepSfx:setRelative(true)
+    -- stepSfx:setPosition(x, y)
+    if relative then stepSfx:setPosition(0, 0) stepSfx:setRelative(true)
+    else stepSfx:setRelative(false) stepSfx:setPosition(x, y) end
+    -- if x == player.x and y == player.y then stepSfx:setRelative(true)
+    -- else stepSfx:setRelative(false)  print(x..","..y) end
+    
     setEnvironmentEffects(stepSfx)
     stepSfx:play()
 end

@@ -127,8 +127,4 @@ function checkTargeting() -- Check which keys are down and place the player targ
         -- newly active, trigger a send to make things feel a tad more responsive
         nextUpdate = 0
     end
-
-    if player.target.active and player.isMounted then
-        beginMounting()
-    end
 end

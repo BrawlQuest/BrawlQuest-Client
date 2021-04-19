@@ -214,8 +214,8 @@ function movePlayer(dt)
         if (prev.x ~= player.x or prev.y ~= player.y) or worldEdit.open then
             player.x = prev.x
             player.y = prev.y
-            if worldLookup[player.x..","..player.y]then
-                playFootstepSound(worldLookup[player.x..","..player.y], player.x, player.y)
+            if me and me.Mount and not orCalc(me.Mount.Name, {"", "None",}) and worldLookup[player.x..","..player.y]then
+                playFootstepSound(worldLookup[player.x..","..player.y], player.x, player.y, true)
             end
             isMoving = true
         end

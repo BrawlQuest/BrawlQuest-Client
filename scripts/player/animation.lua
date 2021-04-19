@@ -14,12 +14,13 @@ function initAnimation()
     animatePlayerAttack = false
 end
 
-local walkSpeed, attackSpeed = 8, 10
+local walkSpeed, attackSpeed = 6, 10
 local idle, walkStart, walkEnd = 1, 2, 5
 
 function animateCharacter(dt, bool)
     if nextTick > 0.3 and nextTick < 0.4 then animatePlayerAttack = player.attacking end
-    if animatePlayerAttack then
+    if me and me.Mount and not orCalc(me.Mount.Name, {"", "None",}) then player.frame = idle
+    elseif animatePlayerAttack then
         if player.frame < 10 then
             player.frame = 10
             player.frameAmount = 0
@@ -38,16 +39,26 @@ function animateCharacter(dt, bool)
         if player.frameAmount >= 1 then
             player.frame = player.frame + 1
             if player.frame > walkEnd then player.frame = walkStart end
+            if orCalc(player.frame, {walkStart, walkStart + 2}) and worldLookup[player.x..","..player.y] then
+                playFootstepSound(worldLookup[player.x..","..player.y], player.x, player.y, true)
+            end
             player.frameAmount = 0
-            if not bool then player.frame = idle end
+            if not bool then
+                player.frame = idle
+                if worldLookup[player.x..","..player.y] then
+                    playFootstepSound(worldLookup[player.x..","..player.y], player.x, player.y, true)
+                end
+            end
         end
-    else player.frame = idle
+    else
+        player.frame = idle
     end
 end
 
 function animateOtherPlayer(dt, bool, i)
     local plr = players[i]
-    if plr.Attacking or (plr.Frame and plr.Frame > 10) then
+    if plr.Mount and not orCalc(plr.Mount.Name, {"", "None",}) then plr.Frame = idle
+    elseif plr.Attacking or (plr.Frame and plr.Frame > 10) then
         if not plr.frameAmount then plr.frameAmount = 0 end
         if plr.Frame and plr.Frame < 10 then
             plr.Frame = 10
@@ -69,7 +80,15 @@ function animateOtherPlayer(dt, bool, i)
             plr.Frame = (plr.Frame or 1) + 1
             if plr.Frame > walkEnd then plr.Frame = walkStart end
             plr.frameAmount = 0
-            if not bool then plr.Frame = idle end
+            if orCalc(plr.Frame, {walkStart, walkStart + 2}) and worldLookup[plr.X..","..plr.Y] then
+                playFootstepSound(worldLookup[plr.X..","..plr.Y], plr.X, plr.Y)
+            end
+            if not bool then 
+                plr.Frame = idle
+                if worldLookup[plr.X..","..plr.Y] then
+                    playFootstepSound(worldLookup[plr.X..","..plr.Y], plr.X, plr.Y)
+                end
+            end
         end
     end
 end
