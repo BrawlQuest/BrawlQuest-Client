@@ -43,7 +43,6 @@ require "scripts.libraries.utils"
 require "scripts.libraries.colorize"
 require "scripts.libraries.simple-slider"
 require "scripts.phases.login.login"
-require "scripts.player.animation"
 require "scripts.player.other_players"
 require "scripts.player.ranged-weapons"
 require "scripts.player.targeting"
@@ -143,7 +142,6 @@ function love.load()
     initWeather()
     initParticles()
     initNews()
-    initAnimation()
     love.graphics.setFont(textFont)
     recursivelyDelete( "img" )
     love.filesystem.createDirectory( "img" )
@@ -350,7 +348,7 @@ function love.update(dt)
                 end
 
                 if response then
-                    previousPlayers = copy(players) -- Temp
+                    local previousPlayers = copy(players) -- Temp
 
                     players = response['Players']
                     npcs = response['NPC']
