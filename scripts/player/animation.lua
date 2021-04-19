@@ -27,6 +27,9 @@ function animateCharacter(dt, bool)
         player.frameAmount = player.frameAmount + attackSpeed * dt
         if player.frameAmount >= 1 then
             player.frame = player.frame + 1
+            if orCalc(player.frame, {10, 12, 13}) and worldLookup[player.x..","..player.y] then
+                playFootstepSound(worldLookup[player.x..","..player.y], player.x, player.y, true)
+            end
             if player.frame >= 16 then
                 player.frame = 1
                 animatePlayerAttack = false

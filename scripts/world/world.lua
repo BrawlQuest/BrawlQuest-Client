@@ -30,7 +30,7 @@ function createWorld()
     if not love.filesystem.getInfo( "img" ) then love.filesystem.createDirectory( "img" ) end
     -- recalculateLighting()
     leaves = {}
-    critters = {}
+    -- critters = {}
     worldEmitters = {}
     worldLookup = {}
     originalTiles = {}
@@ -73,12 +73,6 @@ function createWorld()
             end
         end
     end
-
-    -- if player.x and player.y then
-    --     createNPCChatBackground(player.x,player.y)
-    -- else
-    --     createNPCChatBackground(0,0)
-    -- end
 end
 
 function drawChunks(cx,cy)
