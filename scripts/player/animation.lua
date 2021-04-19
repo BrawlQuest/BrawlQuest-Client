@@ -3,7 +3,6 @@ function initAnimation()
     baseShadow = love.graphics.newImage("assets/player/base/base-shadow.png")
     baseSwing = love.graphics.newImage("assets/player/base/base-swing.png")
     baseImages = {}
-    -- baseImages[#baseImages+1] = love.graphics.newQuad(0, 0, 32, 32, baseSpriteSheet:getDimensions())
     for x = 0, 15 do
         baseImages[#baseImages+1] = love.graphics.newQuad(x * 32, 0, 32, 32, baseSpriteSheet:getDimensions())
     end
@@ -19,8 +18,8 @@ local idle, walkStart, walkEnd = 1, 2, 5
 
 function animateCharacter(dt, bool)
     if nextTick > 0.3 and nextTick < 0.4 then animatePlayerAttack = player.attacking end
-    if me and me.Mount and not orCalc(me.Mount.Name, {"", "None",}) then player.frame = idle
-    elseif animatePlayerAttack then
+    
+    if animatePlayerAttack then
         if player.frame < 10 then
             player.frame = 10
             player.frameAmount = 0
@@ -34,6 +33,7 @@ function animateCharacter(dt, bool)
             end
             player.frameAmount = 0
         end
+    elseif me and me.Mount and not orCalc(me.Mount.Name, {"", "None",}) then player.frame = idle
     elseif bool or player.frame > walkStart then
         player.frameAmount = player.frameAmount + walkSpeed * dt
         if player.frameAmount >= 1 then
@@ -57,8 +57,7 @@ end
 
 function animateOtherPlayer(dt, bool, i)
     local plr = players[i]
-    if plr.Mount and not orCalc(plr.Mount.Name, {"", "None",}) then plr.Frame = idle
-    elseif plr.Attacking or (plr.Frame and plr.Frame > 10) then
+    if plr.Attacking or (plr.Frame and plr.Frame > 10) then
         if not plr.frameAmount then plr.frameAmount = 0 end
         if plr.Frame and plr.Frame < 10 then
             plr.Frame = 10
@@ -73,6 +72,7 @@ function animateOtherPlayer(dt, bool, i)
             end
             plr.frameAmount = 0
         end
+    elseif plr.Mount and not orCalc(plr.Mount.Name, {"", "None",}) then plr.Frame = idle
     elseif bool or (plr.Frame and plr.Frame > 1) then
         if not plr.frameAmount then plr.frameAmount = 0 end
         plr.frameAmount = plr.frameAmount + walkSpeed * dt
@@ -94,9 +94,7 @@ function animateOtherPlayer(dt, bool, i)
 end
 
 function tickAnimation()
-    -- animatePlayerAttack = player.attacking
-    -- player.attacking = true
-    -- print("I'm Attacking")
+
 end
 
 function drawAnimation(v,x,y,dir)
@@ -148,7 +146,6 @@ function drawAnimationWeapon(v,x,y,dir,r)
     r = (r or 0) * dir
     x,y = x - (2 * dir), y - 1
     if v["WeaponID"] ~= 0 then
-        -- if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) else love.graphics.setColor(1, 1, 1) end
         love.graphics.draw(getImgIfNotExist(v.Weapon.ImgPath), x, y, math.rad(r), dir, 1, 0, 0)
         if v.Weapon.Enchantment ~= "None" then
             love.graphics.push()

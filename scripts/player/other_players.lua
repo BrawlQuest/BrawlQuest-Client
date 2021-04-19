@@ -202,6 +202,9 @@ function drawPlayer(v, i)
                     elseif my > range.y then diffY = 1 end
                     if mx < -range.x then diffX = -1
                     elseif mx > range.x then diffX = 1 end
+                elseif not orCalc(0, {player.target.x, player.target.y}) then
+                    diffX = player.target.x - player.x
+                    diffY = player.target.y - player.y
                 else
                     if targetKeys[1] then diffY = -1
                     elseif targetKeys[2] then diffY = 1

@@ -103,22 +103,26 @@ function checkTargeting() -- Check which keys are down and place the player targ
         targetHeld = false
     end
 
-    if isMouseDown() and not holdingStaff() then
-        checkMouseTargeting()
+    if isMouseDown() then -- and not holdingStaff() then
+        if not uiOpen then checkMouseTargeting() end
     else
         if targetKeys[1] then
             player.target.active = true
+            player.attacking = true
             player.target.y = player.y - 1
         elseif targetKeys[2] then
             player.target.active = true
+            player.attacking = true
             player.target.y = player.y + 1
         end
 
         if targetKeys[3] then
             player.target.active = true
+            player.attacking = true
             player.target.x = player.x - 1
         elseif targetKeys[4] then
             player.target.active = true
+            player.attacking = true
             player.target.x = player.x + 1
         end
     end
