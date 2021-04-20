@@ -22,7 +22,7 @@ function updateZoneTitle(dt)
         if zoneTitle.title == "Foundation Forest" then
             openTutorial(11)
         end
-        if love.system.getOS() ~= "Linux" then 
+        if love.system.getOS() ~= "Linux" and love.system.getOS() ~= "Windows" then 
             steam.friends.setRichPresence("steam_display", "#StatusAdventuring")
             steam.friends.setRichPresence("location", zoneTitle.title)
         end
