@@ -129,7 +129,7 @@ function updateHUD( dt )
         updateCharacterHub(dt)
         updateQuestHub(dt)
         updateCrafting(dt) -- fine
-        if orders.open then updateOrders(dt) end
+        if orders.open or orders.amount > 0 then updateOrders(dt) end
         if showChat then updateChat(dt) end
         if orCalc(true, {crafting.open, not inventory.notNPC, forging.open, settPan.opacity > 0, news.alpha == 1, orders.open,}) then uiOpen = true else uiOpen = false end
     end
@@ -186,7 +186,7 @@ function drawHUD()
         elseif forging.open then drawForging()
         elseif enchanting.open then drawEnchanting()
         elseif news.open then drawNews()
-        elseif orders.open then drawOrders()
+        elseif orders.open or orders.amount > 0 then drawOrders()
         end
         if itemDrag.dragging then drawItemDrag() end
     love.graphics.pop()

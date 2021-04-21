@@ -2,6 +2,7 @@ function initOrders()
     orders = {
         open = true,
         amount = 1,
+        selAmount = 0,
         w = 200,
         h = 380,
         fw = 200 * 3 + 20,
@@ -53,18 +54,33 @@ end
 function updateOrders(dt)
     local o = orders
     for orderI, order in ipairs(orders.items) do
-        if order.isMouse then panelMovement(dt, order, 1, "amount", 4)
+        if order.isMouse or o.selected.item == orderI then panelMovement(dt, order, 1, "amount", 4)
         else panelMovement(dt, order, -1, "amount", 4) end
         order.redAlpha = cerp(0,1,order.amount)
     end
+    if o.open then panelMovement(dt, orders, 1, "amount", 3)
+    else panelMovement(dt, orders, -1, "amount", 3) end
+
+    if o.selected.item > 0 then panelMovement(dt, orders, 1, "selAmount", 2)
+    else panelMovement(dt, orders, -1, "selAmount", 2) end
+    o.selCerp = cerp(0,1,o.selAmount)
 end
 
 function drawOrders()
     local o = orders
+    o.mouseOver.item = 0
     love.graphics.setFont(font)
-    local x,y = (uiX / 2 - o.fw / 2), (uiY / 2 - o.fh / 2)
+    local x,y = uiX / 2 - o.fw / 2, uiY / 2 - o.fh / 2 - o.fh * o.selCerp
     for orderI, order in ipairs(orders.items) do drawOrderBox(x + (o.w + 10) * (orderI - 1), y, orderI, order) end
+    love.graphics.setColor(1,1,1,(1-o.selCerp) * o.amount)
     love.graphics.printf(o.title, x, y - getTextHeight(o.title, o.fw, font, 2) - 20, o.fw / 2, "center", 0, 2)
+    
+    if o.selected.item > 0 or o.selAmount > 0 then
+        dx,dy = x,y + o.fh + 10
+        local order = o.items[o.selected.item]
+        love.graphics.setColor(0,0,0,(0.8 * o.selAmount) * o.amount)
+        love.graphics.rectangle("fill", dx, dy, o.fw, o.fh, 10)
+    end
 end
 
 function drawOrderBox(x, y, orderI, order)
@@ -72,10 +88,12 @@ function drawOrderBox(x, y, orderI, order)
 
     order.isMouse = isMouseOver(x * scale, y * scale, o.w * scale, o.h * scale)
     if order.isMouse then o.mouseOver.item = orderI end
-    love.graphics.setColor(order.redAlpha,0,0,0.8)
+    love.graphics.setColor(order.redAlpha, 0, 0, 0.8 * o.amount)
     y = y - 4 * order.redAlpha
     love.graphics.rectangle("fill", x, y, o.w, o.h, 10)
-    love.graphics.setColor(1,1,1)
+    if o.selected.item > 0 and o.selected.item ~= orderI then love.graphics.setColor(1,1,1, o.amount - 0.5 * o.selAmount)
+    else love.graphics.setColor(1,1,1, o.amount) end
+
     love.graphics.draw(order.image, x, y)
 
     local dx, dy = x + 15, y + 140
@@ -93,15 +111,8 @@ end
 
 function checkOrdersMousePressed(button)
     local o = orders
-    if o.mouseOver.item > 0 then o.items[o.mouseOver.item].action() end
+    if o.mouseOver.item > 0 then
+        if o.selected.item == o.mouseOver.item then o.selected.item = 0
+        else o.selected.item = o.mouseOver.item end
+    end -- o.items[o.mouseOver.item].action() end
 end
-
---[[
-initOrders()
-updateOrders(dt)
-drawOrders()
-if orders.open then updateOrders(dt) end
-if orders.open then drawOrders() end
-elseif orders.open then checkOrdersKeyPressed(key)
-if orders.open then checkOrdersMousePressed(button) end
-]]
