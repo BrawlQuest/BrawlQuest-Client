@@ -1,4 +1,4 @@
-drawAnimations = false
+
 
 function initPlayers()
     enchantment = love.graphics.newImage("assets/player/gen/enchantment.png")
@@ -42,7 +42,7 @@ function drawCharacter(v, x, y, ad)
             if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) end
             if drawAnimations then drawAnimation(v, x + offsetX, y, direction)
             else
-                if v.ShieldID ~= 0 then print("HELLO") drawArmourImage(x + offsetX,y,v,ad,"ShieldFalse",direction) end
+                if v.ShieldID ~= 0 then drawArmourImage(x + offsetX,y,v,ad,"ShieldFalse",direction) end
                 drawWeapon(x,y,v,ad,direction,offsetX)
                 if v.Invulnerability >= 0 then love.graphics.setColor(1,1,1,0.3)
                 else love.graphics.setColor(1,1,1) end

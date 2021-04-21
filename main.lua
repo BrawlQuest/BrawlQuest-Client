@@ -20,24 +20,27 @@ require "scripts.effects.weather"
 require "scripts.effects.world-sfx-emitters"
 require "scripts.effects.particles"
 require "scripts.ui.hud_controller"
+
 require "scripts.ui.components.character-hub"
-require "scripts.ui.components.crafting"
 require "scripts.ui.components.toolbar-inventory"
 require "scripts.ui.components.draw-inventory"
 require "scripts.ui.components.quest-hub"
 require "scripts.ui.components.quests-panel"
-require "scripts.ui.components.settings-panel"
 require "scripts.ui.components.chat"
-require "scripts.ui.components.toolbar"
-require "scripts.ui.components.zone-titles"
 require "scripts.ui.components.profile"
 require "scripts.ui.components.hotbar"
-require "scripts.ui.components.events"
-require "scripts.ui.components.enchanting"
-require "scripts.ui.components.challenges"
-require "scripts.ui.components.item-drag"
-require "scripts.ui.components.forging"
-require "scripts.ui.components.news"
+
+require "scripts.ui.panels.crafting"
+require "scripts.ui.panels.settings-panel"
+require "scripts.ui.panels.enchanting"
+require "scripts.ui.panels.challenges"
+require "scripts.ui.panels.forging"
+require "scripts.ui.panels.news"
+
+require "scripts.ui.mechanics.zone-titles"
+require "scripts.ui.mechanics.item-drag"
+require "scripts.ui.mechanics.events"
+
 require "scripts.libraries.api"
 require "scripts.libraries.utils"
 require "scripts.libraries.colorize"
@@ -58,8 +61,10 @@ require "scripts.ui.temporary.world-edit-rect"
 require "data.data_controller"
 require "scripts.player.settings"
 require "scripts.player.structures"
-require "scripts.ui.components.npc-chat"
-require "scripts.ui.components.tutorial"
+
+require "scripts.ui.panels.npc-chat"
+require "scripts.ui.panels.tutorial"
+
 require "scripts.achievements"
 Luven = require "scripts.libraries.luven.luven"
 
@@ -68,6 +73,7 @@ versionType = "dev" -- "dev" for quick login, "release" for not
 useSteam = true -- turn off for certain naughty computers
 if versionType == "dev" then require 'dev' end
 versionNumber = "1.3.1" -- very important for settings
+drawAnimations = true
 
 if love.system.getOS() ~= "Linux" and useSteam then steam = require 'luasteam' end -- we can disable other platforms here. Can't get Steam working on Linux and we aren't targetting it so this'll do for dev purposes
 json = require("scripts.libraries.json")

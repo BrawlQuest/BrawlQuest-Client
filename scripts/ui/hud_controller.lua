@@ -1,20 +1,10 @@
-require "scripts.ui.components.tooltip"
-require "scripts.ui.components.floats"
-
-isEnteringText = false
-UITextFields = {
-    "", -- search
-    "", -- chat
-}
+require "scripts.ui.mechanics.tooltip"
+require "scripts.ui.mechanics.floats"
 
 function initHUD()
-
     previousPlayerColor = {}
-
     --scaling
     scale = 1
-    velyWorldScale = 0
-    posYWorldScale = 1
     worldScales = {8, 4, 3, 2, 1,}
     worldEditScales = {8, 4, 3, 2, 1, 0.5, 0.25, 0.125}
     selectedWorldScale = 4
@@ -31,8 +21,6 @@ function initHUD()
     smallTextFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 12)
     playerNameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8)
     npcNameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8)
-    headerSmallFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 16)
-    headerTinyFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 6)
     headerFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 18) -- TODO: get a license for this font
     headerMediumFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 28)
     headerBigFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 32) -- TODO: get a license for this font
@@ -53,34 +41,12 @@ function initHUD()
 
     -- chatbox
     initChat()
-    chatCursor = {
-        on = true,
-        speed = 40,
-        i = 0,
-    }
 
     -- Profile
-
-	level = love.graphics.newImage("assets/ui/hud/profile/Level.png")
-	profileBars = love.graphics.newImage("assets/ui/hud/profile/bars.png")
-    profileBackground = love.graphics.newImage("assets/ui/hud/profile/profile-backing.png")
     ShieldImg = love.graphics.newImage("assets/player/gen/shield false.png")
     profileImgStencil = love.graphics.newQuad(12, 0, 16, 16, playerImg:getDimensions())
     npcImgStencil = love.graphics.newQuad(7, 0, 16, 16, playerImg:getDimensions())
     ShieldImgStencil = love.graphics.newQuad(12, 0, 16, 16, ShieldImg:getDimensions())
-
-    -- Perks
-
-    perksBg = love.graphics.newImage("assets/ui/hud/perks/perksBg.png")
-    mouseDown = love.graphics.newImage("assets/ui/hud/perks/BQ Mice - 1.png")
-    mouseUp = love.graphics.newImage("assets/ui/hud/perks/BQ Mice + 1.png")
-    perksReserve = love.graphics.newImage("assets/ui/hud/perks/cp-backing.png")
-
-    perkImages = {
-        love.graphics.newImage("assets/ui/hud/perks/perkType3.png"),
-        love.graphics.newImage("assets/ui/hud/perks/perkType2.png"),
-        love.graphics.newImage("assets/ui/hud/perks/perkType1.png")
-    }
 
     perkTitles = {
         "STR", "INT", "STA",
