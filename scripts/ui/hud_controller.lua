@@ -1,3 +1,24 @@
+require "scripts.ui.components.character-hub"
+require "scripts.ui.components.toolbar-inventory"
+require "scripts.ui.components.draw-inventory"
+require "scripts.ui.components.quest-hub"
+require "scripts.ui.components.quests-panel"
+require "scripts.ui.components.chat"
+require "scripts.ui.components.profile"
+require "scripts.ui.components.hotbar"
+
+require "scripts.ui.panels.crafting"
+require "scripts.ui.panels.settings-panel"
+require "scripts.ui.panels.enchanting"
+require "scripts.ui.panels.challenges"
+require "scripts.ui.panels.forging"
+require "scripts.ui.panels.news"
+require "scripts.ui.panels.orders"
+
+require "scripts.ui.mechanics.zone-titles"
+require "scripts.ui.mechanics.item-drag"
+require "scripts.ui.mechanics.events"
+
 require "scripts.ui.mechanics.tooltip"
 require "scripts.ui.mechanics.floats"
 
@@ -79,6 +100,7 @@ function initHUD()
     initQuestHub()
     initNPCChat()
     initCrafting()
+    initOrders()
     initNewWorldEdit()
     initTutorial()
 end
@@ -159,10 +181,12 @@ function drawHUD()
     love.graphics.push()
         love.graphics.scale(scale)
         drawTooltip()
-        if challenges.open then drawChallenges() end
-        if forging.open then drawForging() end
-        if enchanting.open then drawEnchanting() end
-        if news.open then drawNews() end
+        if challenges.open then drawChallenges()
+        elseif forging.open then drawForging()
+        elseif enchanting.open then drawEnchanting()
+        elseif news.open then drawNews()
+        elseif orders.open then drawOrders()
+        end
         if itemDrag.dragging then drawItemDrag() end
     love.graphics.pop()
 end
