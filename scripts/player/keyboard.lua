@@ -23,6 +23,7 @@ function checkKeyPressedPhaseGame(key)
     elseif challenges.open then checkChallengesKeyPressed(key)
     elseif enchanting.open then checkEnchantingKeyPressed(key)
     elseif worldEdit.isTyping then
+    elseif orders.open then checkOrdersKeyPressed(key)
     elseif isSettingsWindowOpen then checkSettingKeyPressed(key)
     elseif controls.currentKeybind > 0 then
     elseif tutorialOpen then checkTutorialKeyPressed(key)
@@ -88,7 +89,7 @@ function checkKeyPressedPhaseGame(key)
                 startConversation()
             end
         end
-        if (key == "f" and versionType == "dev") then openEnchanting() end
+        if (key == "f" and versionType == "dev") then orders.open = true end
     end
 end
 

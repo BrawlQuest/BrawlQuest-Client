@@ -19,6 +19,7 @@ function love.mousepressed(x, y, button)
         if enchanting.open then checkEnchantingMousePressed(button) end
         if forging.open then checkForgingMousePressed(button) end
         if news.open then checkNewsMousePressed(button) end
+        if orders.open then checkOrdersMousePressed(button) end
     end
 end
 
