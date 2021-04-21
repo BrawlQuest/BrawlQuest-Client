@@ -1,8 +1,5 @@
+drawAnimations = false
 
---[[
-    This script is for managing other player's actions.
-    It could probably be named better. Any ideas, Matt?
-]]
 function initPlayers()
     enchantment = love.graphics.newImage("assets/player/gen/enchantment.png")
     profileEnchantment = love.graphics.newImage("assets/player/gen/profileEnchantment.png")
@@ -43,27 +40,22 @@ function drawCharacter(v, x, y, ad)
             love.graphics.setColor(1,1,1)
             drawBuddy(v)
             if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) end
-            -- if v.ShieldID ~= 0 then drawArmourImage(x + offsetX  - 5 * direction,y,v,ad,"ShieldFalse",direction) end
-            -- drawWeapon(x,y,v,ad,direction,offsetX)
-            if v.Invulnerability >= 0 then
-                love.graphics.setColor(1,1,1,0.3)
+            if drawAnimations then drawAnimation(v, x + offsetX, y, direction)
             else
-                love.graphics.setColor(1,1,1)
+                if v.ShieldID ~= 0 then print("HELLO") drawArmourImage(x + offsetX,y,v,ad,"ShieldFalse",direction) end
+                drawWeapon(x,y,v,ad,direction,offsetX)
+                if v.Invulnerability >= 0 then love.graphics.setColor(1,1,1,0.3)
+                else love.graphics.setColor(1,1,1) end
+                love.graphics.draw(playerImg, x + offsetX, y, 0, direction, 1, 0, 0)
+                drawArmourImage(x,y,v,ad,"LegArmour")
+                drawArmourImage(x,y,v,ad,"ChestArmour")
+                drawArmourImage(x,y,v,ad,"HeadArmour")
             end
-           
-            -- love.graphics.draw(playerImg, x + offsetX, y, 0, direction, 1, 0, 0)
-
-            drawAnimation(v, x + offsetX, y, direction)
-
-            -- drawArmourImage(x,y,v,ad,"LegArmour")
-            -- drawArmourImage(x,y,v,ad,"ChestArmour")
-            -- drawArmourImage(x,y,v,ad,"HeadArmour")
             love.graphics.setColor(1,1,1)
             drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,"/fore.png")
-            -- if v.IsShield and v.ShieldID ~= 0 and notBoat then drawArmourImage(x+12 - 5 * direction,y,v,ad,"Shield",direction) end
+            if not drawAnimations and v.IsShield and v.ShieldID ~= 0 and notBoat then drawArmourImage(x+12 + 0 * direction,y,v,ad,"Shield",direction) end
         end
 
-        -- drawRangedWeaponEffects(v, x, y)
     end
 end
 
@@ -86,31 +78,31 @@ function drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,type)
     end
 end
 
--- function drawWeapon(x,y,v,ad,direction,offsetX)
+function drawWeapon(x,y,v,ad,direction,offsetX)
 
---     if not itemImg[v.Weapon.ImgPath] then
---         if love.filesystem.getInfo(v.Weapon.ImgPath) then
---             itemImg[v.Weapon.ImgPath] = love.graphics.newImage(v.Weapon.ImgPath)
---         else
---             itemImg[v.Weapon.ImgPath] = love.graphics.newImage("assets/error.png")
---         end
---     end
+    if not itemImg[v.Weapon.ImgPath] then
+        if love.filesystem.getInfo(v.Weapon.ImgPath) then
+            itemImg[v.Weapon.ImgPath] = love.graphics.newImage(v.Weapon.ImgPath)
+        else
+            itemImg[v.Weapon.ImgPath] = love.graphics.newImage("assets/error.png")
+        end
+    end
 
---     if v["WeaponID"] ~= 0 then
---         if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) else love.graphics.setColor(1, 1, 1) end
---         love.graphics.draw(itemImg[v.Weapon.ImgPath], x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32) * direction + offsetX, y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, direction, 1, 0, 0)
---         if v.Weapon.Enchantment ~= "None" then
---             love.graphics.push()
---                 love.graphics.stencil(function() 
---                     love.graphics.setShader(alphaShader)
---                     love.graphics.draw(itemImg[v.Weapon.ImgPath], x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32) * direction + offsetX, y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, direction, 1, 0, 0)
---                     love.graphics.setShader()
---                 end)
---                 drawEnchantment(x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32) + offsetX, y)
---             love.graphics.pop()
---         end
---     end
--- end
+    if v["WeaponID"] ~= 0 then
+        if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) else love.graphics.setColor(1, 1, 1) end
+        love.graphics.draw(itemImg[v.Weapon.ImgPath], x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32) * direction + offsetX, y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, direction, 1, 0, 0)
+        if v.Weapon.Enchantment ~= "None" then
+            love.graphics.push()
+                love.graphics.stencil(function() 
+                    love.graphics.setShader(alphaShader)
+                    love.graphics.draw(itemImg[v.Weapon.ImgPath], x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32) * direction + offsetX, y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, direction, 1, 0, 0)
+                    love.graphics.setShader()
+                end)
+                drawEnchantment(x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32) + offsetX, y)
+            love.graphics.pop()
+        end
+    end
+end
 
 function drawArmourImage(x,y,v,ad,type,direction)
     if v[type.."ID"] ~= 0 then
@@ -373,7 +365,7 @@ function updateOtherPlayers(dt)
             playersDrawable[i].Y = v.Y * 32
         end
 
-        animateOtherPlayer(dt, distance > 3, i)
+        if drawAnimations then animateOtherPlayer(dt, distance > 3, i) end
 
         if distance > 1 then
             local speed = 64

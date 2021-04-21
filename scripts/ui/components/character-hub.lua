@@ -217,7 +217,7 @@ function drawCharacterHubStats(thisX, thisY)
             perks.stats[4] = player.cp - change
         end
         local text = perks.stats[i+1]..perks.bonus[i+1]
-        love.graphics.printf(text, thisX + (49 * i) + 14, thisY + 78, 36, "center")
+        love.graphics.printf(text, thisX + (49 * i) + 13, thisY + 78, 36, "center")
     end
 end
 

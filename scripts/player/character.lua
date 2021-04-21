@@ -222,7 +222,7 @@ function movePlayer(dt)
     end
     
     local distance = distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy)
-    animateCharacter(dt, distance > 1)
+    if drawAnimations then animateCharacter(dt, distance > 1) end
     
     if distance > 1 then
         local speed = 80

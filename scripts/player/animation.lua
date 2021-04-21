@@ -108,10 +108,11 @@ function drawAnimation(v,x,y,dir)
     love.graphics.draw(baseShadow, x, y + 15, 0, dir, 1)
 
 
-    drawWeapon(v,x,y,dir,frame)
+    drawAnimatedWeapon(v,x,y,dir,frame)
 
 
-    love.graphics.setColor(1,1,1)
+    if v.Invulnerability >= 0 then love.graphics.setColor(1,1,1,0.3)
+    else love.graphics.setColor(1,1,1) end
     love.graphics.draw(baseSpriteSheet, baseImages[frame], x, y, 0, dir, 1)
 
     if v.IsShield and v.ShieldID ~= 0 and notBoat then drawArmourImage(x+12 - 5 * dir,y,v,ad,"Shield",dir) end
@@ -123,7 +124,7 @@ function drawAnimation(v,x,y,dir)
     love.graphics.print(frame, x, y+34)
 end
 
-function drawWeapon(v,x,y,dir,frame)
+function drawAnimatedWeapon(v,x,y,dir,frame)
     if frame >= 10 then
         local wx,wy = x - (getImgIfNotExist(v.Weapon.ImgPath):getWidth() - 32) * dir, y - (getImgIfNotExist(v.Weapon.ImgPath):getHeight() - 32)
         if frame == 10 then drawAnimationWeapon(v,wx,wy - 3, dir)
