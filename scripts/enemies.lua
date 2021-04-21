@@ -293,7 +293,7 @@ function drawEnemies()
                 end
                 setEnvironmentEffects(deathSound)
                 deathSound:play()
-                if love.system.getOS() ~= "Linux" and love.system.getOS() ~= "Windows" then
+                if love.system.getOS() ~= "Linux" and useSteam then
                     if v.Enemy.Name == "Fire Phoenix" then
                         steam.userStats.setAchievement('kill_phoenix_achievement')
                         steam.userStats.storeStats()

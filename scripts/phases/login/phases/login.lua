@@ -144,7 +144,7 @@ function login()
                     characters[i].Color = {love.math.random(), love.math.random(), love.math.random(),  1}
                     end
                 end
-                if love.system.getOS() ~= "Linux" and love.system.getOS() ~= "Windows" then steam.userStats.requestCurrentStats() end -- init achievements and stat tracking
+                if love.system.getOS() ~= "Linux" and useSteam then steam.userStats.requestCurrentStats() end -- init achievements and stat tracking
         -- end
         if versionType == "dev" then
             r, h = http.request {

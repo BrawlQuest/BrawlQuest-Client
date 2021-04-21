@@ -63,17 +63,18 @@ require "scripts.ui.components.tutorial"
 require "scripts.achievements"
 Luven = require "scripts.libraries.luven.luven"
 
-if love.system.getOS() ~= "Linux" and love.system.getOS() ~= "Windows" then steam = require 'luasteam' end -- we can disable other platforms here. Can't get Steam working on Linux and we aren't targetting it so this'll do for dev purposes
+version = "Early Access" 
+versionType = "dev" -- "dev" for quick login, "release" for not
+useSteam = true -- turn off for certain naughty computers
+if versionType == "dev" then require 'dev' end
+versionNumber = "1.3.1" -- very important for settings
+
+if love.system.getOS() ~= "Linux" and useSteam then steam = require 'luasteam' end -- we can disable other platforms here. Can't get Steam working on Linux and we aren't targetting it so this'll do for dev purposes
 json = require("scripts.libraries.json")
 http = require("socket.http")
 ltn12 = require("ltn12")
 utf8 = require("utf8")
 newOutliner = require 'scripts.libraries.outliner'
-
-version = "Early Access" 
-versionType = "dev" -- "dev" for quick login, "release" for not
-if versionType == "dev" then require 'dev' end
-versionNumber = "1.3.1" -- very important for settings
 
 phase = "login"
 blockMap = {}
@@ -110,7 +111,7 @@ function love.load()
     outlinerOnly:outline(0.8, 0, 0) -- this is used to draw enemy outlines
     grayOutlinerOnly = newOutliner(true)
     grayOutlinerOnly:outline(1,1,1)
-    if love.system.getOS() ~= "Linux" and love.system.getOS() ~= "Windows" then  steam.init() end
+    if love.system.getOS() ~= "Linux" and useSteam then  steam.init() end
     love.graphics.setDefaultFilter("nearest", "nearest")
     initHardData()
     initLogin()
@@ -255,7 +256,7 @@ function love.draw()
 end
 
 function love.update(dt)
-    if love.system.getOS() ~= "Linux" and love.system.getOS() ~= "Windows" then steam.runCallbacks() end
+    if love.system.getOS() ~= "Linux" and useSteam then steam.runCallbacks() end
 
     enchantmentPos = enchantmentPos + 15 * dt
     if enchantmentPos > 64 then enchantmentPos = 0 end
@@ -490,7 +491,7 @@ function love.update(dt)
 
                     weather.type = response['Weather']
 
-                    if love.system.getOS() ~= "Linux" and love.system.getOS() ~= "Windows" then checkAchievementUnlocks() end
+                    if love.system.getOS() ~= "Linux" and useSteam then checkAchievementUnlocks() end
                 end
             end
         end
@@ -556,5 +557,5 @@ function love.resize(width, height)
 end
 
 function love.quit()
-    if love.system.getOS() ~= "Linux" and love.system.getOS() ~= "Windows" then steam.shutdown() end
+    if love.system.getOS() ~= "Linux" and useSteam then steam.shutdown() end
 end

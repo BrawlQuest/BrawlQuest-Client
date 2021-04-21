@@ -106,7 +106,7 @@ function updateCrafting(dt)
                     if json:decode(table.concat(b))["success"] == null then
                         crafting.result = json:decode(table.concat(b))
                         crafting.result.alpha = 2
-                        if love.system.getOS() ~= "Linux" and love.system.getOS() ~= "Windows" then 
+                        if love.system.getOS() ~= "Linux" and useSteam then 
                             steam.userStats.setAchievement('craft_achievement')
                             if crafting.result.Type == "spell" then
                                 steam.userStats.setAchievement('craft_spell_achievement')
@@ -516,7 +516,7 @@ function checkCraftingKeyPressed(key)
         checkHotbarChange()
     elseif key == keybinds.INTERACT or checkMoveOrAttack(key, "move") then
         crafting.open = false
-        if love.system.getOS() ~= "Linux" and love.system.getOS() ~= "Windows" then 
+        if love.system.getOS() ~= "Linux" and useSteam then 
             steam.friends.setRichPresence("steam_display", "#StatusAdventuring")
             steam.friends.setRichPresence("location", zoneTitle.title)
         end
