@@ -206,10 +206,6 @@ function drawCharacterHubStats(thisX, thisY)
 
     love.graphics.setColor(1,1,1,cerp(0, 1, characterHub.amount))
     love.graphics.draw(hubImages.statsFG, thisX, thisY)
-
-    love.graphics.setColor(1,0,1)
-    love.graphics.rectangle("fill", thisX + 9, thisY + 77, 40, 14, 7)
-    
     love.graphics.setColor(0,0,0, cerp(0, 1, characterHub.amount))
     love.graphics.print(perks.stats[4], thisX + 77 - (characterHub.font:getWidth(perks.stats[4])/2), thisY + 27 - (characterHub.font:getHeight(perks.stats[4])/2))
     
@@ -221,7 +217,7 @@ function drawCharacterHubStats(thisX, thisY)
             perks.stats[4] = player.cp - change
         end
         local text = perks.stats[i+1]..perks.bonus[i+1]
-        love.graphics.printf(text, thisX + (49 * i) + 13, thisY + 78, 36, "center")
+        love.graphics.printf(text, thisX + (49 * i) + 14, thisY + 78, 36, "center")
     end
 end
 
