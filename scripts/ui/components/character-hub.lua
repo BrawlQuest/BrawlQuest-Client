@@ -220,8 +220,8 @@ function drawCharacterHubStats(thisX, thisY)
             perks.stats[i+1] = me[perkTitles[i+1]] + change
             perks.stats[4] = player.cp - change
         end
-        local text = perks.stats[i+1].."+"..perks.bonus[i+1]
-        love.graphics.print(text, thisX + (49 * i) + 2 + 32 - (characterHub.font:getWidth(text)/2), thisY + 42 + 42 - (characterHub.font:getHeight(text)/2))
+        local text = perks.stats[i+1]..perks.bonus[i+1]
+        love.graphics.printf(text, thisX + (49 * i) + 13, thisY + 78, 36, "center")
     end
 end
 
@@ -237,7 +237,6 @@ function tickCharacterHub()
         if me[v] and me[v].Enchantment then
             local ench = explode(me[v].Enchantment, ",")
             local tabI = enchTab[ench[1]]
-            print(ench[1])
             if tabI and ench[2] then perks.bonus[tabI] = perks.bonus[tabI] + ench[2] end
         end
         if me[v] and me[v].ID ~= 0 and me[v].Attributes then
@@ -248,6 +247,7 @@ function tickCharacterHub()
             end
         end
     end
+    for i,v in ipairs(perks.bonus) do if v == 0 then perks.bonus[i] = "" else perks.bonus[i] = "+"..v end end
 end
 
 function drawCharacterHubMeters(thisX, thisY)
