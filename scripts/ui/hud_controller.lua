@@ -15,6 +15,7 @@ require "scripts.ui.panels.forging"
 require "scripts.ui.panels.news"
 require "scripts.ui.panels.orders"
 
+require "scripts.ui.mechanics.ui"
 require "scripts.ui.mechanics.zone-titles"
 require "scripts.ui.mechanics.item-drag"
 require "scripts.ui.mechanics.events"

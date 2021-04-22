@@ -10,8 +10,12 @@ function initOrders()
         fh = 380,
 
         title = "Choose an Order to join to get perks, unique items and to improve your order reputation. You can join a different Order at any time, but will lose all of your existing Reputation with your previous Order.",
+        points = {
+            ""
+        },
         mouseOver = {
             item = 0,
+            commit = false,
         },
         selected = {
             item = 0,
@@ -78,14 +82,26 @@ function drawOrders()
 end
 
 function drawOrderSelection(x,y)
-    local dx,dy = x,y + o.fh + 10
-    local alpha = (0.8 * o.selAmount) * o.amount
+    x,y = x,y + o.fh + 10
     local order = o.items[o.selected.item]
-    love.graphics.setColor(0,0,0,alpha)
-    love.graphics.rectangle("fill", dx, dy, o.fw, o.fh, 10)
-    love.graphics.setColor(1,1,1,alpha)
-    love.graphics.printf(order.title.." Order", dx, dy + 20, o.fw / 6, "center", 0, 6)
-    
+    local bgAlpha = (0.8 * o.selAmount) * o.amount
+    love.graphics.setColor(0,0,0,bgAlpha)
+    love.graphics.rectangle("fill", x, y, o.fw, o.fh, 10)
+    love.graphics.setColor(1,1,1,o.selAmount * o.amount)
+    love.graphics.printf(order.title.." Order", x, y + 30, o.fw / 6, "center", 0, 6)
+
+    local dx, dy = x + 20, y + 50 + font:getHeight() * 6
+    love.graphics.printf(o.title, dx, dy, (o.fw - 40) / 2, "left", 0, 2)
+
+    me.Order = "Stoic"
+    local text
+    if me.Order == order.title then text = "You are already a Member" else text = "Join the " .. order.title .. " Order" end
+    drawStandardButton(x + 20, y + o.fh - 20 - 50, o.fw - 40, 50, {
+        text = {static = text},
+        bgColor = {off = {0,0,0,bgAlpha}, on = {1,0,0,bgAlpha}},
+        action = {on = function() o.mouseOver.commit = true end, off = function() o.mouseOver.commit = false end,},
+        disabled = me.Order == order.title,
+    })
 end
 
 function drawOrderBox(x, y, orderI, order)
@@ -115,12 +131,5 @@ function checkOrdersMousePressed(button)
     if o.mouseOver.item > 0 then
         if o.selected.item == o.mouseOver.item then o.selected.item = 0
         else o.selected.item = o.mouseOver.item end
-    end -- o.items[o.mouseOver.item].action() end
-end
-
-function drawStandardButton(x,y,w,h,t)
-    love.graphics.setColor()
-    local isMouse = isMouseOver(x * scale, y * scale, w * scale, h * scale)
-    
-    love.graphics.rectangle("fill", x, y, w, h, 10)
+    elseif o.mouseOver.commit then print(o.selected.item) end
 end
