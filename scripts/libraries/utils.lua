@@ -1,27 +1,28 @@
 --[[
-
+local e
 function initVar()
     Var = {
         open = true,
         amount = 1,
     }
+    e = Var
 end
 
 function updateVar(dt)
-    local e = Var
+    
 end
 
 function drawVar()
-    local e = Var
-    local x,y = uiX / 2 * scale, uiY / 2 * scale
+    local x,y = uiX / 2, uiY / 2
+
 end
 
 function checkVarKeyPressed(key)
-    local e = Var
+
 end
 
 function checkVarMousePressed(button)
-    local e = Var
+
 end
 
 --[[

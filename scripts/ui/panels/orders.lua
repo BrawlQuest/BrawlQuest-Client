@@ -1,3 +1,4 @@
+local o
 function initOrders()
     orders = {
         open = true,
@@ -49,10 +50,10 @@ function initOrders()
             },
         },
     }
+    o = orders
 end
 
 function updateOrders(dt)
-    local o = orders
     for orderI, order in ipairs(orders.items) do
         if order.isMouse or o.selected.item == orderI then panelMovement(dt, order, 1, "amount", 4)
         else panelMovement(dt, order, -1, "amount", 4) end
@@ -67,25 +68,27 @@ function updateOrders(dt)
 end
 
 function drawOrders()
-    local o = orders
     o.mouseOver.item = 0
     love.graphics.setFont(font)
     local x,y = uiX / 2 - o.fw / 2, uiY / 2 - o.fh / 2 - o.fh * o.selCerp
     for orderI, order in ipairs(orders.items) do drawOrderBox(x + (o.w + 10) * (orderI - 1), y, orderI, order) end
     love.graphics.setColor(1,1,1,(1-o.selCerp) * o.amount)
     love.graphics.printf(o.title, x, y - getTextHeight(o.title, o.fw, font, 2) - 20, o.fw / 2, "center", 0, 2)
+    if o.selected.item > 0 or o.selAmount > 0 then drawOrderSelection(x,y) end
+end
+
+function drawOrderSelection(x,y)
+    local dx,dy = x,y + o.fh + 10
+    local alpha = (0.8 * o.selAmount) * o.amount
+    local order = o.items[o.selected.item]
+    love.graphics.setColor(0,0,0,alpha)
+    love.graphics.rectangle("fill", dx, dy, o.fw, o.fh, 10)
+    love.graphics.setColor(1,1,1,alpha)
+    love.graphics.printf(order.title.." Order", dx, dy + 20, o.fw / 6, "center", 0, 6)
     
-    if o.selected.item > 0 or o.selAmount > 0 then
-        dx,dy = x,y + o.fh + 10
-        local order = o.items[o.selected.item]
-        love.graphics.setColor(0,0,0,(0.8 * o.selAmount) * o.amount)
-        love.graphics.rectangle("fill", dx, dy, o.fw, o.fh, 10)
-    end
 end
 
 function drawOrderBox(x, y, orderI, order)
-    local o = orders
-
     order.isMouse = isMouseOver(x * scale, y * scale, o.w * scale, o.h * scale)
     if order.isMouse then o.mouseOver.item = orderI end
     love.graphics.setColor(order.redAlpha, 0, 0, 0.8 * o.amount)
@@ -105,14 +108,19 @@ function drawOrderBox(x, y, orderI, order)
 end
 
 function checkOrdersKeyPressed(key)
-    local o = orders
     if checkMoveOrAttack(key) then o.open = false end
 end
 
 function checkOrdersMousePressed(button)
-    local o = orders
     if o.mouseOver.item > 0 then
         if o.selected.item == o.mouseOver.item then o.selected.item = 0
         else o.selected.item = o.mouseOver.item end
     end -- o.items[o.mouseOver.item].action() end
+end
+
+function drawStandardButton(x,y,w,h,t)
+    love.graphics.setColor()
+    local isMouse = isMouseOver(x * scale, y * scale, w * scale, h * scale)
+    
+    love.graphics.rectangle("fill", x, y, w, h, 10)
 end
