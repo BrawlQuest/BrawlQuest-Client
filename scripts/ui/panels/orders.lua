@@ -29,7 +29,6 @@ function initOrders()
                 isMouse = false,
                 amount = 0,
                 redAlpha = 0,
-                rep = 0,
             },{
                 title = "Warrior Order",
                 features = {"+50 STR", "Exclusive Medium armour set & mount", "Restricts access to heavy armour and high-mastery spells",},
@@ -40,7 +39,6 @@ function initOrders()
                 isMouse = false,
                 amount = 0,
                 redAlpha = 0,
-                rep = 0,
             },{
                 title = "Stoic Order",
                 features = {"+50 STA", "Exclusive Heavy armour set & mount", "Restricts access to heavy weapons and high-mastery spells",},
@@ -51,7 +49,6 @@ function initOrders()
                 isMouse = false,
                 amount = 0,
                 redAlpha = 0,
-                rep = 0,
             },
         },
     }
@@ -92,12 +89,19 @@ function drawOrderSelection(x,y)
     love.graphics.rectangle("fill", x, y, o.fw, o.fh, 10)
     if order then
         love.graphics.setColor(1,1,1,o.selAmount * o.amount)
-        love.graphics.printf(order.title, x, y + 30, o.fw / 6, "center", 0, 6)
 
-        local dx, dy = x + 20, y + 50 + font:getHeight() * 6
-        love.graphics.printf(o.title, dx, dy, (o.fw - 40) / 2, "left", 0, 2)
+        local dx, dy = x + 20, y + 30
+        love.graphics.printf(order.title, dx, dy, o.fw / 6, "left", 0, 6)
 
         local text = ""
+        dx, dy = dx, dy + 20 + font:getHeight() * 6
+        -- love.graphics.printf(o.title, dx, dy, (o.fw - 40) / 2, "left", 0, 2)
+        if me.Order then
+            if me.Order == "" then text = "Choosing an order will gain you reputation with them."
+            elseif me.Order then text = "You will loose your entire " .. me.Order .. " reputation." end
+            love.graphics.printf(text, dx, dy, (o.fw - 40) / 3, "left", 0, 3)
+        end
+        text = ""
         if me.Order == order.title then text = "You are already a Member" else text = "Join the " .. order.title end
         drawStandardButton(x + 20, y + o.fh - 20 - 50, o.fw - 40, 50, {
             text = {static = text},
@@ -143,4 +147,5 @@ function openOrders()
     o.open = true
     o.selected.item = 0
     o.amount = 0
+    o.selAmount = 0
 end
