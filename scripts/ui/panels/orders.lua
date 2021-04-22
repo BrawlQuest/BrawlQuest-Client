@@ -1,18 +1,16 @@
 local o
 function initOrders()
     orders = {
-        open = true,
-        amount = 1,
+        open = false,
+        amount = 0,
         selAmount = 0,
         w = 200,
         h = 380,
         fw = 200 * 3 + 20,
         fh = 380,
 
+        order = {},
         title = "Choose an Order to join to get perks, unique items and to improve your order reputation. You can join a different Order at any time, but will lose all of your existing Reputation with your previous Order.",
-        points = {
-            ""
-        },
         mouseOver = {
             item = 0,
             commit = false,
@@ -22,7 +20,7 @@ function initOrders()
         },
         items = {
             {
-                title = "Mage",
+                title = "Mage Order",
                 features = {"+50 INT", "2 exclusive spells", "Restricts access to medium/heavy armour and weapons",},
                 image = love.graphics.newImage("assets/ui/orders/01.png"),
                 action = function ()
@@ -31,8 +29,9 @@ function initOrders()
                 isMouse = false,
                 amount = 0,
                 redAlpha = 0,
+                rep = 0,
             },{
-                title = "Warrior",
+                title = "Warrior Order",
                 features = {"+50 STR", "Exclusive Medium armour set & mount", "Restricts access to heavy armour and high-mastery spells",},
                 image = love.graphics.newImage("assets/ui/orders/02.png"),
                 action = function ()
@@ -41,8 +40,9 @@ function initOrders()
                 isMouse = false,
                 amount = 0,
                 redAlpha = 0,
+                rep = 0,
             },{
-                title = "Stoic",
+                title = "Stoic Order",
                 features = {"+50 STA", "Exclusive Heavy armour set & mount", "Restricts access to heavy weapons and high-mastery spells",},
                 image = love.graphics.newImage("assets/ui/orders/03.png"),
                 action = function ()
@@ -51,10 +51,12 @@ function initOrders()
                 isMouse = false,
                 amount = 0,
                 redAlpha = 0,
+                rep = 0,
             },
         },
     }
     o = orders
+
 end
 
 function updateOrders(dt)
@@ -85,23 +87,26 @@ function drawOrderSelection(x,y)
     x,y = x,y + o.fh + 10
     local order = o.items[o.selected.item]
     local bgAlpha = (0.8 * o.selAmount) * o.amount
+    local fgAlpha = o.selAmount * o.amount
     love.graphics.setColor(0,0,0,bgAlpha)
     love.graphics.rectangle("fill", x, y, o.fw, o.fh, 10)
-    love.graphics.setColor(1,1,1,o.selAmount * o.amount)
-    love.graphics.printf(order.title.." Order", x, y + 30, o.fw / 6, "center", 0, 6)
+    if order then
+        love.graphics.setColor(1,1,1,o.selAmount * o.amount)
+        love.graphics.printf(order.title, x, y + 30, o.fw / 6, "center", 0, 6)
 
-    local dx, dy = x + 20, y + 50 + font:getHeight() * 6
-    love.graphics.printf(o.title, dx, dy, (o.fw - 40) / 2, "left", 0, 2)
+        local dx, dy = x + 20, y + 50 + font:getHeight() * 6
+        love.graphics.printf(o.title, dx, dy, (o.fw - 40) / 2, "left", 0, 2)
 
-    me.Order = "Stoic"
-    local text
-    if me.Order == order.title then text = "You are already a Member" else text = "Join the " .. order.title .. " Order" end
-    drawStandardButton(x + 20, y + o.fh - 20 - 50, o.fw - 40, 50, {
-        text = {static = text},
-        bgColor = {off = {0,0,0,bgAlpha}, on = {1,0,0,bgAlpha}},
-        action = {on = function() o.mouseOver.commit = true end, off = function() o.mouseOver.commit = false end,},
-        disabled = me.Order == order.title,
-    })
+        local text = ""
+        if me.Order == order.title then text = "You are already a Member" else text = "Join the " .. order.title end
+        drawStandardButton(x + 20, y + o.fh - 20 - 50, o.fw - 40, 50, {
+            text = {static = text},
+            bgColor = {off = {0,0,0,bgAlpha}, on = {1,0,0,bgAlpha}},
+            fgColor = {off = {1,1,1,fgAlpha}, on = {1,1,1,fgAlpha}},
+            action = {on = function() o.mouseOver.commit = true end, off = function() o.mouseOver.commit = false end,},
+            disabled = me.Order == order.title,
+        })
+    end
 end
 
 function drawOrderBox(x, y, orderI, order)
@@ -116,7 +121,7 @@ function drawOrderBox(x, y, orderI, order)
     love.graphics.draw(order.image, x, y)
 
     local dx, dy = x + 15, y + 140
-    love.graphics.printf(order.title, dx, dy, 172 / 4, "center", 0, 4)
+    love.graphics.printf(explode(order.title, " ")[1], dx, dy, 172 / 4, "center", 0, 4)
     dy = dy + font:getHeight() * 4 + 15
     local text = ""
     for i,v in ipairs(order.features) do text = text.."- "..v.."\n\n" end
@@ -131,5 +136,11 @@ function checkOrdersMousePressed(button)
     if o.mouseOver.item > 0 then
         if o.selected.item == o.mouseOver.item then o.selected.item = 0
         else o.selected.item = o.mouseOver.item end
-    elseif o.mouseOver.commit then print(o.selected.item) end
+    elseif o.mouseOver.commit then print("Trying to join the " .. o.items[o.selected.item].title) end
+end
+
+function openOrders()
+    o.open = true
+    o.selected.item = 0
+    o.amount = 0
 end

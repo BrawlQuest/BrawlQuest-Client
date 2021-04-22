@@ -89,7 +89,7 @@ function checkKeyPressedPhaseGame(key)
                 startConversation()
             end
         end
-        if (key == "f" and versionType == "dev") then orders.open = true end
+        if (key == "f" and versionType == "dev") then openOrders() end
     end
 end
 
