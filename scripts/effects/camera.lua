@@ -14,7 +14,7 @@ function initCamera()
             ["Elodine's Gift"] = {
                 open = false,
                 todAmount = 0, -- controls the amount of timeOfDay added to your color
-                tab = {0.2,0.1,0.2}, --time of day
+                tab = {0.4,0.2,0.4}, --time of day
             },
         },
         previousLocation = {0,0,0,},
@@ -50,7 +50,7 @@ end
 
 function setAmbientLighting()
     local l = lighting
-    local tab = {l.tab[1] + timeOfDay * l.timeAmount, l.tab[2] + timeOfDay * l.timeAmount, l.tab[3] + timeOfDay * l.timeAmount}
+    local tab = {l.tab[1] + timeOfDay * l.timeAmount + 0.3, l.tab[2] + timeOfDay * l.timeAmount + 0.3, l.tab[3] + timeOfDay * l.timeAmount + 0.3}
     Luven.setAmbientLightColor(tab)
 end
 
