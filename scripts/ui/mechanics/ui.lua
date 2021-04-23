@@ -23,7 +23,7 @@ function drawStandardButton(x,y,w,h,t)
     love.graphics.rectangle("line", x, y, w, h, 10)
     local textScale = t.scale or 3
     if t.text.static then text = t.text.static end
-    if text then love.graphics.printf(text, x + 10, y + h/2 - getTextHeight(text, w - 20, font, textScale) * 0.4, (w - 20) / textScale, t.textPos or "center", 0, textScale) end
+    if text then love.graphics.printf(text, x + 10, y + h/2 - getTextHeight(text, w - 20, t.font or font, textScale) * (t.textMod or 0.5), (w - 20) / textScale, t.textPos or "center", 0, textScale) end
     if t.other then t.other() end
 end
 

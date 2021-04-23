@@ -282,6 +282,7 @@ function love.update(dt)
         updateWeather(dt)
         updateWorldEmitters(dt)
         updateParticles(dt)
+        updateScrolling(dt)
         if news.open then
             updateNews(dt)
         end

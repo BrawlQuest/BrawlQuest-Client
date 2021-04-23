@@ -1,11 +1,11 @@
 --[[
-local e
+local t
 function initVar()
     Var = {
         open = true,
         amount = 1,
     }
-    e = Var
+    t = Var
 end
 
 function updateVar(dt)

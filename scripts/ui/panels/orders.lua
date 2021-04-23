@@ -109,6 +109,7 @@ function drawOrderSelection(x,y)
             fgColor = {off = {1,1,1,fgAlpha}, on = {1,1,1,fgAlpha}},
             action = {on = function() o.mouseOver.commit = true end, off = function() o.mouseOver.commit = false end,},
             disabled = me.Order == order.title,
+            textMod = 0.4
         })
     end
 end
