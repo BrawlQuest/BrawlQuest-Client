@@ -16,13 +16,11 @@ end
 
 function updateZoneTitle(dt)
     if worldLookup[player.x..","..player.y] and worldLookup[player.x..","..player.y].Name and worldLookup[player.x..","..player.y].Name ~= zoneTitle.title and worldLookup[player.x..","..player.y].Name  ~= "Spooky Forest" and worldLookup[player.x..","..player.y].Name ~= "" then
-        zoneTitle.title = worldLookup[player.x..","..player.y].Name 
-        -- zoneTitle.alphaUp = true
-        -- zoneTitle.alpha = 0
+        zoneTitle.title = worldLookup[player.x..","..player.y].Name
         if zoneTitle.title == "Foundation Forest" then
             openTutorial(11)
         end
-        if love.system.getOS() ~= "Linux" then 
+        if love.system.getOS() ~= "Linux" and useSteam then
             steam.friends.setRichPresence("steam_display", "#StatusAdventuring")
             steam.friends.setRichPresence("location", zoneTitle.title)
         end

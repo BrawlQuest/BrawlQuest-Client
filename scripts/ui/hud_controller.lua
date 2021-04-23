@@ -1,20 +1,34 @@
-require "scripts.ui.components.tooltip"
-require "scripts.ui.components.floats"
+require "scripts.ui.components.character-hub"
+require "scripts.ui.components.toolbar-inventory"
+require "scripts.ui.components.draw-inventory"
+require "scripts.ui.components.quest-hub"
+require "scripts.ui.components.quests-panel"
+require "scripts.ui.components.chat"
+require "scripts.ui.components.profile"
+require "scripts.ui.components.hotbar"
 
-isEnteringText = false
-UITextFields = {
-    "", -- search
-    "", -- chat
-}
+require "scripts.ui.panels.crafting"
+require "scripts.ui.panels.settings-panel"
+require "scripts.ui.panels.enchanting"
+require "scripts.ui.panels.challenges"
+require "scripts.ui.panels.forging"
+require "scripts.ui.panels.news"
+require "scripts.ui.panels.orders"
+require "scripts.ui.panels.reputation"
+
+require "scripts.ui.mechanics.ui"
+require "scripts.ui.mechanics.zone-titles"
+require "scripts.ui.mechanics.item-drag"
+require "scripts.ui.mechanics.events"
+require "scripts.ui.mechanics.scrolling"
+
+require "scripts.ui.mechanics.tooltip"
+require "scripts.ui.mechanics.floats"
 
 function initHUD()
-
     previousPlayerColor = {}
-
     --scaling
     scale = 1
-    velyWorldScale = 0
-    posYWorldScale = 1
     worldScales = {8, 4, 3, 2, 1,}
     worldEditScales = {8, 4, 3, 2, 1, 0.5, 0.25, 0.125}
     selectedWorldScale = 4
@@ -31,8 +45,6 @@ function initHUD()
     smallTextFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 12)
     playerNameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8)
     npcNameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8)
-    headerSmallFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 16)
-    headerTinyFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 6)
     headerFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 18) -- TODO: get a license for this font
     headerMediumFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 28)
     headerBigFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 32) -- TODO: get a license for this font
@@ -53,34 +65,12 @@ function initHUD()
 
     -- chatbox
     initChat()
-    chatCursor = {
-        on = true,
-        speed = 40,
-        i = 0,
-    }
 
     -- Profile
-
-	level = love.graphics.newImage("assets/ui/hud/profile/Level.png")
-	profileBars = love.graphics.newImage("assets/ui/hud/profile/bars.png")
-    profileBackground = love.graphics.newImage("assets/ui/hud/profile/profile-backing.png")
     ShieldImg = love.graphics.newImage("assets/player/gen/shield false.png")
     profileImgStencil = love.graphics.newQuad(12, 0, 16, 16, playerImg:getDimensions())
     npcImgStencil = love.graphics.newQuad(7, 0, 16, 16, playerImg:getDimensions())
     ShieldImgStencil = love.graphics.newQuad(12, 0, 16, 16, ShieldImg:getDimensions())
-
-    -- Perks
-
-    perksBg = love.graphics.newImage("assets/ui/hud/perks/perksBg.png")
-    mouseDown = love.graphics.newImage("assets/ui/hud/perks/BQ Mice - 1.png")
-    mouseUp = love.graphics.newImage("assets/ui/hud/perks/BQ Mice + 1.png")
-    perksReserve = love.graphics.newImage("assets/ui/hud/perks/cp-backing.png")
-
-    perkImages = {
-        love.graphics.newImage("assets/ui/hud/perks/perkType3.png"),
-        love.graphics.newImage("assets/ui/hud/perks/perkType2.png"),
-        love.graphics.newImage("assets/ui/hud/perks/perkType1.png")
-    }
 
     perkTitles = {
         "STR", "INT", "STA",
@@ -113,8 +103,10 @@ function initHUD()
     initQuestHub()
     initNPCChat()
     initCrafting()
+    initOrders()
     initNewWorldEdit()
     initTutorial()
+    initReputation()
 end
 
 function updateHUD( dt )
@@ -141,8 +133,9 @@ function updateHUD( dt )
         updateCharacterHub(dt)
         updateQuestHub(dt)
         updateCrafting(dt) -- fine
+        if orders.open or orders.amount > 0 then updateOrders(dt) end
         if showChat then updateChat(dt) end
-        if orCalc(true, {crafting.open, not inventory.notNPC, forging.open, settPan.opacity > 0, news.alpha == 1,}) then uiOpen = true else uiOpen = false end
+        if orCalc(true, {crafting.open, not inventory.notNPC, forging.open, settPan.opacity > 0, news.alpha == 1, orders.open,}) then uiOpen = true else uiOpen = false end
     end
 
     updateFloats(dt)
@@ -193,10 +186,13 @@ function drawHUD()
     love.graphics.push()
         love.graphics.scale(scale)
         drawTooltip()
-        if challenges.open then drawChallenges() end
-        if forging.open then drawForging() end
-        if enchanting.open then drawEnchanting() end
-        if news.open then drawNews() end
+        if challenges.open then drawChallenges()
+        elseif forging.open then drawForging()
+        elseif enchanting.open then drawEnchanting()
+        elseif news.open then drawNews()
+        elseif orders.open or orders.amount > 0 then drawOrders()
+        elseif reputation.open or reputation.amount > 0 then drawReputation()
+        end
         if itemDrag.dragging then drawItemDrag() end
     love.graphics.pop()
 end

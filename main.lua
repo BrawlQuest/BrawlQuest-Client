@@ -20,29 +20,12 @@ require "scripts.effects.weather"
 require "scripts.effects.world-sfx-emitters"
 require "scripts.effects.particles"
 require "scripts.ui.hud_controller"
-require "scripts.ui.components.character-hub"
-require "scripts.ui.components.crafting"
-require "scripts.ui.components.toolbar-inventory"
-require "scripts.ui.components.draw-inventory"
-require "scripts.ui.components.quest-hub"
-require "scripts.ui.components.quests-panel"
-require "scripts.ui.components.settings-panel"
-require "scripts.ui.components.chat"
-require "scripts.ui.components.toolbar"
-require "scripts.ui.components.zone-titles"
-require "scripts.ui.components.profile"
-require "scripts.ui.components.hotbar"
-require "scripts.ui.components.events"
-require "scripts.ui.components.enchanting"
-require "scripts.ui.components.challenges"
-require "scripts.ui.components.item-drag"
-require "scripts.ui.components.forging"
-require "scripts.ui.components.news"
 require "scripts.libraries.api"
 require "scripts.libraries.utils"
 require "scripts.libraries.colorize"
 require "scripts.libraries.simple-slider"
 require "scripts.phases.login.login"
+require "scripts.player.animation"
 require "scripts.player.other_players"
 require "scripts.player.ranged-weapons"
 require "scripts.player.targeting"
@@ -57,27 +40,26 @@ require "scripts.ui.temporary.world-edit-rect"
 require "data.data_controller"
 require "scripts.player.settings"
 require "scripts.player.structures"
-require "scripts.ui.components.npc-chat"
-require "scripts.ui.components.tutorial"
+
+require "scripts.ui.panels.npc-chat"
+require "scripts.ui.panels.tutorial"
+
 require "scripts.achievements"
 Luven = require "scripts.libraries.luven.luven"
 
-if love.system.getOS() ~= "Linux" then
-    steam = require 'luasteam'
-end -- we can disable other platforms here. Can't get Steam working on Linux and we aren't targetting it so this'll do for dev purposes
+version = "Early Access" 
+versionType = "dev" -- "dev" for quick login, "release" for not
+useSteam = true -- turn off for certain naughty computers
+if versionType == "dev" then require 'dev' end
+versionNumber = "1.3.1" -- very important for settings
+drawAnimations = true
+
+if love.system.getOS() ~= "Linux" and useSteam then steam = require 'luasteam' end -- we can disable other platforms here. Can't get Steam working on Linux and we aren't targetting it so this'll do for dev purposes
 json = require("scripts.libraries.json")
 http = require("socket.http")
 ltn12 = require("ltn12")
 utf8 = require("utf8")
 newOutliner = require 'scripts.libraries.outliner'
-
-version = "Early Access"
-versionType = "dev" -- "dev" for quick login, "release" for not
-if versionType == "dev" then
-    require 'dev'
-end
-
-versionNumber = "1.3.1+3" -- very important for settings
 
 phase = "login"
 blockMap = {}
@@ -113,13 +95,12 @@ function love.load()
     outlinerOnly = newOutliner(true)
     outlinerOnly:outline(0.8, 0, 0) -- this is used to draw enemy outlines
     grayOutlinerOnly = newOutliner(true)
-    grayOutlinerOnly:outline(1, 1, 1)
-    if love.system.getOS() ~= "Linux" then
-        steam.init()
-    end
+    grayOutlinerOnly:outline(1,1,1)
+    if love.system.getOS() ~= "Linux" and useSteam then  steam.init() end
     love.graphics.setDefaultFilter("nearest", "nearest")
     initHardData()
     initLogin()
+    initScrolling()
     initHUD()
     initLeaves()
     initSettings()
@@ -142,6 +123,7 @@ function love.load()
     initWeather()
     initParticles()
     initNews()
+    initAnimation()
     love.graphics.setFont(textFont)
     recursivelyDelete( "img" )
     love.filesystem.createDirectory( "img" )
@@ -260,13 +242,10 @@ function love.draw()
 end
 
 function love.update(dt)
-    if love.system.getOS() ~= "Linux" then
-        steam.runCallbacks()
-    end
+    if love.system.getOS() ~= "Linux" and useSteam then steam.runCallbacks() end
+
     enchantmentPos = enchantmentPos + 15 * dt
-    if enchantmentPos > 64 then
-        enchantmentPos = 0
-    end
+    if enchantmentPos > 64 then enchantmentPos = 0 end
 
     love.graphics.print(json:encode(love.audio.getActiveEffects()))
 
@@ -304,6 +283,7 @@ function love.update(dt)
         updateWeather(dt)
         updateWorldEmitters(dt)
         updateParticles(dt)
+        updateScrolling(dt)
         if news.open then
             updateNews(dt)
         end
@@ -348,7 +328,7 @@ function love.update(dt)
                 end
 
                 if response then
-                    local previousPlayers = copy(players) -- Temp
+                    previousPlayers = copy(players) -- Temp
 
                     players = response['Players']
                     npcs = response['NPC']
@@ -406,7 +386,6 @@ function love.update(dt)
                             headers = {
                                 ["token"] = token
                             }
-
                         }
                     end
                     if me.IsDead then
@@ -499,7 +478,7 @@ function love.update(dt)
 
                     weather.type = response['Weather']
 
-                    checkAchievementUnlocks()
+                    if love.system.getOS() ~= "Linux" and useSteam then checkAchievementUnlocks() end
                 end
             end
         end
@@ -520,6 +499,7 @@ function tick()
     getInventory()
     tickRangedWeapons()
     tickWorld()
+    if me then tickCharacterHub() end
     if hotbarChanged then
         hotbarChangeCount = hotbarChangeCount + 1
         if hotbarChangeCount > 0 then
@@ -564,7 +544,5 @@ function love.resize(width, height)
 end
 
 function love.quit()
-    if love.system.getOS() ~= "Linux" then
-        steam.shutdown()
-    end
+    if love.system.getOS() ~= "Linux" and useSteam then steam.shutdown() end
 end

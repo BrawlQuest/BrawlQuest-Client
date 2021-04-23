@@ -34,6 +34,9 @@ player = {
     color = {1,0.4,0.2,1},
     cp = 0,
     speed = {x = 0, y = 0},
+    frameAmount = 0,
+    frame = 1,
+    attacking = true,
     wx = 0,
     wy = 0,
     worldPosition = "0,0",
@@ -158,8 +161,8 @@ end
 isMoving = false
 movementStarted = 1 -- the max time it'll ever take to cross a tile. This should fix rubberbanding.
 
-
 function movePlayer(dt)
+
     if andCalc(true, {
             (me and not me.IsDead),
             (not isMoving or (distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) < 1)),
@@ -169,6 +172,7 @@ function movePlayer(dt)
             not death.open,
             not forging.forging,
             news.alpha ~= 1,
+            not player.attacking,
         }) then -- movement smoothing has finished
         local prev = {x = player.x, y = player.y}
         if love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.LEFT) and not (worldCollison(prev.x - 1, prev.y - 1) or worldCollison(prev.x - 1, prev.y) or worldCollison(prev.x, prev.y - 1)) then
@@ -210,14 +214,17 @@ function movePlayer(dt)
         if (prev.x ~= player.x or prev.y ~= player.y) or worldEdit.open then
             player.x = prev.x
             player.y = prev.y
-            if worldLookup[player.x..","..player.y]then
-                playFootstepSound(worldLookup[player.x..","..player.y], player.x, player.y)
+            if me and me.Mount and not orCalc(me.Mount.Name, {"", "None",}) and worldLookup[player.x..","..player.y]then
+                playFootstepSound(worldLookup[player.x..","..player.y], player.x, player.y, true)
             end
             isMoving = true
         end
     end
     
-    if distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) > 1 then
+    local distance = distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy)
+    if drawAnimations then animateCharacter(dt, distance > 1) end
+    
+    if distance > 1 then
         local speed = 80
         if me and me.Mount and me.Mount.Name ~= "None" or worldEdit.open then
             speed = tonumber(me.Mount.Val) or 80 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
@@ -271,9 +278,10 @@ function movePlayer(dt)
                 if player.cy >= y then player.dy = y end
             end
         end
-        if distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) < 1  then
-            isMoving = false
-        end
+
+        -- if distance < 1 then isMoving = false end
+    else
+        isMoving = false
     end
 end
 

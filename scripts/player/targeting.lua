@@ -42,9 +42,14 @@ function checkTargetingPress(key)
     for i,v in ipairs(keys) do
         if key == v then -- if the key pressed == a direction, set the targetKeys direction to true
             targetKeys[i] = true
-         
             break
         end
+    end
+
+    if key == keybinds.ATTACK_LEFT then
+        player.previousDirection = "left"
+    elseif key == keybinds.ATTACK_RIGHT then
+        player.previousDirection = "right"
     end
 end
 
@@ -71,10 +76,15 @@ function checkTargeting() -- Check which keys are down and place the player targ
     local wasActive = player.target.active
     player.target = {x = player.x, y = player.y, active = false}
 
-    local holding = false
+    player.attacking = false
     for i,v in ipairs(keys) do
         if love.keyboard.isDown(v) then
-            holding = true
+            player.attacking = true
+            if v == keybinds.ATTACK_LEFT then
+                player.previousDirection = "left"
+            elseif v == keybinds.ATTACK_RIGHT then
+                player.previousDirection = "right"
+            end
             break
         end
     end
@@ -87,28 +97,32 @@ function checkTargeting() -- Check which keys are down and place the player targ
         end
     end
 
-    if not oldTargeting and ((moving and not isTypingInChat) and not holding) then
+    if not oldTargeting and ((moving and not isTypingInChat) and not player.attacking ) then
         heldKeys = {false, false, false, false,}
         targetKeys = {false, false, false, false,}
         targetHeld = false
     end
 
-    if isMouseDown() and not holdingStaff() then
-        checkMouseTargeting()
+    if isMouseDown() then -- and not holdingStaff() then
+        if not uiOpen then checkMouseTargeting() end
     else
         if targetKeys[1] then
             player.target.active = true
+            player.attacking = true
             player.target.y = player.y - 1
         elseif targetKeys[2] then
             player.target.active = true
+            player.attacking = true
             player.target.y = player.y + 1
         end
 
         if targetKeys[3] then
             player.target.active = true
+            player.attacking = true
             player.target.x = player.x - 1
         elseif targetKeys[4] then
             player.target.active = true
+            player.attacking = true
             player.target.x = player.x + 1
         end
     end
@@ -116,9 +130,5 @@ function checkTargeting() -- Check which keys are down and place the player targ
     if not wasActive and player.target.active then
         -- newly active, trigger a send to make things feel a tad more responsive
         nextUpdate = 0
-    end
-
-    if player.target.active and player.isMounted then
-        beginMounting()
     end
 end

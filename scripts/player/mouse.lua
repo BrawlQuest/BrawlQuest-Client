@@ -19,6 +19,7 @@ function love.mousepressed(x, y, button)
         if enchanting.open then checkEnchantingMousePressed(button) end
         if forging.open then checkForgingMousePressed(button) end
         if news.open then checkNewsMousePressed(button) end
+        if orders.open then checkOrdersMousePressed(button) end
     end
 end
 
@@ -57,6 +58,7 @@ function updateMouse(dt)
 end
 
 function love.wheelmoved( dx, dy )
+    checkScrollingWheelMoved(dx, dy)
     if phase == "game" then
         if isSettingsWindowOpen then scrollSettings(dx, dy)
         elseif isTypingInChat then velyChat = velyChat + dy * 512
@@ -91,16 +93,22 @@ function checkMouseTargeting()
     if my < -range.y then 
         player.target.active = true
         player.target.y = player.y - 1
+        player.attacking = true
     elseif my > range.y then
         player.target.active = true
         player.target.y = player.y + 1
+        player.attacking = true
     end
 
     if mx < -range.x then
         player.target.active = true
         player.target.x = player.x - 1
+        player.attacking = true
+        player.previousDirection = "left"
     elseif mx > range.x then
         player.target.active = true
         player.target.x = player.x + 1
+        player.attacking = true
+        player.previousDirection = "right"
     end
 end
