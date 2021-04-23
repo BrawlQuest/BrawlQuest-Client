@@ -122,7 +122,7 @@ function newEnemyData(data) -- called when nearby data is returned
                 boneSpurt(enemy.dx + 16, enemy.dy + 16, 4, 20, 1, 1, 1, "mob", v.Enemy.Name)
                 if sfxVolume > 0 then
                     enemyHitSfx:setPitch(love.math.random(50, 100) / 100)
-                    enemyHitSfx:setVolume(1 * sfxVolume)
+                    enemyHitSfx:setVolume(0.5 * sfxVolume)
                     enemyHitSfx:setPosition(v.X, v.Y)
                     enemyHitSfx:setRolloff(sfxRolloff)
                     setEnvironmentEffects(enemyHitSfx)
@@ -293,19 +293,21 @@ function drawEnemies()
                 end
                 setEnvironmentEffects(deathSound)
                 deathSound:play()
-                if v.Enemy.Name == "Fire Phoenix" then
-                    steam.userStats.setAchievement('kill_phoenix_achievement')
-                    steam.userStats.storeStats()
-                elseif v.Enemy.Name == "Entity of Frost" then
-                    steam.userStats.setAchievement('kill_frost_achievement')
-                    steam.userStats.storeStats()
+                if love.system.getOS() ~= "Linux" and useSteam then
+                    if v.Enemy.Name == "Fire Phoenix" then
+                        steam.userStats.setAchievement('kill_phoenix_achievement')
+                        steam.userStats.storeStats()
+                    elseif v.Enemy.Name == "Entity of Frost" then
+                        steam.userStats.setAchievement('kill_frost_achievement')
+                        steam.userStats.storeStats()
+                    end
+                    if v.Enemy.HP > 1000 then
+                        steam.userStats.setAchievement('kill_boss_achievement')
+                        steam.userStats.storeStats()
+                    end
+                    local success,kills = steam.userStats.getStatInt("kill")
+                    steam.userStats.setStatInt("kill", kills+1)
                 end
-                if v.Enemy.HP > 1000 then
-                    steam.userStats.setAchievement('kill_boss_achievement')
-                    steam.userStats.storeStats()
-                end
-                local success,kills = steam.userStats.getStatInt("kill")
-                steam.userStats.setStatInt("kill", kills+1)
                 if v.Enemy.Width and v.Enemy.Height then
                     for a = 1, v.Enemy.Width do
                         for k = 1, v.Enemy.Height do

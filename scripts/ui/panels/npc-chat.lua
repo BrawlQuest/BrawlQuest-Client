@@ -131,9 +131,9 @@ function scrollNPCChatText(text)
         else
             return height - npcChatArg.posY
         end
-    else 
+    else
         npcChatArg.posY = 0
-        return 0 
+        return 0
     end
 end
 

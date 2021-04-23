@@ -13,11 +13,13 @@
         "Elodine's",
         "LUVEN",
         "Rolloff",
+        "Scroller",
         "elodine",
         "iheight",
         "iwidth",
         "lerp",
         "multicompare",
+        "scrollers",
         "sfxr"
     ]
 }

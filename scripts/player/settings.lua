@@ -194,6 +194,7 @@ function checkSettingsMousePressed(button)
                             fullscreen = settings[2][2].v
                             vsync = settings[2][5].v
                             setWindowOptions()
+                            recalculateLighting()
                             createWorld()
                         else
                             bv.v = not bv.v

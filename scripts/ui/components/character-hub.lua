@@ -39,6 +39,7 @@ function initCharacterHub()
 
     perks = {
         stats = {0,0,0,0},
+        bonus = {0,0,0,},
         delay = 0,
         change = false,
         tick = 0,
@@ -205,7 +206,6 @@ function drawCharacterHubStats(thisX, thisY)
 
     love.graphics.setColor(1,1,1,cerp(0, 1, characterHub.amount))
     love.graphics.draw(hubImages.statsFG, thisX, thisY)
-    
     love.graphics.setColor(0,0,0, cerp(0, 1, characterHub.amount))
     love.graphics.print(perks.stats[4], thisX + 77 - (characterHub.font:getWidth(perks.stats[4])/2), thisY + 27 - (characterHub.font:getHeight(perks.stats[4])/2))
     
@@ -216,8 +216,34 @@ function drawCharacterHubStats(thisX, thisY)
             perks.stats[i+1] = me[perkTitles[i+1]] + change
             perks.stats[4] = player.cp - change
         end
-        love.graphics.print(perks.stats[i+1], thisX + (49 * i) + 2 + 32 - (characterHub.font:getWidth(perks.stats[i+1])/2), thisY + 42 + 42 - (characterHub.font:getHeight(me[perkTitles[i+1]])/2))
+        local text = perks.stats[i+1]..perks.bonus[i+1]
+        love.graphics.printf(text, thisX + (49 * i) + 13, thisY + 78, 36, "center")
     end
+end
+
+local enchTab = {
+    STR = 1,
+    INT = 2,
+    STA = 3,
+}
+
+function tickCharacterHub()
+    perks.bonus = {0,0,0,}
+    for i,v in ipairs(armourTypes) do
+        if me[v] and me[v].Enchantment then
+            local ench = explode(me[v].Enchantment, ",")
+            local tabI = enchTab[ench[1]]
+            if tabI and ench[2] then perks.bonus[tabI] = perks.bonus[tabI] + ench[2] end
+        end
+        if me[v] and me[v].ID ~= 0 and me[v].Attributes then
+            for j, k in ipairs(explode(me[v].Attributes, ";")) do
+                local atri = explode(me[v].Attributes, ",")
+                local tabI = enchTab[atri[1]]
+                if tabI then perks.bonus[tabI] = perks.bonus[tabI] + atri[2] end
+            end
+        end
+    end
+    for i,v in ipairs(perks.bonus) do if v == 0 then perks.bonus[i] = "" else perks.bonus[i] = "+"..v end end
 end
 
 function drawCharacterHubMeters(thisX, thisY)
@@ -282,7 +308,7 @@ function drawBattlebarItem(thisX, thisY, item, stats)
         end
     elseif item == "hold" then
         love.graphics.print(boolToString(holdAttack), characterHub.nameFont, thisX+(w / 2)-(characterHub.nameFont:getWidth(stats)/2), thisY + 16)
-    else
+    elseif item then
         love.graphics.draw(item, thisX + 4, thisY + 4)
     end
 
