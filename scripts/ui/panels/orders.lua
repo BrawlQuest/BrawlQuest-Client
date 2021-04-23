@@ -76,7 +76,6 @@ function drawOrders()
     local x,y = uiX / 2 - o.fw / 2, uiY / 2 - o.fh / 2 - o.fh * o.selCerp
     for orderI, order in ipairs(orders.items) do drawOrderBox(x + (o.w + 10) * (orderI - 1), y, orderI, order) end
     love.graphics.setColor(1,1,1,(1-o.selCerp) * o.amount)
-    love.graphics.printf(o.title, x, y - getTextHeight(o.title, o.fw, font, 2) - 20, o.fw / 2, "center", 0, 2)
     if o.selected.item > 0 or o.selAmount > 0 then drawOrderSelection(x,y) end
 end
 
@@ -98,7 +97,9 @@ function drawOrderSelection(x,y)
         -- love.graphics.printf(o.title, dx, dy, (o.fw - 40) / 2, "left", 0, 2)
         if me.Order then
             if me.Order == "" then text = "Choosing an order will gain you reputation with them."
-            elseif me.Order then text = "You will loose your entire " .. me.Order .. " reputation." end
+            elseif me.Order ~= order.title then text = "You will loose your entire " .. me.Order .. " reputation."
+            else text = "You are already a part of the " .. me.Order end
+            text = o.title .. "\n\n" .. text
             love.graphics.printf(text, dx, dy, (o.fw - 40) / 3, "left", 0, 3)
         end
         text = ""
@@ -106,7 +107,6 @@ function drawOrderSelection(x,y)
         drawStandardButton(x + 20, y + o.fh - 20 - 50, o.fw - 40, 50, {
             text = {static = text},
             bgColor = {off = {0,0,0,bgAlpha}, on = {1,0,0,bgAlpha}},
-            fgColor = {off = {1,1,1,fgAlpha}, on = {1,1,1,fgAlpha}},
             action = {on = function() o.mouseOver.commit = true end, off = function() o.mouseOver.commit = false end,},
             disabled = me.Order == order.title,
             textMod = 0.4
@@ -141,7 +141,14 @@ function checkOrdersMousePressed(button)
     if o.mouseOver.item > 0 then
         if o.selected.item == o.mouseOver.item then o.selected.item = 0
         else o.selected.item = o.mouseOver.item end
-    elseif o.mouseOver.commit then print("Trying to join the " .. o.items[o.selected.item].title) end
+    elseif o.mouseOver.commit then 
+        love.filesystem.write("me.txt", json:encode_pretty(me)) 
+        print("Trying to join the " .. o.items[o.selected.item].title)
+        r, h = http.request {
+            url = api.url .. "/order/" .. me.ID .. "/" .. o.items[o.selected.item].title,
+            headers = {['token'] = token},
+        }
+    end
 end
 
 function openOrders()
