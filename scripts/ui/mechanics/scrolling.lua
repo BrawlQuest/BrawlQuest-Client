@@ -21,7 +21,7 @@ function updateScrolling(dt)
         elseif scroll.position > max then
             scroll.position = max
         end
-        print(scrollKey .. ", " .. scroll.position)
+        -- print(scrollKey .. ", " .. scroll.position)
     end
 end
 

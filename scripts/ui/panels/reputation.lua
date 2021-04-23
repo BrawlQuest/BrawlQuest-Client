@@ -1,8 +1,8 @@
 local t
 function initReputation()
     reputation = {
-        open = true,
-        amount = 1,
+        open = false,
+        amount = 0,
         fw = 620,
         fh = 0,
         w = 540,
@@ -125,7 +125,7 @@ function drawReputationItem(i, v, x, y)
 end
 
 function checkReputationKeyPressed(key)
-
+    if checkMoveOrAttack(key) then t.open = false end
 end
 
 function checkReputationMousePressed(button)
@@ -136,6 +136,7 @@ function openReputation()
     --for each reputation thing, add to the rep.items table
     -- t.items = {}
     -- for each item in me.rep do
+    t.open = true
 end
 
 --[[
