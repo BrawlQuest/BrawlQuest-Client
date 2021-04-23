@@ -14,6 +14,7 @@ require "scripts.ui.panels.challenges"
 require "scripts.ui.panels.forging"
 require "scripts.ui.panels.news"
 require "scripts.ui.panels.orders"
+require "scripts.ui.panels.reputation"
 
 require "scripts.ui.mechanics.ui"
 require "scripts.ui.mechanics.zone-titles"
@@ -104,6 +105,7 @@ function initHUD()
     initOrders()
     initNewWorldEdit()
     initTutorial()
+    initReputation()
 end
 
 function updateHUD( dt )
@@ -188,6 +190,7 @@ function drawHUD()
         elseif enchanting.open then drawEnchanting()
         elseif news.open then drawNews()
         elseif orders.open or orders.amount > 0 then drawOrders()
+        elseif reputation.open or reputation.amount > 0 then drawReputation()
         end
         if itemDrag.dragging then drawItemDrag() end
     love.graphics.pop()
