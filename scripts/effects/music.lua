@@ -24,10 +24,12 @@ function loadMusic()
         Permafrost = love.audio.newSource("assets/music/temp/Some-Dreamy-Place.mp3", "stream"),
         Enchantment = love.audio.newSource("assets/music/ambient/enchant.mp3", "stream"),
         ["Enchantment Haunt"] = love.audio.newSource("assets/music/ambient/enchant haunt.mp3", "stream"),
-        ["Dreamlands"] = love.audio.newSource("assets/music/temp/Dreamlands.mp3", "stream")
+        ["Dreamlands"] = love.audio.newSource("assets/music/temp/Dreamlands.mp3", "stream"),
+        ["Of-Legends-and-Fables-2"] = love.audio.newSource("assets/music/temp/Of-Legends-and-Fables-2.mp3", "stream"),
+        ["Of-Legends-and-Fables"] = love.audio.newSource("assets/music/temp/Of-Legends-and-Fables.mp3", "stream")
     }
 
-    worldMusic = {"PuerLavari", "Mining", "Sax", "ToFindTheOne", "Heat", "Longing", "Permafrost", "Enchantment", "Enchantment Haunt", "Dreamlands"}
+    worldMusic = {"Of-Legends-and-Fables", "PuerLavari", "Mining", "Sax", "ToFindTheOne", "Heat", "Longing", "Permafrost", "Enchantment", "Enchantment Haunt", "Dreamlands", "Of-Legends-and-Fables-2"}
     battleMusic = {"Titans", "Skirmish", "Skirmish2", "CaperOfCruelty", "HIJINKS", }
 
     musicSwitchAmount = 0

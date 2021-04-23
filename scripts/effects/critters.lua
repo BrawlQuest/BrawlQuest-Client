@@ -25,6 +25,13 @@ critterType = {
         chance = 150,
         name = "mystic",
         amount = 4
+    },
+    ["assets/world/grounds/grass/grass12.png"] = {
+        img = "assets/critter/fly.png",
+        allowed = {"Foglands"},
+        name = "fly",
+        amount = 3,
+        chance = 30,
     }
     --  ["assets/world/grounds/Water.png"] = "assets/critter/fish.png",
 }
