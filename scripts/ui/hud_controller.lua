@@ -20,6 +20,7 @@ require "scripts.ui.mechanics.ui"
 require "scripts.ui.mechanics.zone-titles"
 require "scripts.ui.mechanics.item-drag"
 require "scripts.ui.mechanics.events"
+require "scripts.ui.mechanics.scrolling"
 
 require "scripts.ui.mechanics.tooltip"
 require "scripts.ui.mechanics.floats"

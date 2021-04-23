@@ -53,6 +53,7 @@ function initReputation()
         },
     }
     t = reputation
+    -- addScroller("reputation", 0, #t.items * (t.h + 10) + 160, boxMax, function () return reputation.open end)
 end
 
 function updateReputation(dt)
@@ -70,14 +71,13 @@ function drawReputation()
 
     love.graphics.print("Reputation", x + 40, y + 20, 0, 2)
 
-
-
     love.graphics.stencil(function ()
-        roundRectangle("fill", x, y + 70, w, h - 70, 10, {false, false, true, true})
+        roundRectangle("fill", x, y + 80, w, h - 80, 10, {false, false, true, true})
     end, "replace", 1) -- stencils inventory
     love.graphics.setStencilTest("greater", 0) -- push
 
-    x, y = x + 40, y + 80
+    addScroller("reputation", 0, #t.items * (t.h + 10) + 160, h - 100)
+    x, y = x + 40, y + 80 - scrollers.reputation.position
 
     -- love.graphics.setColor(1,1,1,0.7)
     -- love.graphics.line(x, y, x + t.w, y)

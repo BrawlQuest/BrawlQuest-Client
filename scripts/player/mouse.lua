@@ -58,6 +58,7 @@ function updateMouse(dt)
 end
 
 function love.wheelmoved( dx, dy )
+    checkScrollingWheelMoved(dx, dy)
     if phase == "game" then
         if isSettingsWindowOpen then scrollSettings(dx, dy)
         elseif isTypingInChat then velyChat = velyChat + dy * 512
