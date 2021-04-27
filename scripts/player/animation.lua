@@ -121,9 +121,9 @@ function drawAnimation(v,x,y,dir)
     if v.IsShield and v.ShieldID ~= 0 and notBoat then drawArmourImage(x+12 - 5 * dir,y,v,ad,"Shield",dir) end
     love.graphics.draw(baseSpriteSheet, baseImages[frame], x - 16 * dir, y - 16, 0, dir, 1)
 
-    drawAnimatedItem(v, "LegArmour", x - 16 * dir, y - 16, dir, frame)
-    drawAnimatedItem(v, "ChestArmour", x - 16 * dir, y - 16, dir, frame)
-    drawAnimatedItem(v, "HeadArmour", x - 16 * dir, y - 16, dir, frame)
+    drawAnimatedArmourImage(v, "LegArmour", x - 16 * dir, y - 16, dir, frame)
+    drawAnimatedArmourImage(v, "ChestArmour", x - 16 * dir, y - 16, dir, frame)
+    drawAnimatedArmourImage(v, "HeadArmour", x - 16 * dir, y - 16, dir, frame)
 
     love.graphics.setBlendMode("add")
     if frame >= 12 and frame <= 14 then love.graphics.draw(baseSwing, swingImages[frame - 11], x - (27 * dir), y - 27, 0, dir, 1) end
