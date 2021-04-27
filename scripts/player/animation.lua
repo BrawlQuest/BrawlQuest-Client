@@ -1,16 +1,25 @@
 function initAnimation()
-    baseSpriteSheet = love.graphics.newImage("assets/player/base/base-animation.png")
-    baseShadow = love.graphics.newImage("assets/player/base/base-shadow.png")
-    baseSwing = love.graphics.newImage("assets/player/base/base-swing.png")
+    baseSpriteSheet = love.graphics.newImage("assets/player/animations/base-sprites.png")
+    baseShadow = love.graphics.newImage("assets/player/animations/base-shadow.png")
+    baseSwing = love.graphics.newImage("assets/player/animations/base-swing.png")
     baseImages = {}
-    for x = 0, 15 do
-        baseImages[#baseImages+1] = love.graphics.newQuad(x * 32, 0, 32, 32, baseSpriteSheet:getDimensions())
+    baseImages[1] = love.graphics.newQuad(0, 0, 48, 48, baseSpriteSheet:getDimensions())
+    for x = 0, 3 do -- walk images
+        baseImages[#baseImages+1] = love.graphics.newQuad(x * 48, 48, 48, 48, baseSpriteSheet:getDimensions())
     end
+    for x = 0, 5 do -- attack images
+        baseImages[10+x] = love.graphics.newQuad(math.clamp(0, x, 3) * 48, 96, 48, 48, baseSpriteSheet:getDimensions())
+    end
+    for x = 0, 3 do -- cast images
+        baseImages[#baseImages+1] = love.graphics.newQuad(x * 48, 144, 48, 48, baseSpriteSheet:getDimensions())
+    end
+
     swingImages = {}
     for x = 0, 2 do
         swingImages[#swingImages+1] = love.graphics.newQuad(x * 96, 0, 96, 96, baseSwing:getDimensions())
     end
     animatePlayerAttack = false
+    initArmour()
 end
 
 local walkSpeed, attackSpeed = 6, 10
@@ -107,15 +116,14 @@ function drawAnimation(v,x,y,dir)
     if frame == 1 or frame % 2 == 0 then off = 1 end
     love.graphics.draw(baseShadow, x, y + 15, 0, dir, 1)
 
-
     drawAnimatedWeapon(v,x,y,dir,frame)
 
-
-    if v.Invulnerability >= 0 then love.graphics.setColor(1,1,1,0.3)
-    else love.graphics.setColor(1,1,1) end
-    love.graphics.draw(baseSpriteSheet, baseImages[frame], x, y, 0, dir, 1)
-
     if v.IsShield and v.ShieldID ~= 0 and notBoat then drawArmourImage(x+12 - 5 * dir,y,v,ad,"Shield",dir) end
+    love.graphics.draw(baseSpriteSheet, baseImages[frame], x - 16 * dir, y - 16, 0, dir, 1)
+
+    drawAnimatedItem(v, "LegArmour", x - 16 * dir, y - 16, dir, frame)
+    drawAnimatedItem(v, "ChestArmour", x - 16 * dir, y - 16, dir, frame)
+    drawAnimatedItem(v, "HeadArmour", x - 16 * dir, y - 16, dir, frame)
 
     love.graphics.setBlendMode("add")
     if frame >= 12 and frame <= 14 then love.graphics.draw(baseSwing, swingImages[frame - 11], x - (27 * dir), y - 27, 0, dir, 1) end

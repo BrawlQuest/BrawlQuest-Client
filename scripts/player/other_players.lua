@@ -1,5 +1,4 @@
 
-
 function initPlayers()
     enchantment = love.graphics.newImage("assets/player/gen/enchantment.png")
     profileEnchantment = love.graphics.newImage("assets/player/gen/profileEnchantment.png")
@@ -7,8 +6,6 @@ function initPlayers()
     shieldFalse = love.graphics.newImage("assets/player/gen/shield false.png")
     showEnchantments = false
     playerNameAlpha = 1
-
-
 end
 
 alphaShader = love.graphics.newShader[[
