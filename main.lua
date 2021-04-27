@@ -87,7 +87,6 @@ nextTick = 0
 lastTick = 0
 totalCoverAlpha = 0 -- this covers the entire screen in white, for hiding purposes
 timeOfDay = 0
-enemiesInAggro = 0
 username = "Pebsie"
 readyForUpdate = true
 playersOnline = ""
@@ -239,7 +238,6 @@ function love.draw()
 end
 
 function love.update(dt)
-    -- dt = dt * 0.5
     if love.system.getOS() ~= "Linux" and useSteam then steam.runCallbacks() end
 
     enchantmentPos = enchantmentPos + 15 * dt
