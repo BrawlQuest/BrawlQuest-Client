@@ -152,9 +152,7 @@ function worldCollison(x, y)
             output = true
         end
     end
-     if enemyCollisions[x] and enemyCollisions[x][y] == true and me and me.Invulnerability < 0 then
-        output = true
-    end
+    if enemyCollisions[x..","..y] and me and me.Invulnerability < 0 then output = true end
     return output
 end
 
@@ -211,7 +209,7 @@ function movePlayer(dt)
             end
         end
 
-        if (prev.x ~= player.x or prev.y ~= player.y) or worldEdit.open then
+        if (prev.x ~= player.x or prev.y ~= player.y) then--or worldEdit.open then
             player.x = prev.x
             player.y = prev.y
             if me and me.Mount and not orCalc(me.Mount.Name, {"", "None",}) and worldLookup[player.x..","..player.y]then
@@ -224,7 +222,7 @@ function movePlayer(dt)
     local distance = distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy)
     if drawAnimations then animateCharacter(dt, distance > 1) end
     
-    if distance > 1 then
+    if distance > 3 then
         local speed = 80
         if me and me.Mount and me.Mount.Name ~= "None" or worldEdit.open then
             speed = tonumber(me.Mount.Val) or 80 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
@@ -248,35 +246,39 @@ function movePlayer(dt)
             local x,y = player.x * 32, player.y * 32
             if player.dx > x then
                 player.dx = player.dx - speed * dt
-                if player.dx <= x then player.dx = x end
+                -- if player.dx <= x then player.dx = x end
             elseif player.dx < x then
                 player.dx = player.dx + speed * dt
-                if player.dx >= x then player.dx = x end
+                -- if player.dx >= x then player.dx = x end
             end
 
             if player.cx > x then
                 player.cx = player.cx - speed * dt
-                if player.cx <= x then player.cx = x end
+                -- if player.cx <= x then player.cx = x end
             elseif player.cx < x then
                 player.cx = player.cx + speed * dt
-                if player.cx >= x then player.dx = x end
+                -- if player.cx >= x then player.dx = x end
             end
 
             if player.dy > y then
                 player.dy = player.dy - speed * dt
-                if player.dy <= y then player.dy = y end
+                -- if player.dy <= y then player.dy = y end
             elseif player.dy < y then
                 player.dy = player.dy + speed * dt
-                if player.dy >= y then player.dy = y end
+                -- if player.dy >= y then player.dy = y end
             end
 
             if player.cy > y then
                 player.cy = player.cy - speed * dt
-                if player.cy <= y then player.cy = y end
+                -- if player.cy <= y then player.cy = y end
             elseif player.cy < y then
                 player.cy = player.cy + speed * dt
-                if player.cy >= y then player.dy = y end
+                -- if player.cy >= y then player.dy = y end
             end
+            
+            -- player.dx = player.dx + (x - player.dx) * 10 * dt
+            -- player.dy = player.dy + (y - player.dy) * 10 * dt
+
         end
 
         -- if distance < 1 then isMoving = false end

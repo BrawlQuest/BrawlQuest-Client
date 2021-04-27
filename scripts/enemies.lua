@@ -9,25 +9,24 @@ enemyQuads = {}
 enemyCollisionsI = 0
 enemySounds = {}
 
-attackSfxs = {love.audio.newSource("assets/sfx/monsters/skeletons/attack/1.ogg", "static"),
-              love.audio.newSource("assets/sfx/monsters/skeletons/attack/2.ogg", "static"),
-              love.audio.newSource("assets/sfx/monsters/skeletons/attack/3.ogg", "static"),
-              love.audio.newSource("assets/sfx/monsters/skeletons/attack/4.ogg", "static")}
+-- attackSfxs = {love.audio.newSource("assets/sfx/monsters/skeletons/attack/1.ogg", "static"),
+--               love.audio.newSource("assets/sfx/monsters/skeletons/attack/2.ogg", "static"),
+--               love.audio.newSource("assets/sfx/monsters/skeletons/attack/3.ogg", "static"),
+--               love.audio.newSource("assets/sfx/monsters/skeletons/attack/4.ogg", "static")}
 
-aggroSfxs = {love.audio.newSource("assets/sfx/monsters/skeletons/aggro/1.ogg", "static"),
-             love.audio.newSource("assets/sfx/monsters/skeletons/aggro/2.ogg", "static"),
-             love.audio.newSource("assets/sfx/monsters/skeletons/aggro/3.ogg", "static")}
+-- aggroSfxs = {love.audio.newSource("assets/sfx/monsters/skeletons/aggro/1.ogg", "static"),
+--              love.audio.newSource("assets/sfx/monsters/skeletons/aggro/2.ogg", "static"),
+--              love.audio.newSource("assets/sfx/monsters/skeletons/aggro/3.ogg", "static")}
 
-deathSfxs = {love.audio.newSource("assets/sfx/monsters/skeletons/death/1.ogg", "static"),
-             love.audio.newSource("assets/sfx/monsters/skeletons/death/2.ogg", "static"),
-             love.audio.newSource("assets/sfx/monsters/skeletons/death/3.ogg", "static")}
+-- deathSfxs = {love.audio.newSource("assets/sfx/monsters/skeletons/death/1.ogg", "static"),
+--              love.audio.newSource("assets/sfx/monsters/skeletons/death/2.ogg", "static"),
+--              love.audio.newSource("assets/sfx/monsters/skeletons/death/3.ogg", "static")}
 
 alertImg = love.graphics.newImage("assets/ui/alert.png")
 
 function newEnemyData(data) -- called when nearby data is returned
     enemiesInAggro = 0
     enemyCollisions = copy(enemyCollisionsPrevious[enemyCollisionsI])
-
 
     for i, v in ipairs(enemies) do
         enemies[i].updated = false
@@ -171,10 +170,7 @@ function newEnemyData(data) -- called when nearby data is returned
         enemy.Y = v.Y
 
         if enemy.HP > 0 then
-            if enemyCollisions[v.X] == null then
-                enemyCollisions[v.X] = {}
-            end
-            enemyCollisions[v.X][v.Y] = true
+            enemyCollisions[v.X..","..v.Y] = true -- ..","..
             enemy.updated = true
             enemy.lastUpdate = os.time(os.date("!*t"))
         end
