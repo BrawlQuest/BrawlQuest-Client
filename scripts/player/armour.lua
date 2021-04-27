@@ -1,15 +1,16 @@
 function initArmour()
     armour = {
-        leather = {
-            HeadArmour =  love.graphics.newImage("assets/player/animations/leather/head.png"),
-            ChestArmour = love.graphics.newImage("assets/player/animations/leather/chest.png"),
-            LegArmour =  love.graphics.newImage("assets/player/animations/leather/legs.png"),
-        },
-        studded = {
-            HeadArmour =  love.graphics.newImage("assets/player/animations/studded/head.png"),
-            ChestArmour = love.graphics.newImage("assets/player/animations/studded/chest.png"),
-            LegArmour =  love.graphics.newImage("assets/player/animations/studded/legs.png"),
-        },
+        leather =  getArmourImages("leather"),
+        iron = getArmourImages("iron"),
+        studded = getArmourImages("studded"),
+    }
+end
+
+function getArmourImages(id)
+    return {
+        HeadArmour =  love.graphics.newImage("assets/player/animations/"..id.."/head.png"),
+        ChestArmour = love.graphics.newImage("assets/player/animations/"..id.."/chest.png"),
+        LegArmour =  love.graphics.newImage("assets/player/animations/"..id.."/legs.png"),
     }
 end
 
@@ -35,9 +36,11 @@ end
 function drawAnimatedItem(v, type, x, y, dir, frame)
     if string.find(v[type].Name, "Leather") then
         love.graphics.draw(armour.leather[type], baseImages[frame], x, y, 0, dir, 1)
+    elseif string.find(v[type].Name, "Iron") then
+        love.graphics.draw(armour.iron[type], baseImages[frame], x, y, 0, dir, 1)
     elseif string.find(v[type].Name, "Studded") then
         love.graphics.draw(armour.studded[type], baseImages[frame], x, y, 0, dir, 1)
     elseif string.find(v[type].Name, "Robe") then
-        
+
     end
 end
