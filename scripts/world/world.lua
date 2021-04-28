@@ -28,9 +28,7 @@ end
 
 function createWorld()
     if not love.filesystem.getInfo( "img" ) then love.filesystem.createDirectory( "img" ) end
-    -- recalculateLighting()
     leaves = {}
-    -- critters = {}
     worldEmitters = {}
     worldLookup = {}
     originalTiles = {}
