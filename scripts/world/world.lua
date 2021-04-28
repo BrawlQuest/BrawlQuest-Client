@@ -20,8 +20,16 @@ end
 function drawSimplexNoise(x, y)
     local noise
     local noiseFactor = 0.23 -- 0.18
-    islandNoise = math.clamp(0.8, love.math.noise(x * 0.009, y * 0.009) - love.math.noise(x * 0.07, y * 0.07) * 0.1, 1) + ((love.math.noise( x * 0.06, y * 0.06) - (love.math.noise( x * 0.5, y * 0.5) * 0.2)) * 2 - 1) * 0.1
-    if islandNoise > 0.85 then noise = islandNoise else noise = 1 - ((love.math.noise( x * 0.06, y * 0.06) - (love.math.noise( x * 0.5, y * 0.5) * 0.2)) * noiseFactor) end
+    local noises = {
+        love.math.noise((x * 0.009) - player.world, (y * 0.009) + player.world),
+        love.math.noise((x * 0.07) - player.world, (y * 0.07) + player.world) * 0.1,
+        love.math.noise( (x * 0.06) - player.world, (y * 0.06) + player.world),
+        love.math.noise( (x * 0.5) - player.world, (y * 0.5) + player.world) * 0.2,
+        love.math.noise( (x * 0.06) - player.world, (y * 0.06) + player.world),
+        love.math.noise( (x * 0.5) - player.world, (y * 0.5) + player.world) * 0.2,
+    }
+    islandNoise = math.clamp(0.8, noises[1] - noises[2], 1) + ((noises[3] - noises[4]) * 2 - 1) * 0.1
+    if islandNoise > 0.85 then noise = islandNoise else noise = 1 - ((noises[5] - noises[6]) * noiseFactor) end
     noise = islandNoise
     love.graphics.setColor(noise * 1 ,noise * 1 ,noise )
 end

@@ -366,7 +366,7 @@ function initWorldTable(b)
     for i,tile in ipairs(world) do
         local x,y = math.floor((tile.X) / chunkSize), math.floor((tile.Y) / chunkSize)
         if not worldChunks[x..","..y] then worldChunks[x..","..y] = {} end
-        if player.world == "main" then worldChunks[x..","..y][#worldChunks[x..","..y] + 1] = copy(tile) end
+        if player.world == 0 then worldChunks[x..","..y][#worldChunks[x..","..y] + 1] = copy(tile) end
     end
 end
 

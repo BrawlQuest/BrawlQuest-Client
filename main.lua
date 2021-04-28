@@ -205,12 +205,8 @@ function love.draw()
             end
         end
         drawWeather()
-        if showWorldMask and not worldEdit.open and enchanting.amount < 0.01 then
-            drawWorldMask()
-        end -- not worldEdit.open or
-        if showClouds and not worldEdit.open and enchanting.amount < 0.01 then
-            drawClouds()
-        end
+        if andCalc(true, {showWorldMask, not worldEdit.open, enchanting.amount < 0.01}) then drawWorldMask() end -- not worldEdit.open or
+        if showClouds and not worldEdit.open and enchanting.amount < 0.01 then drawClouds() end
 
         -- if player.target.active then
         --     love.graphics.setColor(1,0,0,0.5 * nextTick)
@@ -291,7 +287,6 @@ function love.update(dt)
         end
         Luven.update(dt)
         if showClouds and enchanting.amount < 0.01 then updateClouds(dt) end
-        if showWorldMask then updateWorldMask(dt) end
         if enchanting.amount >= 0.01 then updateEnchanting(dt) end
         updateCamera(dt)
         updateOtherPlayers(dt)

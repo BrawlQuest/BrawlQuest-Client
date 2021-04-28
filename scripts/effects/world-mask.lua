@@ -15,10 +15,6 @@ function initWorldMask()
     worldMaskTables = {{}, {}, }
 end
 
-function updateWorldMask(dt)
-
-end
-
 function checkIfCollision(x,y)
     local output = true
     if not worldMask.detected then
@@ -51,101 +47,96 @@ function drawWorldMask()
             worldMask.detected = false            
             local distance = distanceToPoint(player.cx, player.cy, x * gridSize, y * gridSize)
             if distance <= range then 
-                if showShadows then
-                    local success, counter = Bresenham.line(math.floor((player.cx / 32) * gridScale), math.floor((player.cy / 32) * gridScale), math.round(x), math.round(y), function (x,y) 
-                        local thisX, thisY = x / gridScale, y / gridScale
-                        local elseX, elseY = thisX - 0.5, thisY - 0.5
-                        local show = true
+                if player.world == 0 then
+                    if showShadows then
+                        local success, counter = Bresenham.line(math.floor((player.cx / 32) * gridScale), math.floor((player.cy / 32) * gridScale), math.round(x), math.round(y), function (x,y) 
+                            local thisX, thisY = x / gridScale, y / gridScale
+                            local elseX, elseY = thisX - 0.5, thisY - 0.5
+                            local show = true
+                            if worldLookup[thisX..","..thisY] and worldLookup[thisX..","..thisY].Collision ~= null then
+                                return checkIfCollision(thisX, thisY)
+                            elseif worldLookup[thisX..","..elseY] and worldLookup[thisX..","..elseY].Collision ~= null then
+                                return checkIfCollision(thisX, elseY)
+                            elseif worldLookup[elseX..","..thisY] and worldLookup[elseX..","..thisY].Collision ~= null then
+                                return checkIfCollision(elseX, thisY)
+                            elseif worldLookup[elseX..","..elseY] and worldLookup[elseX..","..elseY].Collision ~= null then
+                                return checkIfCollision(elseX, elseY)
+                            else return true end -- if there is no tile, just count it as blank.
+                        end)
 
-                        if worldLookup[thisX..","..thisY] and worldLookup[thisX..","..thisY].Collision ~= null then
-                            return checkIfCollision(thisX, thisY)
-                        elseif worldLookup[thisX..","..elseY] and worldLookup[thisX..","..elseY].Collision ~= null then
-                            return checkIfCollision(thisX, elseY)
-                        elseif worldLookup[elseX..","..thisY] and worldLookup[elseX..","..thisY].Collision ~= null then
-                            return checkIfCollision(elseX, thisY)
-                        elseif worldLookup[elseX..","..elseY] and worldLookup[elseX..","..elseY].Collision ~= null then
-                            return checkIfCollision(elseX, elseY)
+                        if success then
+                            local intensity = range / (range + difference(range, distance) * 4)
+                            if intensity < 0.1 then show = false end
+                            love.graphics.setColor(0,0,0, (intensity - 0.2) * (worldMask.opacity2))
                         else
-                            return true -- if there is no tile, just count it as blank.
+                            love.graphics.setColor(0,0,0,worldMask.opacity)
+                        end       
+                        if show then love.graphics.rectangle("fill", math.round(x) * gridSize, math.round(y) * gridSize, gridSize, gridSize) end
+                    else -- if not drawing shadows
+                        local intensity = range / (range + (difference(range, distance) * 5))
+                        if intensity > 0.1 then
+                            love.graphics.setColor(r, g, 0, (intensity) * (worldMask.opacity2))
+                            love.graphics.rectangle("fill", math.round(x) * gridSize, math.round(y) * gridSize, gridSize, gridSize)
                         end
-                    end)
-
-                    if success then
-                        local intensity = range / (range + difference(range, distance) * 4)
-                        if intensity < 0.1 then show = false end
-                        love.graphics.setColor(0,0,0, (intensity - 0.2) * (worldMask.opacity2))
-                        -- worldMaskTables[1][#worldMaskTables[1] + 1] = {x = x, y = y, visable = true, intensity = intensity}
-                    else
-                        love.graphics.setColor(0,0,0,worldMask.opacity)
-                        -- worldMaskTables[1][#worldMaskTables[1] + 1] = {x = x, y = y, visable = false,}
-                    end       
-                    if show then love.graphics.rectangle("fill", math.round(x) * gridSize, math.round(y) * gridSize, gridSize, gridSize) end
-                else -- if not drawing shadows
-                    local intensity = range / (range + (difference(range, distance) * 5))
-                    if intensity > 0.1 then
-                        love.graphics.setColor(r, g, 0, (intensity) * (worldMask.opacity2))
-                        love.graphics.rectangle("fill", math.round(x) * gridSize, math.round(y) * gridSize, gridSize, gridSize)
-                        -- love.graphics.setColor(1,1,1)
-                        -- love.graphics.print(math.round(intensity, 2), math.round(x) * gridSize, math.round(y) * gridSize)
                     end
-                    -- worldMaskTables[1][#worldMaskTables[1] + 1] = {x = x, y = y, visable = true, intensity = intensity}
                 end
-
-                drawRangedWeaponsGrid(x,y) 
-
+                drawRangedWeaponsGrid(x,y)
             else -- outside of the circle
-                love.graphics.setColor(r, g, 0,worldMask.opacity)
-                -- worldMaskTables[2][#worldMaskTables[2] + 1] = {x = x, y = y,}
-                love.graphics.rectangle("fill", math.round(x) * gridSize, math.round(y) * gridSize, gridSize, gridSize)
+                if player.world == 0 then
+                    love.graphics.setColor(r, g, 0,worldMask.opacity)
+                    love.graphics.rectangle("fill", math.round(x) * gridSize, math.round(y) * gridSize, gridSize, gridSize)
+                end
             end
         end
     end
 
-    love.graphics.setColor(r, g, 0, worldMask.opacity)
+    if player.world == 0 then
+        love.graphics.setColor(r, g, 0, worldMask.opacity)
 
-    width, height = ((love.graphics.getWidth() * cloudScale) * 0.5), ((love.graphics.getHeight() * cloudScale) * 0.5)
+        width, height = ((love.graphics.getWidth() * cloudScale) * 0.5), ((love.graphics.getHeight() * cloudScale) * 0.5)
 
-    local fourCorners = {
-        {player.cx - width - gridSize, player.cy - height - gridSize, 100, 100,},
-        {player.cx + width + gridSize * 3, player.cy - height - gridSize, -100, 100,},
-        {player.cx + width + gridSize * 3, player.cy + height + gridSize * 3, -100, -100,},
-        {player.cx - width - gridSize * 2, player.cy + height + gridSize * 3, 100, -100,},
-    }
+        local fourCorners = {
+            {player.cx - width - gridSize, player.cy - height - gridSize, 100, 100,},
+            {player.cx + width + gridSize * 3, player.cy - height - gridSize, -100, 100,},
+            {player.cx + width + gridSize * 3, player.cy + height + gridSize * 3, -100, -100,},
+            {player.cx - width - gridSize * 2, player.cy + height + gridSize * 3, 100, -100,},
+        }
 
-    local shadeCorners = {
-        {player.x * 32 - range, player.y * 32 - range,},
-        {player.x * 32 + range + gridSize, player.y * 32 - range,},
-        {player.x * 32 + range + gridSize, player.y * 32 + range + gridSize,},
-        {player.x * 32 - range, player.y * 32 + range + gridSize,},
-    }
+        local shadeCorners = {
+            {player.x * 32 - range, player.y * 32 - range,},
+            {player.x * 32 + range + gridSize, player.y * 32 - range,},
+            {player.x * 32 + range + gridSize, player.y * 32 + range + gridSize,},
+            {player.x * 32 - range, player.y * 32 + range + gridSize,},
+        }
 
-    love.graphics.polygon("fill", {
-        fourCorners[1][1], fourCorners[1][2], 
-        fourCorners[2][1], fourCorners[2][2], 
-        shadeCorners[2][1], shadeCorners[2][2],
-        shadeCorners[1][1], shadeCorners[1][2], 
-    })
+        love.graphics.polygon("fill", {
+            fourCorners[1][1], fourCorners[1][2], 
+            fourCorners[2][1], fourCorners[2][2], 
+            shadeCorners[2][1], shadeCorners[2][2],
+            shadeCorners[1][1], shadeCorners[1][2], 
+        })
 
-    love.graphics.polygon("fill", {
-        fourCorners[3][1], fourCorners[3][2], 
-        fourCorners[4][1], fourCorners[4][2], 
-        shadeCorners[4][1], shadeCorners[4][2],
-        shadeCorners[3][1], shadeCorners[3][2], 
-    })
+        love.graphics.polygon("fill", {
+            fourCorners[3][1], fourCorners[3][2], 
+            fourCorners[4][1], fourCorners[4][2], 
+            shadeCorners[4][1], shadeCorners[4][2],
+            shadeCorners[3][1], shadeCorners[3][2], 
+        })
 
-    love.graphics.polygon("fill", {
-        fourCorners[4][1], fourCorners[4][2], 
-        fourCorners[1][1], fourCorners[1][2], 
-        shadeCorners[1][1], shadeCorners[1][2],
-        shadeCorners[4][1], shadeCorners[4][2], 
-    })
+        love.graphics.polygon("fill", {
+            fourCorners[4][1], fourCorners[4][2], 
+            fourCorners[1][1], fourCorners[1][2], 
+            shadeCorners[1][1], shadeCorners[1][2],
+            shadeCorners[4][1], shadeCorners[4][2], 
+        })
 
-    love.graphics.polygon("fill", {
-        fourCorners[2][1], fourCorners[2][2], 
-        fourCorners[3][1], fourCorners[3][2], 
-        shadeCorners[3][1], shadeCorners[3][2],
-        shadeCorners[2][1], shadeCorners[2][2], 
-    })
+        love.graphics.polygon("fill", {
+            fourCorners[2][1], fourCorners[2][2], 
+            fourCorners[3][1], fourCorners[3][2], 
+            shadeCorners[3][1], shadeCorners[3][2],
+            shadeCorners[2][1], shadeCorners[2][2], 
+        })
+    end
 
     love.graphics.setColor(1,1,1,1)
 end

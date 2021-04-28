@@ -13,7 +13,7 @@ function serverResponce()
                 previousPlayers = copy(players) -- Temp
 
                 players = response['Players']
-                if player.world == "main" then npcs = response['NPC'] end
+                if player.world == 0 then npcs = response['NPC'] end
                 auras = response['Auras']
                 playersOnline = ""
                 playerCount = 0
@@ -114,7 +114,7 @@ function serverResponce()
                     firstLaunch = false
                 end
                 player.name = me.Name
-                if player.world == "main" then newEnemyData(response['Enemies']) end
+                if player.world == 0 then newEnemyData(response['Enemies']) end
                 quests = {{}, {}, {}}
                 for i, v in ipairs(response['MyQuests']) do
                     local trackedVar = 2

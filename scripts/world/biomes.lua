@@ -21,10 +21,10 @@ end
 function loadNoiseTiles(cx,cy,x,y)
     local nx,ny = x + cx * chunkSize, y + cy * chunkSize
 
-    local largeNoise = love.math.noise(nx * nf[1], ny * nf[1]) - love.math.noise(nx * nf[2], ny * nf[2]) * 0.1
-    local smallNoise = love.math.noise(nx * nf[3], ny * nf[3]) * largeNoise
-    local typeNoise = love.math.noise(nx * nf[4], ny * nf[4])
-    local biomeNoise = love.math.noise(nx * nf[5], ny * nf[5])
+    local largeNoise = love.math.noise((nx * nf[1]) - player.world, (ny * nf[1]) + player.world) - love.math.noise((nx * nf[2]) - player.world, (ny * nf[2]) + player.world) * 0.1
+    local smallNoise = love.math.noise((nx * nf[3]) - player.world, (ny * nf[3]) + player.world) * largeNoise
+    local typeNoise = love.math.noise((nx * nf[4]) - player.world, (ny * nf[4]) + player.world)
+    local biomeNoise = love.math.noise((nx * nf[5]) - player.world, (ny * nf[5]) + player.world)
     local groundColor = largeNoise * 1.5 - 0.5 - smallNoise * 0.04
 
     local biome

@@ -3,7 +3,7 @@
     as a means of controlling the character.
 ]]
 player = {
-    world = "1",
+    world = 1000,
     x = -15,
     y = -15,    
     dx = 15 * 32,
