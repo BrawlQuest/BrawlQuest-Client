@@ -3,10 +3,11 @@
     as a means of controlling the character.
 ]]
 player = {
+    world = "1",
     x = -15,
+    y = -15,    
     dx = 15 * 32,
     dy = 15 * 32,
-    y = -15,
     cx = 0,
     cy = 0,
     hp = 100,
@@ -170,7 +171,7 @@ function movePlayer(dt)
             not death.open,
             not forging.forging,
             news.alpha ~= 1,
-            not player.attacking,
+            -- not player.attacking,
         }) then -- movement smoothing has finished
         local prev = {x = player.x, y = player.y}
         if love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.LEFT) and not (worldCollison(prev.x - 1, prev.y - 1) or worldCollison(prev.x - 1, prev.y) or worldCollison(prev.x, prev.y - 1)) then
