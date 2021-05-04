@@ -39,39 +39,33 @@ function createWorld()
     local tab = {}
     for x = chunkMap[1], chunkMap[2] do for y = chunkMap[3], chunkMap[4] do tab[#tab+1] = player.wx + x .."," .. player.wy + y end end
 
-    -- if player.world == 0 then
-        for key,tiles in next, worldChunks do
-            if orCalc(key, tab) then
-                for i,v in ipairs(tiles) do
-                    worldLookup[v.X..","..v.Y] = v
-                    if showWorldAnimations then
-                        addWorldEmitter(v)
-                        if not isTileType(v.ForegroundTile, "Dead") and isTileType(v.ForegroundTile, "Tree") and love.math.random(1,5) == 1 then
-                            if isTileType(v.ForegroundTile, "Snowy") then addLeaf(v.X*32 + 16, v.Y*32 + 16, "snowy tree")
-                            else addLeaf(v.X*32 + 16, v.Y*32 + 16, "tree") end
-                        elseif isTileType(v.ForegroundTile, "Campfire") then addLeaf(v.X*32 + 16, v.Y*32 + 8, "fire")
-                        elseif isTileType(v.ForegroundTile, "Sand") then -- addLeaf(v.X*32 + 16, v.Y*32 + 16, "sand")
-                        elseif isTileType(v.GroundTile, "Murky") then addLeaf(v.X*32, v.Y*32+16, "murky") end
-                    end
-                    if lightGivers[v.ForegroundTile] and not lightSource[v.X .. "," .. v.Y] then
-                        lightSource[v.X .. "," .. v.Y] = true
-                        Luven.addNormalLight(16 + (v.X * 32), 16 + (v.Y * 32), lightGivers[v.ForegroundTile].color, lightGivers[v.ForegroundTile].brightness)
-                    end
-                    if v.GroundTile and v.GroundTile ~= "" then originalTiles[v.X..","..v.Y] = true end
+    for key,tiles in next, worldChunks do
+        if orCalc(key, tab) then
+            for i,v in ipairs(tiles) do
+                worldLookup[v.X..","..v.Y] = v
+                if showWorldAnimations then
+                    addWorldEmitter(v)
+                    if not isTileType(v.ForegroundTile, "Dead") and isTileType(v.ForegroundTile, "Tree") and love.math.random(1,5) == 1 then
+                        if isTileType(v.ForegroundTile, "Snowy") then addLeaf(v.X*32 + 16, v.Y*32 + 16, "snowy tree")
+                        else addLeaf(v.X*32 + 16, v.Y*32 + 16, "tree") end
+                    elseif isTileType(v.ForegroundTile, "Campfire") then addLeaf(v.X*32 + 16, v.Y*32 + 8, "fire")
+                    elseif isTileType(v.ForegroundTile, "Sand") then -- addLeaf(v.X*32 + 16, v.Y*32 + 16, "sand")
+                    elseif isTileType(v.GroundTile, "Murky") then addLeaf(v.X*32, v.Y*32+16, "murky") end
                 end
+                if lightGivers[v.ForegroundTile] and not lightSource[v.X .. "," .. v.Y] then
+                    lightSource[v.X .. "," .. v.Y] = true
+                    Luven.addNormalLight(16 + (v.X * 32), 16 + (v.Y * 32), lightGivers[v.ForegroundTile].color, lightGivers[v.ForegroundTile].brightness)
+                end
+                if v.GroundTile and v.GroundTile ~= "" then originalTiles[v.X..","..v.Y] = true end
             end
         end
-    -- end
+    end
 
     for key, v in next, worldImages do if not orCalc(key, tab) then v:release( ) table.removekey(worldImages, key) end end
 
     for cx = player.wx + chunkMap[1], player.wx + chunkMap[2] do
         for cy = player.wy + chunkMap[3], player.wy + chunkMap[4] do
-            if not worldImages[cx..","..cy] then
-                -- loadChunks(cx,cy)
-                worldToCreate[#worldToCreate+1] = {cx = cx, cy = cy,}
-                -- drawChunks(cx,cy)
-            end
+            if not worldImages[cx..","..cy] then worldToCreate[#worldToCreate+1] = {cx = cx, cy = cy,} end
         end
     end
 end
