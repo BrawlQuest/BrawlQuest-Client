@@ -23,6 +23,7 @@ end
 function updateWorld(dt)
     if #worldToCreate > 0 then
         local v = worldToCreate[#worldToCreate]
+        loadChunks(v.cx, v.cy)
         drawChunks(v.cx, v.cy)
         table.remove(worldToCreate, #worldToCreate)
     end
@@ -67,7 +68,7 @@ function createWorld()
     for cx = player.wx + chunkMap[1], player.wx + chunkMap[2] do
         for cy = player.wy + chunkMap[3], player.wy + chunkMap[4] do
             if not worldImages[cx..","..cy] then
-                loadChunks(cx,cy)
+                -- loadChunks(cx,cy)
                 worldToCreate[#worldToCreate+1] = {cx = cx, cy = cy,}
                 -- drawChunks(cx,cy)
             end
