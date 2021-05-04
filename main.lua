@@ -260,6 +260,7 @@ function love.update(dt)
                 }))
             nextUpdate = 0.5
         end
+        updateWorld(dt)
         updateMouse(dt)
         updateHUD(dt)
         updateEnemies(dt)

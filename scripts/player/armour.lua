@@ -41,6 +41,5 @@ function drawAnimatedItem(v, type, x, y, dir, frame)
     elseif string.find(v[type].Name, "Studded") then
         love.graphics.draw(armour.studded[type], baseImages[frame], x, y, 0, dir, 1)
     elseif string.find(v[type].Name, "Robe") then
-
     end
 end

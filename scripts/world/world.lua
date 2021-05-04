@@ -3,6 +3,9 @@ worldImages = {}
 worldLookup = {}
 lightSource = {}
 originalTiles = {}
+worldToCreate = {
+
+}
 chunkSize = 16
 halfChunk = chunkSize / 2
 chunkMap = {-3, 2, -2, 1}
@@ -17,21 +20,12 @@ function tickWorld()
     end
 end
 
-function drawSimplexNoise(x, y)
-    local noise
-    local noiseFactor = 0.23 -- 0.18
-    local noises = {
-        love.math.noise((x * 0.009) - player.world, (y * 0.009) + player.world),
-        love.math.noise((x * 0.07) - player.world, (y * 0.07) + player.world) * 0.1,
-        love.math.noise( (x * 0.06) - player.world, (y * 0.06) + player.world),
-        love.math.noise( (x * 0.5) - player.world, (y * 0.5) + player.world) * 0.2,
-        love.math.noise( (x * 0.06) - player.world, (y * 0.06) + player.world),
-        love.math.noise( (x * 0.5) - player.world, (y * 0.5) + player.world) * 0.2,
-    }
-    islandNoise = math.clamp(0.8, noises[1] - noises[2], 1) + ((noises[3] - noises[4]) * 2 - 1) * 0.1
-    if islandNoise > 0.85 then noise = islandNoise else noise = 1 - ((noises[5] - noises[6]) * noiseFactor) end
-    noise = islandNoise
-    love.graphics.setColor(noise * 1 ,noise * 1 ,noise )
+function updateWorld(dt)
+    if #worldToCreate > 0 then
+        local v = worldToCreate[#worldToCreate]
+        drawChunks(v.cx, v.cy)
+        table.remove(worldToCreate, #worldToCreate)
+    end
 end
 
 function createWorld()
@@ -44,24 +38,26 @@ function createWorld()
     local tab = {}
     for x = chunkMap[1], chunkMap[2] do for y = chunkMap[3], chunkMap[4] do tab[#tab+1] = player.wx + x .."," .. player.wy + y end end
 
-    for key,tiles in next, worldChunks do
-        if orCalc(key, tab) then
-            for i,v in ipairs(tiles) do
-                worldLookup[v.X..","..v.Y] = v
-                if showWorldAnimations then
-                    addWorldEmitter(v)
-                    if not isTileType(v.ForegroundTile, "Dead") and isTileType(v.ForegroundTile, "Tree") and love.math.random(1,5) == 1 then
-                        if isTileType(v.ForegroundTile, "Snowy") then addLeaf(v.X*32 + 16, v.Y*32 + 16, "snowy tree")
-                        else addLeaf(v.X*32 + 16, v.Y*32 + 16, "tree") end
-                    elseif isTileType(v.ForegroundTile, "Campfire") then addLeaf(v.X*32 + 16, v.Y*32 + 8, "fire")
-                    elseif isTileType(v.ForegroundTile, "Sand") then -- addLeaf(v.X*32 + 16, v.Y*32 + 16, "sand")
-                    elseif isTileType(v.GroundTile, "Murky") then addLeaf(v.X*32, v.Y*32+16, "murky") end
+    if player.world == 0 then
+        for key,tiles in next, worldChunks do
+            if orCalc(key, tab) then
+                for i,v in ipairs(tiles) do
+                    worldLookup[v.X..","..v.Y] = v
+                    if showWorldAnimations then
+                        addWorldEmitter(v)
+                        if not isTileType(v.ForegroundTile, "Dead") and isTileType(v.ForegroundTile, "Tree") and love.math.random(1,5) == 1 then
+                            if isTileType(v.ForegroundTile, "Snowy") then addLeaf(v.X*32 + 16, v.Y*32 + 16, "snowy tree")
+                            else addLeaf(v.X*32 + 16, v.Y*32 + 16, "tree") end
+                        elseif isTileType(v.ForegroundTile, "Campfire") then addLeaf(v.X*32 + 16, v.Y*32 + 8, "fire")
+                        elseif isTileType(v.ForegroundTile, "Sand") then -- addLeaf(v.X*32 + 16, v.Y*32 + 16, "sand")
+                        elseif isTileType(v.GroundTile, "Murky") then addLeaf(v.X*32, v.Y*32+16, "murky") end
+                    end
+                    if lightGivers[v.ForegroundTile] and not lightSource[v.X .. "," .. v.Y] then
+                        lightSource[v.X .. "," .. v.Y] = true
+                        Luven.addNormalLight(16 + (v.X * 32), 16 + (v.Y * 32), lightGivers[v.ForegroundTile].color, lightGivers[v.ForegroundTile].brightness)
+                    end
+                    if v.GroundTile and v.GroundTile ~= "" then originalTiles[v.X..","..v.Y] = true end
                 end
-                if lightGivers[v.ForegroundTile] and not lightSource[v.X .. "," .. v.Y] then
-                    lightSource[v.X .. "," .. v.Y] = true
-                    Luven.addNormalLight(16 + (v.X * 32), 16 + (v.Y * 32), lightGivers[v.ForegroundTile].color, lightGivers[v.ForegroundTile].brightness)
-                end
-                if v.GroundTile and v.GroundTile ~= "" then originalTiles[v.X..","..v.Y] = true end
             end
         end
     end
@@ -72,7 +68,8 @@ function createWorld()
         for cy = player.wy + chunkMap[3], player.wy + chunkMap[4] do
             if not worldImages[cx..","..cy] then
                 loadChunks(cx,cy)
-                drawChunks(cx,cy)
+                worldToCreate[#worldToCreate+1] = {cx = cx, cy = cy,}
+                -- drawChunks(cx,cy)
             end
         end
     end
@@ -127,4 +124,21 @@ function drawWorld()
         v = explode(key, ",")
         love.graphics.draw(img, v[1] * (32 * chunkSize), v[2] * (32 * chunkSize))
     end
+end
+
+function drawSimplexNoise(x, y)
+    local noise
+    local noiseFactor = 0.23 -- 0.18
+    local noises = {
+        love.math.noise((x * 0.009) - player.world, (y * 0.009) + player.world),
+        love.math.noise((x * 0.07) - player.world, (y * 0.07) + player.world) * 0.1,
+        love.math.noise( (x * 0.06) - player.world, (y * 0.06) + player.world),
+        love.math.noise( (x * 0.5) - player.world, (y * 0.5) + player.world) * 0.2,
+        love.math.noise( (x * 0.06) - player.world, (y * 0.06) + player.world),
+        love.math.noise( (x * 0.5) - player.world, (y * 0.5) + player.world) * 0.2,
+    }
+    islandNoise = math.clamp(0.8, noises[1] - noises[2], 1) + ((noises[3] - noises[4]) * 2 - 1) * 0.1
+    if islandNoise > 0.85 then noise = islandNoise else noise = 1 - ((noises[5] - noises[6]) * noiseFactor) end
+    noise = islandNoise
+    love.graphics.setColor(noise * 1 ,noise * 1 ,noise )
 end
