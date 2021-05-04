@@ -38,7 +38,7 @@ function createWorld()
     local tab = {}
     for x = chunkMap[1], chunkMap[2] do for y = chunkMap[3], chunkMap[4] do tab[#tab+1] = player.wx + x .."," .. player.wy + y end end
 
-    if player.world == 0 then
+    -- if player.world == 0 then
         for key,tiles in next, worldChunks do
             if orCalc(key, tab) then
                 for i,v in ipairs(tiles) do
@@ -60,7 +60,7 @@ function createWorld()
                 end
             end
         end
-    end
+    -- end
 
     for key, v in next, worldImages do if not orCalc(key, tab) then v:release( ) table.removekey(worldImages, key) end end
 
