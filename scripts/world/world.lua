@@ -8,7 +8,7 @@ worldToCreate = {
 }
 chunkSize = 16
 halfChunk = chunkSize / 2
-chunkMap = {-3, 2, -2, 1}
+chunkMap = {-4, 3, -3, 2}
 chunkCount = 0
 
 function tickWorld()
