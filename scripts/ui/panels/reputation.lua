@@ -58,7 +58,6 @@ function initReputation()
         },
     }
     t = reputation
-    -- addScroller("reputation", 0, #t.items * (t.h + 10) + 160, boxMax, function () return reputation.open end)
 end
 
 function updateReputation(dt)
@@ -72,7 +71,7 @@ function drawReputation()
     love.graphics.setColor(0,0,0,0.8)
     love.graphics.rectangle("fill", x, y, w, h, 10)
     love.graphics.setColor(1,1,1,1)
-    love.graphics.printf("REPUTATION", x + 20, y + 20, t.w/6, "center", 0, 6)
+    love.graphics.printf("REPUTATION", x + 20, y + 24, t.w/6, "center", 0, 6)
 
     love.graphics.stencil(function ()
         roundRectangle("fill", x, y + 80, w, h - 80, 10, {false, false, true, true})
@@ -109,7 +108,7 @@ end
 function drawReputationItem(v, x, y, dw, dh)
 
     dw, dh = dw or t.w, dh or t.h
-    love.graphics.setColor(0,0,0,0.8)
+    love.graphics.setColor(0,0,0,0.6)
     love.graphics.rectangle("fill", x, y, dw, dh, 6)
 
     local w, h = dw, dh
@@ -129,7 +128,7 @@ function drawReputationItem(v, x, y, dw, dh)
     local ts = 2
     dx,dy = x + 10, y + dh/2 - (font:getHeight() * ts) * 0.4
     love.graphics.setColor(1,1,1)
-    love.graphics.rectangle("line", x, y, dw, dh, 6)
+    -- love.graphics.rectangle("line", x, y, dw, dh, 6)
     love.graphics.print(v.title, dx, dy, 0, ts)
     love.graphics.printf(v.rep, dx, dy, (dw - 20) / ts, "right", 0, ts)
     love.graphics.printf(v.repName, dx, dy, (dw - 20 - 60) / ts, "right", 0, ts)
@@ -144,9 +143,6 @@ function checkReputationMousePressed(button)
 end
 
 function openReputation()
-    --for each reputation thing, add to the rep.items table
-    -- t.items = {}
-    -- for each item in me.rep do
     t.open = true
     Reputation = {
         {
