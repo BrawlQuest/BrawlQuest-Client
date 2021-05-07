@@ -3,12 +3,10 @@ worldImages = {}
 worldLookup = {}
 lightSource = {}
 originalTiles = {}
-worldToCreate = {
-
-}
+worldToCreate = {}
 chunkSize = 16
 halfChunk = chunkSize / 2
-chunkMap = {-4, 3, -3, 2}
+chunkMap = {-3, 2, -2, 1}
 chunkCount = 0
 
 function tickWorld()
@@ -29,7 +27,7 @@ function updateWorld(dt)
     end
 end
 
-function createWorld()
+function createWorld(first)
     if not love.filesystem.getInfo( "img" ) then love.filesystem.createDirectory( "img" ) end
     leaves = {}
     worldEmitters = {}
@@ -40,7 +38,7 @@ function createWorld()
     for x = chunkMap[1], chunkMap[2] do for y = chunkMap[3], chunkMap[4] do tab[#tab+1] = player.wx + x .."," .. player.wy + y end end
 
     for key,tiles in next, worldChunks do
-        if orCalc(key, tab) then
+        if orCalc(key, tab) and not first then
             for i,v in ipairs(tiles) do
                 worldLookup[v.X..","..v.Y] = v
                 if showWorldAnimations then
@@ -61,13 +59,13 @@ function createWorld()
         end
     end
 
-    for key, v in next, worldImages do if not orCalc(key, tab) then v:release( ) table.removekey(worldImages, key) end end
-
     for cx = player.wx + chunkMap[1], player.wx + chunkMap[2] do
         for cy = player.wy + chunkMap[3], player.wy + chunkMap[4] do
             if not worldImages[cx..","..cy] then worldToCreate[#worldToCreate+1] = {cx = cx, cy = cy,} end
         end
     end
+
+    for key, v in next, worldImages do if not orCalc(key, tab) then v:release( ) table.removekey(worldImages, key) end end
 end
 
 function drawChunks(cx,cy)

@@ -67,6 +67,8 @@ function love.wheelmoved( dx, dy )
         elseif isMouseOver(((uiX) - 313) * scale, ((uiY) - ((uiY/1.25) - 15)) * scale, (313) * scale, ((uiY/1.25) - 106 - 14) * scale) then velYQuest = velYQuest + dy * 512
         elseif showNPCChatBackground then npcChatArg.posY = npcChatArg.posY + (dy * (npcChatArg.font:getHeight() * 0.5))
         elseif questHub.commentOpen and #quests[1] > 0 then questHub.velY = questHub.velY + dy * 512
+        elseif orders.open then
+        elseif reputation.open then
         elseif worldEdit.open then zoomCamera(dy, worldEditScales)
         else zoomCamera(dy, worldScales) end
     end

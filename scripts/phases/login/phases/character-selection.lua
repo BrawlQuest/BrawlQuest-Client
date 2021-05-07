@@ -342,7 +342,7 @@ function transitionToPhaseGame()
             titleMusic:stop()
 
             recalculateLighting()
-            createWorld()
+            -- createWorld(true)
             openTutorial(1)
             if musicVolume > 0 then
                 checkMusic()

@@ -129,6 +129,7 @@ function drawReputationItem(v, x, y, dw, dh)
     local ts = 2
     dx,dy = x + 10, y + dh/2 - (font:getHeight() * ts) * 0.4
     love.graphics.setColor(1,1,1)
+    love.graphics.rectangle("line", x, y, dw, dh, 6)
     love.graphics.print(v.title, dx, dy, 0, ts)
     love.graphics.printf(v.rep, dx, dy, (dw - 20) / ts, "right", 0, ts)
     love.graphics.printf(v.repName, dx, dy, (dw - 20 - 60) / ts, "right", 0, ts)
