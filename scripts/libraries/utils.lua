@@ -1,54 +1,55 @@
 --[[
-local t
-function initVar()
-    Var = {
-        open = true,
-        amount = 1,
-    }
-    t = Var
+Var = require "scipts"
+local t = {
+    open = true,
+    amount = 1,
+}
+
+function t:init()
+
 end
 
-function updateVar(dt)
+function t:update(dt)
     
 end
 
-function drawVar()
+function t:draw(x, y)
     local x,y = uiX / 2, uiY / 2
 
 end
 
-function checkVarKeyPressed(key)
+function t:keypressed(key)
 
 end
 
-function checkVarMousePressed(button)
+function t:mousepressed(button)
 
 end
+
+return t
 
 --[[
-initVar()
-updateVar(dt)
-drawVar()
-if Var.open then updateVar(dt) end
-if Var.open then drawVar() end
-elseif Var.open then checkVarKeyPressed(key)
-if Var.open then checkVarMousePressed(button) end
+Var:init()
+Var:update(dt)
+Var:draw(x,y)
+Var:keypressed(key)
+Var:mousepressed(button)
 ]]
 
 --[[
-function updateVar(dt)
+function t:updateVar(dt)
     for i,v in ipairs(particles.sparkles) do
         
     end
 end
 
-function drawVar()
+function t:drawVar()
     for i,v in ipairs(particles.sparkles) do
         
     end
 end
 
-function addVar()
+function t:addVar()
     
 end
 
@@ -57,6 +58,8 @@ updateVar(dt)
 drawVar()
 addVar()
 ]]
+
+function getPaddedSize(max, padding, partitions) return max / partitions - padding / partitions * (partitions - 1) end
 
 function orCalc(val, tab) -- compares a value to a table of items
     local output = false

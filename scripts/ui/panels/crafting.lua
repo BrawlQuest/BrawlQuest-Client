@@ -188,7 +188,6 @@ function drawCraftingBackground(thisX, thisY)
         crafting.overOpenField = 0
 
         for i,field in ipairs(crafting.fields) do
-
             local isMouse = isMouseOver(x * scale,y * scale,w * scale,36 * scale)
             if isMouse then
                 love.graphics.setColor(1,0,0)
@@ -199,7 +198,7 @@ function drawCraftingBackground(thisX, thisY)
                 love.graphics.setColor(0,0,0,0.7)
             end
 
-            roundRectangle("fill", x, y, w, 36, 10)
+            love.graphics.rectangle("fill", x, y, w, 36, 10)
             if crafting.openField[i] == true and not isMouse then
                 love.graphics.setColor(0,0,0)
             else
@@ -230,13 +229,13 @@ function drawCraftingBackground(thisX, thisY)
                         love.graphics.setColor(0,0,0,0.7)
                     end
 
-                    roundRectangle("fill", x, y, w, h, 10)
+                    love.graphics.rectangle("fill", x, y, w, h, 10)
                     local values = json:decode(v.ItemsString)
                     for l = 1, 4 do
                         if l == 1 then
                             if v.Item ~= null then
                                 love.graphics.setColor(1,1,1,1)
-                                drawCraftingItem(x + 10, y + 10, 0, v.Item)
+                                drawCraftingItem(x + 10, y + 10, v.Item)
                             end
                             love.graphics.printf("=", x + 51, y + 8, 8, "center", 0, 3)
                             x = x + 10 + 8
@@ -251,7 +250,7 @@ function drawCraftingBackground(thisX, thisY)
                                     end
                                 end
                                 love.graphics.setColor(1,1,1,1)
-                                drawCraftingItem(x + 10, y + 10, 0, v.ItemsItem[l], amount)
+                                drawCraftingItem(x + 10, y + 10, v.ItemsItem[l], amount)
                             else
                                 love.graphics.setColor(0,0,0,0.7)
                                 drawItemBacking(x + 10, y + 10)
@@ -289,7 +288,7 @@ function drawCraftingBackground(thisX, thisY)
             else
                 love.graphics.setColor(0,0,0,0.7)
             end
-            drawCraftingItem(x + 10, y + 10, 0, crafting.enteredItems[i].item, crafting.enteredItems[i].amount)
+            drawCraftingItem(x + 10, y + 10, crafting.enteredItems[i].item, crafting.enteredItems[i].amount)
         else
             love.graphics.setColor(0,0,0,0.7)
             drawItemBacking(x + 10, y + 10)
@@ -306,7 +305,7 @@ function drawCraftingBackground(thisX, thisY)
         love.graphics.setColor(0,0,0,0.7)
         roundRectangle("fill", x, y, w - 18, h, 10)
         love.graphics.setColor(1,1,1)
-        drawCraftingItem(x + 10, y + 10, 0, v.Item, 1)
+        drawCraftingItem(x + 10, y + 10, v.Item, 1)
         love.graphics.print(v.Item.Name, x + 54, y + 22)
     end
 
@@ -327,7 +326,7 @@ function drawCraftingBackground(thisX, thisY)
     roundRectangle("fill",thisX,thisY,crafting.w,crafting.h, 10)
 end
 
-function drawCraftingItem(thisX, thisY, field, item, amount)
+function drawCraftingItem(thisX, thisY, item, amount)
     love.graphics.setFont(inventory.itemFont)
 
     local isMouse = isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale)

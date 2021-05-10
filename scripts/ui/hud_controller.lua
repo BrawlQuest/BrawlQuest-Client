@@ -15,6 +15,7 @@ require "scripts.ui.panels.forging"
 require "scripts.ui.panels.news"
 require "scripts.ui.panels.orders"
 require "scripts.ui.panels.reputation"
+shop = require "scripts.ui.panels.shop"
 
 require "scripts.ui.mechanics.ui"
 require "scripts.ui.mechanics.zone-titles"
@@ -133,6 +134,7 @@ function updateHUD( dt )
         updateCharacterHub(dt)
         updateQuestHub(dt)
         updateCrafting(dt) -- fine
+        shop:update(dt)
         if orders.open or orders.amount > 0 then updateOrders(dt) end
         if showChat then updateChat(dt) end
         if orCalc(true, {crafting.open, not inventory.notNPC, forging.open, settPan.opacity > 0, news.alpha == 1, orders.open,}) then uiOpen = true else uiOpen = false end
@@ -192,6 +194,7 @@ function drawHUD()
         elseif news.open then drawNews()
         elseif orders.open or orders.amount > 0 then drawOrders()
         elseif reputation.open or reputation.amount > 0 then drawReputation()
+        elseif shop.open or shop.amount > 0 then shop:draw()
         end
         if itemDrag.dragging then drawItemDrag() end
     love.graphics.pop()

@@ -92,6 +92,7 @@ function checkKeyPressedPhaseGame(key)
         end
         if (key == "f" and versionType == "dev") then openOrders() end
         if key == "r" then openReputation() end
+        if key == "c" then shop:reveal() end
     end
 end
 

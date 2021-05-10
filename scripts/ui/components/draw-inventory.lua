@@ -207,7 +207,7 @@ function drawInventoryItemField(thisX, thisY, field)
 end
 
 function drawItemBacking(thisX, thisY)
-    roundRectangle("fill", thisX, thisY, inventory.images.itemBG:getWidth(), inventory.images.itemBG:getHeight(), 4)
+    love.graphics.rectangle("fill", thisX, thisY, 36, 36, 4)
 end
 
 function drawItemAmount(x,y,amount, alpha)
