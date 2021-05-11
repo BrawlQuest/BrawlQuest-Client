@@ -10,7 +10,23 @@ local t = {
             open = true,
             items = {
                 {
-                    price = 200,
+                    cost = {
+                        {
+                            amount = 100,
+                            item = {
+                                Attributes = "None",
+                                Desc = "A silky piece of string",
+                                Enchantment = "None",
+                                ID = 31,
+                                ImgPath = "assets/items/reagent/String.png",
+                                Name = "String",
+                                Type = "reagent",
+                                Val = "0",
+                                Worth = 1,
+                            },
+                        },
+                    },
+                    amount = 255,
                     item = {
                         Attributes = "None",
                         Desc = "A silky piece of string",
@@ -24,14 +40,6 @@ local t = {
                     },
                 },
             },
-        },{
-            title = "IT'S GOOD",
-            open = true,
-            items = {},
-        },{
-            title = "VERY GOOD",
-            open = true,
-            items = {},
         },
     },
 
@@ -54,15 +62,15 @@ function t:draw()
     love.graphics.rectangle("fill", x, y, t.w, t.h, 10)
     love.graphics.setColor(1,1,1,t.alpha)
     love.graphics.print("TRADING", inventory.headerFont, x + 16 , y + 14)
-    local aw, ah, pad = getPaddedSize(t.w - 20, 10, 2), 36, 10
+    local aw, ah, pad = 305, 36, 10
     local bw, bh = aw + 0, 56
     local ax, ay = x + pad, y + 80
     for i, field in ipairs(t.fields) do
         t:drawField(i,field,ax,ay,aw,ah)
         ay = ay + ah + pad
         if field.open then
-            for j,item in ipairs(field.items) do
-                t:drawItem(i,field,j,item,ax,ay,bw,bh)
+            for j,items in ipairs(field.items) do
+                t:drawItem(i,field,j,items,ax,ay,bw,bh)
                 ay = ay + bh + pad
             end
         end
@@ -76,14 +84,23 @@ function t:drawField(i,field,ax,ay,aw,ah)
     love.graphics.print(field.title, inventory.font, ax + 10, ay + 11, 0, 1)
 end
 
-function t:drawItem(i,field,j,item,x,y,w,h)
+function t:drawItem(i,field,j,items,x,y,w,h)
     love.graphics.setColor(1,0,1,0.4 * t.alpha)
     love.graphics.rectangle("fill",x,y,w,h,10)
     love.graphics.setColor(1,1,1,t.alpha)
-    drawCraftingItem(x + 10, y + 10, item, 0)
-    x = x + 56
-    love.graphics.print(item.Name, inventory.font, x, y + 11, 0, 1)
-    love.graphics.print(item.Name, inventory.font, x, y + 11, 0, 1)
+    drawCraftingItem(x + 10, y + 10, items.item, items.amount)
+    love.graphics.printf("=", x + 51, y + 8, 8, "center", 0, 3)
+    x = x + 65
+    for k = 1, 5 do
+        local item = items.cost[k]
+        if item then
+            drawCraftingItem(x + 10, y + 10, item.item, item.amount)
+        else
+            love.graphics.setColor(0,0,0,0.7)
+            drawItemBacking(x + 10, y + 10)
+        end
+        x = x + 46
+    end
 end
 
 function t:reveal()

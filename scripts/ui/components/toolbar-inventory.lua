@@ -197,7 +197,7 @@ end
 
 function isItemUnusable(item)
     if (item and me.LVL and not debugItems)  then
-        return item.Worth * 1 > me.LVL
+        return (item.Worth or 1) * 1 > me.LVL
     else return false end
 end
 
