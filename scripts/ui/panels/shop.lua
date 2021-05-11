@@ -42,6 +42,122 @@ for key, v in pairs(t.fields) do
         v.items[i] = {
             cost = {},
             amount = 255,
+            type = "npc", -- "npc" "player"
+            player = {
+                AX = 20,
+                AY = -17,
+                ActiveSpell = {
+                  Attributes = "",
+                  Desc = "",
+                  Enchantment = "",
+                  ID = 0,
+                  ImgPath = "",
+                  Name = "None",
+                  Type = "",
+                  Val = "",
+                  Worth = 0
+                },
+                ActiveSpellTimer = -7821,
+                Buddy = "assets/items/buddy/Penguin.png",
+                ChestArmour = {
+                  Attributes = "None",
+                  Desc = "A sturdy, reinforced Iron Chestplate",
+                  Enchantment = "None",
+                  ID = 39,
+                  ImgPath = "assets/player/gear/a2/chest.png",
+                  Name = "Iron Chestplate",
+                  Type = "arm_chest",
+                  Val = "18",
+                  Worth = 10
+                },
+                ChestArmourID = 39,
+                Frame = 1,
+                HP = 442,
+                HeadArmour = {
+                  Attributes = "None",
+                  Desc = "A sturdy, reinforced Iron Helmet",
+                  Enchantment = "None",
+                  ID = 38,
+                  ImgPath = "assets/player/gear/a2/head.png",
+                  Name = "Iron Helmet",
+                  Type = "arm_head",
+                  Val = "12",
+                  Worth = 10
+                },
+                HeadArmourID = 38,
+                Hotbar = {},
+                ID = 2,
+                INT = 71,
+                Invulnerability = -7810,
+                IsDead = false,
+                IsShield = false,
+                LVL = 20,
+                LastUpdate = 1620742535,
+                LegArmour = {
+                    Attributes = "None",
+                    Desc = "A sturdy, reinforced pair of Iron Leggings",
+                    Enchantment = "None",
+                    ID = 40,
+                    ImgPath = "assets/player/gear/a2/legs.png",
+                    Name = "Iron Leggings",
+                    Type = "arm_legs",
+                    Val = "12",
+                    Worth = 10
+                },
+                LegArmourID = 40,
+                Mana = 100,
+                MaxHP = 320,
+                Mount = {
+                    Attributes = "",
+                    Desc = "",
+                    Enchantment = "",
+                    ID = 0,
+                    ImgPath = "",
+                    Name = "None",
+                    Type = "",
+                    Val = "64",
+                    Worth = 0
+                },
+                Name = "Danjoe",
+                NameAlpha = 1,
+                Order = "Warrior Order",
+                Owner = "Danjoe",
+                Prestige = 3,
+                RedAlpha = 0,
+                STA = 22,
+                STR = 18,
+                Shield = {
+                    Attributes = "None",
+                    Desc = "A sturdy shield, crafted from Iron.",
+                    Enchantment = "None",
+                    ID = 57,
+                    ImgPath = "assets/player/gear/a2/shield.png",
+                    Name = "Iron Shield",
+                    Type = "shield",
+                    Val = "50",
+                    Worth = 10
+                },
+                ShieldID = 57,
+                SpellCooldown = -8723,
+                Weapon = {
+                    Attributes = "None",
+                    Desc = "A short, mostly blunt knife designed for opening small parcels.",
+                    Enchantment = "None",
+                    ID = 14,
+                    ImgPath = "assets/player/gear/a1/dagger.png",
+                    Name = "Letter Opener",
+                    Type = "wep",
+                    Val = "3",
+                    Worth = 2
+                },
+                WeaponID = 14,
+                X = 640,
+                XP = 8,
+                Y = -544,
+                previousDirection = "right"
+            },
+            name = "Lord Squabulus",
+            image = "assets/npc/Guard.png",
             item = item,
         }
         for j = 1, 4 do
@@ -77,24 +193,52 @@ function t:draw()
     local aw, ah, pad = 305, 36, 10
     local bw, bh = aw + 0, 56
     local ax, ay = x + pad, y + 10
+    local fieldHeight = 0
+
+    for i, field in ipairs(t.fields) do
+        fieldHeight = fieldHeight + ah + pad
+        if field.open then
+            for j,items in ipairs(field.items) do
+                fieldHeight = fieldHeight + bh + pad
+            end
+        end
+    end
+
+    addScroller("shopLeft", 0, fieldHeight - 10, t.h - 20, function ()
+        return isMouseOver(x, y, t.w, t.h)
+    end)
+    local bx, by = ax, ay - scrollers.shopLeft.position
 
     love.graphics.stencil(function ()
         love.graphics.rectangle("fill", ax, ay, aw, t.h - 20, 10)
     end, "replace", 1) -- stencils inventory
     love.graphics.setStencilTest("greater", 0) -- push
         for i, field in ipairs(t.fields) do
-            t:drawField(i,field,ax,ay,aw,ah)
-            ay = ay + ah + pad
+            t:drawField(i,field,bx,by,aw,ah)
+            by = by + ah + pad
             if field.open then
                 for j,items in ipairs(field.items) do
-                    t:drawItem(i,field,j,items,ax,ay,bw,bh)
-                    ay = ay + bh + pad
+                    t:drawItem(i,field,j,items,bx,by,bw,bh)
+                    by = by + bh + pad
                 end
             end
         end
     love.graphics.setStencilTest()
 
-
+    local cw, ch = 266, 76
+    local cx, cy = ax + aw + 10, ay
+    love.graphics.setColor(0.2,0.2,0.2,0.8 * t.alpha)
+    love.graphics.rectangle("fill", cx, cy, cw, ch, 10)
+    if t.selected ~= "" then
+        local e = explode(t.selected, ",")
+        local v = t.fields[e[2]].items[e[3]]
+        if v.type == "player" then
+            drawProfilePic(cx + 6, cy + 6, 1, "right",v.player)
+        else drawNPCProfilePic(cx + 6, cy + 6, 1, "right", v.image)
+        end
+        love.graphics.setColor(1,1,1,t.alpha)
+        love.graphics.printf(v.name, inventory.font, cx + ch + 10, cy + 10, cw - (ch + 20), "left")
+    end
 end
 
 function t:drawTab(i, x, y)
@@ -155,7 +299,7 @@ function t:keypressed(key)
 end
 
 function t:mousepressed(button)
-
+    if t.mouseOver ~= "" then t.selected = t.mouseOver end
 end
 
 return t

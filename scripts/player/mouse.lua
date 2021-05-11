@@ -20,6 +20,7 @@ function love.mousepressed(x, y, button)
         if forging.open then checkForgingMousePressed(button) end
         if news.open then checkNewsMousePressed(button) end
         if orders.open then checkOrdersMousePressed(button) end
+        if shop.open then shop:mousepressed(button) end
     end
 end
 
@@ -69,6 +70,7 @@ function love.wheelmoved( dx, dy )
         elseif questHub.commentOpen and #quests[1] > 0 then questHub.velY = questHub.velY + dy * 512
         elseif orders.open then
         elseif reputation.open then
+        elseif shop.open then
         elseif worldEdit.open then zoomCamera(dy, worldEditScales)
         else zoomCamera(dy, worldScales) end
     end

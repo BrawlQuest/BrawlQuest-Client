@@ -117,12 +117,13 @@ function arrayContains(tab, val)
 end
 
 function explode (inputstr, sep)
-    sep = sep or ","
-    if inputstr then
-        local t = {}
-        for str in string.gmatch(inputstr, "([^"..sep.."]+)") do table.insert(t, str) end
-        return t
-    else return {""} end
+    sep = sep or "%s"
+    local t={}
+    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+        if tonumber(str) then str = tonumber(str) end
+        table.insert(t, str)
+    end
+    return t
 end
 
 function distanceToPoint(x,y,x2,y2)
