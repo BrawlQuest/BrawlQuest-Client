@@ -187,7 +187,7 @@ function drawHUD()
 
     love.graphics.push()
         love.graphics.scale(scale)
-        drawTooltip()
+
         if challenges.open then drawChallenges()
         elseif forging.open then drawForging()
         elseif enchanting.open then drawEnchanting()
@@ -197,6 +197,7 @@ function drawHUD()
         elseif shop.open or shop.amount > 0 then shop:draw()
         end
         if itemDrag.dragging then drawItemDrag() end
+        drawTooltip()
     love.graphics.pop()
 end
 
