@@ -179,7 +179,6 @@ function openReputation()
     }
 
     t.items = {}
-
     for i,v in ipairs(Reputation) do
         local repName, repNumber = getRepInfo(v.Value)
         if v.Faction == me.Order then t.order = {title = v.Faction, rep = v.Value,}
