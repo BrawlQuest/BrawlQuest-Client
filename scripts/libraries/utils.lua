@@ -117,7 +117,7 @@ function arrayContains(tab, val)
 end
 
 function explode (inputstr, sep)
-    sep = sep or "%s"
+    sep = sep or ","
     local t={}
     for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
         if tonumber(str) then str = tonumber(str) end

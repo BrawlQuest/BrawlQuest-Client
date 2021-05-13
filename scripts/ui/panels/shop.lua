@@ -21,7 +21,7 @@ local t = {
             items = {},
         },
     },
-    selected = "",
+    selected = "item,1,1",
     mouseOver = "",
 }
 
@@ -44,21 +44,6 @@ for key, v in pairs(t.fields) do
             amount = 255,
             type = "npc", -- "npc" "player"
             player = {
-                AX = 20,
-                AY = -17,
-                ActiveSpell = {
-                  Attributes = "",
-                  Desc = "",
-                  Enchantment = "",
-                  ID = 0,
-                  ImgPath = "",
-                  Name = "None",
-                  Type = "",
-                  Val = "",
-                  Worth = 0
-                },
-                ActiveSpellTimer = -7821,
-                Buddy = "assets/items/buddy/Penguin.png",
                 ChestArmour = {
                   Attributes = "None",
                   Desc = "A sturdy, reinforced Iron Chestplate",
@@ -70,9 +55,6 @@ for key, v in pairs(t.fields) do
                   Val = "18",
                   Worth = 10
                 },
-                ChestArmourID = 39,
-                Frame = 1,
-                HP = 442,
                 HeadArmour = {
                   Attributes = "None",
                   Desc = "A sturdy, reinforced Iron Helmet",
@@ -85,76 +67,10 @@ for key, v in pairs(t.fields) do
                   Worth = 10
                 },
                 HeadArmourID = 38,
-                Hotbar = {},
                 ID = 2,
-                INT = 71,
-                Invulnerability = -7810,
-                IsDead = false,
-                IsShield = false,
-                LVL = 20,
-                LastUpdate = 1620742535,
-                LegArmour = {
-                    Attributes = "None",
-                    Desc = "A sturdy, reinforced pair of Iron Leggings",
-                    Enchantment = "None",
-                    ID = 40,
-                    ImgPath = "assets/player/gear/a2/legs.png",
-                    Name = "Iron Leggings",
-                    Type = "arm_legs",
-                    Val = "12",
-                    Worth = 10
-                },
-                LegArmourID = 40,
-                Mana = 100,
-                MaxHP = 320,
-                Mount = {
-                    Attributes = "",
-                    Desc = "",
-                    Enchantment = "",
-                    ID = 0,
-                    ImgPath = "",
-                    Name = "None",
-                    Type = "",
-                    Val = "64",
-                    Worth = 0
-                },
                 Name = "Danjoe",
-                NameAlpha = 1,
                 Order = "Warrior Order",
                 Owner = "Danjoe",
-                Prestige = 3,
-                RedAlpha = 0,
-                STA = 22,
-                STR = 18,
-                Shield = {
-                    Attributes = "None",
-                    Desc = "A sturdy shield, crafted from Iron.",
-                    Enchantment = "None",
-                    ID = 57,
-                    ImgPath = "assets/player/gear/a2/shield.png",
-                    Name = "Iron Shield",
-                    Type = "shield",
-                    Val = "50",
-                    Worth = 10
-                },
-                ShieldID = 57,
-                SpellCooldown = -8723,
-                Weapon = {
-                    Attributes = "None",
-                    Desc = "A short, mostly blunt knife designed for opening small parcels.",
-                    Enchantment = "None",
-                    ID = 14,
-                    ImgPath = "assets/player/gear/a1/dagger.png",
-                    Name = "Letter Opener",
-                    Type = "wep",
-                    Val = "3",
-                    Worth = 2
-                },
-                WeaponID = 14,
-                X = 640,
-                XP = 8,
-                Y = -544,
-                previousDirection = "right"
             },
             name = "Lord Squabulus",
             image = "assets/npc/Guard.png",
@@ -228,7 +144,7 @@ function t:draw()
     local cw, ch = 266, 76
     local cx, cy = ax + aw + 10, ay
     love.graphics.setColor(0.2,0.2,0.2,0.8 * t.alpha)
-    love.graphics.rectangle("fill", cx, cy, cw, ch, 10)
+    roundRectangle("fill", cx, cy, cw, ch, 10, {true, true, true, false,})
     if t.selected ~= "" then
         local e = explode(t.selected, ",")
         local v = t.fields[e[2]].items[e[3]]
@@ -256,7 +172,7 @@ function t:drawField(i,field,x,y,w,h)
     local isMouse = isMouseOver(x * scale, y * scale, w * scale, h * scale)
     if isMouse then
         t.mouseOver = "field,"..i
-        love.graphics.setColor(1,0,0,t.alpha)
+        love.graphics.setColor(0.4,0.4,0.4,t.alpha)
     else
         love.graphics.setColor(0.3,0.3,0.3,0.8 * t.alpha)
     end
@@ -267,9 +183,12 @@ end
 
 function t:drawItem(i,field,j,items,x,y,w,h)
     local isMouse = isMouseOver(x * scale, y * scale, w * scale, h * scale)
-    if isMouse then
-        t.mouseOver = "item,"..i..","..j
+    if t.selected == "item,"..i..","..j then
         love.graphics.setColor(1,0,0,t.alpha)
+    elseif isMouse then
+        t.mouseOver = "item,"..i..","..j
+        love.graphics.setColor(0.3,0.3,0.3,t.alpha)
+        y = y - 1
     else
         love.graphics.setColor(0.2,0.2,0.2,0.8 * t.alpha)
     end
@@ -299,7 +218,12 @@ function t:keypressed(key)
 end
 
 function t:mousepressed(button)
-    if t.mouseOver ~= "" then t.selected = t.mouseOver end
+    if t.mouseOver ~= "" then
+        local e = explode(t.mouseOver)
+        if e[1] == "item" then t.selected = t.mouseOver
+        elseif e[1] == "field" then t.fields[e[2]].open = not t.fields[e[2]].open
+        end
+    end
 end
 
 return t
