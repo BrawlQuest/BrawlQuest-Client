@@ -37,41 +37,55 @@ local item = {
     Worth = 1,
 }
 
+local standardPlayer = {
+    ChestArmour = {
+      Attributes = "None",
+      Desc = "A sturdy, reinforced Iron Chestplate",
+      Enchantment = "None",
+      ID = 39,
+      ImgPath = "assets/player/gear/a2/chest.png",
+      Name = "Iron Chestplate",
+      Type = "arm_chest",
+      Val = "18",
+      Worth = 10
+    },
+    HeadArmour = {
+      Attributes = "None",
+      Desc = "A sturdy, reinforced Iron Helmet",
+      Enchantment = "None",
+      ID = 38,
+      ImgPath = "assets/player/gear/a2/head.png",
+      Name = "Iron Helmet",
+      Type = "arm_head",
+      Val = "12",
+      Worth = 10
+    },
+    HeadArmourID = 38,
+    ID = 2,
+    Name = "Danjoe",
+    Order = "Warrior Order",
+    Owner = "Danjoe",
+}
+
+local ghostItem = {
+    Attributes = "None",
+    Desc = "These are reputation tokens that can be traded and sold.",
+    Enchantment = "None",
+    ID = 0,
+    ImgPath = "assets/player/gear/a2/head.png",
+    Name = "Mages Order Reputation",
+    Type = "rep",
+    Val = "12",
+    Worth = 10,
+}
+
 for key, v in pairs(t.fields) do
     for i = 1, 4 do
         v.items[i] = {
             cost = {},
             amount = 255,
             type = "npc", -- "npc" "player"
-            player = {
-                ChestArmour = {
-                  Attributes = "None",
-                  Desc = "A sturdy, reinforced Iron Chestplate",
-                  Enchantment = "None",
-                  ID = 39,
-                  ImgPath = "assets/player/gear/a2/chest.png",
-                  Name = "Iron Chestplate",
-                  Type = "arm_chest",
-                  Val = "18",
-                  Worth = 10
-                },
-                HeadArmour = {
-                  Attributes = "None",
-                  Desc = "A sturdy, reinforced Iron Helmet",
-                  Enchantment = "None",
-                  ID = 38,
-                  ImgPath = "assets/player/gear/a2/head.png",
-                  Name = "Iron Helmet",
-                  Type = "arm_head",
-                  Val = "12",
-                  Worth = 10
-                },
-                HeadArmourID = 38,
-                ID = 2,
-                Name = "Danjoe",
-                Order = "Warrior Order",
-                Owner = "Danjoe",
-            },
+            player = standardPlayer,
             name = "Lord Squabulus",
             image = "assets/npc/Guard.png",
             item = item,
@@ -79,7 +93,7 @@ for key, v in pairs(t.fields) do
         for j = 1, 4 do
             v.items[i].cost[j] = {
                 amount = 100,
-                item = item,
+                item = ghostItem,
             }
         end
     end
@@ -149,7 +163,7 @@ function t:draw()
         local e = explode(t.selected, ",")
         local v = t.fields[e[2]].items[e[3]]
         if v.type == "player" then
-            drawProfilePic(cx + 6, cy + 6, 1, "right",v.player)
+            drawProfilePic(cx + 6, cy + 6, 1, "right", v.player)
         else drawNPCProfilePic(cx + 6, cy + 6, 1, "right", v.image)
         end
         love.graphics.setColor(1,1,1,t.alpha)
@@ -182,6 +196,34 @@ function t:drawField(i,field,x,y,w,h)
 end
 
 function t:drawItem(i,field,j,items,x,y,w,h)
+    local isMouse = isMouseOver(x * scale, y * scale, w * scale, h * scale)
+    if t.selected == "item,"..i..","..j then
+        love.graphics.setColor(1,0,0,t.alpha)
+    elseif isMouse then
+        t.mouseOver = "item,"..i..","..j
+        love.graphics.setColor(0.3,0.3,0.3,t.alpha)
+        y = y - 1
+    else
+        love.graphics.setColor(0.2,0.2,0.2,0.8 * t.alpha)
+    end
+    love.graphics.rectangle("fill",x,y,w,h,10)
+    love.graphics.setColor(1,1,1,t.alpha)
+    drawCraftingItem(x + 10, y + 10, items.item, items.amount)
+    love.graphics.printf("=", x + 51, y + 8, 8, "center", 0, 3)
+    x = x + 65
+    for k = 1, 5 do
+        local item = items.cost[k]
+        if item then
+            drawCraftingItem(x + 10, y + 10, item.item, item.amount)
+        else
+            love.graphics.setColor(0,0,0,0.7)
+            drawItemBacking(x + 10, y + 10)
+        end
+        x = x + 46
+    end
+end
+
+function t:drawGhostItem(i,field,j,items,x,y,w,h)
     local isMouse = isMouseOver(x * scale, y * scale, w * scale, h * scale)
     if t.selected == "item,"..i..","..j then
         love.graphics.setColor(1,0,0,t.alpha)

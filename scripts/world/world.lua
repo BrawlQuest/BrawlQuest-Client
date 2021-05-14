@@ -12,7 +12,7 @@ chunkCount = 0
 function tickWorld()
     player.wx, player.wy = math.floor((player.x + halfChunk) / chunkSize), math.floor((player.y + halfChunk) / chunkSize)
     player.worldPosition = player.wx .. "," .. player.wy
-    if player.worldPosition ~= player.prevWorldPosition then
+    if player.worldPosition ~= player.prevWorldPosition or not worldLookup[player.worldPosition] then
         player.prevWorldPosition = player.worldPosition
         createWorld()
     end
