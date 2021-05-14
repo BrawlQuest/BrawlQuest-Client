@@ -202,17 +202,6 @@ function getDrawableWater(tileName, x, y)
 end
 
 function isNearbyTile(name)
-    -- local tab = {}
-    -- for x = -1, 1 do
-    --     for y = -1, 1 do
-    --         tab[#tab+1] = worldLookup[player.x + x ..",".. player.y + y]
-    --     end
-    -- end
-
-    -- for i,v in ipairs(tab) do
-    --     tab[#tab+1] = v.ForegroundTile == name
-    -- end
-
     return worldLookup[player.x+1 ..","..player.y] and worldLookup[player.x-1 ..","..player.y] and worldLookup[player.x ..","..player.y+1] and
       worldLookup[player.x..","..player.y-1] and
       (worldLookup[player.x+1 ..","..player.y].ForegroundTile == name or worldLookup[player.x-1 ..","..player.y].ForegroundTile == name or

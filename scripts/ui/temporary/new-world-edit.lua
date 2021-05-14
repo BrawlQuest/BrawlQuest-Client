@@ -625,12 +625,14 @@ function getWorldInfo()
     for key,tiles in next, worldChunks do
         if orCalc(key, {player.wx - 1 ..","..player.wy - 1, player.wx..","..player.wy - 1, player.wx - 1 ..","..player.wy, player.wx..","..player.wy,}) then
             for i,v in ipairs(tiles) do
-                local location = worldLookup[v.X..","..v.Y].Name
-                if not arrayContains(availablePlaceNames, location) and not string.find(location, "Dominion") then
-                    availablePlaceNames[#availablePlaceNames + 1] = location
-                end
-                if not arrayContains(avaliableMusic, worldLookup[v.X..","..v.Y].Music) then
-                    avaliableMusic[#avaliableMusic + 1] = worldLookup[v.X..","..v.Y].Music
+                if  worldLookup[v.X..","..v.Y] then
+                    local location = worldLookup[v.X..","..v.Y].Name or ""
+                    if not arrayContains(availablePlaceNames, location) and not string.find(location, "Dominion") then
+                        availablePlaceNames[#availablePlaceNames + 1] = location
+                    end
+                    if not arrayContains(avaliableMusic, worldLookup[v.X..","..v.Y].Music) then
+                        avaliableMusic[#avaliableMusic + 1] = worldLookup[v.X..","..v.Y].Music
+                    end
                 end
             end
         end

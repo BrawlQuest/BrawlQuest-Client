@@ -66,12 +66,6 @@ function updateMusic(dt)
             end
         end
 
-        -- if enemiesInAggro == 0 and not arrayContains(worldMusic, currentTrack) then
-        --     switchMusic(worldMusic[love.math.random(1, #worldMusic)])
-        -- elseif not arrayContains(battleMusic, currentTrack) and enemiesInAggro > 0 then
-        --     switchMusic(battleMusic[love.math.random(1, #battleMusic)])
-        -- end
-
         if isSwitching then
             if arrayContains(battleMusic, nextTrack) then
                 musicSwitchAmount = musicSwitchAmount - 2 * dt

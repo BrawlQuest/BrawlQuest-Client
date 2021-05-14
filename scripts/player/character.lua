@@ -3,10 +3,11 @@
     as a means of controlling the character.
 ]]
 player = {
+    world = 0,  -- 0 default
     x = -15,
+    y = -15,    
     dx = 15 * 32,
     dy = 15 * 32,
-    y = -15,
     cx = 0,
     cy = 0,
     hp = 100,
@@ -152,9 +153,7 @@ function worldCollison(x, y)
             output = true
         end
     end
-     if enemyCollisions[x] and enemyCollisions[x][y] == true and me and me.Invulnerability < 0 then
-        output = true
-    end
+    if enemyCollisions[x..","..y] and me and me.Invulnerability < 0 then output = true end
     return output
 end
 
@@ -172,7 +171,7 @@ function movePlayer(dt)
             not death.open,
             not forging.forging,
             news.alpha ~= 1,
-            not player.attacking,
+            -- not player.attacking,
         }) then -- movement smoothing has finished
         local prev = {x = player.x, y = player.y}
         if love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.LEFT) and not (worldCollison(prev.x - 1, prev.y - 1) or worldCollison(prev.x - 1, prev.y) or worldCollison(prev.x, prev.y - 1)) then
@@ -211,7 +210,7 @@ function movePlayer(dt)
             end
         end
 
-        if (prev.x ~= player.x or prev.y ~= player.y) or worldEdit.open then
+        if (prev.x ~= player.x or prev.y ~= player.y) then--or worldEdit.open then
             player.x = prev.x
             player.y = prev.y
             if me and me.Mount and not orCalc(me.Mount.Name, {"", "None",}) and worldLookup[player.x..","..player.y]then
@@ -278,8 +277,6 @@ function movePlayer(dt)
                 if player.cy >= y then player.dy = y end
             end
         end
-
-        -- if distance < 1 then isMoving = false end
     else
         isMoving = false
     end

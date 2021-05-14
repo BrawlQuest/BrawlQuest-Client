@@ -90,10 +90,6 @@ function drawRangedWeaponEffects()
             local originY = player.dy + 16
             local destX = cerp(originX, paths[#paths].x * 32 + 16, 1 - target.amount)
             local destY = cerp(originY, paths[#paths].y * 32 + 16, 1 - target.amount)
-            -- local destX = paths[#paths].x * 32 + 16
-            -- local destY = paths[#paths].y * 32 + 16
-            -- love.graphics.line(originX, originY, destX, destY)
-            -- love.graphics.setBlendMode("add")
             love.graphics.setColor(1,0.5,0.5,0.9 * ((target.amount)))
             love.graphics.push()
             love.graphics.translate(destX, destY)

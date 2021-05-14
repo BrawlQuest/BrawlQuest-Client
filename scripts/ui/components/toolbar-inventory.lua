@@ -111,26 +111,16 @@ end
 
 function getItemType(v)
     local t = 10
-    if v.Item.Type == "wep" then
-        t = 1
-    elseif v.Item.Type == "spell" then
-        t = 2
-    elseif string.sub(v.Item.Type, 1, 4) == "arm_" or v.Item.Type == "shield" then
-        t = 3
-    elseif v.Item.Type == "ore" then
-        t = 4
-    elseif v.Item.Type == "reagent" then
-        t = 5
-    elseif v.Item.Type == "consumable" then 
-        t = 6
-    elseif v.Item.Type == "mount" then
-        t = 7
-    elseif v.Item.Type == "buddy" then
-        t = 8
-    elseif v.Item.Type == "wall" or v.Item.Type == "floor" or v.Item.Type == "furniture" then
-        t = 9
-    end
-    return t
+    if v.Item.Type == "wep" then t = 1
+    elseif v.Item.Type == "spell" then t = 2
+    elseif string.sub(v.Item.Type, 1, 4) == "arm_" or v.Item.Type == "shield" then t = 3
+    elseif v.Item.Type == "ore" then t = 4
+    elseif v.Item.Type == "reagent" then t = 5
+    elseif v.Item.Type == "consumable" then t = 6
+    elseif v.Item.Type == "mount" then t = 7
+    elseif v.Item.Type == "buddy" then t = 8
+    elseif v.Item.Type == "wall" or v.Item.Type == "floor" or v.Item.Type == "furniture" then t = 9
+    end return t
 end
 
 function getInventory()
@@ -140,9 +130,6 @@ function getInventory()
         userInventory[i] = {}
         inventoryFieldLength[i] = 0
     end
-
-  
-
 
     for i, v in ipairs(inventoryAlpha) do
         local t = getItemType(v)
@@ -182,8 +169,7 @@ function getFullUserInventoryFieldHeight()
         if inventoryFieldLength[i] ~= 0 then
             j = j + getUserInventoryFieldHeight(i)
         end
-    end
-    return j
+    end return j
 end
 
 function checkInventoryMousePressed(button)
@@ -211,7 +197,7 @@ end
 
 function isItemUnusable(item)
     if (item and me.LVL and not debugItems)  then
-        return item.Worth * 1 > me.LVL
+        return (item.Worth or 1) * 1 > me.LVL
     else return false end
 end
 

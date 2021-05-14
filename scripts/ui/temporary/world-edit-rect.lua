@@ -254,9 +254,7 @@ function standardIfStatement(x, y)
     worldEdit.draw[x][y][6] = "*"
 end
 
-function boolToInt(value)
-    return value and 1 or 0
-end
+function boolToInt(value) return value and 1 or 0 end
 
 function boolToString(bool)
     if bool == true then return "true" elseif bool == false then return "false" else return bool end

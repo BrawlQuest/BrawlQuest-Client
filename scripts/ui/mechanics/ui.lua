@@ -16,7 +16,7 @@ function drawStandardButton(x,y,w,h,t)
     local isMouse
     if t.disabled then isMouse = not t.disabled else isMouse = isMouseOver(x * scale, y * scale, w * scale, h * scale) end
     local text
-    if isMouse or (t.select and t.select()) then buttonToggleActions(t, "on", {1,0,0,1}) y = y - 4 else buttonToggleActions(t, "off", {0,0,0,0.8}) end
+    if isMouse or (t.select and t.select()) then buttonToggleActions(t, "on", {1,0,0,1}) y = y - 1 else buttonToggleActions(t, "off", {0,0,0,0.8}) end
     love.graphics.rectangle("fill", x, y, w, h, 10)
     if isMouse or (t.select and t.select()) then if t.fgColor then love.graphics.setColor(unpack(t.fgColor.on)) else love.graphics.setColor(1,1,1) end
     else if t.fgColor then love.graphics.setColor(unpack(t.fgColor.off)) else love.graphics.setColor(1,1,1, 1 - 0.5 * boolToInt(t.disabled)) end end

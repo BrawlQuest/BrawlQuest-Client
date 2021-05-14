@@ -48,7 +48,6 @@ function addScroller(key, min, max, boxMax, allowed)
     end
 end
 
-
 --[[
 initScrolling()a
 updateScrolling(dt)
