@@ -114,5 +114,9 @@ function initHardData()
             brightness = 0.7,
             color ={1,0,0.8}
         },
+        ["assets/world/objects/Standing Light.png"] = {
+            brightness = 1,
+            color ={1,0.3,0.1}
+        },
     }
 end
