@@ -21,7 +21,7 @@ tutorial = {
     },
     {
         title = "Inventory Management",
-        desc = "Press "..keybinds.INVENTORY.." to open your inventory or hover the mouse over the left side of the screen. Items stack infinitely and there's no limit to how many items you can hold.\n\nPress 1 - 7 on the keyboard whilst hovering over an item to add it to your quick select bar for easy access.",
+        desc = "Press "..keybinds.INVENTORY.." to open your inventory or hover the mouse over the left side of the screen. Items stack infinitely and there's no limit to how many items you can hold.\n\nClick and drag an item to add it to your quick select bar below the inventory for easy access.",
     },
     {
         title = "You've levelled up!",
