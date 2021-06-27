@@ -234,7 +234,7 @@ function continueConversation()
                 if b ~= nil then
                     npcChat = json:decode(table.concat(b))
                     local optionString = npcChat.Options
-                    optionString = string.gsub(optionString, "'s", 's')
+                 --   optionString = string.gsub(optionString, "'s", 's')
                     optionString = string.gsub(optionString, "'t", 't')
                     optionString = string.gsub(optionString, "'ll", 'll')
                     optionString = string.gsub(optionString, "'ve", 've')

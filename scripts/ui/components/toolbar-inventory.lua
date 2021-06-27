@@ -197,8 +197,29 @@ end
 
 function isItemUnusable(item)
     if (item and me.LVL and not debugItems)  then
+        if item.Subtype and item.Subtype ~= "None" and item.Subtype ~= "Light" and me.Order ~= "None" then
+            if item.Type:sub(1,3) == "arm" then
+                if item.Subtype == "Heavy" and me.Order ~= "Stoic Order" then
+                    return true
+                elseif item.Subtype == "Medium" and (me.Order ~= "Stoic Order" and me.Order ~= "Warrior Order") then
+                    return true
+                end
+            elseif item.Type == "wep" then
+                if item.Subtype == "Heavy" and me.Order ~= "Warrior Order" then
+                    return true
+                elseif item.Subtype == "Medium" and (me.Order ~= "Stoic Order" and me.Order ~= "Warrior Order") then
+                    return true
+                end
+            elseif item.Type == "spell" then
+                if item.Subtype == "High Mastery" and me.Order ~= "Mage Order" then
+                    return true
+                end
+            end
+        end
         return (item.Worth or 1) * 1 > me.LVL
-    else return false end
+    else
+        return false
+    end
 end
 
 function isSpellUnusable(item)
