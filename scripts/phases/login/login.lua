@@ -37,7 +37,7 @@ function initLogin()
 
     loginText = {
         "BrawlQuest " .. version .. " " .. versionNumber,
-        "Luven Interactive LTD 2020",
+        "Luven Interactive LTD 2020 - 2021",
         "",
         "Created By" ,
         "Thomas Lock & Danjoe Stubbs",

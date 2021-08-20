@@ -53,8 +53,8 @@ version = "Early Access"
 versionType = "dev" -- "dev" for quick login, "release" for not
 useSteam = true -- turn off for certain naughty computers
 if versionType == "dev" then require 'dev' end
-versionNumber = "1.3.1" -- very important for settings
-drawAnimations = false
+versionNumber = "1.4.0" -- very important for settings
+drawAnimations = false -- player animations
 
 if love.system.getOS() ~= "Linux" and useSteam then steam = require 'luasteam' end -- we can disable other platforms here. Can't get Steam working on Linux and we aren't targetting it so this'll do for dev purposes
 json = require("scripts.libraries.json")
@@ -225,7 +225,7 @@ function love.draw()
         love.graphics.setColor(1, 1, 1)
         love.graphics.setFont(settPan.itemFont)
         local text
-        if true then text = "BrawlQuest "..version.." "..versionNumber.. "\nPress \"r\" to open reputation" .. "\nX,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount .."\n"..playersOnline
+        if true then text = "BrawlQuest "..version.." "..versionNumber.. "\nPress \"r\" to enable animations preview" .. "\nX,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount .."\n"..playersOnline
         else text = "X,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount end
         love.graphics.print(text, offset, 10)
     end
