@@ -291,7 +291,7 @@ function love.update(dt)
         if enchanting.amount >= 0.01 then updateEnchanting(dt) end
         updateCamera(dt)
         updateOtherPlayers(dt)
-        serverResponce()
+        serverResponse()
     end
 end
 
