@@ -61,6 +61,7 @@ function serverResponse()
                     perks.stats = {me.STR, me.INT, me.STA, player.cp}
                 end
                 if me.IsDead == true then
+                    love.audio.play(deathSfx)
                     c, h = http.request {
                         url = api.url .. "/revive/" .. username,
                         method = "GET",
