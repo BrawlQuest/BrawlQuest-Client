@@ -1,4 +1,4 @@
-function serverResponce()
+function serverResponse()
     local info = love.thread.getChannel('players'):pop()
     if info then
         local response = json:decode(info)

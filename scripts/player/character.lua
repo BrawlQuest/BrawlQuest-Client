@@ -178,6 +178,7 @@ function movePlayer(dt)
             prev.y = prev.y - 1
             prev.x = prev.x - 1
             player.previousDirection = "left"
+          
         elseif love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.RIGHT) and not (worldCollison(prev.x + 1, prev.y - 1) or worldCollison(prev.x + 1, prev.y) or worldCollison(prev.x, prev.y - 1)) then
             prev.y = prev.y - 1
             prev.x = prev.x + 1
@@ -213,7 +214,7 @@ function movePlayer(dt)
         if (prev.x ~= player.x or prev.y ~= player.y) then--or worldEdit.open then
             player.x = prev.x
             player.y = prev.y
-            if me and me.Mount and not orCalc(me.Mount.Name, {"", "None",}) and worldLookup[player.x..","..player.y]then
+            if me and me.Mount and worldLookup[player.x..","..player.y] then
                 playFootstepSound(worldLookup[player.x..","..player.y], player.x, player.y, true)
             end
             isMoving = true

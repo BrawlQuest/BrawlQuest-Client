@@ -116,16 +116,16 @@ function updateLoot(dt)
 
         if distanceToPoint(player.dx+16, player.dy+16, v.x, v.y) < 32 and v.phase ~= "initial" then
             if v.type == "xp" then
-                xpSfx:stop()
-                xpSfx:setPitch(1 + (player.xp/100))
-                xpSfx:setRelative(true)
-                setEnvironmentEffects(xpSfx)
-                xpSfx:play()
+                local nsfx = xpSfx:clone()
+                nsfx:setPitch(1 + (player.xp/100))
+                -- xpSfx:setRelative(true)
+                -- setEnvironmentEffects(xpSfx)
+                love.audio.play(nsfx)
             else
-                lootSfx:stop()
-                setEnvironmentEffects(lootSfx)
-                -- lootSfx:setRolloff(sfxRolloff)
-                lootSfx:play()
+                local nsfx = lootSfx[love.math.random(1,#lootSfx)]:clone()
+                nsfx:setVolume(0.5*sfxVolume)
+             
+                love.audio.play(nsfx)
             end
             player.xp = player.xp + 1
             table.remove(loot, i)

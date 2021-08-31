@@ -4,9 +4,9 @@ worldLookup = {}
 lightSource = {}
 originalTiles = {}
 worldToCreate = {}
-chunkSize = 16
+chunkSize = 4
 halfChunk = chunkSize / 2
-chunkMap = {-3, 2, -2, 1}
+chunkMap = {-8, 8, -6, 6} --{-3, 2, -2, 1}
 chunkCount = 0
 
 function tickWorld()

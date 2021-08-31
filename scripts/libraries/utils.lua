@@ -116,6 +116,15 @@ function arrayContains(tab, val)
     return false
 end
 
+function stringArrayContains(tab, val)
+    for index, value in ipairs(tab) do
+        if string.match(val, value) then
+            return true
+        end
+    end
+    return false
+end
+
 function explode (inputstr, sep)
     sep = sep or ","
     local t={}

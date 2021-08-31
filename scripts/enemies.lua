@@ -95,6 +95,7 @@ function newEnemyData(data) -- called when nearby data is returned
         if enemy.HP ~= v.HP then
             if enemy.HP > v.HP then
                 boneSpurt(enemy.dx + 16, enemy.dy + 16, 4, 20, 1, 1, 1, "mob", v.Enemy.Name)
+               
                 if sfxVolume > 0 then
                     enemyHitSfx:setPitch(love.math.random(50, 100) / 100)
                     enemyHitSfx:setVolume(0.5 * sfxVolume)
