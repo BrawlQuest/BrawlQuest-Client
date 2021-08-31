@@ -350,7 +350,7 @@ function transitionToPhaseGame()
             love.filesystem.write("world.txt", json:encode_pretty(world))
         end
 
-        if b[1] then
+        if #world > 0 then
             initWorldTable(world)
             awakeSfx:play()
             love.graphics.setBackgroundColor(0, 0, 0)
