@@ -202,11 +202,11 @@ function drawPlayer(v, i)
                     elseif targetKeys[4] then diffX = 1
                     else diffX = 0 end
                 end
+                drawArrowImage(diffX, diffY, v.X, v.Y)
             else
                 diffX = thisPlayer.AX - thisPlayer.X
                 diffY = thisPlayer.AY - thisPlayer.Y
             end
-            drawArrowImage(diffX, diffY, v.X, v.Y)
         end
         local underCharacterBarY = v.Y+34
         local thisHealth
@@ -234,7 +234,7 @@ function drawPlayer(v, i)
 end
 
 function drawArrowImage(diffX, diffY, x, y)
-    if arrowData[diffX] ~= nil and arrowData[diffX][diffY] ~= nil then
+    if arrowData[diffX] and arrowData[diffX][diffY] then
         local v = arrowData[diffX][diffY]
         local size = 32
         love.graphics.setColor(1, cerp(0.1, 0.8, attackHitAmount), 0, 1)

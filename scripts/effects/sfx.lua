@@ -114,6 +114,7 @@ function setSFXVolumes()
 end
 
 function playFootstepSound(v, x, y, relative)
+
     stepSfx:stop()
     if v and stepSounds[v.GroundTile] then
         stepSfx = stepSounds[v.GroundTile]

@@ -320,7 +320,9 @@ function transitionToPhaseGame()
     -- print(json:encode_pretty(characters[cs.selectedCharacter]))
     me.Color = copy(characters[cs.selectedCharacter].Color)
     username = characters[cs.selectedCharacter]["Name"]
+
     local b = {}
+    print("loading players")
     c, h = http.request{url = api.url.."/players/"..username, method="GET", headers={["token"]=token}, sink=ltn12.sink.table(b)}
     if b[1] then
         local response = json:decode(table.concat(b))
@@ -331,37 +333,50 @@ function transitionToPhaseGame()
         player.cx = player.x*32
         player.cy = player.y*32
         totalCoverAlpha = 2
-        local b = {}
-       c, h = http.request{url = api.url.."/world", method="GET", sink=ltn12.sink.table(b)}
-        if b[1] then
-            -- world = json:decode(table.concat(b))
-            initWorldTable(b)
+        b = {}
+        print("loading world")
+
+        local world, size = {}, 0
+
+        if love.filesystem.getInfo("world.txt") then
+            world, size = love.filesystem.read("string", "world.txt")
+            world = json:decode(world)
+        end
+
+
+        if #world == 0 then
+            c, h = http.request{url = api.url.."/world", method="GET", sink=ltn12.sink.table(b)}
+            world = json:decode(table.concat(b))
+            love.filesystem.write("world.txt", json:encode_pretty(world))
+        end
+
+        if #world > 0 then
+            initWorldTable(world)
             awakeSfx:play()
             love.graphics.setBackgroundColor(0, 0, 0)
             phase = "game"
             titleMusic:stop()
 
             recalculateLighting()
-            -- createWorld(true)
             openTutorial(1)
-            if musicVolume > 0 then
-                checkMusic()
-            end
+            if musicVolume > 0 then checkMusic() end
         else
             zoneChange(json:encode(b).."\n"..tostring(c).."\n"..tostring(h))
         end
+        
 
     else
         zoneChange("Error code "..tostring(c))
     end
-    news.open = true
-    news.alpha = 1
-    news.selected.item = 1
-    getNews()
+
+    -- news.open = true
+    -- news.alpha = 1
+    -- news.selected.item = 1
+    -- getNews()
 end
 
-function initWorldTable(b)
-    world = json:decode(table.concat(b))
+function initWorldTable(world)
+    print("Decoding")
     worldChunks = {}
     for i,tile in ipairs(world) do
         local x,y = math.floor((tile.X) / chunkSize), math.floor((tile.Y) / chunkSize)

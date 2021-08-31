@@ -7,5 +7,9 @@
 			"path": "../brawlquest-api"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"cSpell.words": [
+			"Westlum"
+		]
+	}
 }

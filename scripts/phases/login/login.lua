@@ -71,7 +71,7 @@ function initLogin()
 end
 
 function drawLogin()
-    if loginPhase == "prelaunch" then   
+    if loginPhase == "prelaunch" then
         local imageScale = 0.4 * (1 / launch.inCERP)
         local width, height = love.graphics.getWidth(), love.graphics.getHeight()
         local iwidth, iheight = launch.logo:getWidth() * imageScale, launch.logo:getHeight() * imageScale

@@ -129,7 +129,7 @@ function drawAnimation(v,x,y,dir)
     if frame >= 12 and frame <= 14 then love.graphics.draw(baseSwing, swingImages[frame - 11], x - (27 * dir), y - 27, 0, dir, 1) end
     love.graphics.setBlendMode("alpha")
 
-    love.graphics.print(frame, x, y+34)
+    -- love.graphics.print(frame, x, y+34)
 end
 
 function drawAnimatedWeapon(v,x,y,dir,frame)
