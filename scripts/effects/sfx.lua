@@ -96,6 +96,7 @@ function setSFXVolumes()
     crafting.swing:setVolume(1 * sfxVolume)
     lvlSfx:setVolume(0.6 * sfxVolume)
     -- lootSfx:setVolume(0.5 * sfxVolume)
+    deathSfx:setVolume(sfxVolume)
     shieldUpSfx:setVolume(0.4 * sfxVolume)
     shieldDownSfx:setVolume(0.4 * sfxVolume)
     xpSfx:setVolume(0.7 * sfxVolume)
@@ -113,8 +114,6 @@ function setSFXVolumes()
 end
 
 function playFootstepSound(v, x, y, relative)
-    
-    print("step")
     stepSfx:stop()
     if v and stepSounds[v.GroundTile] then
         stepSfx = stepSounds[v.GroundTile]
