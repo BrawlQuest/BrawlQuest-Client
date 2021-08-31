@@ -15,24 +15,6 @@ function initHardData()
     questCompleteImg = love.graphics.newImage("assets/ui/complete.png")
     itemAlertImg = love.graphics.newImage("assets/ui/alert-item.png")
 
-
-    arrowImg = {}
-    arrowImg[-1]  = {
-        [0]=love.graphics.newImage("assets/ui/target/w_arrow_1.png"),
-        [-1] = love.graphics.newImage("assets/ui/target/nw_arrow_1.png"),
-        [1]=love.graphics.newImage("assets/ui/target/sw_arrow_1.png")
-    }
-    arrowImg[0] = 
-    {
-        [-1] = love.graphics.newImage("assets/ui/target/n_arrow_1.png"),
-        [1] = love.graphics.newImage("assets/ui/target/s_arrow_1.png")
-    }
-    arrowImg[1] = {
-        [0] = love.graphics.newImage("assets/ui/target/e_arrow_1.png"),
-        [-1] = love.graphics.newImage("assets/ui/target/ne_arrow_1.png"),
-        [1] = love.graphics.newImage("assets/ui/target/se_arrow_1.png")
-    }
-
     cornerArrowImage = love.graphics.newImage("assets/ui/target/corner.png")
     edgeArrowImage = love.graphics.newImage("assets/ui/target/edge.png")
 
