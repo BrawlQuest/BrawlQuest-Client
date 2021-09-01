@@ -80,6 +80,7 @@ end
 local sparklesAmount = 0
 
 function updateCharacter(dt)
+    -- When you take damage, the screen turns red around you
     if player.damageHUDAlphaUp then
         player.damageHUDAlpha = player.damageHUDAlpha + 3*dt
         if player.damageHUDAlpha > 1 then
@@ -87,12 +88,13 @@ function updateCharacter(dt)
             player.damageHUDAlphaUp = false
         end
     end
+
     if player.damageHUDAlpha > 0 then
         player.damageHUDAlpha = player.damageHUDAlpha - 0.35*dt
         if player.damageHUDAlpha < 0 then player.damageHUDAlpha = 0 end
     end
 
-
+    -- Add sparkles to the player!
     if me.Mount and me.Mount.Name ~= "None" and me.Mount.Name ~= "" and me.Mount.Enchantment ~= "None" then
         sparklesAmount = sparklesAmount + 5 * dt
         if isMoving and sparklesAmount > 1 then
@@ -101,6 +103,7 @@ function updateCharacter(dt)
         end
     end
 
+    -- Updates targeting and buddies
     checkTargeting()
     if me and player.dx and player.dy and player.buddy then
         local pl = {
@@ -113,34 +116,9 @@ function updateCharacter(dt)
     end
 
     movePlayer(dt)
-
-    -- if player.isMounting then
-    --     player.mount.stepSndPlay = player.mount.stepSndPlay - 1 * dt
-    --     if player.mount.stepSndPlay < 0 then
-    --         player.mount.stepSndPlay = 0.2
-    --     end
-
-    --     if player.mount.x > player.dx + 8 then
-    --         player.mount.x = player.mount.x - 150 * dt
-    --     elseif player.mount.x < player.dx - 8 then
-    --         player.mount.x = player.mount.x + 150 * dt
-    --     end
-
-    --     if player.mount.y > player.dy + 8 then
-    --         player.mount.y = player.mount.y - 150 * dt
-    --     elseif player.mount.y < player.dy - 8 then
-    --         player.mount.y = player.mount.y + 150 * dt
-    --     end
-
-    --     if distanceToPoint(player.mount.x, player.mount.y, player.dx, player.dy) < 16 then
-    --         love.audio.play(horseMountSfx[love.math.random(1, #horseMountSfx)])
-    --         player.isMounted = true
-    --         player.isMounting = false
-    --     end
-    -- end
 end
 
-function worldCollison(x, y)
+function worldCollision(x, y)
     local output = false
     if worldEdit.open and versionType == "dev" then return output end
     if worldLookup[x..","..y] then
@@ -158,10 +136,9 @@ function worldCollison(x, y)
 end
 
 isMoving = false
-movementStarted = 1 -- the max time it'll ever take to cross a tile. This should fix rubberbanding.
 
-function movePlayer(dt)
-
+function movePlayer(dt) -- a nice update function
+    -- move player!
     if andCalc(true, {
             (me and not me.IsDead),
             (not isMoving or (distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) < 1)),
@@ -174,37 +151,36 @@ function movePlayer(dt)
             -- not player.attacking,
         }) then -- movement smoothing has finished
         local prev = {x = player.x, y = player.y}
-        if love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.LEFT) and not (worldCollison(prev.x - 1, prev.y - 1) or worldCollison(prev.x - 1, prev.y) or worldCollison(prev.x, prev.y - 1)) then
+        if love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.LEFT) and not (worldCollision(prev.x - 1, prev.y - 1) or worldCollision(prev.x - 1, prev.y) or worldCollision(prev.x, prev.y - 1)) then
             prev.y = prev.y - 1
             prev.x = prev.x - 1
             player.previousDirection = "left"
-          
-        elseif love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.RIGHT) and not (worldCollison(prev.x + 1, prev.y - 1) or worldCollison(prev.x + 1, prev.y) or worldCollison(prev.x, prev.y - 1)) then
+        elseif love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.RIGHT) and not (worldCollision(prev.x + 1, prev.y - 1) or worldCollision(prev.x + 1, prev.y) or worldCollision(prev.x, prev.y - 1)) then
             prev.y = prev.y - 1
             prev.x = prev.x + 1
             player.previousDirection = "right"
-        elseif love.keyboard.isDown(keybinds.DOWN) and love.keyboard.isDown(keybinds.RIGHT) and not (worldCollison(prev.x + 1, prev.y + 1) or worldCollison(prev.x + 1, prev.y) or worldCollison(prev.x, prev.y + 1)) then
+        elseif love.keyboard.isDown(keybinds.DOWN) and love.keyboard.isDown(keybinds.RIGHT) and not (worldCollision(prev.x + 1, prev.y + 1) or worldCollision(prev.x + 1, prev.y) or worldCollision(prev.x, prev.y + 1)) then
             prev.y = prev.y + 1
             prev.x = prev.x + 1
             player.previousDirection = "right"
-        elseif love.keyboard.isDown(keybinds.DOWN) and love.keyboard.isDown(keybinds.LEFT) and not (worldCollison(prev.x - 1, prev.y + 1) or worldCollison(prev.x - 1, prev.y) or worldCollison(prev.x, prev.y + 1)) then
+        elseif love.keyboard.isDown(keybinds.DOWN) and love.keyboard.isDown(keybinds.LEFT) and not (worldCollision(prev.x - 1, prev.y + 1) or worldCollision(prev.x - 1, prev.y) or worldCollision(prev.x, prev.y + 1)) then
             prev.y = prev.y + 1
             prev.x = prev.x - 1
             player.previousDirection = "left"
         else
-            if love.keyboard.isDown(keybinds.LEFT) and not worldCollison(prev.x - 1, prev.y) then
+            if love.keyboard.isDown(keybinds.LEFT) and not worldCollision(prev.x - 1, prev.y) then
                 prev.x = prev.x - 1
                 player.previousDirection = "left"
-            elseif love.keyboard.isDown(keybinds.RIGHT) and not worldCollison(prev.x + 1, prev.y) then
+            elseif love.keyboard.isDown(keybinds.RIGHT) and not worldCollision(prev.x + 1, prev.y) then
                 prev.x = prev.x + 1
                 player.previousDirection = "right"
             else
                 player.speed.x = 0
             end
 
-            if love.keyboard.isDown(keybinds.UP) and not worldCollison(prev.x, prev.y - 1) then
+            if love.keyboard.isDown(keybinds.UP) and not worldCollision(prev.x, prev.y - 1) then
                 prev.y = prev.y - 1
-            elseif love.keyboard.isDown(keybinds.DOWN) and not worldCollison(prev.x, prev.y + 1) then
+            elseif love.keyboard.isDown(keybinds.DOWN) and not worldCollision(prev.x, prev.y + 1) then
                 prev.y = prev.y + 1
             else
                 player.speed.y = 0
@@ -223,18 +199,15 @@ function movePlayer(dt)
     
     local distance = distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy)
     if drawAnimations then animateCharacter(dt, distance > 1) end
-    
+
+    -- Move player! If not dead of course!
     if distance > 1 then
         local speed = 80
         if me and me.Mount and me.Mount.Name ~= "None" or worldEdit.open then
             speed = tonumber(me.Mount.Val) or 80 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
             local enchant = me.Mount.Enchantment or false
-            if enchant and enchant ~= "None" and enchant ~= "" then
-                speed = speed + 25
-            end
-            if worldEdit.open and versionType == "dev" then
-                speed = 256
-            end
+            if enchant and enchant ~= "None" and enchant ~= "" then speed = speed + 25 end
+            if worldEdit.open and versionType == "dev" then speed = 256 end
         end
         if worldLookup[player.x..","..player.y] and worldLookup[player.x..","..player.y].ForegroundTile and worldLookup[player.x..","..player.y].GroundTile and (isTileType(worldLookup[player.x..","..player.y].ForegroundTile, "Path") or isTileType(worldLookup[player.x..","..player.y].GroundTile, "Path")) then
             speed = speed * 1.4
@@ -280,27 +253,6 @@ function movePlayer(dt)
         end
     else
         isMoving = false
-    end
-end
-
-function beginMounting()
-    if player.isMounted or player.isMounting then
-     --   love.audio.play(horseMountSfx[love.math.random(1, #horseMountSfx)])
-        player.isMounted = false
-        player.isMounting = false
-    else
-       -- love.audio.play(whistleSfx[love.math.random(1, #whistleSfx)])
-        player.isMounting = true
-        if love.math.random(1, 2) == 1 then
-            player.mount.x = player.dx + love.graphics.getWidth() / 2
-        else
-            player.mount.x = player.dx - love.graphics.getWidth() / 2
-        end
-        if love.math.random(1, 2) == 1 then
-            player.mount.y = player.dy + love.graphics.getHeight() / 2
-        else
-            player.mount.y = player.dy - love.graphics.getHeight() / 2
-        end
     end
 end
 
