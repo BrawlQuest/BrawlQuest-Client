@@ -136,10 +136,9 @@ function worldCollision(x, y)
 end
 
 isMoving = false
-movementStarted = 1 -- the max time it'll ever take to cross a tile. This should fix rubber-banding.
 
-function movePlayer(dt)
-
+function movePlayer(dt) -- a nice update function
+    -- move player!
     if andCalc(true, {
             (me and not me.IsDead),
             (not isMoving or (distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) < 1)),
@@ -156,7 +155,6 @@ function movePlayer(dt)
             prev.y = prev.y - 1
             prev.x = prev.x - 1
             player.previousDirection = "left"
-          
         elseif love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.RIGHT) and not (worldCollision(prev.x + 1, prev.y - 1) or worldCollision(prev.x + 1, prev.y) or worldCollision(prev.x, prev.y - 1)) then
             prev.y = prev.y - 1
             prev.x = prev.x + 1
@@ -201,18 +199,15 @@ function movePlayer(dt)
     
     local distance = distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy)
     if drawAnimations then animateCharacter(dt, distance > 1) end
-    
+
+    -- Move player! If not dead of course!
     if distance > 1 then
         local speed = 80
         if me and me.Mount and me.Mount.Name ~= "None" or worldEdit.open then
             speed = tonumber(me.Mount.Val) or 80 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
             local enchant = me.Mount.Enchantment or false
-            if enchant and enchant ~= "None" and enchant ~= "" then
-                speed = speed + 25
-            end
-            if worldEdit.open and versionType == "dev" then
-                speed = 256
-            end
+            if enchant and enchant ~= "None" and enchant ~= "" then speed = speed + 25 end
+            if worldEdit.open and versionType == "dev" then speed = 256 end
         end
         if worldLookup[player.x..","..player.y] and worldLookup[player.x..","..player.y].ForegroundTile and worldLookup[player.x..","..player.y].GroundTile and (isTileType(worldLookup[player.x..","..player.y].ForegroundTile, "Path") or isTileType(worldLookup[player.x..","..player.y].GroundTile, "Path")) then
             speed = speed * 1.4

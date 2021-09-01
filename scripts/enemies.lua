@@ -108,8 +108,21 @@ function newEnemyData(data) -- called when nearby data is returned
                 end
             end
 
-            if (me.AX ~= me.X or me.AY ~= me.Y) and (me.AX == enemy.X and me.AY == enemy.Y) and not death.open then
-                if player.dx > me.AX * 32 then -- move to hit in a direction
+
+
+            -- find whether you are attacking an enemy
+            local attackingEnemy = false
+            if enemy.size <= 32 and (me.AX == enemy.X and me.AY == enemy.Y) then attackingEnemy = true
+            elseif enemy.size > 32 and (
+                me.AX == enemy.X and me.AY == enemy.Y or
+                me.AX == enemy.X + 1 and me.AY == enemy.Y or
+                me.AX == enemy.X and me.AY == enemy.Y + 1 or
+                me.AX == enemy.X + 1 and me.AY == enemy.Y + 1
+            ) then attackingEnemy = true end
+
+            -- move the player to hit an enemy
+            if (me.AX ~= me.X or me.AY ~= me.Y) and attackingEnemy and not death.open then
+                if player.dx > me.AX * 32 then
                     player.dx = player.dx - 16
                 elseif player.dx < me.AX * 32 then
                     player.dx = player.dx + 16
