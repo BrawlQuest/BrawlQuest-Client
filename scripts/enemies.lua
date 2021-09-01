@@ -28,8 +28,6 @@ function newEnemyData(data) -- called when nearby data is returned
     enemyCollisions = copy(enemyCollisionsPrevious[enemyCollisionsI])
     for i, v in ipairs(enemies) do enemies[i].updated = false end
     for i, v in ipairs(data) do
-        -- local size = enemyImg[v.Enemy.Name]:getWidth()
-        -- local halfSize = size / 2
         local id = v.InstanceID
         local enemy = enemies[v.InstanceID]
         if not enemy then
