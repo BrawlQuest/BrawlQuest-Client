@@ -109,7 +109,7 @@ function drawChunks(cx,cy)
         
         love.graphics.setCanvas()
         local imageData = chunkCanvas:newImageData( )
-        imageData:encode("tga", "img/" .. cx .. "," .. cy .. ".tga")
+        -- imageData:encode("tga", "img/" .. cx .. "," .. cy .. ".tga")
         worldImages[cx..","..cy] = love.graphics.newImage(imageData)
     end
 end
