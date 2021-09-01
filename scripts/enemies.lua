@@ -28,6 +28,8 @@ function newEnemyData(data) -- called when nearby data is returned
     enemyCollisions = copy(enemyCollisionsPrevious[enemyCollisionsI])
     for i, v in ipairs(enemies) do enemies[i].updated = false end
     for i, v in ipairs(data) do
+        -- local size = enemyImg[v.Enemy.Name]:getWidth()
+        -- local halfSize = size / 2
         local id = v.InstanceID
         local enemy = enemies[v.InstanceID]
         if not enemy then
@@ -45,7 +47,7 @@ function newEnemyData(data) -- called when nearby data is returned
             if enemy.HP <= 0 then enemy.hasBurst = true
             else enemy.hasBurst = false end
             if not enemyImg[enemy.Enemy.Name] then enemyImg[enemy.Enemy.Name] = getImgIfNotExist(enemy.Enemy.Image) end
-            enemy.size = enemyImg[enemy.Enemy.Name].getWidth
+            enemy.size = enemyImg[enemy.Enemy.Name]:getWidth()
             if not enemySounds[enemy.Enemy.Name] then
                 enemySounds[enemy.Enemy.Name] = {
                     attack = {},
@@ -88,7 +90,7 @@ function newEnemyData(data) -- called when nearby data is returned
             end
 
             if not enemyQuads[enemy.Enemy.Name] then -- enemy quad for drawing target outlines
-                enemyQuads[enemy.Enemy.Name] = love.graphics.newQuad(0, 0, 32, 32, enemyImg[enemy.Enemy.Name]:getDimensions())
+                enemyQuads[enemy.Enemy.Name] = love.graphics.newQuad(0, 0, enemy.size, enemy.size, enemyImg[enemy.Enemy.Name]:getDimensions())
             end
 
         end
@@ -121,7 +123,12 @@ function newEnemyData(data) -- called when nearby data is returned
                 end
                 attackHitAmount = 1
             end
-            addFloat("text", enemy.X * 32, enemy.Y * 32 - 18, (enemy.HP - v.HP) * -1, {1, 0, 0})
+
+            -- Add offset to floats
+            local offset = 0
+            if enemy.size > 32 then offset = 16 end
+
+            addFloat("text", enemy.X * 32 + offset, enemy.Y * 32 - 18, (enemy.HP - v.HP) * -1, {1, 0, 0})
             enemy.HP = v.HP
         end
 
@@ -156,7 +163,6 @@ function newEnemyData(data) -- called when nearby data is returned
         enemy.IsAggro = v.IsAggro
     end
 
-    -- print(json:encode_pretty(enemyCollisions))
     if enemyCollisionsI == 0 then
         enemyCollisionsPrevious[0] = copy(enemyCollisions)
         enemyCollisionsPrevious[1] = {}
@@ -177,7 +183,8 @@ function drawEnemies()
     for i, v in pairs(enemies) do
         local distance = distanceToPoint(player.dx, player.dy, v.dx, v.dy)
         local range = worldMask.range * 32
-        local size = 32
+        local size = enemyImg[v.Enemy.Name]:getWidth()
+        local halfSize = size / 2
         if distance <= range then
             if v.HP > 0 and v.updated and os.time(os.date("!*t")) - v.lastUpdate < 5 then
                 local intensity = 1 - (range / (range + difference(range, distance) * 4) - 0.2)
@@ -195,10 +202,6 @@ function drawEnemies()
 
                 local enemyHealth = me.HP / v.Enemy.ATK
                 local playerHealth = v.Enemy.HP / (me.Weapon.Val + (me.STR - 1) * 0.5)
-                -- if versionType == "dev" then
-                --     love.graphics.print("      " .. math.round(enemyHealth, 2) .. " < " .. math.round(playerHealth, 2),
-                --         npcNameFont, v.dx, v.dy - 10)
-                -- end
 
                 if me.HP and v.Enemy.ATK and enemyHealth < playerHealth then
                     local distanceIntensity = 1 - (distance / 128)
@@ -206,6 +209,7 @@ function drawEnemies()
                     love.graphics.draw(skull, v.dx - 6, v.dy - 8, 0, 1)
                 end
 
+                -- show red when hit
                 if v.dhp < v.mhp or not v.Enemy.CanMove then
                     if v.Enemy.CanMove then
                         love.graphics.setColor(1, 0, 0, intensity)
@@ -216,10 +220,12 @@ function drawEnemies()
                     end
                 end
 
+                -- draws alert when first seen
                 love.graphics.setColor(1, 1, 1, v.aggroAlpha * intensity)
                 love.graphics.draw(alertImg, v.dx + 8, v.dy - 16)
                 love.graphics.setColor(1, 1, 1, intensity)
 
+                -- draw lines
                 if v.TargetName == player.name and v.Enemy.CanMove then
                     if nextTick >= 1 then
                         enemies[i].linesDrawable = true
@@ -227,7 +233,7 @@ function drawEnemies()
                     if enemies[i].linesDrawable == true and v.IsAggro then
                         if (v.Enemy.Range + 1) * 32 >= distance then
                             love.graphics.setColor(1, 0, 0, nextTick * intensity)
-                            love.graphics.line(v.dx + 16, v.dy + 16, player.dx + 16, player.dy + 16)
+                            love.graphics.line(v.dx + halfSize, v.dy + halfSize, player.dx + 16, player.dy + 16)
                             love.graphics.setColor(1, 1, 1, intensity)
                             if v.Enemy.XP / player.lvl > 1 then
                                 outlinerOnly:draw(2, enemyImg[v.Enemy.Name], enemyQuads[v.Enemy.Name], v.dx + offsetX,
@@ -240,7 +246,7 @@ function drawEnemies()
                     end
                 else enemies[i].linesDrawable = false end
             elseif  v and v.lastUpdate and os.time(os.date("!*t")) - v.lastUpdate < 5 and not v.hasBurst then
-                burstLoot(v.dx + 16, v.dy + 16, player.owedxp, "xp")
+                burstLoot(v.dx + halfSize, v.dy + halfSize, player.owedxp, "xp")
                 local deathSound =
                     enemySounds[v.Enemy.Name].death[love.math.random(1, #enemySounds[v.Enemy.Name].death)]
                 deathSound:setVolume(1 * sfxVolume)
@@ -268,7 +274,7 @@ function drawEnemies()
                 if v.Enemy.Width and v.Enemy.Height then
                     for a = 1, v.Enemy.Width do
                         for k = 1, v.Enemy.Height do
-                            boneSpurt(v.dx + v.size / 2 + ((a - 1) * 32), v.dy + v.size / 2 + ((k - 1) * 32), 10, 25, 1, 1, 1, "mob",
+                            boneSpurt(v.dx + halfSize + ((a - 1) * 32), v.dy + halfSize + ((k - 1) * 32), 10, 25, 1, 1, 1, "mob",
                                 v.Enemy.Name)
                         end
                     end
