@@ -99,7 +99,7 @@ function setSFXVolumes()
     deathSfx:setVolume(sfxVolume)
     shieldUpSfx:setVolume(0.4 * sfxVolume)
     shieldDownSfx:setVolume(0.4 * sfxVolume)
-    xpSfx:setVolume(0.7 * sfxVolume)
+    xpSfx:setVolume(1 * sfxVolume)
     awakeSfx:setVolume(0.3 * sfxVolume)
     critHitSfx:setVolume(1 * sfxVolume)
     enemyHitSfx:setVolume(1 * sfxVolume)
@@ -114,6 +114,7 @@ function setSFXVolumes()
 end
 
 function playFootstepSound(v, x, y, relative)
+
     stepSfx:stop()
     if v and stepSounds[v.GroundTile] then
         stepSfx = stepSounds[v.GroundTile]

@@ -11,12 +11,6 @@ function initLighting()
     Luven.camera:setScale(worldScale)
 end
 
-function reinitLighting(w,h)
-    lightSource = {}
-    Luven.dispose()
-    initLighting()
-end
-
 function recalculateLighting()
     Luven.dispose()
     lightSource = {}

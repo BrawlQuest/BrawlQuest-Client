@@ -45,6 +45,8 @@ function newEnemyData(data) -- called when nearby data is returned
             if enemy.HP <= 0 then enemy.hasBurst = true
             else enemy.hasBurst = false end
             if not enemyImg[enemy.Enemy.Name] then enemyImg[enemy.Enemy.Name] = getImgIfNotExist(enemy.Enemy.Image) end
+           -- enemy.size = enemyImg[enemy.Enemy.Name].getWidth()
+           enemy.size = 32
             if not enemySounds[enemy.Enemy.Name] then
                 enemySounds[enemy.Enemy.Name] = {
                     attack = {},
@@ -176,6 +178,7 @@ function drawEnemies()
     for i, v in pairs(enemies) do
         local distance = distanceToPoint(player.dx, player.dy, v.dx, v.dy)
         local range = worldMask.range * 32
+        local size = 32
         if distance <= range then
             if v.HP > 0 and v.updated and os.time(os.date("!*t")) - v.lastUpdate < 5 then
                 local intensity = 1 - (range / (range + difference(range, distance) * 4) - 0.2)
@@ -183,7 +186,7 @@ function drawEnemies()
                 local offsetX = 0
                 if v and v.previousDirection and v.previousDirection == "left" then
                     rotation = -1
-                    offsetX = 32
+                    offsetX = size
                 end
 
                 if distance <= range then
@@ -207,10 +210,10 @@ function drawEnemies()
                 if v.dhp < v.mhp or not v.Enemy.CanMove then
                     if v.Enemy.CanMove then
                         love.graphics.setColor(1, 0, 0, intensity)
-                        love.graphics.rectangle("fill", v.dx, v.dy - 6, (v.dhp / v.mhp) * 32, 6)
+                        love.graphics.rectangle("fill", v.dx, v.dy - 6, (v.dhp / v.mhp) * size, 6)
                     else
                         love.graphics.setColor(0.2, 0.2, 1, intensity)
-                        love.graphics.rectangle("fill", v.dx, v.dy - 2, (v.dhp / v.mhp) * 32, 2)
+                        love.graphics.rectangle("fill", v.dx, v.dy - 2, (v.dhp / v.mhp) * size, 2)
                     end
                 end
 
@@ -266,7 +269,7 @@ function drawEnemies()
                 if v.Enemy.Width and v.Enemy.Height then
                     for a = 1, v.Enemy.Width do
                         for k = 1, v.Enemy.Height do
-                            boneSpurt(v.dx + 16 + ((a - 1) * 32), v.dy + 16 + ((k - 1) * 32), 10, 25, 1, 1, 1, "mob",
+                            boneSpurt(v.dx + v.size / 2 + ((a - 1) * 32), v.dy + v.size / 2 + ((k - 1) * 32), 10, 25, 1, 1, 1, "mob",
                                 v.Enemy.Name)
                         end
                     end

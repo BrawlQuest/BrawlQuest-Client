@@ -4,7 +4,12 @@
 
 loot = {}
 
+local xpOwed = 0 -- this is used to correctly set the pitch as XP flies in (previously it all hit the same tone)
+
 function burstLoot(x, y, amount, type)
+    if type == "xp" then
+        xpOwed = amount
+    end
     for i=1,amount do
         loot[#loot+1] = {
             x = x,
@@ -21,6 +26,7 @@ function burstLoot(x, y, amount, type)
         else
             loot[#loot].xv = love.math.random(48,90)
             loot[#loot].yv = love.math.random(48,90)
+         
         end
 
         if love.math.random(1,2) == 1 then
@@ -117,9 +123,11 @@ function updateLoot(dt)
         if distanceToPoint(player.dx+16, player.dy+16, v.x, v.y) < 32 and v.phase ~= "initial" then
             if v.type == "xp" then
                 local nsfx = xpSfx:clone()
-                nsfx:setPitch(1 + (player.xp/100))
-                -- xpSfx:setRelative(true)
-                -- setEnvironmentEffects(xpSfx)
+                nsfx:setPitch(1 + ((player.xp-xpOwed)/100))
+                xpOwed = xpOwed - 1
+                nsfx:setRelative(true)
+                nsfx:setVolume(1*sfxVolume)
+                setEnvironmentEffects(nsfx)
                 love.audio.play(nsfx)
             else
                 local nsfx = lootSfx[love.math.random(1,#lootSfx)]:clone()

@@ -91,14 +91,14 @@ function checkKeyPressedPhaseGame(key)
             end
         end
         if (key == "f" and versionType == "dev") then openOrders() end
-        if key == "r" then 
+        if key == "r" then
             if drawAnimations then
                 drawAnimations = false
             else
                 drawAnimations = true
             end
         end--openReputation() end
-        if key == "c" then shop:reveal() end
+        if key == "c" and versionType == "dev" then shop:reveal() end
         if key == "space" then print(json:encode_pretty(me)) end
     end
 end
