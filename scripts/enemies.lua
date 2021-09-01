@@ -108,8 +108,6 @@ function newEnemyData(data) -- called when nearby data is returned
                 end
             end
 
-
-
             -- find whether you are attacking an enemy
             local attackingEnemy = false
             if enemy.size <= 32 and (me.AX == enemy.X and me.AY == enemy.Y) then attackingEnemy = true
