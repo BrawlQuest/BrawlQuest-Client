@@ -344,11 +344,11 @@ function transitionToPhaseGame()
         end
 
 
-        if #world == 0 then
+       -- if #world == 0 then
             c, h = http.request{url = api.url.."/world", method="GET", sink=ltn12.sink.table(b)}
             world = json:decode(table.concat(b))
             love.filesystem.write("world.txt", json:encode_pretty(world))
-        end
+       -- end
 
         if #world > 0 then
             initWorldTable(world)

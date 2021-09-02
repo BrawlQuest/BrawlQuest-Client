@@ -31,6 +31,12 @@ function addWorldEmitter(worldTile)
                 y = worldTile.Y*32,
                 sound = "assets/sfx/ambient/water.ogg"
             }
+        elseif isTileType(worldTile.ForegroundTile, "Class Machine") then
+            worldEmitters[#worldEmitters+1] = {
+                x = worldTile.X*32,
+                y = worldTile.Y*32,
+                sound = "assets/sfx/ambient/voltage.mp3"
+            }
         elseif isTileType(worldTile.ForegroundTile, "Fire") or isTileType(worldTile.ForegroundTile, "Furnace") then
             worldEmitters[#worldEmitters+1] = {
                 x = worldTile.X*32,
@@ -77,10 +83,13 @@ end
 
 function playAmbience(v)
     playingAmbience[v.x..","..v.y] = love.audio.newSource(v.sound, "stream")
-    playingAmbience[v.x..","..v.y]:setPosition(v.x/32,v.y/32)
-    playingAmbience[v.x..","..v.y]:setRolloff(1)
+    if  playingAmbience[v.x..","..v.y]:getChannelCount() == 1 then
+        playingAmbience[v.x..","..v.y]:setPosition(v.x/32,v.y/32)
+        playingAmbience[v.x..","..v.y]:setRolloff(1)
+     
+        setEnvironmentEffects(playingAmbience[v.x..","..v.y])
+    end
     playingAmbience[v.x..","..v.y]:setVolume(sfxVolume*0.3)
-    setEnvironmentEffects(playingAmbience[v.x..","..v.y])
-    playingAmbience[v.x..","..v.y]:play()
+        playingAmbience[v.x..","..v.y]:play()
     playedThisTick[#playedThisTick+1] = v.sound
 end
