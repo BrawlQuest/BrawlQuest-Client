@@ -33,16 +33,16 @@ function initSFX()
 
     lvlSfx = love.audio.newSource("assets/sfx/player/level.ogg", "static")
 
-    awakeSfx = love.audio.newSource("assets/sfx/player/awake.mp3", "static")
-    deathSfx = love.audio.newSource("assets/sfx/player/death.mp3", "static")
+    awakeSfx = love.audio.newSource("assets/sfx/player/awake.ogg", "static")
+    deathSfx = love.audio.newSource("assets/sfx/player/death.ogg", "static")
     playerHitSfx = love.audio.newSource("assets/sfx/hit.ogg", "static")
     enemyHitSfx = love.audio.newSource("assets/sfx/impact_b.ogg", "static")
     critHitSfx = love.audio.newSource("assets/sfx/pit_trap_damage.ogg", "static")
 
     lootSfx = {
-        love.audio.newSource("assets/sfx/items/loot/1.mp3", "static"),
-        love.audio.newSource("assets/sfx/items/loot/2.mp3", "static"),
-        love.audio.newSource("assets/sfx/items/loot/3.mp3", "static"),
+        love.audio.newSource("assets/sfx/items/loot/1.ogg", "static"),
+        love.audio.newSource("assets/sfx/items/loot/2.ogg", "static"),
+        love.audio.newSource("assets/sfx/items/loot/3.ogg", "static"),
     }
     shieldUpSfx = love.audio.newSource("assets/sfx/player/actions/shield.ogg", "static")
     shieldDownSfx = love.audio.newSource("assets/sfx/player/actions/shield.ogg", "static")

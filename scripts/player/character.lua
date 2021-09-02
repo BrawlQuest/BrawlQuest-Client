@@ -137,6 +137,10 @@ end
 
 isMoving = false
 
+function setDirection(direction)
+    if not player.attacking then player.previousDirection = direction end
+end
+
 function movePlayer(dt) -- a nice update function
     -- move player!
     if andCalc(true, {
@@ -154,26 +158,26 @@ function movePlayer(dt) -- a nice update function
         if love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.LEFT) and not (worldCollision(prev.x - 1, prev.y - 1) or worldCollision(prev.x - 1, prev.y) or worldCollision(prev.x, prev.y - 1)) then
             prev.y = prev.y - 1
             prev.x = prev.x - 1
-            player.previousDirection = "left"
+            setDirection("left")
         elseif love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.RIGHT) and not (worldCollision(prev.x + 1, prev.y - 1) or worldCollision(prev.x + 1, prev.y) or worldCollision(prev.x, prev.y - 1)) then
             prev.y = prev.y - 1
             prev.x = prev.x + 1
-            player.previousDirection = "right"
+            setDirection("right")
         elseif love.keyboard.isDown(keybinds.DOWN) and love.keyboard.isDown(keybinds.RIGHT) and not (worldCollision(prev.x + 1, prev.y + 1) or worldCollision(prev.x + 1, prev.y) or worldCollision(prev.x, prev.y + 1)) then
             prev.y = prev.y + 1
             prev.x = prev.x + 1
-            player.previousDirection = "right"
+            setDirection("right")
         elseif love.keyboard.isDown(keybinds.DOWN) and love.keyboard.isDown(keybinds.LEFT) and not (worldCollision(prev.x - 1, prev.y + 1) or worldCollision(prev.x - 1, prev.y) or worldCollision(prev.x, prev.y + 1)) then
             prev.y = prev.y + 1
             prev.x = prev.x - 1
-            player.previousDirection = "left"
+            setDirection("left")
         else
             if love.keyboard.isDown(keybinds.LEFT) and not worldCollision(prev.x - 1, prev.y) then
                 prev.x = prev.x - 1
-                player.previousDirection = "left"
+                setDirection("left")
             elseif love.keyboard.isDown(keybinds.RIGHT) and not worldCollision(prev.x + 1, prev.y) then
                 prev.x = prev.x + 1
-                player.previousDirection = "right"
+                setDirection("right")
             else
                 player.speed.x = 0
             end

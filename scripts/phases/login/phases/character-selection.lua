@@ -328,10 +328,10 @@ function transitionToPhaseGame()
         local response = json:decode(table.concat(b))
         player.x = response['Me']['X']
         player.y = response['Me']['Y']
-        player.dx = player.x*32
-        player.dy = player.y*32
-        player.cx = player.x*32
-        player.cy = player.y*32
+        player.dx = player.x * 32
+        player.dy = player.y * 32
+        player.cx = player.x * 32
+        player.cy = player.y * 32
         totalCoverAlpha = 2
         b = {}
         print("loading world")
