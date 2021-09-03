@@ -35,7 +35,7 @@ function addWorldEmitter(worldTile)
             worldEmitters[#worldEmitters+1] = {
                 x = worldTile.X*32,
                 y = worldTile.Y*32,
-                sound = "assets/sfx/ambient/voltage.mp3"
+                sound = "assets/sfx/ambient/voltage.ogg"
             }
         elseif isTileType(worldTile.ForegroundTile, "Fire") or isTileType(worldTile.ForegroundTile, "Furnace") then
             worldEmitters[#worldEmitters+1] = {
