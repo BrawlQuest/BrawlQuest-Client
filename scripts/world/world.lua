@@ -29,7 +29,6 @@ function initWorldTable(world)
         if player.world == 0 then worldChunks[x..","..y][#worldChunks[x..","..y] + 1] = copy(tile) end
         -- init world lookup table
         worldLookup[tile.X..","..tile.Y] = tile
-        addLeavesAndLights(tile)
         loadedChunks = {}
     end
     initWorldMap()
@@ -73,11 +72,6 @@ end
 function createWorld()
     -- creates folder for images
     if not love.filesystem.getInfo( "img" ) then love.filesystem.createDirectory( "img" ) end
-    -- leaves = {}
-    -- worldEmitters = {}
-    -- worldLookup = {}
-    -- serverTiles = {}
-    -- loadedChunks = {}
 
     local chunksAroundPlayer = {}
     -- create table entries
@@ -90,21 +84,6 @@ function createWorld()
             }
         end
     end
-
-    --[[
-    for key,tiles in next, worldChunks do
-        -- try to get only the chunks you need
-        -- if world chunk has the same name as the table
-        if orCalc(key, tab) and not loadedChunks[key] then -- issue here!
-            loadedChunks[#loadedChunks+1] = key
-            for i,v in ipairs(tiles) do
-                worldLookup[v.X..","..v.Y] = v
-                addLeavesAndLights(v)
-                if v.GroundTile and v.GroundTile ~= "" then serverTiles[v.X..","..v.Y] = true end
-            end
-        end
-    end
-    ]]
 
     -- for each loaded chunk, destroy what's out of range
     for key, chunk in pairs(loadedChunks) do
@@ -132,29 +111,6 @@ function createWorld()
             worldToCreate[#worldToCreate+1] = {cx = chunk.cx, cy = chunk.cy,}
         end
     end
-
-
-
-
-    -- add uncreated tiles to world to create table. These will be loaded each frame
-    -- for cx = player.wx + chunkMap[1], player.wx + chunkMap[2] do
-    --     for cy = player.wy + chunkMap[3], player.wy + chunkMap[4] do
-    --         if not worldImages[cx..","..cy] then 
-    --             worldToCreate[#worldToCreate+1] = {cx = cx, cy = cy,}
-    --         end
-    --     end
-    -- end
-
-    -- if the local table doesn't contain the currently shown images, get rid of them!
-    -- for key, v in next, worldImages do
-    --     if not orCalc(key, tab) then
-    --         -- if not worldImages[cx..","..cy] then worldToCreate[#worldToCreate+1] = {cx = cx, cy = cy,} end
-    --         worldToDestroy[#worldToDestroy+1] = key
-    --         -- v:release( )
-    --         -- table.removekey(worldImages, key)
-    --         -- table.removekey(loadedChunks, key)
-    --     end
-    -- end
 end
 
 function addLeavesAndLights(v)
@@ -186,10 +142,9 @@ function drawChunks(cx,cy)
         local chunkTiles = worldChunks[cx .. "," .. cy]
         for i,v in ipairs(chunkTiles) do
             drawTile(v, cx, cy)
+            addLeavesAndLights(v)
             addCritters(v)
         end
-
-        -- love.graphics.print(cx .. "," .. cy, cx * chunkSize, cy * chunkSize)
 
         love.graphics.setCanvas()
         local imageData = chunkCanvas:newImageData( )

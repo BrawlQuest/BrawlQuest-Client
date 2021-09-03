@@ -340,6 +340,7 @@ function love.resize(width, height)
     else
         recalculateLighting()
         createWorld()
+        initWorldMap()
         loadSliders()
     end
     if scale then

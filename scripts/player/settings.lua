@@ -196,6 +196,7 @@ function checkSettingsMousePressed(button)
                             setWindowOptions()
                             recalculateLighting()
                             createWorld()
+                            initWorldMap()
                         else
                             bv.v = not bv.v
                         end

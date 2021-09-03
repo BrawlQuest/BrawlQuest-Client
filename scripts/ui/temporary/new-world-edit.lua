@@ -587,6 +587,7 @@ function saveWorldChanges()
     c, h = http.request{url = api.url.."/world", method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
     initWorldTable(json:decode(table.concat(b)))
     createWorld()
+    initWorldMap()
     initDrawableNewWorldEditTiles()
     getWorldInfo() 
     worldEdit.changed = false
