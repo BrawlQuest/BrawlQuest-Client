@@ -13,7 +13,7 @@ end
 function loadChunks(cx,cy)
     for x = 0, chunkSize - 1 do
         for y = 0, chunkSize - 1 do
-            if not originalTiles[x + cx * chunkSize .. "," .. y + cy * chunkSize] then loadNoiseTiles(cx,cy,x,y) end
+            if not serverTiles[x + cx * chunkSize .. "," .. y + cy * chunkSize] then loadNoiseTiles(cx,cy,x,y) end
         end
     end
 end

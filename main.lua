@@ -233,7 +233,7 @@ function love.draw()
         if true then text = "BrawlQuest "..version.." "..versionNumber.. "\nPress \"r\" to enable animations preview" .. "\nX,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount .."\n"..playersOnline
         else text = "X,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount end
         love.graphics.print(text, offset, 10)
-       -- drawWorldMap()
+        drawWorldMap(love.graphics.getWidth() - 256 - 20, 20)
     end
     mx, my = love.mouse.getPosition()
     love.graphics.setColor(1, 1, 1, mouseAmount)

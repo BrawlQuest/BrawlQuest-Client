@@ -48,17 +48,19 @@ function initWorldMap()
     love.graphics.setCanvas()
 end
 
-function drawWorldMap()
-    love.graphics.stencil(function () return love.graphics.rectangle("fill", 0, 0, 256,256,5) end, "replace", 1) -- stencils inventory
+function drawWorldMap(x, y)
+    love.graphics.stencil(function () return love.graphics.rectangle("fill", x, y, 256,256,5) end, "replace", 1) -- stencils inventory
     love.graphics.setStencilTest("greater", 0) -- push
-    love.graphics.draw(worldMapCanvas, farthestX-((player.dx/32)*4)-164, farthestY-((player.dy/32)*4)-145)
-    love.graphics.setColor(1,0,0)
-    for i, v in ipairs(enemies) do
-        love.graphics.rectangle("fill", ((v.X*4)+400)+farthestX-((player.dx/32)*4)-164, ((v.Y*4)+400)+farthestY-((player.dy/32)*4)-145, 4, 4)
-    end
-    love.graphics.setColor(1,1,1)
+    love.graphics.setColor(1,1,1,0.7)
+    love.graphics.draw(worldMapCanvas, x + farthestX-((player.dx/32)*4)-164, y + farthestY-((player.dy/32)*4)-145)
+    -- love.graphics.setColor(1,0,0)
+    -- for i, v in ipairs(enemies) do
+    --     love.graphics.rectangle("fill", x + ((v.X*4)+400)+farthestX-((player.dx/32)*4)-164, y + ((v.Y*4)+400)+farthestY-((player.dy/32)*4)-145, 4, 4)
+    -- end
+    -- love.graphics.setColor(1,1,1)
     love.graphics.setStencilTest() -- pop
-    for i, v in ipairs(enemies) do
-        love.graphics.rectangle("fill", ((v.X*4)+400)+farthestX-((player.dx/32)*4)-164, ((v.Y*4)+400)+farthestY-((player.dy/32)*4)-145, 4, 4)
-    end
+    -- for i, v in ipairs(enemies) do
+    --     love.graphics.rectangle("fill", x + ((v.X*4)+400)+farthestX-((player.dx/32)*4)-164, y + ((v.Y*4)+400)+farthestY-((player.dy/32)*4)-145, 4, 4)
+    -- end
+    love.graphics.setColor(1,1,1)
 end
