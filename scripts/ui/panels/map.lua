@@ -49,14 +49,16 @@ function initWorldMap()
 end
 
 function drawWorldMap()
-    love.graphics.stencil(function () return love.graphics.circle("fill", 128, 128,128, 64) end, "replace", 1) -- stencils inventory
+    love.graphics.stencil(function () return love.graphics.rectangle("fill", 0, 0, 256,256,5) end, "replace", 1) -- stencils inventory
     love.graphics.setStencilTest("greater", 0) -- push
     love.graphics.draw(worldMapCanvas, farthestX-((player.dx/32)*4)-164, farthestY-((player.dy/32)*4)-145)
     love.graphics.setColor(1,0,0)
     for i, v in ipairs(enemies) do
-        love.graphics.rectangle("line", ((v.dx/32)*4)+400, (v.dy/32)+400, 4, 4)
+        love.graphics.rectangle("fill", ((v.X*4)+400)+farthestX-((player.dx/32)*4)-164, ((v.Y*4)+400)+farthestY-((player.dy/32)*4)-145, 4, 4)
     end
     love.graphics.setColor(1,1,1)
     love.graphics.setStencilTest() -- pop
-   
+    for i, v in ipairs(enemies) do
+        love.graphics.rectangle("fill", ((v.X*4)+400)+farthestX-((player.dx/32)*4)-164, ((v.Y*4)+400)+farthestY-((player.dy/32)*4)-145, 4, 4)
+    end
 end
