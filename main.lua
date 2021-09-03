@@ -184,6 +184,10 @@ function love.draw()
             drawingText = true
         elseif isNearbyTile("assets/world/objects/Well.png") and not drawingText then
             drawTextBelowPlayer("Press " .. keybinds.INTERACT .. " to Cleanse")
+        elseif isNearbyTile("assets/world/objects/Class Machine.png") and not drawingText then
+            drawTextBelowPlayer("Press " .. keybinds.INTERACT .. " to change class")
+            inventory.notNPC = false
+            drawingText = true
         end
 
         for i, v in ipairs(npcs) do
@@ -301,7 +305,6 @@ local tickCount = 0
 
 function tick()
     tickCount = tickCount + 1
-    -- print(tickCount)
     tickOtherPlayers()
     tickEnemies()
     tickAuras()

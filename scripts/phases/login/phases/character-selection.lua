@@ -328,10 +328,10 @@ function transitionToPhaseGame()
         local response = json:decode(table.concat(b))
         player.x = response['Me']['X']
         player.y = response['Me']['Y']
-        player.dx = player.x*32
-        player.dy = player.y*32
-        player.cx = player.x*32
-        player.cy = player.y*32
+        player.dx = player.x * 32
+        player.dy = player.y * 32
+        player.cx = player.x * 32
+        player.cy = player.y * 32
         totalCoverAlpha = 2
         b = {}
         print("loading world")
@@ -351,6 +351,7 @@ function transitionToPhaseGame()
             love.filesystem.write("world.txt", json:encode(world))
             love.filesystem.write("world-hash.txt", response['WorldHash'])
         end
+
 
         if #world > 0 then
             initWorldTable(world)

@@ -22,6 +22,7 @@ function drawCharacter(v, x, y, ad)
         local notBoat = not string.find(v.Mount.Name,  "boat")
         local direction, offsetX, mountOffsetX
 
+        -- set offsets for drawing
         if ad and ad.previousDirection and ad.previousDirection == "right" then
             direction, offsetX, mountOffsetX = 1,0,0
         elseif ad and ad.previousDirection and ad.previousDirection == "left" then
@@ -32,6 +33,7 @@ function drawCharacter(v, x, y, ad)
         drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,"/back.png")
         
         if v.ActiveSpell and v.ActiveSpell.Name and v.ActiveSpell.Name ~= "" and v.ActiveSpell.Name ~= "None" then
+            -- draw spell auras
             love.graphics.draw(getImgIfNotExist("assets/auras/full/"..v.ActiveSpell.Name..".png"), x,y)
         elseif notBoat then
             love.graphics.setColor(1,1,1)
@@ -248,7 +250,7 @@ end
 
 function drawNamePlate(x,y,name, alpha, level, prestige)
     level = level or null
-    love.graphics.setFont(playerNameFont)  
+    love.graphics.setFont(playerNameFont)
     alpha = alpha or 1
     if level then
         if prestige and prestige > 1 then
@@ -365,6 +367,7 @@ function updateOtherPlayers(dt)
         if drawAnimations then animateOtherPlayer(dt, distance > 3, i) end
 
         if distance > 1 then
+            -- set the speed of movement for the player
             local speed = 64
             if playersDrawable[i].Mount.Name ~= "None" or worldEdit.open then
                 speed = tonumber(playersDrawable[i].Mount.Val) or 64
@@ -377,8 +380,10 @@ function updateOtherPlayers(dt)
                 speed = speed * 1.4
             end
 
+            -- want some sparkles?
             local iWantSparkles = false
 
+            -- move player
             if playersDrawable[i].X - 1 > v.X * 32 then
                 playersDrawable[i].X = playersDrawable[i].X - speed * dt
                 iWantSparkles = true
@@ -406,12 +411,14 @@ function updateOtherPlayers(dt)
         updateBuddy(dt, playersDrawable[i])
         -- updateRangedWeapons(dt, playersDrawable[i])
 
+        -- set all players animation frame
         if not v.Frame then
             if previousPlayers and previousPlayers[i] and previousPlayers[i].Frame then
                 v.Frame = previousPlayers[i].Frame
             else v.Frame = 1 end
         end
 
+        -- set attacking, mainly for animations
         if (v.X ~= v.AX or v.Y ~= v.AY) and nextTick > 0.3 and nextTick < 0.4 then v.Attacking = true end
     end
 end
@@ -424,6 +431,8 @@ function tickOtherPlayers()
                 plr = v
                 setNamePlateAlpha(v, i)
             end
+
+            -- sets the animation position X and Y
             if v.AX ~= 0 then
                 if v.AX < v.X then
                     plr.X = plr.X - 16
@@ -442,6 +451,7 @@ function tickOtherPlayers()
                 end
             end
 
+            -- sets the direction of other players
             if previousPlayers and previousPlayers[i] then
                 if v.X < previousPlayers[i].X then
                     playersDrawable[i].previousDirection = "left"
@@ -453,6 +463,7 @@ function tickOtherPlayers()
     end
 end
 
+-- sets the opacity of the name plate based on how close you are to other players
 function setNamePlateAlpha(v, i)
     local distance = distanceToPoint(v.X * 32, v.Y * 32, player.dx, player.dy)
     if distance < 128 then playersDrawable[i].NameAlpha = distance / 128 playerNameAlpha = distance / 128 else playersDrawable[i].NameAlpha = 1 playerNameAlpha = 1 end

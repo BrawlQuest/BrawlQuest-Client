@@ -28,20 +28,30 @@ function updateWorld(dt)
 end
 
 function createWorld(first)
+    -- creates folder for images
     if not love.filesystem.getInfo( "img" ) then love.filesystem.createDirectory( "img" ) end
     leaves = {}
     worldEmitters = {}
     worldLookup = {}
     originalTiles = {}
+    loadedChunks = {}
 
     local tab = {}
-    for x = chunkMap[1], chunkMap[2] do for y = chunkMap[3], chunkMap[4] do tab[#tab+1] = player.wx + x .."," .. player.wy + y end end
+    -- create table entries
+    for x = chunkMap[1] - 1, chunkMap[2] + 1 do
+        for y = chunkMap[3] - 1, chunkMap[4] + 1 do
+            tab[#tab+1] = player.wx + x .."," .. player.wy + y
+        end
+    end
 
     for key,tiles in next, worldChunks do
-        if orCalc(key, tab) and not first then
+        -- try to get only the chunks you need
+        -- if world chunk has the same name as the table
+        if orCalc(key, tab) and not loadedChunks[key] then -- issue here!
+            loadedChunks[#loadedChunks+1] = key
             for i,v in ipairs(tiles) do
                 worldLookup[v.X..","..v.Y] = v
-                if showWorldAnimations then
+                if showWorldAnimations then -- add world animations such as leaves and smoke
                     addWorldEmitter(v)
                     if not isTileType(v.ForegroundTile, "Dead") and isTileType(v.ForegroundTile, "Tree") and love.math.random(1,5) == 1 then
                         if isTileType(v.ForegroundTile, "Snowy") then addLeaf(v.X*32 + 16, v.Y*32 + 16, "snowy tree")
@@ -50,28 +60,40 @@ function createWorld(first)
                     elseif isTileType(v.ForegroundTile, "Sand") then -- addLeaf(v.X*32 + 16, v.Y*32 + 16, "sand")
                     elseif isTileType(v.GroundTile, "Murky") then addLeaf(v.X*32, v.Y*32+16, "murky") end
                 end
+                -- set the lights that the world gives
                 if lightGivers[v.ForegroundTile] and not lightSource[v.X .. "," .. v.Y] then
                     lightSource[v.X .. "," .. v.Y] = true
                     Luven.addNormalLight(16 + (v.X * 32), 16 + (v.Y * 32), lightGivers[v.ForegroundTile].color, lightGivers[v.ForegroundTile].brightness)
                 end
+
                 if v.GroundTile and v.GroundTile ~= "" then originalTiles[v.X..","..v.Y] = true end
             end
         end
     end
 
+    -- add uncreated tiles to world to create table. These will be loaded each frame
     for cx = player.wx + chunkMap[1], player.wx + chunkMap[2] do
         for cy = player.wy + chunkMap[3], player.wy + chunkMap[4] do
             if not worldImages[cx..","..cy] then worldToCreate[#worldToCreate+1] = {cx = cx, cy = cy,} end
         end
     end
 
-    for key, v in next, worldImages do if not orCalc(key, tab) then v:release( ) table.removekey(worldImages, key) end end
+    -- if the local table doesn't contain the currently shown images, get rid of them!
+    -- for key, v in next, worldImages do
+    --     if not orCalc(key, tab) then
+    --         v:release( )
+    --         table.removekey(worldImages, key)
+    --         table.removekey(loadedChunks, key)
+    --     end
+    -- end
 end
 
 function drawChunks(cx,cy)
     local fileString = "img/" .. cx .. "," .. cy .. ".tga"
     local info = love.filesystem.getInfo( fileString )
-    if info then worldImages[cx..","..cy] = love.graphics.newImage(fileString) else
+    if info then
+        worldImages[cx..","..cy] = love.graphics.newImage(fileString)
+    else
         chunkCanvas = love.graphics.newCanvas(32 * chunkSize, 32 * chunkSize)
         love.graphics.setCanvas(chunkCanvas)
 
@@ -87,7 +109,7 @@ function drawChunks(cx,cy)
         
         love.graphics.setCanvas()
         local imageData = chunkCanvas:newImageData( )
-        imageData:encode("tga", "img/" .. cx .. "," .. cy .. ".tga")
+        -- imageData:encode("tga", "img/" .. cx .. "," .. cy .. ".tga")
         worldImages[cx..","..cy] = love.graphics.newImage(imageData)
     end
 end

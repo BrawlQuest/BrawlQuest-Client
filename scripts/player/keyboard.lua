@@ -83,14 +83,15 @@ function checkKeyPressedPhaseGame(key)
             
                 steam.friends.setRichPresence("steam_display", "#StatusCrafting")
                 steam.friends.setRichPresence("location", zoneTitle.title)
-              
+            elseif isNearbyTile("assets/world/objects/Class Machine.png") and not drawingText then
+                openOrders()
             elseif inventory.notNPC then
                 inventory.forceOpen = not inventory.forceOpen
             else
                 startConversation()
             end
         end
-        if (key == "f" and versionType == "dev") then openOrders() end
+   
         if key == "r" then
             if drawAnimations then
                 drawAnimations = false
