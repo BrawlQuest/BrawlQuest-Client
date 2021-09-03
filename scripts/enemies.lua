@@ -45,7 +45,9 @@ function newEnemyData(data) -- called when nearby data is returned
             if enemy.HP <= 0 then enemy.hasBurst = true
             else enemy.hasBurst = false end
             if not enemyImg[enemy.Enemy.Name] then enemyImg[enemy.Enemy.Name] = getImgIfNotExist(enemy.Enemy.Image) end
+
             enemy.size = enemyImg[enemy.Enemy.Name]:getWidth()
+
             if not enemySounds[enemy.Enemy.Name] then
                 enemySounds[enemy.Enemy.Name] = {
                     attack = {},

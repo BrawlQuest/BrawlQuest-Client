@@ -336,19 +336,22 @@ function transitionToPhaseGame()
         b = {}
         print("loading world")
 
-        local world, size = {}, 0
-
+        local tempWorld, size, worldHash = {}, 0, ""
+       
         if love.filesystem.getInfo("world.txt") then
-            world, size = love.filesystem.read("string", "world.txt")
-            world = json:decode(world)
+            tempWorld, size = love.filesystem.read("string", "world.txt")
+            world = json:decode(tempWorld)
+            worldHash = love.filesystem.read("string", "world-hash.txt")
         end
 
-
-       -- if #world == 0 then
+        if #world == 0 or worldHash ~= response['WorldHash'] then
+            print("Getting new world")
             c, h = http.request{url = api.url.."/world", method="GET", sink=ltn12.sink.table(b)}
             world = json:decode(table.concat(b))
-            love.filesystem.write("world.txt", json:encode_pretty(world))
-       -- end
+            love.filesystem.write("world.txt", json:encode(world))
+            love.filesystem.write("world-hash.txt", response['WorldHash'])
+        end
+
 
         if #world > 0 then
             initWorldTable(world)
@@ -364,7 +367,7 @@ function transitionToPhaseGame()
             zoneChange(json:encode(b).."\n"..tostring(c).."\n"..tostring(h))
         end
         
-
+       
     else
         zoneChange("Error code "..tostring(c))
     end
@@ -375,13 +378,16 @@ function transitionToPhaseGame()
     -- getNews()
 end
 
+
 function initWorldTable(world)
     print("Decoding")
+
     worldChunks = {}
     for i,tile in ipairs(world) do
         local x,y = math.floor((tile.X) / chunkSize), math.floor((tile.Y) / chunkSize)
         if not worldChunks[x..","..y] then worldChunks[x..","..y] = {} end
         if player.world == 0 then worldChunks[x..","..y][#worldChunks[x..","..y] + 1] = copy(tile) end
     end
+    initWorldMap()
 end
 

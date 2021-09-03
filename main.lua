@@ -22,6 +22,7 @@ require "scripts.effects.particles"
 require "scripts.ui.hud_controller"
 require "scripts.libraries.api"
 require "scripts.libraries.utils"
+require "scripts.ui.panels.map"
 require "scripts.libraries.colorize"
 require "scripts.libraries.simple-slider"
 require "scripts.phases.login.login"
@@ -232,6 +233,7 @@ function love.draw()
         if true then text = "BrawlQuest "..version.." "..versionNumber.. "\nPress \"r\" to enable animations preview" .. "\nX,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount .."\n"..playersOnline
         else text = "X,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount end
         love.graphics.print(text, offset, 10)
+        drawWorldMap()
     end
     mx, my = love.mouse.getPosition()
     love.graphics.setColor(1, 1, 1, mouseAmount)
