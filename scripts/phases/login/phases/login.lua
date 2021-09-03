@@ -59,14 +59,16 @@ function drawLoginPhase(countCerp)
 end
 
 function checkClickLoginPhaseLogin(x,y)
-    if isMouseOver(loginImageX + 50, loginImageY + 265, 288, 44) and editingField ~= 1 then
-        editingField = 1
-    elseif isMouseOver(loginImageX + 50, loginImageY + 335, 288, 44) and editingField ~= 2 then
-        editingField = 2
-    elseif isMouseOver(loginImageX + 36, loginImageY + 380, 288, 44) then
-        login()
-    elseif isMouseOver(loginImageX + 50, loginImageY + 460, 262, 30) then
-        loginPhase = "server"
+    if loginImageX and loginImageY then
+        if isMouseOver(loginImageX + 50, loginImageY + 265, 288, 44) and editingField ~= 1 then
+            editingField = 1
+        elseif isMouseOver(loginImageX + 50, loginImageY + 335, 288, 44) and editingField ~= 2 then
+            editingField = 2
+        elseif isMouseOver(loginImageX + 36, loginImageY + 380, 288, 44) then
+            login()
+        elseif isMouseOver(loginImageX + 50, loginImageY + 460, 262, 30) then
+            loginPhase = "server"
+        end
     end
 end
 

@@ -175,8 +175,8 @@ function love.draw()
             inventory.notNPC = false
             drawingText = true
         elseif isNearbyTile("assets/world/objects/Portal.png") and not drawingText then
-            if me.LVL ~= 30 then
-                drawTextBelowPlayer("You must be Level 30 to Enchant")
+            if me.LVL ~= 40 then
+                drawTextBelowPlayer("You must be Level 40 to Enchant")
             else
                 drawTextBelowPlayer("Press " .. keybinds.INTERACT .. " to Enchant")
             end
@@ -233,7 +233,7 @@ function love.draw()
         if true then text = "BrawlQuest "..version.." "..versionNumber.. "\nPress \"r\" to enable animations preview" .. "\nX,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount .."\n"..playersOnline
         else text = "X,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount end
         love.graphics.print(text, offset, 10)
-        drawWorldMap()
+       -- drawWorldMap()
     end
     mx, my = love.mouse.getPosition()
     love.graphics.setColor(1, 1, 1, mouseAmount)

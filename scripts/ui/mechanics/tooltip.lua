@@ -103,10 +103,10 @@ function setItemTooltip(item)
         valueAdditional.desc = "Placeable Flooring"
         valueAdditional.color = {0.8,0.8,0.8}
     end
-    if item.Subtype ~= "None" then
-        
+    if item.Subtype ~= "None" and getUsableSubtypeString(item) then
        valueAdditional.desc = valueAdditional.desc.." ("..item.Subtype..")"
     end
+   
     if me and me.LVL and item and item.Worth and me.LVL >= item.Worth then
         setTooltip(item.Name, "", {valueAdditional, {
             desc = item.Desc,
@@ -124,7 +124,12 @@ function setItemTooltip(item)
             color = {1, 0, 0}
         }})
     end
-    
+    if getUsableSubtypeString(item) then
+        tooltip.additional[#tooltip.additional + 1] = {
+            desc = getUsableSubtypeString(item),
+            color = {1,1,1}
+        }
+    end
     if item.Attributes and item.Attributes ~= "None" then
         att = explode(item.Attributes, ";")
         for i,v in ipairs(att) do

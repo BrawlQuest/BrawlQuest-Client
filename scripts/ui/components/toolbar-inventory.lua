@@ -222,6 +222,30 @@ function isItemUnusable(item)
     end
 end
 
+function getUsableSubtypeString(item) -- returns a string "Usable by *classname*"
+    if item.Subtype and item.Subtype ~= "None" and item.Subtype ~= "Light" and me.Order ~= "None" then
+        if item.Type:sub(1,3) == "arm" then
+            if item.Subtype == "Heavy" then
+                return "Usable by Stoics"
+            elseif item.Subtype == "Medium" then
+                return "Usable by Stoics & Warriors"
+            end
+        elseif item.Type == "wep" then
+            if item.Subtype == "Heavy" then
+                return "Usable by Warriors"
+            elseif item.Subtype == "Medium" then
+                return "Usable by Stoics & Warriors"
+            end
+        elseif item.Type == "spell" then
+            if item.Subtype == "High Mastery" and me.Order ~= "Mage Order" then
+                return "Usable by Mages"
+            end
+        end
+
+        return "Usable by all classes"
+    end
+end
+
 function isSpellUnusable(item)
     return item and item.Type == "spell" and me and me.SpellCooldown and me.SpellCooldown > 0
 end

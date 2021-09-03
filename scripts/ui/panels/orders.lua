@@ -152,6 +152,8 @@ function checkOrdersMousePressed(button)
 end
 
 function openOrders()
+    classMachineSFX:setVolume(sfxVolume)
+    love.audio.play(classMachineSFX)
     o.open = true
     o.selected.item = 0
     o.amount = 0

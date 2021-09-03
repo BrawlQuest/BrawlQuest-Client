@@ -338,7 +338,7 @@ function transitionToPhaseGame()
 
         local tempWorld, size, worldHash = {}, 0, ""
        
-        if love.filesystem.getInfo("world.txt") then
+        if love.filesystem.getInfo("world.txt") and love.filesystem.getInfo("world-hash.txt") then
             tempWorld, size = love.filesystem.read("string", "world.txt")
             world = json:decode(tempWorld)
             worldHash = love.filesystem.read("string", "world-hash.txt")
