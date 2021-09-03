@@ -51,7 +51,7 @@ require "scripts.achievements"
 Luven = require "scripts.libraries.luven.luven"
 
 version = "Early Access" 
-versionType = "dev" -- "dev" for quick login, "release" for not
+versionType = "release" -- "dev" for quick login, "release" for not
 useSteam = true -- turn off for certain naughty computers
 if versionType == "dev" then require 'dev' end
 versionNumber = "1.4.0" -- very important for settings
@@ -66,7 +66,7 @@ newOutliner = require 'scripts.libraries.outliner'
 
 
 version = "Early Access"
-versionType = "dev" -- "dev" for quick login, "release" for not
+versionType = "release" -- "dev" for quick login, "release" for not
 if versionType == "dev" then
     require 'dev'
 end
