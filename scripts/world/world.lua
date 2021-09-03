@@ -1,17 +1,45 @@
 isWorldCreated = false
+leaves = {}
+worldEmitters = {}
 worldImages = {}
 worldLookup = {}
 lightSource = {}
-originalTiles = {}
+serverTiles = {}
 worldToCreate = {}
+worldToDestroy = {}
+loadedChunks = {}
 chunkSize = 4
 halfChunk = chunkSize / 2
 chunkMap = {-8, 8, -6, 6} --{-3, 2, -2, 1}
 chunkCount = 0
 
+--[[
+Get chunks from api
+
+]]
+
+function initWorldTable(world)
+    worldChunks = {}
+    worldLookup = {}
+    for i,tile in ipairs(world) do
+        -- get chunk x and y values
+        local x,y = math.floor((tile.X) / chunkSize), math.floor((tile.Y) / chunkSize)
+        -- add tile to chunk, works perfectly
+        if not worldChunks[x..","..y] then worldChunks[x..","..y] = {} end
+        if player.world == 0 then worldChunks[x..","..y][#worldChunks[x..","..y] + 1] = copy(tile) end
+        -- init world lookup table
+        worldLookup[tile.X..","..tile.Y] = tile
+        addLeavesAndLights(tile)
+        loadedChunks = {}
+    end
+    initWorldMap()
+end
+
 function tickWorld()
+    -- gets players position
     player.wx, player.wy = math.floor((player.x + halfChunk) / chunkSize), math.floor((player.y + halfChunk) / chunkSize)
     player.worldPosition = player.wx .. "," .. player.wy
+    -- creates the world only when necessary
     if player.worldPosition ~= player.prevWorldPosition or not worldLookup[player.worldPosition] then
         player.prevWorldPosition = player.worldPosition
         createWorld()
@@ -19,31 +47,51 @@ function tickWorld()
 end
 
 function updateWorld(dt)
+    -- creates the world only when necessary
     if #worldToCreate > 0 then
         local v = worldToCreate[#worldToCreate]
         loadChunks(v.cx, v.cy)
         drawChunks(v.cx, v.cy)
         table.remove(worldToCreate, #worldToCreate)
     end
+
+    if #worldToDestroy > 0 then
+        local v = worldToDestroy[#worldToDestroy]
+        destroyChunks(v)
+        table.remove(worldToDestroy, #worldToDestroy)
+    end
 end
 
-function createWorld(first)
+function destroyChunks(key)
+    if worldImages[key] then
+        worldImages[key]:release( )
+        table.removekey(worldImages, key)
+        table.removekey(loadedChunks, key)
+    end
+end
+
+function createWorld()
     -- creates folder for images
     if not love.filesystem.getInfo( "img" ) then love.filesystem.createDirectory( "img" ) end
-    leaves = {}
-    worldEmitters = {}
-    worldLookup = {}
-    originalTiles = {}
-    loadedChunks = {}
+    -- leaves = {}
+    -- worldEmitters = {}
+    -- worldLookup = {}
+    -- serverTiles = {}
+    -- loadedChunks = {}
 
-    local tab = {}
+    local chunksAroundPlayer = {}
     -- create table entries
-    for x = chunkMap[1] - 1, chunkMap[2] + 1 do
-        for y = chunkMap[3] - 1, chunkMap[4] + 1 do
-            tab[#tab+1] = player.wx + x .."," .. player.wy + y
+    for x = chunkMap[1], chunkMap[2] do
+        for y = chunkMap[3], chunkMap[4] do
+            chunksAroundPlayer[#chunksAroundPlayer+1] = {
+                key = player.wx + x .. "," .. player.wy + y,
+                cx = player.wx + x,
+                cy = player.wy + y,
+            }
         end
     end
 
+    --[[
     for key,tiles in next, worldChunks do
         -- try to get only the chunks you need
         -- if world chunk has the same name as the table
@@ -51,41 +99,79 @@ function createWorld(first)
             loadedChunks[#loadedChunks+1] = key
             for i,v in ipairs(tiles) do
                 worldLookup[v.X..","..v.Y] = v
-                if showWorldAnimations then -- add world animations such as leaves and smoke
-                    addWorldEmitter(v)
-                    if not isTileType(v.ForegroundTile, "Dead") and isTileType(v.ForegroundTile, "Tree") and love.math.random(1,5) == 1 then
-                        if isTileType(v.ForegroundTile, "Snowy") then addLeaf(v.X*32 + 16, v.Y*32 + 16, "snowy tree")
-                        else addLeaf(v.X*32 + 16, v.Y*32 + 16, "tree") end
-                    elseif isTileType(v.ForegroundTile, "Campfire") then addLeaf(v.X*32 + 16, v.Y*32 + 8, "fire")
-                    elseif isTileType(v.ForegroundTile, "Sand") then -- addLeaf(v.X*32 + 16, v.Y*32 + 16, "sand")
-                    elseif isTileType(v.GroundTile, "Murky") then addLeaf(v.X*32, v.Y*32+16, "murky") end
-                end
-                -- set the lights that the world gives
-                if lightGivers[v.ForegroundTile] and not lightSource[v.X .. "," .. v.Y] then
-                    lightSource[v.X .. "," .. v.Y] = true
-                    Luven.addNormalLight(16 + (v.X * 32), 16 + (v.Y * 32), lightGivers[v.ForegroundTile].color, lightGivers[v.ForegroundTile].brightness)
-                end
-
-                if v.GroundTile and v.GroundTile ~= "" then originalTiles[v.X..","..v.Y] = true end
+                addLeavesAndLights(v)
+                if v.GroundTile and v.GroundTile ~= "" then serverTiles[v.X..","..v.Y] = true end
             end
         end
     end
+    ]]
 
-    -- add uncreated tiles to world to create table. These will be loaded each frame
-    for cx = player.wx + chunkMap[1], player.wx + chunkMap[2] do
-        for cy = player.wy + chunkMap[3], player.wy + chunkMap[4] do
-            if not worldImages[cx..","..cy] then worldToCreate[#worldToCreate+1] = {cx = cx, cy = cy,} end
+    -- for each loaded chunk, destroy what's out of range
+    for key, chunk in pairs(loadedChunks) do
+        local found = false
+        for i,v in pairs(chunksAroundPlayer) do
+            if key == v.key then found = true end
+        end
+        if not found then worldToDestroy[#worldToDestroy+1] = key end
+    end
+
+    -- for players current position, load chunk only
+
+    -- local key = player.wx..","..player.wy
+    for oop, chunk in ipairs(chunksAroundPlayer) do
+        -- if the chunk is a part of the world and if chunk is not already drawn
+        if not loadedChunks[chunk.key] then
+            if worldChunks[chunk.key] then
+                for i, v in ipairs(worldChunks[chunk.key]) do
+                    -- worldLookup[v.X..","..v.Y] = v
+                    if v.GroundTile and v.GroundTile ~= "" then serverTiles[v.X..","..v.Y] = true end
+                end
+            end
+            -- defines that this chunk is loaded ans does not need to be loaded again
+            loadedChunks[chunk.key] = "true"
+            worldToCreate[#worldToCreate+1] = {cx = chunk.cx, cy = chunk.cy,}
         end
     end
+
+
+
+
+    -- add uncreated tiles to world to create table. These will be loaded each frame
+    -- for cx = player.wx + chunkMap[1], player.wx + chunkMap[2] do
+    --     for cy = player.wy + chunkMap[3], player.wy + chunkMap[4] do
+    --         if not worldImages[cx..","..cy] then 
+    --             worldToCreate[#worldToCreate+1] = {cx = cx, cy = cy,}
+    --         end
+    --     end
+    -- end
 
     -- if the local table doesn't contain the currently shown images, get rid of them!
     -- for key, v in next, worldImages do
     --     if not orCalc(key, tab) then
-    --         v:release( )
-    --         table.removekey(worldImages, key)
-    --         table.removekey(loadedChunks, key)
+    --         -- if not worldImages[cx..","..cy] then worldToCreate[#worldToCreate+1] = {cx = cx, cy = cy,} end
+    --         worldToDestroy[#worldToDestroy+1] = key
+    --         -- v:release( )
+    --         -- table.removekey(worldImages, key)
+    --         -- table.removekey(loadedChunks, key)
     --     end
     -- end
+end
+
+function addLeavesAndLights(v)
+    if showWorldAnimations then -- add world animations such as leaves and smoke
+        addWorldEmitter(v)
+        if not isTileType(v.ForegroundTile, "Dead") and isTileType(v.ForegroundTile, "Tree") and love.math.random(1,5) == 1 then
+            if isTileType(v.ForegroundTile, "Snowy") then addLeaf(v.X*32 + 16, v.Y*32 + 16, "snowy tree")
+            else addLeaf(v.X*32 + 16, v.Y*32 + 16, "tree") end
+        elseif isTileType(v.ForegroundTile, "Campfire") then addLeaf(v.X*32 + 16, v.Y*32 + 8, "fire")
+        elseif isTileType(v.ForegroundTile, "Sand") then -- addLeaf(v.X*32 + 16, v.Y*32 + 16, "sand")
+        elseif isTileType(v.GroundTile, "Murky") then addLeaf(v.X*32, v.Y*32+16, "murky") end
+    end
+    -- set the lights that the world gives
+    if lightGivers[v.ForegroundTile] and not lightSource[v.X .. "," .. v.Y] then
+        lightSource[v.X .. "," .. v.Y] = true
+        Luven.addNormalLight(16 + (v.X * 32), 16 + (v.Y * 32), lightGivers[v.ForegroundTile].color, lightGivers[v.ForegroundTile].brightness)
+    end
 end
 
 function drawChunks(cx,cy)
@@ -97,16 +183,14 @@ function drawChunks(cx,cy)
         chunkCanvas = love.graphics.newCanvas(32 * chunkSize, 32 * chunkSize)
         love.graphics.setCanvas(chunkCanvas)
 
-        local originalTiles = {}
-        for key,tiles in next, worldChunks do
-            if key == cx .. "," .. cy then
-                for i,v in ipairs(tiles) do
-                    drawTile(v, cx, cy)
-                    addCritters(v)
-                end
-            end
+        local chunkTiles = worldChunks[cx .. "," .. cy]
+        for i,v in ipairs(chunkTiles) do
+            drawTile(v, cx, cy)
+            addCritters(v)
         end
-        
+
+        -- love.graphics.print(cx .. "," .. cy, cx * chunkSize, cy * chunkSize)
+
         love.graphics.setCanvas()
         local imageData = chunkCanvas:newImageData( )
         -- imageData:encode("tga", "img/" .. cx .. "," .. cy .. ".tga")
@@ -116,20 +200,29 @@ end
 
 function drawTile(v, cx, cy)
     local x, y = v.X - cx * chunkSize, v.Y - cy * chunkSize -- draw
+
+    -- get assets
     local backgroundAsset = getWorldAsset(v.GroundTile, v.X, v.Y)
     local foregroundAsset = getWorldAsset(v.ForegroundTile, v.X, v.Y)
-    
+
+    -- draw noise
     if v.Color then love.graphics.setColor(v.Color, v.Color, v.Color) else drawSimplexNoise(v.X, v.Y) end
+
+    -- draw background
     if worldImg[backgroundAsset] then love.graphics.draw(worldImg[backgroundAsset], x * 32, y * 32) end
 
+    -- shadows
     love.graphics.setColor(0,0,0,0.5)
     if worldLookup[v.X..","..v.Y-1] and (isTileWall(worldLookup[v.X..","..v.Y-1].ForegroundTile) or isTileWall(worldLookup[v.X..","..v.Y-1].GroundTile)) and not isTileWall(v.ForegroundTile) then
         love.graphics.rectangle("fill", x * 32, y * 32, 32, 16)
     elseif (isTileWall(v.GroundTile) or isTileWall(v.ForegroundTile)) and not worldLookup[v.X..","..v.Y+1] then -- no tile below us but we still need to cast a shadow
         love.graphics.rectangle("fill", x * 32, y * 32, 32, 16)
-    end 
+    end
 
+    -- draw noise
     if v.Color then love.graphics.setColor(v.Color, v.Color, v.Color) else drawSimplexNoise(v.X, v.Y) end
+
+    -- draw foreground
     if foregroundAsset ~= backgroundAsset and worldImg[foregroundAsset] then love.graphics.draw(worldImg[foregroundAsset], (x) * 32, (y) * 32) end
 end
 
@@ -157,3 +250,4 @@ function drawSimplexNoise(x, y)
     noise = islandNoise
     love.graphics.setColor(noise * 1 ,noise * 1 ,noise )
 end
+
