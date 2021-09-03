@@ -51,7 +51,7 @@ function initSFX()
     forgingPush = love.audio.newSource("assets/ui/forging/microwave-push.ogg", "static")
     forgingPop = love.audio.newSource("assets/ui/forging/microwave-pop.ogg", "static")
     speakSound = love.audio.newSource("assets/sfx/speak.ogg", "static")
-    classMachineSFX = love.audio.newSource("assets/sfx/ambient/voltage.mp3", "static")
+    classMachineSFX = love.audio.newSource("assets/sfx/ambient/voltage.ogg", "static")
 
     stepSounds = {
         ["assets/world/grounds/grass.png"] = love.audio.newSource("assets/sfx/step/grass.ogg", "static"),
