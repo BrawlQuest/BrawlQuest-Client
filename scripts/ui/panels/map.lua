@@ -1,4 +1,4 @@
-local worldMapCanvas = love.graphics.newCanvas(2048,2048)
+local worldMapCanvas = love.graphics.newCanvas(4048,4048)
 local farthestX = 0
 local farthestY = 0
 local leastX = 0

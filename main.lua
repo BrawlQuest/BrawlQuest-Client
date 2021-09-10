@@ -66,12 +66,12 @@ newOutliner = require 'scripts.libraries.outliner'
 
 
 version = "Early Access"
-versionType = "release" -- "dev" for quick login, "release" for not
+versionType = "dev" -- "dev" for quick login, "release" for not
 if versionType == "dev" then
     require 'dev'
 end
 
-versionNumber = "1.4.0" -- very important for settings
+versionNumber = "1.4.1" -- very important for settings
 
 phase = "login"
 blockMap = {}
