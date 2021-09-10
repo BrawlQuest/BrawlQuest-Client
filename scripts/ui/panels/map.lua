@@ -53,14 +53,17 @@ function drawWorldMap(x, y)
     love.graphics.setStencilTest("greater", 0) -- push
     love.graphics.setColor(1,1,1,0.7)
     love.graphics.draw(worldMapCanvas, x + farthestX-((player.dx/32)*4)-164, y + farthestY-((player.dy/32)*4)-145)
-    -- love.graphics.setColor(1,0,0)
-    -- for i, v in ipairs(enemies) do
-    --     love.graphics.rectangle("fill", x + ((v.X*4)+400)+farthestX-((player.dx/32)*4)-164, y + ((v.Y*4)+400)+farthestY-((player.dy/32)*4)-145, 4, 4)
-    -- end
-    -- love.graphics.setColor(1,1,1)
+    love.graphics.setColor(0,1,1)
+    love.graphics.rectangle("fill", x + farthestX-((player.dx/32)*4)-164 + ((player.dx/32)*4)+400,  y + farthestY-((player.dy/32)*4)-145  + ((player.dy/32)*4)+400, 4, 4)
+    love.graphics.setColor(1,0,0)
+  
+     for i,v in pairs(enemies) do
+        if (v.HP > 0) then
+            love.graphics.rectangle("fill", x + farthestX-((player.dx/32)*4)-164 + ((v.dx/32)*4)+400,  y + farthestY-((player.dy/32)*4)-145  + ((v.dy/32)*4)+400, 4, 4)
+        end
+    end
+
     love.graphics.setStencilTest() -- pop
-    -- for i, v in ipairs(enemies) do
-    --     love.graphics.rectangle("fill", x + ((v.X*4)+400)+farthestX-((player.dx/32)*4)-164, y + ((v.Y*4)+400)+farthestY-((player.dy/32)*4)-145, 4, 4)
-    -- end
+
     love.graphics.setColor(1,1,1)
 end
