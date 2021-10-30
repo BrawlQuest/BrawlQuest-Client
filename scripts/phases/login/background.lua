@@ -7,6 +7,10 @@ loginMountains = {}
 loginTrees = {}
 loginPlayerX = 0
 
+-- halloween related
+flashAlpha = 0
+flashSfx = love.audio.newSource("assets/sfx/weather/lightning_b.ogg", "static")
+
 function initLoginBackground() 
     clouds = {}
     loginGrass = {}
@@ -26,9 +30,10 @@ function initLoginBackground()
         love.graphics.newImage("assets/ui/login/monsters/7.png"),
         love.graphics.newImage("assets/ui/login/monsters/8.png")
     }
-    love.graphics.setBackgroundColor(0.137,0.537,1)
+    --love.graphics.setBackgroundColor(0.137,0.537,1)
+    love.graphics.setBackgroundColor(0.3,0.05,0.5)
   
-    for i=1,8 do
+    for i=1,85 do
         clouds[#clouds+1] = {
             x=love.math.random(-love.graphics.getWidth(),love.graphics.getWidth()),
             y=love.math.random(1,love.graphics.getHeight()),
@@ -65,26 +70,31 @@ function initLoginBackground()
 end
 
 function drawLoginBackground() 
-    love.graphics.setColor(1,1,1,randoMonAlpha)
-    love.graphics.draw(monsterImgs[randoMon1],love.graphics.getWidth()/2-512,love.graphics.getHeight()-360)
-    love.graphics.draw(monsterImgs[randoMon2],love.graphics.getWidth()/2+256,love.graphics.getHeight()-360)
-    love.graphics.setColor(1,1,1,1)
+    -- love.graphics.setColor(1,1,1,randoMonAlpha)
+    -- love.graphics.draw(monsterImgs[randoMon1],love.graphics.getWidth()/2-512,love.graphics.getHeight()-360)
+    -- love.graphics.draw(monsterImgs[randoMon2],love.graphics.getWidth()/2+256,love.graphics.getHeight()-360)
+    love.graphics.setColor(0.2,0.1,0.4,1)
     for i,v in pairs(clouds) do
         love.graphics.draw(cloudImg, v.x, v.y)
     end
-
+    love.graphics.setColor(0.2,0.2,0.2,1)
     for i,v in pairs(loginMountains) do
         love.graphics.draw(mountainImg, v.x, v.y)
     end
 
+    love.graphics.setColor(0.2,0.1,0.4)
     for i,v in pairs(loginGrass) do
         love.graphics.draw(groundImg,v.x,v.y)
     end
-    love.graphics.setColor(1,1,1)
+   
     for i=0,10  do
         love.graphics.draw(loginTreeImg,loginTrees[i].x,love.graphics.getHeight()+loginTrees[i].y)
     end
     love.graphics.draw(playerImg,loginPlayerX,love.graphics.getHeight()-32)
+    love.graphics.setColor(1,1,1,flashAlpha*0.5)
+    love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+    love.graphics.setColor(1,1,1,1)
+    
 end
 
 function updateLoginBackground(dt) 
@@ -126,4 +136,12 @@ function updateLoginBackground(dt)
     if loginPlayerX > love.graphics.getWidth() then
         loginPlayerX = -love.math.random(64,128)
     end
+
+    if love.math.random(1,500) == 1 then
+        flashAlpha = 2
+        flashSfx:setVolume(sfxVolume)
+        flashSfx:play()
+    end
+
+    flashAlpha = flashAlpha - 1*dt
 end
