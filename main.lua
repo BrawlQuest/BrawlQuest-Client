@@ -19,6 +19,7 @@ require "scripts.effects.critters"
 require "scripts.effects.weather"
 require "scripts.effects.world-sfx-emitters"
 require "scripts.effects.particles"
+require "scripts.player.entities"
 require "scripts.ui.hud_controller"
 require "scripts.libraries.api"
 require "scripts.libraries.utils"
@@ -64,14 +65,6 @@ ltn12 = require("ltn12")
 utf8 = require("utf8")
 newOutliner = require 'scripts.libraries.outliner'
 
-
-version = "Early Access"
-versionType = "dev" -- "dev" for quick login, "release" for not
-if versionType == "dev" then
-    require 'dev'
-end
-
-versionNumber = "1.4.1" -- very important for settings
 
 phase = "login"
 blockMap = {}
@@ -264,7 +257,7 @@ function love.update(dt)
                     ["AY"] = player.target.y,
                     ["IsShield"] = love.keyboard.isDown(keybinds.SHIELD)
                 }))
-            nextUpdate = 0.5
+            nextUpdate = 1
         end
         updateWorld(dt)
         updateMouse(dt)

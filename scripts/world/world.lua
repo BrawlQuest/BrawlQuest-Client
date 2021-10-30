@@ -126,7 +126,7 @@ function addLeavesAndLights(v)
         elseif isTileType(v.GroundTile, "Murky") then addLeaf(v.X*32, v.Y*32+16, "murky") end
     end
     -- set the lights that the world gives
-    if lightGivers[v.ForegroundTile] and not lightSource[v.X .. "," .. v.Y] then
+    if lightGivers[v.ForegroundTile] then--and not lightSource[v.X .. "," .. v.Y] then
         lightSource[v.X .. "," .. v.Y] = true
         Luven.addNormalLight(16 + (v.X * 32), 16 + (v.Y * 32), lightGivers[v.ForegroundTile].color, lightGivers[v.ForegroundTile].brightness)
     end

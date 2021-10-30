@@ -19,6 +19,7 @@ alphaShader = love.graphics.newShader[[
 
 function drawCharacter(v, x, y, ad)
     if ad then
+        local playerAlpha = getEntityAlpha(x,y)
         local notBoat = not string.find(v.Mount.Name,  "boat")
         local direction, offsetX, mountOffsetX
 
@@ -29,38 +30,38 @@ function drawCharacter(v, x, y, ad)
             direction, offsetX, mountOffsetX = -1,32,getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"):getWidth() - 11
         end
 
-        love.graphics.setColor(1,1,1)
-        drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,"/back.png")
+        love.graphics.setColor(1,1,1,playerAlpha)
+        drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,"/back.png",playerAlpha)
         
         if v.ActiveSpell and v.ActiveSpell.Name and v.ActiveSpell.Name ~= "" and v.ActiveSpell.Name ~= "None" then
             -- draw spell auras
             love.graphics.draw(getImgIfNotExist("assets/auras/full/"..v.ActiveSpell.Name..".png"), x,y)
         elseif notBoat then
-            love.graphics.setColor(1,1,1)
+            love.graphics.setColor(1,1,1,playerAlpha)
             drawBuddy(v)
-            if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) end
+            if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha,playerAlpha) end
             if drawAnimations then drawAnimation(v, x + offsetX, y, direction)
             else
-                if v.ShieldID ~= 0 then drawArmourImage(x + offsetX,y,v,ad,"ShieldFalse",direction) end
-                drawWeapon(x,y,v,ad,direction,offsetX)
-                if v.Invulnerability >= 0 then love.graphics.setColor(1,1,1,0.3)
-                else love.graphics.setColor(1,1,1) end
+                if v.ShieldID ~= 0 then drawArmourImage(x + offsetX,y,v,ad,"ShieldFalse",direction,playerAlpha) end
+                drawWeapon(x,y,v,ad,direction,offsetX,playerAlpha)
+                if v.Invulnerability >= 0 then love.graphics.setColor(1,1,1,0.3*playerAlpha)
+                else love.graphics.setColor(1,1,1,playerAlpha) end
                 love.graphics.draw(playerImg, x + offsetX, y, 0, direction, 1, 0, 0)
-                drawArmourImage(x,y,v,ad,"LegArmour")
-                drawArmourImage(x,y,v,ad,"ChestArmour")
-                drawArmourImage(x,y,v,ad,"HeadArmour")
+                drawArmourImage(x,y,v,ad,"LegArmour",nil,playerAlpha)
+                drawArmourImage(x,y,v,ad,"ChestArmour",nil,playerAlpha)
+                drawArmourImage(x,y,v,ad,"HeadArmour",nil,playerAlpha)
             end
-            love.graphics.setColor(1,1,1)
-            drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,"/fore.png")
+            love.graphics.setColor(1,1,1,playerAlpha)
+            drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,"/fore.png",playerAlpha)
             if not drawAnimations and v.IsShield and v.ShieldID ~= 0 and notBoat then drawArmourImage(x+12 + 0 * direction,y,v,ad,"Shield",direction) end
         end
 
     end
 end
 
-function drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,type)
+function drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,type,playerAlpha)
     if v.Mount.Name ~= "" then
-        if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) else love.graphics.setColor(1, 1, 1) end
+        if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha, playerAlpha) else love.graphics.setColor(1, 1, 1, playerAlpha) end
         if notBoat then love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name)..type), x + 6 + mountOffsetX, y + 9, 0, direction, 1, 0, 0)
         else love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"), x  + mountOffsetX, y, 0, direction, 1, 0, 0) end
         if v.Mount.Enchantment ~= "None" then
@@ -77,7 +78,7 @@ function drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,type)
     end
 end
 
-function drawWeapon(x,y,v,ad,direction,offsetX)
+function drawWeapon(x,y,v,ad,direction,offsetX,playerAlpha)
 
     if not itemImg[v.Weapon.ImgPath] then
         if love.filesystem.getInfo(v.Weapon.ImgPath) then
@@ -88,7 +89,7 @@ function drawWeapon(x,y,v,ad,direction,offsetX)
     end
 
     if v["WeaponID"] ~= 0 then
-        if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) else love.graphics.setColor(1, 1, 1) end
+        if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha, playerAlpha) else love.graphics.setColor(1, 1, 1, playerAlpha) end
         love.graphics.draw(itemImg[v.Weapon.ImgPath], x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32) * direction + offsetX, y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, direction, 1, 0, 0)
         if v.Weapon.Enchantment ~= "None" then
             love.graphics.push()
@@ -103,11 +104,11 @@ function drawWeapon(x,y,v,ad,direction,offsetX)
     end
 end
 
-function drawArmourImage(x,y,v,ad,type,direction)
+function drawArmourImage(x,y,v,ad,type,direction,playerAlpha)
     if v[type.."ID"] ~= 0 then
-        if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) else love.graphics.setColor(1, 1, 1) end
+        if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha, playerAlpha) else love.graphics.setColor(1, 1, 1, playerAlpha) end
         if v.Invulnerability >= 0 then
-            love.graphics.setColor(1,1,1,0.3)
+            love.graphics.setColor(1,1,1,0.3*playerAlpha)
         end
         if type ~= "ShieldFalse" then drawItemIfExists(v[type].ImgPath, x, y, ad.previousDirection) else love.graphics.draw(shieldFalse, x, y, 0, direction, 1) end
         if v[type] and v[type].Enchantment ~= "None" then
@@ -178,7 +179,7 @@ function drawPlayer(v, i)
         local alpha
         if true then alpha = v.NameAlpha else alpha = 1 end
 
-        drawNamePlate(v.X + boi, v.Y, v.Name, v.NameAlpha, thisPlayer.LVL, thisPlayer.Prestige, thisPlayer.IsPremium) -- thisPlayer.LVL
+        drawNamePlate(v.X + boi, v.Y, thisPlayer.Name, v.NameAlpha, thisPlayer.LVL, thisPlayer.Prestige, v.IsPremium) -- thisPlayer.LVL
         
         if thisPlayer ~= nil and thisPlayer.AX then -- attack players
             local diffX = 0
@@ -252,6 +253,7 @@ function drawNamePlate(x,y,name, alpha, level, prestige, isPremium)
     level = level or null
     love.graphics.setFont(playerNameFont)
     alpha = alpha or 1
+    local playerAlpha = getEntityAlpha(x, y)
     if level then
         if prestige and prestige > 1 then
             local thisX, thisY = x , y - 4
@@ -263,29 +265,29 @@ function drawNamePlate(x,y,name, alpha, level, prestige, isPremium)
             local dx = thisX - (fullWidth * 0.5)
             local dy = thisY - nameHeight - padding.y - 1
             local dh = nameHeight + (padding.y * 2)
-            
+      
             if (isPremium) then
-                love.graphics.setColor(1,0.6,0,0.6*alpha)
+                love.graphics.setColor(1,0.6,0,0.6*alpha*playerAlpha)
             else
-                love.graphics.setColor(0, 0, 0, 0.6 * alpha)
+                love.graphics.setColor(0, 0, 0, 0.6 * alpha*playerAlpha)
             end
             roundRectangle("fill", dx, dy, fullWidth, dh, 3)
             -- love.graphics.setColor(1,1,1,1 * alpha)
             -- roundRectangle("fill", dx, dy, prestigeWidth + padding.x * 2, dh, 3, {true, false, false, true})
             
-            love.graphics.setColor(1,0,0,alpha)
+            love.graphics.setColor(1,0,0,alpha*playerAlpha)
             love.graphics.rectangle("fill", dx + (prestigeWidth + padding.x * 2), dy, levelWidth + padding.x * 2, dh)
             if (isPremium) then
-                love.graphics.setColor(1,1,1,alpha)
+                love.graphics.setColor(1,1,1,alpha*playerAlpha)
             else
-                love.graphics.setColor(1, 0, 0, alpha)
+                love.graphics.setColor(1, 0, 0, alpha*playerAlpha)
             end
           
             love.graphics.print(prestige, dx + padding.x + 0.5, thisY - nameHeight - 2 + padding.y)
             if (isPremium) then
-                love.graphics.setColor(0,0,0,0.6*alpha)
+                love.graphics.setColor(0,0,0,0.6*alpha*playerAlpha)
             else
-                love.graphics.setColor(1, 1, 1, alpha)
+                love.graphics.setColor(1, 1, 1, alpha*playerAlpha)
             end
            
             love.graphics.print(level, dx + padding.x + 0.5 + (prestigeWidth + padding.x * 2), thisY - nameHeight - 2 + padding.y)
@@ -300,12 +302,12 @@ function drawNamePlate(x,y,name, alpha, level, prestige, isPremium)
             local dy = thisY - nameHeight - padding.y - 1
             local dh = nameHeight + (padding.y * 2)
             
-            love.graphics.setColor(0, 0, 0, 0.6 * alpha)
+            love.graphics.setColor(0, 0, 0, 0.6 * alpha*playerAlpha)
             roundRectangle("fill", dx, dy, fullWidth, dh, 3)
-            love.graphics.setColor(1,0,0,alpha)
+            love.graphics.setColor(1,0,0,alpha*playerAlpha)
             roundRectangle("fill", dx, dy, levelWidth + padding.x * 2, dh, 3, {true, false, false, true})
             
-            love.graphics.setColor(1, 1, 1, alpha)
+            love.graphics.setColor(1, 1, 1, alpha*playerAlpha)
             love.graphics.print(level, dx + padding.x + 0.5, thisY - nameHeight - 2 + padding.y)
             love.graphics.print(name, dx + padding.x * 3 + levelWidth, thisY - nameHeight - 2 + padding.y)
         end
@@ -316,9 +318,9 @@ function drawNamePlate(x,y,name, alpha, level, prestige, isPremium)
         local nameWidth = playerNameFont:getWidth(name)
         local nameHeight = playerNameFont:getHeight(name)
         local padding = 2
-        love.graphics.setColor(0, 0, 0, 0.6 * alpha)
+        love.graphics.setColor(0, 0, 0, 0.6 * alpha*playerAlpha)
         roundRectangle("fill", (thisX) - (nameWidth / 2) - (padding) - 2, thisY - nameHeight - 3, nameWidth + (padding * 2) + 3, nameHeight + (padding * 2), 3)
-        love.graphics.setColor(1, 1, 1, alpha)
+        love.graphics.setColor(1, 1, 1, alpha*playerAlpha)
         love.graphics.print(name, (thisX) - (nameWidth * 0.5), thisY - nameHeight - 2 + padding)
     end
 end
@@ -438,6 +440,9 @@ function updateOtherPlayers(dt)
 end
 
 function tickOtherPlayers()
+    for i,v in ipairs(players) do
+        
+    end
     for i, v in pairs(players) do
         if playersDrawable[i] then
             local plr = playersDrawable[i]
@@ -445,14 +450,15 @@ function tickOtherPlayers()
                 plr = v
                 setNamePlateAlpha(v, i)
             end
+            v.Name = plr.Name
 
             -- sets the animation position X and Y
             if v.AX ~= 0 then
                 if v.AX < v.X then
-                    plr.X = plr.X - 16
+                    plr.X = plr.X - 15
                     plr.previousDirection = "left"
                 elseif v.AX > v.X then
-                    plr.X = plr.X + 16
+                    plr.X = plr.X + 15
                     plr.previousDirection = "right"
                 end
             end

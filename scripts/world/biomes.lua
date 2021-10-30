@@ -90,7 +90,7 @@ function createNoiseTile(groundTile,foregroundTile,cx,cy,x,y,nx,ny,color)
     }
     worldChunks[cx..","..cy][#worldChunks[cx..","..cy]+1] = tile
     worldLookup[nx..","..ny] = tile
-    if lightGivers[foregroundTile] and not lightSource[nx..","..ny] then
+    if lightGivers[foregroundTile] then--and not lightSource[nx..","..ny] then
         lightSource[nx..","..ny] = true
         Luven.addNormalLight(16 + (nx * 32), 16 + (ny * 32), lightGivers[foregroundTile].color, lightGivers[foregroundTile].brightness)
     end

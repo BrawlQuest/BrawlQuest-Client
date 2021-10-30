@@ -71,7 +71,7 @@ function tickAuras()
             Stat = v.Stat,
             alpha = 1,
             Radius = v.Radius,
-           -- lightID = Luven.addNormalLight(16 + v.X * 32, 16 + v.Y * 32, auraColors[v.Stat], 2),
+            lightID = Luven.addNormalLight(16 + v.X * 32, 16 + v.Y * 32, auraColors[v.Stat], 2),
             hasBurst = false,
             expanding = true,
             maxWidth = 0,
@@ -134,7 +134,7 @@ function updateAuras(dt)
         v.alpha = v.alpha - 0.3 * dt
 
         if v.alpha < 0 then
-      --      Luven.removeLight(v.lightID) 
+            Luven.removeLight(v.lightID) 
             table.remove(auraAuras, i)
         end
     end
