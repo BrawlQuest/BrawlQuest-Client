@@ -11,8 +11,30 @@ function serverResponse()
 
             if response then
                 previousPlayers = copy(players) -- Temp
-
-                players = response['Players']
+                if #players == 0 then
+                    players = response['Players']
+                end
+              --  players = response['Players']
+                -- re-order players to match previous order so we can loop properly
+                local playersFound = {} -- a table to match against the players found. If a player isn't being sent then we need to remove it
+                for i,v in ipairs(response['Players']) do
+                    playersFound[#playersFound+1] = v['Name']
+                    local foundPlayer = false -- if this isn't ever changed to true then we need to create the player
+                    for k,x in ipairs(previousPlayers) do
+                        if k == i and x['Name'] ~= v['Name'] then
+                            players[i] = v
+                            foundPlayer = true
+                        end
+                    end
+                    if not foundPlayer then
+                        players[i] = v -- create the player
+                    end
+                end
+                for i,v in ipairs(players) do -- remove players we haven't found from the players table
+                    if not arrayContains(playersFound, v['Name']) then
+                        table.remove(players, i)
+                    end
+                end
                 if player.world == 0 then npcs = response['NPC'] end
                 auras = response['Auras']
                 playersOnline = ""

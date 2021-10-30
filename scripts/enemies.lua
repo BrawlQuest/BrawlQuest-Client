@@ -198,6 +198,7 @@ function drawEnemies()
         local range = worldMask.range * 32
         local size = enemyImg[v.Enemy.Name]:getWidth()
         local halfSize = size / 2
+        local enemyAlpha = getEntityAlpha(v.dx, v.dy)
         if distance <= range then
             if v.HP > 0 and v.updated and os.time(os.date("!*t")) - v.lastUpdate < 5 then
                 local intensity = 1 - (range / (range + difference(range, distance) * 4) - 0.2)
@@ -209,7 +210,7 @@ function drawEnemies()
                 end
 
                 if distance <= range then
-                    love.graphics.setColor(1, 1 - v.red, (1 - v.red), intensity)
+                    love.graphics.setColor(1, 1 - v.red, (1 - v.red), intensity * enemyAlpha)
                     love.graphics.draw(enemyImg[v.Enemy.Name], v.dx + offsetX, v.dy, 0, rotation, 1, 0, 0)
                 end
 
@@ -218,25 +219,25 @@ function drawEnemies()
 
                 if me.HP and v.Enemy.ATK and enemyHealth < playerHealth then
                     local distanceIntensity = 1 - (distance / 128)
-                    love.graphics.setColor(1, cerp(0, 0.5, nextTick * 2), 0, intensity * distanceIntensity)
+                    love.graphics.setColor(1, cerp(0, 0.5, nextTick * 2), 0, intensity * distanceIntensity  * enemyAlpha)
                     love.graphics.draw(skull, v.dx - 6, v.dy - 8, 0, 1)
                 end
 
                 -- show red when hit
                 if v.dhp < v.mhp or not v.Enemy.CanMove then
                     if v.Enemy.CanMove then
-                        love.graphics.setColor(1, 0, 0, intensity)
+                        love.graphics.setColor(1, 0, 0, intensity * enemyAlpha)
                         love.graphics.rectangle("fill", v.dx, v.dy - 6, (v.dhp / v.mhp) * size, 6)
                     else
-                        love.graphics.setColor(0.2, 0.2, 1, intensity)
+                        love.graphics.setColor(0.2, 0.2, 1, intensity * enemyAlpha)
                         love.graphics.rectangle("fill", v.dx, v.dy - 2, (v.dhp / v.mhp) * size, 2)
                     end
                 end
 
                 -- draws alert when first seen
-                love.graphics.setColor(1, 1, 1, v.aggroAlpha * intensity)
+                love.graphics.setColor(1, 1, 1, v.aggroAlpha * intensity )
                 love.graphics.draw(alertImg, v.dx + 8, v.dy - 16)
-                love.graphics.setColor(1, 1, 1, intensity)
+                love.graphics.setColor(1, 1, 1, intensity * enemyAlpha)
 
                 -- draw lines
                 if v.TargetName == player.name and v.Enemy.CanMove then
@@ -245,9 +246,9 @@ function drawEnemies()
                     end
                     if enemies[i].linesDrawable == true and v.IsAggro then
                         if (v.Enemy.Range + 1) * 32 >= distance then
-                            love.graphics.setColor(1, 0, 0, nextTick * intensity)
+                            love.graphics.setColor(1, 0, 0, nextTick * intensity * enemyAlpha)
                             love.graphics.line(v.dx + halfSize, v.dy + halfSize, player.dx + 16, player.dy + 16)
-                            love.graphics.setColor(1, 1, 1, intensity)
+                            love.graphics.setColor(1, 1, 1, intensity * enemyAlpha)
                             if v.Enemy.XP / player.lvl > 1 then
                                 outlinerOnly:draw(2, enemyImg[v.Enemy.Name], enemyQuads[v.Enemy.Name], v.dx + offsetX,
                                     v.dy, 0, rotation, 1)

@@ -17,10 +17,11 @@ function drawNPCs()
                 end
             end
 
-            love.graphics.setColor(1, 1, 1, intensity)
+            love.graphics.setColor(1,1,1,getEntityAlpha(v.X, v.Y))
             love.graphics.draw(worldImg[v.ImgPath], v.X, v.Y)
             drawNamePlate(v.X + 16, v.Y, v.Name, intensity)
             local isQuestCompleter = false
+            love.graphics.setColor(1,1,1,getEntityAlpha(v.X, v.Y))
             for k,q in ipairs(quests[1]) do
                 if q.rawData.Quest.ReturnNPCID == v.ID and q.currentAmount == q.requiredAmount then
                     love.graphics.draw(questCompleteImg , v.X + 8, v.Y - 32 + v.AlertY)
