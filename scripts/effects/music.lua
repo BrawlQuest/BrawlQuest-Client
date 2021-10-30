@@ -31,14 +31,17 @@ function loadMusic()
         Warrior = love.audio.newSource("assets/music/classes/Warrior.mp3", "stream"),
         Mage = love.audio.newSource("assets/music/classes/Mage.mp3", "stream"),
         Stoic = love.audio.newSource("assets/music/classes/Stoic.mp3", "stream"),
+        Jungle = love.audio.newSource("assets/music/temp/Lost-Meadow_Looping.mp3", "stream"),
+        Halloween = love.audio.newSource("assets/music/event/The-Island-of-Dr-Sinister.mp3", "stream")
     }
+  
 
-    worldMusic = {"Warrior", "Mage", "Stoic", "The-Castle-Mice", "Of-Legends-and-Fables", "PuerLavari", "Mining", "Sax", "ToFindTheOne", "Heat", "Longing", "Permafrost", "Enchantment", "Enchantment Haunt", "Dreamlands", "Of-Legends-and-Fables-2"}
+    worldMusic = {"Warrior", "Mage", "Stoic", "The-Castle-Mice", "Of-Legends-and-Fables", "PuerLavari", "Mining", "Sax", "ToFindTheOne", "Heat", "Longing", "Permafrost", "Enchantment", "Enchantment Haunt", "Dreamlands", "Of-Legends-and-Fables-2", "Jungle"}
     battleMusic = {"Titans", "Skirmish", "Skirmish2", "CaperOfCruelty", "HIJINKS", }
 
     musicSwitchAmount = 0
 
-    titleMusic = love.audio.newSource("assets/music/album1/Longing Startup - Bass.mp3", "stream")
+    titleMusic = music.Halloween--love.audio.newSource("assets/music/album1/Longing Startup - Bass.mp3", "stream")
     previousMusicTile = null
 
     if musicVolume ~= 0 then

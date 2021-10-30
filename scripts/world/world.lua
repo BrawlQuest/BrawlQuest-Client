@@ -29,6 +29,8 @@ function initWorldTable(world)
         if player.world == 0 then worldChunks[x..","..y][#worldChunks[x..","..y] + 1] = copy(tile) end
         -- init world lookup table
         worldLookup[tile.X..","..tile.Y] = tile
+          addLeavesAndLights(tile)
+            addCritters(tile)
         loadedChunks = {}
     end
     initWorldMap()
@@ -136,14 +138,15 @@ function drawChunks(cx,cy)
     if info then
         worldImages[cx..","..cy] = love.graphics.newImage(fileString)
     else
+        -- load chunk
         chunkCanvas = love.graphics.newCanvas(32 * chunkSize, 32 * chunkSize)
         love.graphics.setCanvas(chunkCanvas)
 
         local chunkTiles = worldChunks[cx .. "," .. cy]
+        
         for i,v in ipairs(chunkTiles) do
             drawTile(v, cx, cy)
-            addLeavesAndLights(v)
-            addCritters(v)
+          
         end
 
         love.graphics.setCanvas()

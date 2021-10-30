@@ -69,7 +69,6 @@ function addCritters(v)
             alpha = 2,
             critter = {},
             type = v.GroundTile
-
         }
 
         if critterType[v.GroundTile].light then
@@ -92,15 +91,18 @@ end
 
 function drawCritters()
     for i, v in ipairs(critters) do
-        love.graphics.setColor(1, 1, 1, v.alpha)
-        for k, a in pairs(v.critter) do
-            love.graphics.draw(getImgIfNotExist(critterType[v.type].img), a.x, a.y)
+        if distanceToPoint(player.dx, player.dy, v.x, v.y) < 256 then
+            love.graphics.setColor(1, 1, 1, v.alpha)
+            for k, a in pairs(v.critter) do
+                love.graphics.draw(getImgIfNotExist(critterType[v.type].img), a.x, a.y)
+            end
         end
     end
 end
 
 function updateCritters(dt)
     for i, v in ipairs(critters) do
+        if distanceToPoint(player.dx, player.dy, v.x, v.y) < 256 then
         if target.hit and target.hit.x and target.hit.y and (distanceToPoint(player.dx, player.dy, v.x, v.y) < 64 or distanceToPoint(target.hit.x * 32, target.hit.y * 32, v.x, v.y) < 64) then
             v.alpha = v.alpha - 3 * dt
             if v.light then
@@ -182,6 +184,7 @@ function updateCritters(dt)
                 end
             end
         end
+    end
 
     end
 end

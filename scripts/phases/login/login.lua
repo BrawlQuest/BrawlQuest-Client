@@ -41,7 +41,7 @@ function initLogin()
         "",
         "Created By" ,
         "Thomas Lock & Danjoe Stubbs",
-        "Original music by JoeyFunWithMusic\nAdditional music by Eric Matyas (Some Dreamy Place, Ocean Game Title, Left Behind, Dreamlands, Their Sacred Place, The Castle Mice, North Ridge, The Key To The Kingdom, Ancient Game Open)",
+        "Original music by JoeyFunWithMusic\nAdditional music by Eric Matyas (Some Dreamy Place, Ocean Game Title, Left Behind, Dreamlands, Their Sacred Place, The Castle Mice, North Ridge, The Key To The Kingdom, Ancient Game Open, The Castle of Dr Sinister)",
         "",
         "Graphics by David E. Gervais,used here under a CC license. pousse.rapiere.free.fr/tome/",
         "",

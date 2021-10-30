@@ -178,7 +178,7 @@ function drawPlayer(v, i)
         local alpha
         if true then alpha = v.NameAlpha else alpha = 1 end
 
-        drawNamePlate(v.X + boi, v.Y, v.Name, v.NameAlpha, thisPlayer.LVL, thisPlayer.Prestige) -- thisPlayer.LVL
+        drawNamePlate(v.X + boi, v.Y, v.Name, v.NameAlpha, thisPlayer.LVL, thisPlayer.Prestige, thisPlayer.IsPremium) -- thisPlayer.LVL
         
         if thisPlayer ~= nil and thisPlayer.AX then -- attack players
             local diffX = 0
@@ -248,7 +248,7 @@ function drawArrowImage(diffX, diffY, x, y)
     end
 end
 
-function drawNamePlate(x,y,name, alpha, level, prestige)
+function drawNamePlate(x,y,name, alpha, level, prestige, isPremium)
     level = level or null
     love.graphics.setFont(playerNameFont)
     alpha = alpha or 1
@@ -264,16 +264,30 @@ function drawNamePlate(x,y,name, alpha, level, prestige)
             local dy = thisY - nameHeight - padding.y - 1
             local dh = nameHeight + (padding.y * 2)
             
-            love.graphics.setColor(0, 0, 0, 0.6 * alpha)
+            if (isPremium) then
+                love.graphics.setColor(1,0.6,0,0.6*alpha)
+            else
+                love.graphics.setColor(0, 0, 0, 0.6 * alpha)
+            end
             roundRectangle("fill", dx, dy, fullWidth, dh, 3)
             -- love.graphics.setColor(1,1,1,1 * alpha)
             -- roundRectangle("fill", dx, dy, prestigeWidth + padding.x * 2, dh, 3, {true, false, false, true})
+            
             love.graphics.setColor(1,0,0,alpha)
             love.graphics.rectangle("fill", dx + (prestigeWidth + padding.x * 2), dy, levelWidth + padding.x * 2, dh)
-
-            love.graphics.setColor(1, 0, 0, alpha)
+            if (isPremium) then
+                love.graphics.setColor(1,1,1,alpha)
+            else
+                love.graphics.setColor(1, 0, 0, alpha)
+            end
+          
             love.graphics.print(prestige, dx + padding.x + 0.5, thisY - nameHeight - 2 + padding.y)
-            love.graphics.setColor(1, 1, 1, alpha)
+            if (isPremium) then
+                love.graphics.setColor(0,0,0,0.6*alpha)
+            else
+                love.graphics.setColor(1, 1, 1, alpha)
+            end
+           
             love.graphics.print(level, dx + padding.x + 0.5 + (prestigeWidth + padding.x * 2), thisY - nameHeight - 2 + padding.y)
             love.graphics.print(name, dx + padding.x * 3 + levelWidth + (prestigeWidth + padding.x * 2), thisY - nameHeight - 2 + padding.y)
         else

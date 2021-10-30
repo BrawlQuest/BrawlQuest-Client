@@ -182,6 +182,8 @@ function newEnemyData(data) -- called when nearby data is returned
         enemyCollisionsPrevious[0] = {}
     end
 
+    for i, v in ipairs(enemies) do table.remove(enemies, i) end
+
     -- for i, v in ipairs(enemies) do
     --     if os.time(os.date("!*t")) - v.lastUpdate > 5 then -- TODO: figure out why this doesn't actually remove an enemy from the table
     --         table.remove(enemies, i)
