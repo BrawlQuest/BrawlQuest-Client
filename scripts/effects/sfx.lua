@@ -78,6 +78,7 @@ function initSFX()
         ["assets/npc/Person.png"] = love.audio.newSource("assets/sfx/npc/person.ogg", "static"),
         ["assets/npc/Drunk Man.png"] = love.audio.newSource("assets/sfx/npc/drunk man.ogg", "static"),
         ["assets/npc/Priest.png"] = love.audio.newSource("assets/sfx/npc/soldier.ogg", "static"),
+        ["assets/npc/Mr Bones.png"] = love.audio.newSource("assets/sfx/npc/mr bones.ogg", "static"),
     }
 
     staffExplode = generateNoise()

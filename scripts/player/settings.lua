@@ -40,7 +40,7 @@ function initSettings()
     showClouds = false
     showShadows = false
     showWorldMask = true
-    showWorldAnimations = true
+    showWorldAnimations = false
     showHUD = true
     oldTargeting = false
 

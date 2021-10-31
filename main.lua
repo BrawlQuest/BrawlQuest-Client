@@ -55,7 +55,7 @@ version = "Early Access"
 versionType = "dev" -- "dev" for quick login, "release" for not
 useSteam = true -- turn off for certain naughty computers
 if versionType == "dev" then require 'dev' end
-versionNumber = "1.4.1" -- very important for settings
+versionNumber = "1.4.2" -- very important for settings
 drawAnimations = false -- player animations
 
 if love.system.getOS() ~= "Linux" and useSteam then steam = require 'luasteam' end -- we can disable other platforms here. Can't get Steam working on Linux and we aren't targetting it so this'll do for dev purposes
