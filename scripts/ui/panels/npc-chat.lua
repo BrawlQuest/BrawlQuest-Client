@@ -230,16 +230,21 @@ function continueConversation()
                 npcChat.Title = ""
             else
                 local b = {}
+                print(api.url.."/conversation/"..v[2].."/"..username.."/"..currentNPC)
                 c, h = http.request{url = api.url.."/conversation/"..v[2].."/"..username.."/"..currentNPC, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
                 if b ~= nil then
                     npcChat = json:decode(table.concat(b))
-                    local optionString = npcChat.Options
-                 --   optionString = string.gsub(optionString, "'s", 's')
-                    optionString = string.gsub(optionString, "'t", 't')
-                    optionString = string.gsub(optionString, "'ll", 'll')
-                    optionString = string.gsub(optionString, "'ve", 've')
-                    optionString =  string.gsub(optionString, "'", '"')
-                    npcChat.Options = json:decode(optionString)
+                    if npcChat then
+                        local optionString = npcChat.Options
+                    --   optionString = string.gsub(optionString, "'s", 's')
+                        optionString = string.gsub(optionString, "'t", 't')
+                        optionString = string.gsub(optionString, "'ll", 'll')
+                        optionString = string.gsub(optionString, "'ve", 've')
+                        optionString =  string.gsub(optionString, "'", '"')
+                        npcChat.Options = json:decode(optionString)
+                    -- else
+                    --     npcChat.options = {{"Okay", "1"},}
+                    end
                     --npcChat.Options = json:decode(string.gsub(npcChat.Options, "'", '"'))
                 end
             end

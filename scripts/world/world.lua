@@ -21,6 +21,8 @@ Get chunks from api
 function initWorldTable(world)
     worldChunks = {}
     worldLookup = {}
+    worldEmitters = {}
+    critters = {}
     for i,tile in ipairs(world) do
         -- get chunk x and y values
         local x,y = math.floor((tile.X) / chunkSize), math.floor((tile.Y) / chunkSize)

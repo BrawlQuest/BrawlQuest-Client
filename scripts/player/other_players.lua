@@ -107,7 +107,7 @@ end
 function drawArmourImage(x,y,v,ad,type,direction,playerAlpha)
     if v[type.."ID"] ~= 0 then
         if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha, playerAlpha) else love.graphics.setColor(1, 1, 1, playerAlpha) end
-        if v.Invulnerability >= 0 then
+        if v.Invulnerability >= 0 and playerAlpha then
             love.graphics.setColor(1,1,1,0.3*playerAlpha)
         end
         if type ~= "ShieldFalse" then drawItemIfExists(v[type].ImgPath, x, y, ad.previousDirection) else love.graphics.draw(shieldFalse, x, y, 0, direction, 1) end

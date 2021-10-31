@@ -50,7 +50,7 @@ end
 
 function setAmbientLighting()
     local l = lighting
-    local tab = {l.tab[1] + timeOfDay * l.timeAmount + 0.3, l.tab[2] + timeOfDay * l.timeAmount + 0.3, l.tab[3] + timeOfDay * l.timeAmount + 0.3}
+    local tab = {l.tab[1] + timeOfDay * l.timeAmount + 0.3, l.tab[2] + timeOfDay * l.timeAmount + 0.1, l.tab[3] + timeOfDay * l.timeAmount + 0.6}
     Luven.setAmbientLightColor(tab)
 end
 

@@ -68,7 +68,7 @@ end
 
 function updateLeaves(dt)
     for i,v in ipairs(leaves) do
-        if distanceToPoint(player.dx, player.dy, v.bx, v.by) < 1024 then
+        if distanceToPoint(player.dx, player.dy, v.bx, v.by) < 200 then
             v.x = v.x - v.xv*dt
             v.y = v.y - v.yv*dt
             v.r = v.r + v.rs*dt
@@ -93,8 +93,10 @@ end
 
 function drawLeaves()
     for i,v in ipairs(leaves) do
-        love.graphics.setColor(1,1,1,v.alpha)
-        love.graphics.draw(leafImg[v.type].img, v.x, v.y, v.r)
+        if distanceToPoint(me.X, me.Y, v.x, v.y) > 200 then
+            love.graphics.setColor(1,1,1,v.alpha)
+            love.graphics.draw(leafImg[v.type].img, v.x, v.y, v.r)
+        end
     end
 end
 
