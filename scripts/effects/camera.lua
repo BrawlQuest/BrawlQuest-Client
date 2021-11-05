@@ -57,9 +57,7 @@ end
 function setLighting(response)
     local l = lighting
 
-   -- timeOfDay = cerp(0.1, 1, ((math.abs(response['CurrentHour']) * 60) + 0) / 720)
- --   timeOfDay = timeOfDay + 0.1
-    timeOfDay = 0
+    timeOfDay = cerp(0.1, 1, ((math.abs(response['CurrentHour']) * 60) + 0) / 720)
 
     if not worldEdit.open then
         
