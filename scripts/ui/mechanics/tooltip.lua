@@ -12,13 +12,13 @@ tooltip = {
     spacing = 2,
     perks = {{
         title = "Strength",
-        desc = "Increases maximum potential bonus damage output by 1 for each point (damage is wep value plus 1 to STR)"
+        desc = "Increases melee damage output by 1 for each point."
     }, {
         title = "Intelligence",
         desc = "Increases the potency of your spells. Each point increases the impact of spells (check spell tooltips to see updated values)"
     }, {
         title = "Stamina",
-        desc = "Increases your character's HP. You gain an extra 15 HP per point."
+        desc = "Increases your character's HP. You gain an extra 10 HP per point."
     }}
 }
 
