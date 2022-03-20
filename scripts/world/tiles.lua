@@ -83,9 +83,6 @@ function getDrawableWall(tileName, x, y) -- this is used to smooth the corners o
     -- end
 end
 
-function isTileWater(tileName)
-   return isTileType(tileName, "Water")
-end
 
 function getDrawableWater(tileName, x, y)
     -- if  worldLookup[x-1] and worldLookup[x+1] and worldLookup[x] and worldLookup[x-1][y] then
@@ -118,11 +115,13 @@ function getDrawableWater(tileName, x, y)
     
         -- checks if water is nearby
         for i,v in ipairs(worldToCheck) do
-            if v.tile and (isTileWater(v.tile.ForegroundTile) or isTileWater(v.tile.GroundTile)) then
+            if v.tile and (isTileType(v.tile.ForegroundTile, "water") or isTileType(v.tile.GroundTile, "water")) then
                 if v.tile.X == x + v.x and v.tile.Y == y + v.y then  nearby[v.key] = true end
                 count = count + 1
             elseif not v.tile then nearby[v.key] = true end
         end
+
+ 
 
         local assetName = "1.png"
         if count == 8 then return "assets/world/water/12.png" end
@@ -196,9 +195,6 @@ function getDrawableWater(tileName, x, y)
         end
 
         return "assets/world/water/"  .. assetName
-    -- else
-    --     return "assets/world/water/1.png" 
-    -- end
 end
 
 function isNearbyTile(name)

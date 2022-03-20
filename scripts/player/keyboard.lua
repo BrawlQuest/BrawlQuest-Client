@@ -80,9 +80,10 @@ function checkKeyPressedPhaseGame(key)
                 getRecipesHeight()
                 crafting.open = true
             
-            
-                steam.friends.setRichPresence("steam_display", "#StatusCrafting")
-                steam.friends.setRichPresence("location", zoneTitle.title)
+                if useSteam then
+                    steam.friends.setRichPresence("steam_display", "#StatusCrafting")
+                    steam.friends.setRichPresence("location", zoneTitle.title)
+                end
             elseif isNearbyTile("assets/world/objects/Class Machine.png") and not drawingText then
                 openOrders()
             elseif inventory.notNPC then

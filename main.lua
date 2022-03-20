@@ -35,9 +35,10 @@ require "scripts.player.targeting"
 require "scripts.enemies"
 require "scripts.npcs"
 require "scripts.server"
-require "scripts.world.world"
+-- require "scripts.world.world"
 require "scripts.world.tiles"
-require "scripts.world.biomes"
+-- require "scripts.world.biomes"
+require "scripts.world.new-world-drawer"
 require "scripts.ui.temporary.worldedit"
 require "scripts.ui.temporary.new-world-edit"
 require "scripts.ui.temporary.world-edit-rect"
@@ -51,11 +52,11 @@ require "scripts.ui.panels.tutorial"
 require "scripts.achievements"
 Luven = require "scripts.libraries.luven.luven"
 
-version = "Early Access" 
+version = "Early Access"
 versionType = "dev" -- "dev" for quick login, "release" for not
-useSteam = true -- turn off for certain naughty computers
+useSteam = false -- turn off for certain naughty computers
 if versionType == "dev" then require 'dev' end
-versionNumber = "1.4.3" -- very important for settings
+versionNumber = "1.0.0" -- very important for settings
 drawAnimations = false -- player animations
 
 if love.system.getOS() ~= "Linux" and useSteam then steam = require 'luasteam' end -- we can disable other platforms here. Can't get Steam working on Linux and we aren't targetting it so this'll do for dev purposes
@@ -64,7 +65,6 @@ http = require("socket.http")
 ltn12 = require("ltn12")
 utf8 = require("utf8")
 newOutliner = require 'scripts.libraries.outliner'
-
 
 phase = "login"
 blockMap = {}
@@ -99,8 +99,8 @@ function love.load()
     outlinerOnly = newOutliner(true)
     outlinerOnly:outline(0.8, 0, 0) -- this is used to draw enemy outlines
     grayOutlinerOnly = newOutliner(true)
-    grayOutlinerOnly:outline(1,1,1)
-    if love.system.getOS() ~= "Linux" and useSteam then  steam.init() end
+    grayOutlinerOnly:outline(1, 1, 1)
+    if love.system.getOS() ~= "Linux" and useSteam then steam.init() end
     love.graphics.setDefaultFilter("nearest", "nearest")
     initHardData()
     initLogin()
@@ -129,8 +129,8 @@ function love.load()
     initNews()
     initAnimation()
     love.graphics.setFont(textFont)
-    recursivelyDelete( "img" )
-    love.filesystem.createDirectory( "img" )
+    recursivelyDelete("img")
+    love.filesystem.createDirectory("img")
 end
 
 function love.draw()
@@ -140,6 +140,7 @@ function love.draw()
     else
         Luven.drawBegin()
         drawWorld()
+
         if worldEdit.open and player then drawNewWorldEditTiles() end
         drawStructures()
         drawAuras()
@@ -163,38 +164,48 @@ function love.draw()
             drawTextBelowPlayer("Press " .. keybinds.INTERACT .. " to craft")
             inventory.notNPC = false
             drawingText = true
-        elseif isNearbyTile("assets/world/objects/Furnace.png") and not drawingText then
+        elseif isNearbyTile("assets/world/objects/Furnace.png") and
+            not drawingText then
             drawTextBelowPlayer("Press " .. keybinds.INTERACT .. " to forge")
             inventory.notNPC = false
             drawingText = true
-        elseif isNearbyTile("assets/world/objects/Portal.png") and not drawingText then
+        elseif isNearbyTile("assets/world/objects/Portal.png") and
+            not drawingText then
             if me.LVL ~= 40 then
                 drawTextBelowPlayer("You must be Level 40 to Enchant")
             else
-                drawTextBelowPlayer("Press " .. keybinds.INTERACT .. " to Enchant")
+                drawTextBelowPlayer("Press " .. keybinds.INTERACT ..
+                                        " to Enchant")
             end
             inventory.notNPC = false
             drawingText = true
         elseif isNearbyTile("assets/world/objects/Well.png") and not drawingText then
             drawTextBelowPlayer("Press " .. keybinds.INTERACT .. " to Cleanse")
-        elseif isNearbyTile("assets/world/objects/Class Machine.png") and not drawingText then
-            drawTextBelowPlayer("Press " .. keybinds.INTERACT .. " to change class")
+        elseif isNearbyTile("assets/world/objects/Class Machine.png") and
+            not drawingText then
+            drawTextBelowPlayer("Press " .. keybinds.INTERACT ..
+                                    " to change class")
             inventory.notNPC = false
             drawingText = true
         end
 
         for i, v in ipairs(npcs) do
-            if distanceToPoint(player.x, player.y, v.X, v.Y) <= 1 and not showNPCChatBackground and v.Conversation ~= "" then
+            if distanceToPoint(player.x, player.y, v.X, v.Y) <= 1 and
+                not showNPCChatBackground and v.Conversation ~= "" then
                 local isQuestCompleter = false
                 for k, q in ipairs(quests[1]) do
-                    if q.rawData.Quest.ReturnNPCID == v.ID and q.currentAmount == q.requiredAmount then
-                        drawTextBelowPlayer("Press " .. keybinds.INTERACT .. " to complete quest")
+                    if q.rawData.Quest.ReturnNPCID == v.ID and q.currentAmount ==
+                        q.requiredAmount then
+                        drawTextBelowPlayer(
+                            "Press " .. keybinds.INTERACT ..
+                                " to complete quest")
                         isQuestCompleter = true
                     end
                 end
 
                 if not isQuestCompleter and not drawingText then
-                    drawTextBelowPlayer("Press " .. keybinds.INTERACT .. " to talk")
+                    drawTextBelowPlayer("Press " .. keybinds.INTERACT ..
+                                            " to talk")
                     drawingText = true
                 end
 
@@ -203,8 +214,12 @@ function love.draw()
             end
         end
         drawWeather()
-        if andCalc(true, {showWorldMask, not worldEdit.open, enchanting.amount < 0.01}) then drawWorldMask() end -- not worldEdit.open or
-        if showClouds and not worldEdit.open and enchanting.amount < 0.01 then drawClouds() end
+        if andCalc(true, {
+            showWorldMask, not worldEdit.open, enchanting.amount < 0.01
+        }) then drawWorldMask() end -- not worldEdit.open or
+        if showClouds and not worldEdit.open and enchanting.amount < 0.01 then
+            drawClouds()
+        end
 
         -- if player.target.active then
         --     love.graphics.setColor(1,0,0,0.5 * nextTick)
@@ -223,11 +238,18 @@ function love.draw()
         love.graphics.setColor(1, 1, 1)
         love.graphics.setFont(settPan.itemFont)
         local text
-        if true then text = "BrawlQuest "..version.." "..versionNumber.. "\nPress \"r\" to enable animations preview" .. "\nX,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount .."\n"..playersOnline
-        else text = "X,Y: " .. player.x..","..player.y .. " FPS: " .. tostring(love.timer.getFPS()) .. "\nPlayers: " .. playerCount end
+        if not dev then
+            text =
+                "BrawlQuest " .. version .. " " .. versionNumber .. "X,Y: " ..
+                    player.x .. "," .. player.y .. " FPS: " ..
+                    tostring(love.timer.getFPS()) .. "\nPlayers: " ..
+                    playerCount .. "\n" .. playersOnline
+        end
         love.graphics.print(text, offset, 10)
         drawWorldMap(love.graphics.getWidth() - 256 - 20, 20)
+       
     end
+
     mx, my = love.mouse.getPosition()
     love.graphics.setColor(1, 1, 1, mouseAmount)
     love.graphics.draw(mouseImg, mx, my)
@@ -249,17 +271,16 @@ function love.update(dt)
         nextUpdate = nextUpdate - 1 * dt
         nextTick = nextTick - 1 * dt
         if nextUpdate < 0 then
-            getPlayerData('/players/' .. username, json:encode(
-                {
-                    ["X"] = player.x,
-                    ["Y"] = player.y,
-                    ["AX"] = player.target.x,
-                    ["AY"] = player.target.y,
-                    ["IsShield"] = love.keyboard.isDown(keybinds.SHIELD)
-                }))
-            nextUpdate = 1
+            getPlayerData('/players/' .. username, json:encode({
+                ["X"] = player.x,
+                ["Y"] = player.y,
+                ["AX"] = player.target.x,
+                ["AY"] = player.target.y,
+                ["IsShield"] = love.keyboard.isDown(keybinds.SHIELD)
+            }))
+            nextUpdate = 0.5
         end
-        updateWorld(dt)
+       -- updateWorld(dt)
         updateMouse(dt)
         updateHUD(dt)
         updateEnemies(dt)
@@ -291,6 +312,7 @@ function love.update(dt)
         updateCamera(dt)
         updateOtherPlayers(dt)
         serverResponse()
+      --  updateWorldDrawer()
     end
 end
 
@@ -306,7 +328,7 @@ function tick()
     nextTick = 1
     getInventory()
     tickRangedWeapons()
-    tickWorld()
+   -- tickWorld()
     if me then tickCharacterHub() end
     if hotbarChanged then
         hotbarChangeCount = hotbarChangeCount + 1
@@ -319,7 +341,9 @@ function tick()
     if crafting.changed then
         crafting.changeCount = crafting.changeCount + 1
         if crafting.changeCount > 0 then
-            enterCraftingItems(crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j])
+            enterCraftingItems(
+                crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField
+                    .j])
             checkHotbarChange()
             crafting.changeCount = 0
             crafting.changed = false
@@ -338,7 +362,7 @@ function love.resize(width, height)
     end
     if scale then
         uiX = love.graphics.getWidth() / scale -- scaling options
-        
+
         uiY = love.graphics.getHeight() / scale
     end
     if enchanting.open then

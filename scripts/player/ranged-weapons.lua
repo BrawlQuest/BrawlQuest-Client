@@ -59,7 +59,7 @@ function tickRangedWeapons()
             if worldLookup[x..","..y] and worldLookup[x..","..y].Collision ~= null then
                 local output = not worldLookup[x..","..y].Collision
                 target.paths[#target.paths + 1] = {x = x, y = y,}
-                if isTileWater(worldLookup[x..","..y].ForegroundTile) then output = true end
+                if isTileType(worldLookup[x..","..y].ForegroundTile, "water") then output = true end
                 return output
             end
         end)
@@ -108,6 +108,7 @@ function hitTarget()
     if target.hit then
         local x, y = target.hit.x, target.hit.y -- hit a target on these coordinates
         apiGET('/ranged/' .. me.ID .. "/" .. x .. "/" .. y)
+        
     end
 end
 
