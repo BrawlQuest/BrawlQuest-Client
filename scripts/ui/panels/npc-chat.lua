@@ -14,6 +14,16 @@ currentNPC = 0
 
 npcChatSFX = {}
 
+npcPitch = {
+   ["assets/npc/Bartender.png"] = {40,80},
+   ["assets/npc/Guard.png"] = {40,60},
+   ["assets/npc/Blacksmith.png"] = {60,100},
+   ["assets/npc/Citizen2.png"] = {40,70},
+   ["assets/npc/Citizen3.png"] = {40,70},
+   ["assets/npc/Dancing Man.png"] = {100,120},
+   ["assets/npc/Kid.png"] = {150,180},
+}
+
 function initNPCChat()
     npcChatArg = {
         font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
@@ -27,44 +37,18 @@ end
 
 function createNPCChatBackground(x, y)
     npcChatBackground = {}
-    local foundX = false
-    local pathAhead = {}
-    for key,tiles in next, worldChunks do
-        for i,v in ipairs(tiles) do
-            if v.X == x and v.Y == y then npcChatBackground[1] = v.GroundTile
-            elseif v.Y == y and v.X > x then pathAhead[#pathAhead + 1] = v end
+  
+    npcChatBackground[1] = worldLookup[x..","..y].GroundTile
+
+    local foundCollidable = false
+    local currentX = x
+    while not foundCollidable do
+        if worldLookup[currentX..","..y] and worldLookup[currentX..","..y].Collision then
+            npcChatBackground[2] = worldLookup[currentX..","..y].ForegroundTile
+            foundCollidable = true
         end
+        currentX = currentX + 1
     end
-
-    table.sort(pathAhead, function(a, b) return a.X < b.X end)
-
-    for i, v in ipairs(pathAhead) do
-        if v.Collision and not foundX then
-            if string.find(v.ForegroundTile, "walls", 13) then
-            else
-                npcChatBackground[2] = v.ForegroundTile
-                -- print(npcChatBackground[2])
-                break
-            end 
-        end
-    end
-
-    if npcChatBackground[1] == nil then
-        npcChatBackground[1] = "assets/world/grounds/grass.png"
-    end
-    if npcChatBackground[2] == nil then
-        npcChatBackground[2] = "none"
-    end
-
-    -- for i, v in ipairs(npcChatBackground) do
-    --     if not worldImg[v] then
-    --         if love.filesystem.getInfo(v) then
-    --             worldImg[v] = love.graphics.newImage(v)
-    --         else
-    --             worldImg[v] = love.graphics.newImage("assets/error.png")
-    --         end
-    --     end
-    -- end
 end
 
 function drawNPCChatBackground(x, y)
@@ -77,21 +61,15 @@ function drawNPCChatBackground(x, y)
     love.graphics.setStencilTest("greater", 0) -- push
         
         for i = -2, 2 do
-            love.graphics.draw(worldImg[npcChatBackground[2]], x + (i * 128) - chatXpos, y + 78, 0, 4, 4)
+            love.graphics.draw(getImgIfNotExist(npcChatBackground[2]), x + (i * 128) - chatXpos, y + 78, 0, 4, 4)
         end
 
         for i = -5, 5 do
-            love.graphics.draw(worldImg[npcChatBackground[1]], x + (i * 64) - chatXpos, y + 192, 0, 2, 2)
+            love.graphics.draw(getImgIfNotExist(npcChatBackground[1]), x + (i * 64) - chatXpos, y + 192, 0, 2, 2)
         end
 
-        if not worldImg[npcChat.ImgPath] then
-            if love.filesystem.getInfo(npcChat.ImgPath) then
-                worldImg[npcChat.ImgPath] = love.graphics.newImage(npcChat.ImgPath)
-            else
-                worldImg[npcChat.ImgPath] = love.graphics.newImage("assets/error.png")
-            end
-        end
-        love.graphics.draw(worldImg[npcChat.ImgPath], x + 128 - (chatXpos*2), y + (254 - worldImg[npcChat.ImgPath]:getWidth()*4) + 0, 0, 4, 4)
+       
+        love.graphics.draw(getImgIfNotExist(npcChat.ImgPath), x + 128 - (chatXpos*2), y + (254 - worldImg[npcChat.ImgPath]:getWidth()*4) + 0, 0, 4, 4)
 
         love.graphics.setColor(1,1,1,chatOpacity)
         love.graphics.setFont(npcChatArg.font)
@@ -146,29 +124,30 @@ function updateNPCChat(dt)
         if nextChar < 0 then
             
             if npcChat and #chatWritten ~= #npcChat.Title then
-                -- if not npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)] then
-                --     if love.filesystem.getInfo("assets/sfx/npc/speak/"..string.lower(string.sub(npcChat.Title,#chatWritten,#chatWritten))..".ogg") then
-                --         npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)] = love.audio.newSource("assets/sfx/npc/speak/"..string.lower(string.sub(npcChat.Title,#chatWritten,#chatWritten))..".ogg", "static")
-                --     end
-                -- end
-                -- if npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)] then
-                --    -- speakSound:stop()
-                --     speakSound = npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)]
-                --     speakSound:setPitch(love.math.random(20,200)/100)
-                --     speakSound:setVolume(0.3*sfxVolume)
-                --     npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)]:setPitch(love.math.random(20,200)/100)
-                --     npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)]:play()
-                --     -- speakSound:play()
-                -- end
-              --  speakSound:stop()
-                speakSound:setPitch(love.math.random(60,100)/100)
+                if not npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)] then
+                    if love.filesystem.getInfo("assets/sfx/npc/speak/"..string.lower(string.sub(npcChat.Title,#chatWritten,#chatWritten))..".ogg") then
+                        npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)] = love.audio.newSource("assets/sfx/npc/speak/"..string.lower(string.sub(npcChat.Title,#chatWritten,#chatWritten))..".ogg", "static")
+                    end
+                end
+                if npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)] then
+                    speakSound = npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)]
+                    speakSound:setPitch(love.math.random(100,110)/100)
+                    speakSound:setVolume(0.15*sfxVolume)
+                    if npcPitch[npcChat.ImgPath] then
+                        speakSound:setPitch(love.math.random(npcPitch[npcChat.ImgPath][1],npcPitch[npcChat.ImgPath][2])/100)
+                    else
+                        speakSound:setPitch(love.math.random(20,200)/100)
+                    end
+                   
+                  
+                end
+                speakSound:stop()
                 speakSound:setRelative(true)
-                speakSound:setVolume(0.1*sfxVolume)
                 setEnvironmentEffects(speakSound)
                 speakSound:play()
                 chatWritten = chatWritten..string.sub(npcChat.Title,#chatWritten+1,#chatWritten+1)
                 if string.sub(npcChat.Title,#chatWritten,#chatWritten) == "." or string.sub(npcChat.Title,#chatWritten,#chatWritten) == "?" then
-                    nextChar = 0.3
+                    nextChar = 0.2
                 elseif string.sub(npcChat.Title,#chatWritten,#chatWritten) == "," then
                     nextChar = 0.1
                 elseif string.sub(npcChat.Title,#chatWritten,#chatWritten) == "!" then

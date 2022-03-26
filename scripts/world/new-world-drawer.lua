@@ -1,5 +1,7 @@
 worldCanvas = love.graphics.newCanvas(32 * 101, 32 * 101)
 isWorldCreated = false
+waterPhase = 1
+waterPhases = {}
 lightSource = {}
 
 function initWorldTable(world)
@@ -7,6 +9,11 @@ function initWorldTable(world)
     worldLookup = {}
     worldEmitters = {}
     critters = {}
+    waterPhases = {
+        getImgIfNotExist("assets/world/grounds/water/1.png"),
+        getImgIfNotExist("assets/world/grounds/water/2.png"),
+        getImgIfNotExist("assets/world/grounds/water/3.png")
+    }
     for i, tile in ipairs(world) do
         worldLookup[tile.X .. "," .. tile.Y] = tile
         if tile then
@@ -34,23 +41,42 @@ function addLeavesAndLights(v)
     end
 end
 
-
 function drawWorld()
-
     love.graphics.setColor(1, 1, 1)
 
-    local maxX, maxY = (love.graphics.getWidth() / 2) / 32,
-                       (love.graphics.getHeight() / 2) / 32
+    local maxX, maxY = math.floor((love.graphics.getWidth() / 2) / 32),
+                       math.floor((love.graphics.getHeight() / 2) / 32)
+    local offsetY = 0
+    local offsetX = 0
 
-    for x = player.x - maxX, player.x + maxX do
-        for y = player.y - maxY, player.y + maxY do
-            groundImg, foregroundImg = getWorldTiles(math.floor(x),
-                                                     math.floor(y))
-            love.graphics.draw(groundImg, x * 32 - 8, y * 32 - 8)
-            love.graphics.draw(foregroundImg, x * 32 - 8, y * 32 - 8)
+        for x = player.x - maxX, player.x + maxX do
+            for y = player.y - maxY, player.y + maxY do
+                groundImg, foregroundImg = getWorldTiles(math.floor(x),
+                                                        math.floor(y))
+                if not groundImg then
+                    love.graphics.draw(waterPhases[math.floor(waterPhase)],
+                                    x * 32 - offsetX, y * 32 - offsetY)
+                end
+
+                if worldLookup[math.floor(x) .. "," .. math.floor(y)] and
+                    isTileType(
+                        worldLookup[math.floor(x) .. "," .. math.floor(y)]
+                            .GroundTile, "Water") then
+                    love.graphics.draw(waterPhases[math.floor(waterPhase)],
+                                    x * 32 - offsetX, y * 32 - offsetY)
+                elseif groundImg and foregroundImg then
+                    love.graphics.draw(groundImg, x * 32 - offsetX, y * 32 - offsetY)
+                    love.graphics.draw(foregroundImg, x * 32- offsetX, y * 32 - offsetY)
+                end
+
+            end
         end
-    end
+   
+end
 
+function updateWorld(dt)
+    waterPhase = waterPhase + 0.7 * dt
+    if waterPhase > 4 then waterPhase = 1 end
 end
 
 --[[
@@ -67,8 +93,12 @@ function getWorldTiles(x, y)
             groundImgPath = getDrawableWater(groundImgPath, x, y)
         end
 
-        if isTileWall(foregroundImgPath) then
+        if isTileWall(foregroundImgPath)  then
             foregroundImgPath = getDrawableWall(foregroundImgPath, x, y)
+            groundImgPath = getDrawableWall(foregroundImgPath, x, y)
+        end
+        if isTileWall(groundImgPath)  then
+            groundImgPath = getDrawableWall(groundImgPath, x, y)
         end
 
         return getImgIfNotExist(groundImgPath),
@@ -98,19 +128,19 @@ function getDrawableWall(tileName, x, y) -- this is used to smooth the corners o
     local nearby = {top = false, left = false, right = false, bottom = false}
 
     if worldLookup[x - 1 .. "," .. y] and
-        isTileWall(worldLookup[x - 1 .. "," .. y].ForegroundTile) then
+        (isTileWall(worldLookup[x - 1 .. "," .. y].ForegroundTile) or isTileWall(worldLookup[x - 1 .. "," .. y].GroundTile)) then
         nearby.left = true
     end
     if worldLookup[x + 1 .. "," .. y] and
-        isTileWall(worldLookup[x + 1 .. "," .. y].ForegroundTile) then
+        (isTileWall(worldLookup[x + 1 .. "," .. y].ForegroundTile) or isTileWall(worldLookup[x + 1 .. "," .. y].GroundTile) ) then
         nearby.right = true
     end
     if worldLookup[x .. "," .. y + 1] and
-        isTileWall(worldLookup[x .. "," .. y + 1].ForegroundTile) then
+        (isTileWall(worldLookup[x .. "," .. y + 1].ForegroundTile) or isTileWall(worldLookup[x .. "," .. y + 1].GroundTile)) then
         nearby.bottom = true
     end
     if worldLookup[x .. "," .. y - 1] and
-        isTileWall(worldLookup[x .. "," .. y - 1].ForegroundTile) then
+        (isTileWall(worldLookup[x .. "," .. y - 1].ForegroundTile) or  isTileWall(worldLookup[x .. "," .. y - 1].GroundTile)) then
         nearby.top = true
     end
 

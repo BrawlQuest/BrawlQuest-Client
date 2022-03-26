@@ -18,7 +18,7 @@ function initCharacterSelection()
         selectedCharacter = 0,
         dualAmount = 0,
         dualCERP = 0,
-        font = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 16),
+        font = love.graphics.newFont("assets/ui/fonts/VT323-Regular.ttf", 16),
         w = 350, -- width
         h = 450, -- height
         s = 10, -- spacing
@@ -227,12 +227,12 @@ function loginOrCreate()
         loginPhase = "loadingWorld"
         worldLoading = {amount = 0}
     else
-        if cs.nameText ~= "" then
+        if cs.nameText ~= "" then -- create character
             characters[cs.selectedCharacter] = {}
             characters[cs.selectedCharacter].Name = cs.nameText
             characters[cs.selectedCharacter].Color = copy(cs.initialCharacter.Color)
             r, c, h = http.request {
-                url = api.url.."/user/"..UID.."/".. characters[cs.selectedCharacter].Name,
+                url = api.url.."/user/"..UID.."/".. characters[cs.selectedCharacter].Name.."/1", -- 1=hardcore, 0=normal
                 method = "POST",
                 headers = {
                     ['token'] = token

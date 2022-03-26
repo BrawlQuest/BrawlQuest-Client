@@ -557,9 +557,10 @@ function checkWorldEditKeyPressed(key)
 end
 
 function saveWorldChanges()
-    recursivelyDelete( "img" )
-    love.filesystem.createDirectory( "img" )
-    for key, v in next, worldImages do v:release( ) table.removekey(worldImages, key) end
+    -- recursivelyDelete( "img" )
+    -- love.filesystem.createDirectory( "img" )
+    -- for key, v in next, worldImages do v:release( ) table.removekey(worldImages, key) end
+    -- local count = 0
     local count = 0
     for x = worldEdit.worldSize * -1, worldEdit.worldSize do
         for y = worldEdit.worldSize * -1, worldEdit.worldSize do
@@ -586,7 +587,7 @@ function saveWorldChanges()
     local b = {}
     c, h = http.request{url = api.url.."/world", method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
     initWorldTable(json:decode(table.concat(b)))
-    createWorld()
+    --createWorld()
     initWorldMap()
     initDrawableNewWorldEditTiles()
     getWorldInfo() 

@@ -42,6 +42,7 @@ require "scripts.world.new-world-drawer"
 require "scripts.ui.temporary.worldedit"
 require "scripts.ui.temporary.new-world-edit"
 require "scripts.ui.temporary.world-edit-rect"
+require 'scripts.ui.components.premium-message'
 require "data.data_controller"
 require "scripts.player.settings"
 require "scripts.player.structures"
@@ -52,9 +53,9 @@ require "scripts.ui.panels.tutorial"
 require "scripts.achievements"
 Luven = require "scripts.libraries.luven.luven"
 
-version = "Early Access"
+version = ""
 versionType = "dev" -- "dev" for quick login, "release" for not
-useSteam = false -- turn off for certain naughty computers
+useSteam = false
 if versionType == "dev" then require 'dev' end
 versionNumber = "1.0.0" -- very important for settings
 drawAnimations = false -- player animations
@@ -93,6 +94,8 @@ oldInfo = {}
 sendUpdate = false
 
 function love.load()
+    love.graphics.setDefaultFilter("nearest", "nearest")
+
     showMouse, mouseAmount, mx, my = true, 1, 0, 0
     limits = love.graphics.getSystemLimits()
     print(limits.multicanvas)
@@ -101,7 +104,7 @@ function love.load()
     grayOutlinerOnly = newOutliner(true)
     grayOutlinerOnly:outline(1, 1, 1)
     if love.system.getOS() ~= "Linux" and useSteam then steam.init() end
-    love.graphics.setDefaultFilter("nearest", "nearest")
+
     initHardData()
     initLogin()
     initScrolling()
@@ -138,6 +141,10 @@ function love.draw()
     if phase == "login" then
         drawLogin()
     else
+        -- if (premiumMessage.display) then
+        --     love.graphics.setShader(blur1)
+        --     love.graphics.setShader(blur2)
+        -- end
         Luven.drawBegin()
         drawWorld()
 
@@ -247,7 +254,8 @@ function love.draw()
         end
         love.graphics.print(text, offset, 10)
         drawWorldMap(love.graphics.getWidth() - 256 - 20, 20)
-       
+        if (premiumMessage.display) then love.graphics.setShader() end
+        drawPremiumMessage()
     end
 
     mx, my = love.mouse.getPosition()
@@ -280,7 +288,7 @@ function love.update(dt)
             }))
             nextUpdate = 0.5
         end
-       -- updateWorld(dt)
+        updateWorld(dt)
         updateMouse(dt)
         updateHUD(dt)
         updateEnemies(dt)
@@ -312,7 +320,7 @@ function love.update(dt)
         updateCamera(dt)
         updateOtherPlayers(dt)
         serverResponse()
-      --  updateWorldDrawer()
+        --  updateWorldDrawer()
     end
 end
 
@@ -328,7 +336,7 @@ function tick()
     nextTick = 1
     getInventory()
     tickRangedWeapons()
-   -- tickWorld()
+    -- tickWorld()
     if me then tickCharacterHub() end
     if hotbarChanged then
         hotbarChangeCount = hotbarChangeCount + 1
@@ -356,7 +364,6 @@ function love.resize(width, height)
         initLogin()
     else
         recalculateLighting()
-        createWorld()
         initWorldMap()
         loadSliders()
     end

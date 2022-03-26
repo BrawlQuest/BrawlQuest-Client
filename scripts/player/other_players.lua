@@ -138,7 +138,6 @@ function drawEnchantment(x, y, noiseScale)
 end
 
 function drawPlayer(v, i)
-    -- TODO: we need to extract player armour somewhere here, but as we aren't loading in assets yet this hasn't been done
     local thisPlayer
     if i == -1 then -- this player is me
         thisPlayer = copy(me)

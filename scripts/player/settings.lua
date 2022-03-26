@@ -195,7 +195,7 @@ function checkSettingsMousePressed(button)
                             vsync = settings[2][5].v
                             setWindowOptions()
                             recalculateLighting()
-                            createWorld()
+                           -- createWorld()
                             initWorldMap()
                         else
                             bv.v = not bv.v

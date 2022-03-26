@@ -22,7 +22,7 @@ function initSFX()
     for key,v in next, sfx do v.action() end -- init sfx
 
     sfxRolloff = 0.3
-    love.audio.setDistanceModel("exponent")
+   -- love.audio.setDistanceModel("exponent")
 
     previousSFXVolume = sfxVolume
 
@@ -52,6 +52,7 @@ function initSFX()
     forgingPop = love.audio.newSource("assets/ui/forging/microwave-pop.ogg", "static")
     speakSound = love.audio.newSource("assets/sfx/speak.ogg", "static")
     classMachineSFX = love.audio.newSource("assets/sfx/ambient/voltage.ogg", "static")
+    splashSfx = love.audio.newSource("assets/sfx/player/actions/fish.ogg", "static")
 
     stepSounds = {
         ["assets/world/grounds/grass.png"] = love.audio.newSource("assets/sfx/step/grass.ogg", "static"),
@@ -67,7 +68,13 @@ function initSFX()
         ["assets/world/doors/Potion.png"] = love.audio.newSource("assets/sfx/player/step/door.ogg", "static"),
         ["assets/world/doors/Residential.png"] = love.audio.newSource("assets/sfx/player/step/door.ogg", "static"),
         ["assets/world/grounds/Water.png"] = love.audio.newSource("assets/sfx/step/water.ogg", "static"),
-        ["assets/world/grounds/Path.png"] = love.audio.newSource("assets/sfx/player/step/path.ogg", "static")
+        ["assets/world/grounds/Path.png"] = love.audio.newSource("assets/sfx/player/step/path.ogg", "static"),
+        ["assets/world/objects/BridgeX 1.png"] = love.audio.newSource("assets/sfx/player/step/bridge.ogg", "static"),
+        ["assets/world/objects/BridgeX 2.png"] = love.audio.newSource("assets/sfx/player/step/bridge.ogg", "static"),
+        ["assets/world/objects/BridgeX 3.png"] = love.audio.newSource("assets/sfx/player/step/bridge.ogg", "static"),
+        ["assets/world/objects/BridgeY 1.png"] = love.audio.newSource("assets/sfx/player/step/bridge.ogg", "static"),
+        ["assets/world/objects/BridgeY 2.png"] = love.audio.newSource("assets/sfx/player/step/bridge.ogg", "static"),
+        ["assets/world/objects/BridgeY 3.png"] = love.audio.newSource("assets/sfx/player/step/bridge.ogg", "static"),
     }
 
     npcSounds = {
@@ -106,6 +113,7 @@ function setSFXVolumes()
     critHitSfx:setVolume(1 * sfxVolume)
     enemyHitSfx:setVolume(1 * sfxVolume)
     playerHitSfx:setVolume(1 * sfxVolume)
+    splashSfx:setVolume(1 * sfxVolume)
     birds:setVolume(0.1 * sfxVolume)
     -- horseMountSfx:setVolume(1*sfxVolume)
     forgingPush:setVolume(1 * sfxVolume)
@@ -128,13 +136,13 @@ function playFootstepSound(v, x, y, relative)
     stepSfx:setPitch(love.math.random(85,200)/100)
     stepSfx:setVolume(0.5 * sfxVolume)
     stepSfx:setRelative(false)
-    -- stepSfx:setPosition(x, y)
+    stepSfx:setPosition(x, y)
     if relative then stepSfx:setPosition(0, 0) stepSfx:setRelative(true)
     else stepSfx:setRelative(false) stepSfx:setPosition(x, y) end
     if x == player.x and y == player.y then stepSfx:setRelative(true)
     else stepSfx:setRelative(false)  print(x..","..y) end
     
-    setEnvironmentEffects(stepSfx)
+   setEnvironmentEffects(stepSfx)
     stepSfx:play()
 end
 

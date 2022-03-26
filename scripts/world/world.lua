@@ -55,7 +55,7 @@ function tickWorld()
     if player.worldPosition ~= player.prevWorldPosition or
         not worldLookup[player.worldPosition] then
         player.prevWorldPosition = player.worldPosition
-        createWorld()
+      --  createWorld()
     end
 end
 
