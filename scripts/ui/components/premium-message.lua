@@ -19,6 +19,8 @@ premiumMessage = {
     crownImg = love.graphics.newImage("assets/ui/crown.png")
 }
 
+restrictedItemTypes = {"Buildable", "Buddy"}
+
 function drawPremiumMessage()
     if (premiumMessage.display) then
         local x, y = love.graphics.getWidth() / 2 - premiumMessage.width / 2,
@@ -85,5 +87,19 @@ function drawPremiumMessage()
                                  premiumMessage.height - 85 +
                                  (premiumMessage.titleFont:getHeight() / 2),
                              premiumMessage.width - 40, "center")
+
+        if isMouseOver(x + premiumMessage.width - 16, y, 32, 32) then
+            love.graphics.setColor(0.6, 0, 0)
+            if isMouseDown() then
+                premiumMessage.display = false
+            end
+        else
+            love.graphics.setColor(0.8, 0, 0)
+        end
+        love.graphics.rectangle("fill", x + premiumMessage.width - 16, y, 32,
+                                32, 5)
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.printf("x", x + premiumMessage.width - 16, y - 12, 32,
+                             "center")
     end
 end

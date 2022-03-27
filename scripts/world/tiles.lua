@@ -1,6 +1,6 @@
 function getWorldAsset(v,x,y,color)
     if isTileWall(v) then v = getDrawableWall(v, x,y) end
-    if isTileWater(v) then v = getDrawableWater(v, x, y) end
+  --  if isTileWater(v) then v = getDrawableWater(v, x, y) end
     return v
 end
 

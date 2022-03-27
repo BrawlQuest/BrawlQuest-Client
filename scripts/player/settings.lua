@@ -72,11 +72,11 @@ function initSettings()
         showHUD = contents["showHUD"] or showHUD
         -- openUiOnHover = contents["openUiOnHover"] or openUiOnHover
         oldTargeting = contents["oldTargeting"] or oldTargeting
-        if contents["hotbar"] and #contents["hotbar"] ~= 7 then
-            hotbar = hotbar
-        else
-            hotbar = contents["hotbar"]
-        end
+        -- if contents["hotbar"] and #contents["hotbar"] ~= 7 then
+        --     hotbar = hotbar
+        -- else
+        --     hotbar = contents["hotbar"]
+        -- end
         
       
         openInventoryOnHover = contents["openInventoryOnHover"] or openInventoryOnHover

@@ -76,7 +76,15 @@ function serverResponse()
                 usedItemThisTick = false
                 setLighting(response)
 
-                if (response['Me']) then me = response['Me'] end
+                if (response['Me']) then
+                    me = response['Me']
+                    me.Hotbar = response['Hotbar']
+                    if me.Hotbar then
+                        for i, v in ipairs(me.Hotbar) do
+                            sortedHotbar[v.Position] = v
+                        end
+                    end
+                end
                 if response["PlayerStructures"] then
                     structures = response["PlayerStructures"]
                     updateWorldLookup()
@@ -194,6 +202,7 @@ function serverResponse()
                     previousTick = response['Tick']
                 end
                 weather.type = response['Weather']
+
                 -- if love.system.getOS() ~= "Linux" and useSteam then checkAchievementUnlocks() end
             end
         end

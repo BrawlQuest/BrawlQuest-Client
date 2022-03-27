@@ -131,9 +131,9 @@ function startConversation()
 
                 -- print(string.gsub(string.gsub(string.gsub(npcChat.Options, "',", '",'),"['",'["'),"']",'"]'))
                 local optionString = npcChat.Options
-          --      optionString = string.gsub(optionString, "'s", 's')
-               -- optionString = string.gsub(optionString, "'t", 't')
-                optionString = string.gsub(optionString, "'", '"')
+               optionString = string.gsub(optionString, "'s", 's')
+                optionString = string.gsub(optionString, "'t", 't')
+               optionString = string.gsub(optionString, "'", '"')
                 npcChat.Options = json:decode(optionString)
                 createNPCChatBackground(player.x, player.y)
                 showNPCChatBackground = not showNPCChatBackground

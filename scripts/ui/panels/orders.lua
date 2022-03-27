@@ -152,10 +152,14 @@ function checkOrdersMousePressed(button)
 end
 
 function openOrders()
-    classMachineSFX:setVolume(sfxVolume)
-    love.audio.play(classMachineSFX)
-    o.open = true
-    o.selected.item = 0
-    o.amount = 0
-    o.selAmount = 0
+    if not me.IsPremium then
+        premiumMessage.display = true
+    else
+        classMachineSFX:setVolume(sfxVolume)
+        love.audio.play(classMachineSFX)
+        o.open = true
+        o.selected.item = 0
+        o.amount = 0
+        o.selAmount = 0
+    end
 end

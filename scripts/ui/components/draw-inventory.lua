@@ -37,9 +37,9 @@ function drawToolBarInventory(thisX, thisY)
     drawHotbar(thisX, thisY)
 end
 
-function drawInventoryItem(thisX, thisY, item, amount, number)
+function drawInventoryItem(thisX, thisY, item, amount, number, id)
     love.graphics.setFont(inventory.itemFont)
-    if number then
+    if number and number ~= 0 then
         local height = 19
         local isMouse = isMouseOver(thisX * scale, thisY * scale, 34 * scale, 34 * scale)
         -- amount = inventory.amount
@@ -102,6 +102,7 @@ function drawInventoryItem(thisX, thisY, item, amount, number)
             if isMouse and item then
                 selectedItem = item
                 selectedItemAmount = amount
+                selectedItemID = id
                 setItemTooltip(item)
             end
             love.graphics.setColor(0.2, 0.2, 0.2)
@@ -109,6 +110,7 @@ function drawInventoryItem(thisX, thisY, item, amount, number)
             setItemTooltip(item)
             selectedItem = item
             selectedItemAmount = amount
+            selectedItemID = id
             inventory.isMouseOverInventoryItem = true
             love.graphics.setColor(1,0,0,1)
             thisY = thisY - 2
@@ -142,12 +144,12 @@ function drawItem(x,y,item,number)
         love.graphics.setColor(1,1,1,1)
     end
 
-    if number then drawItemImageHotbar(x,y,item,number) else drawItemImage(x,y,item) end
+    if number and number ~= 0 then drawItemImageHotbar(x,y,item,number) else drawItemImage(x,y,item) end
     if item.Enchantment ~= "None" then
         love.graphics.push()
             love.graphics.stencil(function() 
                 love.graphics.setShader(alphaShader)
-                if number then drawItemImageHotbar(x,y,item,number) else drawItemImage(x,y,item) end
+                if number and number ~= 0 then drawItemImageHotbar(x,y,item,number) else drawItemImage(x,y,item) end
                 love.graphics.setShader()
             end)
             drawEnchantment(x, y)
@@ -191,17 +193,17 @@ function drawInventoryItemField(thisX, thisY, field)
 
     for i,v in ipairs(userInventory[field]) do  
         if i <= 7 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 0), v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 0), v.Item, v.Inventory.Amount, 0, v.Inventory.ID)
         elseif i > 7 and i <= 14 then
-            drawInventoryItem(thisX + (43 * (i - 8)), thisY + (inventory.itemSpacing * 1), v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 8)), thisY + (inventory.itemSpacing * 1), v.Item, v.Inventory.Amount, 0, v.Inventory.ID)
         elseif i > 14 and i <= 21 then
-            drawInventoryItem(thisX + (43 * (i - 15)), thisY + (inventory.itemSpacing * 2), v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 15)), thisY + (inventory.itemSpacing * 2), v.Item, v.Inventory.Amount, 0, v.Inventory.ID)
         elseif i > 21 and i <= 28 then
-            drawInventoryItem(thisX + (43 * (i - 22)), thisY + (inventory.itemSpacing * 3), v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 22)), thisY + (inventory.itemSpacing * 3), v.Item, v.Inventory.Amount, 0, v.Inventory.ID)
         elseif i > 28 and i <= 35 then
-            drawInventoryItem(thisX + (43 * (i - 29)), thisY + (inventory.itemSpacing * 4), v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 29)), thisY + (inventory.itemSpacing * 4), v.Item, v.Inventory.Amount, 0, v.Inventory.ID)
         else
-            drawInventoryItem(thisX + (43 * (i - 36)), thisY + (inventory.itemSpacing * 5), v.Item, v.Inventory.Amount)
+            drawInventoryItem(thisX + (43 * (i - 36)), thisY + (inventory.itemSpacing * 5), v.Item, v.Inventory.Amount, 0, v.Inventory.ID)
         end
     end
 end
