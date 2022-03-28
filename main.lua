@@ -160,7 +160,7 @@ function love.draw()
         drawParticles()
         for i, v in ipairs(playersDrawable) do drawPlayer(v, i) end
         drawFloats()
-        drawPlayer(me, -1)
+       drawPlayer(me, -1)
         if showWorldAnimations then
             drawLeaves()
             drawCritters()
@@ -285,7 +285,7 @@ function love.update(dt)
                 ["AX"] = player.target.x,
                 ["AY"] = player.target.y,
                 ["IsShield"] = love.keyboard.isDown(keybinds.SHIELD)
-            }))
+            }), token)
             nextUpdate = 0.5
         end
         updateWorld(dt)
