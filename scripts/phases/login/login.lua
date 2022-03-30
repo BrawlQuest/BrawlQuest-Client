@@ -210,15 +210,17 @@ function checkLoginTextInput(key)
 end
 
 function loginViaSteam(skipDev)
-    if skipDev or (versionType ~= "dev" and love.system.getOS() ~= "Linux") then
-        local originalID = steam.user.getSteamID()
-        local str = tostring(originalID)
-        print("Logging in as " .. str)
-        if str ~= "nil" then
-            textfields[1] = str
-            textfields[2] = str
-            textfields[3] = str
-            login()
+    if versionType ~= "dev" then
+        if useSteam then
+            local originalID = steam.user.getSteamID()
+            local str = tostring(originalID)
+            print("Logging in as " .. str)
+            if str ~= "nil" then
+                textfields[1] = str
+                textfields[2] = str
+                textfields[3] = str
+                login()
+            end
         else
             print("Can't connect to server")
             loginPhase = "login"
