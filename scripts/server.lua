@@ -34,7 +34,9 @@ function serverResponse()
                         table.remove(players, i)
                     end
                 end
-                if player.world == 0 then npcs = response['NPC'] end
+                if player.world == 0 then
+                    npcs = response['NPC']
+                end
                 auras = response['Auras']
                 playersOnline = ""
                 playerCount = 0
@@ -44,8 +46,7 @@ function serverResponse()
                         playerCount = playerCount + 1
                     end
                 end
-                if json:encode(inventoryAlpha) ~=
-                    json:encode(response['Inventory']) then
+                if json:encode(inventoryAlpha) ~= json:encode(response['Inventory']) then
                     updateInventory(response)
                     inventoryAlpha = response['Inventory'] -- this is in this order for a reason dummy
                     -- this is in this order for a reason dummy
@@ -64,9 +65,7 @@ function serverResponse()
                 player.cp = response['CharPoints']
                 messages = {}
                 for i = 1, #response['Chat']['Global'] do
-                    local v =
-                        response['Chat']['Global'][#response['Chat']['Global'] +
-                            1 - i]
+                    local v = response['Chat']['Global'][#response['Chat']['Global'] + 1 - i]
                     messages[#messages + 1] = {
                         username = v["Sender"]["Name"],
                         text = v["Message"],
@@ -97,7 +96,9 @@ function serverResponse()
                     c, h = http.request {
                         url = api.url .. "/revive/" .. username,
                         method = "GET",
-                        headers = {["token"] = token}
+                        headers = {
+                            ["token"] = token
+                        }
                     }
                 end
 
@@ -107,7 +108,9 @@ function serverResponse()
                     c, h = http.request {
                         url = api.url .. "/revive/" .. username,
                         method = "GET",
-                        headers = {["token"] = token}
+                        headers = {
+                            ["token"] = token
+                        }
 
                     }
                     if death.previousPosition.hp < getMaxHealth() * 0.9 then
@@ -133,8 +136,7 @@ function serverResponse()
                 player.buddy = me.Buddy
                 if player.hp > me.HP and me.HP < getMaxHealth() then
                     player.damageHUDAlphaUp = true
-                    boneSpurt(player.dx + 16, player.dy + 16, player.hp - me.HP,
-                              40, 1, 1, 1, "me")
+                    boneSpurt(player.dx + 16, player.dy + 16, player.hp - me.HP, 40, 1, 1, 1, "me")
                 end
                 player.hp = me.HP
                 player.owedxp = me.XP - player.xp
@@ -147,8 +149,7 @@ function serverResponse()
                         setEnvironmentEffects(lvlSfx)
                         lvlSfx:play()
                         perks.stats[4] = player.cp
-                        addFloat("level", player.dx + 16, player.dy + 16, null,
-                                 {1, 0, 0}, 10)
+                        addFloat("level", player.dx + 16, player.dy + 16, null, {1, 0, 0}, 10)
                     end
                     player.lvl = me.LVL
                     firstLaunch = false
@@ -160,7 +161,9 @@ function serverResponse()
                 quests = {{}, {}, {}}
                 for i, v in ipairs(response['MyQuests']) do
                     local trackedVar = 2
-                    if v.Tracked == 1 then trackedVar = 1 end
+                    if v.Tracked == 1 then
+                        trackedVar = 1
+                    end
                     quests[v.Tracked][#quests[v.Tracked] + 1] = {
                         title = v.Quest.Title,
                         comment = v.Quest.Desc,
@@ -171,29 +174,15 @@ function serverResponse()
                         rawData = v
                     }
                     if v.Quest.Type == "kill" then
-                        quests[v.Tracked][#quests[v.Tracked]].task = "Kill " ..
-                                                                         v.Quest
-                                                                             .ValueRequired ..
-                                                                         "x " ..
-                                                                         v.Quest
-                                                                             .Value
+                        quests[v.Tracked][#quests[v.Tracked]].task =
+                            "Kill " .. v.Quest.ValueRequired .. "x " .. v.Quest.Value
                     elseif v.Quest.Type == "gather" then
                         quests[v.Tracked][#quests[v.Tracked]].task =
-                            "Gather " .. v.Quest.ValueRequired .. "x " ..
-                                v.Quest.Value
+                            "Gather " .. v.Quest.ValueRequired .. "x " .. v.Quest.Value
                     elseif v.Quest.Type == "go" then
                         quests[v.Tracked][#quests[v.Tracked]].task = "Go to " ..
-                                                                         (worldLookup[v.Quest
-                                                                             .X ..
-                                                                             "," ..
-                                                                             v.Quest
-                                                                                 .Y]
-                                                                             .Name or
-                                                                             v.Quest
-                                                                                 .X ..
-                                                                             ", " ..
-                                                                             v.Quest
-                                                                                 .Y)
+                                                                         (worldLookup[v.Quest.X .. "," .. v.Quest.Y]
+                                                                             .Name or v.Quest.X .. ", " .. v.Quest.Y)
                     end
                 end
                 activeConversations = response['ActiveConversations']

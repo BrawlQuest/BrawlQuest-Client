@@ -48,7 +48,8 @@ function drawWorld()
                        math.floor((love.graphics.getHeight() / 2) / 32)
     local offsetY = 0
     local offsetX = 0
-
+    maxX = 16
+    maxY = 16
         for x = player.x - maxX, player.x + maxX do
             for y = player.y - maxY, player.y + maxY do
                 groundImg, foregroundImg = getWorldTiles(math.floor(x),
