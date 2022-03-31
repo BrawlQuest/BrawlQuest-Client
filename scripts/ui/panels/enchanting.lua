@@ -586,7 +586,7 @@ end
 
 function openEnchanting()
 
-    if not me.IsPremium then
+    if me.IsPremium then
         premiumMessage.display = true
     else
         enchanting.phase = 1

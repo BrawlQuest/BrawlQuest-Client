@@ -152,7 +152,7 @@ function checkOrdersMousePressed(button)
 end
 
 function openOrders()
-    if not me.IsPremium then
+    if  me.IsPremium then
         premiumMessage.display = true
     else
         classMachineSFX:setVolume(sfxVolume)

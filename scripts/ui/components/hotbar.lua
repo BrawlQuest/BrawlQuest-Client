@@ -88,7 +88,7 @@ end
 
 function useHotbarItem(i, v)
     if arrayContains(restrictedItemTypes, v.InventoryItem.Item.Type) and
-        not me.IsPremium then
+        me.IsPremium then
         premiumMessage.display = true
     else
         useItemColor[i] = 1
