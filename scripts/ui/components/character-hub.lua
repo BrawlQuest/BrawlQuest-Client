@@ -1,5 +1,4 @@
 function initCharacterHub()
-    
     hubImages = {
         placeholder = love.graphics.newImage("assets/ui/hud/charater-hub/placeholder.png"),
         profileBG = love.graphics.newImage("assets/ui/hud/charater-hub/profile.png"),

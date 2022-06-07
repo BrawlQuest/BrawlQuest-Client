@@ -13,7 +13,7 @@ selectedServer = 1
 
 servers = {{
     name = "Swordbreak (UK)",
-    url = "https://swordbreak.brawlquest.com"
+    url = "http://167.99.80.7"
 }, {
     name = "Test Server (UK)",
     url = "http://dev.brawlquest.com"

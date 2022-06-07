@@ -13,6 +13,8 @@ function initCharacterSelection()
         overName = false,
         overExit = true,
         isTyping = false,
+        isHardcore = false,
+        isOverHardcore = false,
         nameText = "",
         selectableI = 0,
         selectedCharacter = 0,
@@ -100,40 +102,54 @@ function drawCharacterCreator()
     love.graphics.print(text, thisX + cs.s, thisY + 25 + cs.s + 2)
 
     love.graphics.setColor(1,1,1,cs.dualCERP)
-    love.graphics.print("CHARACTER COLOUR", thisX + 5, thisY + 80)
-    love.graphics.setColor(0,0,0,0.5 * cs.dualCERP)
+    if isMouseOver(thisX,thisY+70,100,300) then
+        love.graphics.setColor(1,0,0)
+        cs.isOverHardcore = true
+      
+    else
+        cs.isOverHardcore = false
+        love.graphics.setColor(1,1,1)
+    end
+  
+    if (cs.isHardcore) then
+        love.graphics.print('HARDCORE MODE', thisX + 5, thisY + 80)
+    else
+        love.graphics.print('Character is not hardcore. Click here to change.', thisX + 5, thisY + 80)
+    end
+  
+    -- love.graphics.print("CHARACTER COLOUR", thisX + 5, thisY + 80)
+    -- love.graphics.setColor(0,0,0,0.5 * cs.dualCERP)
     local w, h = cs.cw * 0.5, 105  -- cs.p * 0.5
-    thisX, thisY =  thisX, thisY + h
-    roundRectangle("fill", thisX, thisY, 100, 100, 10)
+   thisX, thisY =  thisX, thisY + h
+    -- roundRectangle("fill", thisX, thisY, 100, 100, 10)
     thisX, thisY =  thisX + 100 + cs.p * 0.5, thisY
-    roundRectangle("fill", thisX, thisY, cs.cw - 100 - cs.p * 0.5, 100, 10)
+    -- roundRectangle("fill", thisX, thisY, cs.cw - 100 - cs.p * 0.5, 100, 10)
 
-    love.graphics.setColor(v.Color[1], v.Color[2], v.Color[3], cs.dualCERP)
-    roundRectangle("fill", thisX + cs.s, thisY + cs.s, cs.cw - 100 - cs.p * 0.5 - cs.s * 2, 100 - cs.s * 2, 5)
-    love.graphics.setColor(1,1,1,cs.dualCERP)
-    love.graphics.draw(playerImg, x + cs.p + 12, thisY + 18, 0, 2)
+    -- love.graphics.setColor(v.Color[1], v.Color[2], v.Color[3], cs.dualCERP)
+    -- roundRectangle("fill", thisX + cs.s, thisY + cs.s, cs.cw - 100 - cs.p * 0.5 - cs.s * 2, 100 - cs.s * 2, 5)
+    -- love.graphics.setColor(1,1,1,cs.dualCERP)
+    -- love.graphics.draw(playerImg, x + cs.p + 12, thisY + 18, 0, 2)
 
-    love.graphics.setColor(1 - v.Color[1], 1 - v.Color[2], 1 - v.Color[3], cs.dualCERP)
-    text = math.floor(v.Color[1] * 255) .. ", " .. math.floor(v.Color[2] * 255) .. ", " .. math.floor(v.Color[3] * 255)
-    love.graphics.printf(text, thisX + cs.s, thisY + cs.s + 40 - cs.font:getHeight() * 0.5, cs.cw - 100 - cs.p * 0.5 - cs.s * 2, "center")
+    -- love.graphics.setColor(1 - v.Color[1], 1 - v.Color[2], 1 - v.Color[3], cs.dualCERP)
+    -- text = math.floor(v.Color[1] * 255) .. ", " .. math.floor(v.Color[2] * 255) .. ", " .. math.floor(v.Color[3] * 255)
+    -- love.graphics.printf(text, thisX + cs.s, thisY + cs.s + 40 - cs.font:getHeight() * 0.5, cs.cw - 100 - cs.p * 0.5 - cs.s * 2, "center")
 
     w, h = cs.cw, 120
-    thisX, thisY = x + cs.p, y + cs.h * 0.5 - cs.p - 50 - cs.s - h
-    love.graphics.setColor(0,0,0,0.5 * cs.dualCERP)
-    roundRectangle("fill", thisX, thisY, w, h, 10)
-    love.graphics.setColor(1,1,1,cs.dualCERP)
+   thisX, thisY = x + cs.p, y + cs.h * 0.5 - cs.p - 50 - cs.s - h
+    -- love.graphics.setColor(0,0,0,0.5 * cs.dualCERP)
+    -- roundRectangle("fill", thisX, thisY, w, h, 10)
+    -- love.graphics.setColor(1,1,1,cs.dualCERP)
 
     thisX, thisY = thisX + cs.s + 4, thisY + cs.s + 4
     for i,color in ipairs(cs.colors) do
-        love.graphics.print(color, thisX, thisY)
-        cs.slider[i]:draw()
-        thisY = thisY + 38
-    end
+    --     love.graphics.print(color, thisX, thisY)
+    --     cs.slider[i]:draw()
+         thisY = thisY + 38
+     end
 
-    w, h = cs.cw, 50
-    thisX, thisY = x + cs.p, y + cs.h * 0.5 - cs.p - h
-
-    local isMouse = isMouseOver(thisX, thisY, w, h)
+     w, h = cs.cw, 50
+     thisX, thisY = x + cs.p, y + cs.h * 0.5 - cs.p - h
+     local isMouse = isMouseOver(thisX, thisY, w, h)
     if isMouse then
         love.graphics.setColor(43 / 255, 134 / 255, cs.dualCERP)
         cs.overExit = true
@@ -215,6 +231,9 @@ function checkCharacterSelectorMousePressed()
         if cs.overExit then
             loginOrCreate()
         end
+        if cs.isOverHardcore then
+            cs.isHardcore = not cs.isHardcore
+        end
     end
     if cs.selectableI > 0 then
         cs.selectedCharacter = cs.selectableI
@@ -231,8 +250,12 @@ function loginOrCreate()
             characters[cs.selectedCharacter] = {}
             characters[cs.selectedCharacter].Name = cs.nameText
             characters[cs.selectedCharacter].Color = copy(cs.initialCharacter.Color)
+            local hardcore = 0
+            if cs.isHardcore == true then
+                hardcore = 1
+            end
             r, c, h = http.request {
-                url = api.url.."/user/"..UID.."/".. characters[cs.selectedCharacter].Name.."/1", -- 1=hardcore, 0=normal
+                url = api.url.."/user/"..UID.."/".. characters[cs.selectedCharacter].Name.."/"..hardcore, -- 1=hardcore, 0=normal
                 method = "POST",
                 headers = {
                     ['token'] = token
