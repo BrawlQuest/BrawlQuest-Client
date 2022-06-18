@@ -17,7 +17,11 @@ servers = {{
 }, {
     name = "Test Server (UK)",
     url = "http://dev.brawlquest.com"
-}, {
+},
+{
+    name = "Old Server",
+    url = "http://swordbreak.brawlquest.com"
+},  {
     name = "Local",
     url = "http://localhost"
 }}

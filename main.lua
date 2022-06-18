@@ -43,6 +43,7 @@ require "scripts.ui.temporary.worldedit"
 require "scripts.ui.temporary.new-world-edit"
 require "scripts.ui.temporary.world-edit-rect"
 require 'scripts.ui.components.premium-message'
+require "scripts.ui.panels.hardcore-dead"
 require "data.data_controller"
 require "scripts.player.settings"
 require "scripts.player.structures"
@@ -57,7 +58,7 @@ version = ""
 versionType = "release" -- "dev" for quick login, "release" for not
 useSteam = true
 if versionType == "dev" then require 'dev' end
-versionNumber = "Early Access 1.5.0" -- very important for settings
+versionNumber = "Early Access 1.5.1" -- very important for settings
 drawAnimations = false -- player animations
 
 if love.system.getOS() ~= "Linux" and useSteam then steam = require 'luasteam' end -- we can disable other platforms here. Can't get Steam working on Linux and we aren't targetting it so this'll do for dev purposes
@@ -247,15 +248,16 @@ function love.draw()
         local text
         if not dev then
             text =
-                "BrawlQuest " .. version .. " " .. versionNumber .. "X,Y: " ..
-                    player.x .. "," .. player.y .. " FPS: " ..
-                    tostring(love.timer.getFPS()) .. "\nPlayers: " ..
+                "BrawlQuest " .. version .. " " .. versionNumber .. "\nX,Y: " ..
+                    player.x .. "," .. player.y .. "\nFPS: " ..
+                    tostring(love.timer.getFPS()) .. "\n\nPlayers: " ..
                     playerCount .. "\n" .. playersOnline
         end
         love.graphics.print(text, offset, 10)
         drawWorldMap(love.graphics.getWidth() - 256 - 20, 20)
-        if (premiumMessage.display) then love.graphics.setShader() end
+        if (premiumMessage.display or deathMessage.display) then love.graphics.setShader() end
         drawPremiumMessage()
+        drawDeathMessage()
     end
 
     mx, my = love.mouse.getPosition()

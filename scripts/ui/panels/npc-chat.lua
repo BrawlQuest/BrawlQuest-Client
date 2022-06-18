@@ -124,15 +124,15 @@ function updateNPCChat(dt)
         if nextChar < 0 then
             
             if npcChat and #chatWritten ~= #npcChat.Title then
-                if not npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)] then
-                    if love.filesystem.getInfo("assets/sfx/npc/speak/"..string.lower(string.sub(npcChat.Title,#chatWritten,#chatWritten))..".ogg") then
-                        npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)] = love.audio.newSource("assets/sfx/npc/speak/"..string.lower(string.sub(npcChat.Title,#chatWritten,#chatWritten))..".ogg", "static")
-                    end
-                end
-                if npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)] then
-                    speakSound = npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)]
+                -- if not npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)] then
+                --     if love.filesystem.getInfo("assets/sfx/npc/speak/"..string.lower(string.sub(npcChat.Title,#chatWritten,#chatWritten))..".ogg") then
+                --         npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)] = love.audio.newSource("assets/sfx/npc/speak/"..string.lower(string.sub(npcChat.Title,#chatWritten,#chatWritten))..".ogg", "static")
+                --     end
+                -- end
+             --   if npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)] then
+                --    speakSound = npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)]
                     speakSound:setPitch(love.math.random(100,110)/100)
-                    speakSound:setVolume(0.15*sfxVolume)
+                    speakSound:setVolume(0.05*sfxVolume)
                     if npcPitch[npcChat.ImgPath] then
                         speakSound:setPitch(love.math.random(npcPitch[npcChat.ImgPath][1],npcPitch[npcChat.ImgPath][2])/100)
                     else
@@ -140,7 +140,7 @@ function updateNPCChat(dt)
                     end
                    
                   
-                end
+            --    end
                 speakSound:stop()
                 speakSound:setRelative(true)
                 setEnvironmentEffects(speakSound)

@@ -96,7 +96,7 @@ function drawOrderSelection(x,y)
         dx, dy = dx, dy + 20 + font:getHeight() * 6
         -- love.graphics.printf(o.title, dx, dy, (o.fw - 40) / 2, "left", 0, 2)
         if me.Order then
-            if me.Order == "" then text = "Choosing an order will gain you reputation with them."
+            if me.Order == "None" then text = "Choosing an order will gain you reputation with them."
             elseif me.Order ~= order.title then text = "You will loose your entire " .. me.Order .. " reputation."
             else text = "You are already a part of the " .. me.Order end
             text = o.title .. "\n\n" .. text

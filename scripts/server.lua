@@ -91,7 +91,7 @@ function serverResponse()
                 if perks.stats[1] == 0 then
                     perks.stats = {me.STR, me.INT, me.STA, player.cp}
                 end
-                if me.IsDead == true then
+                if me.IsDead and me.IsHardcore == 0 then
                     love.audio.play(deathSfx)
                     c, h = http.request {
                         url = api.url .. "/revive/" .. username,
@@ -100,19 +100,26 @@ function serverResponse()
                             ["token"] = token
                         }
                     }
+                elseif me.isDead and me.IsHardcore == 1 then
+                    deathMessage.display = true
+              
                 end
 
                 if me.IsDead then
                     player.x = me.X
                     player.y = me.Y
-                    c, h = http.request {
-                        url = api.url .. "/revive/" .. username,
-                        method = "GET",
-                        headers = {
-                            ["token"] = token
-                        }
+                    if me.IsHardcore == 0 then
+                        c, h = http.request {
+                            url = api.url .. "/revive/" .. username,
+                            method = "GET",
+                            headers = {
+                                ["token"] = token
+                            }
 
-                    }
+                        }
+                    else
+                        deathMessage.display = true
+                    end
                     if death.previousPosition.hp < getMaxHealth() * 0.9 then
                         death.open = true
                         totalCoverAlpha = 2

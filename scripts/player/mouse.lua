@@ -40,6 +40,8 @@ function love.mousereleased(x, y, button)
         if inventory.mouseOverButtonsAmount == 0 and json:encode(itemDrag.item) == json:encode(selectedItem) then checkInventoryMousePressed(button) 
         elseif inventory.mouseOverButtonsAmount > 0 and json:encode(itemDrag.item) == json:encode(hotbar[inventory.mouseOverButtonsAmount].item) then checkHotbarMousePressed(button) end
         checkItemDragMouseReleased(button)
+        onPremiumMouseDown()
+        onHardcoreMouseDown()
     end
 end
 

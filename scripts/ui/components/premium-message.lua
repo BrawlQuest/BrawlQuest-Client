@@ -16,7 +16,8 @@ premiumMessage = {
     subtitleFont = love.graphics
         .newFont("assets/ui/fonts/VT323-Regular.ttf", 28),
     featureFont = love.graphics.newFont("assets/ui/fonts/VT323-Regular.ttf", 24),
-    crownImg = love.graphics.newImage("assets/ui/crown.png")
+    crownImg = love.graphics.newImage("assets/ui/crown.png"),
+    isCallToActionOver = false
 }
 
 restrictedItemTypes = {"Buildable", "Buddy"}
@@ -79,6 +80,9 @@ function drawPremiumMessage()
                                     y + premiumMessage.height - 60,
                                     premiumMessage.width - 40, 50, 10)
             love.graphics.setColor(1, 1, 1, 1)
+            premiumMessage.isCallToActionOver = true
+                       else
+                        premiumMessage.isCallToActionOver = false
         end
         love.graphics.rectangle("line", x + 20, y + premiumMessage.height - 60,
                                 premiumMessage.width - 40, 50, 10)
@@ -101,5 +105,11 @@ function drawPremiumMessage()
         love.graphics.setColor(1, 1, 1)
         love.graphics.printf("x", x + premiumMessage.width - 16, y - 12, 32,
                              "center")
+    end
+end
+
+function onPremiumMouseDown()
+    if (premiumMessage.isCallToActionOver) then
+        apiGET("/micro")
     end
 end
