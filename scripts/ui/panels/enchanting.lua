@@ -586,13 +586,11 @@ end
 
 function openEnchanting()
 
-    if me.IsPremium then
-        premiumMessage.display = true
-    else
+ 
         enchanting.phase = 1
         enchanting.open = true
         enchanting.amount = 0.01
-    end
+   
 end
 
 function transitionToEnchantingPhase3()

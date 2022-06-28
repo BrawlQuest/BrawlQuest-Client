@@ -26,7 +26,7 @@ end
 
 function checkItemDragMousePressed(button, hotbarI)
     local iD = itemDrag
-    if hotbarI then -- copy from hotbar
+    if hotbarI and hotbar[hotbarI] and hotbar[hotbarI].InventoryItem then -- copy from hotbar
         iD.prevI = hotbarI
         iD.item = copy(hotbar[hotbarI].InventoryItem.Item)
         iD.amount = hotbar[hotbarI].InventoryItem.Inventory.Amount

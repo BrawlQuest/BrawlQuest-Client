@@ -44,14 +44,15 @@ end
 function drawWorld()
     love.graphics.setColor(1, 1, 1)
 
-    local maxX, maxY = math.floor((love.graphics.getWidth() / 2) / 32),
-                       math.floor((love.graphics.getHeight() / 2) / 32)
+    -- local maxX, maxY = math.floor((love.graphics.getWidth() / 2) / 32),
+    --                    math.floor((love.graphics.getHeight() / 2) / 32)
     local offsetY = 0
     local offsetX = 0
-    maxX = 16
-    maxY = 16
+    maxX = 10
+    maxY = 10
         for x = player.x - maxX, player.x + maxX do
             for y = player.y - maxY, player.y + maxY do
+                love.graphics.setColor(1,1,1, getEntityAlpha(x*32,y*32,250))
                 groundImg, foregroundImg = getWorldTiles(math.floor(x),
                                                         math.floor(y))
                 if not groundImg then

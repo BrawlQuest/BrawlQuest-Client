@@ -55,10 +55,10 @@ require "scripts.achievements"
 Luven = require "scripts.libraries.luven.luven"
 
 version = ""
-versionType = "release" -- "dev" for quick login, "release" for not
+versionType = "dev" -- "dev" for quick login, "release" for not
 useSteam = true
 if versionType == "dev" then require 'dev' end
-versionNumber = "Early Access 1.5.1" -- very important for settings
+versionNumber = "1.0.0" -- very important for settings
 drawAnimations = false -- player animations
 
 if love.system.getOS() ~= "Linux" and useSteam then steam = require 'luasteam' end -- we can disable other platforms here. Can't get Steam working on Linux and we aren't targetting it so this'll do for dev purposes

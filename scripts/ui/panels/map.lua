@@ -1,4 +1,4 @@
-local worldMapCanvas = love.graphics.newCanvas(4048,4048)
+local worldMapCanvas = love.graphics.newCanvas(5048,5048)
 local farthestX = 0
 local farthestY = 0
 local leastX = 0
@@ -6,7 +6,15 @@ local leastY = 0
 
 function initWorldMap()
     love.graphics.setCanvas(worldMapCanvas)
-    
+    for i,tile in ipairs(world) do
+        if tile.X < farthestX then
+            farthestX = tile.X
+        end
+        if tile.Y < farthestY then
+            farthestY = tile.Y
+        end
+    end
+
     for i,tile in ipairs(world) do
         local fgt = tile.ForegroundTile:lower()
         if string.sub(tile.Name, 1,5) == "Domin" then
@@ -37,13 +45,7 @@ function initWorldMap()
 
         love.graphics.rectangle("fill", (tile.X*4)+400, (tile.Y*4)+400, 4, 4)
 
-        if tile.X < farthestX then
-            farthestX = tile.X
-
-        end
-        if tile.Y < farthestY then
-            farthestY = tile.Y
-        end
+     
     end
     love.graphics.setCanvas()
 end

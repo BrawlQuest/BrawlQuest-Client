@@ -87,10 +87,7 @@ function checkHotbarMousePressed(button)
 end
 
 function useHotbarItem(i, v)
-    if arrayContains(restrictedItemTypes, v.InventoryItem.Item.Type) and
-        me.IsPremium then
-        premiumMessage.display = true
-    else
+   
         useItemColor[i] = 1
         useItemColorChanged = true
         apiGET("/item/" .. player.name .. "/" .. v.InventoryItem.Item.ID)
@@ -98,7 +95,7 @@ function useHotbarItem(i, v)
                               ".ogg", true)
         usedItemThisTick = true
         writeSettings()
-    end
+  
 
 end
 
