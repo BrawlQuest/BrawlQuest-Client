@@ -35,7 +35,7 @@ function setTooltip(title, desc, additional)
     tooltip.additional = additional
 
     local e = explode(desc, "{")
-    if me and me.STA and #e > 1 then
+    if me and me.sta and #e > 1 then
         local e2 = explode(e[2], "}")
         local eq = e2[1]
         eq = eq:gsub("INT", me["INT"])
@@ -61,28 +61,28 @@ function setItemTooltip(item)
     }
     local valString = "Item"
     if item.Type == "wep" then
-        valueAdditional.desc = "+" .. item.Val .. " Weapon"
+        valueAdditional.desc = "+" .. item.val .. " Weapon"
         valueAdditional.color = {1, 0.6, 0}
     elseif item.Type == "arm_head" then
-        valueAdditional.desc = "+" .. item.Val .. " Head Armour"
+        valueAdditional.desc = "+" .. item.val .. " Head Armour"
         valueAdditional.color = {0.5, 0.87, 0.47}
     elseif item.Type == "arm_chest" then
-        valueAdditional.desc = "+" .. item.Val .. " Chest Armour"
+        valueAdditional.desc = "+" .. item.val .. " Chest Armour"
         valueAdditional.color = {0.5, 0.87, 0.47}
     elseif item.Type == "arm_legs" then
-        valueAdditional.desc = "+" .. item.Val .. " Leg Armour"
+        valueAdditional.desc = "+" .. item.val .. " Leg Armour"
         valueAdditional.color = {0.5, 0.87, 0.47}
     elseif item.Type == "shield" then
-        valueAdditional.desc = "+" .. item.Val .. " Shield"
+        valueAdditional.desc = "+" .. item.val .. " Shield"
         valueAdditional.color = {0.5, 0.87, 0.47}
     elseif item.Type == "spell" then
-        valueAdditional.desc = "Spell (" .. item.Val .. " Mana)"
+        valueAdditional.desc = "Spell (" .. item.val .. " Mana)"
         valueAdditional.color = {0.6, 0.6, 1}
     elseif item.Type == "hp_potion" then
-        valueAdditional.desc = "Restores " .. item.Val .. " HP"
+        valueAdditional.desc = "Restores " .. item.val .. " HP"
         valueAdditional.color = {1, 0.5, 0.5}
     elseif item.Type == "mana_potion" then
-        valueAdditional.desc = "Restores " .. item.Val .. " Mana"
+        valueAdditional.desc = "Restores " .. item.val .. " Mana"
         valueAdditional.color = {0.5, 0.5, 1}
     elseif item.Type == "reagent" then
         valueAdditional.desc = "Reagent"
@@ -91,7 +91,7 @@ function setItemTooltip(item)
         valueAdditional.desc = "Buddy"
         valueAdditional.color = {0.8, 0, 1}
     elseif item.Type == "mount" then
-        valueAdditional.desc = item.Val / 32 .. "m/s Mount"
+        valueAdditional.desc = item.val / 32 .. "m/s Mount"
         valueAdditional.color = {0.8, 0.2, 1}
     elseif item.Type == "wall" then
         valueAdditional.desc = "Placeable Wall"
@@ -107,8 +107,8 @@ function setItemTooltip(item)
        valueAdditional.desc = valueAdditional.desc.." ("..item.Subtype..")"
     end
    
-    if me and me.LVL and item and item.Worth and me.LVL >= item.Worth then
-        setTooltip(item.Name, "", {valueAdditional, {
+    if me and me.lvl and item and item.Worth and me.lvl >= item.Worth then
+        setTooltip(item.name, "", {valueAdditional, {
             desc = item.Desc,
             color = {0.8, 0.8, 0.8}
         }, {
@@ -116,7 +116,7 @@ function setItemTooltip(item)
             color = {0, 1, 0}
         }})
     else
-        setTooltip(item.Name, "", {valueAdditional, {
+        setTooltip(item.name, "", {valueAdditional, {
             desc = item.Desc,
             color = {0.8, 0.8, 0.8}
         }, {
@@ -140,8 +140,8 @@ function setItemTooltip(item)
             }
         end
     end
-    if me and item and item.Enchantment ~= "None" then
-        ench = explode(item.Enchantment, ",")
+    if me and item and item.enchantment ~= "None" then
+        ench = explode(item.enchantment, ",")
         if string.sub(item.Type,1,3) == "arm" then
 
             tooltip.additional[#tooltip.additional + 1] = {
@@ -165,7 +165,7 @@ function setItemTooltip(item)
 
     if item.Type == "wall" or item.Type == "furniture" or item.Type == "floor" then
         tooltip.additional[#tooltip.additional + 1] = {
-            desc = "This item is placeable within any zone called 'Foundation Forest' or 'Dominion of "..me.Name.."'",
+            desc = "This item is placeable within any zone called 'Foundation Forest' or 'Dominion of "..me.name.."'",
             color = {0.6,0.6,1}
         }
     end

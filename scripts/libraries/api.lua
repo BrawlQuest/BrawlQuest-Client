@@ -11,7 +11,12 @@ token = ""
 
 selectedServer = 1
 
-servers = {{
+servers = {
+    {
+        name = "Local",
+        url = "http://localhost:8080"
+    },
+    {
     name = "Swordbreak (UK)",
     url = "http://167.99.80.7"
 }, {

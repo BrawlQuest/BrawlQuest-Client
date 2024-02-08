@@ -145,7 +145,7 @@ function checkOrdersMousePressed(button)
         love.filesystem.write("me.txt", json:encode_pretty(me))
         print("Trying to join the " .. o.items[o.selected.item].title)
         r, h = http.request {
-            url = api.url .. "/order/" .. me.ID .. "/" .. o.items[o.selected.item].title,
+            url = api.url .. "/order/" .. me.id .. "/" .. o.items[o.selected.item].title,
             headers = {['token'] = token},
         }
     end

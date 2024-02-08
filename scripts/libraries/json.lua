@@ -110,7 +110,7 @@ local OBJDEF = {
 --          function JSON:onDecodeError(message, text, location, etc)
 --             local note = "Internal Error: invalid JSON data"
 --             if type(etc) = 'table' and etc.photo then
---                note = note .. " while processing for " .. etc.photo:getFormattedMetadata('fileName')
+--                note = note .. " while processing for " .. etc.photo:getFormattedMetadata('filename')
 --             end
 --             LrErrors.throwUserError(note)
 --          end

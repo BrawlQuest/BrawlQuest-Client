@@ -15,7 +15,7 @@ function initCharacterHub()
             love.graphics.newImage("assets/ui/hud/charater-hub/2.png"),
             love.graphics.newImage("assets/ui/hud/charater-hub/3.png"),
         },
-        meterNames = {
+        meternames = {
             love.graphics.newImage("assets/ui/hud/charater-hub/HEALTH.png"),
             love.graphics.newImage("assets/ui/hud/charater-hub/MANA.png"),
             love.graphics.newImage("assets/ui/hud/charater-hub/XP.png"),
@@ -47,13 +47,13 @@ function initCharacterHub()
 
     armourHub = {
         titles = {
-            {name = "Head Armour", v = "HeadArmour"},
-            {name = "Chest Armour", v = "ChestArmour"},
-            {name = "Leg Armour", v = "LegArmour"},
+            {name = "Head Armour", v = "headarmour"},
+            {name = "Chest Armour", v = "chestarmour"},
+            {name = "Leg Armour", v = "legarmour"},
         },
     }
 
-    armourTypes = {"HeadArmour", "ChestArmour", "LegArmour",}
+    armourTypes = {"headarmour", "chestarmour", "legarmour",}
 end
 
 function updateCharacterHub(dt)
@@ -113,7 +113,7 @@ function updateCharacterHub(dt)
 end
 
 function drawCharacterHub(thisX, thisY)
-    if me ~= null and me.HP ~= null or me.XP ~= null then
+    if me ~= null and me.hp ~= null or me.xP ~= null then
         love.graphics.setFont(characterHub.font)
         thisX, thisY = thisX, thisY - hubImages.profileBG:getHeight()
 
@@ -133,20 +133,20 @@ function drawCharacterHub(thisX, thisY)
             thisY = thisY - 70
         end
 
-        if me.Weapon ~= null then drawBattlebarItem(thisX, thisY, itemImg[me.Weapon.ImgPath], "+"..me.Weapon.Val) end
+        if me.weapon ~= null then drawBattlebarItem(thisX, thisY, itemImg[me.weapon.imgpath], "+"..me.weapon.val) end
 
         local defence = 0
         if me ~= null then
-            if me.LegArmourID ~= 0 and me.LegArmour.Val ~= "Error" then
-                defence = defence + me.LegArmour.Val
+            if me.legarmourID ~= 0 and me.legarmour.val ~= "Error" then
+                defence = defence + me.legarmour.val
             end
 
-            if me.ChestArmourID ~= 0 and me.ChestArmour.Val ~= "Error" then
-                defence = defence + me.ChestArmour.Val
+            if me.chestarmourID ~= 0 and me.chestarmour.val ~= "Error" then
+                defence = defence + me.chestarmour.val
             end
 
-            if me.HeadArmourID ~= 0 and me.HeadArmour.Val ~= "Error" then
-                defence = defence + me.HeadArmour.Val
+            if me.headarmour ~= nil and me.headarmourID ~= 0 and me.headarmour.val ~= "Error" then
+                defence = defence + me.headarmour.val
             end
         end
         thisX = thisX + 50
@@ -184,7 +184,7 @@ function drawCharacterHubProfile(thisX, thisY)
         setTooltip("Character Level", "Your level increases when you kill mobs or complete quests. Level up your player to access more items and to increase your character points.")
     end
     if player.cp > 0 then love.graphics.setColor(1,1,1,1) else love.graphics.setColor(0,0,0,1) end
-    love.graphics.print(tostring(me.LVL), thisX + 56 - math.floor(characterHub.font:getWidth(tostring(me.LVL))/2), thisY + 84 - (characterHub.font:getHeight(tostring(me.LVL))/2))
+    love.graphics.print(tostring(me.lvl), thisX + 56 - math.floor(characterHub.font:getWidth(tostring(me.lvl))/2), thisY + 84 - (characterHub.font:getHeight(tostring(me.lvl))/2))
 end
 
 function drawCharacterHubStats(thisX, thisY)
@@ -229,12 +229,12 @@ local enchTab = {
 function tickCharacterHub()
     perks.bonus = {0,0,0,}
     for i,v in ipairs(armourTypes) do
-        if me[v] and me[v].Enchantment then
-            local ench = explode(me[v].Enchantment, ",")
+        if me[v] and me[v].enchantment then
+            local ench = explode(me[v].enchantment, ",")
             local tabI = enchTab[ench[1]]
             if tabI and ench[2] then perks.bonus[tabI] = perks.bonus[tabI] + ench[2] end
         end
-        if me[v] and me[v].ID ~= 0 and me[v].Attributes then
+        if me[v] and me[v].id ~= 0 and me[v].Attributes then
             for j, k in ipairs(explode(me[v].Attributes, ";")) do
                 local atri = explode(me[v].Attributes, ",")
                 local tabI = enchTab[atri[1]]
@@ -250,11 +250,11 @@ function drawCharacterHubMeters(thisX, thisY)
     roundRectangle("fill", thisX, thisY, 231, 97, cerp(0, 10, characterHub.amount), {false, true, false, false})
     love.graphics.setFont(characterHub.nameFont)
     love.graphics.setColor(1,1,1,1)
-    love.graphics.print(me.Name, thisX + 6, thisY+4)
+    love.graphics.print(me.name, thisX + 6, thisY+4)
     thisX, thisY = thisX + 5, thisY + 25
     love.graphics.setFont(characterHub.font)
     local j = (100/151)
-    local meterLevels = {math.clamp(0, me.HP, getMaxHealth()), me.Mana, me.XP}
+    local meterLevels = {math.clamp(0, me.hp, getMaxHealth()), me.mana, me.xP}
     local meterMaxes = {getMaxHealth(), 100, 100}
     for i = 0, 2 do
         local spacing = 23 * i
@@ -263,11 +263,13 @@ function drawCharacterHubMeters(thisX, thisY)
         love.graphics.setColor(unpack(characterHub.barColors[i+1]))
         love.graphics.draw(hubImages.meterSide, thisX, thisY + spacing)
         love.graphics.draw(hubImages.meterSide, thisX + 212, thisY + 19 + spacing, math.rad(180))
-        love.graphics.rectangle("fill", thisX + 31, thisY + spacing, calcProgressBar(meterLevels[i+1], meterMaxes[i+1], 151), 19)
+--        love.graphics.rectangle("fill", thisX + 31, thisY + spacing, calcProgressBar(meterLevels[i+1], meterMaxes[i+1], 151), 19)
         love.graphics.setColor(1,1,1,1)
         love.graphics.draw(hubImages.meterIcons[i+1], thisX, thisY + spacing)
-        love.graphics.draw(hubImages.meterNames[i+1], thisX, thisY + spacing)
-        love.graphics.print(math.floor(meterLevels[i+1]), thisX + 198 - (characterHub.font:getWidth(math.floor(meterLevels[i+1]))/2), thisY + spacing + 3)
+        love.graphics.draw(hubImages.meternames[i+1], thisX, thisY + spacing)
+        if (meterLevels[i+1] ~= nil) then
+            love.graphics.print(math.floor(meterLevels[i+1]), thisX + 198 - (characterHub.font:getWidth(math.floor(meterLevels[i+1]))/2), thisY + spacing + 3)
+        end
     end
 end
 
@@ -303,7 +305,7 @@ function drawBattlebarItem(thisX, thisY, item, stats)
 		love.graphics.setColor(1,1,1,1)
         for i = #armourHub.titles, 1, -1 do
             local vb = armourHub.titles[i]
-            if me and me[vb.v] then drawItemIfExists(me[vb.v].ImgPath, thisX + 4, thisY + 4) end
+            if me and me[vb.v] then drawItemIfExists(me[vb.v].imgpath, thisX + 4, thisY + 4) end
         end
     elseif item == "hold" then
         love.graphics.print(boolToString(holdAttack), characterHub.nameFont, thisX+(w / 2)-(characterHub.nameFont:getWidth(stats)/2), thisY + 16)
@@ -335,7 +337,7 @@ function drawArmourHub(thisX, thisY)
     for i, vb in ipairs(armourHub.titles) do
         love.graphics.rectangle("fill", x, y, bh, bh, 5)
         if me and me[vb.v] then -- draw armour pieces
-            drawItemIfExists(me[vb.v].ImgPath, x + 2, y + 2, "left", 1, 1)
+            drawItemIfExists(me[vb.v].imgpath, x + 2, y + 2, "left", 1, 1)
         end
         love.graphics.setColor(0,0,0,0.8 * alpha)
         local xb = x + bh + 10
@@ -344,9 +346,9 @@ function drawArmourHub(thisX, thisY)
         love.graphics.setColor(1, 1, 1, alpha)
         
         love.graphics.print(vb.name .. ":", xb + 10, y + 3, 0, 1)
-        if me[vb.v].Val ~= "Error" then
-            love.graphics.printf("+" .. me[vb.v].Val, xb + wb - 50, y + 3, 40, "right", 0, 1)
-            love.graphics.print(me[vb.v].Name, xb + 10, y + 3 + 12, 0, 1)
+        if me[vb.v].val ~= "Error" then
+            love.graphics.printf("+" .. me[vb.v].val, xb + wb - 50, y + 3, 40, "right", 0, 1)
+            love.graphics.print(me[vb.v].name, xb + 10, y + 3 + 12, 0, 1)
         end
         y = y + bh + 8
     end

@@ -56,7 +56,7 @@ Luven = require "scripts.libraries.luven.luven"
 
 version = ""
 versionType = "dev" -- "dev" for quick login, "release" for not
-useSteam = true
+useSteam = false
 if versionType == "dev" then require 'dev' end
 versionNumber = "1.0.0" -- very important for settings
 drawAnimations = false -- player animations
@@ -179,7 +179,7 @@ function love.draw()
             drawingText = true
         elseif isNearbyTile("assets/world/objects/Portal.png") and
             not drawingText then
-            if me.LVL ~= 40 then
+            if me.lvl ~= 40 then
                 drawTextBelowPlayer("You must be Level 40 to Enchant")
             else
                 drawTextBelowPlayer("Press " .. keybinds.INTERACT ..
@@ -198,11 +198,11 @@ function love.draw()
         end
 
         for i, v in ipairs(npcs) do
-            if distanceToPoint(player.x, player.y, v.X, v.Y) <= 1 and
+            if distanceToPoint(player.x, player.y, v.x, v.y) <= 1 and
                 not showNPCChatBackground and v.Conversation ~= "" then
                 local isQuestCompleter = false
                 for k, q in ipairs(quests[1]) do
-                    if q.rawData.Quest.ReturnNPCID == v.ID and q.currentAmount ==
+                    if q.rawData.Quest.ReturnNPCID == v.id and q.currentAmount ==
                         q.requiredAmount then
                         drawTextBelowPlayer(
                             "Press " .. keybinds.INTERACT ..
@@ -280,13 +280,13 @@ function love.update(dt)
         love.audio.setPosition(player.dx / 32, player.dy / 32)
         nextUpdate = nextUpdate - 1 * dt
         nextTick = nextTick - 1 * dt
-        if nextUpdate < 0 then
-            getPlayerData('/players/' .. username, json:encode({
-                ["X"] = player.x,
-                ["Y"] = player.y,
-                ["AX"] = player.target.x,
-                ["AY"] = player.target.y,
-                ["IsShield"] = love.keyboard.isDown(keybinds.SHIELD)
+        if nextUpdate < 0 then 
+            getPlayerData('/player/' .. username, json:encode({
+                ["x"] = player.x,
+                ["y"] = player.y,
+                ["ax"] = player.target.x,
+                ["ay"] = player.target.y,
+                ["isShield"] = love.keyboard.isDown(keybinds.SHIELD)
             }), token)
             nextUpdate = 0.5
         end

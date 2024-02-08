@@ -28,7 +28,7 @@ function drawAuras()
         elseif v.Stat == "Bone" then
             love.graphics.setColor(0, 0.8, 0, 0.6 * v.alpha)
         end
-        local x,y = v.X*32, v.Y*32
+        local x,y = v.x*32, v.y*32
         x = x +16
         y = y + 16
 
@@ -45,13 +45,13 @@ function drawAuraHeadings()
     love.graphics.setColor(1,1,1,1)
     local x = (uiX-36)
     for i,v in ipairs(auras) do
-        local img = getImgIfNotExist(v.Item.ImgPath)
+        local img = getImgIfNotExist(v.Item.imgpath)
 
         love.graphics.setColor(1,1,1)
         love.graphics.draw(img,x,4)
         if isMouseOver(x*scale,4*scale,32*scale,32*scale) then
 
-            setTooltip(v.Stat, "Your "..v.Stat.." is being increased by "..v.Value.." for the next "..v.TimeLeft.." seconds")
+            setTooltip(v.Stat, "Your "..v.Stat.." is being increased by "..v.value.." for the next "..v.TimeLeft.." seconds")
 
         end
         x = x - 36
@@ -62,24 +62,24 @@ function tickAuras()
 --  auraAuras = {}
     for i,v in ipairs(auras) do
         local img = getImgIfNotExist("assets/auras/"..v.Stat..".png")
-        local x = v.X - v.Radius
-        local y = v.Y - v.Radius
+        local x = v.x - v.Radius
+        local y = v.y - v.Radius
         auraAuras[#auraAuras+1] = {
-            X = v.X,
-            Y = v.Y,
+            X = v.x,
+            Y = v.y,
             width = 0,
             Stat = v.Stat,
             alpha = 1,
             Radius = v.Radius,
-            lightID = Luven.addNormalLight(16 + v.X * 32, 16 + v.Y * 32, auraColors[v.Stat], 2),
+            lightID = Luven.addNormalLight(16 + v.x * 32, 16 + v.y * 32, auraColors[v.Stat], 2),
             hasBurst = false,
             expanding = true,
             maxWidth = 0,
             amount = 0,
         }
-        while x < v.X + v.Radius do
-            while y < v.Y + v.Radius do
-                if love.math.random(1,10) == 1 and distanceToPoint(x, y, v.X, v.Y) < v.Radius then
+        while x < v.x + v.Radius do
+            while y < v.y + v.Radius do
+                if love.math.random(1,10) == 1 and distanceToPoint(x, y, v.x, v.y) < v.Radius then
                     auraParticles[#auraParticles+1] = {
                         x = x*32 + 16,
                         y = y*32 + 16,
@@ -94,7 +94,7 @@ function tickAuras()
                 y = y + 1
             end
             x = x + 1
-            y = v.Y - v.Radius
+            y = v.y - v.Radius
         end
     end
 end

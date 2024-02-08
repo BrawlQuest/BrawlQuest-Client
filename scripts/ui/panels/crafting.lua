@@ -35,7 +35,7 @@ function initCrafting()
         velY = 0,
         itemCount = 0,
         recipesHeight = 0,
-        fieldNames = {
+        fieldnames = {
             ["wep"] = "Weapons",
             ["Shields"] = "Shields",
             ["arm_head"] = "Head Armour",
@@ -55,11 +55,11 @@ function initCrafting()
         crafting.catalogue = json:decode(table.concat(b))
         for i, v in ipairs(crafting.catalogue) do
             crafting.itemCount = crafting.itemCount + 1
-            if crafting.recipes[v.Item.Type] then
-                crafting.recipes[v.Item.Type][#crafting.recipes[v.Item.Type] + 1] = copy(v)
+            if crafting.recipes[v.item.type] then
+                crafting.recipes[v.item.type][#crafting.recipes[v.item.type] + 1] = copy(v)
             else
-                crafting.recipes[v.Item.Type] = {copy(v),}
-                crafting.fields[#crafting.fields+1] = v.Item.Type
+                crafting.recipes[v.item.type] = {copy(v),}
+                crafting.fields[#crafting.fields+1] = v.item.type
             end
         end
     else
@@ -95,7 +95,7 @@ function updateCrafting(dt)
                     local itemsSoFar = {}
                     for i,v in ipairs(crafting.enteredItems) do
                         itemsSoFar[#itemsSoFar+1] = {
-                            ItemID = v.item.ID,
+                            ItemID = v.item.id,
                             Amount = v.amount
                         }
                     end
@@ -205,7 +205,7 @@ function drawCraftingBackground(thisX, thisY)
                 love.graphics.setColor(1,1,1)
             end
 
-            love.graphics.print(string.upper(crafting.fieldNames[field] or field), inventory.font, x + 10, y + 11, 0, 1)
+            love.graphics.print(string.upper(crafting.fieldnames[field] or field), inventory.font, x + 10, y + 11, 0, 1)
             local ground
             local point
             if crafting.openField[i] then
@@ -244,7 +244,7 @@ function drawCraftingBackground(thisX, thisY)
                             if v.ItemsItem[l] ~= null then
                                 local amount = 0
                                 for n,m in ipairs(values) do
-                                    if m.ItemID == v.ItemsItem[l].ID then
+                                    if m.ItemID == v.ItemsItem[l].id then
                                         amount = m.Amount
                                         break
                                     end
@@ -306,7 +306,7 @@ function drawCraftingBackground(thisX, thisY)
         roundRectangle("fill", x, y, w - 18, h, 10)
         love.graphics.setColor(1,1,1)
         drawCraftingItem(x + 10, y + 10, v.Item, 1)
-        love.graphics.print(v.Item.Name, x + 54, y + 22)
+        love.graphics.print(v.Item.name, x + 54, y + 22)
     end
 
     if crafting.result then    
@@ -319,7 +319,7 @@ function drawCraftingBackground(thisX, thisY)
         love.graphics.setColor(1, cerp(165 / 255, 1, crafting.result.alpha), cerp(32 / 255, 1, crafting.result.alpha), 0.8 * crafting.result.alphaCERP)
         roundRectangle("fill", x,y,w,h, 5 )
         love.graphics.setColor(1,1,1, crafting.result.alphaCERP)
-        love.graphics.draw(getImgIfNotExist(crafting.result.ImgPath), x + size * 2, y + size * 2, 0, size)
+        love.graphics.draw(getImgIfNotExist(crafting.result.imgpath), x + size * 2, y + size * 2, 0, size)
     end
 
     love.graphics.setColor(1,1,1,crafting.whiteout)
@@ -348,7 +348,7 @@ function drawCraftingItem(thisX, thisY, item, amount)
 
     love.graphics.setColor(1,1,1,1)
     if item then
-        itemImg[item.ImgPath] = getImgIfNotExist(item.ImgPath)
+        itemImg[item.imgpath] = getImgIfNotExist(item.imgpath)
         if string.sub(item.Type, 1, 4) == "arm_" then
             love.graphics.setColor(1,1,1,0.5)
             love.graphics.draw(playerImg, thisX + 2, thisY + 2)
@@ -359,12 +359,12 @@ function drawCraftingItem(thisX, thisY, item, amount)
             love.graphics.setColor(1,1,1,0.4)
         end
 
-        if itemImg[item.ImgPath]:getWidth() <= 32 and itemImg[item.ImgPath]:getHeight() <= 32 then
-            love.graphics.draw(itemImg[item.ImgPath],
-                thisX + 18 - (itemImg[item.ImgPath]:getWidth() / 2),
-                thisY + 18 - (itemImg[item.ImgPath]:getHeight() / 2))
+        if itemImg[item.imgpath]:getWidth() <= 32 and itemImg[item.imgpath]:getHeight() <= 32 then
+            love.graphics.draw(itemImg[item.imgpath],
+                thisX + 18 - (itemImg[item.imgpath]:getWidth() / 2),
+                thisY + 18 - (itemImg[item.imgpath]:getHeight() / 2))
         else
-            love.graphics.draw(itemImg[item.ImgPath], thisX + 2, thisY + 2) -- Item
+            love.graphics.draw(itemImg[item.imgpath], thisX + 2, thisY + 2) -- Item
         end
     end
 
@@ -532,7 +532,7 @@ function enterCraftingItems(v)
     local required = json:decode(v.ItemsString)
     for j = 1, #v.ItemsItem do
         local amount = required[j].Amount
-        -- print(v.ItemsItem[j].Name .. " " .. amount)
+        -- print(v.ItemsItem[j].name .. " " .. amount)
         local invAmount = getItemAmount(v.ItemsItem[j])
         if invAmount >= amount then
             crafting.enteredItems[j] = {

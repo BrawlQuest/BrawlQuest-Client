@@ -145,7 +145,7 @@ function drawItem(x,y,item,number)
     end
 
     if number and number ~= 0 then drawItemImageHotbar(x,y,item,number) else drawItemImage(x,y,item) end
-    if item.Enchantment ~= "None" then
+    if item.enchantment ~= "None" then
         love.graphics.push()
             love.graphics.stencil(function() 
                 love.graphics.setShader(alphaShader)
@@ -159,30 +159,30 @@ function drawItem(x,y,item,number)
 end
 
 function drawItemImage(x,y,item)
-    itemImg[item.ImgPath] = getImgIfNotExist(item.ImgPath)
+    itemImg[item.imgpath] = getImgIfNotExist(item.imgpath)
 
   
     if inventory.usedItemThisTick then
         love.graphics.setColor(1,1,1,0.4)
     end
 
-    if itemImg[item.ImgPath]:getWidth() <= 32 and itemImg[item.ImgPath]:getHeight() <= 32 then
-        love.graphics.draw(itemImg[item.ImgPath],
-            x + 18 - (itemImg[item.ImgPath]:getWidth() / 2),
-            y + 18 - (itemImg[item.ImgPath]:getHeight() / 2))
+    if itemImg[item.imgpath]:getWidth() <= 32 and itemImg[item.imgpath]:getHeight() <= 32 then
+        love.graphics.draw(itemImg[item.imgpath],
+            x + 18 - (itemImg[item.imgpath]:getWidth() / 2),
+            y + 18 - (itemImg[item.imgpath]:getHeight() / 2))
     else
-        love.graphics.draw(itemImg[item.ImgPath], x + 2, y + 2) -- Item
+        love.graphics.draw(itemImg[item.imgpath], x + 2, y + 2) -- Item
     end
 end
 
 function drawItemImageHotbar(x,y,item,number)
-    itemImg[item.ImgPath] = getImgIfNotExist(item.ImgPath)
-    if itemImg[item.ImgPath]:getWidth() <= 32 and itemImg[item.ImgPath]:getHeight() <= 32 then
-        love.graphics.draw(itemImg[item.ImgPath],
-            x + 18 - (itemImg[item.ImgPath]:getWidth() / (2 - useItemColor[number])),
-            y + 18 - (itemImg[item.ImgPath]:getHeight() / (2 - useItemColor[number])),  0, 1 + useItemColor[number])
+    itemImg[item.imgpath] = getImgIfNotExist(item.imgpath)
+    if itemImg[item.imgpath]:getWidth() <= 32 and itemImg[item.imgpath]:getHeight() <= 32 then
+        love.graphics.draw(itemImg[item.imgpath],
+            x + 18 - (itemImg[item.imgpath]:getWidth() / (2 - useItemColor[number])),
+            y + 18 - (itemImg[item.imgpath]:getHeight() / (2 - useItemColor[number])),  0, 1 + useItemColor[number])
     else
-        love.graphics.draw(itemImg[item.ImgPath], x + 2 - (16 * useItemColor[number]), y + 2 - (16 * useItemColor[number]), 0, 1 + useItemColor[number]) -- Item
+        love.graphics.draw(itemImg[item.imgpath], x + 2 - (16 * useItemColor[number]), y + 2 - (16 * useItemColor[number]), 0, 1 + useItemColor[number]) -- Item
     end
 end
 
@@ -193,17 +193,17 @@ function drawInventoryItemField(thisX, thisY, field)
 
     for i,v in ipairs(userInventory[field]) do  
         if i <= 7 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 0), v.Item, v.Inventory.Amount, 0, v.Inventory.ID)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 0), v.Item, v.Inventory.Amount, 0, v.Inventory.id)
         elseif i > 7 and i <= 14 then
-            drawInventoryItem(thisX + (43 * (i - 8)), thisY + (inventory.itemSpacing * 1), v.Item, v.Inventory.Amount, 0, v.Inventory.ID)
+            drawInventoryItem(thisX + (43 * (i - 8)), thisY + (inventory.itemSpacing * 1), v.Item, v.Inventory.Amount, 0, v.Inventory.id)
         elseif i > 14 and i <= 21 then
-            drawInventoryItem(thisX + (43 * (i - 15)), thisY + (inventory.itemSpacing * 2), v.Item, v.Inventory.Amount, 0, v.Inventory.ID)
+            drawInventoryItem(thisX + (43 * (i - 15)), thisY + (inventory.itemSpacing * 2), v.Item, v.Inventory.Amount, 0, v.Inventory.id)
         elseif i > 21 and i <= 28 then
-            drawInventoryItem(thisX + (43 * (i - 22)), thisY + (inventory.itemSpacing * 3), v.Item, v.Inventory.Amount, 0, v.Inventory.ID)
+            drawInventoryItem(thisX + (43 * (i - 22)), thisY + (inventory.itemSpacing * 3), v.Item, v.Inventory.Amount, 0, v.Inventory.id)
         elseif i > 28 and i <= 35 then
-            drawInventoryItem(thisX + (43 * (i - 29)), thisY + (inventory.itemSpacing * 4), v.Item, v.Inventory.Amount, 0, v.Inventory.ID)
+            drawInventoryItem(thisX + (43 * (i - 29)), thisY + (inventory.itemSpacing * 4), v.Item, v.Inventory.Amount, 0, v.Inventory.id)
         else
-            drawInventoryItem(thisX + (43 * (i - 36)), thisY + (inventory.itemSpacing * 5), v.Item, v.Inventory.Amount, 0, v.Inventory.ID)
+            drawInventoryItem(thisX + (43 * (i - 36)), thisY + (inventory.itemSpacing * 5), v.Item, v.Inventory.Amount, 0, v.Inventory.id)
         end
     end
 end

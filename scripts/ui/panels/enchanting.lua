@@ -7,14 +7,14 @@ function initEnchanting()
         cerp = 0,
         phase = 1,
         floor = 1,
-        itemNames = {
-            "LegArmour", "ChestArmour", "HeadArmour", "Shield", "Weapon",
+        itemnames = {
+            "legarmour", "chestarmour", "headarmour", "Shield", "Weapon",
             "Mount"
         },
         items = {
-            ["LegArmour"] = {armour = true},
-            ["ChestArmour"] = {armour = true},
-            ["HeadArmour"] = {armour = true},
+            ["legarmour"] = {armour = true},
+            ["chestarmour"] = {armour = true},
+            ["headarmour"] = {armour = true},
             ["Weapon"] = {armour = false},
             ["Mount"] = {armour = false},
             ["Shield"] = {armour = true}
@@ -46,7 +46,7 @@ function initEnchanting()
             return3 = false,
             options = 0
         },
-        chosenItem = "LegArmour",
+        chosenItem = "legarmour",
         chosenItemCount = 1,
         perks = {
             ["Armour"] = {
@@ -153,8 +153,8 @@ function drawEnchanting()
                              y - e.font:getHeight() * textScale - 10,
                              w / textScale, "center", 0, textScale)
         e.mouseOver.item = ""
-        if me and me.HeadArmour then
-            for i, v in ipairs(e.itemNames) do -- draws armour and base images if needed
+        if me and me.headarmour then
+            for i, v in ipairs(e.itemnames) do -- draws armour and base images if needed
                 local dx, dy = x + (itemWidth + 30) * (i - 1), y + 10
                 local offset = 0
                 if e.chosenItem == v then
@@ -177,12 +177,12 @@ function drawEnchanting()
                                            e.itemScale)
                     end
                     if me[v .. "ID"] ~= 0 then
-                        drawItemIfExists(me[v].ImgPath, dx, dy - offset, "", 1,
+                        drawItemIfExists(me[v].imgpath, dx, dy - offset, "", 1,
                                          e.itemScale)
                     end
-                elseif me.Mount and me.Mount.Name ~= "None" and me.Mount.Name ~=
+                elseif me.mount and me.mount.name ~= "None" and me.mount.name ~=
                     "" then
-                    drawItemIfExists(me[v].ImgPath, dx, dy - offset, "", 1,
+                    drawItemIfExists(me[v].imgpath, dx, dy - offset, "", 1,
                                      e.itemScale)
                 end
             end
@@ -209,15 +209,15 @@ function drawEnchanting()
                                        picScale - 2)
                 end
                 if me[e.chosenItem .. "ID"] ~= 0 then
-                    drawItemIfExists(me[e.chosenItem].ImgPath, dx - offset, dy,
+                    drawItemIfExists(me[e.chosenItem].imgpath, dx - offset, dy,
                                      "", 1, picScale - 2)
                 end
-            elseif me.Mount and me.Mount.Name ~= "None" and me.Mount.Name ~= "" then
-                drawItemIfExists(me[e.chosenItem].ImgPath, dx - offset, dy, "",
+            elseif me.mount and me.mount.name ~= "None" and me.mount.name ~= "" then
+                drawItemIfExists(me[e.chosenItem].imgpath, dx - offset, dy, "",
                                  1, picScale - 2)
             end
-            love.graphics.printf(me[e.chosenItem].Name .. "\nEnchantment: " ..
-                                     me[e.chosenItem].Enchantment, x,
+            love.graphics.printf(me[e.chosenItem].name .. "\nEnchantment: " ..
+                                     me[e.chosenItem].enchantment, x,
                                  y + 30 * picScale,
                                  (32 * picScale) / smallPrintScale, "center", 0,
                                  smallPrintScale)
@@ -244,10 +244,10 @@ function drawEnchanting()
 
         e.mouseOver.perk = 0
         if e.chosenItem ~= "" and me[enchanting.chosenItem] and
-            me[enchanting.chosenItem].Name ~= "None" then
+            me[enchanting.chosenItem].name ~= "None" then
             local perk
-            if e.chosenItem == "HeadArmour" or e.chosenItem == "ChestArmour" or
-                e.chosenItem == "LegArmour" then
+            if e.chosenItem == "headarmour" or e.chosenItem == "chestarmour" or
+                e.chosenItem == "legarmour" then
                 perk = "Armour"
             else
                 perk = e.chosenItem
@@ -302,9 +302,9 @@ function drawEnchanting()
         local width = 32 * picScale
         local x, y = uiX / 2 - w * 0.5, uiY / 2 - width * 0.5
 
-        local perk = "HeadArmour"
-        if e.chosenItem == "HeadArmour" or e.chosenItem == "ChestArmour" or
-            e.chosenItem == "LegArmour" then
+        local perk = "headarmour"
+        if e.chosenItem == "headarmour" or e.chosenItem == "chestarmour" or
+            e.chosenItem == "legarmour" then
             perk = "Armour"
         else
             perk = e.chosenItem
@@ -322,11 +322,11 @@ function drawEnchanting()
                 love.graphics.draw(playerImg, dx - offset, dy, 0, picScale - 2)
             end
             if me[e.chosenItem .. "ID"] ~= 0 then
-                drawItemIfExists(me[e.chosenItem].ImgPath, dx - offset, dy, "",
+                drawItemIfExists(me[e.chosenItem].imgpath, dx - offset, dy, "",
                                  1, picScale - 2)
             end
-        elseif me.Mount and me.Mount.Name ~= "None" then
-            drawItemIfExists(me[e.chosenItem].ImgPath, dx - offset, dy, "", 1,
+        elseif me.mount and me.mount.name ~= "None" then
+            drawItemIfExists(me[e.chosenItem].imgpath, dx - offset, dy, "", 1,
                              picScale - 2)
         end
 
@@ -335,13 +335,13 @@ function drawEnchanting()
 
         local floor = 25
         if e.floor > 25 then floor = e.floor end
-        local levelCalc = math.floor(lerp(floor, me.LVL,
+        local levelCalc = math.floor(lerp(floor, me.lvl,
                                           enchantingSliderPhase3:getValue()))
         e.itemLevel = levelCalc
-        love.graphics.printf(me[e.chosenItem].Name, dx, dy, width / textScale,
+        love.graphics.printf(me[e.chosenItem].name, dx, dy, width / textScale,
                              "left", 0, textScale)
         dy = dy +
-                 (getTextHeight(me[e.chosenItem].Name, width / textScale, e.font) *
+                 (getTextHeight(me[e.chosenItem].name, width / textScale, e.font) *
                      textScale)
         love.graphics.printf(e.perks[perk][e.selectedPerk].desc, dx, dy,
                              width / smallPrintScale, "left", 0, smallPrintScale)
@@ -362,7 +362,7 @@ function drawEnchanting()
         love.graphics.printf("Your Level After Enchanting:", dx, dy,
                              width / smallPrintScale, "left", 0, smallPrintScale)
         love.graphics.printf(
-            math.clamp(1, me.LVL - (levelCalc - e.floor), 1000), dx, dy,
+            math.clamp(1, me.lvl - (levelCalc - e.floor), 1000), dx, dy,
             width / smallPrintScale, "right", 0, smallPrintScale)
 
         enchantingSliderPhase3:draw()
@@ -430,9 +430,9 @@ end
 
 function checkEnchantingKeyPressed(key)
     local e = enchanting
-    local perk = "HeadArmour"
-    if e.chosenItem == "HeadArmour" or e.chosenItem == "ChestArmour" or
-        e.chosenItem == "LegArmour" then
+    local perk = "headarmour"
+    if e.chosenItem == "headarmour" or e.chosenItem == "chestarmour" or
+        e.chosenItem == "legarmour" then
         perk = "Armour"
     else
         perk = e.chosenItem
@@ -445,29 +445,29 @@ function checkEnchantingKeyPressed(key)
         end
     elseif e.phase == 2 then
         if key == keybinds.ATTACK_RIGHT then
-            if e.chosenItemCount < #e.itemNames then
+            if e.chosenItemCount < #e.itemnames then
                 e.chosenItemCount = e.chosenItemCount + 1
             else
                 e.chosenItemCount = 1
             end
-            if e.itemNames[e.chosenItemCount] == "Mount" and
-                (me.Mount.Name == "None" or me.Mount.Name == "") then
+            if e.itemnames[e.chosenItemCount] == "Mount" and
+                (me.mount.name == "None" or me.mount.name == "") then
                 e.chosenItemCount = e.chosenItemCount - 1
             else
-                e.chosenItem = e.itemNames[e.chosenItemCount]
+                e.chosenItem = e.itemnames[e.chosenItemCount]
                 e.selectedPerk = 1
             end
         elseif key == keybinds.ATTACK_LEFT then
             if e.chosenItemCount > 1 then
                 e.chosenItemCount = e.chosenItemCount - 1
             else
-                e.chosenItemCount = #e.itemNames
+                e.chosenItemCount = #e.itemnames
             end
-            if e.itemNames[e.chosenItemCount] == "Mount" and
-                (me.Mount.Name == "None" or me.Mount.Name == "") then
+            if e.itemnames[e.chosenItemCount] == "Mount" and
+                (me.mount.name == "None" or me.mount.name == "") then
                 e.chosenItemCount = e.chosenItemCount + 1
             else
-                e.chosenItem = e.itemNames[e.chosenItemCount]
+                e.chosenItem = e.itemnames[e.chosenItemCount]
                 e.selectedPerk = 1
             end
         elseif key == keybinds.ATTACK_DOWN and e.chosenItem ~= "" then
@@ -483,7 +483,7 @@ function checkEnchantingKeyPressed(key)
                 e.selectedPerk = #e.perks[perk]
             end
         elseif key == "return" and me[enchanting.chosenItem] and
-            me[enchanting.chosenItem].Name ~= "None" then
+            me[enchanting.chosenItem].name ~= "None" then
             transitionToEnchantingPhase4()
         elseif key == "f" or checkMoveOrAttack(key, "move") then
             e.open = false
@@ -519,13 +519,13 @@ function checkEnchantingMousePressed(button)
         if e.mouseOver.endPhaseOne then e.phase = 2 end
     elseif e.phase == 2 then
         if e.mouseOver.item ~= "" then
-            for i, v in ipairs(e.itemNames) do
+            for i, v in ipairs(e.itemnames) do
                 if e.mouseOver.item == v then
                     if v ~= "Mount" then
                         e.chosenItemCount = i
                         e.chosenItem = e.mouseOver.item
-                    elseif me.Mount and me.Mount.Name ~= "None" and
-                        me.Mount.Name ~= "" then
+                    elseif me.mount and me.mount.name ~= "None" and
+                        me.mount.name ~= "" then
                         e.chosenItemCount = i
                         e.chosenItem = e.mouseOver.item
                     end
@@ -534,7 +534,7 @@ function checkEnchantingMousePressed(button)
         end
         if e.mouseOver.perk > 0 then e.selectedPerk = e.mouseOver.perk end
         if e.mouseOver.commit and me[enchanting.chosenItem] and
-            me[enchanting.chosenItem].Name ~= "None" then
+            me[enchanting.chosenItem].name ~= "None" then
             transitionToEnchantingPhase4()
         end
     elseif e.phase == 3 then
@@ -556,30 +556,30 @@ end
 function enchantItem()
 
     local e = enchanting
-    local perk = "HeadArmour"
-    if e.chosenItem == "HeadArmour" or e.chosenItem == "ChestArmour" or
-        e.chosenItem == "LegArmour" then
+    local perk = "headarmour"
+    if e.chosenItem == "headarmour" or e.chosenItem == "chestarmour" or
+        e.chosenItem == "legarmour" then
         perk = "Armour"
     else
         perk = e.chosenItem
     end
-    print("Trying to enchant ID" .. me[enchanting.chosenItem].ID ..
+    print("Trying to enchant ID" .. me[enchanting.chosenItem].id ..
               " Enchantment = " .. e.perks[perk][e.selectedPerk].desc)
 
-    -- print("Trying to enchant " .. me[e.chosenItem].ID)
+    -- print("Trying to enchant " .. me[e.chosenItem].id)
     c, h = http.request {
-        url = api.url .. "/enchant/" .. me.ID .. "/" .. me[e.chosenItem].ID ..
+        url = api.url .. "/enchant/" .. me.id .. "/" .. me[e.chosenItem].id ..
             "/" .. e.perks[perk][e.selectedPerk].title .. "/" .. e.itemLevel,
         method = "GET",
         headers = {["token"] = token}
     }
 
     print(
-        api.url .. "/enchant/" .. me.ID .. "/" .. me[e.chosenItem].ID .. "/" ..
+        api.url .. "/enchant/" .. me.id .. "/" .. me[e.chosenItem].id .. "/" ..
             e.perks[perk][e.selectedPerk].title .. "/" .. e.itemLevel)
 
     e.open = false
-    e.chosenItem = "LegArmour"
+    e.chosenItem = "legarmour"
     e.chosenItemCount = 1
     e.phase = 1
 end
@@ -603,17 +603,17 @@ end
 
 function transitionToEnchantingPhase4()
     local e = enchanting
-    if not me[enchanting.chosenItem].Enchantment or
-        me[enchanting.chosenItem].Enchantment == "None" then
+    if not me[enchanting.chosenItem].enchantment or
+        me[enchanting.chosenItem].enchantment == "None" then
         transitionToEnchantingPhase3()
-    elseif me[enchanting.chosenItem].Enchantment ~= "None" then
+    elseif me[enchanting.chosenItem].enchantment ~= "None" then
         e.phase = 4 -- go to the choose an enchantment type phase
     end
 end
 
 function transitionToEnchantingPhase5()
     local e = enchanting
-    local ench = explode(me[e.chosenItem].Enchantment, ",")
+    local ench = explode(me[e.chosenItem].enchantment, ",")
     for i, v in ipairs(e.perks.Armour) do
         if ench[1] == v.title then e.selectedPerk = i end
     end

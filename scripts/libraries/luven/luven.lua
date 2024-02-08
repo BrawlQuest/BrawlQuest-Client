@@ -32,33 +32,33 @@ local luven = {
 -- /// Luven error management local functions
 -- ///////////////////////////////////////////////
 
-local function assertPositiveNumber(functionName, parameterName, parameterValue, level)
+local function assertPositiveNumber(functionname, parametername, parameterValue, level)
     level = level or 3
     if ((type(parameterValue) ~= "number") or (parameterValue < 0)) then
-        error(functionName .. "\n        parameter : " .. parameterName .. ", expected positive number.", level)
+        error(functionname .. "\n        parameter : " .. parametername .. ", expected positive number.", level)
     end
 end
 
-local function assertRangeNumber(functionName, parameterName, parameterValue, min, max, level)
+local function assertRangeNumber(functionname, parametername, parameterValue, min, max, level)
     min = min or 0
     max = max or 1
     level = level or 3
     if ((type(parameterValue) ~= "number") or (parameterValue < min) or (parameterValue > max)) then
-        error(functionName .. "\n        parameter : " .. parameterName .. ", expected range number between " .. min .. " and " .. max .. ".", level)
+        error(functionname .. "\n        parameter : " .. parametername .. ", expected range number between " .. min .. " and " .. max .. ".", level)
     end
 end
 
-local function assertType(functionName, parameterName, parameterValue, parameterType, level)
+local function assertType(functionname, parametername, parameterValue, parameterType, level)
     level = level or 3
     if (type(parameterValue) ~= parameterType) then
-        error(functionName .. "\n        parameter : " .. parameterName .. ", expected type ".. parameterType .. ".", level)
+        error(functionname .. "\n        parameter : " .. parametername .. ", expected type ".. parameterType .. ".", level)
     end
 end
 
-local function assertLightShape(newShapeName, level)
+local function assertLightShape(newShapename, level)
     level = level or 3
-    if (luven.lightShapes[newShapeName] ~= nil) then
-        error("The light shapes : " .. newShapeName .. " already exists, please set another name.")
+    if (luven.lightShapes[newShapename] ~= nil) then
+        error("The light shapes : " .. newShapename .. " already exists, please set another name.")
     end
 end
 
@@ -147,9 +147,9 @@ end
 -- //////////////////////////////
 
 function luven.camera:init(x, y)
-    local functionName = "luven.camera:init(x, y)"
-    assertType(functionName, "x", x, "number")
-    assertType(functionName, "y", y, "number")
+    local functionname = "luven.camera:init(x, y)"
+    assertType(functionname, "x", x, "number")
+    assertType(functionname, "y", y, "number")
     self.transform = love.math.newTransform(x, y)
     self.x = x
     self.y = y
@@ -344,10 +344,10 @@ function luven.init(screenWidth, screenHeight, useCamera)
         useIntegratedCamera = true
     end
 
-    local functionName = "luven.init( [ screenWidth ], [ screenHeight ], [ useCamera ] )"
-    assertPositiveNumber(functionName, "screenWidth", screenWidth)
-    assertPositiveNumber(functionName, "screenHeight", screenHeight)
-    assertType(functionName, "useCamera", useIntegratedCamera, "boolean")
+    local functionname = "luven.init( [ screenWidth ], [ screenHeight ], [ useCamera ] )"
+    assertPositiveNumber(functionname, "screenWidth", screenWidth)
+    assertPositiveNumber(functionname, "screenHeight", screenHeight)
+    assertType(functionname, "useCamera", useIntegratedCamera, "boolean")
 
     luven.registerLightShape("round", luvenPath .. "lights/round.png")
     luven.registerLightShape("rectangle", luvenPath .. "lights/rectangle.png")
@@ -367,16 +367,16 @@ function luven.setAmbientLightColor(color)
 end
 
 function luven.registerLightShape(name, spritePath, originX, originY)
-    local functionName = "luven.registerLightShape( name, spritePath, [ originX ], [ originY ] )"
+    local functionname = "luven.registerLightShape( name, spritePath, [ originX ], [ originY ] )"
     assertLightShape(name)
-    assertType(functionName, "spritePath", spritePath, "string")
+    assertType(functionname, "spritePath", spritePath, "string")
 
     local lightSprite = lg.newImage(spritePath)
     originX = originX or (lightSprite:getWidth() / 2)
     originY = originY or (lightSprite:getHeight() / 2)
 
-    assertPositiveNumber(functionName, "originX", originX)
-    assertPositiveNumber(functionName, "originY", originY)
+    assertPositiveNumber(functionname, "originX", originX)
+    assertPositiveNumber(functionname, "originY", originY)
 
     luven.lightShapes[name] = {
         sprite = lightSprite,
@@ -497,16 +497,16 @@ function luven.addNormalLight(x, y, color, power, lightShape, angle, sx, sy)
     sx = sx or 1
     sy = sy or sx
 
-    local functionName = "luven.addNormalLight(x, y, color, power, angle, sx, sy)"
-    assertType(functionName, "x", x, "number")
-    assertType(functionName, "y", y, "number")
-    assertRangeNumber(functionName, "color[1]", color[1])
-    assertRangeNumber(functionName, "color[2]", color[2])
-    assertRangeNumber(functionName, "color[3]", color[3])
-    assertPositiveNumber(functionName, "power", power)
-    assertType(functionName, "angle", angle, "number")
-    assertPositiveNumber(functionName, "sx", sx)
-    assertPositiveNumber(functionName, "sy", sy)
+    local functionname = "luven.addNormalLight(x, y, color, power, angle, sx, sy)"
+    assertType(functionname, "x", x, "number")
+    assertType(functionname, "y", y, "number")
+    assertRangeNumber(functionname, "color[1]", color[1])
+    assertRangeNumber(functionname, "color[2]", color[2])
+    assertRangeNumber(functionname, "color[3]", color[3])
+    assertPositiveNumber(functionname, "power", power)
+    assertType(functionname, "angle", angle, "number")
+    assertPositiveNumber(functionname, "sx", sx)
+    assertPositiveNumber(functionname, "sy", sy)
 
     local id = getNextId()
     local light = currentLights[id]
@@ -539,22 +539,22 @@ function luven.addFlickeringLight(x, y, colorRange, powerRange, speedRange, ligh
     sx = sx or 1
     sy = sy or sx
 
-    local functionName = "luven.addFlickeringLight(x, y, colorRange, powerRange, speedRange, angle, sx, sy)"
-    assertType(functionName, "x", x, "number")
-    assertType(functionName, "y", y, "number")
-    assertRangeNumber(functionName, "colorRange.min[1]", colorRange.min[1])
-    assertRangeNumber(functionName, "colorRange.min[2]", colorRange.min[2])
-    assertRangeNumber(functionName, "colorRange.min[3]", colorRange.min[3])
-    assertRangeNumber(functionName, "colorRange.max[1]", colorRange.max[1])
-    assertRangeNumber(functionName, "colorRange.max[2]", colorRange.max[2])
-    assertRangeNumber(functionName, "colorRange.max[3]", colorRange.max[3])
-    assertPositiveNumber(functionName, "powerRange.min", powerRange.min)
-    assertPositiveNumber(functionName, "powerRange.max", powerRange.max)
-    assertPositiveNumber(functionName, "speedRange.min", speedRange.min)
-    assertPositiveNumber(functionName, "speedRange.max", speedRange.max)
-    assertType(functionName, "angle", angle, "number")
-    assertPositiveNumber(functionName, "sx", sx)
-    assertPositiveNumber(functionName, "sy", sy)
+    local functionname = "luven.addFlickeringLight(x, y, colorRange, powerRange, speedRange, angle, sx, sy)"
+    assertType(functionname, "x", x, "number")
+    assertType(functionname, "y", y, "number")
+    assertRangeNumber(functionname, "colorRange.min[1]", colorRange.min[1])
+    assertRangeNumber(functionname, "colorRange.min[2]", colorRange.min[2])
+    assertRangeNumber(functionname, "colorRange.min[3]", colorRange.min[3])
+    assertRangeNumber(functionname, "colorRange.max[1]", colorRange.max[1])
+    assertRangeNumber(functionname, "colorRange.max[2]", colorRange.max[2])
+    assertRangeNumber(functionname, "colorRange.max[3]", colorRange.max[3])
+    assertPositiveNumber(functionname, "powerRange.min", powerRange.min)
+    assertPositiveNumber(functionname, "powerRange.max", powerRange.max)
+    assertPositiveNumber(functionname, "speedRange.min", speedRange.min)
+    assertPositiveNumber(functionname, "speedRange.max", speedRange.max)
+    assertType(functionname, "angle", angle, "number")
+    assertPositiveNumber(functionname, "sx", sx)
+    assertPositiveNumber(functionname, "sy", sy)
 
     local id = getNextId()
     local light = currentLights[id]
@@ -590,17 +590,17 @@ function luven.addFlashingLight(x, y, color, maxPower, speed, lightShape, angle,
     sx = sx or 1
     sy = sy or sx
 
-    local functionName = "luven.addFlashingLight(x, y, color, maxPower, speed, angle, sx, sy)"
-    assertType(functionName, "x", x, "number")
-    assertType(functionName, "y", y, "number")
-    assertRangeNumber(functionName, "color[1]", color[1])
-    assertRangeNumber(functionName, "color[2]", color[2])
-    assertRangeNumber(functionName, "color[3]", color[3])
-    assertPositiveNumber(functionName, "maxPower", maxPower)
-    assertPositiveNumber(functionName, "speed", speed)
-    assertType(functionName, "angle", angle, "number")
-    assertPositiveNumber(functionName, "sx", sx)
-    assertPositiveNumber(functionName, "sy", sy)
+    local functionname = "luven.addFlashingLight(x, y, color, maxPower, speed, angle, sx, sy)"
+    assertType(functionname, "x", x, "number")
+    assertType(functionname, "y", y, "number")
+    assertRangeNumber(functionname, "color[1]", color[1])
+    assertRangeNumber(functionname, "color[2]", color[2])
+    assertRangeNumber(functionname, "color[3]", color[3])
+    assertPositiveNumber(functionname, "maxPower", maxPower)
+    assertPositiveNumber(functionname, "speed", speed)
+    assertType(functionname, "angle", angle, "number")
+    assertPositiveNumber(functionname, "sx", sx)
+    assertPositiveNumber(functionname, "sy", sy)
 
     local id = getNextId()
     local light = currentLights[id]

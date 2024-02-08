@@ -65,7 +65,7 @@ function updateWeather(dt)
     end
 
    
-   if weather.type ~= "rain" or (worldLookup[player.x..","..player.y] and (stringArrayContains(weather.insideTiles, worldLookup[player.x..","..player.y].GroundTile))) then
+   if weather.type ~= "rain" or (worldLookup[player.x..","..player.y] and (stringArrayContains(weather.insideTiles, worldLookup[player.x..","..player.y].groundtile))) then
         weather.alpha = weather.alpha - 1*dt
         if weather.sound.rain:getVolume() > 0 then
             weather.sound.rain:setVolume(weather.sound.rain:getVolume()-1*dt)

@@ -30,7 +30,7 @@ function checkItemDragMousePressed(button, hotbarI)
         iD.prevI = hotbarI
         iD.item = copy(hotbar[hotbarI].InventoryItem.Item)
         iD.amount = hotbar[hotbarI].InventoryItem.Inventory.Amount
-        iD.id = hotbar[hotbarI].InventoryItem.Inventory.ID
+        iD.id = hotbar[hotbarI].InventoryItem.Inventory.id
     else
         iD.prevI = 0
         iD.item = copy(selectedItem)
@@ -48,7 +48,7 @@ function checkItemDragMouseReleased(button)
         iD.item = null
         iD.amount = 0
         hotbarData = {
-            PlayerID=me.ID,
+            PlayerID=me.id,
             InventoryItemID=iD.id,
             Position=inventory.mouseOverButtonsAmount
         }

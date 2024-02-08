@@ -113,8 +113,8 @@ end
 function login()
     if textfields[1] ~= "" and textfields[2] ~= "" then
         b, c, h = http.request(api.url .. "/login", json:encode({
-            UID = textfields[1],
-            Password = textfields[2]
+            uid = textfields[1],
+            password = textfields[2]
         }))
         -- print("logged in as "..textfields[1])
         
@@ -154,17 +154,17 @@ function login()
             
                 sink = ltn12.sink.table(availableEnemies)
             }
-            
-            if c == 200 then
-                if type(availableEnemies[1]) == "string" then
-                    local c = json:decode(availableEnemies[1])
-                    availableEnemies = {}
-                    for i,v in ipairs(c) do
-                        availableEnemies[#availableEnemies+1] = v
-                        worldEdit.enemyImages[#availableEnemies] = getImgIfNotExist(v.Image)
-                    end
-                end
-            end
+         
+            -- if c == 200 then
+            --    -- if type(availableEnemies[1]) == "string" then
+            --         local c = json:decode(availableEnemies)
+            --         availableEnemies = {}
+            --         for i,v in ipairs(c) do
+            --             availableEnemies[#availableEnemies+1] = v
+            --             worldEdit.enemyImages[#availableEnemies] = getImgIfNotExist(v.image)
+            --         end
+            --   --  end
+            -- end
         end
         elseif c == 401 then
             textfields[2] = ""

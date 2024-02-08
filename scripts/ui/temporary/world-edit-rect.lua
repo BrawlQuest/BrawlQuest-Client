@@ -39,11 +39,11 @@ function drawWorldEditTileFromRect(x, y, button)
         -- if not worldLookup[x..","..y] then
         --     worldLookup[x..","..y] = worldEdit.draw[x][y]
         -- end
-        worldEdit.draw[x][y][1] = worldLookup[x..","..y].GroundTile
-        worldEdit.draw[x][y][2] = worldLookup[x..","..y].ForegroundTile
-        worldEdit.draw[x][y][3] = worldLookup[x..","..y].Enemy
+        worldEdit.draw[x][y][1] = worldLookup[x..","..y].groundtile
+        worldEdit.draw[x][y][2] = worldLookup[x..","..y].foregroundtile
+        worldEdit.draw[x][y][3] = worldLookup[x..","..y].enemy
         worldEdit.draw[x][y][4] = worldLookup[x..","..y].Collision
-        worldEdit.draw[x][y][5] = worldLookup[x..","..y].Name
+        worldEdit.draw[x][y][5] = worldLookup[x..","..y].name
     end
 
     if button == 1 then
@@ -55,7 +55,7 @@ function drawWorldEditTileFromRect(x, y, button)
                             worldEdit.draw[x][y][2] = worldEdit.drawableTile[1]
                         end
                     elseif worldLookup[x..","..y] then
-                        if  worldLookup[x..","..y].GroundTile == worldLookup[x..","..y].ForegroundTile then -- if ground and foreground match
+                        if  worldLookup[x..","..y].groundtile == worldLookup[x..","..y].foregroundtile then -- if ground and foreground match
                             worldEdit.draw[x][y][2] = worldEdit.drawableTile[1]
                         end
                     end
@@ -82,12 +82,12 @@ function drawWorldEditTileFromRect(x, y, button)
                     if areaDraw.state[2] then -- if drawing object as well
                         worldEdit.draw[x][y][1] = worldEdit.drawableTile[1]
                     else
-                        worldEdit.draw[x][y][1] = worldLookup[x..","..y].GroundTile
+                        worldEdit.draw[x][y][1] = worldLookup[x..","..y].groundtile
                     end
                 elseif i == 2 then
-                    worldEdit.draw[x][y][2] = worldLookup[x..","..y].ForegroundTile
+                    worldEdit.draw[x][y][2] = worldLookup[x..","..y].foregroundtile
                 elseif i == 3 then
-                    worldEdit.draw[x][y][3] = worldLookup[x..","..y].Enemy
+                    worldEdit.draw[x][y][3] = worldLookup[x..","..y].enemy
                 elseif i == 4 then
                     worldEdit.draw[x][y][4] = worldLookup[x..","..y].Collision
                 end
@@ -109,7 +109,7 @@ function drawAreaDrawButtons()
     drawNewWorldEditButton(thisX, thisY, width * 2, height, worldEdit.isTyping)
     if isMouseOver(thisX, thisY, width * 2, height) then worldEdit.readyToWriteText = true end
     if worldEdit.isTyping then love.graphics.setColor(0,0,0) else love.graphics.setColor(1,1,1) end
-    love.graphics.print("Area Name: ''" .. worldEdit.enteredWorldText .. "''", thisX + 10, thisY + 10, 0, 1.5)
+    love.graphics.print("Area name: ''" .. worldEdit.enteredWorldText .. "''", thisX + 10, thisY + 10, 0, 1.5)
 
     thisX, thisY = thisX - (width + 10), thisY - 52
 
@@ -132,7 +132,7 @@ function drawAreaDrawButtons()
 
         elseif i == 5 then
             if areaDraw.state[i] then love.graphics.setColor(0,0,0,1) else love.graphics.setColor(1,1,1,1) end
-            love.graphics.printf("Tile Name: ''" .. worldEdit.drawableTile[5] .. "''", x + 5, y + 10, 32, "center")
+            love.graphics.printf("Tile name: ''" .. worldEdit.drawableTile[5] .. "''", x + 5, y + 10, 32, "center")
 
         elseif i == 6 then
             if areaDraw.state[i] then love.graphics.setColor(0,0,0,1) else love.graphics.setColor(1,1,1,1) end
@@ -145,7 +145,7 @@ function drawAreaDrawButtons()
     if areaDraw.state[5] then -- draw avaliable world names
         local thisX, thisY = love.graphics.getWidth() - 62 - 150, love.graphics.getHeight() - 104
         local count = 0
-        for i,v in ipairs(availablePlaceNames) do
+        for i,v in ipairs(availablePlacenames) do
             if v.name ~= "" then 
                 local bool = v.name == worldEdit.drawableTile[5]
                 
@@ -157,7 +157,7 @@ function drawAreaDrawButtons()
                 end
 
                 if isMouseOver(thisX, thisY, 150, 42) then
-                    areaDraw.mouseOverPlaceNames = count
+                    areaDraw.mouseOverPlacenames = count
                 end
 
                 love.graphics.setColor(1,1,1)
@@ -171,7 +171,7 @@ function drawAreaDrawButtons()
                 drawNewWorldEditButton(x, y, 150, 42, bool)
 
                 if isMouseOver(x, y, 150, 42) then
-                    areaDraw.mouseOverPlaceNames = 0
+                    areaDraw.mouseOverPlacenames = 0
                 end
 
                 love.graphics.printf("''" .. v.name .. "''", x + 5, y + 10, 100, "left")
@@ -194,7 +194,7 @@ function drawAreaDrawButtons()
                 end
 
                 if isMouseOver(thisX, thisY, 150, 42) then
-                    areaDraw.mouseOverMusicNames = count
+                    areaDraw.mouseOverMusicnames = count
                 end
 
                 love.graphics.setColor(1,1,1)
@@ -208,7 +208,7 @@ function drawAreaDrawButtons()
                 drawNewWorldEditButton(x, y, 150, 42, bool)
 
                 if isMouseOver(x, y, 150, 42) then
-                    areaDraw.mouseOverMusicNames = 0
+                    areaDraw.mouseOverMusicnames = 0
                 end
 
                 love.graphics.printf("''" .. v.name .. "''", x + 5, y + 10, 100, "left")
@@ -247,7 +247,7 @@ end
 
 function standardIfStatement(x, y)
     if worldLookup[x..","..y] then
-        worldEdit.draw[x][y][5] = worldLookup[x..","..y].Name
+        worldEdit.draw[x][y][5] = worldLookup[x..","..y].name
     else
         worldEdit.draw[x][y][5] = ""
     end
@@ -266,14 +266,14 @@ function checkAreaDrawSingleButtonPressed(i)
             areaDraw.showMusic = false
             areaDraw.state[6] = false 
         end
-        areaDraw.showPlaceNames = not areaDraw.showPlaceNames
+        areaDraw.showPlacenames = not areaDraw.showPlacenames
         if not areaDraw.state[5] then
             getWorldInfo()
         end
         areaDraw.state[i] = not areaDraw.state[i]
     elseif i == 6 then
         if areaDraw.state[5] then 
-            areaDraw.showPlaceNames = false
+            areaDraw.showPlacenames = false
             areaDraw.state[5] = false 
         end
         areaDraw.showMusic = not areaDraw.showMusic
@@ -287,12 +287,12 @@ function checkAreaDrawSingleButtonPressed(i)
 end
 
 function drawAreaDrawAreas(x, y)
-    if areaDraw.showPlaceNames then
+    if areaDraw.showPlacenames then
         love.graphics.setColor(1, 0, 1, 0.5)
         if worldLookup[x..","..y] then
-            if worldLookup[x..","..y].Name ~= "" then
-                for j,v in ipairs(availablePlaceNames) do
-                    if v.name == worldLookup[x..","..y].Name then
+            if worldLookup[x..","..y].name ~= "" then
+                for j,v in ipairs(availablePlacenames) do
+                    if v.name == worldLookup[x..","..y].name then
                         love.graphics.setColor(unpack(v.color))
                     end
                 end

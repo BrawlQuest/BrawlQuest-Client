@@ -5,7 +5,7 @@ function initPlayers()
     enchantmentPos = 0
     shieldFalse = love.graphics.newImage("assets/player/gen/shield false.png")
     showEnchantments = false
-    playerNameAlpha = 1
+    playernameAlpha = 1
 end
 
 alphaShader = love.graphics.newShader[[
@@ -20,56 +20,56 @@ alphaShader = love.graphics.newShader[[
 function drawCharacter(v, x, y, ad)
     if ad then
         local playerAlpha = getEntityAlpha(x,y)
-        local notBoat = not string.find(v.Mount.Name,  "boat")
+        local notBoat = v.mount ~= nil and not string.find(v.mount.name,  "boat")
         local direction, offsetX, mountOffsetX
 
         -- set offsets for drawing
         if ad and ad.previousDirection and ad.previousDirection == "right" then
             direction, offsetX, mountOffsetX = 1,0,0
         elseif ad and ad.previousDirection and ad.previousDirection == "left" then
-            direction, offsetX, mountOffsetX = -1,32,getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"):getWidth() - 11
+            direction, offsetX, mountOffsetX = -1,32,getImgIfNotExist("assets/player/mounts/"..string.lower(v.mount.name).."/back.png"):getWidth() - 11
         end
 
         love.graphics.setColor(1,1,1,playerAlpha)
         drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,"/back.png",playerAlpha)
         
-        if v.ActiveSpell and v.ActiveSpell.Name and v.ActiveSpell.Name ~= "" and v.ActiveSpell.Name ~= "None" then
+        if v.activespell and v.activespell.name and v.activespell.name ~= "" and v.activespell.name ~= "None" then
             -- draw spell auras
-            love.graphics.draw(getImgIfNotExist("assets/auras/full/"..v.ActiveSpell.Name..".png"), x,y)
+            love.graphics.draw(getImgIfNotExist("assets/auras/full/"..v.activespell.name..".png"), x,y)
         elseif notBoat then
             love.graphics.setColor(1,1,1,playerAlpha)
             drawBuddy(v)
             if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha,playerAlpha) end
             if drawAnimations then drawAnimation(v, x + offsetX, y, direction)
             else
-                if v.ShieldID ~= 0 then drawArmourImage(x + offsetX,y,v,ad,"ShieldFalse",direction,playerAlpha) end
+                if v.shieldId ~= 0 then drawArmourImage(x + offsetX,y,v,ad,"ShieldFalse",direction,playerAlpha) end
                 drawWeapon(x,y,v,ad,direction,offsetX,playerAlpha)
-                if v.Invulnerability >= 0 then love.graphics.setColor(1,1,1,0.3*playerAlpha)
+                if v.invulnerability >= 0 then love.graphics.setColor(1,1,1,0.3*playerAlpha)
                 else love.graphics.setColor(1,1,1,playerAlpha) end
                 love.graphics.draw(playerImg, x + offsetX, y, 0, direction, 1, 0, 0)
-                drawArmourImage(x,y,v,ad,"LegArmour",nil,playerAlpha)
-                drawArmourImage(x,y,v,ad,"ChestArmour",nil,playerAlpha)
-                drawArmourImage(x,y,v,ad,"HeadArmour",nil,playerAlpha)
+                if v.legarmour ~= nil then drawArmourImage(x,y,v,ad,"legarmour",nil,playerAlpha) end
+                if v.chestarmour ~= nil then drawArmourImage(x,y,v,ad,"chestarmour",nil,playerAlpha) end
+                if v.headarmour ~= nil then drawArmourImage(x,y,v,ad,"headarmour",nil,playerAlpha) end
             end
             love.graphics.setColor(1,1,1,playerAlpha)
             drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,"/fore.png",playerAlpha)
-            if not drawAnimations and v.IsShield and v.ShieldID ~= 0 and notBoat then drawArmourImage(x+12 + 0 * direction,y,v,ad,"Shield",direction) end
+            if not drawAnimations and v.shield ~= nil and v.isShield and v.shieldId ~= 0 and notBoat then drawArmourImage(x+12 + 0 * direction,y,v,ad,"Shield",direction) end
         end
 
     end
 end
 
 function drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,type,playerAlpha)
-    if v.Mount.Name ~= "" then
+    if v.mount ~= nil and v.mount.name ~= "" then
         if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha, playerAlpha) else love.graphics.setColor(1, 1, 1, playerAlpha) end
-        if notBoat then love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name)..type), x + 6 + mountOffsetX, y + 9, 0, direction, 1, 0, 0)
-        else love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"), x  + mountOffsetX, y, 0, direction, 1, 0, 0) end
-        if v.Mount.Enchantment ~= "None" then
+        if notBoat then love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.mount.name)..type), x + 6 + mountOffsetX, y + 9, 0, direction, 1, 0, 0)
+        else love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.mount.name).."/back.png"), x  + mountOffsetX, y, 0, direction, 1, 0, 0) end
+        if v.mount.enchantment ~= "None" then
             love.graphics.push()
                 love.graphics.stencil(function() 
                     love.graphics.setShader(alphaShader)
-                    if notBoat then love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name)..type), x + 6 + mountOffsetX, y + 9, 0, direction, 1, 0, 0)
-                    else love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.Mount.Name).."/back.png"), x  + mountOffsetX, y, 0, direction, 1, 0, 0) end
+                    if notBoat then love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.mount.name)..type), x + 6 + mountOffsetX, y + 9, 0, direction, 1, 0, 0)
+                    else love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.mount.name).."/back.png"), x  + mountOffsetX, y, 0, direction, 1, 0, 0) end
                     love.graphics.setShader()
                 end)
                 drawEnchantment(x, y)
@@ -80,25 +80,25 @@ end
 
 function drawWeapon(x,y,v,ad,direction,offsetX,playerAlpha)
 
-    if not itemImg[v.Weapon.ImgPath] then
-        if love.filesystem.getInfo(v.Weapon.ImgPath) then
-            itemImg[v.Weapon.ImgPath] = love.graphics.newImage(v.Weapon.ImgPath)
+    if not itemImg[v.weapon.imgpath] then
+        if love.filesystem.getInfo(v.weapon.imgpath) then
+            itemImg[v.weapon.imgpath] = love.graphics.newImage(v.weapon.imgpath)
         else
-            itemImg[v.Weapon.ImgPath] = love.graphics.newImage("assets/error.png")
+            itemImg[v.weapon.imgpath] = love.graphics.newImage("assets/error.png")
         end
     end
 
     if v["WeaponID"] ~= 0 then
         if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha, playerAlpha) else love.graphics.setColor(1, 1, 1, playerAlpha) end
-        love.graphics.draw(itemImg[v.Weapon.ImgPath], x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32) * direction + offsetX, y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, direction, 1, 0, 0)
-        if v.Weapon.Enchantment ~= "None" then
+        love.graphics.draw(itemImg[v.weapon.imgpath], x - (itemImg[v.weapon.imgpath]:getWidth() - 32) * direction + offsetX, y - (itemImg[v.weapon.imgpath]:getHeight() - 32), 0, direction, 1, 0, 0)
+        if v.weapon.enchantment ~= "None" then
             love.graphics.push()
                 love.graphics.stencil(function() 
                     love.graphics.setShader(alphaShader)
-                    love.graphics.draw(itemImg[v.Weapon.ImgPath], x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32) * direction + offsetX, y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, direction, 1, 0, 0)
+                    love.graphics.draw(itemImg[v.weapon.imgpath], x - (itemImg[v.weapon.imgpath]:getWidth() - 32) * direction + offsetX, y - (itemImg[v.weapon.imgpath]:getHeight() - 32), 0, direction, 1, 0, 0)
                     love.graphics.setShader()
                 end)
-                drawEnchantment(x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32) + offsetX, y)
+                drawEnchantment(x - (itemImg[v.weapon.imgpath]:getWidth() - 32) + offsetX, y)
             love.graphics.pop()
         end
     end
@@ -107,15 +107,15 @@ end
 function drawArmourImage(x,y,v,ad,type,direction,playerAlpha)
     if v[type.."ID"] ~= 0 then
         if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha, playerAlpha) else love.graphics.setColor(1, 1, 1, playerAlpha) end
-        if v.Invulnerability >= 0 and playerAlpha then
+        if v.invulnerability >= 0 and playerAlpha then
             love.graphics.setColor(1,1,1,0.3*playerAlpha)
         end
-        if type ~= "ShieldFalse" then drawItemIfExists(v[type].ImgPath, x, y, ad.previousDirection) else love.graphics.draw(shieldFalse, x, y, 0, direction, 1) end
-        if v[type] and v[type].Enchantment ~= "None" then
+        if type ~= "ShieldFalse" then drawItemIfExists(v[type].imgpath, x, y, ad.previousDirection) else love.graphics.draw(shieldFalse, x, y, 0, direction, 1) end
+        if v[type] and v[type].enchantment ~= "None" then
             love.graphics.push()
                 love.graphics.stencil(function() 
                     love.graphics.setShader(alphaShader)
-                    if type ~= "ShieldFalse" then drawItemIfExists(v[type].ImgPath, x, y, ad.previousDirection) else love.graphics.draw(shieldFalse, x, y, 0, direction, 1) end
+                    if type ~= "ShieldFalse" then drawItemIfExists(v[type].imgpath, x, y, ad.previousDirection) else love.graphics.draw(shieldFalse, x, y, 0, direction, 1) end
                     love.graphics.setShader()
                 end)
                 local offset = 16
@@ -141,46 +141,46 @@ function drawPlayer(v, i)
     local thisPlayer
     if i == -1 then -- this player is me
         thisPlayer = copy(me)
-        v.X = player.dx
-        v.Y = player.dy
-        v.Name = player.name
+        v.x = player.dx
+        v.y = player.dy
+        v.name = player.name
         v.previousDirection = player.previousDirection
-        thisPlayer.AX = player.target.x
-        thisPlayer.AY = player.target.y
-        thisPlayer.IsShield = love.keyboard.isDown(keybinds.SHIELD)
-        thisPlayer.Name = player.name
-        thisPlayer.Buddy = player.buddy
-        thisPlayer.HP = player.hp
-        thisPlayer.Mana = me.Mana
+        thisPlayer.ax = player.target.x
+        thisPlayer.ay = player.target.y
+        thisPlayer.isShield = love.keyboard.isDown(keybinds.SHIELD)
+        thisPlayer.name = player.name
+        thisPlayer.buddy = player.buddy
+        thisPlayer.hp = player.hp
+        thisPlayer.mana = me.mana
         v.RedAlpha = 0
-        v.NameAlpha = playerNameAlpha
+        v.nameAlpha = playernameAlpha
         v.Frame = player.frame
         thisPlayer.Frame = player.frame
     else
         thisPlayer = players[i]
     end
 
-    if thisPlayer and v and thisPlayer.Weapon then
+    if thisPlayer and v and thisPlayer.weapon then
         if not v.previousDirection then v.previousDirection = "right" end
         -- print(v.RedAlpha)
         if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) end
-        drawCharacter(thisPlayer, v.X, v.Y, v)
+        drawCharacter(thisPlayer, v.x, v.y, v)
 
         love.graphics.setColor(1,1,1)
-        love.graphics.setFont(playerNameFont)
+        love.graphics.setFont(playernameFont)
         
         local boi = 0
         if v.previousDirection == "left" then boi = 11 + 3
         else boi = 16 + 3 end
 
         -- local text
-        -- if thisPlayer.Prestige > 1 then text = thisPlayer.Prestige .. "," .. thisPlayer.LVL else text = thisPlayer.LVL end
+        -- if thisPlayer.Prestige > 1 then text = thisPlayer.Prestige .. "," .. thisPlayer.lvl else text = thisPlayer.lvl end
         local alpha
-        if true then alpha = v.NameAlpha else alpha = 1 end
+        if true then alpha = v.nameAlpha else alpha = 1 end
 
-        drawNamePlate(v.X + boi, v.Y, thisPlayer.Name, v.NameAlpha, thisPlayer.LVL, thisPlayer.Prestige, v.IsPremium) -- thisPlayer.LVL
+        drawnamePlate(v.x + boi, v.y, thisPlayer.name, v.nameAlpha, thisPlayer.lvl, thisPlayer.Prestige, v.IsPremium) -- thisPlayer.lvl
         
-        if thisPlayer ~= nil and thisPlayer.AX then -- attack players
+        if thisPlayer ~= nil and thisPlayer.ax then -- attack players
             local diffX = 0
             local diffY = 0
             if i == -1 and player.target.active then
@@ -204,31 +204,31 @@ function drawPlayer(v, i)
                     elseif targetKeys[4] then diffX = 1
                     else diffX = 0 end
                 end
-                drawArrowImage(diffX, diffY, v.X, v.Y)
+                drawArrowImage(diffX, diffY, v.x, v.y)
             else
-                diffX = thisPlayer.AX - thisPlayer.X
-                diffY = thisPlayer.AY - thisPlayer.Y
+                diffX = thisPlayer.ax - thisPlayer.x
+                diffY = thisPlayer.ay - thisPlayer.y
             end
         end
-        local underCharacterBarY = v.Y+34
+        local underCharacterBarY = v.y+34
         local thisHealth
         if i == -1 then thisHealth = getMaxHealth() else thisHealth = thisPlayer.MaxHP end
-        if thisPlayer.HP < thisHealth then
+        if thisPlayer.hp < thisHealth then
             love.graphics.setColor(0.4,0,0)
-            love.graphics.rectangle("fill", v.X, underCharacterBarY, 32, 4)
+            love.graphics.rectangle("fill", v.x, underCharacterBarY, 32, 4)
             love.graphics.setColor(0,1,0)
             if i == -1 then
-                love.graphics.rectangle("fill", v.X, underCharacterBarY, math.clamp(0, thisPlayer.HP / thisHealth, 1) * 32, 4)
+                love.graphics.rectangle("fill", v.x, underCharacterBarY, math.clamp(0, thisPlayer.hp / thisHealth, 1) * 32, 4)
             else
-                love.graphics.rectangle("fill", v.X, underCharacterBarY, (thisPlayer.HP / thisHealth) * 32, 4)
+                love.graphics.rectangle("fill", v.x, underCharacterBarY, (thisPlayer.hp / thisHealth) * 32, 4)
             end
             underCharacterBarY = underCharacterBarY + 5
         end
-        if thisPlayer.Mana < 100 then
+        if thisPlayer.mana < 100 then
             love.graphics.setColor(0,0,0.4)
-            love.graphics.rectangle("fill", v.X, underCharacterBarY,32,4)
+            love.graphics.rectangle("fill", v.x, underCharacterBarY,32,4)
             love.graphics.setColor(0,0,1)
-            love.graphics.rectangle("fill", v.X, underCharacterBarY, (thisPlayer.Mana/100) * 32, 4)
+            love.graphics.rectangle("fill", v.x, underCharacterBarY, (thisPlayer.mana/100) * 32, 4)
             underCharacterBarY = underCharacterBarY + 10
         end
         love.graphics.setColor(1, 1, 1)
@@ -248,17 +248,17 @@ function drawArrowImage(diffX, diffY, x, y)
     end
 end
 
-function drawNamePlate(x,y,name, alpha, level, prestige, isPremium)
+function drawnamePlate(x,y,name, alpha, level, prestige, isPremium)
     level = level or null
-    love.graphics.setFont(playerNameFont)
+    love.graphics.setFont(playernameFont)
     alpha = alpha or 1
     local playerAlpha = getEntityAlpha(x, y)
     if level then
         if prestige and prestige > 1 then
             local thisX, thisY = x , y - 4
-            local nameWidth, levelWidth = playerNameFont:getWidth(name) + 1, playerNameFont:getWidth(level)
-            local prestigeWidth = playerNameFont:getWidth(prestige)
-            local nameHeight = playerNameFont:getHeight(name)
+            local nameWidth, levelWidth = playernameFont:getWidth(name) + 1, playernameFont:getWidth(level)
+            local prestigeWidth = playernameFont:getWidth(prestige)
+            local nameHeight = playernameFont:getHeight(name)
             local padding = {x = 3, y = 2}
             local fullWidth = levelWidth + nameWidth + prestigeWidth + padding.x * 6
             local dx = thisX - (fullWidth * 0.5)
@@ -293,8 +293,8 @@ function drawNamePlate(x,y,name, alpha, level, prestige, isPremium)
             love.graphics.print(name, dx + padding.x * 3 + levelWidth + (prestigeWidth + padding.x * 2), thisY - nameHeight - 2 + padding.y)
         else
             local thisX, thisY = x , y - 4
-            local nameWidth, levelWidth = playerNameFont:getWidth(name) + 1, playerNameFont:getWidth(level)
-            local nameHeight = playerNameFont:getHeight(name)
+            local nameWidth, levelWidth = playernameFont:getWidth(name) + 1, playernameFont:getWidth(level)
+            local nameHeight = playernameFont:getHeight(name)
             local padding = {x = 3, y = 2}
             local fullWidth = levelWidth + nameWidth + padding.x * 4
             local dx = thisX - (fullWidth * 0.5)
@@ -314,8 +314,8 @@ function drawNamePlate(x,y,name, alpha, level, prestige, isPremium)
         level = level or null
         alpha = alpha or 1
         local thisX, thisY = x , y - 4
-        local nameWidth = playerNameFont:getWidth(name)
-        local nameHeight = playerNameFont:getHeight(name)
+        local nameWidth = playernameFont:getWidth(name)
+        local nameHeight = playernameFont:getHeight(name)
         local padding = 2
         love.graphics.setColor(0, 0, 0, 0.6 * alpha*playerAlpha)
         roundRectangle("fill", (thisX) - (nameWidth / 2) - (padding) - 2, thisY - nameHeight - 3, nameWidth + (padding * 2) + 3, nameHeight + (padding * 2), 3)
@@ -336,30 +336,30 @@ function updateOtherPlayers(dt)
         if playersDrawable[i] == nil then
             -- print("Setting drawable")
             playersDrawable[i] = {
-                ['Name'] = v.Name,
-                ['X'] = v.X * 32,
-                ['Y'] = v.X * 32,
+                ['name'] = v.name,
+                ['X'] = v.x * 32,
+                ['Y'] = v.x * 32,
                 ['AX'] = 0,
                 ['AY'] = 0,
-                ['HP'] = v.HP,
+                ['HP'] = v.hp,
                 ['RedAlpha'] = 0,
-                ['Mount'] = v.Mount,
+                ['Mount'] = v.mount,
                 ['Color'] = v.Color,
-                ['Buddy'] = v.Buddy,
-                ['NameAlpha'] = 1,
+                ['Buddy'] = v.buddy,
+                ['nameAlpha'] = 1,
             }
         end
-        playersDrawable[i].Mount = v.Mount
+        playersDrawable[i].mount = v.mount
         updateBuddy(dt, playersDrawable)
-        if playersDrawable[i].HP > v.HP then
+        if playersDrawable[i].hp > v.hp then
             -- print("player Hit")
-            playersDrawable[i].HP = v.HP
+            playersDrawable[i].hp = v.hp
             playersDrawable[i].RedAlpha = 1
-            playerHitSfx:setPosition((playersDrawable[i].X + 16) / 32, (playersDrawable[i].Y + 16) / 32)
+            playerHitSfx:setPosition((playersDrawable[i].x + 16) / 32, (playersDrawable[i].y + 16) / 32)
             playerHitSfx:setRolloff(sfxRolloff)
             setEnvironmentEffects(playerHitSfx)
             playerHitSfx:play()
-            boneSpurt(playersDrawable[i].X + 16, playersDrawable[i].Y + 16, 10, 25, 1, 1, 1)
+            boneSpurt(playersDrawable[i].x + 16, playersDrawable[i].y + 16, 10, 25, 1, 1, 1)
         end
 
         if playersDrawable[i].RedAlpha then
@@ -371,12 +371,12 @@ function updateOtherPlayers(dt)
             end
         end
 
-        local distance = distanceToPoint(playersDrawable[i].X, playersDrawable[i].Y, v.X * 32, v.Y * 32)
-        setNamePlateAlpha(v, i)
+        local distance = distanceToPoint(playersDrawable[i].x, playersDrawable[i].y, v.x * 32, v.y * 32)
+        setnamePlateAlpha(v, i)
 
         if distance > 128 then
-            playersDrawable[i].X = v.X * 32
-            playersDrawable[i].Y = v.Y * 32
+            playersDrawable[i].x = v.x * 32
+            playersDrawable[i].y = v.y * 32
         end
 
         if drawAnimations then animateOtherPlayer(dt, distance > 3, i) end
@@ -384,14 +384,14 @@ function updateOtherPlayers(dt)
         if distance > 1 then
             -- set the speed of movement for the player
             local speed = 64
-            if playersDrawable[i].Mount.Name ~= "None" or worldEdit.open then
-                speed = tonumber(playersDrawable[i].Mount.Val) or 64
-                local enchant = playersDrawable[i].Mount.Enchantment or false
+            if playersDrawable[i].mount.name ~= "None" or worldEdit.open then
+                speed = tonumber(playersDrawable[i].mount.val) or 64
+                local enchant = playersDrawable[i].mount.enchantment or false
                 if enchant and enchant ~= "None" and enchant ~= "" then
                     speed = speed + 25
                 end
             end
-            if worldLookup[v.X..","..v.Y] and (isTileType(worldLookup[v.X..","..v.Y].ForegroundTile, "Path") or isTileType(worldLookup[v.X..","..v.Y].GroundTile, "Path")) then
+            if worldLookup[v.x..","..v.y] and (isTileType(worldLookup[v.x..","..v.y].foregroundtile, "Path") or isTileType(worldLookup[v.x..","..v.y].groundtile, "Path")) then
                 speed = speed * 1.4
             end
 
@@ -399,27 +399,27 @@ function updateOtherPlayers(dt)
             local iWantSparkles = false
 
             -- move player
-            if playersDrawable[i].X - 1 > v.X * 32 then
-                playersDrawable[i].X = playersDrawable[i].X - speed * dt
+            if playersDrawable[i].x - 1 > v.x * 32 then
+                playersDrawable[i].x = playersDrawable[i].x - speed * dt
                 iWantSparkles = true
-            elseif playersDrawable[i].X + 1 < v.X * 32 then
-                playersDrawable[i].X = playersDrawable[i].X + speed * dt
-                iWantSparkles = true
-            end
-
-            if playersDrawable[i].Y - 1 > v.Y * 32 then
-                playersDrawable[i].Y = playersDrawable[i].Y - speed * dt
-                iWantSparkles = true
-            elseif playersDrawable[i].Y + 1 < v.Y * 32 then
-                playersDrawable[i].Y = playersDrawable[i].Y + speed * dt
+            elseif playersDrawable[i].x + 1 < v.x * 32 then
+                playersDrawable[i].x = playersDrawable[i].x + speed * dt
                 iWantSparkles = true
             end
 
-            if v.Mount and v.Mount.Name ~= "None" and v.Mount.Name ~= "" and v.Mount.Enchantment ~= "None" then
+            if playersDrawable[i].y - 1 > v.y * 32 then
+                playersDrawable[i].y = playersDrawable[i].y - speed * dt
+                iWantSparkles = true
+            elseif playersDrawable[i].y + 1 < v.y * 32 then
+                playersDrawable[i].y = playersDrawable[i].y + speed * dt
+                iWantSparkles = true
+            end
+
+            if v.mount and v.mount.name ~= "None" and v.mount.name ~= "" and v.mount.enchantment ~= "None" then
                 sparklesAmount = sparklesAmount + 5 * dt
                 if iWantSparkles and sparklesAmount > 1 then
                     sparklesAmount = 0
-                    addSparkles(playersDrawable[i].X + 16, playersDrawable[i].Y + 16, 5, 30, 20)
+                    addSparkles(playersDrawable[i].x + 16, playersDrawable[i].y + 16, 5, 30, 20)
                 end
             end
         end
@@ -434,7 +434,7 @@ function updateOtherPlayers(dt)
         end
 
         -- set attacking, mainly for animations
-        if (v.X ~= v.AX or v.Y ~= v.AY) and nextTick > 0.3 and nextTick < 0.4 then v.Attacking = true end
+        if (v.x ~= v.ax or v.y ~= v.ay) and nextTick > 0.3 and nextTick < 0.4 then v.Attacking = true end
     end
 end
 
@@ -445,36 +445,36 @@ function tickOtherPlayers()
     for i, v in pairs(players) do
         if playersDrawable[i] then
             local plr = playersDrawable[i]
-            if v['Name'] ~= plr['Name'] then
+            if v['name'] ~= plr['name'] then
                 plr = v
-                setNamePlateAlpha(v, i)
+                setnamePlateAlpha(v, i)
             end
-            v.Name = plr.Name
+            v.name = plr.name
 
             -- sets the animation position X and Y
-            if v.AX ~= 0 then
-                if v.AX < v.X then
-                    plr.X = plr.X - 15
+            if v.ax ~= 0 then
+                if v.ax < v.x then
+                    plr.x = plr.x - 15
                     plr.previousDirection = "left"
-                elseif v.AX > v.X then
-                    plr.X = plr.X + 15
+                elseif v.ax > v.x then
+                    plr.x = plr.x + 15
                     plr.previousDirection = "right"
                 end
             end
 
-            if v.AY ~= 0 then
-                if v.AY < v.Y then
-                    plr.Y = plr.Y - 16
-                elseif v.AY > v.Y then
-                    plr.Y = plr.Y + 16
+            if v.ay ~= 0 then
+                if v.ay < v.y then
+                    plr.y = plr.y - 16
+                elseif v.ay > v.y then
+                    plr.y = plr.y + 16
                 end
             end
 
             -- sets the direction of other players
             if previousPlayers and previousPlayers[i] then
-                if v.X < previousPlayers[i].X then
+                if v.x < previousPlayers[i].x then
                     playersDrawable[i].previousDirection = "left"
-                elseif v.X > previousPlayers[i].X then
+                elseif v.x > previousPlayers[i].x then
                     playersDrawable[i].previousDirection = "right"
                 end
             end
@@ -483,7 +483,7 @@ function tickOtherPlayers()
 end
 
 -- sets the opacity of the name plate based on how close you are to other players
-function setNamePlateAlpha(v, i)
-    local distance = distanceToPoint(v.X * 32, v.Y * 32, player.dx, player.dy)
-    if distance < 128 then playersDrawable[i].NameAlpha = distance / 128 playerNameAlpha = distance / 128 else playersDrawable[i].NameAlpha = 1 playerNameAlpha = 1 end
+function setnamePlateAlpha(v, i)
+    local distance = distanceToPoint(v.x * 32, v.y * 32, player.dx, player.dy)
+    if distance < 128 then playersDrawable[i].nameAlpha = distance / 128 playernameAlpha = distance / 128 else playersDrawable[i].nameAlpha = 1 playernameAlpha = 1 end
 end

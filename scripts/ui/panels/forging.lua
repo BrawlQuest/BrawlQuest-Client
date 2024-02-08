@@ -21,7 +21,7 @@ function initForging()
                 "Enchantment": "None",
                 "ID": 7,
                 "ImgPath": "assets/items/reagent/Metal.png",
-                "Name": "Metal",
+                "name": "Metal",
                 "Type": "reagent",
                 "Val": "0",
                 "Worth": 1
@@ -31,7 +31,7 @@ function initForging()
                 "Enchantment": "None",
                 "ID": 46,
                 "ImgPath": "assets/items/reagent/Exotic Material.png",
-                "Name": "Exotic Material",
+                "name": "Exotic Material",
                 "Type": "reagent",
                 "Val": "1",
                 "Worth": 1
@@ -41,7 +41,7 @@ function initForging()
                 "Enchantment": "None",
                 "ID": 46,
                 "ImgPath": "assets/items/reagent/Exotic Material.png",
-                "Name": "Exotic Material",
+                "name": "Exotic Material",
                 "Type": "reagent",
                 "Val": "1",
                 "Worth": 1
@@ -68,7 +68,7 @@ function updateForging(dt)
             forgingPop:play()
             for i,v in ipairs(f.enteredItems) do
                 c, h = http.request {
-                    url = api.url .. "/forge/" .. me.Name .. "/" .. v.Item.ID,
+                    url = api.url .. "/forge/" .. me.name .. "/" .. v.Item.id,
                     method = "GET",
                     source = ltn12.source.string(body),
                     headers = {
@@ -136,7 +136,7 @@ function drawForging()
         x,y = x + 10, y + f.font:getHeight() * 3 + 6
         for i,v in ipairs(f.enteredItems) do
             drawInventoryItem(x,y,v.Item,v.amount)
-            love.graphics.print(v.Item.Name, x + 44, y + 8, 0, 2)
+            love.graphics.print(v.Item.name, x + 44, y + 8, 0, 2)
             y = y + 46
         end
 

@@ -134,11 +134,11 @@ function getInventory()
     for i, v in ipairs(inventoryAlpha) do
         local t = getItemType(v)
         inventoryFieldLength[t] = inventoryFieldLength[t] + 1
-        if not itemImg[v.Item.ImgPath] then
-            if love.filesystem.getInfo(v.Item.ImgPath) then
-                itemImg[v.Item.ImgPath] = love.graphics.newImage(v.Item.ImgPath)
+        if not itemImg[v.Item.imgpath] then
+            if love.filesystem.getInfo(v.Item.imgpath) then
+                itemImg[v.Item.imgpath] = love.graphics.newImage(v.Item.imgpath)
             else
-                itemImg[v.Item.ImgPath] = love.graphics.newImage("assets/error.png")
+                itemImg[v.Item.imgpath] = love.graphics.newImage("assets/error.png")
             end
         end
         userInventory[t][#userInventory[t] + 1] = v
@@ -173,11 +173,11 @@ function getFullUserInventoryFieldHeight()
 end
 
 function checkInventoryMousePressed(button)
-    if selectedItem ~= nil and selectedItem.ID ~= nil and inventory.isMouseOverInventoryItem then
+    if selectedItem ~= nil and selectedItem.id ~= nil and inventory.isMouseOverInventoryItem then
         if  not usedItemThisTick then
             statStoreTimer = 0
-            apiGET("/item/" .. player.name .. "/" .. selectedItem.ID)
-            playSoundIfExists("assets/sfx/items/"..selectedItem.Name..".ogg", true)
+            apiGET("/item/" .. player.name .. "/" .. selectedItem.id)
+            playSoundIfExists("assets/sfx/items/"..selectedItem.name..".ogg", true)
             usedItemThisTick = true
         end
     end
@@ -187,7 +187,7 @@ function getItemAmount(item)
     local amount = 0
     if item then
         for i, v in ipairs(inventoryAlpha) do
-            if v.Item.ID == item.ID then
+            if v.Item.id == item.id then
                 amount = v.Inventory.Amount
             end
         end
@@ -196,7 +196,7 @@ function getItemAmount(item)
 end
 
 function isItemUnusable(item)
-    if (item and me.LVL and not debugItems)  then
+    if (item and me.lvl and not debugItems)  then
         if item.Subtype and item.Subtype ~= "None" and item.Subtype ~= "Light" and me.Order ~= "None" then
             if item.Type:sub(1,3) == "arm" then
                 if item.Subtype == "Heavy" and me.Order ~= "Stoic Order" then
@@ -216,7 +216,7 @@ function isItemUnusable(item)
                 end
             end
         end
-        return (item.Worth or 1) * 1 > me.LVL
+        return (item.Worth or 1) * 1 > me.lvl
     else
         return false
     end

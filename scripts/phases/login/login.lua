@@ -92,8 +92,8 @@ function drawLogin()
                              love.graphics.getHeight() * 0.5 + 70,
                              love.graphics.getWidth() / 1, "center", 0, 1)
         for i, v in ipairs(loginText) do
-            love.graphics.print(v, playerNameFont, 10, 10 +
-                                    ((playerNameFont:getHeight() + 2) * (i - 1)),
+            love.graphics.print(v, playernameFont, 10, 10 +
+                                    ((playernameFont:getHeight() + 2) * (i - 1)),
                                 0, 1)
         end
         love.graphics.setColor(launch.inCERP, launch.inCERP, launch.inCERP,
@@ -137,11 +137,11 @@ function drawLogin()
         end
         love.graphics.setColor(1, 1, 1)
         for i, v in ipairs(loginText) do
-            love.graphics.print(v, playerNameFont, 10, 10 +
-                                    ((playerNameFont:getHeight() + 2) * (i - 1)),
+            love.graphics.print(v, playernameFont, 10, 10 +
+                                    ((playernameFont:getHeight() + 2) * (i - 1)),
                                 0, 1)
         end
-        drawAreaName()
+        drawAreaname()
     end
 end
 

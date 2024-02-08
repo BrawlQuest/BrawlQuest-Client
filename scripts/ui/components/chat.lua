@@ -61,7 +61,7 @@ function drawChatPanel(thisX, thisY) -- the function to recall it all
 
 		for i,v in ipairs (messages) do-- the most important thing here
 			thisY = thisY - getChatHeight(v.username, v.text, i)
-			-- print(json:encode_pretty(v.player.Name))
+			-- print(json:encode_pretty(v.player.name))
 			drawChatbox(thisX - (chatWidth+130), thisY, v.username, v.text,  v.player, i)
 			previousUsername = v.username
 		end
@@ -84,7 +84,7 @@ function drawChatboxBackground(thisX, thisY, username, text)
 	love.graphics.setColor(0,0,0,0.7)
 	local width = getChatWidth(text)
 
-	if username == me.Name then
+	if username == me.name then
 		thisX = thisX + chatWidth - width
 	end
 
@@ -111,7 +111,7 @@ function drawChatbox(thisX, thisY, username, text, player, i)
 	if i == 1 then
 		drawChatboxProfilePic(thisX, thisY, username, text, player, i)
 	elseif username == previousUsername then
-		if username == me.Name then
+		if username == me.name then
 			drawChatboxBackground(thisX, thisY, username, text)
 			drawChatboxText(thisX, thisY, text, "right")
 		else
@@ -125,7 +125,7 @@ function drawChatbox(thisX, thisY, username, text, player, i)
 end
 
 function drawChatboxProfilePic(thisX, thisY, username, text, player)
-	if username == me.Name then
+	if username == me.name then
 		drawProfilePic(thisX+chatWidth+(chatCorner:getWidth() * 2) + 8, getProfilePicY(thisY, text, username), 1, "left")
 		drawChatboxBackground(thisX, thisY, username, text, "right")
 		drawChatboxText(thisX, thisY, text, "right")
@@ -137,18 +137,18 @@ function drawChatboxProfilePic(thisX, thisY, username, text, player)
 		drawChatboxText(i, thisY, text, "left")
 		love.graphics.setColor(1,1,1,1)
 		local coords = ""
-		if versionType == "dev" then coords = " X,Y: " .. player.X .. ", " .. player.Y end
+		if versionType == "dev" then coords = " X,Y: " .. player.x .. ", " .. player.y end
 		if player.Prestige > 1 then
-			love.graphics.print(player.Prestige .. " " .. player.LVL .. " " .. username .. coords, i+4, thisY + getChatTextHeight(text)+(chatCorner:getHeight()*2)+10)
+			love.graphics.print(player.Prestige .. " " .. player.lvl .. " " .. username .. coords, i+4, thisY + getChatTextHeight(text)+(chatCorner:getHeight()*2)+10)
 			love.graphics.setColor(1,0,0)
 			love.graphics.print(player.Prestige, i+4, thisY + getChatTextHeight(text)+(chatCorner:getHeight()*2)+10)
-		else love.graphics.print(player.LVL .. " " .. username .. coords, i+4, thisY + getChatTextHeight(text)+(chatCorner:getHeight()*2)+10)
+		else love.graphics.print(player.lvl .. " " .. username .. coords, i+4, thisY + getChatTextHeight(text)+(chatCorner:getHeight()*2)+10)
 		end
 	end
 end
 
 function getProfilePicY(thisY, text, username)
-	if username == me.Name then
+	if username == me.name then
 		return thisY-profilePic:getHeight()+getChatTextHeight(text)+(chatCorner:getHeight()*2)
 	else
 		return thisY-profilePic:getHeight()+getChatTextHeight(text)+(chatCorner:getHeight()*2)+10
@@ -156,7 +156,7 @@ function getProfilePicY(thisY, text, username)
 end
 
 function getChatboxProfilePicHeight(username, text, i)
-	if username == me.Name then
+	if username == me.name then
 		return (getChatTextHeight(text)+(chatCorner:getHeight()*2))+chatSpacing
 	else
 		return (getChatTextHeight(text)+(chatCorner:getHeight()*2)+chatFont:getHeight())+chatSpacing+10
@@ -225,7 +225,7 @@ end
 function sendChatText()
 	posYChat = 0
 	chatData = {
-		["PlayerName"] = me.Name,
+		["Playername"] = me.name,
 		["Channel"] = "Global",
 		["Message"] = enteredChatText,
 		["Created"] = os.time(os.date("!*t"))

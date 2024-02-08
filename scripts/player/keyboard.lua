@@ -40,7 +40,7 @@ function checkKeyPressedPhaseGame(key)
         checkHotbarKeyPressed(key)
         checkTargetingPress(key)
         if key == "return" and not isSettingsWindowOpen then isTypingInChat = true end
-        if me and me.ShieldID ~= 0 and key == keybinds.SHIELD then shieldUpSfx:setRelative(true) setEnvironmentEffects(shieldUpSfx) shieldUpSfx:play() end
+        if me and me.shieldId ~= 0 and key == keybinds.SHIELD then shieldUpSfx:setRelative(true) setEnvironmentEffects(shieldUpSfx) shieldUpSfx:play() end
         if key == "escape" then
             settPan.movement.x, settPan.movement.y = 0, 0
             isSettingsWindowOpen = true
@@ -57,7 +57,7 @@ function checkKeyPressedPhaseGame(key)
         local nearbyAnvil = isNearbyTile("assets/world/objects/Anvil.png")
         if key == keybinds.QUESETS and not nearbyAnvil then questsPanel.forceOpen = not questsPanel.forceOpen end
         if key == keybinds.INTERACT then -- Hello Mr HackerMan! Removing the isNearbyTile will allow you to open the crafting menu from anywhere, but won't allow you to actually craft any items. Sorry! =(
-            if isNearbyTile("assets/world/objects/Portal.png") and me.LVL == 40 then
+            if isNearbyTile("assets/world/objects/Portal.png") and me.lvl == 40 then
                 openEnchanting()
             elseif isNearbyTile("assets/world/objects/Furnace.png") then
                 forging.enteredItems = {}
@@ -69,7 +69,7 @@ function checkKeyPressedPhaseGame(key)
                 forging.open = true
             elseif isNearbyTile("assets/world/objects/Well.png") and not drawingText  then
                 c, h = http.request {
-                    url = api.url .. "/cleanse/" .. me.ID,
+                    url = api.url .. "/cleanse/" .. me.id,
                     method = "GET",
                     headers = {
                         ["token"] = token
@@ -108,7 +108,7 @@ end
 function love.keyreleased(key)
     if phase == "game" then
         if checkAttack(key) then checkTargetingRelease(key) end
-        if me and me.ShieldID ~= 0 and key == keybinds.SHIELD and not isTypingInChat and not worldEdit.isTyping then shieldDownSfx:setRelative(true) setEnvironmentEffects(shieldDownSfx) shieldDownSfx:play() end
+        if me and me.shieldId ~= 0 and key == keybinds.SHIELD and not isTypingInChat and not worldEdit.isTyping then shieldDownSfx:setRelative(true) setEnvironmentEffects(shieldDownSfx) shieldDownSfx:play() end
     end
 end
 

@@ -2,7 +2,7 @@ function initCharacterSelection()
     bqLogo = love.graphics.newImage("assets/logo.png")
      
     cs = { -- character selection
-        initialCharacter = {Name = "", Color = {love.math.random() ,love.math.random() ,love.math.random() }},
+        initialCharacter = {name = "", Color = {love.math.random() ,love.math.random() ,love.math.random() }},
         colors = {"RED", "GREEN", "BLUE",},
         colorI = {{1,0,0,1}, {0,1,0,1}, {0,0,1,1},},
         slider = {
@@ -10,7 +10,7 @@ function initCharacterSelection()
             newSlider(400, 300, 300, 0.5, 0, 1, function (v) end),
             newSlider(400, 300, 300, 0.5, 0, 1, function (v) end),
         },
-        overName = false,
+        overname = false,
         overExit = true,
         isTyping = false,
         isHardcore = false,
@@ -44,7 +44,7 @@ end
 
 function drawCharacterSelection()
     cs.selectableI = 0
-    cs.overName = false
+    cs.overname = false
     love.graphics.setFont(cs.font)
 
     local x, y = love.graphics.getWidth() * 0.5 - cerp(0, cs.w * 0.5, cs.dualAmount), love.graphics.getHeight() * 0.5 + 20
@@ -63,7 +63,7 @@ function drawCharacterSelection()
         end
         local thisX, thisY = x - cs.w * 0.5 + cs.p, y - cs.h * 0.5 + cs.p + 120
         for i,v in ipairs(characters) do
-            drawCharacterSelector(thisX, thisY, i, v.Name)
+            drawCharacterSelector(thisX, thisY, i, v.name)
         end
         if #characters < 3 then drawCharacterSelector(thisX, thisY, math.clamp(1, #characters + 1,3), "NEW CHARACTER") end
 
@@ -78,13 +78,13 @@ function drawCharacterCreator()
     local x, y = math.floor(love.graphics.getWidth() * 0.5), math.floor(love.graphics.getHeight() * 0.5 + 20)
     local thisX, thisY = x + cs.p, y - cs.h * 0.5 + cs.p
     love.graphics.line(x, y - cs.h * 0.5 + 20, x, y + cs.h * 0.5 - 20)
-    love.graphics.print("CHARACTER NAME", thisX + 5, thisY)
+    love.graphics.print("CHARACTER name", thisX + 5, thisY)
 
     if cs.isTyping then 
         love.graphics.setColor(1,1,1,cs.dualCERP)
-    elseif characters[cs.selectedCharacter] and isMouseOver(thisX, thisY + 25, cs.cw, cs.font:getHeight() + cs.s * 2) and not characters[cs.selectedCharacter].Name then
+    elseif characters[cs.selectedCharacter] and isMouseOver(thisX, thisY + 25, cs.cw, cs.font:getHeight() + cs.s * 2) and not characters[cs.selectedCharacter].name then
         love.graphics.setColor(43 / 255, 134 / 255, cs.dualCERP)
-        cs.overName = true
+        cs.overname = true
     else
         love.graphics.setColor(0,0,0,0.5 * cs.dualCERP)
     end
@@ -164,7 +164,7 @@ function drawCharacterCreator()
     else love.graphics.setColor(0,0,0, cs.dualCERP)
     end
 
-    if characters[cs.selectedCharacter] and characters[cs.selectedCharacter].Name ~= null then
+    if characters[cs.selectedCharacter] and characters[cs.selectedCharacter].name ~= null then
         text = "ENTER WORLD"
     else
         text = "CREATE CHARACTER"
@@ -206,9 +206,9 @@ function getSelectedCharacter()
     local x = math.floor(love.graphics.getWidth() * 0.5) + cs.p + cs.s + 4 + cs.cw * 0.56
     local y = math.floor(love.graphics.getHeight() * 0.5 + 20) + cs.h * 0.5 - cs.p - 50 - cs.s - h + cs.s + 4
 
-    if characters[cs.selectedCharacter] and characters[cs.selectedCharacter].Name ~= null then
+    if characters[cs.selectedCharacter] and characters[cs.selectedCharacter].name ~= null then
         v = characters[cs.selectedCharacter]
-        cs.nameText = v.Name 
+        cs.nameText = v.name 
         for i, slider in ipairs(cs.slider) do
             cs.slider[i] = newSlider(x, y + 5 + 38 * (i - 1), width, v.Color[i], 0.2, 1, function (sv) v.Color[i] = sv end, style)
         end
@@ -225,7 +225,7 @@ end
 
 function checkCharacterSelectorMousePressed()
     if cs.selectedCharacter > 0 then
-        if cs.overName then
+        if cs.overname then
             cs.isTyping = true
         end
         if cs.overExit then
@@ -242,20 +242,20 @@ function checkCharacterSelectorMousePressed()
 end
 
 function loginOrCreate()
-    if characters[cs.selectedCharacter] and characters[cs.selectedCharacter].Name then
+    if characters[cs.selectedCharacter] and characters[cs.selectedCharacter].name then
         loginPhase = "loadingWorld"
         worldLoading = {amount = 0}
     else
         if cs.nameText ~= "" then -- create character
             characters[cs.selectedCharacter] = {}
-            characters[cs.selectedCharacter].Name = cs.nameText
+            characters[cs.selectedCharacter].name = cs.nameText
             characters[cs.selectedCharacter].Color = copy(cs.initialCharacter.Color)
             local hardcore = 0
             if cs.isHardcore == true then
                 hardcore = 1
             end
             r, c, h = http.request {
-                url = api.url.."/user/"..UID.."/".. characters[cs.selectedCharacter].Name.."/"..hardcore, -- 1=hardcore, 0=normal
+                url = api.url.."/user/"..UID.."/".. characters[cs.selectedCharacter].name.."/"..hardcore, -- 1=hardcore, 0=normal
                 method = "POST",
                 headers = {
                     ['token'] = token
@@ -342,15 +342,15 @@ function transitionToPhaseGame()
     love.graphics.rectangle("fill", 0,0, uiX, uiY)
     -- print(json:encode_pretty(characters[cs.selectedCharacter]))
     me.Color = copy(characters[cs.selectedCharacter].Color)
-    username = characters[cs.selectedCharacter]["Name"]
+    username = characters[cs.selectedCharacter]["name"]
 
     local b = {}
     print("loading players")
-    c, h = http.request{url = api.url.."/players/"..username, method="GET", headers={["token"]=token}, sink=ltn12.sink.table(b)}
+    c, h = http.request{url = api.url.."/player/"..username, method="GET", headers={["token"]=token}, sink=ltn12.sink.table(b)}
     if b[1] then
         local response = json:decode(table.concat(b))
-        player.x = response['Me']['X']
-        player.y = response['Me']['Y']
+        player.x = response['Me']['x']
+        player.y = response['Me']['y']
         player.dx = player.x * 32
         player.dy = player.y * 32
         player.cx = player.x * 32
@@ -367,12 +367,12 @@ function transitionToPhaseGame()
             worldHash = love.filesystem.read("string", "world-hash.txt")
         end
 
-        if #world == 0 or worldHash ~= response['WorldHash'] then
+        if #world == 0 or worldHash ~= response['worldHash'] then
             print("Getting new world")
             c, h = http.request{url = api.url.."/world", method="GET", sink=ltn12.sink.table(b)}
             world = json:decode(table.concat(b))
             love.filesystem.write("world.txt", json:encode(world))
-            love.filesystem.write("world-hash.txt", response['WorldHash'])
+--            love.filesystem.write("world-hash.txt", response['worldHash'])
         end
 
 
