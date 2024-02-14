@@ -49,7 +49,7 @@ function updateRangedWeapons(dt)
 end
 
 function tickRangedWeapons()
-    if target.selected and target.amount == 0 and me and me.Mana >= 5 then
+    if target.selected and target.amount == 0 and me and me.mana >= 5 then
         target.amount = 1
         target.selected = false
         throw.amount = 0
@@ -59,12 +59,12 @@ function tickRangedWeapons()
             if worldLookup[x..","..y] and worldLookup[x..","..y].Collision ~= null then
                 local output = not worldLookup[x..","..y].Collision
                 target.paths[#target.paths + 1] = {x = x, y = y,}
-                if isTileType(worldLookup[x..","..y].ForegroundTile, "water") then output = true end
+                if isTileType(worldLookup[x..","..y].foregroundtile, "water") then output = true end
                 return output
             end
         end)
         hitTarget()
-    elseif me and me.Mana < 5 and target.selected then
+    elseif me and me.mana < 5 and target.selected then
         noManaSFX:setVolume(sfxVolume)
         noManaSFX:play()
     end
@@ -107,7 +107,7 @@ function hitTarget()
     target.hit = target.paths[#target.paths] or null
     if target.hit then
         local x, y = target.hit.x, target.hit.y -- hit a target on these coordinates
-        apiGET('/ranged/' .. me.ID .. "/" .. x .. "/" .. y)
+        apiGET('/ranged/' .. me.id .. "/" .. x .. "/" .. y)
         
     end
 end

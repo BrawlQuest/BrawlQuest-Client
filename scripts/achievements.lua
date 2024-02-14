@@ -13,13 +13,13 @@ stats = {
 function checkAchievementUnlocks()
     statStoreTimer = statStoreTimer - 1
     if me and statStoreTimer < 1 and love.system.getOS() ~= "Linux" then
-        if me.LegArmourID == 37 and me.ChestArmourID == 35 and me.HeadArmourID == 36 then
+        if me.legarmourID == 37 and me.chestarmourID == 35 and me.headarmourID == 36 then
             steam.userStats.setAchievement('leather_armour_achievement')
-        elseif  me.LegArmourID == 40 and me.ChestArmourID == 39 and me.HeadArmourID == 38 then
+        elseif  me.legarmourID == 40 and me.chestarmourID == 39 and me.headarmourID == 38 then
             steam.userStats.setAchievement('iron_armour_achievement')
-        elseif me.LegArmourID == 49 and me.ChestArmourID == 48 and me.HeadArmourID == 47 then
+        elseif me.legarmourID == 49 and me.chestarmourID == 48 and me.headarmourID == 47 then
             steam.userStats.setAchievement('guardian_armour_achievement')
-        elseif me.LegArmourID == 74 and me.ChestArmourID == 73 and me.HeadArmourID == 72 then
+        elseif me.legarmourID == 74 and me.chestarmourID == 73 and me.headarmourID == 72 then
             steam.userStats.setAchievement('hero_armour_achievement')
         end
 
@@ -31,34 +31,34 @@ function checkAchievementUnlocks()
             steam.userStats.setAchievement('prestige_achievement')
         end
 
-        if worldLookup[me.X..","..me.Y] and worldLookup[me.X..","..me.Y].Name == "Dominion of "..me.Name then
+        if worldLookup[me.x..","..me.y] and worldLookup[me.x..","..me.y].name == "Dominion of "..me.name then
             steam.userStats.setAchievement('build_achievement')
         end
 
-        if me.Mount.ID == 64 then
+        if me.mount.id == 64 then
             steam.userStats.setAchievement('pirate_achievement')
         end
 
-        if me.Mount.ID == 61 then
+        if me.mount.id == 61 then
             steam.userStats.setAchievement('boat_achievement')
         end
 
-        if me.Mount.Name ~= "None" and me.Mount.Name ~= "Error" and me.Mount.Name ~= "" then
+        if me.mount.name ~= "None" and me.mount.name ~= "Error" and me.mount.name ~= "" then
             steam.userStats.setAchievement('mount_achievement')
         end
 
 
-        if me.Buddy ~= "None" then
+        if me.buddy ~= "None" then
             steam.userStats.setAchievement('pet_achievement')
         end
 
-        if me.LVL >= 2 then
+        if me.lvl >= 2 then
             steam.userStats.setAchievement('level_1_achievement')
         end
-        if me.LVL >= 10 then
+        if me.lvl >= 10 then
             steam.userStats.setAchievement('level_10_achievement')
         end
-        if me.LVL >= 25 then
+        if me.lvl >= 25 then
             steam.userStats.setAchievement('level_25_achievement')
         end
 

@@ -50,7 +50,7 @@ function updateEvents(dt)
     end
 end
 
-function drawAreaName()
+function drawAreaname()
     local alpha = 0.1
     if phase == "login" then alpha = 0.4 end
     love.graphics.setColor(0,0,0, alpha * event.alpha)
@@ -59,7 +59,7 @@ function drawAreaName()
   love.graphics.setColor(1,1,1,event.alpha)
  -- love.graphics.setColor(1,1,1,1)
     local textScale = 8
-    love.graphics.printf(event.text, npcNameFont, 0, 100, uiX / textScale, "center", 0, textScale)
+    love.graphics.printf(event.text, npcnameFont, 0, 100, uiX / textScale, "center", 0, textScale)
 end
 
 

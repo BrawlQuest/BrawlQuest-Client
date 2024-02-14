@@ -59,20 +59,20 @@ function initCritters()
 end
 
 function addCritters(v)
-    if critterType[v.GroundTile] and (v.ForegroundTile == "" or v.ForegroundTile == v.GroundTile) and
-        arrayContains(critterType[v.GroundTile].allowed, v.Name) and
-        love.math.random(1, critterType[v.GroundTile].chance) == 1 then
+    if critterType[v.groundtile] and (v.foregroundtile == "" or v.foregroundtile == v.groundtile) and
+        arrayContains(critterType[v.groundtile].allowed, v.name) and
+        love.math.random(1, critterType[v.groundtile].chance) == 1 then
         critters[#critters + 1] = {
-            x = v.X * 32,
-            y = v.Y * 32,
-            amount = love.math.random(1, critterType[v.GroundTile].amount),
+            x = v.x * 32,
+            y = v.y * 32,
+            amount = love.math.random(1, critterType[v.groundtile].amount),
             alpha = 2,
             critter = {},
-            type = v.GroundTile
+            type = v.groundtile
         }
 
-        if critterType[v.GroundTile].light then
-            critters[#critters].light = Luven.addNormalLight(v.X * 32 + 16, v.Y * 32 + 16, critterType[v.GroundTile].light, 2)
+        if critterType[v.groundtile].light then
+            critters[#critters].light = Luven.addNormalLight(v.x * 32 + 16, v.y * 32 + 16, critterType[v.groundtile].light, 2)
         end
 
         for i = 1, critters[#critters].amount do

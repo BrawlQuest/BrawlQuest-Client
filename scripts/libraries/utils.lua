@@ -59,6 +59,7 @@ addVar()
     return max / partitions - padding / partitions * (partitions - 1)
 end
 
+
 function orCalc(val, tab) -- compares a value to a table of items
     local output = false
     for i, v in ipairs(tab) do
@@ -80,14 +81,18 @@ function andCalc(val, tab) -- compares a value to a table of items
     end
 end
 
+errorImg = love.graphics.newImage("assets/error.png")
+
 function getImgIfNotExist(v)
     if not worldImg[v] then
         if v and v ~= "" and love.filesystem.getInfo(v) then
             worldImg[v] = love.graphics.newImage(v)
         else
-            worldImg[v] = love.graphics.newImage("assets/error.png")
-            print("Can't find " .. v)
+          return errorImg
         end
+  
+
+        
     end
     return worldImg[v]
 end
@@ -431,3 +436,22 @@ blur1 = love.graphics.newShader [[
 			return sum;
 		}
 		]]
+
+function mergeTables(a, b) -- merges two tables
+    for k, v in pairs(b) do a[k] = v end
+    return a
+end
+
+function mergeAllTables(...)
+    local newTable = {}
+    for i, v in ipairs(arg) do
+        for k, v in pairs(v) do newTable[k] = v end
+    end
+    return newTable
+end
+
+function tableToString(tab)
+    local output = ""
+    for k, v in pairs(tab) do output = output..v end
+    return output
+end

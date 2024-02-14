@@ -1,5 +1,5 @@
 function initTargeting()
-    keyNames = {"ATTACK_UP", "ATTACK_DOWN", "ATTACK_LEFT", "ATTACK_RIGHT"}
+    keynames = {"ATTACK_UP", "ATTACK_DOWN", "ATTACK_LEFT", "ATTACK_RIGHT"}
     moveKeys = {keybinds.UP, keybinds.DOWN, keybinds.LEFT, keybinds.RIGHT}
     targetHeld = false
     keys = {keybinds.ATTACK_UP, keybinds.ATTACK_DOWN, keybinds.ATTACK_LEFT, keybinds.ATTACK_RIGHT}
@@ -10,7 +10,7 @@ end
 
 function checkAttack(key)
     local output = false
-    for i,v in ipairs(keyNames) do if key == keybinds[v] then output = true break end end
+    for i,v in ipairs(keynames) do if key == keybinds[v] then output = true break end end
     return output
 end
 

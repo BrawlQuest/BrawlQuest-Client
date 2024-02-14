@@ -111,15 +111,15 @@ end
 
 function getItemType(v)
     local t = 10
-    if v.Item.Type == "wep" then t = 1
-    elseif v.Item.Type == "spell" then t = 2
-    elseif string.sub(v.Item.Type, 1, 4) == "arm_" or v.Item.Type == "shield" then t = 3
-    elseif v.Item.Type == "ore" then t = 4
-    elseif v.Item.Type == "reagent" then t = 5
-    elseif v.Item.Type == "consumable" then t = 6
-    elseif v.Item.Type == "mount" then t = 7
-    elseif v.Item.Type == "buddy" then t = 8
-    elseif v.Item.Type == "wall" or v.Item.Type == "floor" or v.Item.Type == "furniture" then t = 9
+    if v.item.type == "wep" then t = 1
+    elseif v.item.type == "spell" then t = 2
+    elseif string.sub(v.item.type, 1, 4) == "arm_" or v.item.type == "shield" then t = 3
+    elseif v.item.type == "ore" then t = 4
+    elseif v.item.type == "reagent" then t = 5
+    elseif v.item.type == "consumable" then t = 6
+    elseif v.item.type == "mount" then t = 7
+    elseif v.item.type == "buddy" then t = 8
+    elseif v.item.type == "wall" or v.item.type == "floor" or v.item.type == "furniture" then t = 9
     end return t
 end
 
@@ -134,11 +134,11 @@ function getInventory()
     for i, v in ipairs(inventoryAlpha) do
         local t = getItemType(v)
         inventoryFieldLength[t] = inventoryFieldLength[t] + 1
-        if not itemImg[v.Item.ImgPath] then
-            if love.filesystem.getInfo(v.Item.ImgPath) then
-                itemImg[v.Item.ImgPath] = love.graphics.newImage(v.Item.ImgPath)
+        if not itemImg[v.item.imgpath] then
+            if love.filesystem.getInfo(v.item.imgpath) then
+                itemImg[v.item.imgpath] = love.graphics.newImage(v.item.imgpath)
             else
-                itemImg[v.Item.ImgPath] = love.graphics.newImage("assets/error.png")
+                itemImg[v.item.imgpath] = love.graphics.newImage("assets/error.png")
             end
         end
         userInventory[t][#userInventory[t] + 1] = v
@@ -173,13 +173,13 @@ function getFullUserInventoryFieldHeight()
 end
 
 function checkInventoryMousePressed(button)
-    if selectedItem ~= nil and selectedItem.ID ~= nil and inventory.isMouseOverInventoryItem then
-        if  not usedItemThisTick then
+    if selectedItem ~= nil and selectedItem.id ~= nil and inventory.isMouseOverInventoryItem then
+    --    if  not usedItemThisTick then
             statStoreTimer = 0
-            apiGET("/item/" .. player.name .. "/" .. selectedItem.ID)
-            playSoundIfExists("assets/sfx/items/"..selectedItem.Name..".ogg", true)
+            apiGET("/item/" .. player.name .. "/" .. selectedItem.id)
+            playSoundIfExists("assets/sfx/items/"..selectedItem.name..".ogg", true)
             usedItemThisTick = true
-        end
+      --  end
     end
 end
 
@@ -187,8 +187,8 @@ function getItemAmount(item)
     local amount = 0
     if item then
         for i, v in ipairs(inventoryAlpha) do
-            if v.Item.ID == item.ID then
-                amount = v.Inventory.Amount
+            if v.item.id == item.id then
+                amount = v.inventory.amount
             end
         end
     end
@@ -196,48 +196,48 @@ function getItemAmount(item)
 end
 
 function isItemUnusable(item)
-    if (item and me.LVL and not debugItems)  then
-        if item.Subtype and item.Subtype ~= "None" and item.Subtype ~= "Light" and me.Order ~= "None" then
-            if item.Type:sub(1,3) == "arm" then
-                if item.Subtype == "Heavy" and me.Order ~= "Stoic Order" then
+    if (item and me.lvl and not debugItems)  then
+        if item.subtype and item.subtype ~= "None" and item.subtype ~= "Light" and me.Order ~= "None" then
+            if item.type:sub(1,3) == "arm" then
+                if item.subtype == "Heavy" and me.Order ~= "Stoic Order" then
                     return true
-                elseif item.Subtype == "Medium" and (me.Order ~= "Stoic Order" and me.Order ~= "Warrior Order") then
-                    return true
-                end
-            elseif item.Type == "wep" then
-                if item.Subtype == "Heavy" and me.Order ~= "Warrior Order" then
-                    return true
-                elseif item.Subtype == "Medium" and (me.Order ~= "Stoic Order" and me.Order ~= "Warrior Order") then
+                elseif item.subtype == "Medium" and (me.Order ~= "Stoic Order" and me.Order ~= "Warrior Order") then
                     return true
                 end
-            elseif item.Type == "spell" then
-                if item.Subtype == "High Mastery" and me.Order ~= "Mage Order" then
+            elseif item.type == "wep" then
+                if item.subtype == "Heavy" and me.Order ~= "Warrior Order" then
+                    return true
+                elseif item.subtype == "Medium" and (me.Order ~= "Stoic Order" and me.Order ~= "Warrior Order") then
+                    return true
+                end
+            elseif item.type == "spell" then
+                if item.subtype == "High Mastery" and me.Order ~= "Mage Order" then
                     return true
                 end
             end
         end
-        return (item.Worth or 1) * 1 > me.LVL
+        return (item.worth or 1) * 1 > me.lvl
     else
         return false
     end
 end
 
 function getUsableSubtypeString(item) -- returns a string "Usable by *classname*"
-    if item.Subtype and item.Subtype ~= "None" and item.Subtype ~= "Light" and me.Order ~= "None" then
-        if item.Type:sub(1,3) == "arm" then
-            if item.Subtype == "Heavy" then
+    if item.subtype and item.subtype ~= "None" and item.subtype ~= "Light" and me.Order ~= "None" then
+        if item.type:sub(1,3) == "arm" then
+            if item.subtype == "Heavy" then
                 return "Usable by Stoics"
-            elseif item.Subtype == "Medium" then
+            elseif item.subtype == "Medium" then
                 return "Usable by Stoics & Warriors"
             end
-        elseif item.Type == "wep" then
-            if item.Subtype == "Heavy" then
+        elseif item.type == "wep" then
+            if item.subtype == "Heavy" then
                 return "Usable by Warriors"
-            elseif item.Subtype == "Medium" then
+            elseif item.subtype == "Medium" then
                 return "Usable by Stoics & Warriors"
             end
-        elseif item.Type == "spell" then
-            if item.Subtype == "High Mastery" and me.Order ~= "Mage Order" then
+        elseif item.type == "spell" then
+            if item.subtype == "High Mastery" and me.Order ~= "Mage Order" then
                 return "Usable by Mages"
             end
         end
@@ -247,5 +247,5 @@ function getUsableSubtypeString(item) -- returns a string "Usable by *classname*
 end
 
 function isSpellUnusable(item)
-    return item and item.Type == "spell" and me and me.SpellCooldown and me.SpellCooldown > 0
+    return item and item.type == "spell" and me and me.SpellCooldown and me.SpellCooldown > 0
 end

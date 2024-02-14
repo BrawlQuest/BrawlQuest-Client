@@ -59,10 +59,10 @@ function setLighting(response)
 
     timeOfDay = cerp(0.1, 1, ((math.abs(response['CurrentHour']) * 60) + 0) / 720)
 
-    if me.X and me.Y and not worldEdit.open then
+    if me.x and me.y and not worldEdit.open then
         
-        if worldLookup[me.X..","..me.Y] and worldLookup[me.X..","..me.Y].Name ~= "" then -- custom lighting for different zones
-            local location = worldLookup[me.X..","..me.Y].Name
+        if worldLookup[me.x..","..me.y] and worldLookup[me.x..","..me.y].name ~= "" then -- custom lighting for different zones
+            local location = worldLookup[me.x..","..me.y].name
             if l.current ~= location and not l.open then
                 lighting.next = location
                 lighting.previous = l.current

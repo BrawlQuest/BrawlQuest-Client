@@ -75,7 +75,7 @@ end
 
 function onHardcoreMouseDown()
     if (deathMessage.isCallToActionOver) then
-        apiGET("/reset/" .. me.Name)
+        apiGET("/reset/" .. me.name)
         deathMessage.display = false
         deathMessage.isCallToActionOver = false
     end

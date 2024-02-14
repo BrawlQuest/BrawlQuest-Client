@@ -15,7 +15,7 @@ function initWorldTable(world)
         getImgIfNotExist("assets/world/grounds/water/3.png")
     }
     for i, tile in ipairs(world) do
-        worldLookup[tile.X .. "," .. tile.Y] = tile
+        worldLookup[tile.x .. "," .. tile.y] = tile
         if tile then
             addLeavesAndLights(tile)
             addCritters(tile)
@@ -26,49 +26,49 @@ end
 
 function addLeavesAndLights(v)
     addWorldEmitter(v)
-    if not isTileType(v.ForegroundTile, "Dead") and
-        isTileType(v.ForegroundTile, "Tree") and love.math.random(1, 5) == 1 then
-        if isTileType(v.ForegroundTile, "Snowy") then
-            addLeaf(v.X * 32 + 16, v.Y * 32 + 16, "snowy tree")
+    if not isTileType(v.foregroundtile, "Dead") and
+        isTileType(v.foregroundtile, "Tree") and love.math.random(1, 5) == 1 then
+        if isTileType(v.foregroundtile, "Snowy") then
+            addLeaf(v.x * 32 + 16, v.y * 32 + 16, "snowy tree")
         else
-            addLeaf(v.X * 32 + 16, v.Y * 32 + 16, "tree")
+            addLeaf(v.x * 32 + 16, v.y * 32 + 16, "tree")
         end
-    elseif isTileType(v.ForegroundTile, "Campfire") then
-        addLeaf(v.X * 32 + 16, v.Y * 32 + 8, "fire")
-    elseif isTileType(v.ForegroundTile, "Sand") then -- addLeaf(v.X*32 + 16, v.Y*32 + 16, "sand")
-    elseif isTileType(v.GroundTile, "Murky") then
-        addLeaf(v.X * 32, v.Y * 32 + 16, "murky")
+    elseif isTileType(v.foregroundtile, "Campfire") then
+        addLeaf(v.x * 32 + 16, v.y * 32 + 8, "fire")
+    elseif isTileType(v.foregroundtile, "Sand") then -- addLeaf(v.x*32 + 16, v.y*32 + 16, "sand")
+    elseif isTileType(v.groundtile, "Murky") then
+        addLeaf(v.x * 32, v.y * 32 + 16, "murky")
     end
 end
 
 function drawWorld()
     love.graphics.setColor(1, 1, 1)
 
-    -- local maxX, maxY = math.floor((love.graphics.getWidth() / 2) / 32),
+    -- local maxx, maxy = math.floor((love.graphics.getWidth() / 2) / 32),
     --                    math.floor((love.graphics.getHeight() / 2) / 32)
-    local offsetY = 0
-    local offsetX = 0
-    maxX = 10
-    maxY = 10
-        for x = player.x - maxX, player.x + maxX do
-            for y = player.y - maxY, player.y + maxY do
+    local offsety = 0
+    local offsetx = 0
+    maxx = 10
+    maxy = 10
+        for x = player.x - maxx, player.x + maxx do
+            for y = player.y - maxy, player.y + maxy do
                 love.graphics.setColor(1,1,1, getEntityAlpha(x*32,y*32,250))
                 groundImg, foregroundImg = getWorldTiles(math.floor(x),
                                                         math.floor(y))
                 if not groundImg then
                     love.graphics.draw(waterPhases[math.floor(waterPhase)],
-                                    x * 32 - offsetX, y * 32 - offsetY)
+                                    x * 32 - offsetx, y * 32 - offsety)
                 end
 
                 if worldLookup[math.floor(x) .. "," .. math.floor(y)] and
                     isTileType(
                         worldLookup[math.floor(x) .. "," .. math.floor(y)]
-                            .GroundTile, "Water") then
+                            .groundtile, "Water") then
                     love.graphics.draw(waterPhases[math.floor(waterPhase)],
-                                    x * 32 - offsetX, y * 32 - offsetY)
+                                    x * 32 - offsetx, y * 32 - offsety)
                 elseif groundImg and foregroundImg then
-                    love.graphics.draw(groundImg, x * 32 - offsetX, y * 32 - offsetY)
-                    love.graphics.draw(foregroundImg, x * 32- offsetX, y * 32 - offsetY)
+                    love.graphics.draw(groundImg, x * 32 - offsetx, y * 32 - offsety)
+                    love.graphics.draw(foregroundImg, x * 32- offsetx, y * 32 - offsety)
                 end
 
             end
@@ -88,8 +88,8 @@ end
 
 function getWorldTiles(x, y)
     if (worldLookup[x .. ',' .. y]) then
-        local groundImgPath = worldLookup[x .. ',' .. y].GroundTile
-        local foregroundImgPath = worldLookup[x .. ',' .. y].ForegroundTile
+        local groundImgPath = worldLookup[x .. ',' .. y].groundtile
+        local foregroundImgPath = worldLookup[x .. ',' .. y].foregroundtile
 
         if isTileType(groundImgPath, "water") then
             groundImgPath = getDrawableWater(groundImgPath, x, y)
@@ -114,71 +114,71 @@ function isNearbyTile(name)
                worldLookup[player.x - 1 .. "," .. player.y] and
                worldLookup[player.x .. "," .. player.y + 1] and
                worldLookup[player.x .. "," .. player.y - 1] and
-               (worldLookup[player.x + 1 .. "," .. player.y].ForegroundTile ==
+               (worldLookup[player.x + 1 .. "," .. player.y].foregroundtile ==
                    name or
-                   worldLookup[player.x - 1 .. "," .. player.y].ForegroundTile ==
+                   worldLookup[player.x - 1 .. "," .. player.y].foregroundtile ==
                    name or
-                   worldLookup[player.x .. "," .. player.y + 1].ForegroundTile ==
+                   worldLookup[player.x .. "," .. player.y + 1].foregroundtile ==
                    name or
-                   worldLookup[player.x .. "," .. player.y - 1].ForegroundTile ==
+                   worldLookup[player.x .. "," .. player.y - 1].foregroundtile ==
                    name)
 end
 
-function getDrawableWall(tileName, x, y) -- this is used to smooth the corners of walls appropriately
-    local fp = explode(tileName, "/")
-    tileName = explode(fp[#fp], ".")[1]
+function getDrawableWall(tilename, x, y) -- this is used to smooth the corners of walls appropriately
+    local fp = explode(tilename, "/")
+    tilename = explode(fp[#fp], ".")[1]
     local nearby = {top = false, left = false, right = false, bottom = false}
 
     if worldLookup[x - 1 .. "," .. y] and
-        (isTileWall(worldLookup[x - 1 .. "," .. y].ForegroundTile) or isTileWall(worldLookup[x - 1 .. "," .. y].GroundTile)) then
+        (isTileWall(worldLookup[x - 1 .. "," .. y].foregroundtile) or isTileWall(worldLookup[x - 1 .. "," .. y].groundtile)) then
         nearby.left = true
     end
     if worldLookup[x + 1 .. "," .. y] and
-        (isTileWall(worldLookup[x + 1 .. "," .. y].ForegroundTile) or isTileWall(worldLookup[x + 1 .. "," .. y].GroundTile) ) then
+        (isTileWall(worldLookup[x + 1 .. "," .. y].foregroundtile) or isTileWall(worldLookup[x + 1 .. "," .. y].groundtile) ) then
         nearby.right = true
     end
     if worldLookup[x .. "," .. y + 1] and
-        (isTileWall(worldLookup[x .. "," .. y + 1].ForegroundTile) or isTileWall(worldLookup[x .. "," .. y + 1].GroundTile)) then
+        (isTileWall(worldLookup[x .. "," .. y + 1].foregroundtile) or isTileWall(worldLookup[x .. "," .. y + 1].groundtile)) then
         nearby.bottom = true
     end
     if worldLookup[x .. "," .. y - 1] and
-        (isTileWall(worldLookup[x .. "," .. y - 1].ForegroundTile) or  isTileWall(worldLookup[x .. "," .. y - 1].GroundTile)) then
+        (isTileWall(worldLookup[x .. "," .. y - 1].foregroundtile) or  isTileWall(worldLookup[x .. "," .. y - 1].groundtile)) then
         nearby.top = true
     end
 
-    local assetName = "1.png"
+    local assetname = "1.png"
 
     if nearby.top and nearby.bottom and nearby.left and nearby.right then
-        assetName = "12.png"
+        assetname = "12.png"
     elseif nearby.top and nearby.bottom and nearby.left then
-        assetName = "15.png"
+        assetname = "15.png"
     elseif nearby.top and nearby.bottom and nearby.right then
-        assetName = "9.png"
+        assetname = "9.png"
     elseif nearby.left and nearby.right and nearby.bottom then
-        assetName = "11.png"
+        assetname = "11.png"
     elseif nearby.left and nearby.right and nearby.top then
-        assetName = "13.png"
+        assetname = "13.png"
     elseif nearby.top and nearby.left then
-        assetName = "16.png"
+        assetname = "16.png"
     elseif nearby.top and nearby.right then
-        assetName = "10.png"
+        assetname = "10.png"
     elseif nearby.bottom and nearby.left then
-        assetName = "14.png"
+        assetname = "14.png"
     elseif nearby.bottom and nearby.right then
-        assetName = "8.png"
+        assetname = "8.png"
     elseif nearby.left and nearby.right then
-        assetName = "6.png"
+        assetname = "6.png"
     elseif nearby.top and nearby.bottom then
-        assetName = "3.png"
+        assetname = "3.png"
     elseif nearby.top then
-        assetName = "4.png"
+        assetname = "4.png"
     elseif nearby.bottom then
-        assetName = "2.png"
+        assetname = "2.png"
     elseif nearby.left then
-        assetName = "7.png"
+        assetname = "7.png"
     elseif nearby.right then
-        assetName = "5.png"
+        assetname = "5.png"
     end
 
-    return "assets/world/objects/Wall/" .. tileName .. "/" .. assetName
+    return "assets/world/objects/Wall/" .. tilename .. "/" .. assetname
 end

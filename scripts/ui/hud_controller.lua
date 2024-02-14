@@ -44,8 +44,8 @@ function initHUD()
     textFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 24)
 
     smallTextFont = love.graphics.newFont("assets/ui/fonts/rainyhearts.ttf", 12)
-    playerNameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8)
-    npcNameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8)
+    playernameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8)
+    npcnameFont = love.graphics.newFont("assets/ui/fonts/BMmini.TTF", 8)
     headerFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 18) -- TODO: get a license for this font
     headerMediumFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 28)
     headerBigFont = love.graphics.newFont("assets/ui/fonts/retro_computer_personal_use.ttf", 32) -- TODO: get a license for this font
@@ -89,7 +89,7 @@ function initHUD()
     buttonBacking = love.graphics.newImage("assets/ui/hud/quests/ButtonBacking.png")
     buttonOutline = love.graphics.newImage("assets/ui/hud/quests/ButtonOutline.png")
 
-    selectedQuest = {npcName = "Mortus", npcDialogue = "I have a quest for you", title = "The long and winding road",
+    selectedQuest = {npcname = "Mortus", npcDialogue = "I have a quest for you", title = "The long and winding road",
     "Create a new passport",
     "Have lots of fun, it really is fun, like I have all the fun in the world",
     "Make a lot of money",
@@ -167,7 +167,7 @@ function drawHUD()
             if questsPanel.open then drawQuestsPanel((uiX/i) - 313, (uiY/i) + cerp(-14, 0 - ((uiY/1.25) - 15), questsPanel.amount)) end
             if crafting.open then drawCrafting() end
             drawAuraHeadings()
-            if showEvents then drawAreaName() end
+            if showEvents then drawAreaname() end
         love.graphics.pop()
 
         love.graphics.push() -- chat and quests scaling TODO: Quests
@@ -177,7 +177,7 @@ function drawHUD()
             drawZoneTitle()
         love.graphics.pop()
     else
-        if showEvents then drawAreaName() end
+        if showEvents then drawAreaname() end
     end
 
     drawTutorial()
@@ -202,10 +202,10 @@ function drawHUD()
 end
 
 function drawTextBelowPlayer(text)
-    love.graphics.setFont(playerNameFont)
+    love.graphics.setFont(playernameFont)
     local thisX, thisY = player.dx+14 , player.dy + 48
-    local nameWidth = playerNameFont:getWidth(text)
-    local nameHeight = playerNameFont:getHeight(text)
+    local nameWidth = playernameFont:getWidth(text)
+    local nameHeight = playernameFont:getHeight(text)
     local padding = 2
     love.graphics.setColor(0, 0, 0, 0.6)
     roundRectangle("fill", (thisX) - (nameWidth / 2) - (padding) - 2, thisY - nameHeight - 3, nameWidth + (padding * 2) + 3, nameHeight + (padding * 2), 3)
