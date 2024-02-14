@@ -66,7 +66,7 @@ function updateMusic(dt)
 
     if playMusic then
         if worldLookup[player.x..","..player.y] then
-            local foundMusic = worldLookup[player.x..","..player.y].Music
+            local foundMusic = worldLookup[player.x..","..player.y].music
             if foundMusic ~= (previousMusicTile) and not isSwitching then
                 switchMusic(foundMusic)
                 previousMusicTile = foundMusic
@@ -110,9 +110,9 @@ function switchMusic(newTrack)
 end
 
 function checkMusic()
-    if worldLookup[player.x..","..player.y] and worldLookup[player.x..","..player.y].Music and worldLookup[player.x..","..player.y].Music ~= "*" then
-        setEnvironmentEffects(music[worldLookup[player.x..","..player.y].Music])
-        currentPlaying = music[worldLookup[player.x..","..player.y].Music]:play()
+    if worldLookup[player.x..","..player.y] and worldLookup[player.x..","..player.y].music and worldLookup[player.x..","..player.y].music ~= "*" then
+        setEnvironmentEffects(music[worldLookup[player.x..","..player.y].music])
+        currentPlaying = music[worldLookup[player.x..","..player.y].music]:play()
     else
         currentPlaying = music["PuerLavari"]:play()
     end  

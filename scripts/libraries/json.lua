@@ -38,7 +38,7 @@ local OBJDEF = {
 --   local lua_value = JSON:decode(raw_json_text)
 --
 --   local raw_json_text    = JSON:encode(lua_table_or_value)
---   local pretty_json_text = JSON:encode_pretty(lua_table_or_value) -- "pretty printed" version for human readability
+--   local pretty_json_text = JSON:encode(lua_table_or_value) -- "pretty printed" version for human readability
 --
 --
 --
@@ -178,7 +178,7 @@ local OBJDEF = {
 --   JSON = assert(loadfile "JSON.lua")() -- one-time load of the routines
 --
 --   local raw_json_text    = JSON:encode(lua_table_or_value)
---   local pretty_json_text = JSON:encode_pretty(lua_table_or_value) -- "pretty printed" version for human readability
+--   local pretty_json_text = JSON:encode(lua_table_or_value) -- "pretty printed" version for human readability
 --   local custom_pretty    = JSON:encode(lua_table_or_value, etc, { pretty = true, indent = "|  ", align_keys = false })
 --
 --   On error during encoding, this code calls:
@@ -188,7 +188,7 @@ local OBJDEF = {
 --   which you can override in your local JSON object.
 --
 --   The 'etc' in the error call is the second argument to encode()
---   and encode_pretty(), or nil if it wasn't provided.
+--   and encode(), or nil if it wasn't provided.
 --
 --
 -- ENCODING OPTIONS
@@ -230,8 +230,8 @@ local OBJDEF = {
 --                                       align_keys = false,
 --                                     })
 --
---   encode_pretty() is also provided: it's identical to encode() except
---   that encode_pretty() provides a default options table if none given in the call:
+--   encode() is also provided: it's identical to encode() except
+--   that encode() provides a default options table if none given in the call:
 --
 --       { pretty = true, align_keys = false, indent = "  " }
 --
@@ -245,7 +245,7 @@ local OBJDEF = {
 --
 --   then
 --
---      JSON:encode_pretty(data)
+--      JSON:encode(data)
 --
 --   produces:
 --
@@ -261,13 +261,13 @@ local OBJDEF = {
 --      }
 --
 --   The following three lines return identical results:
---       JSON:encode_pretty(data)
---       JSON:encode_pretty(data, nil, { pretty = true, align_keys = false, indent = "  " })
+--       JSON:encode(data)
+--       JSON:encode(data, nil, { pretty = true, align_keys = false, indent = "  " })
 --       JSON:encode       (data, nil, { pretty = true, align_keys = false, indent = "  " })
 --
 --   An example of setting your own indent string:
 --
---     JSON:encode_pretty(data, nil, { pretty = true, indent = "|    " })
+--     JSON:encode(data, nil, { pretty = true, indent = "|    " })
 --
 --   produces:
 --
@@ -284,7 +284,7 @@ local OBJDEF = {
 --
 --   An example of setting align_keys to true:
 --
---     JSON:encode_pretty(data, nil, { pretty = true, indent = "  ", align_keys = true })
+--     JSON:encode(data, nil, { pretty = true, indent = "  ", align_keys = true })
 --  
 --   produces:
 --   
@@ -300,7 +300,7 @@ local OBJDEF = {
 --      }
 --
 --   which I must admit is kinda ugly, sorry. This was the default for
---   encode_pretty() prior to version 20141223.14.
+--   encode() prior to version 20141223.14.
 --
 --
 --  HANDLING UNICODE LINE AND PARAGRAPH SEPARATORS FOR JAVA
@@ -426,7 +426,7 @@ local OBJDEF = {
 --         precise   = JSON:asNumber("123456789123456789.123456789123456789")
 --      }
 --
---      print(JSON:encode_pretty(T))
+--      print(JSON:encode(T))
 --
 --   This produces:
 --
@@ -1406,9 +1406,9 @@ function OBJDEF:encode(value, etc, options)
    return top_level_encode(self, value, etc, options)
 end
 
-function OBJDEF:encode_pretty(value, etc, options)
+function OBJDEF:encode(value, etc, options)
    if type(self) ~= 'table' or self.__index ~= OBJDEF then
-      OBJDEF:onEncodeError("JSON:encode_pretty must be called in method format", etc)
+      OBJDEF:onEncodeError("JSON:encode must be called in method format", etc)
    end
 
    --
@@ -1478,11 +1478,11 @@ return OBJDEF:new()
 --
 --                 Added the "stringsAreUtf8" encoding option. (Hat tip to http://lua-users.org/wiki/JsonModules )
 --
---   20141223.14   The encode_pretty() routine produced fine results for small datasets, but isn't really
+--   20141223.14   The encode() routine produced fine results for small datasets, but isn't really
 --                 appropriate for anything large, so with help from Alex Aulbach I've made the encode routines
---                 more flexible, and changed the default encode_pretty() to be more generally useful.
+--                 more flexible, and changed the default encode() to be more generally useful.
 --
---                 Added a third 'options' argument to the encode() and encode_pretty() routines, to control
+--                 Added a third 'options' argument to the encode() and encode() routines, to control
 --                 how the encoding takes place.
 --
 --                 Updated docs to add assert() call to the loadfile() line, just as good practice so that
@@ -1508,8 +1508,8 @@ return OBJDEF:new()
 --   20131118.9    Update for Lua 5.3... it seems that tostring(2/1) produces "2.0" instead of "2",
 --                 and this caused some problems.
 --
---   20131031.8    Unified the code for encode() and encode_pretty(); they had been stupidly separate,
---                 and had of course diverged (encode_pretty didn't get the fixes that encode got, so
+--   20131031.8    Unified the code for encode() and encode(); they had been stupidly separate,
+--                 and had of course diverged (encode didn't get the fixes that encode got, so
 --                 sometimes produced incorrect results; thanks to Mattie for the heads up).
 --
 --                 Handle encoding tables with non-positive numeric keys (unlikely, but possible).

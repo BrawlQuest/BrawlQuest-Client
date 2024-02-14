@@ -26,11 +26,11 @@ end
 
 function checkItemDragMousePressed(button, hotbarI)
     local iD = itemDrag
-    if hotbarI and hotbar[hotbarI] and hotbar[hotbarI].InventoryItem then -- copy from hotbar
+    if hotbarI and hotbar[hotbarI] and hotbar[hotbarI].inventoryitem then -- copy from hotbar
         iD.prevI = hotbarI
-        iD.item = copy(hotbar[hotbarI].InventoryItem.Item)
-        iD.amount = hotbar[hotbarI].InventoryItem.Inventory.Amount
-        iD.id = hotbar[hotbarI].InventoryItem.Inventory.id
+        iD.item = copy(hotbar[hotbarI].inventoryitem.item)
+        iD.amount = hotbar[hotbarI].inventoryitem.inventory.amount
+        iD.id = hotbar[hotbarI].inventoryitem.inventory.id
     else
         iD.prevI = 0
         iD.item = copy(selectedItem)
@@ -48,18 +48,18 @@ function checkItemDragMouseReleased(button)
         iD.item = null
         iD.amount = 0
         hotbarData = {
-            PlayerID=me.id,
-            InventoryItemID=iD.id,
-            Position=inventory.mouseOverButtonsAmount
+            playerid=me.id,
+           inventoryitemid=iD.id,
+            position=inventory.mouseOverButtonsAmount
         }
       
         r, c, h = http.request {
             url = api.url.."/hotbar",
             method = "POST",
-            source = ltn12.source.string(json:encode(hotbarData)),
+            source = ltn12.source.string(lunajson.encode(hotbarData)),
             headers = {
                 ["Content-Type"] = "application/json",
-                ["Content-Length"] = string.len(json:encode(hotbarData)),
+                ["Content-Length"] = string.len(lunajson.encode(hotbarData)),
                 ["token"] = token
             }
         }

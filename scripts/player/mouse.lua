@@ -37,8 +37,8 @@ function love.mousereleased(x, y, button)
                 end
             end
         end
-        if inventory.mouseOverButtonsAmount == 0 and json:encode(itemDrag.item) == json:encode(selectedItem) then checkInventoryMousePressed(button) 
-        elseif inventory.mouseOverButtonsAmount > 0 and json:encode(itemDrag.item) == json:encode(hotbar[inventory.mouseOverButtonsAmount].item) then checkHotbarMousePressed(button) end
+        if inventory.mouseOverButtonsAmount == 0 and lunajson.encode(itemDrag.item) == lunajson.encode(selectedItem) then checkInventoryMousePressed(button) 
+        elseif inventory.mouseOverButtonsAmount > 0 and lunajson.encode(itemDrag.item) == lunajson.encode(hotbar[inventory.mouseOverButtonsAmount].item) then checkHotbarMousePressed(button) end
         checkItemDragMouseReleased(button)
         onPremiumMouseDown()
         onHardcoreMouseDown()

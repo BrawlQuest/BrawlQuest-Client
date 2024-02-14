@@ -113,7 +113,7 @@ function updateCharacterHub(dt)
 end
 
 function drawCharacterHub(thisX, thisY)
-    if me ~= null and me.hp ~= null or me.xP ~= null then
+    if me ~= nil and me.hp ~= nil and me.xp ~= nil then
         love.graphics.setFont(characterHub.font)
         thisX, thisY = thisX, thisY - hubImages.profileBG:getHeight()
 
@@ -137,15 +137,15 @@ function drawCharacterHub(thisX, thisY)
 
         local defence = 0
         if me ~= null then
-            if me.legarmourID ~= 0 and me.legarmour.val ~= "Error" then
+            if me.legarmourid ~= 0 and me.legarmour.val ~= "Error" then
                 defence = defence + me.legarmour.val
             end
 
-            if me.chestarmourID ~= 0 and me.chestarmour.val ~= "Error" then
+            if me.chestarmourid ~= 0 and me.chestarmour.val ~= "Error" then
                 defence = defence + me.chestarmour.val
             end
 
-            if me.headarmour ~= nil and me.headarmourID ~= 0 and me.headarmour.val ~= "Error" then
+            if me.headarmour ~= nil and me.headarmourid ~= 0 and me.headarmour.val ~= "Error" then
                 defence = defence + me.headarmour.val
             end
         end
@@ -234,9 +234,9 @@ function tickCharacterHub()
             local tabI = enchTab[ench[1]]
             if tabI and ench[2] then perks.bonus[tabI] = perks.bonus[tabI] + ench[2] end
         end
-        if me[v] and me[v].id ~= 0 and me[v].Attributes then
-            for j, k in ipairs(explode(me[v].Attributes, ";")) do
-                local atri = explode(me[v].Attributes, ",")
+        if me[v] and me[v].id ~= 0 and me[v].attributes then
+            for j, k in ipairs(explode(me[v].attributes, ";")) do
+                local atri = explode(me[v].attributes, ",")
                 local tabI = enchTab[atri[1]]
                 if tabI then perks.bonus[tabI] = perks.bonus[tabI] + atri[2] end
             end
@@ -254,7 +254,7 @@ function drawCharacterHubMeters(thisX, thisY)
     thisX, thisY = thisX + 5, thisY + 25
     love.graphics.setFont(characterHub.font)
     local j = (100/151)
-    local meterLevels = {math.clamp(0, me.hp, getMaxHealth()), me.mana, me.xP}
+    local meterLevels = {math.clamp(0, me.hp, getMaxHealth()), me.mana, me.xp}
     local meterMaxes = {getMaxHealth(), 100, 100}
     for i = 0, 2 do
         local spacing = 23 * i
@@ -263,7 +263,7 @@ function drawCharacterHubMeters(thisX, thisY)
         love.graphics.setColor(unpack(characterHub.barColors[i+1]))
         love.graphics.draw(hubImages.meterSide, thisX, thisY + spacing)
         love.graphics.draw(hubImages.meterSide, thisX + 212, thisY + 19 + spacing, math.rad(180))
---        love.graphics.rectangle("fill", thisX + 31, thisY + spacing, calcProgressBar(meterLevels[i+1], meterMaxes[i+1], 151), 19)
+       love.graphics.rectangle("fill", thisX + 31, thisY + spacing, calcProgressBar(meterLevels[i+1], meterMaxes[i+1], 151), 19)
         love.graphics.setColor(1,1,1,1)
         love.graphics.draw(hubImages.meterIcons[i+1], thisX, thisY + spacing)
         love.graphics.draw(hubImages.meternames[i+1], thisX, thisY + spacing)
@@ -285,7 +285,7 @@ function checkStatsMousePressed(button)
 end
 
 function getMaxHealth()
-    return me.MaxHP or 115
+    return me.maxhp or 115
 end
 
 function drawBattlebarItem(thisX, thisY, item, stats)

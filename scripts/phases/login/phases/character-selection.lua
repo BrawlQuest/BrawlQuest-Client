@@ -31,7 +31,7 @@ function initCharacterSelection()
 end
 
 function updateCharacterSelection(dt)
-    -- print(json:encode_pretty(characters))
+    -- print(lunajson.encode(characters))
     if cs.selectedCharacter > 0 then
         panelMovement(dt, cs, 1, "dualAmount", 3)
     else
@@ -74,7 +74,7 @@ end
 function drawCharacterCreator() 
     love.graphics.setColor(1,1,1, cs.dualCERP)
     local v = characters[cs.selectedCharacter] or cs.initialCharacter
-    -- print(json:encode_pretty(v))
+    -- print(lunajson.encode(v))
     local x, y = math.floor(love.graphics.getWidth() * 0.5), math.floor(love.graphics.getHeight() * 0.5 + 20)
     local thisX, thisY = x + cs.p, y - cs.h * 0.5 + cs.p
     love.graphics.line(x, y - cs.h * 0.5 + 20, x, y + cs.h * 0.5 - 20)
@@ -273,7 +273,7 @@ function loginOrCreate()
             if c ~= 200 then
                 zoneChange("Error code "..tostring(c))
             end
-            characters = json:decode(characters[1])
+            characters = lunajson.decode(characters[1])
             for i,v in ipairs(characters) do
                 if characters[i] and characters[i].Color ~= null then
                 else
@@ -337,18 +337,16 @@ function checkCharacterSelectorKeyInput(key)
 end
 
 function transitionToPhaseGame()
-    print("transitioning")
     love.graphics.setColor(1,1,1)
     love.graphics.rectangle("fill", 0,0, uiX, uiY)
-    -- print(json:encode_pretty(characters[cs.selectedCharacter]))
+    -- print(lunajson.encode(characters[cs.selectedCharacter]))
     me.Color = copy(characters[cs.selectedCharacter].Color)
     username = characters[cs.selectedCharacter]["name"]
 
     local b = {}
-    print("loading players")
     c, h = http.request{url = api.url.."/player/"..username, method="GET", headers={["token"]=token}, sink=ltn12.sink.table(b)}
     if b[1] then
-        local response = json:decode(table.concat(b))
+        local response = lunajson.decode(table.concat(b))
         player.x = response['Me']['x']
         player.y = response['Me']['y']
         player.dx = player.x * 32
@@ -357,21 +355,20 @@ function transitionToPhaseGame()
         player.cy = player.y * 32
         totalCoverAlpha = 2
         b = {}
-        print("loading world")
+   
 
         local tempWorld, size, worldHash = {}, 0, ""
        
         if love.filesystem.getInfo("world.txt") and love.filesystem.getInfo("world-hash.txt") then
             tempWorld, size = love.filesystem.read("string", "world.txt")
-            world = json:decode(tempWorld)
+            world = lunajson.decode(tempWorld)
             worldHash = love.filesystem.read("string", "world-hash.txt")
         end
 
         if #world == 0 or worldHash ~= response['worldHash'] then
-            print("Getting new world")
             c, h = http.request{url = api.url.."/world", method="GET", sink=ltn12.sink.table(b)}
-            world = json:decode(table.concat(b))
-            love.filesystem.write("world.txt", json:encode(world))
+            world = lunajson.decode(table.concat(b))
+            love.filesystem.write("world.txt", lunajson.encode(world))
 --            love.filesystem.write("world-hash.txt", response['worldHash'])
         end
 
@@ -387,7 +384,7 @@ function transitionToPhaseGame()
             openTutorial(1)
             if musicVolume > 0 then checkMusic() end
         else
-            zoneChange(json:encode(b).."\n"..tostring(c).."\n"..tostring(h))
+            zoneChange(lunajson.encode(b).."\n"..tostring(c).."\n"..tostring(h))
         end
         
        

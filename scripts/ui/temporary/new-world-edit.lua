@@ -580,13 +580,12 @@ function saveWorldChanges()
         end
     end
     local b = {}
-    print (json:encode(pendingWorldChanges))
-    print("World change amount: " .. count)
-    c, h = http.request{url = api.url.."/world", method="POST", source=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(pendingWorldChanges)),["token"]=token}}
+    print (lunajson.encode(pendingWorldChanges))
+    c, h = http.request{url = api.url.."/world", method="POST", source=ltn12.source.string(lunajson.encode(pendingWorldChanges)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(lunajson.encode(pendingWorldChanges)),["token"]=token}}
     pendingWorldChanges = {}
     local b = {}
     c, h = http.request{url = api.url.."/world", method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
-    initWorldTable(json:decode(table.concat(b)))
+    initWorldTable(lunajson.decode(table.concat(b)))
     --createWorld()
     initWorldMap()
     initDrawableNewWorldEditTiles()
@@ -632,8 +631,8 @@ function getWorldInfo()
                     if not arrayContains(availablePlacenames, location) and not string.find(location, "Dominion") then
                         availablePlacenames[#availablePlacenames + 1] = location
                     end
-                    if not arrayContains(avaliableMusic, worldLookup[v.x..","..v.y].Music) then
-                        avaliableMusic[#avaliableMusic + 1] = worldLookup[v.x..","..v.y].Music
+                    if not arrayContains(avaliableMusic, worldLookup[v.x..","..v.y].music) then
+                        avaliableMusic[#avaliableMusic + 1] = worldLookup[v.x..","..v.y].music
                     end
                 end
             end
@@ -656,8 +655,6 @@ function getWorldInfo()
     love.math.setRandomSeed(#avaliableMusic + 1)
     areaDraw.nextMusicColor = {getAreaColor(), getAreaColor(), getAreaColor(), 0.7}
 
-    print("Places: " .. json:encode(availablePlacenames))
-    print("Music: " .. json:encode(avaliableMusic))
 end
 
 function checkWorldEditTextInput(key)

@@ -169,9 +169,9 @@ function newEnemyData(data) -- called when nearby data is returned
             enemy.hp = v.hp
         end
 
-        if enemy.IsAggro == false and v.IsAggro then
+        if enemy.isAggro == false and v.isAggro then
             enemy.aggroAlpha = 2
-            enemy.IsAggro = true
+            enemy.isAggro = true
             if sfxVolume > 0 then
                 local aggroSfx = enemySounds[v.enemy.name].aggro[love.math
                                      .random(1, #enemySounds[v.enemy.name].aggro)]
@@ -186,8 +186,8 @@ function newEnemyData(data) -- called when nearby data is returned
             end
         end
 
-        enemy.Target = v.Target
-        enemy.Targetname = v.Targetname
+        enemy.target = v.target
+        enemy.targetname = v.targetname
 
         enemy.x = v.x
         enemy.y = v.y
@@ -198,7 +198,7 @@ function newEnemyData(data) -- called when nearby data is returned
             enemy.lastUpdate = os.time(os.date("!*t"))
         end
 
-        enemy.IsAggro = v.IsAggro
+        enemy.isAggro = v.isAggro
     end
 
     if enemyCollisionsI == 0 then
@@ -273,11 +273,11 @@ function drawEnemies()
                 love.graphics.setColor(1, 1, 1, intensity * enemyAlpha)
 
                 -- draw lines
-                if v.Targetname == player.name and v.enemy.CanMove then
+                if v.targetname == player.name and v.enemy.CanMove then
                     if nextTick >= 1 then
                         enemies[i].linesDrawable = true
                     end
-                    if enemies[i].linesDrawable == true and v.IsAggro then
+                    if enemies[i].linesDrawable == true and v.isAggro then
                         if (v.enemy.Range + 1) * 32 >= distance then
                             love.graphics.setColor(1, 0, 0,
                                                    nextTick * intensity *

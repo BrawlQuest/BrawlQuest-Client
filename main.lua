@@ -50,6 +50,7 @@ require "scripts.player.structures"
 
 require "scripts.ui.panels.npc-chat"
 require "scripts.ui.panels.tutorial"
+lunajson = require 'scripts.libraries.lunajson.lunajson'
 
 require "scripts.achievements"
 Luven = require "scripts.libraries.luven.luven"
@@ -58,7 +59,7 @@ version = ""
 versionType = "dev" -- "dev" for quick login, "release" for not
 useSteam = false
 if versionType == "dev" then require 'dev' end
-versionNumber = "1.0.0" -- very important for settings
+versionNumber = "1.1.0" -- very important for settings
 drawAnimations = false -- player animations
 
 if love.system.getOS() ~= "Linux" and useSteam then steam = require 'luasteam' end -- we can disable other platforms here. Can't get Steam working on Linux and we aren't targetting it so this'll do for dev purposes
@@ -99,7 +100,7 @@ function love.load()
 
     showMouse, mouseAmount, mx, my = true, 1, 0, 0
     limits = love.graphics.getSystemLimits()
-    print(limits.multicanvas)
+
     outlinerOnly = newOutliner(true)
     outlinerOnly:outline(0.8, 0, 0) -- this is used to draw enemy outlines
     grayOutlinerOnly = newOutliner(true)
@@ -271,7 +272,7 @@ function love.update(dt)
     enchantmentPos = enchantmentPos + 15 * dt
     if enchantmentPos > 64 then enchantmentPos = 0 end
 
-    love.graphics.print(json:encode(love.audio.getActiveEffects()))
+    love.graphics.print(lunajson.encode(love.audio.getActiveEffects()))
 
     totalCoverAlpha = totalCoverAlpha - 1 * dt
     if phase == "login" then
@@ -281,7 +282,8 @@ function love.update(dt)
         nextUpdate = nextUpdate - 1 * dt
         nextTick = nextTick - 1 * dt
         if nextUpdate < 0 then 
-            getPlayerData('/player/' .. username, json:encode({
+          
+            getPlayerData('/player/' .. username, lunajson.encode({
                 ["x"] = player.x,
                 ["y"] = player.y,
                 ["ax"] = player.target.x,

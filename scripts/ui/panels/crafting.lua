@@ -52,7 +52,7 @@ function initCrafting()
     b = {}
     c, h = http.request{url = api.url.."/crafts", method="GET", source=ltn12.source.string(body), sink=ltn12.sink.table(b)}
     if b ~= nil and b[1] ~= nil then
-        crafting.catalogue = json:decode(table.concat(b))
+        crafting.catalogue = lunajson.decode(table.concat(b))
         for i, v in ipairs(crafting.catalogue) do
             crafting.itemCount = crafting.itemCount + 1
             if crafting.recipes[v.item.type] then
@@ -63,11 +63,11 @@ function initCrafting()
             end
         end
     else
-        love.window.showMessageBox("Error loading crafting catalogue", "Post this on Discord please!\n"..json:encode_pretty(b).."\n")
+        love.window.showMessageBox("Error loading crafting catalogue", "Post this on Discord please!\n"..lunajson.encode(b).."\n")
         crafting.catalogue = {}
     end
 
-  --  local success,msg = love.filesystem.write("recipes.txt", json:encode_pretty(crafting.recipes))
+  --  local success,msg = love.filesystem.write("recipes.txt", lunajson.encode(crafting.recipes))
 
     for i, v in ipairs(crafting.fields) do
         crafting.openField[i] = false
@@ -100,15 +100,15 @@ function updateCrafting(dt)
                         }
                     end
                     local b = {}
-                    body = json:encode(itemsSoFar)
-                    -- print(api.url.."/craft/"..player.name.."/"..crafting.selectedItem.ItemID)
-                    c, h = http.request{url = api.url.."/craft/"..player.name.."/"..crafting.selectedItem.ItemID, method="POST", source=ltn12.source.string(body), headers={["token"]=token,["Content-Length"]=#body}, sink=ltn12.sink.table(b)}
-                    if json:decode(table.concat(b))["success"] == null then
-                        crafting.result = json:decode(table.concat(b))
+                    body = lunajson.encode(itemsSoFar)
+                    -- print(api.url.."/craft/"..player.name.."/"..crafting.selectedItem.itemID)
+                    c, h = http.request{url = api.url.."/craft/"..player.name.."/"..crafting.selectedItem.itemID, method="POST", source=ltn12.source.string(body), headers={["token"]=token,["Content-Length"]=#body}, sink=ltn12.sink.table(b)}
+                    if lunajson.decode(table.concat(b))["success"] == null then
+                        crafting.result = lunajson.decode(table.concat(b))
                         crafting.result.alpha = 2
                         if love.system.getOS() ~= "Linux" and useSteam then 
                             steam.userStats.setAchievement('craft_achievement')
-                            if crafting.result.Type == "spell" then
+                            if crafting.result.type == "spell" then
                                 steam.userStats.setAchievement('craft_spell_achievement')
                             end
                             steam.userStats.storeStats()
@@ -223,34 +223,34 @@ function drawCraftingBackground(thisX, thisY)
                     if isMouseOver(x * scale,y * scale,w * scale,h * scale) then
                         crafting.mouseOverField = {i = i, j = j}
                         love.graphics.setColor(1,0,0,1)
-                    elseif json:encode(crafting.selectedField) == json:encode({i = i, j = j}) then
+                    elseif lunajson.encode(crafting.selectedField) == lunajson.encode({i = i, j = j}) then
                         love.graphics.setColor(43 / 255, 134 / 255, 0)
                     else
                         love.graphics.setColor(0,0,0,0.7)
                     end
 
                     love.graphics.rectangle("fill", x, y, w, h, 10)
-                    local values = json:decode(v.ItemsString)
+                    local values = lunajson.decode(v.itemsString)
                     for l = 1, 4 do
                         if l == 1 then
-                            if v.Item ~= null then
+                            if v.item ~= null then
                                 love.graphics.setColor(1,1,1,1)
-                                drawCraftingItem(x + 10, y + 10, v.Item)
+                                drawCraftingItem(x + 10, y + 10, v.item)
                             end
                             love.graphics.printf("=", x + 51, y + 8, 8, "center", 0, 3)
                             x = x + 10 + 8
                         else
                             l = l - 1
-                            if v.ItemsItem[l] ~= null then
+                            if v.itemsItem[l] ~= null then
                                 local amount = 0
                                 for n,m in ipairs(values) do
-                                    if m.ItemID == v.ItemsItem[l].id then
-                                        amount = m.Amount
+                                    if m.itemID == v.itemsItem[l].id then
+                                        amount = m.amount
                                         break
                                     end
                                 end
                                 love.graphics.setColor(1,1,1,1)
-                                drawCraftingItem(x + 10, y + 10, v.ItemsItem[l], amount)
+                                drawCraftingItem(x + 10, y + 10, v.itemsItem[l], amount)
                             else
                                 love.graphics.setColor(0,0,0,0.7)
                                 drawItemBacking(x + 10, y + 10)
@@ -305,8 +305,8 @@ function drawCraftingBackground(thisX, thisY)
         love.graphics.setColor(0,0,0,0.7)
         roundRectangle("fill", x, y, w - 18, h, 10)
         love.graphics.setColor(1,1,1)
-        drawCraftingItem(x + 10, y + 10, v.Item, 1)
-        love.graphics.print(v.Item.name, x + 54, y + 22)
+        drawCraftingItem(x + 10, y + 10, v.item, 1)
+        love.graphics.print(v.item.name, x + 54, y + 22)
     end
 
     if crafting.result then    
@@ -349,7 +349,7 @@ function drawCraftingItem(thisX, thisY, item, amount)
     love.graphics.setColor(1,1,1,1)
     if item then
         itemImg[item.imgpath] = getImgIfNotExist(item.imgpath)
-        if string.sub(item.Type, 1, 4) == "arm_" then
+        if string.sub(item.type, 1, 4) == "arm_" then
             love.graphics.setColor(1,1,1,0.5)
             love.graphics.draw(playerImg, thisX + 2, thisY + 2)
             love.graphics.setColor(1,1,1,1)
@@ -529,14 +529,14 @@ end
 function enterCraftingItems(v)
     local craft = {}
     crafting.enteredItems = {}
-    local required = json:decode(v.ItemsString)
-    for j = 1, #v.ItemsItem do
-        local amount = required[j].Amount
-        -- print(v.ItemsItem[j].name .. " " .. amount)
-        local invAmount = getItemAmount(v.ItemsItem[j])
+    local required = lunajson.decode(v.itemsString)
+    for j = 1, #v.itemsItem do
+        local amount = required[j].amount
+        -- print(v.itemsItem[j].name .. " " .. amount)
+        local invAmount = getItemAmount(v.itemsItem[j])
         if invAmount >= amount then
             crafting.enteredItems[j] = {
-                item = v.ItemsItem[j],
+                item = v.itemsItem[j],
                 amount = amount,
                 random = {X = math.random()*100, Y = math.random()*100},
             }
@@ -545,7 +545,7 @@ function enterCraftingItems(v)
             craft[#craft+1] = false
         else
             crafting.enteredItems[j] = {
-                item = v.ItemsItem[j],
+                item = v.itemsItem[j],
                 amount = invAmount,
                 random = {X = math.random()*100, Y = math.random()*100},
             }

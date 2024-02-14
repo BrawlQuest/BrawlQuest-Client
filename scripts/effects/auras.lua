@@ -45,7 +45,7 @@ function drawAuraHeadings()
     love.graphics.setColor(1,1,1,1)
     local x = (uiX-36)
     for i,v in ipairs(auras) do
-        local img = getImgIfNotExist(v.Item.imgpath)
+        local img = getImgIfNotExist(v.item.imgpath)
 
         love.graphics.setColor(1,1,1)
         love.graphics.draw(img,x,4)

@@ -31,7 +31,7 @@ function setTooltip(title, desc, additional)
     tooltip.y = (tooltip.y + 16) / scale
     tooltip.alpha = 1
     tooltip.title = title
-    tooltip.desc = desc
+    tooltip.description = desc
     tooltip.additional = additional
 
     local e = explode(desc, "{")
@@ -44,13 +44,13 @@ function setTooltip(title, desc, additional)
         func = assert(loadstring("return " .. eq))
         y = func()
         -- print(y)
-        tooltip.desc = e[1] .. tostring(y) .. e2[2]
+        tooltip.description = e[1] .. tostring(y) .. e2[2]
     end
 end
 
 function setPerkTooltip(i)
     local v = tooltip.perks[i]
-    setTooltip(v.title, v.desc)
+    setTooltip(v.title, v.description)
 end
 
 function setItemTooltip(item)
@@ -60,67 +60,67 @@ function setItemTooltip(item)
         color = {0.4, 0.4, 0.4}
     }
     local valString = "Item"
-    if item.Type == "wep" then
-        valueAdditional.desc = "+" .. item.val .. " Weapon"
+    if item.type == "wep" then
+        valueAdditional.description = "+" .. item.val .. " Weapon"
         valueAdditional.color = {1, 0.6, 0}
-    elseif item.Type == "arm_head" then
-        valueAdditional.desc = "+" .. item.val .. " Head Armour"
+    elseif item.type == "arm_head" then
+        valueAdditional.description = "+" .. item.val .. " Head Armour"
         valueAdditional.color = {0.5, 0.87, 0.47}
-    elseif item.Type == "arm_chest" then
-        valueAdditional.desc = "+" .. item.val .. " Chest Armour"
+    elseif item.type == "arm_chest" then
+        valueAdditional.description = "+" .. item.val .. " Chest Armour"
         valueAdditional.color = {0.5, 0.87, 0.47}
-    elseif item.Type == "arm_legs" then
-        valueAdditional.desc = "+" .. item.val .. " Leg Armour"
+    elseif item.type == "arm_legs" then
+        valueAdditional.description = "+" .. item.val .. " Leg Armour"
         valueAdditional.color = {0.5, 0.87, 0.47}
-    elseif item.Type == "shield" then
-        valueAdditional.desc = "+" .. item.val .. " Shield"
+    elseif item.type == "shield" then
+        valueAdditional.description = "+" .. item.val .. " Shield"
         valueAdditional.color = {0.5, 0.87, 0.47}
-    elseif item.Type == "spell" then
-        valueAdditional.desc = "Spell (" .. item.val .. " Mana)"
+    elseif item.type == "spell" then
+        valueAdditional.description = "Spell (" .. item.val .. " Mana)"
         valueAdditional.color = {0.6, 0.6, 1}
-    elseif item.Type == "hp_potion" then
-        valueAdditional.desc = "Restores " .. item.val .. " HP"
+    elseif item.type == "hp_potion" then
+        valueAdditional.description = "Restores " .. item.val .. " HP"
         valueAdditional.color = {1, 0.5, 0.5}
-    elseif item.Type == "mana_potion" then
-        valueAdditional.desc = "Restores " .. item.val .. " Mana"
+    elseif item.type == "mana_potion" then
+        valueAdditional.description = "Restores " .. item.val .. " Mana"
         valueAdditional.color = {0.5, 0.5, 1}
-    elseif item.Type == "reagent" then
-        valueAdditional.desc = "Reagent"
+    elseif item.type == "reagent" then
+        valueAdditional.description = "Reagent"
         valueAdditional.color = {0.73, 1, 0}
-    elseif item.Type == "buddy" then
-        valueAdditional.desc = "Buddy"
+    elseif item.type == "buddy" then
+        valueAdditional.description = "Buddy"
         valueAdditional.color = {0.8, 0, 1}
-    elseif item.Type == "mount" then
-        valueAdditional.desc = item.val / 32 .. "m/s Mount"
+    elseif item.type == "mount" then
+        valueAdditional.description = item.val / 32 .. "m/s Mount"
         valueAdditional.color = {0.8, 0.2, 1}
-    elseif item.Type == "wall" then
-        valueAdditional.desc = "Placeable Wall"
+    elseif item.type == "wall" then
+        valueAdditional.description = "Placeable Wall"
         valueAdditional.color = {0.8,0.8,0.8}
     elseif item.type == "furniture" then
-        valueAdditional.desc = "Placeable Furniture"
+        valueAdditional.description = "Placeable Furniture"
         valueAdditional.color = {0.8,0.8,0.8}
     elseif item.type == "floor" then
-        valueAdditional.desc = "Placeable Flooring"
+        valueAdditional.description = "Placeable Flooring"
         valueAdditional.color = {0.8,0.8,0.8}
     end
-    if item.Subtype ~= "None" and getUsableSubtypeString(item) then
-       valueAdditional.desc = valueAdditional.desc.." ("..item.Subtype..")"
+    if item.subtype ~= "None" and getUsableSubtypeString(item) then
+       valueAdditional.description = valueAdditional.description.." ("..item.subtype..")"
     end
    
-    if me and me.lvl and item and item.Worth and me.lvl >= item.Worth then
+    if me and me.lvl and item and item.worth and me.lvl >= item.worth then
         setTooltip(item.name, "", {valueAdditional, {
-            desc = item.Desc,
+            desc = item.description,
             color = {0.8, 0.8, 0.8}
         }, {
-            desc = "Requires Level " .. item.Worth,
+            desc = "Requires Level " .. item.worth,
             color = {0, 1, 0}
         }})
     else
         setTooltip(item.name, "", {valueAdditional, {
-            desc = item.Desc,
+            desc = item.description,
             color = {0.8, 0.8, 0.8}
         }, {
-            desc = "Requires Level " .. item.Worth,
+            desc = "Requires Level " .. item.worth,
             color = {1, 0, 0}
         }})
     end
@@ -130,8 +130,8 @@ function setItemTooltip(item)
             color = {1,1,1}
         }
     end
-    if item.Attributes and item.Attributes ~= "None" then
-        att = explode(item.Attributes, ";")
+    if item.attributes and item.attributes ~= "None" then
+        att = explode(item.attributes, ";")
         for i,v in ipairs(att) do
             thisAttribute = explode(v, ",")
             tooltip.additional[#tooltip.additional + 1] = {
@@ -140,20 +140,20 @@ function setItemTooltip(item)
             }
         end
     end
-    if me and item and item.enchantment ~= "None" then
+    if me and item and item.enchantment and item.enchantment ~= "None" then
         ench = explode(item.enchantment, ",")
-        if string.sub(item.Type,1,3) == "arm" then
+        if string.sub(item.type,1,3) == "arm" then
 
             tooltip.additional[#tooltip.additional + 1] = {
                 desc = "Enchanted with +"..ench[2].." "..ench[1],
                 color = {0.7,0,1}
             }
-        elseif item.Type == "wep" then
+        elseif item.type == "wep" then
             tooltip.additional[#tooltip.additional + 1] = {
                 desc = "Enchanted with +"..ench[2].." Attack Damage",
                 color = {0.7,0,1}
             }
-        elseif item.Type == "mount" then
+        elseif item.type == "mount" then
             tooltip.additional[#tooltip.additional + 1] = {
                 desc = "Enchanted with +0.8m/s movement speed",
                 color = {0.7,0,1}
@@ -163,14 +163,14 @@ function setItemTooltip(item)
         
     end
 
-    if item.Type == "wall" or item.Type == "furniture" or item.Type == "floor" then
+    if item.type == "wall" or item.type == "furniture" or item.type == "floor" then
         tooltip.additional[#tooltip.additional + 1] = {
             desc = "This item is placeable within any zone called 'Foundation Forest' or 'Dominion of "..me.name.."'",
             color = {0.6,0.6,1}
         }
     end
 
-    if item.Type == "spell" and me and me.SpellCooldown and me.SpellCooldown > 0 then
+    if item.type == "spell" and me and me.SpellCooldown and me.SpellCooldown > 0 then
         tooltip.additional[#tooltip.additional + 1] = {
             desc = "Global spell cooldown. Can be used in "..me.SpellCooldown.." seconds.",
             color = {1,0,0}
@@ -185,11 +185,11 @@ function drawTooltip(thisX, thisY)
     if (tooltip.x - tooltip.padding) + (150 + (tooltip.padding * 2)) > uiX then
         tooltip.x = uiX - (150 + (tooltip.padding * 2))
     end
-    local height = getToolTipTitleHeight(tooltip.title) + getToolTipDescHeight(tooltip.desc) + (tooltip.padding * 2) +
+    local height = getToolTipTitleHeight(tooltip.title) + getToolTipDescHeight(tooltip.description) + (tooltip.padding * 2) +
                        tooltip.spacing
     if tooltip.additional then
         for i, v in ipairs(tooltip.additional) do
-            height = height + getToolTipDescHeight(v.desc)
+            height = height + getToolTipDescHeight(v.description)
         end
     end
     if tooltip.y + height > uiY then
@@ -202,7 +202,7 @@ function drawTooltip(thisX, thisY)
     love.graphics.printf(tooltip.title, npcChatFont, tooltip.x, tooltip.y, 150, "left")
     love.graphics.printf(tooltip.desc, characterHub.font, tooltip.x,
         tooltip.y + getToolTipTitleHeight(tooltip.title) + tooltip.spacing, 150, "left")
-    local yPos = tooltip.y + getToolTipTitleHeight(tooltip.title) + tooltip.spacing + getToolTipDescHeight(tooltip.desc)
+    local yPos = tooltip.y + getToolTipTitleHeight(tooltip.title) + tooltip.spacing + getToolTipDescHeight(tooltip.description)
     if tooltip.additional then
         for i, v in ipairs(tooltip.additional) do
             love.graphics.setColor(v.color[1], v.color[2], v.color[3], tooltip.alpha)

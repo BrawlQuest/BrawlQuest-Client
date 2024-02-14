@@ -1,8 +1,7 @@
 function serverResponse()
     local info = love.thread.getChannel('players'):pop()
     if info then
-        print(info)
-        local response = json:decode(info)
+        local response = lunajson.decode(info)
         if response then
 
             if not isMouseDown() then -- if perks.stats[1] == 0 then
@@ -48,19 +47,23 @@ function serverResponse()
                         playerCount = playerCount + 1
                     end
                 end
-                if json:encode(inventoryAlpha) ~= json:encode(response['Inventory']) then
+                if lunajson.encode(inventoryAlpha) ~= lunajson.encode(response['Inventory']) then
                     updateInventory(response)
                     inventoryAlpha = response['Inventory'] -- this is in this order for a reason dummy
                     -- this is in this order for a reason dummy
-
-                    table.sort(inventoryAlpha, function(a, b)
-                        if not tonumber(a.Item.val) then
-                            a.Item.val = "0"
+                    for i, v in ipairs(inventoryAlpha) do
+                        if v.item == nil then
+                            table.remove(inventoryAlpha, i)
                         end
-                        if not tonumber(b.Item.val) then
-                            b.Item.val = "1"
+                    end
+                    table.sort(inventoryAlpha, function(a, b)
+                        if not tonumber(a.item.val) then
+                            a.item.val = "0"
+                        end
+                        if not tonumber(b.item.val) then
+                            b.item.val = "1"
                         end -- these are different to prevent it going back and forth when sorting
-                        return tonumber(a.Item.val) < tonumber(b.Item.val)
+                        return tonumber(a.item.val) < tonumber(b.item.val)
                     end)
 
                 end
@@ -79,10 +82,10 @@ function serverResponse()
 
                 if (response['Me']) then
                     me = response['Me']
-                    me.Hotbar = response['Hotbar']
-                    if me.Hotbar then
-                        for i, v in ipairs(me.Hotbar) do
-                            sortedHotbar[v.Position] = v
+                    me.hotbar = response['Hotbar']
+                    if me.hotbar then
+                        for i, v in ipairs(me.hotbar) do
+                            sortedHotbar[v.position] = v
                         end
                     end
                 end
@@ -93,7 +96,7 @@ function serverResponse()
                 if perks.stats[1] == 0 then
                     perks.stats = {me.str, me.int, me.sta, player.cp}
                 end
-                if me.IsDead and me.IsHardcore == 0 then
+                if me.isDead and me.ishardcore == 0 then
                     love.audio.play(deathSfx)
                     c, h = http.request {
                         url = api.url .. "/revive/" .. username,
@@ -102,22 +105,22 @@ function serverResponse()
                             ["token"] = token
                         }
                     }
-                elseif me.isDead and me.IsHardcore == 1 then
+                elseif me.isDead and me.ishardcore == 1 then
                     deathMessage.display = true
               
                 end
 
-                if me.IsDead then
+                if me.isDead then
                     player.x = me.x
                     player.y = me.y
-                    if me.IsHardcore == 0 then
+                    
+                    if me.ishardcore == 0 then
                         c, h = http.request {
                             url = api.url .. "/revive/" .. username,
                             method = "GET",
                             headers = {
                                 ["token"] = token
                             }
-
                         }
                     else
                         deathMessage.display = true
@@ -175,20 +178,20 @@ function serverResponse()
                     end
                     quests[v.Tracked][#quests[v.Tracked] + 1] = {
                         title = v.Quest.Title,
-                        comment = v.Quest.Desc,
+                        comment = v.Quest.description,
                         profilePic = v.Quest.imgpath,
                         giver = "",
                         requiredAmount = v.Quest.valueRequired,
                         currentAmount = v.Progress,
                         rawData = v
                     }
-                    if v.Quest.Type == "kill" then
+                    if v.Quest.type == "kill" then
                         quests[v.Tracked][#quests[v.Tracked]].task =
                             "Kill " .. v.Quest.valueRequired .. "x " .. v.Quest.value
-                    elseif v.Quest.Type == "gather" then
+                    elseif v.Quest.type == "gather" then
                         quests[v.Tracked][#quests[v.Tracked]].task =
                             "Gather " .. v.Quest.valueRequired .. "x " .. v.Quest.value
-                    elseif v.Quest.Type == "go" then
+                    elseif v.Quest.type == "go" then
                         quests[v.Tracked][#quests[v.Tracked]].task = "Go to " ..
                                                                          (worldLookup[v.Quest.x .. "," .. v.Quest.y]
                                                                              .name or v.Quest.x .. ", " .. v.Quest.y)

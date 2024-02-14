@@ -105,13 +105,13 @@ function drawWeapon(x,y,v,ad,direction,offsetX,playerAlpha)
 end
 
 function drawArmourImage(x,y,v,ad,type,direction,playerAlpha)
-    if v[type.."ID"] ~= 0 then
+    if type ~= nil and v[type.."ID"] ~= 0 and v[type] ~= nil then
         if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha, playerAlpha) else love.graphics.setColor(1, 1, 1, playerAlpha) end
         if v.invulnerability >= 0 and playerAlpha then
             love.graphics.setColor(1,1,1,0.3*playerAlpha)
         end
         if type ~= "ShieldFalse" then drawItemIfExists(v[type].imgpath, x, y, ad.previousDirection) else love.graphics.draw(shieldFalse, x, y, 0, direction, 1) end
-        if v[type] and v[type].enchantment ~= "None" then
+        if v[type] and v[type].enchantment ~= nil and v[type].enchantment ~= "" and v[type].enchantment ~= "None" then
             love.graphics.push()
                 love.graphics.stencil(function() 
                     love.graphics.setShader(alphaShader)
@@ -211,8 +211,9 @@ function drawPlayer(v, i)
             end
         end
         local underCharacterBarY = v.y+34
-        local thisHealth
-        if i == -1 then thisHealth = getMaxHealth() else thisHealth = thisPlayer.MaxHP end
+        local thisHealth = 100
+        -- TODO: make max health work
+       -- if i == -1 then thisHealth = getMaxHealth() else thisHealth = thisPlayer.maxhp end
         if thisPlayer.hp < thisHealth then
             love.graphics.setColor(0.4,0,0)
             love.graphics.rectangle("fill", v.x, underCharacterBarY, 32, 4)
@@ -337,15 +338,15 @@ function updateOtherPlayers(dt)
             -- print("Setting drawable")
             playersDrawable[i] = {
                 ['name'] = v.name,
-                ['X'] = v.x * 32,
-                ['Y'] = v.x * 32,
-                ['AX'] = 0,
-                ['AY'] = 0,
-                ['HP'] = v.hp,
+                ['x'] = v.x * 32,
+                ['y'] = v.x * 32,
+                ['ax'] = 0,
+                ['ay'] = 0,
+                ['hp'] = v.hp,
                 ['RedAlpha'] = 0,
-                ['Mount'] = v.mount,
+                ['mount'] = v.mount,
                 ['Color'] = v.Color,
-                ['Buddy'] = v.buddy,
+                ['buddy'] = v.buddy,
                 ['nameAlpha'] = 1,
             }
         end

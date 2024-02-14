@@ -1,11 +1,13 @@
 buddies = {}
 
 function updateBuddy(dt, pl)
-    if buddies[pl.name] ~= null then
+    if buddies[pl.name] ~= null and pl.x and pl.y then
         local v = buddies[pl.name]
         local speed = {}
+      
         speed.x = difference(v.x, pl.x+16) * dt
         speed.y = difference(v.y, pl.y+16) * dt
+            
         if distanceToPoint(v.x,v.y,pl.x+16,pl.y+16) > 18 then
             if v.x > pl.x+16 then
                 v.x = v.x - speed.x
@@ -46,8 +48,8 @@ function drawBuddy(pl)
             end
         else
             buddies[pl.name] = {
-                X = pl.x*32,
-                Y = pl.y*32,
+                x = pl.x*32,
+                y = pl.y*32,
                 img = pl.buddy,
                 previousDirection = "left"
             }

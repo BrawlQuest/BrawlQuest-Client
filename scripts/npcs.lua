@@ -110,7 +110,7 @@ function startConversation()
                 sink = ltn12.sink.table(b)
             }
             if b ~= nil and b[1] ~= nil then
-                npcChat = json:decode(table.concat(b))
+                npcChat = lunajson.decode(table.concat(b))
                 chatXpos = -64
                 chatOpacity = 0
                 chatWritten = ""
@@ -134,7 +134,7 @@ function startConversation()
                optionString = string.gsub(optionString, "'s", 's')
                 optionString = string.gsub(optionString, "'t", 't')
                optionString = string.gsub(optionString, "'", '"')
-                npcChat.Options = json:decode(optionString)
+                npcChat.Options = lunajson.decode(optionString)
                 createNPCChatBackground(player.x, player.y)
                 showNPCChatBackground = not showNPCChatBackground
             end

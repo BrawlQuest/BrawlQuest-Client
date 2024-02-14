@@ -94,7 +94,7 @@ function drawWorldEditTileFromRect(x, y, button)
             end
         end
     end
-    print ("Second: " .. json:encode(worldEdit.draw[x][y]))
+    print ("Second: " .. lunajson.encode(worldEdit.draw[x][y]))
 end
 
 function drawAreaDrawButtons()
@@ -302,9 +302,9 @@ function drawAreaDrawAreas(x, y)
     elseif areaDraw.showMusic then
         love.graphics.setColor(1, 0, 1, 0.5)
         if worldLookup[x..","..y] then
-            if worldLookup[x..","..y].Music ~= "*" then
+            if worldLookup[x..","..y].music ~= "*" then
                 for j,v in ipairs(avaliableMusic) do
-                    if v.name == worldLookup[x..","..y].Music then
+                    if v.name == worldLookup[x..","..y].music then
                         love.graphics.setColor(unpack(v.color))
                     end
                 end

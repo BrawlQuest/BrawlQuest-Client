@@ -49,7 +49,7 @@ end
 function getNews()
 
     b, c, h = http.request("https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=871940&count=3")
-    newsItems = json:decode(b)
+    newsItems = lunajson.decode(b)
 
     news.items = {}
     for i,newsItem in ipairs(newsItems.appnews.newsitems) do
@@ -145,9 +145,9 @@ function drawNews()
             love.graphics.setColor(1, 1, 1, news.alpha)
             love.graphics.printf(news.items[news.selected.item].header, dx,
                 dy - getTextHeight(news.items[news.selected.item].header, dw, font, 5) - 10 -
-                    getTextHeight(news.items[news.selected.item].desc, dw, font, 2), dw / 5, "left", 0, 5)
-            love.graphics.printf(news.items[news.selected.item].desc, dx,
-                dy - getTextHeight(news.items[news.selected.item].desc, dw, font, 2), dw / 2, "left", 0, 2)
+                    getTextHeight(news.items[news.selected.item].description, dw, font, 2), dw / 5, "left", 0, 5)
+            love.graphics.printf(news.items[news.selected.item].description, dx,
+                dy - getTextHeight(news.items[news.selected.item].description, dw, font, 2), dw / 2, "left", 0, 2)
             love.graphics.setStencilTest()
         end
     })

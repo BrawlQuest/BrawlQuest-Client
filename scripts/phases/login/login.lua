@@ -37,16 +37,7 @@ function initLogin()
 
     initCharacterSelection()
 
-    loginText = {
-        "BrawlQuest " .. version .. " " .. versionNumber,
-        "Luven Interactive LTD 2020 - 2022", "", "Created By",
-        "Thomas Lock & Danjoe Stubbs",
-        "Original music by JoeyFunWithMusic\nAdditional music by Eric Matyas (Some Dreamy Place, Ocean Game Title, Left Behind, Dreamlands, Their Sacred Place, The Castle Mice, North Ridge, The Key To The Kingdom, Ancient Game Open, The Castle of Dr Sinister)",
-        "",
-        "Graphics by David E. Gervais,used here under a CC license. pousse.rapiere.free.fr/tome/",
-        "", "Special thanks to ThinkSometimes for the Minty sprite", "",
-        "Made with LÖVE"
-    }
+   
 
     loginEntryImage = love.graphics.newImage("assets/ui/login/login.png")
     charactersEntryImage = love.graphics.newImage(
@@ -71,6 +62,40 @@ function initLogin()
     loadingDots = "\n"
     dotTick = 0
     dotAmount = 0
+
+    onlinePlayers = {}
+    c, h = http.request {
+        url = api.url .. "/online",
+        method = "GET",
+        source = ltn12.source.string(body),
+    
+        sink = ltn12.sink.table(onlinePlayers)
+    }
+
+   onlinePlayers = json:decode(table.concat(onlinePlayers))
+
+   onlinePlayerString = ""
+   if #onlinePlayers == 0 then
+    onlinePlayerString = "No players online"
+   else
+        onlinePlayerString = "Current players:\n"
+        for i, v in ipairs(onlinePlayers) do
+            onlinePlayerString = onlinePlayerString .. v.name .. "\n"
+        end
+    end
+
+   loginText = {
+    "BrawlQuest " .. version .. " " .. versionNumber,
+    "Luven Interactive LTD 2020 - 2022", "", "Created By",
+    "Thomas Lock & Danjoe Stubbs",
+    "Original music by JoeyFunWithMusic\nAdditional music by Eric Matyas (Some Dreamy Place, Ocean Game Title, Left Behind, Dreamlands, Their Sacred Place, The Castle Mice, North Ridge, The Key To The Kingdom, Ancient Game Open, The Castle of Dr Sinister)",
+    "",
+    "Graphics by David E. Gervais,used here under a CC license. pousse.rapiere.free.fr/tome/",
+    "", "Special thanks to ThinkSometimes for the Minty sprite", "",
+    "Made with LÖVE",
+    "",
+   onlinePlayerString,
+    }
 end
 
 function drawLogin()
@@ -214,7 +239,7 @@ function loginViaSteam(skipDev)
         if useSteam then
             local originalID = steam.user.getSteamID()
             local str = tostring(originalID)
-            print("Logging in as " .. str)
+        
             if str ~= "nil" then
                 textfields[1] = str
                 textfields[2] = str
@@ -222,7 +247,7 @@ function loginViaSteam(skipDev)
                 login()
             end
         else
-            print("Can't connect to server")
+           
             loginPhase = "login"
         end
     else

@@ -61,7 +61,7 @@ function drawChatPanel(thisX, thisY) -- the function to recall it all
 
 		for i,v in ipairs (messages) do-- the most important thing here
 			thisY = thisY - getChatHeight(v.username, v.text, i)
-			-- print(json:encode_pretty(v.player.name))
+			-- print(lunajson.encode(v.player.name))
 			drawChatbox(thisX - (chatWidth+130), thisY, v.username, v.text,  v.player, i)
 			previousUsername = v.username
 		end
@@ -233,10 +233,10 @@ function sendChatText()
 	c, h = http.request {
 		url = api.url .. "/chat",
 		method = "POST",
-		source = ltn12.source.string(json:encode(chatData)),
+		source = ltn12.source.string(lunajson.encode(chatData)),
 		headers = {
 			["Content-Type"] = "application/json",
-			["Content-Length"] = string.len(json:encode(chatData)),
+			["Content-Length"] = string.len(lunajson.encode(chatData)),
 			["token"] = token
 		}
 	}

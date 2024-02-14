@@ -138,7 +138,7 @@ function drawSpellcooldown(item, thisX, thisY)
 end
 
 function drawItem(x,y,item,number)
-    if string.sub(item.Type, 1, 4) == "arm_" then
+    if string.sub(item.type, 1, 4) == "arm_" then
         love.graphics.setColor(1,1,1,0.5)
         love.graphics.draw(playerImg, x + 2, y + 2)
         love.graphics.setColor(1,1,1,1)
@@ -193,17 +193,17 @@ function drawInventoryItemField(thisX, thisY, field)
 
     for i,v in ipairs(userInventory[field]) do  
         if i <= 7 then
-            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 0), v.Item, v.Inventory.Amount, 0, v.Inventory.id)
+            drawInventoryItem(thisX + (43 * (i - 1)), thisY + (inventory.itemSpacing * 0), v.item, v.inventory.amount, 0, v.inventory.id)
         elseif i > 7 and i <= 14 then
-            drawInventoryItem(thisX + (43 * (i - 8)), thisY + (inventory.itemSpacing * 1), v.Item, v.Inventory.Amount, 0, v.Inventory.id)
+            drawInventoryItem(thisX + (43 * (i - 8)), thisY + (inventory.itemSpacing * 1), v.item, v.inventory.amount, 0, v.inventory.id)
         elseif i > 14 and i <= 21 then
-            drawInventoryItem(thisX + (43 * (i - 15)), thisY + (inventory.itemSpacing * 2), v.Item, v.Inventory.Amount, 0, v.Inventory.id)
+            drawInventoryItem(thisX + (43 * (i - 15)), thisY + (inventory.itemSpacing * 2), v.item, v.inventory.amount, 0, v.inventory.id)
         elseif i > 21 and i <= 28 then
-            drawInventoryItem(thisX + (43 * (i - 22)), thisY + (inventory.itemSpacing * 3), v.Item, v.Inventory.Amount, 0, v.Inventory.id)
+            drawInventoryItem(thisX + (43 * (i - 22)), thisY + (inventory.itemSpacing * 3), v.item, v.inventory.amount, 0, v.inventory.id)
         elseif i > 28 and i <= 35 then
-            drawInventoryItem(thisX + (43 * (i - 29)), thisY + (inventory.itemSpacing * 4), v.Item, v.Inventory.Amount, 0, v.Inventory.id)
+            drawInventoryItem(thisX + (43 * (i - 29)), thisY + (inventory.itemSpacing * 4), v.item, v.inventory.amount, 0, v.inventory.id)
         else
-            drawInventoryItem(thisX + (43 * (i - 36)), thisY + (inventory.itemSpacing * 5), v.Item, v.Inventory.Amount, 0, v.Inventory.id)
+            drawInventoryItem(thisX + (43 * (i - 36)), thisY + (inventory.itemSpacing * 5), v.item, v.inventory.amount, 0, v.inventory.id)
         end
     end
 end

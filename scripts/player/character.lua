@@ -144,7 +144,7 @@ end
 function movePlayer(dt) -- a nice update function
     -- move player!
     if andCalc(true, {
-            (me and not me.IsDead),
+            (me and not me.isDead),
             (not isMoving or (distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) < 1)),
             not worldEdit.isTyping,
             not isTypingInChat,
@@ -262,17 +262,17 @@ end
 
 function updateInventory(response)
     newInventoryItems = {}
-    if json:encode(inventoryAlpha) ~= "[]" then
+    if lunajson.encode(inventoryAlpha) ~= "[]" then
         for i, v in ipairs(response['Inventory']) do
             local newItem = true
             v = copy(v)
             for o, k in ipairs(inventoryAlpha) do
-                if k.Item.name == v.Item.name then -- and v.Inventory.Amount == k.Inventory.Amount then
-                    -- print("You have " .. k.Inventory.Amount .. " of this item, and the server says you now have " ..
-                    --           v.Inventory.Amount)
-                    v.Inventory.Amount = v.Inventory.Amount - k.Inventory.Amount
-                    -- print("That's a change of " .. v.Inventory.Amount .. " of it.")
-                    if v.Inventory.Amount <= 0 then
+                if k.item.name == v.item.name then -- and v.inventory.amount == k.inventory.amount then
+                    -- print("You have " .. k.inventory.amount .. " of this item, and the server says you now have " ..
+                    --           v.inventory.amount)
+                    v.inventory.amount = v.inventory.amount - k.inventory.amount
+                    -- print("That's a change of " .. v.inventory.amount .. " of it.")
+                    if v.inventory.amount <= 0 then
                         newItem = false
                     end
                 end
@@ -285,13 +285,15 @@ function updateInventory(response)
     end
 
     for i,k in ipairs(newInventoryItems) do
-        -- print(k.Item.name)
-        enemyHitSfx:setPosition(player.x, player.y)
-        enemyHitSfx:setRolloff(sfxRolloff)
-        enemyHitSfx:setRelative(false)
-        setEnvironmentEffects(enemyHitSfx)
-        enemyHitSfx:play()
-        burstLoot((player.x*32)-16, (player.y*32)-16, k.Inventory.Amount, k.Item.imgpath)
+        -- print(k.item.name)
+        if (k.item ~= nil) then
+            enemyHitSfx:setPosition(player.x, player.y)
+            enemyHitSfx:setRolloff(sfxRolloff)
+            enemyHitSfx:setRelative(false)
+            setEnvironmentEffects(enemyHitSfx)
+            enemyHitSfx:play()
+            burstLoot((player.x*32)-16, (player.y*32)-16, k.inventory.amount, k.item.imgpath)
+        end
         newInventoryItems = {}
     end
 

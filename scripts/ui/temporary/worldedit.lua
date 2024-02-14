@@ -22,7 +22,6 @@ isWorldEditWindowOpen = false
 function initEditWorld() 
   
     local files = recursiveEnumerate("assets/world", {})
-    print(#files)
     for k, file in ipairs(files) do
         if string.find(file, "Store", 1) == nil then
             worldFiles[#worldFiles+1] = file

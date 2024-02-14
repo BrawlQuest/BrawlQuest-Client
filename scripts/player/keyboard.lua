@@ -60,13 +60,8 @@ function checkKeyPressedPhaseGame(key)
             if isNearbyTile("assets/world/objects/Portal.png") and me.lvl == 40 then
                 openEnchanting()
             elseif isNearbyTile("assets/world/objects/Furnace.png") then
-                forging.enteredItems = {}
-                for i,v in ipairs(inventoryAlpha) do
-                    if v.Item.Type == "ore" then
-                        forging.enteredItems[#forging.enteredItems+1] = v
-                    end
-                end
-                forging.open = true
+                openForging()
+               
             elseif isNearbyTile("assets/world/objects/Well.png") and not drawingText  then
                 c, h = http.request {
                     url = api.url .. "/cleanse/" .. me.id,
@@ -101,7 +96,6 @@ function checkKeyPressedPhaseGame(key)
             end
         end--openReputation() end
         if key == "c" and versionType == "dev" then shop:reveal() end
-        if key == "space" then print(json:encode_pretty(me)) end
     end
 end
 

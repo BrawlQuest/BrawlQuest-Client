@@ -37,12 +37,12 @@ api = {
 
         -- print("Calling "..api.url..action)
         b, c, h = http.request(api.url .. action)
-        return json:decode(b)
+        return lunajson.decode(b)
     end,
     post = function(action, body)
         -- print("Calling "..api.url..action)
         b, c, h = http.request(api.url .. action, body)
-        return json:decode(b)
+        return lunajson.decode(b)
     end
 
 }
@@ -73,7 +73,7 @@ function getPlayerData(request, body, token)
     end
 
     local error = getPlayerDataThread:getError()
-    print(error)
+
     love.thread.getChannel('action'):push(request)
     love.thread.getChannel('body'):push(body)
     love.thread.getChannel('token'):push(token)

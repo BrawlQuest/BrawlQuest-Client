@@ -51,7 +51,7 @@ function initSettings()
 
     if info ~= null then
         local contents, size = love.filesystem.read("string", "settings.txt")
-        contents = json:decode(contents)
+        contents = lunajson.decode(contents)
         display = contents["display"] or display
         vsync = contents["vsync"] or vsync
         window = contents["window"] or window
@@ -130,7 +130,7 @@ function initSettings()
 end
 
 function writeSettings()
-    love.filesystem.write("settings.txt", json:encode_pretty({
+    love.filesystem.write("settings.txt", lunajson.encode({
         version = version .. " " .. versionNumber,
         keybinds = keybinds,
         musicVolume = musicVolume,

@@ -142,7 +142,7 @@ function checkOrdersMousePressed(button)
         if o.selected.item == o.mouseOver.item then o.selected.item = 0
         else o.selected.item = o.mouseOver.item end
     elseif o.mouseOver.commit then 
-        love.filesystem.write("me.txt", json:encode_pretty(me))
+        love.filesystem.write("me.txt", lunajson.encode(me))
         print("Trying to join the " .. o.items[o.selected.item].title)
         r, h = http.request {
             url = api.url .. "/order/" .. me.id .. "/" .. o.items[o.selected.item].title,

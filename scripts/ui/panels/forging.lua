@@ -16,41 +16,24 @@ function initForging()
             furnace = false,
         },
         ores = {
-            json:decode([[{
-                "Desc": "A strong and metallic substance, perfect for crafting.",
-                "Enchantment": "None",
-                "ID": 7,
-                "ImgPath": "assets/items/reagent/Metal.png",
-                "name": "Metal",
-                "Type": "reagent",
-                "Val": "0",
-                "Worth": 1
-            }]]),
-            json:decode([[{
-                "Desc": "An immensely rare and precious material, which when combined with Mana sparks and comes to life.",
-                "Enchantment": "None",
-                "ID": 46,
-                "ImgPath": "assets/items/reagent/Exotic Material.png",
-                "name": "Exotic Material",
-                "Type": "reagent",
-                "Val": "1",
-                "Worth": 1
-            }]]),
-            json:decode([[{
-                "Desc": "An immensely rare and precious material, which when combined with Mana sparks and comes to life.",
-                "Enchantment": "None",
-                "ID": 46,
-                "ImgPath": "assets/items/reagent/Exotic Material.png",
-                "name": "Exotic Material",
-                "Type": "reagent",
-                "Val": "1",
-                "Worth": 1
-            }]]),
+        
         },
         enteredItems = {},
         resultItems = {},
         showResults = false,
     }
+
+    c, h = http.request {
+        url = api.url .. "/forge",
+        method = "GET",
+        source = ltn12.source.string(body),
+        headers = {
+            ["token"] = token
+        },
+        sink = ltn12.sink.table(forging.ores)
+    }
+
+    forging.ores = json:decode(table.concat(forging.ores))
 end
 
 function updateForging(dt)
@@ -68,13 +51,12 @@ function updateForging(dt)
             forgingPop:play()
             for i,v in ipairs(f.enteredItems) do
                 c, h = http.request {
-                    url = api.url .. "/forge/" .. me.name .. "/" .. v.Item.id,
+                    url = api.url .. "/forge/" .. me.name .. "/" .. v.item.id,
                     method = "GET",
                     source = ltn12.source.string(body),
                     headers = {
                         ["token"] = token
                     },
-                    sink = ltn12.sink.table(b)
                 }
             end
             f.forging = false
@@ -135,8 +117,8 @@ function drawForging()
     elseif #f.enteredItems > 0 then
         x,y = x + 10, y + f.font:getHeight() * 3 + 6
         for i,v in ipairs(f.enteredItems) do
-            drawInventoryItem(x,y,v.Item,v.amount)
-            love.graphics.print(v.Item.name, x + 44, y + 8, 0, 2)
+            drawInventoryItem(x,y,v.item,v.amount)
+            love.graphics.print(v.item.name, x + 44, y + 8, 0, 2)
             y = y + 46
         end
 
@@ -159,7 +141,7 @@ function drawForging()
             love.graphics.scale(2)
             local dx = 0
             for i,v in ipairs(f.resultItems) do
-                drawInventoryItem(dx - w / 2, 0, v.Item, v.amount)
+                drawInventoryItem(dx - w / 2, 0, v.item, v.amount)
                 dx = dx + 44
             end
             love.graphics.printf("You Received:", 0 - uiX / 2, -20, uiX / 2, "center", 0, 2)
@@ -183,10 +165,12 @@ end
 function enterOres()
     local f = forging
     for i, item in ipairs(f.ores) do
-        local amount = getItemAmount(item)
-        if getItemAmount(item) > 0 then f.enteredItems[#f.enteredItems+1] = {item = item, amount = amount} end
+        local amount = getItemAmount(item.enteritem)
+        if amount > 0 then f.enteredItems[#f.enteredItems+1] = {item = item.enteritem, amount = amount} end
     end
 end
+
+
 
 function smeltOres()
     local f = forging
@@ -197,15 +181,7 @@ end
 
 function openForging()
     local f = forging
-    f.open = true
     f.enteredItems = {}
     enterOres()
+    f.open = true
 end
-
---[[
-initForging()
-if forging.open then updateForging(dt) end
-if forging.open then drawForging() end
-if forging.open then checkForgingKeyPressed(key)
-if forging.open then checkForgingMousePressed(button)
-]]
