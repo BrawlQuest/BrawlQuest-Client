@@ -145,7 +145,7 @@ function drawItem(x,y,item,number)
     end
 
     if number and number ~= 0 then drawItemImageHotbar(x,y,item,number) else drawItemImage(x,y,item) end
-    if item.enchantment ~= "None" then
+    if item.enchantment ~= "None" and item.enchantment ~= nil then
         love.graphics.push()
             love.graphics.stencil(function() 
                 love.graphics.setShader(alphaShader)

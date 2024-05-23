@@ -265,7 +265,7 @@ function loginOrCreate()
             r, c, h = http.request {
                 url = api.url .. "/user/" .. textfields[1],
                 headers = {
-                    ['token'] = b['token']
+                    ['token'] = token
                 },
                 sink = ltn12.sink.table(characters)
             }
@@ -273,7 +273,7 @@ function loginOrCreate()
             if c ~= 200 then
                 zoneChange("Error code "..tostring(c))
             end
-            characters = lunajson.decode(characters[1])
+            characters = lunajson.decode(table.concat(characters))
             for i,v in ipairs(characters) do
                 if characters[i] and characters[i].Color ~= null then
                 else

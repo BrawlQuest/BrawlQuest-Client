@@ -64,7 +64,7 @@ function drawMount(x,y,v,ad,direction,mountOffsetX,notBoat,type,playerAlpha)
         if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha, playerAlpha) else love.graphics.setColor(1, 1, 1, playerAlpha) end
         if notBoat then love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.mount.name)..type), x + 6 + mountOffsetX, y + 9, 0, direction, 1, 0, 0)
         else love.graphics.draw(getImgIfNotExist("assets/player/mounts/"..string.lower(v.mount.name).."/back.png"), x  + mountOffsetX, y, 0, direction, 1, 0, 0) end
-        if v.mount.enchantment ~= "None" then
+        if v.mount.enchantment ~= "None" and v.mount.enchantment ~= nil then
             love.graphics.push()
                 love.graphics.stencil(function() 
                     love.graphics.setShader(alphaShader)
@@ -91,7 +91,7 @@ function drawWeapon(x,y,v,ad,direction,offsetX,playerAlpha)
     if v["WeaponID"] ~= 0 then
         if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha, playerAlpha) else love.graphics.setColor(1, 1, 1, playerAlpha) end
         love.graphics.draw(itemImg[v.weapon.imgpath], x - (itemImg[v.weapon.imgpath]:getWidth() - 32) * direction + offsetX, y - (itemImg[v.weapon.imgpath]:getHeight() - 32), 0, direction, 1, 0, 0)
-        if v.weapon.enchantment ~= "None" then
+        if v.weapon.enchantment ~= "None" and v.weapon.enchantment ~= nil then
             love.graphics.push()
                 love.graphics.stencil(function() 
                     love.graphics.setShader(alphaShader)
@@ -416,7 +416,7 @@ function updateOtherPlayers(dt)
                 iWantSparkles = true
             end
 
-            if v.mount and v.mount.name ~= "None" and v.mount.name ~= "" and v.mount.enchantment ~= "None" then
+            if v.mount and v.mount.name ~= "None" and v.mount.name ~= "" and v.mount.enchantment ~= "None" and v.mount.enchantment ~= nil then
                 sparklesAmount = sparklesAmount + 5 * dt
                 if iWantSparkles and sparklesAmount > 1 then
                     sparklesAmount = 0

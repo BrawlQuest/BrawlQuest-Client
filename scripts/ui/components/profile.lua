@@ -26,7 +26,7 @@ end
 
 function drawProfileArmour(x,y,item,r,thisScale)
     drawItemIfExists(item.imgpath, x, y, "", r, thisScale, profileImgStencil)
-    if item.enchantment ~= "None" then
+    if item.enchantment ~= "None" and item.enchantment ~= nil then
         love.graphics.push()
             love.graphics.stencil(function() 
                 love.graphics.setShader(alphaShader)

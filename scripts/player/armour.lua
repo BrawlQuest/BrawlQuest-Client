@@ -20,7 +20,7 @@ function drawAnimatedArmourImage(v,type,x,y,dir,frame)
     if v.invulnerability >= 0 then love.graphics.setColor(1,1,1,0.3)
     else love.graphics.setColor(1,1,1) end
     drawAnimatedItem(v, type, x, y, dir, frame)
-    if v[type] and v[type].enchantment ~= "None" then
+    if v[type] and v[type].enchantment ~= "None" and v[type].enchantment ~= nil then
         love.graphics.push()
             love.graphics.stencil(function()
                 love.graphics.setShader(alphaShader)

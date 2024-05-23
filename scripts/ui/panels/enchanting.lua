@@ -123,15 +123,15 @@ function drawEnchanting()
     if e.phase == 1 then
 
         local x, y = uiX / 2 - w / 2, uiY / 2 -
-                         getTextHeight(e.text.description, w / textScale, e.font) *
+                         getTextHeight(e.text.desc, w / textScale, e.font) *
                          textScale -- e.font:getHeight() * titleScale -- itemWidth
         love.graphics.printf("Enchanting", x - 10, y, w / titleScale, "center",
                              0, titleScale)
         y = y + e.font:getHeight() * titleScale + 10
-        love.graphics.printf(e.text.description, x - 10, y, w / textScale, "center", 0,
+        love.graphics.printf(e.text.desc, x - 10, y, w / textScale, "center", 0,
                              textScale)
         y =
-            y + (getTextHeight(e.text.description, w / textScale, e.font) * textScale) +
+            y + (getTextHeight(e.text.desc, w / textScale, e.font) * textScale) +
                 20
         -- if e.flash.light then love.graphics.setColor(1,0,0) end
         e.mouseOver.endPhaseOne = false
@@ -216,11 +216,13 @@ function drawEnchanting()
                 drawItemIfExists(me[e.chosenItem].imgpath, dx - offset, dy, "",
                                  1, picScale - 2)
             end
-            love.graphics.printf(me[e.chosenItem].name .. "\nEnchantment: " ..
-                                     me[e.chosenItem].enchantment, x,
-                                 y + 30 * picScale,
-                                 (32 * picScale) / smallPrintScale, "center", 0,
-                                 smallPrintScale)
+            if   me[e.chosenItem].enchantment ~= nil then
+                love.graphics.printf(me[e.chosenItem].name .. "\nEnchantment: " ..
+                                        me[e.chosenItem].enchantment, x,
+                                    y + 30 * picScale,
+                                    (32 * picScale) / smallPrintScale, "center", 0,
+                                    smallPrintScale)
+            end
         else
             love.graphics.setColor(0.5, 0.5, 0.5)
             love.graphics.draw(playerImg, x + 32 - 20, y + 32, 0, picScale - 2)
@@ -268,8 +270,8 @@ function drawEnchanting()
                 if e.selectedPerk == i then
                     love.graphics.setColor(0, 0, 0)
                 end
-                love.graphics.printf(v.description, dx + 84, dy + 42 -
-                                         (getTextHeight(v.description, (width - 84) /
+                love.graphics.printf(v.desc, dx + 84, dy + 42 -
+                                         (getTextHeight(v.desc, (width - 84) /
                                                             smallPrintScale,
                                                         e.font) *
                                              smallPrintScale) * 0.5,
@@ -343,10 +345,10 @@ function drawEnchanting()
         dy = dy +
                  (getTextHeight(me[e.chosenItem].name, width / textScale, e.font) *
                      textScale)
-        love.graphics.printf(e.perks[perk][e.selectedPerk].description, dx, dy,
+        love.graphics.printf(e.perks[perk][e.selectedPerk].desc, dx, dy,
                              width / smallPrintScale, "left", 0, smallPrintScale)
         dy = dy +
-                 getTextHeight(e.perks[perk][e.selectedPerk].description, width,
+                 getTextHeight(e.perks[perk][e.selectedPerk].desc, width,
                                e.font, smallPrintScale) + 10
         love.graphics.printf("Item Enchantment Level:", dx, dy,
                              width / smallPrintScale, "left", 0, smallPrintScale)
@@ -601,7 +603,7 @@ function transitionToEnchantingPhase4()
     if not me[enchanting.chosenItem].enchantment or
         me[enchanting.chosenItem].enchantment == "None" then
         transitionToEnchantingPhase3()
-    elseif me[enchanting.chosenItem].enchantment ~= "None" then
+    elseif me[enchanting.chosenItem].enchantment ~= "None" and me[enchanting.chosenItem].enchantment ~= nil then
         e.phase = 4 -- go to the choose an enchantment type phase
     end
 end

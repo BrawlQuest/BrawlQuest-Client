@@ -12,13 +12,13 @@ tooltip = {
     spacing = 2,
     perks = {{
         title = "Strength",
-        desc = "Increases melee damage output by 1 for each point."
+        description = "Increases melee damage output by 1 for each point."
     }, {
         title = "Intelligence",
-        desc = "Increases the potency of your spells. Each point increases the impact of spells (check spell tooltips to see updated values)"
+        description = "Increases the potency of your spells. Each point increases the impact of spells (check spell tooltips to see updated values)"
     }, {
         title = "Stamina",
-        desc = "Increases your character's HP. You gain an extra 10 HP per point."
+        description = "Increases your character's HP. You gain an extra 10 HP per point."
     }}
 }
 
@@ -140,7 +140,7 @@ function setItemTooltip(item)
             }
         end
     end
-    if me and item and item.enchantment and item.enchantment ~= "None" then
+    if me and item and item.enchantment and item.enchantment ~= "None" and item.enchantment ~= nil then
         ench = explode(item.enchantment, ",")
         if string.sub(item.type,1,3) == "arm" then
 

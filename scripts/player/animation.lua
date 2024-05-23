@@ -159,7 +159,7 @@ function drawAnimationWeapon(v,x,y,dir,r)
     x,y = x - (2 * dir), y - 1
     if v["WeaponID"] ~= 0 then
         love.graphics.draw(getImgIfNotExist(v.weapon.imgpath), x, y, math.rad(r), dir, 1, 0, 0)
-        if v.weapon.enchantment ~= "None" then
+        if v.weapon.enchantment ~= "None" and v.weapon.enchantment ~= nil then
             love.graphics.push()
                 love.graphics.stencil(function() 
                     love.graphics.setShader(alphaShader)

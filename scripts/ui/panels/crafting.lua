@@ -50,9 +50,14 @@ function initCrafting()
     }
 
     b = {}
+    print(api.url .. "/crafts")
     c, h = http.request{url = api.url.."/crafts", method="GET", source=ltn12.source.string(body), sink=ltn12.sink.table(b)}
-    if b ~= nil and b[1] ~= nil then
-        crafting.catalogue = lunajson.decode(table.concat(b))
+
+   -- if b ~= nil and b[1] ~= nil then
+   print(json:encode(b))
+   print(#b)
+
+   crafting.catalogue = lunajson.decode(table.concat(b))
         for i, v in ipairs(crafting.catalogue) do
             crafting.itemCount = crafting.itemCount + 1
             if crafting.recipes[v.item.type] then
@@ -62,10 +67,10 @@ function initCrafting()
                 crafting.fields[#crafting.fields+1] = v.item.type
             end
         end
-    else
-        love.window.showMessageBox("Error loading crafting catalogue", "Post this on Discord please!\n"..lunajson.encode(b).."\n")
-        crafting.catalogue = {}
-    end
+    -- else
+    --     love.window.showMessageBox("Error loading crafting catalogue", "Post this on Discord please!\n"..lunajson.encode(b).."\n")
+    --     crafting.catalogue = {}
+    -- end
 
   --  local success,msg = love.filesystem.write("recipes.txt", lunajson.encode(crafting.recipes))
 
@@ -102,9 +107,12 @@ function updateCrafting(dt)
                     local b = {}
                     body = lunajson.encode(itemsSoFar)
                     -- print(api.url.."/craft/"..player.name.."/"..crafting.selectedItem.itemID)
-                    c, h = http.request{url = api.url.."/craft/"..player.name.."/"..crafting.selectedItem.itemID, method="POST", source=ltn12.source.string(body), headers={["token"]=token,["Content-Length"]=#body}, sink=ltn12.sink.table(b)}
-                    if lunajson.decode(table.concat(b))["success"] == null then
-                        crafting.result = lunajson.decode(table.concat(b))
+                    c, h = http.request{url = api.url.."/craft/"..player.name.."/"..crafting.selectedItem.itemid, method="GET", source=ltn12.source.string(body), headers={["token"]=token,["Content-Length"]=#body}, sink=ltn12.sink.table(b)}
+                    response = table.concat(b)
+
+                    if h == 200 then
+                        print(response)
+                        crafting.result = json:decode(tostring(response))
                         crafting.result.alpha = 2
                         if love.system.getOS() ~= "Linux" and useSteam then 
                             steam.userStats.setAchievement('craft_achievement')
@@ -114,7 +122,7 @@ function updateCrafting(dt)
                             steam.userStats.storeStats()
                         end
                     else
-                        crafting.result = null
+                        crafting.result = nil
                     end
                     enterCraftingItems(crafting.selectedItem)
                 end
@@ -529,11 +537,12 @@ end
 function enterCraftingItems(v)
     local craft = {}
     crafting.enteredItems = {}
-    local required = lunajson.decode(v.itemsString)
+    local required = v.items
     for j = 1, #v.itemsItem do
         local amount = required[j].amount
         -- print(v.itemsItem[j].name .. " " .. amount)
         local invAmount = getItemAmount(v.itemsItem[j])
+
         if invAmount >= amount then
             crafting.enteredItems[j] = {
                 item = v.itemsItem[j],

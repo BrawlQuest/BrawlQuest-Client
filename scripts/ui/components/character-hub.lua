@@ -346,7 +346,7 @@ function drawArmourHub(thisX, thisY)
         love.graphics.setColor(1, 1, 1, alpha)
         
         love.graphics.print(vb.name .. ":", xb + 10, y + 3, 0, 1)
-        if me[vb.v].val ~= "Error" then
+        if me[vb.v] and me[vb.v].val ~= nil and me[vb.v].val ~= "Error" then
             love.graphics.printf("+" .. me[vb.v].val, xb + wb - 50, y + 3, 40, "right", 0, 1)
             love.graphics.print(me[vb.v].name, xb + 10, y + 3 + 12, 0, 1)
         end

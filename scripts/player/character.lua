@@ -95,7 +95,7 @@ function updateCharacter(dt)
     end
 
     -- Add sparkles to the player!
-    if me.mount and me.mount.name ~= "None" and me.mount.name ~= "" and me.mount.enchantment ~= "None" then
+    if me.mount and me.mount.name ~= "None" and me.mount.name ~= "" and me.mount.enchantment ~= "None" and me.mount.enchantment ~= nil then
         sparklesAmount = sparklesAmount + 5 * dt
         if isMoving and sparklesAmount > 1 then
             sparklesAmount = 0

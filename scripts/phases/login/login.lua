@@ -68,16 +68,16 @@ function initLogin()
         url = api.url .. "/online",
         method = "GET",
         source = ltn12.source.string(body),
-    
         sink = ltn12.sink.table(onlinePlayers)
     }
 
+ 
    onlinePlayers = json:decode(table.concat(onlinePlayers))
 
    onlinePlayerString = ""
-   if #onlinePlayers == 0 then
+   if onlinePlayers == nil or #onlinePlayers == 0 then
     onlinePlayerString = "No players online"
-   else
+   else 
         onlinePlayerString = "Current players:\n"
         for i, v in ipairs(onlinePlayers) do
             onlinePlayerString = onlinePlayerString .. v.name .. "\n"
