@@ -122,16 +122,16 @@ function worldCollision(x, y)
     local output = false
     if worldEdit.open and versionType == "dev" then return output end
     if worldLookup[x..","..y] then
-        if worldLookup[x..","..y].Collision == true then
+        if worldLookup[x..","..y].collision == true then
             output = true
         end
         if me.mount and string.find(me.mount.name, "boat") and isTileType(worldLookup[x..","..y].foregroundtile, "Water") then
             output = false
-        elseif me.mount and string.find(me.mount.name, "boat") and not worldLookup[x..","..y].Collision then
+        elseif me.mount and string.find(me.mount.name, "boat") and not worldLookup[x..","..y].collision then
             output = true
         end
     end
-    if enemyCollisions[x..","..y] and me and me.invulnerability < 0 then output = true end
+   -- if enemyCollisions[x..","..y] and me and me.invulnerability < 0 then output = true end
     return output
 end
 
@@ -213,9 +213,9 @@ function movePlayer(dt) -- a nice update function
             if enchant and enchant ~= "None" and enchant ~= "" then speed = speed + 25 end
             if worldEdit.open and versionType == "dev" then speed = 256 end
         end
-        -- if worldLookup[player.x..","..player.y] and worldLookup[player.x..","..player.y].foregroundtile and worldLookup[player.x..","..player.y].groundtile and (isTileType(worldLookup[player.x..","..player.y].foregroundtile, "Path") or isTileType(worldLookup[player.x..","..player.y].groundtile, "Path")) then
-        --     speed = speed * 1.4
-        -- end
+        if worldLookup[player.x..","..player.y] and worldLookup[player.x..","..player.y].foregroundtile and worldLookup[player.x..","..player.y].groundtile and (isTileType(worldLookup[player.x..","..player.y].foregroundtile, "Path") or isTileType(worldLookup[player.x..","..player.y].groundtile, "Path")) then
+            speed = speed * 1.4
+        end
         if me.activespell and me.activespell.name == "Whirlwind" then
             addSparkles(player.dx + 16, player.dy + 16, 5, 30, 20)
             speed = 240
