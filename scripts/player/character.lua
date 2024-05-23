@@ -125,9 +125,9 @@ function worldCollision(x, y)
         if worldLookup[x..","..y].collision == true then
             output = true
         end
-        if me.mount and string.find(me.mount.name, "boat") and isTileType(worldLookup[x..","..y].foregroundtile, "Water") then
+        if me.mount and string.find(me.mount.name:lower(), "boat") and isTileType(worldLookup[x..","..y].foregroundtile, "Water") then
             output = false
-        elseif me.mount and string.find(me.mount.name, "boat") and not worldLookup[x..","..y].collision then
+        elseif me.mount and string.find(me.mount.name:lower(), "boat") and not worldLookup[x..","..y].collision then
             output = true
         end
     end
