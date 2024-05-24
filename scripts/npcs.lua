@@ -13,7 +13,7 @@ function drawNPCs()
                     worldImg[v.imgpath] = love.graphics.newImage(v.imgpath)
                 else
                     worldImg[v.imgpath] = love.graphics.newImage("assets/error.png")
-                    print("AN ERROR OCURRED. " .. v.imgpath .. " can't be found.")
+                    -- print("AN ERROR OCURRED. " .. v.imgpath .. " can't be found.")
                 end
             end
 
@@ -129,7 +129,7 @@ function startConversation()
                     npcSounds["assets/npc/Person.png"]:play()
                 end
 
-                -- print(string.gsub(string.gsub(string.gsub(npcChat.Options, "',", '",'),"['",'["'),"']",'"]'))
+                -- -- print(string.gsub(string.gsub(string.gsub(npcChat.Options, "',", '",'),"['",'["'),"']",'"]'))
                 local optionString = npcChat.Options
                optionString = string.gsub(optionString, "'s", 's')
                 optionString = string.gsub(optionString, "'t", 't')

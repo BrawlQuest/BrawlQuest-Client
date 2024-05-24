@@ -94,7 +94,7 @@ function drawWorldEditTileFromRect(x, y, button)
             end
         end
     end
-    print ("Second: " .. lunajson.encode(worldEdit.draw[x][y]))
+    -- print ("Second: " .. lunajson.encode(worldEdit.draw[x][y]))
 end
 
 function drawAreaDrawButtons()

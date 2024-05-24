@@ -50,7 +50,7 @@
 --     1     2018-10-06   First release (only SHA-2 functions)
 -----------------------------------------------------------------------------
 
-local print_debug_messages = false  -- set to true to view some messages about your system's abilities and implementation branch chosen for your system
+local -- print_debug_messages = false  -- set to true to view some messages about your system's abilities and implementation branch chosen for your system
 
 local unpack, table_concat, byte, char, string_rep, sub, gsub, gmatch, string_format, floor, ceil, math_min, math_max, tonumber, type =
    table.unpack or unpack, table.concat, string.byte, string.char, string.rep, string.sub, string.gsub, string.gmatch, string.format, math.floor, math.ceil, math.min, math.max, tonumber, type
@@ -151,12 +151,12 @@ end
 -- b, library_name = nil
 --------------------------------------------------------------------------------
 
-if print_debug_messages then
+if -- print_debug_messages then
    -- Printing list of abilities of your system
-   print("Abilities:")
-   print("   Lua version:               "..(is_LuaJIT and "LuaJIT "..(is_LuaJIT_21 and "2.1 " or "2.0 ")..(LuaJIT_arch or "")..(ffi and " with FFI" or " without FFI") or _VERSION))
-   print("   Integer bitwise operators: "..(Lua_has_int64 and "int64" or Lua_has_int32 and "int32" or "no"))
-   print("   32-bit bitwise library:    "..(library_name or "not found"))
+   -- print("Abilities:")
+   -- print("   Lua version:               "..(is_LuaJIT and "LuaJIT "..(is_LuaJIT_21 and "2.1 " or "2.0 ")..(LuaJIT_arch or "")..(ffi and " with FFI" or " without FFI") or _VERSION))
+   -- print("   Integer bitwise operators: "..(Lua_has_int64 and "int64" or Lua_has_int32 and "int32" or "no"))
+   -- print("   32-bit bitwise library:    "..(library_name or "not found"))
 end
 
 -- Selecting the most suitable implementation for given set of abilities
@@ -181,10 +181,10 @@ else
    branch = "EMUL"
 end
 
-if print_debug_messages then
+if -- print_debug_messages then
    -- Printing the implementation selected to be used on your system
-   print("Implementation selected:")
-   print("   "..method)
+   -- print("Implementation selected:")
+   -- print("   "..method)
 end
 
 

@@ -38,7 +38,7 @@ local OBJDEF = {
 --   local lua_value = JSON:decode(raw_json_text)
 --
 --   local raw_json_text    = JSON:encode(lua_table_or_value)
---   local pretty_json_text = JSON:encode(lua_table_or_value) -- "pretty printed" version for human readability
+--   local pretty_json_text = JSON:encode(lua_table_or_value) -- "pretty -- printed" version for human readability
 --
 --
 --
@@ -178,7 +178,7 @@ local OBJDEF = {
 --   JSON = assert(loadfile "JSON.lua")() -- one-time load of the routines
 --
 --   local raw_json_text    = JSON:encode(lua_table_or_value)
---   local pretty_json_text = JSON:encode(lua_table_or_value) -- "pretty printed" version for human readability
+--   local pretty_json_text = JSON:encode(lua_table_or_value) -- "pretty -- printed" version for human readability
 --   local custom_pretty    = JSON:encode(lua_table_or_value, etc, { pretty = true, indent = "|  ", align_keys = false })
 --
 --   On error during encoding, this code calls:
@@ -370,9 +370,9 @@ local OBJDEF = {
 --   
 --      T = JSON:decode('{  "small":12345, "big":12345678901234567890123456789, "precise":9876.67890123456789012345  }')
 --
---      print("small:   ",  type(T.small),    T.small)
---      print("big:     ",  type(T.big),      T.big)
---      print("precise: ",  type(T.precise),  T.precise)
+--      -- print("small:   ",  type(T.small),    T.small)
+--      -- print("big:     ",  type(T.big),      T.big)
+--      -- print("precise: ",  type(T.precise),  T.precise)
 --   
 --   produces
 --   
@@ -402,9 +402,9 @@ local OBJDEF = {
 --      
 --      T = JSON:decode('{  "small":12345, "big":12345678901234567890123456789, "precise":9876.67890123456789012345  }')
 --
---      print("small:   ",  type(T.small),    T.small)
---      print("big:     ",  type(T.big),      T.big)
---      print("precise: ",  type(T.precise),  T.precise)
+--      -- print("small:   ",  type(T.small),    T.small)
+--      -- print("big:     ",  type(T.big),      T.big)
+--      -- print("precise: ",  type(T.precise),  T.precise)
 --   
 --   This now produces:
 --   
@@ -426,7 +426,7 @@ local OBJDEF = {
 --         precise   = JSON:asNumber("123456789123456789.123456789123456789")
 --      }
 --
---      print(JSON:encode(T))
+--      -- print(JSON:encode(T))
 --
 --   This produces:
 --
@@ -454,9 +454,9 @@ local OBJDEF = {
 --      
 --      T = JSON:decode('{  "small":12345, "big":12345678901234567890123456789, "precise":9876.67890123456789012345  }')
 --
---      print("small:   ",  type(T.small),    T.small)
---      print("big:     ",  type(T.big),      T.big)
---      print("precise: ",  type(T.precise),  T.precise)
+--      -- print("small:   ",  type(T.small),    T.small)
+--      -- print("big:     ",  type(T.big),      T.big)
+--      -- print("precise: ",  type(T.precise),  T.precise)
 --
 --   This produces:
 --
@@ -472,7 +472,7 @@ local OBJDEF = {
 --      JSON.decodeNumbersAsObjects = true
 --   this stringification is simple and unintelligent: the JSON number simply becomes a Lua string, and that's the end of it.
 --   If the string is then converted back to JSON, it's still a string. After running the code above, adding
---      print(JSON:encode(T))
+--      -- print(JSON:encode(T))
 --   produces
 --      {"big":"12345678901234567890123456789","precise":9876.6789012346,"small":12345}
 --   which is unlikely to be desired.
@@ -495,9 +495,9 @@ local OBJDEF = {
 --
 --      T = JSON:decode('{  "small":12345, "big":12345678901234567890123456789, "precise":9876.67890123456789012345  }')
 --      
---      print("small:   ",  type(T.small),    T.small)
---      print("big:     ",  type(T.big),      T.big)
---      print("precise: ",  type(T.precise),  T.precise)
+--      -- print("small:   ",  type(T.small),    T.small)
+--      -- print("big:     ",  type(T.big),      T.big)
+--      -- print("precise: ",  type(T.precise),  T.precise)
 --
 --  produces:
 --
@@ -1223,7 +1223,7 @@ end
 --
 -- 'options' is nil, or a table with possible keys:
 --
---    pretty         -- If true, return a pretty-printed version.
+--    pretty         -- If true, return a pretty--- printed version.
 --
 --    indent         -- A string (usually of spaces) used to indent each nested level.
 --

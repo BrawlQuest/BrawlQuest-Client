@@ -53,7 +53,7 @@ function drawNPCProfilePic(thisX, thisY, thisScale, thisRotation, image)
 			worldImg[image] = love.graphics.newImage(image)
 		else
 			worldImg[image] = love.graphics.newImage("assets/error.png")
-			print("AN ERROR OCURRED. "..image.." can't be found.")
+			-- print("AN ERROR OCURRED. "..image.." can't be found.")
 		end
 	end
 	drawProfileBackground(thisX, thisY, thisScale)

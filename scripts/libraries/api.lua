@@ -35,12 +35,12 @@ api = {
     url = servers[selectedServer].url,
     get = function(action)
 
-        -- print("Calling "..api.url..action)
+        -- -- print("Calling "..api.url..action)
         b, c, h = http.request(api.url .. action)
         return lunajson.decode(b)
     end,
     post = function(action, body)
-        -- print("Calling "..api.url..action)
+        -- -- print("Calling "..api.url..action)
         b, c, h = http.request(api.url .. action, body)
         return lunajson.decode(b)
     end
@@ -58,7 +58,7 @@ local getPlayerDataThread = love.thread.newThread([[
     while true do
       action, body, token = love.thread.getChannel('action'):demand(), love.thread.getChannel('body'):demand(), love.thread.getChannel('token'):demand()
    --   if action and body and token then
-      -- print("Calling http://167.172.62.97:8080"..action.." with "..body)
+      -- -- print("Calling http://167.172.62.97:8080"..action.." with "..body)
         local b = {}
         c, h = http.request{url = "]] .. api.url ..
                                                       [["..action, method="POST", source=ltn12.source.string(body), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(body),["token"]=token}, sink=ltn12.sink.table(b)}

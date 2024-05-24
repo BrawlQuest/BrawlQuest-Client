@@ -566,7 +566,7 @@ function enchantItem()
         perk = e.chosenItem
     end
 
-    -- print("Trying to enchant " .. me[e.chosenItem].id)
+    -- -- print("Trying to enchant " .. me[e.chosenItem].id)
     c, h = http.request {
         url = api.url .. "/enchant/" .. me.id .. "/" .. me[e.chosenItem].id ..
             "/" .. e.perks[perk][e.selectedPerk].title .. "/" .. e.itemLevel,

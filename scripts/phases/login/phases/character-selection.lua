@@ -31,7 +31,7 @@ function initCharacterSelection()
 end
 
 function updateCharacterSelection(dt)
-    -- print(lunajson.encode(characters))
+    -- -- print(lunajson.encode(characters))
     if cs.selectedCharacter > 0 then
         panelMovement(dt, cs, 1, "dualAmount", 3)
     else
@@ -74,7 +74,7 @@ end
 function drawCharacterCreator() 
     love.graphics.setColor(1,1,1, cs.dualCERP)
     local v = characters[cs.selectedCharacter] or cs.initialCharacter
-    -- print(lunajson.encode(v))
+    -- -- print(lunajson.encode(v))
     local x, y = math.floor(love.graphics.getWidth() * 0.5), math.floor(love.graphics.getHeight() * 0.5 + 20)
     local thisX, thisY = x + cs.p, y - cs.h * 0.5 + cs.p
     love.graphics.line(x, y - cs.h * 0.5 + 20, x, y + cs.h * 0.5 - 20)
@@ -339,7 +339,7 @@ end
 function transitionToPhaseGame()
     love.graphics.setColor(1,1,1)
     love.graphics.rectangle("fill", 0,0, uiX, uiY)
-    -- print(lunajson.encode(characters[cs.selectedCharacter]))
+    -- -- print(lunajson.encode(characters[cs.selectedCharacter]))
     me.Color = copy(characters[cs.selectedCharacter].Color)
     username = characters[cs.selectedCharacter]["name"]
 

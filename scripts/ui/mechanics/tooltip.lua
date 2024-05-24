@@ -2,9 +2,9 @@ tooltip = {
     x = 0,
     y = 0,
     title = "Tooltip",
-    desc = "Tooltip",
+    description = "Tooltip",
     additional = {{
-        desc = "Example",
+        description = "Example",
         color = {0, 1, 0}
     }},
     alpha = 0,
@@ -40,10 +40,10 @@ function setTooltip(title, desc, additional)
         local eq = e2[1]
         eq = eq:gsub("INT", me["INT"])
         eq = eq:gsub("STA", me["STA"])
-        -- print(eq)
+        -- -- print(eq)
         func = assert(loadstring("return " .. eq))
         y = func()
-        -- print(y)
+        -- -- print(y)
         tooltip.description = e[1] .. tostring(y) .. e2[2]
     end
 end
@@ -56,7 +56,7 @@ end
 function setItemTooltip(item)
     love.graphics.setColor(0.6, 0.6, 0.6)
     valueAdditional = {
-        desc = "Item",
+        description = "Item",
         color = {0.4, 0.4, 0.4}
     }
     local valString = "Item"
@@ -109,24 +109,24 @@ function setItemTooltip(item)
    
     if me and me.lvl and item and item.worth and me.lvl >= item.worth then
         setTooltip(item.name, "", {valueAdditional, {
-            desc = item.description,
+            description = item.description,
             color = {0.8, 0.8, 0.8}
         }, {
-            desc = "Requires Level " .. item.worth,
+            description = "Requires Level " .. item.worth,
             color = {0, 1, 0}
         }})
     else
         setTooltip(item.name, "", {valueAdditional, {
-            desc = item.description,
+            description = item.description,
             color = {0.8, 0.8, 0.8}
         }, {
-            desc = "Requires Level " .. item.worth,
+            description = "Requires Level " .. item.worth,
             color = {1, 0, 0}
         }})
     end
     if getUsableSubtypeString(item) then
         tooltip.additional[#tooltip.additional + 1] = {
-            desc = getUsableSubtypeString(item),
+            description = getUsableSubtypeString(item),
             color = {1,1,1}
         }
     end
@@ -135,7 +135,7 @@ function setItemTooltip(item)
         for i,v in ipairs(att) do
             thisAttribute = explode(v, ",")
             tooltip.additional[#tooltip.additional + 1] = {
-                desc = "Grants +"..thisAttribute[2].." "..thisAttribute[1],
+                description = "Grants +"..thisAttribute[2].." "..thisAttribute[1],
                 color = {0.6,0.6,1}
             }
         end
@@ -145,17 +145,17 @@ function setItemTooltip(item)
         if string.sub(item.type,1,3) == "arm" then
 
             tooltip.additional[#tooltip.additional + 1] = {
-                desc = "Enchanted with +"..ench[2].." "..ench[1],
+                description = "Enchanted with +"..ench[2].." "..ench[1],
                 color = {0.7,0,1}
             }
         elseif item.type == "wep" then
             tooltip.additional[#tooltip.additional + 1] = {
-                desc = "Enchanted with +"..ench[2].." Attack Damage",
+                description = "Enchanted with +"..ench[2].." Attack Damage",
                 color = {0.7,0,1}
             }
         elseif item.type == "mount" then
             tooltip.additional[#tooltip.additional + 1] = {
-                desc = "Enchanted with +0.8m/s movement speed",
+                description = "Enchanted with +0.8m/s movement speed",
                 color = {0.7,0,1}
             }
       
@@ -165,14 +165,14 @@ function setItemTooltip(item)
 
     if item.type == "wall" or item.type == "furniture" or item.type == "floor" then
         tooltip.additional[#tooltip.additional + 1] = {
-            desc = "This item is placeable within any zone called 'Foundation Forest' or 'Dominion of "..me.name.."'",
+            description = "This item is placeable within any zone called 'Foundation Forest' or 'Dominion of "..me.name.."'",
             color = {0.6,0.6,1}
         }
     end
 
     if item.type == "spell" and me and me.SpellCooldown and me.SpellCooldown > 0 then
         tooltip.additional[#tooltip.additional + 1] = {
-            desc = "Global spell cooldown. Can be used in "..me.SpellCooldown.." seconds.",
+            description = "Global spell cooldown. Can be used in "..me.SpellCooldown.." seconds.",
             color = {1,0,0}
         }
     end
@@ -200,14 +200,14 @@ function drawTooltip(thisX, thisY)
         150 + (tooltip.padding * 2), height)
     love.graphics.setColor(1, 1, 1, tooltip.alpha)
     love.graphics.printf(tooltip.title, npcChatFont, tooltip.x, tooltip.y, 150, "left")
-    love.graphics.printf(tooltip.desc, characterHub.font, tooltip.x,
+    love.graphics.printf(tooltip.description, characterHub.font, tooltip.x,
         tooltip.y + getToolTipTitleHeight(tooltip.title) + tooltip.spacing, 150, "left")
     local yPos = tooltip.y + getToolTipTitleHeight(tooltip.title) + tooltip.spacing + getToolTipDescHeight(tooltip.description)
     if tooltip.additional then
         for i, v in ipairs(tooltip.additional) do
             love.graphics.setColor(v.color[1], v.color[2], v.color[3], tooltip.alpha)
-            love.graphics.printf(v.desc, characterHub.font, tooltip.x, yPos, 150, "left")
-            yPos = yPos + getToolTipDescHeight(v.desc)
+            love.graphics.printf(v.description, characterHub.font, tooltip.x, yPos, 150, "left")
+            yPos = yPos + getToolTipDescHeight(v.description)
         end
     end
     love.graphics.setColor(1, 1, 1, 1)

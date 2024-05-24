@@ -116,7 +116,7 @@ function login()
             uid = textfields[1],
             password = textfields[2]
         }))
-        -- print("logged in as "..textfields[1])
+        -- -- print("logged in as "..textfields[1])
         
         if c == 200 then
             b = lunajson.decode(tostring(b))
@@ -169,7 +169,7 @@ function login()
         elseif c == 401 then
             textfields[2] = ""
             textfields[3] = ""
-            print("Login Failed")
+            -- print("Login Failed")
         end
     end
 end

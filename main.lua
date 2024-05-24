@@ -37,8 +37,8 @@ require "scripts.npcs"
 require "scripts.server"
 -- require "scripts.world.world"
 require "scripts.world.tiles"
--- require "scripts.world.biomes"
-require "scripts.world.new-world-drawer"
+require "scripts.world.biomes"
+require "scripts.world.world"
 require "scripts.ui.temporary.worldedit"
 require "scripts.ui.temporary.new-world-edit"
 require "scripts.ui.temporary.world-edit-rect"
@@ -255,7 +255,7 @@ function love.draw()
                     playerCount .. "\n" .. playersOnline
         end
         love.graphics.print(text, offset, 10)
-        drawWorldMap(love.graphics.getWidth() - 256 - 20, 20)
+        drawWorldMap(love.graphics.getWidth() - 256, 0)
         if (premiumMessage.display or deathMessage.display) then love.graphics.setShader() end
         drawPremiumMessage()
         drawDeathMessage()
@@ -324,7 +324,7 @@ function love.update(dt)
         updateCamera(dt)
         updateOtherPlayers(dt)
         serverResponse()
-        --  updateWorldDrawer()
+        --updateWorldDrawer()
     end
 end
 
@@ -340,7 +340,7 @@ function tick()
     nextTick = 1
     getInventory()
     tickRangedWeapons()
-    -- tickWorld()
+    tickWorld()
     if me then tickCharacterHub() end
     if hotbarChanged then
         hotbarChangeCount = hotbarChangeCount + 1

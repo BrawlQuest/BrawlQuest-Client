@@ -103,9 +103,9 @@ function switchMusic(newTrack)
         music[nextTrack]:setLooping(true)
         currentPlaying = music[nextTrack]:play()
     -- elseif newTrack == currentTrack then
-        -- print("Attempted to restart playback of already playing track.")
+        -- -- print("Attempted to restart playback of already playing track.")
     -- else
-        -- print("Attempted to play a track that doesn't exist: " .. newTrack)
+        -- -- print("Attempted to play a track that doesn't exist: " .. newTrack)
     end
 end
 

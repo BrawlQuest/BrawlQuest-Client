@@ -162,7 +162,7 @@ function drawPlayer(v, i)
 
     if thisPlayer and v and thisPlayer.weapon then
         if not v.previousDirection then v.previousDirection = "right" end
-        -- print(v.RedAlpha)
+        -- -- print(v.RedAlpha)
         if v.RedAlpha then love.graphics.setColor(1, 1-v.RedAlpha, 1-v.RedAlpha) end
         drawCharacter(thisPlayer, v.x, v.y, v)
 
@@ -335,7 +335,7 @@ function updateOtherPlayers(dt)
 
     for i, v in pairs(players) do
         if playersDrawable[i] == nil then
-            -- print("Setting drawable")
+            -- -- print("Setting drawable")
             playersDrawable[i] = {
                 ['name'] = v.name,
                 ['x'] = v.x * 32,
@@ -353,7 +353,7 @@ function updateOtherPlayers(dt)
         playersDrawable[i].mount = v.mount
         updateBuddy(dt, playersDrawable)
         if playersDrawable[i].hp > v.hp then
-            -- print("player Hit")
+            -- -- print("player Hit")
             playersDrawable[i].hp = v.hp
             playersDrawable[i].RedAlpha = 1
             playerHitSfx:setPosition((playersDrawable[i].x + 16) / 32, (playersDrawable[i].y + 16) / 32)

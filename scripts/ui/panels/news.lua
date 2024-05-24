@@ -17,21 +17,21 @@ function initNews()
             header = "1",
             desc = "This is a general bug update. It should all be good.",
             action = function()
-                print("I WANT YOU")
+                -- print("I WANT YOU")
             end,
             img = love.graphics.newImage("assets/ui/news/01.png")
         }, {
             header = "2",
             desc = "This is a generl be good.",
             action = function()
-                print("Second")
+                -- print("Second")
             end,
             img = love.graphics.newImage("assets/ui/news/02.png")
         }, {
             header = "3",
             desc = "This is a generl be good.",
             action = function()
-                print("Second")
+                -- print("Second")
             end,
             img = love.graphics.newImage("assets/ui/news/03.png")
         }},

@@ -268,10 +268,10 @@ function updateInventory(response)
             v = copy(v)
             for o, k in ipairs(inventoryAlpha) do
                 if k.item.name == v.item.name then -- and v.inventory.amount == k.inventory.amount then
-                    -- print("You have " .. k.inventory.amount .. " of this item, and the server says you now have " ..
+                    -- -- print("You have " .. k.inventory.amount .. " of this item, and the server says you now have " ..
                     --           v.inventory.amount)
                     v.inventory.amount = v.inventory.amount - k.inventory.amount
-                    -- print("That's a change of " .. v.inventory.amount .. " of it.")
+                    -- -- print("That's a change of " .. v.inventory.amount .. " of it.")
                     if v.inventory.amount <= 0 then
                         newItem = false
                     end
@@ -285,7 +285,7 @@ function updateInventory(response)
     end
 
     for i,k in ipairs(newInventoryItems) do
-        -- print(k.item.name)
+        -- -- print(k.item.name)
         if (k.item ~= nil) then
             enemyHitSfx:setPosition(player.x, player.y)
             enemyHitSfx:setRolloff(sfxRolloff)

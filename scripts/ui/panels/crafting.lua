@@ -50,12 +50,12 @@ function initCrafting()
     }
 
     b = {}
-    print(api.url .. "/crafts")
+    -- print(api.url .. "/crafts")
     c, h = http.request{url = api.url.."/crafts", method="GET", source=ltn12.source.string(body), sink=ltn12.sink.table(b)}
 
    -- if b ~= nil and b[1] ~= nil then
-   print(json:encode(b))
-   print(#b)
+   -- print(json:encode(b))
+   -- print(#b)
 
    crafting.catalogue = lunajson.decode(table.concat(b))
         for i, v in ipairs(crafting.catalogue) do
@@ -106,12 +106,12 @@ function updateCrafting(dt)
                     end
                     local b = {}
                     body = lunajson.encode(itemsSoFar)
-                    -- print(api.url.."/craft/"..player.name.."/"..crafting.selectedItem.itemID)
+                    -- -- print(api.url.."/craft/"..player.name.."/"..crafting.selectedItem.itemID)
                     c, h = http.request{url = api.url.."/craft/"..player.name.."/"..crafting.selectedItem.itemid, method="GET", source=ltn12.source.string(body), headers={["token"]=token,["Content-Length"]=#body}, sink=ltn12.sink.table(b)}
                     response = table.concat(b)
 
                     if h == 200 then
-                        print(response)
+                        -- print(response)
                         crafting.result = json:decode(tostring(response))
                         crafting.result.alpha = 2
                         if love.system.getOS() ~= "Linux" and useSteam then 
@@ -438,7 +438,7 @@ function checkCraftingMousePressed(button)
         getRecipesHeight()
         writeSettings()
     elseif button == 1 and crafting.mouseOverField.i > 0 then
-        -- print("I need to enter items!")
+        -- -- print("I need to enter items!")
         crafting.selectedField = copy(crafting.mouseOverField)
         local v = crafting.recipes[crafting.fields[crafting.selectedField.i]][crafting.selectedField.j]
         crafting.selectedItem = v
@@ -540,7 +540,7 @@ function enterCraftingItems(v)
     local required = v.items
     for j = 1, #v.itemsItem do
         local amount = required[j].amount
-        -- print(v.itemsItem[j].name .. " " .. amount)
+        -- -- print(v.itemsItem[j].name .. " " .. amount)
         local invAmount = getItemAmount(v.itemsItem[j])
 
         if invAmount >= amount then

@@ -510,7 +510,7 @@ function checkWorldEditKeyPressed(key)
         elseif key == "return" and worldEdit.enteredWorldText ~= "" then
             worldEdit.isTyping = false
             worldEdit.drawableTile[5] = worldEdit.enteredWorldText
-            -- print(worldEdit.drawableTile[5])
+            -- -- print(worldEdit.drawableTile[5])
         elseif key == "escape" then 
             worldEdit.isTyping = false
         end
@@ -580,7 +580,7 @@ function saveWorldChanges()
         end
     end
     local b = {}
-    print (lunajson.encode(pendingWorldChanges))
+    -- print (lunajson.encode(pendingWorldChanges))
     c, h = http.request{url = api.url.."/world", method="POST", source=ltn12.source.string(lunajson.encode(pendingWorldChanges)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(lunajson.encode(pendingWorldChanges)),["token"]=token}}
     pendingWorldChanges = {}
     local b = {}

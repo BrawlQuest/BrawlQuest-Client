@@ -103,13 +103,13 @@ function drawSettingsPanel()
 
             roundRectangle("fill", nextX, nextY, settPan.objectValueWidth, height, 6) -- value backing
             love.graphics.setColor(1,1,1, settPan.opacityCERP * 1)
-            love.graphics.print(v.name, thisX + 10, thisY + settPan.fontHeight) -- prints the name of things
+            love.graphics.print(v.name, thisX + 10, thisY + settPan.fontHeight) -- -- prints the name of things
 
             if controls.currentKeybind == i then
                 love.graphics.setColor(0,0,0, settPan.opacityCERP * 1)
             end
             if v and v.v then
-                love.graphics.printf("\"" .. v.v .. "\"", nextX, nextY + settPan.fontHeight, settPan.objectValueWidth, "center") -- prints the value of things
+                love.graphics.printf("\"" .. v.v .. "\"", nextX, nextY + settPan.fontHeight, settPan.objectValueWidth, "center") -- -- prints the value of things
             end
             thisY = thisY + height + settPan.objectPadding
             max = max + height + settPan.objectPadding
@@ -153,7 +153,7 @@ function drawSettingsPanel()
                     thisY = thisY + settPan.buttonSpacing
                     max = max + settPan.buttonSpacing
                 elseif bv.type == "fader" then
-                    -- print(max)
+                    -- -- print(max)
                     faderPosition[bi] = max
                     love.graphics.setColor(0, 0, 0, settPan.opacityCERP * 0.5)
                     roundRectangle("fill", thisX, thisY, width, 60, 6)
@@ -181,7 +181,7 @@ function drawSettingsPanel()
     love.graphics.setColor(1, 0, 0, settPan.opacityCERP * 1)
     roundRectangle("fill", thisX, thisY, width, height, 6)
     love.graphics.setColor(1,1,1, settPan.opacityCERP * 1)
-    love.graphics.printf("Save Settings (escape)", thisX, thisY + 20 - (settPan.itemFont:getHeight() * 0.5), width, "center") -- prints the name of things
+    love.graphics.printf("Save Settings (escape)", thisX, thisY + 20 - (settPan.itemFont:getHeight() * 0.5), width, "center") -- -- prints the name of things
 
     x,y = love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5
     thisX, thisY = x + (settPan.width * 0.5) - 33, y - (settPan.height * 0.5) - 43
@@ -211,7 +211,9 @@ function drawSettingsButton(thisX, thisY, width, height, ai, av, bi, bv)
         settPan.mouseOver = (ai * 10) + bi
         settPan.isMouseOver = true
         love.graphics.setColor(1, 0, 0, settPan.opacityCERP)
-        setTooltip(bv.name, bv.description)
+        if bv.description then
+            setTooltip(bv.name, bv.description)
+        end
     elseif bv.v == true then
         love.graphics.setColor(1,1,1, settPan.opacityCERP)
     end
@@ -227,10 +229,10 @@ function drawSettingsButton(thisX, thisY, width, height, ai, av, bi, bv)
 
     local text
     if bi == 1 and ai == 1 then text = "kill me" else text = boolToString(bv.v) end
-    love.graphics.printf(text, thisX + width - 90, thisY + settPan.fontHeight, 90, "center") -- prints the value of things
+    love.graphics.printf(text, thisX + width - 90, thisY + settPan.fontHeight, 90, "center") -- -- prints the value of things
 
     love.graphics.setColor(1,1,1, settPan.opacityCERP)
-    love.graphics.print(bv.name, thisX + 10, thisY + settPan.fontHeight) -- prints the name of things
+    love.graphics.print(bv.name, thisX + 10, thisY + settPan.fontHeight) -- -- prints the name of things
 end
 
 function drawSettingsStencilLeft()

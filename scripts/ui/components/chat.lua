@@ -61,7 +61,7 @@ function drawChatPanel(thisX, thisY) -- the function to recall it all
 
 		for i,v in ipairs (messages) do-- the most important thing here
 			thisY = thisY - getChatHeight(v.username, v.text, i)
-			-- print(lunajson.encode(v.player.name))
+			-- -- print(lunajson.encode(v.player.name))
 			drawChatbox(thisX - (chatWidth+130), thisY, v.username, v.text,  v.player, i)
 			previousUsername = v.username
 		end
