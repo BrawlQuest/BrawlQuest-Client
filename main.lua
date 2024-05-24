@@ -324,7 +324,6 @@ function love.update(dt)
         updateCamera(dt)
         updateOtherPlayers(dt)
         serverResponse()
-        --updateWorldDrawer()
     end
 end
 

@@ -20,7 +20,7 @@ function initCharacterSelection()
         selectedCharacter = 0,
         dualAmount = 0,
         dualCERP = 0,
-        font = love.graphics.newFont("assets/ui/fonts/VT323-Regular.ttf", 16),
+        font = love.graphics.newFont("assets/ui/fonts/BMmini.ttf", 16),
         w = 350, -- width
         h = 450, -- height
         s = 10, -- spacing
