@@ -61,8 +61,7 @@ function drawChatPanel(thisX, thisY) -- the function to recall it all
 
 		for i,v in ipairs (messages) do-- the most important thing here
 			thisY = thisY - getChatHeight(v.username, v.text, i)
-			-- -- print(lunajson.encode(v.player.name))
-			drawChatbox(thisX - (chatWidth+130), thisY, v.username, v.text,  v.player, i)
+			drawChatbox(thisX - (chatWidth+130), thisY, v.username, v.text,  v.player, i, v.isSpecial)
 			previousUsername = v.username
 		end
 
@@ -99,42 +98,46 @@ function drawChatboxBackground(thisX, thisY, username, text)
 	love.graphics.setColor(1,1,1,1)
 end
 
-function drawChatboxText(thisX, thisY, text, orientation)
-		love.graphics.printf(text, thisX + chatCorner:getHeight(), thisY + chatCorner:getHeight(), chatWidth, orientation)
+function drawChatboxText(thisX, thisY, text, orientation, isSpecial)
+	if tostring(isSpecial) == "true" then love.graphics.setColor(1,0,0,1) end
+
+	love.graphics.printf(text, thisX + chatCorner:getHeight(), thisY + chatCorner:getHeight(), chatWidth, orientation)
+
+	love.graphics.setColor(1,1,1,1)
 end
 
 function drawChatboxUsernameText(thisX, thisY, username)
 	love.graphics.printf(username, thisX, thisY - 6, chatWidth+(chatCorner:getWidth()*2), "center")
 end
 
-function drawChatbox(thisX, thisY, username, text, player, i)
+function drawChatbox(thisX, thisY, username, text, player, i, isSpecial)
 	if i == 1 then
-		drawChatboxProfilePic(thisX, thisY, username, text, player, i)
+		drawChatboxProfilePic(thisX, thisY, username, text, player, isSpecial)
 	elseif username == previousUsername then
 		if username == me.name then
 			drawChatboxBackground(thisX, thisY, username, text)
-			drawChatboxText(thisX, thisY, text, "right")
+			drawChatboxText(thisX, thisY, text, "right", isSpecial)
 		else
 			local pos = thisX + profilePic:getWidth()+8
 			drawChatboxBackground(pos, thisY, username, text)
-			drawChatboxText(pos, thisY, text, "left")
+			drawChatboxText(pos, thisY, text, "left", isSpecial)
 		end
 	else
-		drawChatboxProfilePic(thisX, thisY, username, text, player, i)
+		drawChatboxProfilePic(thisX, thisY, username, text, player,  isSpecial)
 	end
 end
 
-function drawChatboxProfilePic(thisX, thisY, username, text, player)
+function drawChatboxProfilePic(thisX, thisY, username, text, player, isSpecial)
 	if username == me.name then
 		drawProfilePic(thisX+chatWidth+(chatCorner:getWidth() * 2) + 8, getProfilePicY(thisY, text, username), 1, "left")
 		drawChatboxBackground(thisX, thisY, username, text, "right")
-		drawChatboxText(thisX, thisY, text, "right")
+		drawChatboxText(thisX, thisY, text, "right", isSpecial)
 	else
 		local i = thisX + profilePic:getWidth()+8
 		local j = thisY + chatFont:getHeight()
 		drawProfilePic(thisX, getProfilePicY(thisY, text, username)+chatFont:getHeight(), 1, "right", player)
 		drawChatboxBackground(i, thisY, username, text, "left")
-		drawChatboxText(i, thisY, text, "left")
+		drawChatboxText(i, thisY, text, "left", isSpecial)
 		love.graphics.setColor(1,1,1,1)
 		local coords = ""
 		if versionType == "dev" then coords = " X,Y: " .. player.x .. ", " .. player.y end
@@ -225,10 +228,10 @@ end
 function sendChatText()
 	posYChat = 0
 	chatData = {
-		["Playername"] = me.name,
-		["Channel"] = "Global",
-		["Message"] = enteredChatText,
-		["Created"] = os.time(os.date("!*t"))
+		["playerName"] = me.name,
+		["channel"] = "Global",
+		["message"] = enteredChatText,
+	
 	}
 	c, h = http.request {
 		url = api.url .. "/chat",

@@ -69,14 +69,15 @@ function serverResponse()
                 end
                 player.cp = response['CharPoints']
                 messages = {}
-                -- for i = 1, #response['Chat']['Global'] do
-                --     local v = response['Chat']['Global'][#response['Chat']['Global'] + 1 - i]
-                --     messages[#messages + 1] = {
-                --         username = v["Sender"]["name"],
-                --         text = v["Message"],
-                --         player = v["Sender"]
-                --     }
-                -- end
+                for i = 1, #response['Chat'] do
+                    local v = response['Chat'][i]
+                    messages[#messages + 1] = {
+                        username = v["sender"]["name"],
+                        text = v["message"],
+                        player = v["sender"],
+                        isSpecial = v["isSpecial"],
+                    }
+                end
                 usedItemThisTick = false
                 setLighting(response)
 
