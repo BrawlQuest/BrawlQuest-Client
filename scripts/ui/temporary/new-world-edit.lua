@@ -28,7 +28,7 @@ function initNewWorldEdit()
             "assets/world/grounds/grass/grass08.png",   -- 2. foreground tile
             "", -- enemy name                           -- 3. enemy name
             true, -- collisions                         -- 4. collisions
-            "", --  Tile Name                           -- 5. tile name
+            "", --  Tile name                           -- 5. tile name
             "*", -- Music                               -- 6. tile music
             0, -- enemy index                           -- 7. enemy index
         },
@@ -55,13 +55,13 @@ function initNewWorldEdit()
         readyToWriteText = false,
     }
 
-    availablePlaceNames = {}
+    availablePlacenames = {}
     avaliableMusic = {}
 
     
     areaDraw = {
         tabMode = false,
-        showPlaceNames = false,
+        showPlacenames = false,
         showMusic = false, 
         state = {
             false, -- 1. ground tile
@@ -75,8 +75,8 @@ function initNewWorldEdit()
         nextPlaceColor = {0,0,0,0},
         nextMusicColor = {0,0,0,0},
         selectedColor = null,
-        mouseOverPlaceNames = -1,
-        mouseOverMusicNames = -1,
+        mouseOverPlacenames = -1,
+        mouseOverMusicnames = -1,
     }
 
     editorCtl = {
@@ -145,8 +145,8 @@ function drawNewWorldEditHud()
         worldEdit.mouseOverEnemyButtons = 0
         worldEdit.mouseOverControlButtons = 0
         worldEdit.mouseOverAreaDrawButtons = 0
-        areaDraw.mouseOverMusicNames = -1
-        areaDraw.mouseOverPlaceNames = -1
+        areaDraw.mouseOverMusicnames = -1
+        areaDraw.mouseOverPlacenames = -1
         worldEdit.hoveringOverButton = false
         worldEdit.readyToWriteText = false
         worldEdit.selectableTile = ""
@@ -158,7 +158,7 @@ function drawNewWorldEditHud()
         thisX, thisY = love.graphics.getWidth(), love.graphics.getHeight()
         local x, y = thisX, thisY
         for i, v in ipairs(availableEnemies) do
-            drawEnemyButton(x, y, 42, 42, 10, v.Name, worldEdit.enemyInputType == i, i, v.Image)
+            drawEnemyButton(x, y, 42, 42, 10, v.name, worldEdit.enemyInputType == i, i, v.image)
             y = y - 52
             if y <= 52 then
                 y = thisY
@@ -344,8 +344,8 @@ function drawNewWorldEditTiles()
                     if love.mouse.isDown(1) then
                         if editorCtl.state[4] then -- rubber
                             if worldLookup[x..","..y] then
-                                worldEdit.draw[x][y][1] = worldLookup[x..","..y].GroundTile
-                                worldEdit.draw[x][y][2] = worldLookup[x..","..y].ForegroundTile
+                                worldEdit.draw[x][y][1] = worldLookup[x..","..y].groundtile
+                                worldEdit.draw[x][y][2] = worldLookup[x..","..y].foregroundtile
                                 worldEdit.draw[x][y][3] = ""
                             else
                                 for i = 1, 3 do
@@ -374,8 +374,8 @@ function drawNewWorldEditTiles()
 
                         elseif love.keyboard.isDown("lshift") then
                             if worldLookup[x..","..y] then
-                                worldEdit.draw[x][y][1] = worldLookup[x..","..y].GroundTile
-                                worldEdit.draw[x][y][2] = worldLookup[x..","..y].ForegroundTile
+                                worldEdit.draw[x][y][1] = worldLookup[x..","..y].groundtile
+                                worldEdit.draw[x][y][2] = worldLookup[x..","..y].foregroundtile
                             else
                                 for i = 1, 3 do
                                     worldEdit.draw[x][y][i] = ""
@@ -403,10 +403,10 @@ function checkWorldEditMouseDown(button)
 
         if button == 1 and worldEdit.tileSelect then -- Selecting a tile to copy - enemies
             if worldLookup[worldEdit.tileSelection.x..","..worldEdit.tileSelection.y] then
-                if worldLookup[worldEdit.tileSelection.x..","..worldEdit.tileSelection.y].GroundTile ~= worldLookup[worldEdit.tileSelection.x..","..worldEdit.tileSelection.y].ForegroundTile then
-                    worldEdit.drawableTile[2] = worldLookup[worldEdit.tileSelection.x..","..worldEdit.tileSelection.y].ForegroundTile
+                if worldLookup[worldEdit.tileSelection.x..","..worldEdit.tileSelection.y].groundtile ~= worldLookup[worldEdit.tileSelection.x..","..worldEdit.tileSelection.y].foregroundtile then
+                    worldEdit.drawableTile[2] = worldLookup[worldEdit.tileSelection.x..","..worldEdit.tileSelection.y].foregroundtile
                 end
-                worldEdit.drawableTile[1] = worldLookup[worldEdit.tileSelection.x..","..worldEdit.tileSelection.y].GroundTile
+                worldEdit.drawableTile[1] = worldLookup[worldEdit.tileSelection.x..","..worldEdit.tileSelection.y].groundtile
                 worldEdit.drawableTile[4] = worldLookup[worldEdit.tileSelection.x..","..worldEdit.tileSelection.y].Collision
                 editorCtl.state[2] = worldLookup[worldEdit.tileSelection.x..","..worldEdit.tileSelection.y].Collision
             else
@@ -434,7 +434,7 @@ function checkWorldEditMouseDown(button)
                     worldEdit.drawableTile[8] = 0
                 else
                     worldEdit.enemyInputType = worldEdit.mouseOverEnemyButtons
-                    worldEdit.drawableTile[3] = availableEnemies[worldEdit.enemyInputType].Name 
+                    worldEdit.drawableTile[3] = availableEnemies[worldEdit.enemyInputType].name 
                     worldEdit.drawableTile[8] = worldEdit.enemyInputType
                 end
             end
@@ -463,14 +463,14 @@ function checkWorldEditMouseDown(button)
         elseif worldEdit.mouseOverAreaDrawButtons > 0 then
             checkAreaDrawButtonsPressed(button)
 
-        elseif areaDraw.mouseOverPlaceNames > -1 then
+        elseif areaDraw.mouseOverPlacenames > -1 then
             if button == 1 then
                 local count = 1
-                for i,v in ipairs(availablePlaceNames) do
-                    if areaDraw.mouseOverPlaceNames == count then
+                for i,v in ipairs(availablePlacenames) do
+                    if areaDraw.mouseOverPlacenames == count then
                         worldEdit.enteredWorldText = v.name
                         worldEdit.drawableTile[5] = v.name
-                    elseif areaDraw.mouseOverPlaceNames == 0 then
+                    elseif areaDraw.mouseOverPlacenames == 0 then
                         worldEdit.enteredWorldText = ""
                         worldEdit.drawableTile[5] = ""
                     end
@@ -479,13 +479,13 @@ function checkWorldEditMouseDown(button)
                     end
                 end
             end
-        elseif areaDraw.mouseOverMusicNames > -1 then
+        elseif areaDraw.mouseOverMusicnames > -1 then
             if button == 1 then
                 local count = 1
                 for i,v in ipairs(avaliableMusic) do
-                    if areaDraw.mouseOverMusicNames == count then
+                    if areaDraw.mouseOverMusicnames == count then
                         worldEdit.drawableTile[6] = v.name
-                    elseif areaDraw.mouseOverMusicNames == 0 then
+                    elseif areaDraw.mouseOverMusicnames == 0 then
                         worldEdit.drawableTile[6] = "*"
                     end
                     if v.name ~= "" then 
@@ -510,7 +510,7 @@ function checkWorldEditKeyPressed(key)
         elseif key == "return" and worldEdit.enteredWorldText ~= "" then
             worldEdit.isTyping = false
             worldEdit.drawableTile[5] = worldEdit.enteredWorldText
-            -- print(worldEdit.drawableTile[5])
+            -- -- print(worldEdit.drawableTile[5])
         elseif key == "escape" then 
             worldEdit.isTyping = false
         end
@@ -567,9 +567,9 @@ function saveWorldChanges()
             if worldEdit.draw[x] and worldEdit.draw[y] and worldEdit.draw[x][y][1] ~= "" then
                 count = count + 1
                 pendingWorldChanges[#pendingWorldChanges+1] = {
-                    GroundTile = worldEdit.draw[x][y][1],
-                    ForegroundTile = worldEdit.draw[x][y][2],
-                    Name =  worldEdit.draw[x][y][5],
+                    groundtile = worldEdit.draw[x][y][1],
+                    foregroundtile = worldEdit.draw[x][y][2],
+                    name =  worldEdit.draw[x][y][5],
                     Music = worldEdit.draw[x][y][6],  
                     Enemy = worldEdit.draw[x][y][3],
                     Collision = worldEdit.draw[x][y][4],
@@ -580,13 +580,12 @@ function saveWorldChanges()
         end
     end
     local b = {}
-    print (json:encode(pendingWorldChanges))
-    print("World change amount: " .. count)
-    c, h = http.request{url = api.url.."/world", method="POST", source=ltn12.source.string(json:encode(pendingWorldChanges)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(json:encode(pendingWorldChanges)),["token"]=token}}
+    -- print (lunajson.encode(pendingWorldChanges))
+    c, h = http.request{url = api.url.."/world", method="POST", source=ltn12.source.string(lunajson.encode(pendingWorldChanges)), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(lunajson.encode(pendingWorldChanges)),["token"]=token}}
     pendingWorldChanges = {}
     local b = {}
     c, h = http.request{url = api.url.."/world", method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
-    initWorldTable(json:decode(table.concat(b)))
+    initWorldTable(lunajson.decode(table.concat(b)))
     --createWorld()
     initWorldMap()
     initDrawableNewWorldEditTiles()
@@ -613,7 +612,7 @@ function checkIfReadyToQuit()
 end
 
 function getWorldInfo() 
-    availablePlaceNames = {}
+    availablePlacenames = {}
     avaliableMusic = {}
 
     for i, v in ipairs(worldMusic) do -- Gets all current music
@@ -627,22 +626,22 @@ function getWorldInfo()
     for key,tiles in next, worldChunks do
         if orCalc(key, {player.wx - 1 ..","..player.wy - 1, player.wx..","..player.wy - 1, player.wx - 1 ..","..player.wy, player.wx..","..player.wy,}) then
             for i,v in ipairs(tiles) do
-                if  worldLookup[v.X..","..v.Y] then
-                    local location = worldLookup[v.X..","..v.Y].Name or ""
-                    if not arrayContains(availablePlaceNames, location) and not string.find(location, "Dominion") then
-                        availablePlaceNames[#availablePlaceNames + 1] = location
+                if  worldLookup[v.x..","..v.y] then
+                    local location = worldLookup[v.x..","..v.y].name or ""
+                    if not arrayContains(availablePlacenames, location) and not string.find(location, "Dominion") then
+                        availablePlacenames[#availablePlacenames + 1] = location
                     end
-                    if not arrayContains(avaliableMusic, worldLookup[v.X..","..v.Y].Music) then
-                        avaliableMusic[#avaliableMusic + 1] = worldLookup[v.X..","..v.Y].Music
+                    if not arrayContains(avaliableMusic, worldLookup[v.x..","..v.y].music) then
+                        avaliableMusic[#avaliableMusic + 1] = worldLookup[v.x..","..v.y].music
                     end
                 end
             end
         end
     end
 
-    for i, v in ipairs(availablePlaceNames) do
+    for i, v in ipairs(availablePlacenames) do
         love.math.setRandomSeed(i)
-        availablePlaceNames[i] = {name = v, color = {getAreaColor(), getAreaColor(), getAreaColor(), 0.7}}
+        availablePlacenames[i] = {name = v, color = {getAreaColor(), getAreaColor(), getAreaColor(), 0.7}}
     end
 
     for i, v in ipairs(avaliableMusic) do
@@ -650,14 +649,12 @@ function getWorldInfo()
         avaliableMusic[i] = {name = v, color = {getAreaColor(), getAreaColor(), getAreaColor(), 0.7}}
     end
     
-    love.math.setRandomSeed(#availablePlaceNames + 1)
+    love.math.setRandomSeed(#availablePlacenames + 1)
     areaDraw.nextPlaceColor = {getAreaColor(), getAreaColor(), getAreaColor(), 0.7}
 
     love.math.setRandomSeed(#avaliableMusic + 1)
     areaDraw.nextMusicColor = {getAreaColor(), getAreaColor(), getAreaColor(), 0.7}
 
-    print("Places: " .. json:encode(availablePlaceNames))
-    print("Music: " .. json:encode(avaliableMusic))
 end
 
 function checkWorldEditTextInput(key)

@@ -95,7 +95,7 @@ function updateCharacter(dt)
     end
 
     -- Add sparkles to the player!
-    if me.Mount and me.Mount.Name ~= "None" and me.Mount.Name ~= "" and me.Mount.Enchantment ~= "None" then
+    if me.mount and me.mount.name ~= "None" and me.mount.name ~= "" and me.mount.enchantment ~= "None" and me.mount.enchantment ~= nil then
         sparklesAmount = sparklesAmount + 5 * dt
         if isMoving and sparklesAmount > 1 then
             sparklesAmount = 0
@@ -110,7 +110,7 @@ function updateCharacter(dt)
             X = player.dx,
             Y = player.dy,
             Buddy = player.buddy,
-            Name = me.Name
+            name = me.name
         }
         updateBuddy(dt, pl)
     end
@@ -122,16 +122,16 @@ function worldCollision(x, y)
     local output = false
     if worldEdit.open and versionType == "dev" then return output end
     if worldLookup[x..","..y] then
-        if worldLookup[x..","..y].Collision == true then
+        if worldLookup[x..","..y].collision == true then
             output = true
         end
-        if me.Mount and string.find(me.Mount.Name, "boat") and isTileType(worldLookup[x..","..y].ForegroundTile, "Water") then
+        if me.mount and string.find(me.mount.name:lower(), "boat") and isTileType(worldLookup[x..","..y].foregroundtile, "Water") then
             output = false
-        elseif me.Mount and string.find(me.Mount.Name, "boat") and not worldLookup[x..","..y].Collision then
+        elseif me.mount and string.find(me.mount.name:lower(), "boat") and not worldLookup[x..","..y].collision then
             output = true
         end
     end
-    if enemyCollisions[x..","..y] and me and me.Invulnerability < 0 then output = true end
+   -- if enemyCollisions[x..","..y] and me and me.invulnerability < 0 then output = true end
     return output
 end
 
@@ -144,7 +144,7 @@ end
 function movePlayer(dt) -- a nice update function
     -- move player!
     if andCalc(true, {
-            (me and not me.IsDead),
+            (me and not me.isDead),
             (not isMoving or (distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy) < 1)),
             not worldEdit.isTyping,
             not isTypingInChat,
@@ -194,7 +194,7 @@ function movePlayer(dt) -- a nice update function
         if (prev.x ~= player.x or prev.y ~= player.y) then--or worldEdit.open then
             player.x = prev.x
             player.y = prev.y
-            if me and me.Mount and worldLookup[player.x..","..player.y] then
+            if me and me.mount and worldLookup[player.x..","..player.y] then
                 playFootstepSound(worldLookup[player.x..","..player.y], player.x, player.y, true)
             end
             isMoving = true
@@ -207,16 +207,16 @@ function movePlayer(dt) -- a nice update function
     -- Move player! If not dead of course!
     if distance > 1 then
         local speed = 80
-        if me and me.Mount and me.Mount.Name ~= "None" or worldEdit.open then
-            speed = tonumber(me.Mount.Val) or 80 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
-            local enchant = me.Mount.Enchantment or false
+        if me and me.mount and me.mount.name ~= "None" or worldEdit.open then
+            speed = tonumber(me.mount.val) or 80 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
+            local enchant = me.mount.enchantment or false
             if enchant and enchant ~= "None" and enchant ~= "" then speed = speed + 25 end
             if worldEdit.open and versionType == "dev" then speed = 256 end
         end
-        -- if worldLookup[player.x..","..player.y] and worldLookup[player.x..","..player.y].ForegroundTile and worldLookup[player.x..","..player.y].GroundTile and (isTileType(worldLookup[player.x..","..player.y].ForegroundTile, "Path") or isTileType(worldLookup[player.x..","..player.y].GroundTile, "Path")) then
-        --     speed = speed * 1.4
-        -- end
-        if me.ActiveSpell and me.ActiveSpell.Name == "Whirlwind" then
+        if worldLookup[player.x..","..player.y] and worldLookup[player.x..","..player.y].foregroundtile and worldLookup[player.x..","..player.y].groundtile and (isTileType(worldLookup[player.x..","..player.y].foregroundtile, "Path") or isTileType(worldLookup[player.x..","..player.y].groundtile, "Path")) then
+            speed = speed * 1.4
+        end
+        if me.activespell and me.activespell.name == "Whirlwind" then
             addSparkles(player.dx + 16, player.dy + 16, 5, 30, 20)
             speed = 240
         end
@@ -262,17 +262,17 @@ end
 
 function updateInventory(response)
     newInventoryItems = {}
-    if json:encode(inventoryAlpha) ~= "[]" then
+    if lunajson.encode(inventoryAlpha) ~= "[]" then
         for i, v in ipairs(response['Inventory']) do
             local newItem = true
             v = copy(v)
             for o, k in ipairs(inventoryAlpha) do
-                if k.Item.Name == v.Item.Name then -- and v.Inventory.Amount == k.Inventory.Amount then
-                    -- print("You have " .. k.Inventory.Amount .. " of this item, and the server says you now have " ..
-                    --           v.Inventory.Amount)
-                    v.Inventory.Amount = v.Inventory.Amount - k.Inventory.Amount
-                    -- print("That's a change of " .. v.Inventory.Amount .. " of it.")
-                    if v.Inventory.Amount <= 0 then
+                if k.item.name == v.item.name then -- and v.inventory.amount == k.inventory.amount then
+                    -- -- print("You have " .. k.inventory.amount .. " of this item, and the server says you now have " ..
+                    --           v.inventory.amount)
+                    v.inventory.amount = v.inventory.amount - k.inventory.amount
+                    -- -- print("That's a change of " .. v.inventory.amount .. " of it.")
+                    if v.inventory.amount <= 0 then
                         newItem = false
                     end
                 end
@@ -285,13 +285,15 @@ function updateInventory(response)
     end
 
     for i,k in ipairs(newInventoryItems) do
-        -- print(k.Item.Name)
-        enemyHitSfx:setPosition(player.x, player.y)
-        enemyHitSfx:setRolloff(sfxRolloff)
-        enemyHitSfx:setRelative(false)
-        setEnvironmentEffects(enemyHitSfx)
-        enemyHitSfx:play()
-        burstLoot((player.x*32)-16, (player.y*32)-16, k.Inventory.Amount, k.Item.ImgPath)
+        -- -- print(k.item.name)
+        if (k.item ~= nil) then
+            enemyHitSfx:setPosition(player.x, player.y)
+            enemyHitSfx:setRolloff(sfxRolloff)
+            enemyHitSfx:setRelative(false)
+            setEnvironmentEffects(enemyHitSfx)
+            enemyHitSfx:play()
+            burstLoot((player.x*32)-16, (player.y*32)-16, k.inventory.amount, k.item.imgpath)
+        end
         newInventoryItems = {}
     end
 
@@ -301,6 +303,6 @@ function updateInventory(response)
 end
 
 function holdingStaff()
-    if me and me.Weapon and string.find(me.Weapon.Name, "Staff") then return true
+    if me and me.weapon and string.find(me.weapon.name, "Staff") then return true
     else return false end
 end

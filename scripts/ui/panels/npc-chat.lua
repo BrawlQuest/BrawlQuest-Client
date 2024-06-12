@@ -38,13 +38,13 @@ end
 function createNPCChatBackground(x, y)
     npcChatBackground = {}
   
-    npcChatBackground[1] = worldLookup[x..","..y].GroundTile
+    npcChatBackground[1] = worldLookup[x..","..y].groundtile
 
     local foundCollidable = false
     local currentX = x
     while not foundCollidable do
         if worldLookup[currentX..","..y] and worldLookup[currentX..","..y].Collision then
-            npcChatBackground[2] = worldLookup[currentX..","..y].ForegroundTile
+            npcChatBackground[2] = worldLookup[currentX..","..y].foregroundtile
             foundCollidable = true
         end
         currentX = currentX + 1
@@ -69,7 +69,7 @@ function drawNPCChatBackground(x, y)
         end
 
        
-        love.graphics.draw(getImgIfNotExist(npcChat.ImgPath), x + 128 - (chatXpos*2), y + (254 - worldImg[npcChat.ImgPath]:getWidth()*4) + 0, 0, 4, 4)
+        love.graphics.draw(getImgIfNotExist(npcChat.imgpath), x + 128 - (chatXpos*2), y + (254 - worldImg[npcChat.imgpath]:getWidth()*4) + 0, 0, 4, 4)
 
         love.graphics.setColor(1,1,1,chatOpacity)
         love.graphics.setFont(npcChatArg.font)
@@ -133,8 +133,8 @@ function updateNPCChat(dt)
                 --    speakSound = npcChatSFX[string.sub(npcChat.Title,#chatWritten,#chatWritten)]
                     speakSound:setPitch(love.math.random(100,110)/100)
                     speakSound:setVolume(0.05*sfxVolume)
-                    if npcPitch[npcChat.ImgPath] then
-                        speakSound:setPitch(love.math.random(npcPitch[npcChat.ImgPath][1],npcPitch[npcChat.ImgPath][2])/100)
+                    if npcPitch[npcChat.imgpath] then
+                        speakSound:setPitch(love.math.random(npcPitch[npcChat.imgpath][1],npcPitch[npcChat.imgpath][2])/100)
                     else
                         speakSound:setPitch(love.math.random(20,200)/100)
                     end
@@ -209,10 +209,9 @@ function continueConversation()
                 npcChat.Title = ""
             else
                 local b = {}
-                print(api.url.."/conversation/"..v[2].."/"..username.."/"..currentNPC)
-                c, h = http.request{url = api.url.."/conversation/"..v[2].."/"..username.."/"..currentNPC, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
+                    c, h = http.request{url = api.url.."/conversation/"..v[2].."/"..username.."/"..currentNPC, method="GET", source=ltn12.source.string(body), headers={["token"]=token}, sink=ltn12.sink.table(b)}
                 if b ~= nil then
-                    npcChat = json:decode(table.concat(b))
+                    npcChat = lunajson.decode(table.concat(b))
                     if npcChat then
                         local optionString = npcChat.Options
                        optionString = string.gsub(optionString, "'s", 's')
@@ -220,11 +219,11 @@ function continueConversation()
                         optionString = string.gsub(optionString, "'ll", 'll')
                         optionString = string.gsub(optionString, "'ve", 've')
                         optionString =  string.gsub(optionString, "'", '"')
-                        npcChat.Options = json:decode(optionString)
+                        npcChat.Options = lunajson.decode(optionString)
                     -- else
                     --     npcChat.options = {{"Okay", "1"},}
                     end
-                    --npcChat.Options = json:decode(string.gsub(npcChat.Options, "'", '"'))
+                    --npcChat.Options = lunajson.decode(string.gsub(npcChat.Options, "'", '"'))
                 end
             end
             break

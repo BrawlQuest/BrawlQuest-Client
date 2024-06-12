@@ -45,7 +45,7 @@ function animateCharacter(dt, bool)
             end
             player.frameAmount = 0
         end
-    elseif me and me.Mount and not orCalc(me.Mount.Name, {"", "None",}) then player.frame = idle
+    elseif me and me.mount and not orCalc(me.mount.name, {"", "None",}) then player.frame = idle
     elseif bool or player.frame > walkStart then
         player.frameAmount = player.frameAmount + walkSpeed * dt
         if player.frameAmount >= 1 then
@@ -84,7 +84,7 @@ function animateOtherPlayer(dt, bool, i)
             end
             plr.frameAmount = 0
         end
-    elseif plr.Mount and not orCalc(plr.Mount.Name, {"", "None",}) then plr.Frame = idle
+    elseif plr.mount and not orCalc(plr.mount.name, {"", "None",}) then plr.Frame = idle
     elseif bool or (plr.Frame and plr.Frame > 1) then
         if not plr.frameAmount then plr.frameAmount = 0 end
         plr.frameAmount = plr.frameAmount + walkSpeed * dt
@@ -92,13 +92,13 @@ function animateOtherPlayer(dt, bool, i)
             plr.Frame = (plr.Frame or 1) + 1
             if plr.Frame > walkEnd then plr.Frame = walkStart end
             plr.frameAmount = 0
-            if orCalc(plr.Frame, {walkStart, walkStart + 2}) and worldLookup[plr.X..","..plr.Y] then
-                playFootstepSound(worldLookup[plr.X..","..plr.Y], plr.X, plr.Y)
+            if orCalc(plr.Frame, {walkStart, walkStart + 2}) and worldLookup[plr.x..","..plr.y] then
+                playFootstepSound(worldLookup[plr.x..","..plr.y], plr.x, plr.y)
             end
             if not bool then 
                 plr.Frame = idle
-                if worldLookup[plr.X..","..plr.Y] then
-                    playFootstepSound(worldLookup[plr.X..","..plr.Y], plr.X, plr.Y)
+                if worldLookup[plr.x..","..plr.y] then
+                    playFootstepSound(worldLookup[plr.x..","..plr.y], plr.x, plr.y)
                 end
             end
         end
@@ -118,12 +118,12 @@ function drawAnimation(v,x,y,dir)
 
     drawAnimatedWeapon(v,x,y,dir,frame)
 
-    if v.IsShield and v.ShieldID ~= 0 and notBoat then drawArmourImage(x+12 - 5 * dir,y,v,ad,"Shield",dir) end
+    if v.isShield and v.shieldId ~= 0 and notBoat then drawArmourImage(x+12 - 5 * dir,y,v,ad,"Shield",dir) end
     love.graphics.draw(baseSpriteSheet, baseImages[frame], x - 16 * dir, y - 16, 0, dir, 1)
 
-    drawAnimatedArmourImage(v, "LegArmour", x - 16 * dir, y - 16, dir, frame)
-    drawAnimatedArmourImage(v, "ChestArmour", x - 16 * dir, y - 16, dir, frame)
-    drawAnimatedArmourImage(v, "HeadArmour", x - 16 * dir, y - 16, dir, frame)
+    drawAnimatedArmourImage(v, "legarmour", x - 16 * dir, y - 16, dir, frame)
+    drawAnimatedArmourImage(v, "chestarmour", x - 16 * dir, y - 16, dir, frame)
+    drawAnimatedArmourImage(v, "headarmour", x - 16 * dir, y - 16, dir, frame)
 
     love.graphics.setBlendMode("add")
     if frame >= 12 and frame <= 14 then love.graphics.draw(baseSwing, swingImages[frame - 11], x - (27 * dir), y - 27, 0, dir, 1) end
@@ -134,7 +134,7 @@ end
 
 function drawAnimatedWeapon(v,x,y,dir,frame)
     if frame >= 10 then
-        local wx,wy = x - (getImgIfNotExist(v.Weapon.ImgPath):getWidth() - 32) * dir, y - (getImgIfNotExist(v.Weapon.ImgPath):getHeight() - 32)
+        local wx,wy = x - (getImgIfNotExist(v.weapon.imgpath):getWidth() - 32) * dir, y - (getImgIfNotExist(v.weapon.imgpath):getHeight() - 32)
         if frame == 10 then drawAnimationWeapon(v,wx,wy - 3, dir)
         elseif frame == 11 then drawAnimationWeapon(v,wx + (24 * dir), wy - 16, dir, 45)
         elseif frame == 12 then drawAnimationWeapon(v,wx + (70 * dir), wy + 18, dir * -1, -40)
@@ -145,11 +145,11 @@ function drawAnimatedWeapon(v,x,y,dir,frame)
 
         local shieldOff = 4
         if frame == 3 or frame == 5 then shieldOff = 5 elseif frame == 4 then shieldOff = 6 end
-        if v.ShieldID ~= 0 then drawArmourImage(x - shieldOff * dir, y - off + 1, v, ad, "ShieldFalse", dir) end
+        if v.shieldId ~= 0 then drawArmourImage(x - shieldOff * dir, y - off + 1, v, ad, "ShieldFalse", dir) end
         local wx, wy, r = x,y - off, 0
-        if string.find(v.Weapon.ImgPath, "a1/special", 18) or
-            string.find(v.Weapon.ImgPath, "sword", 22) or
-            string.find(v.Weapon.ImgPath, "dagger", 22) then wx, wy, r = wx + 32 * dir, wy + 32, 180 end
+        if string.find(v.weapon.imgpath, "a1/special", 18) or
+            string.find(v.weapon.imgpath, "sword", 22) or
+            string.find(v.weapon.imgpath, "dagger", 22) then wx, wy, r = wx + 32 * dir, wy + 32, 180 end
         drawAnimationWeapon(v, wx, wy, dir, r)
     end
 end
@@ -158,15 +158,15 @@ function drawAnimationWeapon(v,x,y,dir,r)
     r = (r or 0) * dir
     x,y = x - (2 * dir), y - 1
     if v["WeaponID"] ~= 0 then
-        love.graphics.draw(getImgIfNotExist(v.Weapon.ImgPath), x, y, math.rad(r), dir, 1, 0, 0)
-        if v.Weapon.Enchantment ~= "None" then
+        love.graphics.draw(getImgIfNotExist(v.weapon.imgpath), x, y, math.rad(r), dir, 1, 0, 0)
+        if v.weapon.enchantment ~= "None" and v.weapon.enchantment ~= nil then
             love.graphics.push()
                 love.graphics.stencil(function() 
                     love.graphics.setShader(alphaShader)
-                    love.graphics.draw(getImgIfNotExist(v.Weapon.ImgPath), x, y, math.rad(r), dir, 1, 0, 0)
+                    love.graphics.draw(getImgIfNotExist(v.weapon.imgpath), x, y, math.rad(r), dir, 1, 0, 0)
                     love.graphics.setShader()
                 end)
-                drawEnchantment(x - (getImgIfNotExist(v.Weapon.ImgPath):getWidth() - 32), y)
+                drawEnchantment(x - (getImgIfNotExist(v.weapon.imgpath):getWidth() - 32), y)
             love.graphics.pop()
         end
     end

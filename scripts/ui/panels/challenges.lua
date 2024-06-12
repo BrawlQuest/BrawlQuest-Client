@@ -46,12 +46,12 @@ function drawChallenges()
         local text
         love.graphics.setColor(1,1,1)
         love.graphics.rectangle("fill", x + 10, y + 10, 84, 84, 6)
-        love.graphics.draw(getImgIfNotExist(v.ImgPath), x + 20, y + 20, 0, 2)
-        love.graphics.printf(v.Desc, x + 114, y + 10 + 4, (w - 134) / c.fs.text, "left", 0, c.fs.text)
+        love.graphics.draw(getImgIfNotExist(v.imgpath), x + 20, y + 20, 0, 2)
+        love.graphics.printf(v.description, x + 114, y + 10 + 4, (w - 134) / c.fs.text, "left", 0, c.fs.text)
         if v.IsComplete then text = "Completed" elseif v.Tracking then text = "Tracking" else text = "Available" end
         love.graphics.printf(text, x + 114, y + 10 + 4, (w - 134) / c.fs.text, "right", 0, c.fs.text)
         if v.IsComplete then text = "Resets in " .. v.Reset elseif v.Tracking then text = "Press to Stop Tracking" else text = "Press to Accept Challenge" end
-        love.graphics.printf("Reward: " .. v.XP .. "XP", x + 114, y + 10 + 4 + (c.font:getHeight() * c.fs.text), (w - 134) / c.fs.text, "left", 0, c.fs.text)
+        love.graphics.printf("Reward: " .. v.xP .. "XP", x + 114, y + 10 + 4 + (c.font:getHeight() * c.fs.text), (w - 134) / c.fs.text, "left", 0, c.fs.text)
         love.graphics.setColor(1,0,0)
         if isMouseOver((x + 114) * scale, (y + 10 + 4 + (c.font:getHeight() * c.fs.text) * 2) * scale, (c.font:getWidth(text) * c.fs.text) * scale, (c.font:getHeight(text) * c.fs.text) * scale) then
             love.graphics.setColor(1,0,1)

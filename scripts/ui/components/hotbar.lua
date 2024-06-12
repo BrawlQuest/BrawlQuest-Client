@@ -29,11 +29,11 @@ function drawHotbar(thisX, thisY)
 
     for i = 1, 7 do
         v = sortedHotbar[i]
-        if v then
+        if v and v.inventoryitem then
             drawInventoryItem(thisX + 9 + (43 * (i - 1)), thisY - 42,
-                              v.InventoryItem.Item,
-                              v.InventoryItem.Inventory.Amount, i,
-                              v.InventoryItem.Inventory.ID)
+                              v.inventoryitem.item,
+                              v.inventoryitem.inventory.amount, i,
+                              v.inventoryitem.inventory.id)
         else
             drawInventoryItem(thisX + 9 + (43 * (i - 1)), thisY - 42, nil, 0, i,
                               nil)
@@ -46,7 +46,7 @@ function checkHotbarKeyPressed(key)
     -- for i, v in ipairs(e/) do
     --     if key == tostring(i) or (i == 7 and key == "space") then
 
-    --         if v.item ~= nil and v.item.ID ~= nil and not isItemUnusable(v.item) and
+    --         if v.item ~= nil and v.item.id ~= nil and not isItemUnusable(v.item) and
     --             not isSpellUnusable(v.item) then
     --             useHotbarItem(i, v)
     --             hotbarChanged = true
@@ -72,7 +72,7 @@ function checkHotbarMousePressed(button)
 
     -- local i, v = inventory.mouseOverButtonsAmount,
     --              copy(hotbar[inventory.mouseOverButtonsAmount])
-    -- if v.item and v.item.ID and not usedItemThisTick then
+    -- if v.item and v.item.id and not usedItemThisTick then
     --     if button == 1 then
     --         useHotbarItem(i, v)
     --         hotbarChanged = true
@@ -90,8 +90,8 @@ function useHotbarItem(i, v)
    
         useItemColor[i] = 1
         useItemColorChanged = true
-        apiGET("/item/" .. player.name .. "/" .. v.InventoryItem.Item.ID)
-        playSoundIfExists("assets/sfx/items/" .. v.InventoryItem.Item.Name ..
+        apiGET("/item/" .. player.name .. "/" .. v.inventoryitem.item.id)
+        playSoundIfExists("assets/sfx/items/" .. v.inventoryitem.item.name ..
                               ".ogg", true)
         usedItemThisTick = true
         writeSettings()
@@ -105,9 +105,9 @@ function checkHotbarChange()
     --         local found = false
     --         for field = 1, #inventory.fields do
     --             for i, v in ipairs(userInventory[field]) do
-    --                 if v.Item.ID and k.item.ID == v.Item.ID then
-    --                     hotbar[j].item = v.Item
-    --                     local amount = getItemAmount(v.Item)
+    --                 if v.item.id and k.item.id == v.item.id then
+    --                     hotbar[j].item = v.item
+    --                     local amount = getItemAmount(v.item)
     --                     hotbar[j].amount = amount
     --                     -- if amount < 1 then hotbar[j] = {item = null, amount = 0} end
     --                     found = true
@@ -116,7 +116,7 @@ function checkHotbarChange()
     --             end
     --             if found then break end
     --         end
-    --         -- if me.LVL and not found then hotbar[j] = {item = null, amount = 0} end
+    --         -- if me.lvl and not found then hotbar[j] = {item = null, amount = 0} end
     --     end
     -- end
     -- writeSettings()

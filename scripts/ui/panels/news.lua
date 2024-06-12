@@ -17,21 +17,21 @@ function initNews()
             header = "1",
             desc = "This is a general bug update. It should all be good.",
             action = function()
-                print("I WANT YOU")
+                -- print("I WANT YOU")
             end,
             img = love.graphics.newImage("assets/ui/news/01.png")
         }, {
             header = "2",
             desc = "This is a generl be good.",
             action = function()
-                print("Second")
+                -- print("Second")
             end,
             img = love.graphics.newImage("assets/ui/news/02.png")
         }, {
             header = "3",
             desc = "This is a generl be good.",
             action = function()
-                print("Second")
+                -- print("Second")
             end,
             img = love.graphics.newImage("assets/ui/news/03.png")
         }},
@@ -49,7 +49,7 @@ end
 function getNews()
 
     b, c, h = http.request("https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=871940&count=3")
-    newsItems = json:decode(b)
+    newsItems = lunajson.decode(b)
 
     news.items = {}
     for i,newsItem in ipairs(newsItems.appnews.newsitems) do
@@ -98,7 +98,7 @@ function drawNews()
     drawButtonBg(x, y, w, h, 10, {1, 1, 1, news.alpha})
 
     love.graphics.setColor(1, 1, 1, news.alpha)
-    love.graphics.print("Welcome back " .. me.Name .. "!", x + 20, y + 25, 0, 4)
+    love.graphics.print("Welcome back " .. me.name .. "!", x + 20, y + 25, 0, 4)
 
     dx, dy = x + 20, y + 70
     dw, dh = w - 40, 260
@@ -145,9 +145,9 @@ function drawNews()
             love.graphics.setColor(1, 1, 1, news.alpha)
             love.graphics.printf(news.items[news.selected.item].header, dx,
                 dy - getTextHeight(news.items[news.selected.item].header, dw, font, 5) - 10 -
-                    getTextHeight(news.items[news.selected.item].desc, dw, font, 2), dw / 5, "left", 0, 5)
-            love.graphics.printf(news.items[news.selected.item].desc, dx,
-                dy - getTextHeight(news.items[news.selected.item].desc, dw, font, 2), dw / 2, "left", 0, 2)
+                    getTextHeight(news.items[news.selected.item].description, dw, font, 2), dw / 5, "left", 0, 5)
+            love.graphics.printf(news.items[news.selected.item].description, dx,
+                dy - getTextHeight(news.items[news.selected.item].description, dw, font, 2), dw / 2, "left", 0, 2)
             love.graphics.setStencilTest()
         end
     })

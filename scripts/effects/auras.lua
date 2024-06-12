@@ -15,20 +15,20 @@ auraColors = {
 function drawAuras()
     love.graphics.setBlendMode("add")
     for i,v in ipairs(auraAuras) do
-        if v.Stat == "HP" then
+        if v.stat == "HP" then
             love.graphics.setColor(1,0,0,0.3 * v.alpha)
-        elseif v.Stat == "INT" then
+        elseif v.stat == "INT" then
             love.graphics.setColor(0,0,1,0.2 * v.alpha)
-        elseif v.Stat == "LUCK" then
+        elseif v.stat == "LUCK" then
             love.graphics.setColor(1,1,0,0.1 * v.alpha)
-        elseif v.Stat == "ATK" then
+        elseif v.stat == "ATK" then
             love.graphics.setColor(0.96, 0.52, 0.26, 0.2 * v.alpha)
-        elseif v.Stat == "DEF" then
+        elseif v.stat == "DEF" then
             love.graphics.setColor(0.4, 0.4, 0.4, 0.6 * v.alpha)
-        elseif v.Stat == "Bone" then
+        elseif v.stat == "Bone" then
             love.graphics.setColor(0, 0.8, 0, 0.6 * v.alpha)
         end
-        local x,y = v.X*32, v.Y*32
+        local x,y = v.x*32, v.y*32
         x = x +16
         y = y + 16
 
@@ -43,58 +43,55 @@ end
 
 function drawAuraHeadings()
     love.graphics.setColor(1,1,1,1)
-    local x = (uiX-36)
+    local x = (uiX-256-36)
     for i,v in ipairs(auras) do
-        local img = getImgIfNotExist(v.Item.ImgPath)
+        local img = getImgIfNotExist(v.item.imgpath)
 
         love.graphics.setColor(1,1,1)
         love.graphics.draw(img,x,4)
         if isMouseOver(x*scale,4*scale,32*scale,32*scale) then
-
-            setTooltip(v.Stat, "Your "..v.Stat.." is being increased by "..v.Value.." for the next "..v.TimeLeft.." seconds")
-
+            setTooltip(v.stat, "Your "..v.stat.." is being increased by "..v.value.." for the next "..v.timeLeft.." seconds")
         end
         x = x - 36
     end
 end
 
 function tickAuras()
---  auraAuras = {}
     for i,v in ipairs(auras) do
-        local img = getImgIfNotExist("assets/auras/"..v.Stat..".png")
-        local x = v.X - v.Radius
-        local y = v.Y - v.Radius
+        local img = getImgIfNotExist("assets/auras/"..v.stat..".png")
+        local x = v.x - v.radius
+        local y = v.y - v.radius
         auraAuras[#auraAuras+1] = {
-            X = v.X,
-            Y = v.Y,
+            x = v.x,
+            y = v.y,
             width = 0,
-            Stat = v.Stat,
+            stat = v.stat,
             alpha = 1,
-            Radius = v.Radius,
-            lightID = Luven.addNormalLight(16 + v.X * 32, 16 + v.Y * 32, auraColors[v.Stat], 2),
+            radius = v.radius,
+            lightID = Luven.addNormalLight(16 + v.x * 32, 16 + v.y * 32, auraColors[v.stat], 2),
             hasBurst = false,
             expanding = true,
             maxWidth = 0,
             amount = 0,
         }
-        while x < v.X + v.Radius do
-            while y < v.Y + v.Radius do
-                if love.math.random(1,10) == 1 and distanceToPoint(x, y, v.X, v.Y) < v.Radius then
+        while x < v.x + v.radius do
+            while y < v.y + v.radius do
+                if love.math.random(1,10) == 1 and distanceToPoint(x, y, v.x, v.y) < v.radius then
                     auraParticles[#auraParticles+1] = {
                         x = x*32 + 16,
                         y = y*32 + 16,
                         xv = love.math.random(-32,32),
                         ox = x*32 + 16,
-                        stat = v.Stat,
+                        stat = v.stat,
                         alpha = 2,
-                        img =  getImgIfNotExist("assets/auras/"..v.Stat..".png"),
-                        Radius = v.Radius
+                        img =  getImgIfNotExist("assets/auras/"..v.stat..".png"),
+                        radius = v.radius
                     }
                 end
                 y = y + 1
             end
             x = x + 1
-            y = v.Y - v.Radius
+            y = v.y - v.radius
         end
     end
 end
@@ -118,14 +115,14 @@ function updateAuras(dt)
 
     for i,v in ipairs(auraAuras) do
         if not v.hasBurst then -- and nextTick and lastTick then
-            v.width = cerp(0, (32*(v.Radius*2)), 1 - nextTick)
-            v.width = v.width + (32*(v.Radius*2)) * dt
+            v.width = cerp(0, (32*(v.radius*2)), 1 - nextTick)
+            v.width = v.width + (32*(v.radius*2)) * dt
             if 1 - nextTick >= (1 - lastTick) * 0.8 then
                 v.hasBurst = true
                 v.maxWidth = v.width
             end
         else
-            v.width = cerp(v.maxWidth, v.maxWidth - (32 * v.Radius) / 2, v.amount)
+            v.width = cerp(v.maxWidth, v.maxWidth - (32 * v.radius) / 2, v.amount)
             v.amount = v.amount + 1 * dt
         end
 

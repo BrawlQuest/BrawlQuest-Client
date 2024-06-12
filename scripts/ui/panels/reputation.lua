@@ -17,43 +17,43 @@ function initReputation()
             {
                 title = "Fish Slice",
                 rep = love.math.random(-300,300),
-                repName = "Legendary",
+                repname = "Legendary",
             },{
                 title = "Big Bad Wolf",
                 rep = love.math.random(-300,300),
-                repName = "Legendary",
+                repname = "Legendary",
             },{
                 title = "Fish Slice",
                 rep = love.math.random(-300,300),
-                repName = "Legendary",
+                repname = "Legendary",
             },{
                 title = "Big Bad Wolf",
                 rep = love.math.random(-300,300),
-                repName = "Legendary",
+                repname = "Legendary",
             },{
                 title = "Big Bad Wolf",
                 rep = love.math.random(-300,300),
-                repName = "Legendary",
+                repname = "Legendary",
             },{
                 title = "Fish Slice",
                 rep = love.math.random(-300,300),
-                repName = "Legendary",
+                repname = "Legendary",
             },{
                 title = "Big Bad Wolf",
                 rep = love.math.random(-300,300),
-                repName = "Legendary",
+                repname = "Legendary",
             },{
                 title = "Big Bad Wolf",
                 rep = love.math.random(-300,300),
-                repName = "Legendary",
+                repname = "Legendary",
             },{
                 title = "Fish Slice",
                 rep = love.math.random(-300,300),
-                repName = "Legendary",
+                repname = "Legendary",
             },{
                 title = "Big Bad Wolf",
                 rep = love.math.random(-300,300),
-                repName = "Legendary",
+                repname = "Legendary",
             },
         },
     }
@@ -131,7 +131,7 @@ function drawReputationItem(v, x, y, dw, dh)
     -- love.graphics.rectangle("line", x, y, dw, dh, 6)
     love.graphics.print(v.title, dx, dy, 0, ts)
     love.graphics.printf(v.rep, dx, dy, (dw - 20) / ts, "right", 0, ts)
-    love.graphics.printf(v.repName, dx, dy, (dw - 20 - 60) / ts, "right", 0, ts)
+    love.graphics.printf(v.repname, dx, dy, (dw - 20 - 60) / ts, "right", 0, ts)
 end
 
 function checkReputationKeyPressed(key)
@@ -180,19 +180,19 @@ function openReputation()
 
     t.items = {}
     for i,v in ipairs(Reputation) do
-        local repName, repNumber = getRepInfo(v.Value)
-        if v.Faction == me.Order then t.order = {title = v.Faction, rep = v.Value,}
+        local repname, repNumber = getRepInfo(v.value)
+        if v.Faction == me.Order then t.order = {title = v.Faction, rep = v.value,}
             t.order = {
                 title = v.Faction,
-                rep = v.Value,
-                repName = repName,
+                rep = v.value,
+                repname = repname,
                 repNumber = repNumber,
             }
         elseif not orCalc(v.Faction, {"Mage Order", "Warrior Order", "Stoic Order",}) then
             t.items[#t.items+1] = {
                 title = v.Faction,
-                rep = v.Value,
-                repName = repName,
+                rep = v.value,
+                repname = repname,
                 repNumber = repNumber,
             }
         end

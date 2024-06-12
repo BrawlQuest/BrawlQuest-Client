@@ -62,7 +62,7 @@ tutorialQuickTriggers = { -- these are reduce by 1 every second, and trigger a t
 function initTutorial()
     if love.filesystem.getInfo("tutorial.txt") then
         local contents, size = love.filesystem.read("string", "tutorial.txt")
-        contents = json:decode(contents)
+        contents = lunajson.decode(contents)
         tutorialCompleted = contents["tutorial"]
     else
         closeTutorial(0)
@@ -136,7 +136,7 @@ end
 
 function closeTutorial(i)
     tutorialCompleted[#tutorialCompleted+1] = i
-    success,msg = love.filesystem.write("tutorial.txt", json:encode({tutorial = tutorialCompleted}))
+    success,msg = love.filesystem.write("tutorial.txt", lunajson.encode({tutorial = tutorialCompleted}))
     tutorialOpen = false
     if i == 1 then
         tutorialOpen = true

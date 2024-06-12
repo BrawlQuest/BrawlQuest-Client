@@ -37,8 +37,8 @@ require "scripts.npcs"
 require "scripts.server"
 -- require "scripts.world.world"
 require "scripts.world.tiles"
--- require "scripts.world.biomes"
-require "scripts.world.new-world-drawer"
+require "scripts.world.biomes"
+require "scripts.world.world"
 require "scripts.ui.temporary.worldedit"
 require "scripts.ui.temporary.new-world-edit"
 require "scripts.ui.temporary.world-edit-rect"
@@ -50,15 +50,16 @@ require "scripts.player.structures"
 
 require "scripts.ui.panels.npc-chat"
 require "scripts.ui.panels.tutorial"
+lunajson = require 'scripts.libraries.lunajson.lunajson'
 
 require "scripts.achievements"
 Luven = require "scripts.libraries.luven.luven"
 
 version = ""
 versionType = "dev" -- "dev" for quick login, "release" for not
-useSteam = true
+useSteam = false
 if versionType == "dev" then require 'dev' end
-versionNumber = "1.0.0" -- very important for settings
+versionNumber = "1.1.0" -- very important for settings
 drawAnimations = false -- player animations
 
 if love.system.getOS() ~= "Linux" and useSteam then steam = require 'luasteam' end -- we can disable other platforms here. Can't get Steam working on Linux and we aren't targetting it so this'll do for dev purposes
@@ -99,7 +100,7 @@ function love.load()
 
     showMouse, mouseAmount, mx, my = true, 1, 0, 0
     limits = love.graphics.getSystemLimits()
-    print(limits.multicanvas)
+
     outlinerOnly = newOutliner(true)
     outlinerOnly:outline(0.8, 0, 0) -- this is used to draw enemy outlines
     grayOutlinerOnly = newOutliner(true)
@@ -179,7 +180,7 @@ function love.draw()
             drawingText = true
         elseif isNearbyTile("assets/world/objects/Portal.png") and
             not drawingText then
-            if me.LVL ~= 40 then
+            if me.lvl ~= 40 then
                 drawTextBelowPlayer("You must be Level 40 to Enchant")
             else
                 drawTextBelowPlayer("Press " .. keybinds.INTERACT ..
@@ -198,11 +199,11 @@ function love.draw()
         end
 
         for i, v in ipairs(npcs) do
-            if distanceToPoint(player.x, player.y, v.X, v.Y) <= 1 and
+            if distanceToPoint(player.x, player.y, v.x, v.y) <= 1 and
                 not showNPCChatBackground and v.Conversation ~= "" then
                 local isQuestCompleter = false
                 for k, q in ipairs(quests[1]) do
-                    if q.rawData.Quest.ReturnNPCID == v.ID and q.currentAmount ==
+                    if q.rawData.Quest.ReturnNPCID == v.id and q.currentAmount ==
                         q.requiredAmount then
                         drawTextBelowPlayer(
                             "Press " .. keybinds.INTERACT ..
@@ -254,7 +255,7 @@ function love.draw()
                     playerCount .. "\n" .. playersOnline
         end
         love.graphics.print(text, offset, 10)
-        drawWorldMap(love.graphics.getWidth() - 256 - 20, 20)
+        drawWorldMap(love.graphics.getWidth() - 256, 0)
         if (premiumMessage.display or deathMessage.display) then love.graphics.setShader() end
         drawPremiumMessage()
         drawDeathMessage()
@@ -271,7 +272,7 @@ function love.update(dt)
     enchantmentPos = enchantmentPos + 15 * dt
     if enchantmentPos > 64 then enchantmentPos = 0 end
 
-    love.graphics.print(json:encode(love.audio.getActiveEffects()))
+    love.graphics.print(lunajson.encode(love.audio.getActiveEffects()))
 
     totalCoverAlpha = totalCoverAlpha - 1 * dt
     if phase == "login" then
@@ -280,13 +281,14 @@ function love.update(dt)
         love.audio.setPosition(player.dx / 32, player.dy / 32)
         nextUpdate = nextUpdate - 1 * dt
         nextTick = nextTick - 1 * dt
-        if nextUpdate < 0 then
-            getPlayerData('/players/' .. username, json:encode({
-                ["X"] = player.x,
-                ["Y"] = player.y,
-                ["AX"] = player.target.x,
-                ["AY"] = player.target.y,
-                ["IsShield"] = love.keyboard.isDown(keybinds.SHIELD)
+        if nextUpdate < 0 then 
+          
+            getPlayerData('/player/' .. username, lunajson.encode({
+                ["x"] = player.x,
+                ["y"] = player.y,
+                ["ax"] = player.target.x,
+                ["ay"] = player.target.y,
+                ["isShield"] = love.keyboard.isDown(keybinds.SHIELD)
             }), token)
             nextUpdate = 0.5
         end
@@ -322,7 +324,6 @@ function love.update(dt)
         updateCamera(dt)
         updateOtherPlayers(dt)
         serverResponse()
-        --  updateWorldDrawer()
     end
 end
 
@@ -338,7 +339,7 @@ function tick()
     nextTick = 1
     getInventory()
     tickRangedWeapons()
-    -- tickWorld()
+    tickWorld()
     if me then tickCharacterHub() end
     if hotbarChanged then
         hotbarChangeCount = hotbarChangeCount + 1

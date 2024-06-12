@@ -126,10 +126,10 @@ end
 function playFootstepSound(v, x, y, relative)
 
     stepSfx:stop()
-    if v and stepSounds[v.GroundTile] then
-        stepSfx = stepSounds[v.GroundTile]
-    elseif v and stepSounds[v.ForegroundTile] then
-        stepSfx = stepSounds[v.ForegroundTile]
+    if v and stepSounds[v.groundtile] then
+        stepSfx = stepSounds[v.groundtile]
+    elseif v and stepSounds[v.foregroundtile] then
+        stepSfx = stepSounds[v.foregroundtile]
     else
         stepSfx = stepSounds["assets/world/grounds/grass.png"]
     end
@@ -140,7 +140,7 @@ function playFootstepSound(v, x, y, relative)
     if relative then stepSfx:setPosition(0, 0) stepSfx:setRelative(true)
     else stepSfx:setRelative(false) stepSfx:setPosition(x, y) end
     if x == player.x and y == player.y then stepSfx:setRelative(true)
-    else stepSfx:setRelative(false)  print(x..","..y) end
+    else stepSfx:setRelative(false) end
     
    setEnvironmentEffects(stepSfx)
     stepSfx:play()
@@ -159,16 +159,16 @@ function generateNoise(tab)
     -- source:play()
 end
 
-local tileName = "Squall's End"
+local tilename = "Squall's End"
 
 function setEnvironmentEffects(sound)
     -- local x,y = 0,0
     -- setEffect(sound, "genRev", true)
     -- if worldLookup[player.x..","..player.y] then
-    --     -- print(worldLookup[player.x..","..player.y].Name)
-    --     if not orCalc(worldLookup[player.x..","..player.y].Name, {"", "Spooky Forest",}) then tileName = worldLookup[player.x..","..player.y].Name end
-    --     setEffect(sound, "caveRev", orCalc(tileName, {"Shieldbreak Mine", "Shieldbreak", "The Permafrost Mines"}))
-    --     setEffect(sound, "elodineRev", orCalc(tileName, {"Elodine's Gift",}))
+    --     -- -- print(worldLookup[player.x..","..player.y].name)
+    --     if not orCalc(worldLookup[player.x..","..player.y].name, {"", "Spooky Forest",}) then tilename = worldLookup[player.x..","..player.y].name end
+    --     setEffect(sound, "caveRev", orCalc(tilename, {"Shieldbreak Mine", "Shieldbreak", "The Permafrost Mines"}))
+    --     setEffect(sound, "elodineRev", orCalc(tilename, {"Elodine's Gift",}))
     -- end
 end
 

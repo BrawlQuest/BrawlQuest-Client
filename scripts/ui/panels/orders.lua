@@ -24,7 +24,7 @@ function initOrders()
                 features = {"+50 INT", "2 exclusive spells", "Restricts access to medium/heavy armour and weapons",},
                 image = love.graphics.newImage("assets/ui/orders/01.png"),
                 action = function ()
-                    print("LET ME DO SOMETHING 1")
+                    -- print("LET ME DO SOMETHING 1")
                 end,
                 isMouse = false,
                 amount = 0,
@@ -34,7 +34,7 @@ function initOrders()
                 features = {"+50 STR", "Exclusive Medium armour set & mount", "Restricts access to heavy armour and high-mastery spells",},
                 image = love.graphics.newImage("assets/ui/orders/02.png"),
                 action = function ()
-                    print("LET ME DO SOMETHING 2")
+                    -- print("LET ME DO SOMETHING 2")
                 end,
                 isMouse = false,
                 amount = 0,
@@ -44,7 +44,7 @@ function initOrders()
                 features = {"+50 STA", "Exclusive Heavy armour set & mount", "Restricts access to heavy weapons and high-mastery spells",},
                 image = love.graphics.newImage("assets/ui/orders/03.png"),
                 action = function ()
-                    print("LET ME DO SOMETHING 3")
+                    -- print("LET ME DO SOMETHING 3")
                 end,
                 isMouse = false,
                 amount = 0,
@@ -142,10 +142,10 @@ function checkOrdersMousePressed(button)
         if o.selected.item == o.mouseOver.item then o.selected.item = 0
         else o.selected.item = o.mouseOver.item end
     elseif o.mouseOver.commit then 
-        love.filesystem.write("me.txt", json:encode_pretty(me))
-        print("Trying to join the " .. o.items[o.selected.item].title)
+        love.filesystem.write("me.txt", lunajson.encode(me))
+        -- print("Trying to join the " .. o.items[o.selected.item].title)
         r, h = http.request {
-            url = api.url .. "/order/" .. me.ID .. "/" .. o.items[o.selected.item].title,
+            url = api.url .. "/order/" .. me.id .. "/" .. o.items[o.selected.item].title,
             headers = {['token'] = token},
         }
     end

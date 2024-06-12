@@ -112,18 +112,18 @@ end
 
 function login()
     if textfields[1] ~= "" and textfields[2] ~= "" then
-        b, c, h = http.request(api.url .. "/login", json:encode({
-            UID = textfields[1],
-            Password = textfields[2]
+        b, c, h = http.request(api.url .. "/login", lunajson.encode({
+            uid = textfields[1],
+            password = textfields[2]
         }))
-        -- print("logged in as "..textfields[1])
+        -- -- print("logged in as "..textfields[1])
         
         if c == 200 then
-            b = json:decode(tostring(b))
+            b = lunajson.decode(tostring(b))
             UID = textfields[1]
             token = b['token']
             characters = {}
-            r, h = http.request {
+            b, r, h = http.request {
                 url = api.url .. "/user/" .. textfields[1],
                 headers = {
                     ['token'] = b['token']
@@ -131,19 +131,19 @@ function login()
                 sink = ltn12.sink.table(characters)
             }
     
-        --  if c == 200 then -- Why was this here?
-            -- if type(characters[1]) == "string" then
-                    characters = json:decode(characters[1])
-                -- print("Loaded characters")
-            -- else
-            --      print("Characters" .. json:encode(characters))
-            --      characters = characters[1]
-            --  end
+            -- Sink will automatically split the response into tables of
+            -- of a certain size, so we need to join them together before
+            -- attempting to decode the JSON
+            characters = tableToString(characters)
+            characters = lunajson.decode(characters)
+           
+           
                 loginPhase = "characters"
                 for i,v in ipairs(characters) do
-                    if characters[i] and characters[i].Color ~= null then
+            
+                    if characters[i] and characters[i].Color ~= nil then
                     else
-                    characters[i].Color = {love.math.random(), love.math.random(), love.math.random(),  1}
+                        characters[i].Color = {love.math.random(), love.math.random(), love.math.random(),  1}
                     end
                 end
                 if love.system.getOS() ~= "Linux" and useSteam then steam.userStats.requestCurrentStats() end -- init achievements and stat tracking
@@ -154,22 +154,22 @@ function login()
             
                 sink = ltn12.sink.table(availableEnemies)
             }
-            
-            if c == 200 then
-                if type(availableEnemies[1]) == "string" then
-                    local c = json:decode(availableEnemies[1])
-                    availableEnemies = {}
-                    for i,v in ipairs(c) do
-                        availableEnemies[#availableEnemies+1] = v
-                        worldEdit.enemyImages[#availableEnemies] = getImgIfNotExist(v.Image)
-                    end
-                end
-            end
+         
+            -- if c == 200 then
+            --    -- if type(availableEnemies[1]) == "string" then
+            --         local c = lunajson.decode(availableEnemies)
+            --         availableEnemies = {}
+            --         for i,v in ipairs(c) do
+            --             availableEnemies[#availableEnemies+1] = v
+            --             worldEdit.enemyImages[#availableEnemies] = getImgIfNotExist(v.image)
+            --         end
+            --   --  end
+            -- end
         end
         elseif c == 401 then
             textfields[2] = ""
             textfields[3] = ""
-            print("Login Failed")
+            -- print("Login Failed")
         end
     end
 end

@@ -4,9 +4,9 @@
 ]]
 
 thisTile = {
-    GroundTile = "assets/world/grounds/Grass.png",
-    ForegroundTile = "assets/world/objects/Mushroom.png",
-    Name = "Spooky Forest",
+    groundtile = "assets/world/grounds/Grass.png",
+    foregroundtile = "assets/world/objects/Mushroom.png",
+    name = "Spooky Forest",
     Music = "*",
     Collision = false,
     Enemy = ""
@@ -22,7 +22,6 @@ isWorldEditWindowOpen = false
 function initEditWorld() 
   
     local files = recursiveEnumerate("assets/world", {})
-    print(#files)
     for k, file in ipairs(files) do
         if string.find(file, "Store", 1) == nil then
             worldFiles[#worldFiles+1] = file
@@ -70,7 +69,7 @@ function drawEditWorldWindow()
 
     love.graphics.setFont(headerFont)
     love.graphics.setColor(1,1,1)
-    love.graphics.print("Name", loginImageX+30, loginImageY+180)
+    love.graphics.print("name", loginImageX+30, loginImageY+180)
     drawTextField(loginImageX+35,loginImageY+210,7)
     love.graphics.setColor(1,1,1)
     love.graphics.print("Enemy", loginImageX+30, loginImageY+250)

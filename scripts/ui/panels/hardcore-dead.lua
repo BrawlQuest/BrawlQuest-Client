@@ -6,10 +6,10 @@ deathMessage = {
     subtitle = "As a hardcore character, you aren't able to revive yourself from death. You can reset this character, and try again.",
    
     callToAction = "RESET CHARACTER",
-    titleFont = love.graphics.newFont("assets/ui/fonts/VT323-Regular.ttf", 48),
+    titleFont = love.graphics.newFont("assets/ui/fonts/BMmini.ttf", 48),
     subtitleFont = love.graphics
-        .newFont("assets/ui/fonts/VT323-Regular.ttf", 28),
-    featureFont = love.graphics.newFont("assets/ui/fonts/VT323-Regular.ttf", 24),
+        .newFont("assets/ui/fonts/BMmini.ttf", 28),
+    featureFont = love.graphics.newFont("assets/ui/fonts/BMmini.ttf", 24),
     isCallToActionOver = false
 }
 
@@ -75,7 +75,7 @@ end
 
 function onHardcoreMouseDown()
     if (deathMessage.isCallToActionOver) then
-        apiGET("/reset/" .. me.Name)
+        apiGET("/reset/" .. me.name)
         deathMessage.display = false
         deathMessage.isCallToActionOver = false
     end

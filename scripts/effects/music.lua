@@ -66,7 +66,7 @@ function updateMusic(dt)
 
     if playMusic then
         if worldLookup[player.x..","..player.y] then
-            local foundMusic = worldLookup[player.x..","..player.y].Music
+            local foundMusic = worldLookup[player.x..","..player.y].music
             if foundMusic ~= (previousMusicTile) and not isSwitching then
                 switchMusic(foundMusic)
                 previousMusicTile = foundMusic
@@ -103,16 +103,16 @@ function switchMusic(newTrack)
         music[nextTrack]:setLooping(true)
         currentPlaying = music[nextTrack]:play()
     -- elseif newTrack == currentTrack then
-        -- print("Attempted to restart playback of already playing track.")
+        -- -- print("Attempted to restart playback of already playing track.")
     -- else
-        -- print("Attempted to play a track that doesn't exist: " .. newTrack)
+        -- -- print("Attempted to play a track that doesn't exist: " .. newTrack)
     end
 end
 
 function checkMusic()
-    if worldLookup[player.x..","..player.y] and worldLookup[player.x..","..player.y].Music and worldLookup[player.x..","..player.y].Music ~= "*" then
-        setEnvironmentEffects(music[worldLookup[player.x..","..player.y].Music])
-        currentPlaying = music[worldLookup[player.x..","..player.y].Music]:play()
+    if worldLookup[player.x..","..player.y] and worldLookup[player.x..","..player.y].music and worldLookup[player.x..","..player.y].music ~= "*" then
+        setEnvironmentEffects(music[worldLookup[player.x..","..player.y].music])
+        currentPlaying = music[worldLookup[player.x..","..player.y].music]:play()
     else
         currentPlaying = music["PuerLavari"]:play()
     end  

@@ -37,8 +37,9 @@ function love.mousereleased(x, y, button)
                 end
             end
         end
-        if inventory.mouseOverButtonsAmount == 0 and json:encode(itemDrag.item) == json:encode(selectedItem) then checkInventoryMousePressed(button) 
-        elseif inventory.mouseOverButtonsAmount > 0 and json:encode(itemDrag.item) == json:encode(hotbar[inventory.mouseOverButtonsAmount].item) then checkHotbarMousePressed(button) end
+        --- If the ID of the current dragged item matches the ID of the released item then we know the user is trying to use the item rather than move it to the hotbar
+        if itemDrag.item and inventory.mouseOverButtonsAmount == 0 and itemDrag.item.name == selectedItem.name then checkInventoryMousePressed(button) 
+        elseif inventory.mouseOverButtonsAmount > 0 and lunajson.encode(itemDrag.item) == lunajson.encode(hotbar[inventory.mouseOverButtonsAmount].item) then checkHotbarMousePressed(button) end
         checkItemDragMouseReleased(button)
         onPremiumMouseDown()
         onHardcoreMouseDown()

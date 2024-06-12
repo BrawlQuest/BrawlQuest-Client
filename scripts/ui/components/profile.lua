@@ -12,25 +12,25 @@ function drawProfilePic(thisX, thisY, thisScale, thisRotation, v)
 	love.graphics.draw(playerImg, profileImgStencil, thisX, thisY, 0, r * thisScale, thisScale)
 	love.graphics.setColor(1,1,1,1)
 
-	if v and v.HeadArmour then
-		if v.ChestArmourID ~= 0 then
-			drawProfileArmour(thisX,thisY,v.ChestArmour,r,thisScale)
-			-- drawItemIfExists(v.ChestArmour.ImgPath, thisX, thisY, "", r, thisScale, profileImgStencil)
+	if v and v.headarmour then
+		if v.chestarmourID ~= 0 then
+			drawProfileArmour(thisX,thisY,v.chestarmour,r,thisScale)
+			-- drawItemIfExists(v.chestarmour.imgpath, thisX, thisY, "", r, thisScale, profileImgStencil)
 		end	
-		if v.HeadArmourID ~= 0 then
-			drawProfileArmour(thisX,thisY,v.HeadArmour,r,thisScale)
-			-- drawItemIfExists(v.HeadArmour.ImgPath, thisX, thisY, "", r, thisScale, profileImgStencil)
+		if v.headarmourID ~= 0 then
+			drawProfileArmour(thisX,thisY,v.headarmour,r,thisScale)
+			-- drawItemIfExists(v.headarmour.imgpath, thisX, thisY, "", r, thisScale, profileImgStencil)
 		end
 	end
 end
 
 function drawProfileArmour(x,y,item,r,thisScale)
-    drawItemIfExists(item.ImgPath, x, y, "", r, thisScale, profileImgStencil)
-    if item.Enchantment ~= "None" then
+    drawItemIfExists(item.imgpath, x, y, "", r, thisScale, profileImgStencil)
+    if item.enchantment ~= "None" and item.enchantment ~= nil then
         love.graphics.push()
             love.graphics.stencil(function() 
                 love.graphics.setShader(alphaShader)
-                drawItemIfExists(item.ImgPath, x, y, "", r, thisScale, profileImgStencil)
+                drawItemIfExists(item.imgpath, x, y, "", r, thisScale, profileImgStencil)
                 love.graphics.setShader()
             end)
 			love.graphics.setStencilTest("equal", 1)
@@ -53,7 +53,7 @@ function drawNPCProfilePic(thisX, thisY, thisScale, thisRotation, image)
 			worldImg[image] = love.graphics.newImage(image)
 		else
 			worldImg[image] = love.graphics.newImage("assets/error.png")
-			print("AN ERROR OCURRED. "..image.." can't be found.")
+			-- print("AN ERROR OCURRED. "..image.." can't be found.")
 		end
 	end
 	drawProfileBackground(thisX, thisY, thisScale)

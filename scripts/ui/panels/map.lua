@@ -7,43 +7,46 @@ local leastY = 0
 function initWorldMap()
     love.graphics.setCanvas(worldMapCanvas)
     for i,tile in ipairs(world) do
-        if tile.X < farthestX then
-            farthestX = tile.X
+        if tile.x < farthestX then
+            farthestX = tile.x
         end
-        if tile.Y < farthestY then
-            farthestY = tile.Y
+        if tile.y < farthestY then
+            farthestY = tile.y
         end
     end
 
     for i,tile in ipairs(world) do
-        local fgt = tile.ForegroundTile:lower()
-        if string.sub(tile.Name, 1,5) == "Domin" then
-            love.graphics.setColor(0,1,0)
-        elseif string.match(fgt, "snowy tree") or string.match(fgt, "dead") then
-            love.graphics.setColor(0.7,0.7,0.7)
-        elseif string.match(fgt, "tree") then
-            love.graphics.setColor(0,0.5,0)
-        elseif string.match(fgt, "snow") then
-            love.graphics.setColor(1,1,1)
-        
-        elseif string.match(fgt, "wall") or string.match(fgt, "mountain") then
-            love.graphics.setColor(0.2,0.2,0.2)
-        elseif string.match(fgt, "floor") then
-            love.graphics.setColor(0.5,0.5,0.5)
-        
-        elseif string.match(fgt, "water") then
-            love.graphics.setColor(0,0,1)
-        elseif string.match(fgt, "sand") then
-            love.graphics.setColor(1,0.8,0)
-        elseif string.match(fgt, "path") or  string.match(fgt, "bridge") then
-            love.graphics.setColor(1,0.7,1)
-        elseif string.match(fgt, "snow") then
-            love.graphics.setColor(1,1,1)
-        elseif string.match(fgt, "grass") then
-            love.graphics.setColor(0,1,0)
+        if tile.foregroundtile ~= nil then
+            local fgt = tile.foregroundtile:lower()
+
+            if tile.name ~= nil and string.sub(tile.name, 1,5) == "Domin" then
+                love.graphics.setColor(0,1,0)
+            elseif string.match(fgt, "snowy tree") or string.match(fgt, "dead") then
+                love.graphics.setColor(0.7,0.7,0.7)
+            elseif string.match(fgt, "tree") then
+                love.graphics.setColor(0,0.5,0)
+            elseif string.match(fgt, "snow") then
+                love.graphics.setColor(1,1,1)
+            
+            elseif string.match(fgt, "wall") or string.match(fgt, "mountain") then
+                love.graphics.setColor(0.2,0.2,0.2)
+            elseif string.match(fgt, "floor") then
+                love.graphics.setColor(0.5,0.5,0.5)
+            
+            elseif string.match(fgt, "water") then
+                love.graphics.setColor(0,0,1)
+            elseif string.match(fgt, "sand") then
+                love.graphics.setColor(1,0.8,0)
+            elseif string.match(fgt, "path") or  string.match(fgt, "bridge") then
+                love.graphics.setColor(1,0.7,1)
+            elseif string.match(fgt, "snow") then
+                love.graphics.setColor(1,1,1)
+            elseif string.match(fgt, "grass") then
+                love.graphics.setColor(0,1,0)
+            end
         end
 
-        love.graphics.rectangle("fill", (tile.X*4)+400, (tile.Y*4)+400, 4, 4)
+        love.graphics.rectangle("fill", (tile.x*4)+400, (tile.y*4)+400, 4, 4)
 
      
     end
@@ -60,7 +63,7 @@ function drawWorldMap(x, y)
     love.graphics.setColor(1,0,0)
   
      for i,v in pairs(enemies) do
-        if (v.HP > 0) then
+        if (v.hp > 0) then
             love.graphics.rectangle("fill", x + farthestX-((player.dx/32)*4)-164 + ((v.dx/32)*4)+400,  y + farthestY-((player.dy/32)*4)-145  + ((v.dy/32)*4)+400, 4, 4)
         end
     end

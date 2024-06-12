@@ -7,40 +7,40 @@ playingAmbience = {}
 
 function addWorldEmitter(worldTile)
     if love.math.random(1,20) == 1 then
-        if isTileType(worldTile.ForegroundTile, "Tree") then
+        if isTileType(worldTile.foregroundtile, "Tree") then
             worldEmitters[#worldEmitters+1] = {
-                x = worldTile.X*32,
-                y = worldTile.Y*32,
+                x = worldTile.x*32,
+                y = worldTile.y*32,
                 sound = "assets/sfx/ambient/forest/jungle.ogg",
             }
-        elseif isTileType(worldTile.ForegroundTile, "Anvil") then
+        elseif isTileType(worldTile.foregroundtile, "Anvil") then
             worldEmitters[#worldEmitters+1] = {
-                x = worldTile.X*32,
-                y = worldTile.Y*32,
+                x = worldTile.x*32,
+                y = worldTile.y*32,
                 sound = "assets/sfx/ambient/blacksmith.ogg",
             }
-        elseif isTileType(worldTile.ForegroundTile, "Lava") then
+        elseif isTileType(worldTile.foregroundtile, "Lava") then
             worldEmitters[#worldEmitters+1] = {
-                x = worldTile.X*32,
-                y = worldTile.Y*32,
+                x = worldTile.x*32,
+                y = worldTile.y*32,
                 sound = "assets/sfx/ambient/lava.ogg",
             }
-        elseif isTileType(worldTile.ForegroundTile, "Water") then
+        elseif isTileType(worldTile.foregroundtile, "Water") then
             worldEmitters[#worldEmitters+1] = {
-                x = worldTile.X*32,
-                y = worldTile.Y*32,
+                x = worldTile.x*32,
+                y = worldTile.y*32,
                 sound = "assets/sfx/ambient/water.ogg"
             }
-        elseif isTileType(worldTile.ForegroundTile, "Class Machine") then
+        elseif isTileType(worldTile.foregroundtile, "Class Machine") then
             worldEmitters[#worldEmitters+1] = {
-                x = worldTile.X*32,
-                y = worldTile.Y*32,
+                x = worldTile.x*32,
+                y = worldTile.y*32,
                 sound = "assets/sfx/ambient/voltage.ogg",
             }
-        elseif isTileType(worldTile.ForegroundTile, "Fire") or isTileType(worldTile.ForegroundTile, "Furnace") then
+        elseif isTileType(worldTile.foregroundtile, "Fire") or isTileType(worldTile.foregroundtile, "Furnace") then
             worldEmitters[#worldEmitters+1] = {
-                x = worldTile.X*32,
-                y = worldTile.Y*32,
+                x = worldTile.x*32,
+                y = worldTile.y*32,
                 sound = "assets/sfx/ambient/fire.ogg"
             }
         end

@@ -12,10 +12,10 @@ premiumMessage = {
         {title = "Enchanting"}, {title = "Pets"}, {title = "Building"}
     },
     callToAction = "Purchase now via Steam",
-    titleFont = love.graphics.newFont("assets/ui/fonts/VT323-Regular.ttf", 48),
+    titleFont = love.graphics.newFont("assets/ui/fonts/BMmini.ttf", 48),
     subtitleFont = love.graphics
-        .newFont("assets/ui/fonts/VT323-Regular.ttf", 28),
-    featureFont = love.graphics.newFont("assets/ui/fonts/VT323-Regular.ttf", 24),
+        .newFont("assets/ui/fonts/BMmini.ttf", 28),
+    featureFont = love.graphics.newFont("assets/ui/fonts/BMmini.ttf", 24),
     crownImg = love.graphics.newImage("assets/ui/crown.png"),
     isCallToActionOver = false
 }

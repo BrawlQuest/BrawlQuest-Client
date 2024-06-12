@@ -11,7 +11,12 @@ token = ""
 
 selectedServer = 1
 
-servers = {{
+servers = {
+    {
+        name = "Local",
+        url = "http://127.0.0.1:8080"
+    },
+    {
     name = "Swordbreak (UK)",
     url = "http://167.99.80.7"
 }, {
@@ -30,14 +35,14 @@ api = {
     url = servers[selectedServer].url,
     get = function(action)
 
-        -- print("Calling "..api.url..action)
+        -- -- print("Calling "..api.url..action)
         b, c, h = http.request(api.url .. action)
-        return json:decode(b)
+        return lunajson.decode(b)
     end,
     post = function(action, body)
-        -- print("Calling "..api.url..action)
+        -- -- print("Calling "..api.url..action)
         b, c, h = http.request(api.url .. action, body)
-        return json:decode(b)
+        return lunajson.decode(b)
     end
 
 }
@@ -53,7 +58,7 @@ local getPlayerDataThread = love.thread.newThread([[
     while true do
       action, body, token = love.thread.getChannel('action'):demand(), love.thread.getChannel('body'):demand(), love.thread.getChannel('token'):demand()
    --   if action and body and token then
-      -- print("Calling http://167.172.62.97:8080"..action.." with "..body)
+      -- -- print("Calling http://167.172.62.97:8080"..action.." with "..body)
         local b = {}
         c, h = http.request{url = "]] .. api.url ..
                                                       [["..action, method="POST", source=ltn12.source.string(body), headers={["Content-Type"] = "application/json",["Content-Length"]=string.len(body),["token"]=token}, sink=ltn12.sink.table(b)}
@@ -68,7 +73,7 @@ function getPlayerData(request, body, token)
     end
 
     local error = getPlayerDataThread:getError()
-    print(error)
+
     love.thread.getChannel('action'):push(request)
     love.thread.getChannel('body'):push(body)
     love.thread.getChannel('token'):push(token)

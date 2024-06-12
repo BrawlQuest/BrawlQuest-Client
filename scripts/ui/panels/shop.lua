@@ -31,38 +31,38 @@ local item = {
     Enchantment = "None",
     ID = 31,
     ImgPath = "assets/items/reagent/String.png",
-    Name = "String",
+    name = "String",
     Type = "reagent",
     Val = "0",
     Worth = 1,
 }
 
 local standardPlayer = {
-    ChestArmour = {
+    chestarmour = {
       Attributes = "None",
       Desc = "A sturdy, reinforced Iron Chestplate",
       Enchantment = "None",
       ID = 39,
       ImgPath = "assets/player/gear/a2/chest.png",
-      Name = "Iron Chestplate",
+      name = "Iron Chestplate",
       Type = "arm_chest",
       Val = "18",
       Worth = 10
     },
-    HeadArmour = {
+    headarmour = {
       Attributes = "None",
       Desc = "A sturdy, reinforced Iron Helmet",
       Enchantment = "None",
       ID = 38,
       ImgPath = "assets/player/gear/a2/head.png",
-      Name = "Iron Helmet",
+      name = "Iron Helmet",
       Type = "arm_head",
       Val = "12",
       Worth = 10
     },
-    HeadArmourID = 38,
+    headarmourID = 38,
     ID = 2,
-    Name = "Danjoe",
+    name = "Danjoe",
     Order = "Warrior Order",
     Owner = "Danjoe",
 }
@@ -73,7 +73,7 @@ local ghostItem = {
     Enchantment = "None",
     ID = 0,
     ImgPath = "assets/player/gear/a2/head.png",
-    Name = "Mages Order Reputation",
+    name = "Mages Order Reputation",
     Type = "rep",
     Val = "12",
     Worth = 10,

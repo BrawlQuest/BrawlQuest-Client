@@ -15,8 +15,8 @@ function drawZoneTitle()
 end
 
 function updateZoneTitle(dt)
-    if worldLookup[player.x..","..player.y] and worldLookup[player.x..","..player.y].Name and worldLookup[player.x..","..player.y].Name ~= zoneTitle.title and worldLookup[player.x..","..player.y].Name  ~= "Spooky Forest" and worldLookup[player.x..","..player.y].Name ~= "" then
-        zoneTitle.title = worldLookup[player.x..","..player.y].Name
+    if worldLookup[player.x..","..player.y] and worldLookup[player.x..","..player.y].name and worldLookup[player.x..","..player.y].name ~= zoneTitle.title and worldLookup[player.x..","..player.y].name  ~= "Spooky Forest" and worldLookup[player.x..","..player.y].name ~= "" then
+        zoneTitle.title = worldLookup[player.x..","..player.y].name
         if zoneTitle.title == "Foundation Forest" then
             openTutorial(11)
         end
@@ -24,7 +24,7 @@ function updateZoneTitle(dt)
             steam.friends.setRichPresence("steam_display", "#StatusAdventuring")
             steam.friends.setRichPresence("location", zoneTitle.title)
         end
-        zoneChange(worldLookup[player.x..","..player.y].Name)
+        zoneChange(worldLookup[player.x..","..player.y].name)
     end
 
     if zoneTitle.alphaUp then
