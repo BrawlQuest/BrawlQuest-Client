@@ -56,7 +56,7 @@ Luven = require "scripts.libraries.luven.luven"
 
 version = ""
 versionType = "dev" -- "dev" for quick login, "release" for not
-useSteam = true
+useSteam = false
 if versionType == "dev" then require 'dev' end
 versionNumber = "1.0.0" -- very important for settings
 drawAnimations = false -- player animations
