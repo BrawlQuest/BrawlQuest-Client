@@ -55,10 +55,10 @@ require "scripts.achievements"
 Luven = require "scripts.libraries.luven.luven"
 
 version = ""
-versionType = "dev" -- "dev" for quick login, "release" for not
-useSteam = false
+versionType = "release" -- "dev" for quick login, "release" for not
+useSteam = love.system.getOS() ~= "Linux" and love.system.getOS() ~= "OS X"
 if versionType == "dev" then require 'dev' end
-versionNumber = "1.0.0" -- very important for settings
+versionNumber = "1.0.3" -- very important for settings
 drawAnimations = false -- player animations
 
 if love.system.getOS() ~= "Linux" and useSteam then steam = require 'luasteam' end -- we can disable other platforms here. Can't get Steam working on Linux and we aren't targetting it so this'll do for dev purposes
@@ -95,6 +95,7 @@ oldInfo = {}
 sendUpdate = false
 
 function love.load()
+    print(love.system.getOS())
     love.graphics.setDefaultFilter("nearest", "nearest")
 
     showMouse, mouseAmount, mx, my = true, 1, 0, 0
@@ -104,7 +105,7 @@ function love.load()
     outlinerOnly:outline(0.8, 0, 0) -- this is used to draw enemy outlines
     grayOutlinerOnly = newOutliner(true)
     grayOutlinerOnly:outline(1, 1, 1)
-    if love.system.getOS() ~= "Linux" and useSteam then steam.init() end
+    if useSteam then steam.init() end
 
     initHardData()
     initLogin()
