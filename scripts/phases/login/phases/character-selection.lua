@@ -367,7 +367,7 @@ function transitionToPhaseGame()
             worldHash = love.filesystem.read("string", "world-hash.txt")
         end
 
-        if #world == 0 or worldHash ~= response['WorldHash'] then
+       if #world == 0 or worldHash ~= response['WorldHash'] then
             print("Getting new world")
             c, h = http.request{url = api.url.."/world", method="GET", sink=ltn12.sink.table(b)}
             world = json:decode(table.concat(b))

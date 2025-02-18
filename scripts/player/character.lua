@@ -125,9 +125,9 @@ function worldCollision(x, y)
         if worldLookup[x..","..y].Collision == true then
             output = true
         end
-        if me.Mount and string.find(me.Mount.Name, "boat") and isTileType(worldLookup[x..","..y].ForegroundTile, "Water") then
+        if isInBoat() and isTileType(worldLookup[x..","..y].ForegroundTile, "Water") then
             output = false
-        elseif me.Mount and string.find(me.Mount.Name, "boat") and not worldLookup[x..","..y].Collision then
+        elseif isInBoat() and not worldLookup[x..","..y].Collision then
             output = true
         end
     end
@@ -302,5 +302,10 @@ end
 
 function holdingStaff()
     if me and me.Weapon and string.find(me.Weapon.Name, "Staff") then return true
+    else return false end
+end
+
+function isInBoat() 
+    if me and me.Mount and string.find(string.lower(me.Mount.Name), "boat") then return true
     else return false end
 end

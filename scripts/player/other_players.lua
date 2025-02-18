@@ -20,7 +20,7 @@ alphaShader = love.graphics.newShader[[
 function drawCharacter(v, x, y, ad)
     if ad then
         local playerAlpha = getEntityAlpha(x,y)
-        local notBoat = not string.find(v.Mount.Name,  "boat")
+        local notBoat = not string.find(string.lower(v.Mount.Name),  "boat")
         local direction, offsetX, mountOffsetX
 
         -- set offsets for drawing

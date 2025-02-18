@@ -58,7 +58,7 @@ version = ""
 versionType = "release" -- "dev" for quick login, "release" for not
 useSteam = love.system.getOS() ~= "Linux" and love.system.getOS() ~= "OS X"
 if versionType == "dev" then require 'dev' end
-versionNumber = "1.0.3" -- very important for settings
+versionNumber = "1.0.4" -- very important for settings
 drawAnimations = false -- player animations
 
 if love.system.getOS() ~= "Linux" and useSteam then steam = require 'luasteam' end -- we can disable other platforms here. Can't get Steam working on Linux and we aren't targetting it so this'll do for dev purposes
@@ -272,7 +272,7 @@ function love.update(dt)
     enchantmentPos = enchantmentPos + 15 * dt
     if enchantmentPos > 64 then enchantmentPos = 0 end
 
-    love.graphics.print(json:encode(love.audio.getActiveEffects()))
+ 
 
     totalCoverAlpha = totalCoverAlpha - 1 * dt
     if phase == "login" then
@@ -289,7 +289,8 @@ function love.update(dt)
                 ["AY"] = player.target.y,
                 ["IsShield"] = love.keyboard.isDown(keybinds.SHIELD)
             }), token)
-            nextUpdate = 0.5
+            nextUpdate = 0.75
+            tick()
         end
         updateWorld(dt)
         updateMouse(dt)

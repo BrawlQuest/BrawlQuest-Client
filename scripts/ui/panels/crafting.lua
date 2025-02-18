@@ -42,6 +42,7 @@ function initCrafting()
             ["arm_legs"] = "Leg Armour",
             ["arm_chest"] = "Chest Armour",
             ["spell"] = "Spells",
+            ["mana_potion"] = "Mana Potion"
         },
         openField = {},
         overOpenField = 0,

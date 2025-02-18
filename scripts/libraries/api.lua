@@ -59,13 +59,34 @@ local getPlayerDataThread = love.thread.newThread([[
     end
   ]])
 
+function setAPI(i) 
+
+    if i then selectedServer = i end
+
+    api = {
+        url = servers[selectedServer].url,
+        get = function(action)
+    
+            -- print("Calling "..api.url..action)
+            b, c, h = http.request(api.url .. action)
+            return json:decode(b)
+        end,
+        post = function(action, body)
+            -- print("Calling "..api.url..action)
+            b, c, h = http.request(api.url .. action, body)
+            return json:decode(b)
+        end
+    
+    }
+end
+
 function getPlayerData(request, body, token)
     if not getPlayerDataThread:isRunning() then
         getPlayerDataThread:start()
     end
 
     local error = getPlayerDataThread:getError()
-    print(error)
+   -- print(error)
     love.thread.getChannel('action'):push(request)
     love.thread.getChannel('body'):push(body)
     love.thread.getChannel('token'):push(token)

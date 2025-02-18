@@ -86,7 +86,7 @@ function initSettings()
             selectedServer = 1
         end
       
-        api.url = servers[selectedServer].url
+      setAPI()
     
     
     else

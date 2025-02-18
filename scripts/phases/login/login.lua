@@ -222,7 +222,7 @@ function loginViaSteam(skipDev)
                 login()
             end
         else
-            print("Can't connect to server")
+       
             loginPhase = "login"
         end
     else

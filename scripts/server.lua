@@ -193,13 +193,13 @@ function serverResponse()
                     end
                 end
                 activeConversations = response['ActiveConversations']
-                if response['Tick'] ~= previousTick then
-                    tick()
-                    previousTick = response['Tick']
-                end
+                -- if response['Tick'] ~= previousTick then
+                 
+                --     previousTick = response['Tick']
+                -- end
                 weather.type = response['Weather']
 
-                -- if love.system.getOS() ~= "Linux" and useSteam then checkAchievementUnlocks() end
+                if useSteam then checkAchievementUnlocks() end
             end
         end
     end
