@@ -154,8 +154,8 @@ function updateLogin(dt)
         elseif launch.outAmount < 1 then
             launch.outAmount = launch.outAmount + 0.8 * dt
             if launch.outAmount > 1 then
-                loginPhase = "loading"
-                loginViaSteam()
+                loginPhase = "server"
+              
             end
             launch.outCERP = cerp(0, 1, launch.outAmount)
         end

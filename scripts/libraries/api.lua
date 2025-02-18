@@ -12,15 +12,12 @@ token = ""
 selectedServer = 1
 
 servers = {{
-    name = "Swordbreak (UK)",
-    url = "http://167.99.80.7"
-}, {
-    name = "Test Server (UK)",
-    url = "http://dev.brawlquest.com"
-},
+    name = "EU",
+    url = "http://34.142.50.138"
+}, 
 {
-    name = "Old Server",
-    url = "http://swordbreak.brawlquest.com"
+    name = "US",
+    url = "http://35.227.144.94"
 },  {
     name = "Local",
     url = "http://localhost"
