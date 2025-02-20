@@ -76,7 +76,7 @@ function checkKeyPressedPhaseGame(key)
                     },
                 }
             elseif nearbyAnvil then
-                initCrafting()
+                initCrafting(true)
                 getRecipesHeight()
                 crafting.open = true
             

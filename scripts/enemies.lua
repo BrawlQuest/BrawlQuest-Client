@@ -1,7 +1,7 @@
 enemies = {}
 enemyImg = {}
 enemyCollisions = {}
-enemyCollisionsPrevious = {[0] = {}, [1] = {}}
+enemyCollisionsPrevious = { [0] = {}, [1] = {} }
 enemyQuads = {}
 enemyCollisionsI = 0
 enemySounds = {}
@@ -64,17 +64,17 @@ function newEnemyData(data) -- called when nearby data is returned
                     taunt = {}
                 }
                 if love.filesystem.getInfo(
-                    "assets/sfx/monsters/" .. enemy.Enemy.Name .. "/") then
+                        "assets/sfx/monsters/" .. enemy.Enemy.Name .. "/") then
                     for key, sound in pairs(enemySounds[enemy.Enemy.Name]) do
                         local files = recursiveEnumerate(
-                                          "assets/sfx/monsters/" ..
-                                              enemy.Enemy.Name .. "/" .. key, {})
+                            "assets/sfx/monsters/" ..
+                            enemy.Enemy.Name .. "/" .. key, {})
                         for k, file in ipairs(files) do
                             if explode(file, ".")[#explode(file, ".")] == "ogg" or
                                 explode(file, ".")[#explode(file, ".")] == "mp3" or
                                 explode(file, ".")[#explode(file, ".")] == "wav" then
                                 enemySounds[enemy.Enemy.Name][key][#enemySounds[enemy.Enemy
-                                    .Name][key] + 1] =
+                                .Name][key] + 1] =
                                     love.audio.newSource(file, "static")
                             end
                         end
@@ -92,10 +92,10 @@ function newEnemyData(data) -- called when nearby data is returned
             if bone[enemy.Enemy.Name] == null then -- load custom gore
                 bone[enemy.Enemy.Name] = {}
                 if love.filesystem.getInfo(
-                    "assets/gore/" .. enemy.Enemy.Name .. "/") then
+                        "assets/gore/" .. enemy.Enemy.Name .. "/") then
                     local files = recursiveEnumerate("assets/gore/" ..
-                                                         enemy.Enemy.Name .. "/",
-                                                     {})
+                        enemy.Enemy.Name .. "/",
+                        {})
                     for k, file in ipairs(files) do
                         bone[enemy.Enemy.Name][#bone[enemy.Enemy.Name] + 1] =
                             love.graphics.newImage(file)
@@ -108,9 +108,8 @@ function newEnemyData(data) -- called when nearby data is returned
             if not enemyQuads[enemy.Enemy.Name] then -- enemy quad for drawing target outlines
                 enemyQuads[enemy.Enemy.Name] =
                     love.graphics.newQuad(0, 0, enemy.size, enemy.size,
-                                          enemyImg[enemy.Enemy.Name]:getDimensions())
+                        enemyImg[enemy.Enemy.Name]:getDimensions())
             end
-
         end
 
         if enemy.HP ~= v.HP then
@@ -121,8 +120,7 @@ function newEnemyData(data) -- called when nearby data is returned
                     thisHitSfx = splashSfx
                 else
                     boneSpurt(enemy.dx + 16, enemy.dy + 16, 4, 20, 1, 1, 1,
-                              "mob", v.Enemy.Name)
-
+                        "mob", v.Enemy.Name)
                 end
                 thisHitSfx:setPitch(love.math.random(50, 100) / 100)
                 thisHitSfx:setVolume(0.5 * sfxVolume)
@@ -134,38 +132,38 @@ function newEnemyData(data) -- called when nearby data is returned
             end
 
             -- find whether you are attacking an enemy
-            local attackingEnemy = false
-            if enemy.size <= 32 and (me.AX == enemy.X and me.AY == enemy.Y) then
-                attackingEnemy = true
-            elseif enemy.size > 32 and
-                (me.AX == enemy.X and me.AY == enemy.Y or me.AX == enemy.X + 1 and
-                    me.AY == enemy.Y or me.AX == enemy.X and me.AY == enemy.Y +
-                    1 or me.AX == enemy.X + 1 and me.AY == enemy.Y + 1) then
-                attackingEnemy = true
-            end
+            -- local attackingEnemy = false
+            -- if enemy.size <= 32 and (me.AX == enemy.X and me.AY == enemy.Y) then
+            --     attackingEnemy = true
+            -- elseif enemy.size > 32 and
+            --     (me.AX == enemy.X and me.AY == enemy.Y or me.AX == enemy.X + 1 and
+            --         me.AY == enemy.Y or me.AX == enemy.X and me.AY == enemy.Y +
+            --         1 or me.AX == enemy.X + 1 and me.AY == enemy.Y + 1) then
+            --     attackingEnemy = true
+            -- end
 
             -- move the player to hit an enemy
-            if (me.AX ~= me.X or me.AY ~= me.Y) and attackingEnemy and
-                not death.open then
-                if player.dx > me.AX * 32 then
-                    player.dx = player.dx - 16
-                elseif player.dx < me.AX * 32 then
-                    player.dx = player.dx + 16
-                end
-                if player.dy > me.AY * 32 then
-                    player.dy = player.dy - 16
-                elseif player.dy < me.AY * 32 then
-                    player.dy = player.dy + 16
-                end
-                attackHitAmount = 1
-            end
+            -- if (me.AX ~= me.X or me.AY ~= me.Y) and attackingEnemy and
+            --     not death.open then
+            --     if player.dx > me.AX * 32 then
+            --         player.dx = player.dx - 16
+            --     elseif player.dx < me.AX * 32 then
+            --         player.dx = player.dx + 16
+            --     end
+            --     if player.dy > me.AY * 32 then
+            --         player.dy = player.dy - 16
+            --     elseif player.dy < me.AY * 32 then
+            --         player.dy = player.dy + 16
+            --     end
+            --     attackHitAmount = 1
+            -- end
 
             -- Add offset to floats
             local offset = 0
             if enemy.size > 32 then offset = 16 end
 
             addFloat("text", enemy.X * 32 + offset, enemy.Y * 32 - 18,
-                     (enemy.HP - v.HP) * -1, {1, 0, 0})
+                (enemy.HP - v.HP) * -1, { 1, 0, 0 })
             enemy.HP = v.HP
         end
 
@@ -174,7 +172,7 @@ function newEnemyData(data) -- called when nearby data is returned
             enemy.IsAggro = true
             if sfxVolume > 0 then
                 local aggroSfx = enemySounds[v.Enemy.Name].aggro[love.math
-                                     .random(1, #enemySounds[v.Enemy.Name].aggro)]
+                .random(1, #enemySounds[v.Enemy.Name].aggro)]
                 aggroSfx:setPitch(love.math.random(80, 150) / 100)
                 aggroSfx:setVolume(1 * sfxVolume)
                 if aggroSfx:getChannelCount() == 1 then
@@ -210,7 +208,6 @@ function newEnemyData(data) -- called when nearby data is returned
     end
 
     for i, v in ipairs(enemies) do table.remove(enemies, i) end
-
 end
 
 function drawEnemies()
@@ -224,9 +221,9 @@ function drawEnemies()
             if v.HP > 0 and v.updated and os.time(os.date("!*t")) - v.lastUpdate <
                 5 then
                 local intensity = 1 -
-                                      (range /
-                                          (range + difference(range, distance) *
-                                              4) - 0.2)
+                    (range /
+                        (range + difference(range, distance) *
+                            4) - 0.2)
                 local rotation = 1
                 local offsetX = 0
                 if v and v.previousDirection and v.previousDirection == "left" then
@@ -236,20 +233,20 @@ function drawEnemies()
 
                 if distance <= range then
                     love.graphics.setColor(1, 1 - v.red, (1 - v.red),
-                                           intensity * enemyAlpha)
+                        intensity * enemyAlpha)
                     love.graphics.draw(enemyImg[v.Enemy.Name], v.dx + offsetX,
-                                       v.dy, 0, rotation, 1, 0, 0)
+                        v.dy, 0, rotation, 1, 0, 0)
                 end
 
                 local enemyHealth = me.HP / v.Enemy.ATK
                 local playerHealth = v.Enemy.HP /
-                                         (me.Weapon.Val + (me.STR - 1) * 0.5)
+                    (me.Weapon.Val + (me.STR - 1) * 0.5)
 
-                if me.HP and v.Enemy.ATK and enemyHealth < playerHealth then
+                if me.HP and v.Enemy.ATK and enemyHealth > playerHealth then
                     local distanceIntensity = 1 - (distance / 128)
                     love.graphics.setColor(1, cerp(0, 0.5, nextTick * 2), 0,
-                                           intensity * distanceIntensity *
-                                               enemyAlpha)
+                        intensity * distanceIntensity *
+                        enemyAlpha)
                     love.graphics.draw(skull, v.dx - 6, v.dy - 8, 0, 1)
                 end
 
@@ -258,12 +255,12 @@ function drawEnemies()
                     if v.Enemy.CanMove then
                         love.graphics.setColor(1, 0, 0, intensity * enemyAlpha)
                         love.graphics.rectangle("fill", v.dx, v.dy - 6,
-                                                (v.dhp / v.mhp) * size, 6)
+                            (v.dhp / v.mhp) * size, 6)
                     else
                         love.graphics.setColor(0.2, 0.2, 1,
-                                               intensity * enemyAlpha)
+                            intensity * enemyAlpha)
                         love.graphics.rectangle("fill", v.dx, v.dy - 2,
-                                                (v.dhp / v.mhp) * size, 2)
+                            (v.dhp / v.mhp) * size, 2)
                     end
                 end
 
@@ -273,41 +270,34 @@ function drawEnemies()
                 love.graphics.setColor(1, 1, 1, intensity * enemyAlpha)
 
                 -- draw lines
-                if v.TargetName == player.name and v.Enemy.CanMove then
-                    if nextTick >= 1 then
-                        enemies[i].linesDrawable = true
-                    end
-                    if enemies[i].linesDrawable == true and v.IsAggro then
-                        if (v.Enemy.Range + 1) * 32 >= distance then
-                            love.graphics.setColor(1, 0, 0,
-                                                   nextTick * intensity *
-                                                       enemyAlpha)
-                            love.graphics.line(v.dx + halfSize, v.dy + halfSize,
-                                               player.dx + 16, player.dy + 16)
-                            love.graphics.setColor(1, 1, 1,
-                                                   intensity * enemyAlpha)
-                            if v.Enemy.XP / player.lvl > 1 then
-                                outlinerOnly:draw(2, enemyImg[v.Enemy.Name],
-                                                  enemyQuads[v.Enemy.Name],
-                                                  v.dx + offsetX, v.dy, 0,
-                                                  rotation, 1)
-                            else
-                                grayOutlinerOnly:draw(2, enemyImg[v.Enemy.Name],
-                                                      enemyQuads[v.Enemy.Name],
-                                                      v.dx + offsetX, v.dy, 0,
-                                                      rotation, 1)
-                            end
+                if v.TargetName == player.name and v.Enemy.CanMove and v.IsAggro then
+                    if (v.Enemy.Range + 1) * 32 >= distance then
+                        love.graphics.setColor(1, 0, 0,
+                            nextTick * intensity *
+                            enemyAlpha)
+                        love.graphics.line(v.dx + halfSize, v.dy + halfSize,
+                            player.dx + 16, player.dy + 16)
+                        love.graphics.setColor(1, 1, 1,
+                            intensity * enemyAlpha)
+                        if v.Enemy.XP / player.lvl > 1 then
+                            outlinerOnly:draw(2, enemyImg[v.Enemy.Name],
+                                enemyQuads[v.Enemy.Name],
+                                v.dx + offsetX, v.dy, 0,
+                                rotation, 1)
+                        else
+                            grayOutlinerOnly:draw(2, enemyImg[v.Enemy.Name],
+                                enemyQuads[v.Enemy.Name],
+                                v.dx + offsetX, v.dy, 0,
+                                rotation, 1)
                         end
                     end
-                else
-                    enemies[i].linesDrawable = false
                 end
             elseif v and v.lastUpdate and os.time(os.date("!*t")) - v.lastUpdate <
                 5 and not v.hasBurst then
                 burstLoot(v.dx + halfSize, v.dy + halfSize, player.owedxp, "xp")
                 local deathSound = enemySounds[v.Enemy.Name].death[love.math
-                                       .random(1,
-                                               #enemySounds[v.Enemy.Name].death)]
+                .random(1,
+                    #enemySounds[v.Enemy.Name].death)]
                 deathSound:setVolume(1 * sfxVolume)
                 if deathSound:getChannelCount() == 1 then
                     deathSound:setPosition(v.dx / 32, v.dy / 32)
@@ -335,8 +325,8 @@ function drawEnemies()
                     for a = 1, v.Enemy.Width do
                         for k = 1, v.Enemy.Height do
                             boneSpurt(v.dx + halfSize + ((a - 1) * 32),
-                                      v.dy + halfSize + ((k - 1) * 32), 10, 25,
-                                      1, 1, 1, "mob", v.Enemy.Name)
+                                v.dy + halfSize + ((k - 1) * 32), 10, 25,
+                                1, 1, 1, "mob", v.Enemy.Name)
                         end
                     end
                 end

@@ -87,6 +87,7 @@ timeOfDay = 0
 username = "Pebsie"
 readyForUpdate = true
 playersOnline = ""
+timeToReset = ""
 firstLaunch = true
 playerCount = 0
 
@@ -249,9 +250,8 @@ function love.draw()
         local text
         if not dev then
             text =
-                "BrawlQuest " .. version .. " " .. versionNumber .. "\nX,Y: " ..
-                    player.x .. "," .. player.y .. "\nFPS: " ..
-                    tostring(love.timer.getFPS()) .. "\n\nPlayers: " ..
+                "BrawlQuest " .. version .. "" .. versionNumber .. "\n" .. timeToReset ..
+                   "\nPlayers: " ..
                     playerCount .. "\n" .. playersOnline
         end
         love.graphics.print(text, offset, 10)
@@ -289,7 +289,7 @@ function love.update(dt)
                 ["AY"] = player.target.y,
                 ["IsShield"] = love.keyboard.isDown(keybinds.SHIELD)
             }), token)
-            nextUpdate = 0.75
+            nextUpdate = 1
             tick()
         end
         updateWorld(dt)

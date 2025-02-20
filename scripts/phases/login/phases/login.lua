@@ -119,6 +119,8 @@ function login()
         -- print("logged in as "..textfields[1])
         
         if c == 200 then
+
+            
             b = json:decode(tostring(b))
             UID = textfields[1]
             token = b['token']

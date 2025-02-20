@@ -81,12 +81,12 @@ function initSettings()
       
         openInventoryOnHover = contents["openInventoryOnHover"] or openInventoryOnHover
         openQuestsOnHover = contents["openQuestsOnHover"] or openQuestsOnHover
-        if contents["craftingFields"] and #contents["craftingFields"] == #crafting.openField then crafting.openField = contents["craftingFields"] end
+--        if contents["craftingFields"] and #contents["craftingFields"] == #crafting.openField then crafting.openField = contents["craftingFields"] end
         if selectedServer == nil or servers[selectedServer] == nil then
             selectedServer = 1
         end
       
-      setAPI()
+   
     
     
     else

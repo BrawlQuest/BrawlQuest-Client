@@ -361,29 +361,40 @@ end
 
 soundStore = {}
 
-function playSoundIfExists(path, notRelative)
+function getSoundIfExists(path)
     if not soundStore[path] then
+        -- file hasn't been loaded previously
         if love.filesystem.getInfo(path) then
             soundStore[path] = love.audio.newSource(path, "static")
-            if notRelative and soundStore[path]:getChannelCount() > 1 then
-                soundStore[path]:setRelative(true)
-            else
-                soundStore[path]:setPosition(player.dx / 32, player.dy / 32)
-            end
-            setEnvironmentEffects(soundStore[path])
-            soundStore[path]:setVolume(sfxVolume)
-            soundStore[path]:play()
         end
+    end
+
+    return soundStore[path]
+end
+
+function playSoundIfExists(path, notRelative, positionX, positionY)
+    local sound
+    if type(path) == "userdata" then
+        sound = path
     else
-        if soundStore[path]:isPlaying() then soundStore[path]:stop() end
-        if notRelative and soundStore[path]:getChannelCount() > 1 then
-            soundStore[path]:setRelative(true)
-        else
-            soundStore[path]:setPosition(player.dx / 32, player.dy / 32)
+        sound = getSoundIfExists(path)
+    end
+
+    if sound then
+        if sound:isPlaying() then sound:stop() end
+  
+       if  sound:getChannelCount() == 1 then
+            if not positionX or not positionY then
+                sound:setPosition(player.dx / 32, player.dy / 32)
+            else
+                sound:setPosition(positionX, positionY)
+            end
+            sound:setRolloff(sfxRolloff)
         end
-        setEnvironmentEffects(soundStore[path])
-        soundStore[path]:setVolume(sfxVolume)
-        soundStore[path]:play()
+      
+        setEnvironmentEffects(sound)
+        sound:setVolume(sfxVolume)
+        sound:play()
     end
 end
 

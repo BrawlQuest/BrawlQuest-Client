@@ -1,4 +1,4 @@
-function initCrafting()
+function initCrafting(refreshList)
     crafting = {
         w = 600,
         h = 400,
@@ -50,24 +50,27 @@ function initCrafting()
         changeCount = 0,
     }
 
-    b = {}
-    c, h = http.request{url = api.url.."/crafts", method="GET", source=ltn12.source.string(body), sink=ltn12.sink.table(b)}
-    if b ~= nil and b[1] ~= nil then
-        crafting.catalogue = json:decode(table.concat(b))
-        for i, v in ipairs(crafting.catalogue) do
-            crafting.itemCount = crafting.itemCount + 1
-            if crafting.recipes[v.Item.Type] then
-                crafting.recipes[v.Item.Type][#crafting.recipes[v.Item.Type] + 1] = copy(v)
-            else
-                crafting.recipes[v.Item.Type] = {copy(v),}
-                crafting.fields[#crafting.fields+1] = v.Item.Type
+   
+    if (refreshList) then
+        
+        b = {}
+        c, h = http.request{url = api.url.."/crafts", method="GET", source=ltn12.source.string(body), sink=ltn12.sink.table(b)}
+        if b ~= nil and b[1] ~= nil then
+            crafting.catalogue = json:decode(table.concat(b))
+            for i, v in ipairs(crafting.catalogue) do
+                crafting.itemCount = crafting.itemCount + 1
+                if crafting.recipes[v.Item.Type] then
+                    crafting.recipes[v.Item.Type][#crafting.recipes[v.Item.Type] + 1] = copy(v)
+                else
+                    crafting.recipes[v.Item.Type] = {copy(v),}
+                    crafting.fields[#crafting.fields+1] = v.Item.Type
+                end
             end
+        else
+            love.window.showMessageBox("Error loading crafting catalogue", "Post this on Discord please!\n"..json:encode_pretty(b).."\n")
+            crafting.catalogue = {}
         end
-    else
-        love.window.showMessageBox("Error loading crafting catalogue", "Post this on Discord please!\n"..json:encode_pretty(b).."\n")
-        crafting.catalogue = {}
     end
-
   --  local success,msg = love.filesystem.write("recipes.txt", json:encode_pretty(crafting.recipes))
 
     for i, v in ipairs(crafting.fields) do

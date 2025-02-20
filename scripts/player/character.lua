@@ -264,16 +264,17 @@ function updateInventory(response)
     newInventoryItems = {}
     if json:encode(inventoryAlpha) ~= "[]" then
         for i, v in ipairs(response['Inventory']) do
-            local newItem = true
             v = copy(v)
+            local newItem = true
             for o, k in ipairs(inventoryAlpha) do
-                if k.Item.Name == v.Item.Name then -- and v.Inventory.Amount == k.Inventory.Amount then
-                    -- print("You have " .. k.Inventory.Amount .. " of this item, and the server says you now have " ..
-                    --           v.Inventory.Amount)
+                if k.Item.Name == v.Item.Name then
                     v.Inventory.Amount = v.Inventory.Amount - k.Inventory.Amount
-                    -- print("That's a change of " .. v.Inventory.Amount .. " of it.")
+               
                     if v.Inventory.Amount <= 0 then
+                   
                         newItem = false
+                    else
+                        newItem = true
                     end
                 end
             end
@@ -285,12 +286,8 @@ function updateInventory(response)
     end
 
     for i,k in ipairs(newInventoryItems) do
-        -- print(k.Item.Name)
-        enemyHitSfx:setPosition(player.x, player.y)
-        enemyHitSfx:setRolloff(sfxRolloff)
-        enemyHitSfx:setRelative(false)
-        setEnvironmentEffects(enemyHitSfx)
-        enemyHitSfx:play()
+      
+        playSoundIfExists(enemyHitSfx, false, player.x, player.y)
         burstLoot((player.x*32)-16, (player.y*32)-16, k.Inventory.Amount, k.Item.ImgPath)
         newInventoryItems = {}
     end
