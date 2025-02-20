@@ -93,7 +93,7 @@ end
 
 function drawLeaves()
     for i,v in ipairs(leaves) do
-        if distanceToPoint(me.X, me.Y, v.x, v.y) > 200 then
+        if distanceToPoint(me.X, me.Y, v.x, v.y) < 200 then
             love.graphics.setColor(1,1,1,v.alpha)
             love.graphics.draw(leafImg[v.type].img, v.x, v.y, v.r)
         end

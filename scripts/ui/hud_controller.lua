@@ -98,7 +98,6 @@ function initHUD()
     questPopUpWidth = 335
     questPopUpHeight = 496
     questPopUpPanelGap = 400
-
     initCharacterHub()
     initToolBarInventory()
     initQuestHub()
@@ -108,6 +107,7 @@ function initHUD()
     initNewWorldEdit()
     initTutorial()
     initReputation()
+
 end
 
 function updateHUD( dt )

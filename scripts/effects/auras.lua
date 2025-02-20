@@ -43,7 +43,7 @@ end
 
 function drawAuraHeadings()
     love.graphics.setColor(1,1,1,1)
-    local x = (uiX-36)
+    local x = (uiX-36-256-20) 
     for i,v in ipairs(auras) do
         local img = getImgIfNotExist(v.Item.ImgPath)
 

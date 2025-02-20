@@ -38,10 +38,10 @@ function initLogin()
     initCharacterSelection()
 
     loginText = {
-        "BrawlQuest " .. version .. " " .. versionNumber,
-        "Luven Interactive LTD 2020 - 2022", "", "Created By",
+        "BrawlQuest " .. version .. "" .. versionNumber,
+        "AppFlare LTD 2025", "", "Created By",
         "Thomas Lock & Danjoe Stubbs",
-        "Original music by JoeyFunWithMusic\nAdditional music by Eric Matyas (Some Dreamy Place, Ocean Game Title, Left Behind, Dreamlands, Their Sacred Place, The Castle Mice, North Ridge, The Key To The Kingdom, Ancient Game Open, The Castle of Dr Sinister)",
+        "Original music by JoeyFunWithMusic\nAdditional music by Eric Matyas (RPG MAP MUSIC, Some Dreamy Place, Ocean Game Title, Left Behind, Dreamlands, Their Sacred Place, The Castle Mice, North Ridge, The Key To The Kingdom, Ancient Game Open, The Castle of Dr Sinister)",
         "",
         "Graphics by David E. Gervais,used here under a CC license. pousse.rapiere.free.fr/tome/",
         "", "Special thanks to ThinkSometimes for the Minty sprite", "",
@@ -222,7 +222,7 @@ function loginViaSteam(skipDev)
                 login()
             end
         else
-            print("Can't connect to server")
+       
             loginPhase = "login"
         end
     else

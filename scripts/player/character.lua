@@ -125,9 +125,9 @@ function worldCollision(x, y)
         if worldLookup[x..","..y].Collision == true then
             output = true
         end
-        if me.Mount and string.find(me.Mount.Name, "boat") and isTileType(worldLookup[x..","..y].ForegroundTile, "Water") then
+        if isInBoat() and isTileType(worldLookup[x..","..y].ForegroundTile, "Water") then
             output = false
-        elseif me.Mount and string.find(me.Mount.Name, "boat") and not worldLookup[x..","..y].Collision then
+        elseif isInBoat() and not worldLookup[x..","..y].Collision then
             output = true
         end
     end
@@ -264,16 +264,17 @@ function updateInventory(response)
     newInventoryItems = {}
     if json:encode(inventoryAlpha) ~= "[]" then
         for i, v in ipairs(response['Inventory']) do
-            local newItem = true
             v = copy(v)
+            local newItem = true
             for o, k in ipairs(inventoryAlpha) do
-                if k.Item.Name == v.Item.Name then -- and v.Inventory.Amount == k.Inventory.Amount then
-                    -- print("You have " .. k.Inventory.Amount .. " of this item, and the server says you now have " ..
-                    --           v.Inventory.Amount)
+                if k.Item.Name == v.Item.Name then
                     v.Inventory.Amount = v.Inventory.Amount - k.Inventory.Amount
-                    -- print("That's a change of " .. v.Inventory.Amount .. " of it.")
+               
                     if v.Inventory.Amount <= 0 then
+                   
                         newItem = false
+                    else
+                        newItem = true
                     end
                 end
             end
@@ -285,12 +286,8 @@ function updateInventory(response)
     end
 
     for i,k in ipairs(newInventoryItems) do
-        -- print(k.Item.Name)
-        enemyHitSfx:setPosition(player.x, player.y)
-        enemyHitSfx:setRolloff(sfxRolloff)
-        enemyHitSfx:setRelative(false)
-        setEnvironmentEffects(enemyHitSfx)
-        enemyHitSfx:play()
+      
+        playSoundIfExists(enemyHitSfx, false, player.x, player.y)
         burstLoot((player.x*32)-16, (player.y*32)-16, k.Inventory.Amount, k.Item.ImgPath)
         newInventoryItems = {}
     end
@@ -302,5 +299,10 @@ end
 
 function holdingStaff()
     if me and me.Weapon and string.find(me.Weapon.Name, "Staff") then return true
+    else return false end
+end
+
+function isInBoat() 
+    if me and me.Mount and string.find(string.lower(me.Mount.Name), "boat") then return true
     else return false end
 end

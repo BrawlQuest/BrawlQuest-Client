@@ -64,7 +64,7 @@ function tickRangedWeapons()
             end
         end)
         hitTarget()
-    elseif me and me.Mana < 5 and target.selected then
+    elseif me and me.Mana and me.Mana < 5 and target.selected then
         noManaSFX:setVolume(sfxVolume)
         noManaSFX:play()
     end
@@ -108,7 +108,6 @@ function hitTarget()
     if target.hit then
         local x, y = target.hit.x, target.hit.y -- hit a target on these coordinates
         apiGET('/ranged/' .. me.ID .. "/" .. x .. "/" .. y)
-        
     end
 end
 

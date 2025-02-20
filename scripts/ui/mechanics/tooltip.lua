@@ -141,6 +141,7 @@ function setItemTooltip(item)
         end
     end
     if me and item and item.Enchantment ~= "None" then
+       
         ench = explode(item.Enchantment, ",")
         if string.sub(item.Type,1,3) == "arm" then
 
@@ -176,8 +177,6 @@ function setItemTooltip(item)
             color = {1,0,0}
         }
     end
-
-   
 end
 
 function drawTooltip(thisX, thisY)

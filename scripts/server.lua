@@ -3,9 +3,8 @@ function serverResponse()
     if info then
         local response = json:decode(info)
         if response then
-
             if not isMouseDown() then -- if perks.stats[1] == 0 then
-                perks.stats = {me.STR, me.INT, me.STA, player.cp}
+                perks.stats = { me.STR, me.INT, me.STA, player.cp }
             end
 
             if response then
@@ -46,6 +45,9 @@ function serverResponse()
                         playerCount = playerCount + 1
                     end
                 end
+                if response['TimeToReset'] then
+                    timeToReset = response['TimeToReset']
+                end
                 if json:encode(inventoryAlpha) ~= json:encode(response['Inventory']) then
                     updateInventory(response)
                     inventoryAlpha = response['Inventory'] -- this is in this order for a reason dummy
@@ -60,7 +62,6 @@ function serverResponse()
                         end -- these are different to prevent it going back and forth when sorting
                         return tonumber(a.Item.Val) < tonumber(b.Item.Val)
                     end)
-
                 end
                 player.cp = response['CharPoints']
                 messages = {}
@@ -89,7 +90,7 @@ function serverResponse()
                     updateWorldLookup()
                 end
                 if perks.stats[1] == 0 then
-                    perks.stats = {me.STR, me.INT, me.STA, player.cp}
+                    perks.stats = { me.STR, me.INT, me.STA, player.cp }
                 end
                 if me.IsDead and me.IsHardcore == 0 then
                     love.audio.play(deathSfx)
@@ -102,7 +103,6 @@ function serverResponse()
                     }
                 elseif me.isDead and me.IsHardcore == 1 then
                     deathMessage.display = true
-              
                 end
 
                 if me.IsDead then
@@ -156,7 +156,7 @@ function serverResponse()
                         setEnvironmentEffects(lvlSfx)
                         lvlSfx:play()
                         perks.stats[4] = player.cp
-                        addFloat("level", player.dx + 16, player.dy + 16, null, {1, 0, 0}, 10)
+                        addFloat("level", player.dx + 16, player.dy + 16, null, { 1, 0, 0 }, 10)
                     end
                     player.lvl = me.LVL
                     firstLaunch = false
@@ -165,7 +165,7 @@ function serverResponse()
                 if player.world == 0 then
                     newEnemyData(response['Enemies'])
                 end
-                quests = {{}, {}, {}}
+                quests = { {}, {}, {} }
                 for i, v in ipairs(response['MyQuests']) do
                     local trackedVar = 2
                     if v.Tracked == 1 then
@@ -188,18 +188,33 @@ function serverResponse()
                             "Gather " .. v.Quest.ValueRequired .. "x " .. v.Quest.Value
                     elseif v.Quest.Type == "go" then
                         quests[v.Tracked][#quests[v.Tracked]].task = "Go to " ..
-                                                                         (worldLookup[v.Quest.X .. "," .. v.Quest.Y]
-                                                                             .Name or v.Quest.X .. ", " .. v.Quest.Y)
+                            (worldLookup[v.Quest.X .. "," .. v.Quest.Y]
+                                .Name or v.Quest.X .. ", " .. v.Quest.Y)
                     end
                 end
                 activeConversations = response['ActiveConversations']
-                if response['Tick'] ~= previousTick then
-                    tick()
-                    previousTick = response['Tick']
-                end
+                -- if response['Tick'] ~= previousTick then
+
+                --     previousTick = response['Tick']
+                -- end
                 weather.type = response['Weather']
 
-                -- if love.system.getOS() ~= "Linux" and useSteam then checkAchievementUnlocks() end
+                if useSteam then checkAchievementUnlocks() end
+
+                if (me.AX ~= me.X or me.AY ~= me.Y) and
+                    not death.open and not isMoving then
+                    if player.dx > me.AX * 32 then
+                        player.dx = player.dx - 16
+                    elseif player.dx < me.AX * 32 then
+                        player.dx = player.dx + 16
+                    end
+                    if player.dy > me.AY * 32 then
+                        player.dy = player.dy - 16
+                    elseif player.dy < me.AY * 32 then
+                        player.dy = player.dy + 16
+                    end
+                    attackHitAmount = 1
+                end
             end
         end
     end

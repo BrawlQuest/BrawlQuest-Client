@@ -13,36 +13,44 @@ selectedServer = 1
 
 servers = {{
     name = "EU",
-    url = "http://34.142.50.138"
+    url = "http://198.244.191.157"
 }, 
-{
-    name = "US",
-    url = "http://35.227.144.94"
-},  {
+ {
     name = "Local",
     url = "http://localhost"
 }}
 
 api = {
-    url = servers[selectedServer].url,
-    get = function(action)
-
-        -- print("Calling "..api.url..action)
-        b, c, h = http.request(api.url .. action)
-        return json:decode(b)
-    end,
-    post = function(action, body)
-        -- print("Calling "..api.url..action)
-        b, c, h = http.request(api.url .. action, body)
-        return json:decode(b)
-    end
-
 }
 
 local thread
 local getThread
 local playerDataChannel = love.thread.getChannel('data')
 local getPlayerDataThread = love.thread.newThread([[
+   print("Not initialised!")
+  ]])
+
+function setAPI(i) 
+
+    if i then selectedServer = i end
+
+    api = {
+        url = servers[selectedServer].url,
+        get = function(action)
+    
+            -- print("Calling "..api.url..action)
+            b, c, h = http.request(api.url .. action)
+            return json:decode(b)
+        end,
+        post = function(action, body)
+            -- print("Calling "..api.url..action)
+            b, c, h = http.request(api.url .. action, body)
+            return json:decode(b)
+        end
+    
+    }
+
+     getPlayerDataThread = love.thread.newThread([[
     local http = require("socket.http")
     local json = require("scripts.libraries.json")
     local ltn12 = require("ltn12")
@@ -58,6 +66,7 @@ local getPlayerDataThread = love.thread.newThread([[
     --  end
     end
   ]])
+end
 
 function getPlayerData(request, body, token)
     if not getPlayerDataThread:isRunning() then
@@ -65,7 +74,7 @@ function getPlayerData(request, body, token)
     end
 
     local error = getPlayerDataThread:getError()
-    print(error)
+   -- print(error)
     love.thread.getChannel('action'):push(request)
     love.thread.getChannel('body'):push(body)
     love.thread.getChannel('token'):push(token)

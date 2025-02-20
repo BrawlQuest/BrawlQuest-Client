@@ -27,7 +27,7 @@ function checkClickLoginPhaseServer(x,y)
     for i=1,#servers do
         if isMouseOver(loginImageX+30, loginImageY+140+(i*48), buttonImage:getWidth(), buttonImage:getHeight()) then
             selectedServer = i
-            api.url = servers[selectedServer].url
+            setAPI(selectedServer)
             loginPhase = "login"
             
             writeSettings()
