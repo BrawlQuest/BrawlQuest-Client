@@ -32,16 +32,19 @@ function loadMusic()
         Mage = love.audio.newSource("assets/music/classes/Mage.mp3", "stream"),
         Stoic = love.audio.newSource("assets/music/classes/Stoic.mp3", "stream"),
         Jungle = love.audio.newSource("assets/music/temp/Lost-Meadow_Looping.mp3", "stream"),
-        Foglands = love.audio.newSource("assets/music/temp/foglands.mp3", "stream")
+        Foglands = love.audio.newSource("assets/music/temp/foglands.mp3", "stream"),
+        Boat = love.audio.newSource("assets/music/boat.mp3", "stream")
     }
-  
 
-    worldMusic = {"Foglands", "Warrior", "Mage", "Stoic", "The-Castle-Mice", "Of-Legends-and-Fables", "PuerLavari", "Mining", "Sax", "ToFindTheOne", "Heat", "Longing", "Permafrost", "Enchantment", "Enchantment Haunt", "Dreamlands", "Of-Legends-and-Fables-2", "Jungle"}
-    battleMusic = {"Titans", "Skirmish", "Skirmish2", "CaperOfCruelty", "HIJINKS", }
+
+    worldMusic = { "Foglands", "Warrior", "Mage", "Stoic", "The-Castle-Mice", "Of-Legends-and-Fables", "PuerLavari",
+        "Mining", "Sax", "ToFindTheOne", "Heat", "Longing", "Permafrost", "Enchantment", "Enchantment Haunt",
+        "Dreamlands", "Of-Legends-and-Fables-2", "Jungle", "Boat" }
+    battleMusic = { "Titans", "Skirmish", "Skirmish2", "CaperOfCruelty", "HIJINKS", }
 
     musicSwitchAmount = 0
-
-    titleMusic = love.audio.newSource("assets/music/album1/Longing Startup - Bass.mp3", "stream")
+    -- set title to random world music
+    titleMusic = music[worldMusic[math.random(1, #worldMusic)]]
     previousMusicTile = null
 
     if musicVolume ~= 0 then
@@ -65,9 +68,9 @@ function updateMusic(dt)
     end
 
     if playMusic then
-        if worldLookup[player.x..","..player.y] then
-            local foundMusic = worldLookup[player.x..","..player.y].Music
-            if foundMusic ~= (previousMusicTile) and not isSwitching then
+        if worldLookup[player.x .. "," .. player.y] then
+            local foundMusic = worldLookup[player.x .. "," .. player.y].Music
+            if foundMusic ~= (previousMusicTile) and not isSwitching and not isInBoat() then
                 switchMusic(foundMusic)
                 previousMusicTile = foundMusic
             end
@@ -90,11 +93,14 @@ function updateMusic(dt)
                 currentTrack = nextTrack
             end
         end
+
+        if isInBoat() and nextTrack ~= "Boat" then
+            switchMusic("Boat")
+        end
     end
 end
 
 function switchMusic(newTrack)
-
     if music[newTrack] ~= nil and newTrack ~= currentTrack then
         nextTrack = newTrack
         isSwitching = true
@@ -102,20 +108,20 @@ function switchMusic(newTrack)
         music[nextTrack]:setVolume(musicVolume)
         music[nextTrack]:setLooping(true)
         currentPlaying = music[nextTrack]:play()
-    -- elseif newTrack == currentTrack then
+        -- elseif newTrack == currentTrack then
         -- print("Attempted to restart playback of already playing track.")
-    -- else
+        -- else
         -- print("Attempted to play a track that doesn't exist: " .. newTrack)
     end
 end
 
 function checkMusic()
-    if worldLookup[player.x..","..player.y] and worldLookup[player.x..","..player.y].Music and worldLookup[player.x..","..player.y].Music ~= "*" then
-        setEnvironmentEffects(music[worldLookup[player.x..","..player.y].Music])
-        currentPlaying = music[worldLookup[player.x..","..player.y].Music]:play()
+    if worldLookup[player.x .. "," .. player.y] and worldLookup[player.x .. "," .. player.y].Music and worldLookup[player.x .. "," .. player.y].Music ~= "*" then
+        setEnvironmentEffects(music[worldLookup[player.x .. "," .. player.y].Music])
+        currentPlaying = music[worldLookup[player.x .. "," .. player.y].Music]:play()
     else
         currentPlaying = music["PuerLavari"]:play()
-    end  
+    end
     music[currentTrack]:setVolume(musicVolume)
     music[currentTrack]:setLooping(true)
 end

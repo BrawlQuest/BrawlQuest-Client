@@ -81,7 +81,7 @@ function drawTutorial()
     love.graphics.printf(tutorial[tutorialActive].desc, x, y, w / 3, "center", 0, 3)
     love.graphics.setColor(1,0,0,pressEnterOpacity*tutorialOpacity)
     y = y + getTextHeight(tutorial[tutorialActive].desc, w, enchanting.font, 3) + 20
-    love.graphics.printf("Press ENTER to continue", x, y, w / 3,"center", 0, 3)
+    love.graphics.printf("Press ENTER or E to continue", x, y, w / 3,"center", 0, 3)
 end
 
 function updateTutorial(dt)
@@ -122,7 +122,7 @@ function updateTutorial(dt)
 end
 
 function checkTutorialKeyPressed(key)
-    if key == "return" then
+    if key == "return" or key == "e" then
         closeTutorial(tutorialActive)
     end
 end

@@ -13,12 +13,9 @@ selectedServer = 1
 
 servers = {{
     name = "EU",
-    url = "http://34.142.50.138"
+    url = "http://198.244.191.157"
 }, 
-{
-    name = "US",
-    url = "http://35.227.144.94"
-},  {
+ {
     name = "Local",
     url = "http://localhost"
 }}
