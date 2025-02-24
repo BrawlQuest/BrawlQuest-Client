@@ -1,4 +1,6 @@
 function serverResponse()
+   
+
     local info = love.thread.getChannel('players'):pop()
     if info then
         local response = json:decode(info)
@@ -48,20 +50,10 @@ function serverResponse()
                 if response['TimeToReset'] then
                     timeToReset = response['TimeToReset']
                 end
-                if json:encode(inventoryAlpha) ~= json:encode(response['Inventory']) then
-                    updateInventory(response)
-                    inventoryAlpha = response['Inventory'] -- this is in this order for a reason dummy
-                    -- this is in this order for a reason dummy
-
-                    table.sort(inventoryAlpha, function(a, b)
-                        if not tonumber(a.Item.Val) then
-                            a.Item.Val = "0"
-                        end
-                        if not tonumber(b.Item.Val) then
-                            b.Item.Val = "1"
-                        end -- these are different to prevent it going back and forth when sorting
-                        return tonumber(a.Item.Val) < tonumber(b.Item.Val)
-                    end)
+                print(response["InventoryHash"] .. ", curret hash: " .. inventoryHash)
+                if response["InventoryHash"] ~= inventoryHash and me.ID ~= nil then
+                    inventoryHash = response["InventoryHash"]
+                    getPlayerInventory(me.ID, token)
                 end
                 player.cp = response['CharPoints']
                 messages = {}
@@ -217,5 +209,22 @@ function serverResponse()
                 end
             end
         end
+    end
+
+    local inventoryThreadData = love.thread.getChannel('inventory'):pop()
+    if inventoryThreadData then
+        updateInventory(inventoryThreadData)
+        inventoryAlpha = json:decode(inventoryThreadData) -- this is in this order for a reason dummy
+        -- this is in this order for a reason dummy
+
+        table.sort(inventoryAlpha, function(a, b)
+            if not tonumber(a.Item.Val) then
+                a.Item.Val = "0"
+            end
+            if not tonumber(b.Item.Val) then
+                b.Item.Val = "1"
+            end -- these are different to prevent it going back and forth when sorting
+            return tonumber(a.Item.Val) < tonumber(b.Item.Val)
+        end)
     end
 end

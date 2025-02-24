@@ -239,9 +239,7 @@ function drawEnemies()
                 end
 
                 local enemyHealth = me.HP / v.Enemy.ATK
-                local playerHealth = v.Enemy.HP /
-                    (me.Weapon.Val + (me.STR - 1) * 0.5)
-
+                local playerHealth =0
                 if me.HP and v.Enemy.ATK and enemyHealth > playerHealth then
                     local distanceIntensity = 1 - (distance / 128)
                     love.graphics.setColor(1, cerp(0, 0.5, nextTick * 2), 0,

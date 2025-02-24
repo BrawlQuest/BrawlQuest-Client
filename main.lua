@@ -289,7 +289,7 @@ function love.update(dt)
                 ["AY"] = player.target.y,
                 ["IsShield"] = love.keyboard.isDown(keybinds.SHIELD)
             }), token)
-            nextUpdate = 1
+            nextUpdate = 0.25
             tick()
         end
         updateWorld(dt)

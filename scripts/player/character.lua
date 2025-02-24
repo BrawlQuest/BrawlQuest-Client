@@ -1,11 +1,11 @@
 --[[
-    This file contains all of the functions that would be used by the player 
+    This file contains all of the functions that would be used by the player
     as a means of controlling the character.
 ]]
 player = {
-    world = 0,  -- 0 default
+    world = 0, -- 0 default
     x = -15,
-    y = -15,    
+    y = -15,
     dx = 15 * 32,
     dy = 15 * 32,
     cx = 0,
@@ -32,9 +32,9 @@ player = {
         y = -100,
         stepSndPlay = 0.3
     },
-    color = {1,0.4,0.2,1},
+    color = { 1, 0.4, 0.2, 1 },
     cp = 0,
-    speed = {x = 0, y = 0},
+    speed = { x = 0, y = 0 },
     frameAmount = 0,
     frame = 1,
     attacking = true,
@@ -46,6 +46,7 @@ player = {
 
 newInventoryItems = {}
 me = {}
+inventoryHash = ""
 
 function drawItemIfExists(path, x, y, previousDirection, direction, imageScale, stencil)
     imageScale = imageScale or 1
@@ -59,15 +60,18 @@ function drawItemIfExists(path, x, y, previousDirection, direction, imageScale, 
     end
 
     if not itemImg[path] then
-        if love.filesystem.getInfo(path).size then itemImg[path] = love.graphics.newImage(path)
-        else itemImg[path] = love.graphics.newImage("assets/error.png") end
+        if love.filesystem.getInfo(path).size then
+            itemImg[path] = love.graphics.newImage(path)
+        else
+            itemImg[path] = love.graphics.newImage("assets/error.png")
+        end
     end
 
     if itemImg[path]:getWidth() > 32 then
-        x = x - (itemImg[path]:getWidth()-32)
+        x = x - (itemImg[path]:getWidth() - 32)
     end
     if itemImg[path]:getHeight() > 32 then
-        y = y - (itemImg[path]:getHeight()-32)
+        y = y - (itemImg[path]:getHeight() - 32)
     end
 
     if stencil then
@@ -82,7 +86,7 @@ local sparklesAmount = 0
 function updateCharacter(dt)
     -- When you take damage, the screen turns red around you
     if player.damageHUDAlphaUp then
-        player.damageHUDAlpha = player.damageHUDAlpha + 3*dt
+        player.damageHUDAlpha = player.damageHUDAlpha + 3 * dt
         if player.damageHUDAlpha > 1 then
             player.damageHUDAlpha = 1
             player.damageHUDAlphaUp = false
@@ -90,7 +94,7 @@ function updateCharacter(dt)
     end
 
     if player.damageHUDAlpha > 0 then
-        player.damageHUDAlpha = player.damageHUDAlpha - 0.35*dt
+        player.damageHUDAlpha = player.damageHUDAlpha - 0.35 * dt
         if player.damageHUDAlpha < 0 then player.damageHUDAlpha = 0 end
     end
 
@@ -121,17 +125,17 @@ end
 function worldCollision(x, y)
     local output = false
     if worldEdit.open and versionType == "dev" then return output end
-    if worldLookup[x..","..y] then
-        if worldLookup[x..","..y].Collision == true then
+    if worldLookup[x .. "," .. y] then
+        if worldLookup[x .. "," .. y].Collision == true then
             output = true
         end
-        if isInBoat() and isTileType(worldLookup[x..","..y].ForegroundTile, "Water") then
+        if isInBoat() and isTileType(worldLookup[x .. "," .. y].ForegroundTile, "Water") then
             output = false
-        elseif isInBoat() and not worldLookup[x..","..y].Collision then
+        elseif isInBoat() and not worldLookup[x .. "," .. y].Collision then
             output = true
         end
     end
-    if enemyCollisions[x..","..y] and me and me.Invulnerability < 0 then output = true end
+    if enemyCollisions[x .. "," .. y] and me and me.Invulnerability < 0 then output = true end
     return output
 end
 
@@ -154,7 +158,7 @@ function movePlayer(dt) -- a nice update function
             news.alpha ~= 1,
             -- not player.attacking,
         }) then -- movement smoothing has finished
-        local prev = {x = player.x, y = player.y}
+        local prev = { x = player.x, y = player.y }
         if love.keyboard.isDown(keybinds.UP) and love.keyboard.isDown(keybinds.LEFT) and not (worldCollision(prev.x - 1, prev.y - 1) or worldCollision(prev.x - 1, prev.y) or worldCollision(prev.x, prev.y - 1)) then
             prev.y = prev.y - 1
             prev.x = prev.x - 1
@@ -191,16 +195,16 @@ function movePlayer(dt) -- a nice update function
             end
         end
 
-        if (prev.x ~= player.x or prev.y ~= player.y) then--or worldEdit.open then
+        if (prev.x ~= player.x or prev.y ~= player.y) then --or worldEdit.open then
             player.x = prev.x
             player.y = prev.y
-            if me and me.Mount and worldLookup[player.x..","..player.y] then
-                playFootstepSound(worldLookup[player.x..","..player.y], player.x, player.y, true)
+            if me and me.Mount and worldLookup[player.x .. "," .. player.y] then
+                playFootstepSound(worldLookup[player.x .. "," .. player.y], player.x, player.y, true)
             end
             isMoving = true
         end
     end
-    
+
     local distance = distanceToPoint(player.x * 32, player.y * 32, player.dx, player.dy)
     if drawAnimations then animateCharacter(dt, distance > 1) end
 
@@ -208,7 +212,8 @@ function movePlayer(dt) -- a nice update function
     if distance > 1 then
         local speed = 80
         if me and me.Mount and me.Mount.Name ~= "None" or worldEdit.open then
-            speed = tonumber(me.Mount.Val) or 80 -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
+            speed = tonumber(me.Mount.Val) or
+            80                                   -- Hello Mr Hackerman! If you go faster than this the server will think you're teleporting.
             local enchant = me.Mount.Enchantment or false
             if enchant and enchant ~= "None" and enchant ~= "" then speed = speed + 25 end
             if worldEdit.open and versionType == "dev" then speed = 256 end
@@ -222,7 +227,7 @@ function movePlayer(dt) -- a nice update function
         end
 
         if not death.open then
-            local x,y = player.x * 32, player.y * 32
+            local x, y = player.x * 32, player.y * 32
             if player.dx > x then
                 player.dx = player.dx - speed * dt
                 if player.dx <= x then player.dx = x end
@@ -262,47 +267,51 @@ end
 
 function updateInventory(response)
     newInventoryItems = {}
-    if json:encode(inventoryAlpha) ~= "[]" then
-        for i, v in ipairs(response['Inventory']) do
-            v = copy(v)
-            local newItem = true
-            for o, k in ipairs(inventoryAlpha) do
-                if k.Item.Name == v.Item.Name then
-                    v.Inventory.Amount = v.Inventory.Amount - k.Inventory.Amount
-               
-                    if v.Inventory.Amount <= 0 then
-                   
-                        newItem = false
-                    else
-                        newItem = true
-                    end
+   local newInventory = json:decode(response)
+    for i, v in ipairs(newInventory) do
+        v = copy(v)
+        local newItem = true
+        for o, k in ipairs(inventoryAlpha) do
+            if k.Item.Name == v.Item.Name then
+                v.Inventory.Amount = v.Inventory.Amount - k.Inventory.Amount
+
+                if v.Inventory.Amount <= 0 then
+                    newItem = false
+                else
+                    newItem = true
                 end
             end
-            if newItem then
-                table.insert(newInventoryItems, v)
-                openTutorial(6)
-            end
+        end
+        if newItem then
+            table.insert(newInventoryItems, v)
+            openTutorial(6)
         end
     end
 
-    for i,k in ipairs(newInventoryItems) do
-      
+
+    for i, k in ipairs(newInventoryItems) do
         playSoundIfExists(enemyHitSfx, false, player.x, player.y)
-        burstLoot((player.x*32)-16, (player.y*32)-16, k.Inventory.Amount, k.Item.ImgPath)
+        burstLoot((player.x * 32) - 16, (player.y * 32) - 16, k.Inventory.Amount, k.Item.ImgPath)
         newInventoryItems = {}
     end
 
-  
+
 
     getInventory()
 end
 
 function holdingStaff()
-    if me and me.Weapon and string.find(me.Weapon.Name, "Staff") then return true
-    else return false end
+    if me and me.Weapon and string.find(me.Weapon.Name, "Staff") then
+        return true
+    else
+        return false
+    end
 end
 
-function isInBoat() 
-    if me and me.Mount and string.find(string.lower(me.Mount.Name), "boat") then return true
-    else return false end
+function isInBoat()
+    if me and me.Mount and string.find(string.lower(me.Mount.Name), "boat") then
+        return true
+    else
+        return false
+    end
 end
