@@ -19,7 +19,7 @@ alphaShader = love.graphics.newShader [[
 function drawCharacter(v, x, y, ad)
     if ad then
         local playerAlpha = getEntityAlpha(x, y)
-        local notBoat = not string.find(string.lower(v.Mount.Name), "boat")
+        local notBoat = v.Mount == nil or not string.find(string.lower(v.Mount.Name or ""), "boat")
         local direction, offsetX, mountOffsetX
 
         -- set offsets for drawing
@@ -57,24 +57,32 @@ function drawCharacter(v, x, y, ad)
             end
             love.graphics.setColor(1, 1, 1, playerAlpha)
             drawMount(x, y, v, ad, direction, mountOffsetX, notBoat, "/fore.png", playerAlpha)
-            if not drawAnimations and v.IsShield and v.ShieldID ~= 0 and notBoat then drawArmourImage(
-                x + 12 + 0 * direction, y, v, ad, "Shield", direction) end
+            if not drawAnimations and v.IsShield and v.ShieldID ~= 0 and notBoat then
+                drawArmourImage(
+                    x + 12 + 0 * direction, y, v, ad, "Shield", direction)
+            end
         end
+    else
+        love.graphics.print("Error: No ad", x, y)
     end
 end
 
 function drawMount(x, y, v, ad, direction, mountOffsetX, notBoat, type, playerAlpha)
-    if v.Mount.Name ~= "" then
-        if v.RedAlpha then love.graphics.setColor(1, 1 - v.RedAlpha, 1 - v.RedAlpha, playerAlpha) else love.graphics
-                .setColor(1, 1, 1, playerAlpha) end
-        if notBoat then
+    if v.Mount and v.Mount.Name ~= "" then
+        if v.RedAlpha then
+            love.graphics.setColor(1, 1 - v.RedAlpha, 1 - v.RedAlpha, playerAlpha)
+        else
+            love.graphics
+                .setColor(1, 1, 1, playerAlpha)
+        end
+        if notBoat and v.Mount then
             love.graphics.draw(getImgIfNotExist("assets/player/mounts/" .. string.lower(v.Mount.Name) .. type),
                 x + 6 + mountOffsetX, y + 9, 0, direction, 1, 0, 0)
-        else
+        elseif v.Mount then
             love.graphics.draw(getImgIfNotExist("assets/player/mounts/" .. string.lower(v.Mount.Name) .. "/back.png"),
                 x + mountOffsetX, y, 0, direction, 1, 0, 0)
         end
-        if v.Mount.Enchantment ~= "None" then
+        if isItemEnchanted(v.Mount) then
             love.graphics.push()
             love.graphics.stencil(function()
                 love.graphics.setShader(alphaShader)
@@ -83,7 +91,7 @@ function drawMount(x, y, v, ad, direction, mountOffsetX, notBoat, type, playerAl
                         x + 6 + mountOffsetX, y + 9, 0, direction, 1, 0, 0)
                 else
                     love.graphics.draw(
-                    getImgIfNotExist("assets/player/mounts/" .. string.lower(v.Mount.Name) .. "/back.png"),
+                        getImgIfNotExist("assets/player/mounts/" .. string.lower(v.Mount.Name) .. "/back.png"),
                         x + mountOffsetX, y, 0, direction, 1, 0, 0)
                 end
                 love.graphics.setShader()
@@ -104,12 +112,16 @@ function drawWeapon(x, y, v, ad, direction, offsetX, playerAlpha)
     end
 
     if v["WeaponID"] ~= 0 then
-        if v.RedAlpha then love.graphics.setColor(1, 1 - v.RedAlpha, 1 - v.RedAlpha, playerAlpha) else love.graphics
-                .setColor(1, 1, 1, playerAlpha) end
+        if v.RedAlpha then
+            love.graphics.setColor(1, 1 - v.RedAlpha, 1 - v.RedAlpha, playerAlpha)
+        else
+            love.graphics
+                .setColor(1, 1, 1, playerAlpha)
+        end
         love.graphics.draw(itemImg[v.Weapon.ImgPath],
             x - (itemImg[v.Weapon.ImgPath]:getWidth() - 32) * direction + offsetX,
             y - (itemImg[v.Weapon.ImgPath]:getHeight() - 32), 0, direction, 1, 0, 0)
-        if v.Weapon.Enchantment ~= "None" then
+        if isItemEnchanted(v.Weapon) then
             love.graphics.push()
             love.graphics.stencil(function()
                 love.graphics.setShader(alphaShader)
@@ -126,19 +138,31 @@ end
 
 function drawArmourImage(x, y, v, ad, type, direction, playerAlpha)
     if v[type .. "ID"] ~= 0 then
-        if v.RedAlpha then love.graphics.setColor(1, 1 - v.RedAlpha, 1 - v.RedAlpha, playerAlpha) else love.graphics
-                .setColor(1, 1, 1, playerAlpha) end
+        if v.RedAlpha then
+            love.graphics.setColor(1, 1 - v.RedAlpha, 1 - v.RedAlpha, playerAlpha)
+        else
+            love.graphics
+                .setColor(1, 1, 1, playerAlpha)
+        end
         if v.Invulnerability >= 0 and playerAlpha then
             love.graphics.setColor(1, 1, 1, 0.3 * playerAlpha)
         end
-        if type ~= "ShieldFalse" then drawItemIfExists(v[type].ImgPath, x, y, ad.previousDirection) else love.graphics
-                .draw(shieldFalse, x, y, 0, direction, 1) end
-        if v[type] and v[type].Enchantment ~= "None" then
+        if type ~= "ShieldFalse" and v[type] then
+            drawItemIfExists(v[type].ImgPath, x, y, ad.previousDirection)
+        else
+            love.graphics
+                .draw(shieldFalse, x, y, 0, direction, 1)
+        end
+        if v[type] and isItemEnchanted(v[type]) then
             love.graphics.push()
             love.graphics.stencil(function()
                 love.graphics.setShader(alphaShader)
-                if type ~= "ShieldFalse" then drawItemIfExists(v[type].ImgPath, x, y, ad.previousDirection) else love
-                        .graphics.draw(shieldFalse, x, y, 0, direction, 1) end
+                if type ~= "ShieldFalse" then
+                    drawItemIfExists(v[type].ImgPath, x, y, ad.previousDirection)
+                else
+                    love
+                        .graphics.draw(shieldFalse, x, y, 0, direction, 1)
+                end
                 love.graphics.setShader()
             end)
             local offset = 16
@@ -162,6 +186,7 @@ end
 
 function drawPlayer(v, i)
     local thisPlayer
+
     if i == -1 then -- this player is me
         thisPlayer = copy(me)
         v.X = player.dx
@@ -183,10 +208,12 @@ function drawPlayer(v, i)
         thisPlayer = players[i]
     end
 
+
     if thisPlayer and v and thisPlayer.Weapon then
         if not v.previousDirection then v.previousDirection = "right" end
         -- print(v.RedAlpha)
         if v.RedAlpha then love.graphics.setColor(1, 1 - v.RedAlpha, 1 - v.RedAlpha) end
+
         drawCharacter(thisPlayer, v.X, v.Y, v)
 
         love.graphics.setColor(1, 1, 1)
@@ -399,6 +426,12 @@ function updateOtherPlayers(dt)
                 (playersDrawable[i].Y + 16) / 32)
         end
         playersDrawable[i].Mount = v.Mount
+        playersDrawable[i].Weapon = v.Weapon
+        playersDrawable[i].Shield = v.Shield
+        playersDrawable[i].HeadArmour = v.HeadArmour
+        playersDrawable[i].ChestArmour = v.ChestArmour
+        playersDrawable[i].LegArmour = v.LegArmour
+
         updateBuddy(dt, playersDrawable)
         if playersDrawable[i].HP > v.HP then
             playSoundIfExists("assets/sfx/hit.ogg", (playersDrawable[i].X + 16) / 32, (playersDrawable[i].Y + 16) / 32)
@@ -431,7 +464,7 @@ function updateOtherPlayers(dt)
             local speed = 64
             if playersDrawable[i].Mount.Name ~= "None" or worldEdit.open then
                 speed = tonumber(playersDrawable[i].Mount.Val) or 64
-                local enchant = playersDrawable[i].Mount.Enchantment or false
+                local enchant = isItemEnchanted(playersDrawable[i].Mount)
                 if enchant and enchant ~= "None" and enchant ~= "" then
                     speed = speed + 25
                 end
@@ -460,7 +493,7 @@ function updateOtherPlayers(dt)
                 iWantSparkles = true
             end
 
-            if v.Mount and v.Mount.Name ~= "None" and v.Mount.Name ~= "" and v.Mount.Enchantment ~= "None" then
+            if isItemEnchanted(v.Mount) then
                 sparklesAmount = sparklesAmount + 5 * dt
                 if iWantSparkles and sparklesAmount > 1 then
                     sparklesAmount = 0
@@ -481,7 +514,7 @@ function updateOtherPlayers(dt)
         end
 
         -- set attacking, mainly for animations
-        if (v.X ~= v.AX or v.Y ~= v.AY) and nextTick > 0.3 and nextTick < 0.4 then v.Attacking = true end
+      --  if (v.X ~= v.AX or v.Y ~= v.AY) and nextTick > 0.3 and nextTick < 0.4 then v.Attacking = true end
     end
 end
 

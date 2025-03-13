@@ -54,6 +54,8 @@ require "scripts.ui.panels.tutorial"
 require "scripts.achievements"
 Luven = require "scripts.libraries.luven.luven"
 
+require "data.items"
+
 version = ""
 versionType = "release" -- "dev" for quick login, "release" for not
 useSteam = love.system.getOS() ~= "Linux" and love.system.getOS() ~= "OS X"
@@ -252,7 +254,8 @@ function love.draw()
             text =
                 "BrawlQuest " .. version .. "" .. versionNumber .. "\n" .. timeToReset ..
                    "\nPlayers: " ..
-                    playerCount .. "\n" .. playersOnline
+                    playerCount .. "\n" .. playersOnline .. "\n\n" .. "Position: " .. player.x .. ", " ..
+                    player.y .. "\n" .. "FPS: " .. love.timer.getFPS()
         end
         love.graphics.print(text, offset, 10)
         drawWorldMap(love.graphics.getWidth() - 256 - 20, 20)
@@ -289,7 +292,7 @@ function love.update(dt)
                 ["AY"] = player.target.y,
                 ["IsShield"] = love.keyboard.isDown(keybinds.SHIELD)
             }), token)
-            nextUpdate = 0.25
+            nextUpdate = 1
             tick()
         end
         updateWorld(dt)

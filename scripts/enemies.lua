@@ -39,12 +39,18 @@ function newEnemyData(data) -- called when nearby data is returned
             enemy.dx = v.X * 32
             enemy.speed = 32
             enemy.dy = v.Y * 32
-            enemy.mhp = v.Enemy.HP
+            if v.DoublePower == 1 then
+                enemy.mhp = v.Enemy.HP * 3
+            else
+                enemy.mhp = v.Enemy.HP
+            end
+            
             enemy.dhp = v.HP
             enemy.red = 0
             enemy.atkAlpha = 0
             enemy.aggroAlpha = 0
             enemy.linesDrawable = false
+            enemy.DoublePower = v.DoublePower == 1
             if enemy.HP <= 0 then
                 enemy.hasBurst = true
             else
@@ -234,6 +240,17 @@ function drawEnemies()
                 if distance <= range then
                     love.graphics.setColor(1, 1 - v.red, (1 - v.red),
                         intensity * enemyAlpha)
+                    if v.DoublePower == true then
+                        love.graphics.push()
+                        love.graphics.stencil(function()
+                            love.graphics.setShader(alphaShader)
+                            love.graphics.draw(enemyImg[v.Enemy.Name], v.dx +
+                                offsetX, v.dy, 0, rotation, 1, 0, 0)
+                            love.graphics.setShader()
+                        end)
+                        drawEnchantment(v.dx + offsetX, v.dy)
+                        love.graphics.pop()
+                    end
                     love.graphics.draw(enemyImg[v.Enemy.Name], v.dx + offsetX,
                         v.dy, 0, rotation, 1, 0, 0)
                 end

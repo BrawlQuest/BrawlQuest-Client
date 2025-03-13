@@ -29,6 +29,12 @@ function serverResponse()
                     if not foundPlayer then
                         players[i] = v -- create the player
                     end
+                    players[i].Weapon = getItemFromID(v.Weapon)
+                    players[i].LegArmour = getItemFromID(v.LegArmour)
+                    players[i].ChestArmour = getItemFromID(v.ChestArmour)
+                    players[i].HeadArmour = getItemFromID(v.HeadArmour)
+                    players[i].Shield = getItemFromID(v.Shield)
+                    players[i].Mount = getItemFromID(v.Mount) or {Name = "None", Val = 64}
                 end
                 for i, v in ipairs(players) do -- remove players we haven't found from the players table
                     if not arrayContains(playersFound, v['Name']) then
@@ -48,9 +54,10 @@ function serverResponse()
                     end
                 end
                 if response['TimeToReset'] then
+                    
                     timeToReset = response['TimeToReset']
                 end
-                print(response["InventoryHash"] .. ", curret hash: " .. inventoryHash)
+             
                 if response["InventoryHash"] ~= inventoryHash and me.ID ~= nil then
                     inventoryHash = response["InventoryHash"]
                     getPlayerInventory(me.ID, token)

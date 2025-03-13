@@ -117,3 +117,11 @@ function apiGET(request)
   ]])
     getThread:start(request, api.url, token)
 end
+
+function apiGETThreadless(request)
+    print("Calling " .. api.url .. request)
+    local b = {}
+    c, h = http.request{url=api.url .. request, headers={["token"]=token}, sink=ltn12.sink.table(b)}
+   
+    return table.concat(b)
+end
