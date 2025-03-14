@@ -150,8 +150,14 @@ function love.draw()
         --     love.graphics.setShader(blur1)
         --     love.graphics.setShader(blur2)
         -- end
-        Luven.drawBegin()
-        drawWorld()
+        
+        if show3D then
+            drawWorld3D()
+            Luven.drawBegin()
+        else
+            Luven.drawBegin()
+            drawWorld2D()
+        end
 
         if worldEdit.open and player then drawNewWorldEditTiles() end
         drawStructures()
@@ -238,7 +244,7 @@ function love.draw()
         --     love.graphics.rectangle("fill", player.target.x * 32, player.target.y * 32, 32, 32)
         --     love.graphics.setColor(1,1,1)
         -- end
-
+        
         Luven.drawEnd()
 
         if death.open then drawDeath() end
